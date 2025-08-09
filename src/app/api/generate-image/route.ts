@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 
 // Use types from the 'canvas' package
-import type { Canvas, createCanvas as createCanvasType } from 'canvas';
+import type { createCanvas as createCanvasType } from 'canvas';
 
 let createCanvas: typeof createCanvasType | null = null;
 let canvasAvailable = false;

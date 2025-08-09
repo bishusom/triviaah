@@ -4,7 +4,6 @@
 import { useEffect, useState, useMemo, memo, useCallback } from 'react';
 import Link from 'next/link';
 import { MdInfo, MdEmail } from 'react-icons/md';
-import { FaCheckCircle } from 'react-icons/fa';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 
