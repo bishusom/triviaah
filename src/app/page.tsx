@@ -8,10 +8,19 @@ import { FaCheckCircle } from 'react-icons/fa';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 
-// Lazy load non-critical components
-const ScrollButtons = dynamic(() => import('@/components/ScrollButtons'));
+// Optimize icon imports
+const FaCheckCircleIcon = dynamic(() => import('react-icons/fa').then(mod => mod.FaCheckCircle), { 
+  ssr: false,
+  loading: () => <div className="inline-block w-4 h-4 bg-gray-200 animate-pulse rounded-full" />
+});
 
-// Static quiz data (prevents re-creation on every render)
+// Lazy load non-critical components
+const ScrollButtons = dynamic(() => import('@/components/ScrollButtons'), {
+  ssr: false,
+  loading: () => <div className="fixed right-4 bottom-4 w-12 h-12" />
+});
+
+// Static quiz data
 const DAILY_QUIZZES = [
   {
     category: 'general-knowledge',
@@ -125,8 +134,8 @@ export default function Home() {
 
   useEffect(() => {
     updateTimer();
-    // Reduced from 1 min to 5 min intervals (300000ms)
-    const interval = setInterval(updateTimer, 300000);
+    // Reduce to 10 min intervals
+    const interval = setInterval(updateTimer, 600000);
     return () => clearInterval(interval);
   }, [updateTimer]);
 
@@ -142,15 +151,16 @@ export default function Home() {
     localStorage.setItem('playedQuizzes', JSON.stringify(updated));
   }, [playedQuizzes]);
 
-  // Memoized components prevent unnecessary re-renders
+  // Memoized components
   const DailyQuizCards = useMemo(() => (
-    DAILY_QUIZZES.map((quiz) => (
+    DAILY_QUIZZES.map((quiz, index) => (
       <DailyQuizCard
         key={quiz.category}
         quiz={quiz}
         playedQuizzes={playedQuizzes}
         timeLeft={timeLeft}
         onPlay={handleQuizPlay}
+        priorityImage={index < 3} // Preload first 3 images
       />
     ))
   ), [playedQuizzes, timeLeft, handleQuizPlay]);
@@ -169,7 +179,7 @@ export default function Home() {
               width={80}
               height={80}
               className="object-cover w-full h-full"
-              loading="lazy"  // Lazy load below-the-fold images
+              loading="lazy"
             />
           </div>
         </div>
@@ -178,6 +188,7 @@ export default function Home() {
         <Link
           href={`/${section.category}`}
           className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors"
+          prefetch={false} // Disable prefetching for non-critical links
         >
           Explore
         </Link>
@@ -187,16 +198,20 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      
       <header className="bg-blue-700 text-white py-4 px-4">
         <div className="container mx-auto flex items-center justify-center gap-4">
           <div className="flex items-center">
+            {/* Preconnect to image origin */}
+            <link rel="preconnect" href="https://triviaah.com" />
+            
+            {/* Preload critical image */}
             <Image 
               src="logo.webp" 
               alt="Triviaah Logo"
               width={140}
               height={140}
-              priority // Preload critical LCP image
+              priority
+              fetchPriority="high"
             />
             <h1 className="text-2xl md:text-3xl font-bold ml-2">Explore Fun Trivia Quizzes!</h1>
           </div>
@@ -204,18 +219,30 @@ export default function Home() {
       </header>
       
       <main className="container mx-auto px-4 py-6 flex-grow">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Daily Trivia Challenges</h2>
-          <p className="text-gray-600">New quizzes every 24 hours!</p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {DailyQuizCards}
-        </div>
+        {/* Add loading skeletons */}
+        {!timeLeft && (
+          <div className="text-center mb-8">
+            <div className="h-8 bg-gray-200 rounded w-1/4 mx-auto mb-4 animate-pulse"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/3 mx-auto animate-pulse"></div>
+          </div>
+        )}
         
-        <div className="bg-blue-50 text-blue-800 p-4 rounded-lg text-center mb-8">
-          <p className="font-medium">All quizzes reset in <span className="font-bold">{timeLeft}</span></p>
-        </div>
+        {timeLeft && (
+          <>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Daily Trivia Challenges</h2>
+              <p className="text-gray-600">New quizzes every 24 hours!</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {DailyQuizCards}
+            </div>
+            
+            <div className="bg-blue-50 text-blue-800 p-4 rounded-lg text-center mb-8">
+              <p className="font-medium">All quizzes reset in <span className="font-bold">{timeLeft}</span></p>
+            </div>
+          </>
+        )}
 
         <div className="mb-12">
           <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">More Brain Challenges</h3>
@@ -227,7 +254,7 @@ export default function Home() {
         <div className="mb-12">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-bold text-gray-800">All Trivia Categories</h3>
-            <Link href="/trivias" className="text-blue-600 hover:underline">
+            <Link href="/trivias" className="text-blue-600 hover:underline" prefetch={false}>
               View All →
             </Link>
           </div>
@@ -237,6 +264,7 @@ export default function Home() {
                 key={category}
                 href={`/trivias/${category.toLowerCase()}`}
                 className="bg-white hover:bg-blue-50 border border-gray-200 rounded-lg p-4 text-center transition-colors"
+                prefetch={false}
               >
                 {category}
               </Link>
@@ -255,13 +283,13 @@ export default function Home() {
               <p className="text-gray-400">Daily trivia challenges</p>
             </div>
             <div className="flex gap-6">
-              <Link href="/about" className="flex items-center hover:text-blue-300 transition-colors">
+              <Link href="/about" className="flex items-center hover:text-blue-300 transition-colors" prefetch={false}>
                 <MdInfo className="mr-1" /> About
               </Link>
-              <Link href="/contact" className="flex items-center hover:text-blue-300 transition-colors">
+              <Link href="/contact" className="flex items-center hover:text-blue-300 transition-colors" prefetch={false}>
                 <MdEmail className="mr-1" /> Contact Us
               </Link>
-              <Link href="/privacy" className="hover:text-blue-300 transition-colors">
+              <Link href="/privacy" className="hover:text-blue-300 transition-colors" prefetch={false}>
                 Privacy Policy
               </Link>
             </div>
@@ -279,7 +307,8 @@ const DailyQuizCard = memo(function DailyQuizCard({
   quiz, 
   playedQuizzes,
   timeLeft,
-  onPlay 
+  onPlay,
+  priorityImage = false
 }: {
   quiz: {
     category: string;
@@ -291,6 +320,7 @@ const DailyQuizCard = memo(function DailyQuizCard({
   playedQuizzes: Record<string, { played: boolean; timestamp: number }>;
   timeLeft: string;
   onPlay: (category: string) => void;
+  priorityImage?: boolean;
 }) {
   const shouldResetQuiz = (category: string) => {
     if (!playedQuizzes[category]) return true;
@@ -314,14 +344,26 @@ const DailyQuizCard = memo(function DailyQuizCard({
       <div className="p-6 flex flex-col h-full">
         <div className="flex items-center justify-center mb-4">
           <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
-            <Image 
-              src={quiz.image}
-              alt={quiz.name}
-              width={80}
-              height={80}
-              className="object-cover w-full h-full"
-              loading="lazy"  // Lazy load images
-            />
+            {priorityImage ? (
+              <Image 
+                src={quiz.image}
+                alt={quiz.name}
+                width={80}
+                height={80}
+                className="object-cover w-full h-full"
+                priority
+                fetchPriority="high"
+              />
+            ) : (
+              <Image 
+                src={quiz.image}
+                alt={quiz.name}
+                width={80}
+                height={80}
+                className="object-cover w-full h-full"
+                loading="lazy"
+              />
+            )}
           </div>
         </div>
         
@@ -339,7 +381,7 @@ const DailyQuizCard = memo(function DailyQuizCard({
           {showAsPlayed ? (
             <div className="text-center">
               <div className="inline-flex items-center bg-gray-100 text-gray-600 text-sm px-4 py-2 rounded-full">
-                <FaCheckCircle className="mr-2 text-green-500" />
+                <FaCheckCircleIcon className="mr-2 text-green-500" />
                 <span>Played</span>
               </div>
               <div className="text-xs text-gray-400 mt-2">
