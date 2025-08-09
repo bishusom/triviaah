@@ -1,20 +1,43 @@
-// src/components/Ads.tsx
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+
+// Shared initialization guard
+let adInitialized = false;
+
+const initializeAdSense = () => {
+  if (adInitialized || typeof window === 'undefined') return;
+  
+  try {
+    // Initialize ads only once globally
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    adInitialized = true;
+  } catch (e) {
+    console.error("AdSense initialization error", e);
+  }
+};
 
 export const AdBanner = () => {
+  const adRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    if (!adRef.current || adRef.current.dataset.initialized) return;
+    
     try {
-      // Initialize ads
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      // Mark as initialized
+      adRef.current.dataset.initialized = "true";
+      
+      // Initialize global AdSense if not done
+      if (!adInitialized) {
+        initializeAdSense();
+      }
     } catch (e) {
       console.error("AdSense error", e);
     }
   }, []);
 
   return (
-    <div className="w-full py-4 bg-white">
+    <div ref={adRef} className="w-full py-4 bg-white">
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
@@ -27,18 +50,23 @@ export const AdBanner = () => {
   );
 };
 
+// Similar updates for other ad components
 export const AdSquare = () => {
+  const adRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    if (!adRef.current || adRef.current.dataset.initialized) return;
+    
     try {
-      // Initialize ads
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      adRef.current.dataset.initialized = "true";
+      if (!adInitialized) initializeAdSense();
     } catch (e) {
       console.error("AdSense error", e);
     }
   }, []);
 
   return (
-    <div className="my-6 flex justify-center">
+    <div ref={adRef} className="my-6 flex justify-center">
       <ins
         className="adsbygoogle"
         style={{ display: 'inline-block', width: '300px', height: '250px' }}
@@ -50,17 +78,21 @@ export const AdSquare = () => {
 };
 
 export const AdMultiplex = () => {
+  const adRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    if (!adRef.current || adRef.current.dataset.initialized) return;
+    
     try {
-      // Initialize ads
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      adRef.current.dataset.initialized = "true";
+      if (!adInitialized) initializeAdSense();
     } catch (e) {
       console.error("AdSense error", e);
     }
   }, []);
 
   return (
-    <div className="hidden md:block w-[300px]">
+    <div ref={adRef} className="hidden md:block w-[300px]">
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
