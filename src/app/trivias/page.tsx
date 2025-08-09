@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import triviaCategories from '@/config/triviaCategories.json';
 import Image from 'next/image';
+import ScrollButtons from '@/components/ScrollButtons'; // Import ScrollButtons component
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -62,6 +63,7 @@ export default function TriviasPage() {
           </Link>
         ))}
       </div>
+      <ScrollButtons /> {/* Add ScrollButtons component at the bottom */}
     </div>
   );
 }

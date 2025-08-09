@@ -7,6 +7,7 @@ import { MdInfo, MdEmail } from 'react-icons/md';
 import { FaCheckCircle } from 'react-icons/fa';
 import Image from 'next/image';
 import AdInit from '@/components/AdInit';
+import ScrollButtons from '@/components/ScrollButtons';
 
 export default function Home() {
   const [playedQuizzes, setPlayedQuizzes] = useState<Record<string, { played: boolean; timestamp: number }>>({})
@@ -247,6 +248,7 @@ export default function Home() {
         </div>
 
         {/* Rest of your existing content (timer, about section) */}
+         <ScrollButtons />
       </main>
       <footer className="bg-gray-800 text-white py-6 px-4">
         <div className="container mx-auto">
