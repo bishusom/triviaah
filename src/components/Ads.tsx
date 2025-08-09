@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { FaTimes } from 'react-icons/fa';
 
 // Shared initialization guard
 let adInitialized = false;
@@ -9,7 +10,6 @@ const initializeAdSense = () => {
   if (adInitialized || typeof window === 'undefined') return;
   
   try {
-    // Initialize ads only once globally
     (window.adsbygoogle = window.adsbygoogle || []).push({});
     adInitialized = true;
   } catch (e) {
@@ -19,43 +19,58 @@ const initializeAdSense = () => {
 
 export const AdBanner = () => {
   const adRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    if (!adRef.current || adRef.current.dataset.initialized) return;
+    if (!isVisible || !adRef.current || adRef.current.dataset.initialized) return;
     
     try {
-      // Mark as initialized
       adRef.current.dataset.initialized = "true";
-      
-      // Initialize global AdSense if not done
       if (!adInitialized) {
         initializeAdSense();
       }
     } catch (e) {
       console.error("AdSense error", e);
     }
-  }, []);
+  }, [isVisible]);
+
+  if (!isVisible) return null;
 
   return (
-    <div ref={adRef} className="w-full py-4 bg-white">
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'block' }}
-        data-ad-client="ca-pub-4386714040098164"
-        data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HEADER}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      />
+    <div className="relative w-full bg-white">
+      <div ref={adRef} className="py-2 px-4">
+        <ins
+          className="adsbygoogle"
+          style={{ 
+            display: 'block',
+            height: '90px',
+            width: '100%',
+            maxWidth: '728px',
+            margin: '0 auto'
+          }}
+          data-ad-client="ca-pub-4386714040098164"
+          data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HEADER}
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      </div>
+      <button 
+        onClick={() => setIsVisible(false)}
+        className="absolute top-1 right-1 md:top-2 md:right-2 bg-gray-200 rounded-full p-1 hover:bg-gray-300 transition-colors"
+        aria-label="Close ad"
+      >
+        <FaTimes className="text-gray-600 text-sm" />
+      </button>
     </div>
   );
 };
 
-// Similar updates for other ad components
 export const AdSquare = () => {
   const adRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    if (!adRef.current || adRef.current.dataset.initialized) return;
+    if (!isVisible || !adRef.current || adRef.current.dataset.initialized) return;
     
     try {
       adRef.current.dataset.initialized = "true";
@@ -63,25 +78,42 @@ export const AdSquare = () => {
     } catch (e) {
       console.error("AdSense error", e);
     }
-  }, []);
+  }, [isVisible]);
+
+  if (!isVisible) return null;
 
   return (
-    <div ref={adRef} className="my-6 flex justify-center">
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'inline-block', width: '300px', height: '250px' }}
-        data-ad-client="ca-pub-4386714040098164"
-        data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_SQUARE}
-      />
+    <div className="relative my-4">
+      <div ref={adRef} className="flex justify-center">
+        <ins
+          className="adsbygoogle"
+          style={{ 
+            display: 'inline-block', 
+            width: '300px', 
+            height: '250px',
+            maxWidth: '100%'
+          }}
+          data-ad-client="ca-pub-4386714040098164"
+          data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_SQUARE}
+        />
+      </div>
+      <button 
+        onClick={() => setIsVisible(false)}
+        className="absolute top-0 right-0 md:right-2 bg-gray-200 rounded-full p-1 hover:bg-gray-300 transition-colors"
+        aria-label="Close ad"
+      >
+        <FaTimes className="text-gray-600 text-sm" />
+      </button>
     </div>
   );
 };
 
 export const AdMultiplex = () => {
   const adRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    if (!adRef.current || adRef.current.dataset.initialized) return;
+    if (!isVisible || !adRef.current || adRef.current.dataset.initialized) return;
     
     try {
       adRef.current.dataset.initialized = "true";
@@ -89,17 +121,28 @@ export const AdMultiplex = () => {
     } catch (e) {
       console.error("AdSense error", e);
     }
-  }, []);
+  }, [isVisible]);
+
+  if (!isVisible) return null;
 
   return (
-    <div ref={adRef} className="hidden md:block w-[300px]">
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'block' }}
-        data-ad-client="ca-pub-4386714040098164"
-        data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_MULTIPLEX}
-        data-ad-format="autorelaxed"
-      />
+    <div className="relative hidden md:block w-[300px]">
+      <div ref={adRef}>
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-client="ca-pub-4386714040098164"
+          data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_MULTIPLEX}
+          data-ad-format="autorelaxed"
+        />
+      </div>
+      <button 
+        onClick={() => setIsVisible(false)}
+        className="absolute top-0 right-0 bg-gray-200 rounded-full p-1 hover:bg-gray-300 transition-colors"
+        aria-label="Close ad"
+      >
+        <FaTimes className="text-gray-600 text-sm" />
+      </button>
     </div>
   );
 };

@@ -20,47 +20,47 @@ const ScrollButtons = dynamic(() => import('@/components/ScrollButtons'), {
   loading: () => <div className="fixed right-4 bottom-4 w-12 h-12" />
 });
 
-// Static quiz data
+// Static quiz data with optimized images
 const DAILY_QUIZZES = [
   {
     category: 'general-knowledge',
     name: 'General Knowledge',
-    image: '/imgs/general-knowledge.webp',
+    image: '/imgs/general-knowledge-160x160.webp',
     tagline: 'Test your worldly wisdom with diverse topics',
     keywords: 'facts, trivia, knowledge quiz'
   },
   {
     category: 'entertainment',
     name: 'Entertainment',
-    image: '/imgs/entertainment.webp',
+    image: '/imgs/entertainment-160x160.webp',
     tagline: 'Movies, music & pop culture challenges',
     keywords: 'film quiz, music trivia, celebrity questions'
   },
   {
     category: 'history',
     name: 'History',
-    image: '/imgs/history.webp',
+    image: '/imgs/history-160x160.webp',
     tagline: 'Journey through time with historical facts',
     keywords: 'world history, past events, historical figures'
   },
   {
     category: 'geography',
     name: 'Geography',
-    image: '/imgs/geography.webp',
+    image: '/imgs/geography-160x160.webp',
     tagline: 'Explore the world without leaving home',
     keywords: 'countries, capitals, landmarks, maps'
   },
   {
     category: 'science',
     name: 'Science',
-    image: '/imgs/science.webp',
+    image: '/imgs/science-160x160.webp',
     tagline: 'Discover the wonders of science',
     keywords: 'biology, physics, chemistry, space'
   },
   {
     category: 'sports',
     name: 'Sports',
-    image: '/imgs/sports.webp',
+    image: '/imgs/sports-160x160.webp',
     tagline: 'For the ultimate sports fanatic',
     keywords: 'football, basketball, olympics, athletes'
   }
@@ -70,28 +70,28 @@ const ADDITIONAL_SECTIONS = [
   {
     category: 'word-games',
     name: 'Word Games',
-    image: '/imgs/word-games.webp',
+    image: '/imgs/word-games-160x160.webp',
     tagline: 'Challenge your vocabulary and word skills',
     keywords: 'word puzzles, anagrams, word search'
   },
   {
     category: 'number-puzzles',
     name: 'Number Puzzles',
-    image: '/imgs/number-puzzles.webp',
+    image: '/imgs/number-puzzles-160x160.webp',
     tagline: 'Exercise your mathematics and logic skills',
     keywords: 'math games, sudoku, number challenges'
   },
   {
     category: 'blog',
     name: 'Trivia Blog',
-    image: '/imgs/blog.webp',
+    image: '/imgs/blog-160x160.webp',
     tagline: 'Learn interesting facts and trivia stories',
     keywords: 'trivia articles, fun facts, knowledge'
   },
   {
     category: 'trivia-bank',
     name: 'Trivia Bank',
-    image: '/imgs/tbank.webp',
+    image: '/imgs/tbank-160x160.webp',
     tagline: 'Access our complete collection of questions',
     keywords: 'question database, trivia archive'
   }
@@ -174,11 +174,10 @@ export default function Home() {
         <div className="flex items-center justify-center mb-4">
           <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
             <Image 
-              src={section.image}
+              src={section.image}  // FIXED: Use section's own image
               alt={section.name}
               width={80}
               height={80}
-              className="object-cover w-full h-full"
               loading="lazy"
             />
           </div>
@@ -188,7 +187,7 @@ export default function Home() {
         <Link
           href={`/${section.category}`}
           className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors"
-          prefetch={false} // Disable prefetching for non-critical links
+          prefetch={false}
         >
           Explore
         </Link>
@@ -206,10 +205,10 @@ export default function Home() {
             
             {/* Preload critical image */}
             <Image 
-              src="logo.webp" 
+              src="/logo-280x80.webp"  // Use optimized logo
               alt="Triviaah Logo"
               width={140}
-              height={140}
+              height={40}  // Correct aspect ratio
               priority
               fetchPriority="high"
             />
@@ -344,26 +343,15 @@ const DailyQuizCard = memo(function DailyQuizCard({
       <div className="p-6 flex flex-col h-full">
         <div className="flex items-center justify-center mb-4">
           <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
-            {priorityImage ? (
-              <Image 
-                src={quiz.image}
-                alt={quiz.name}
-                width={80}
-                height={80}
-                className="object-cover w-full h-full"
-                priority
-                fetchPriority="high"
-              />
-            ) : (
-              <Image 
-                src={quiz.image}
-                alt={quiz.name}
-                width={80}
-                height={80}
-                className="object-cover w-full h-full"
-                loading="lazy"
-              />
-            )}
+            <Image 
+              src={quiz.image}  // Use the pre-optimized image path
+              alt={quiz.name}
+              width={80}
+              height={80}
+              className="object-cover w-full h-full"
+              priority={priorityImage}
+              loading={priorityImage ? "eager" : "lazy"}
+            />
           </div>
         </div>
         

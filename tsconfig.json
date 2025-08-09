@@ -29,6 +29,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/components/AnswerToggle.js"  ],
   "exclude": ["node_modules"]
 }
