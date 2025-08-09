@@ -1,0 +1,603 @@
+'use client';
+import { event } from '@/lib/gtag';
+import { useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
+import { db } from '@/lib/firebase'; // Import your Firebase config
+import { useSound } from '@/app/context/SoundContext';
+import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
+
+interface GameConfig {
+  wordLength: {
+    easy: number;
+    medium: number;
+    hard: number;
+  };
+  timeLimit: {
+    easy: number;
+    medium: number;
+    hard: number;
+  };
+  scorePerStep: {
+    easy: number;
+    medium: number;
+    hard: number;
+  };
+  bonusPerSecond: number;
+  maxHints: number;
+}
+
+interface GameState {
+  difficulty: 'easy' | 'medium' | 'hard';
+  consecutiveWins: number;
+  currentLevel: number;
+}
+
+export default function WordLadderGame() {
+  // Refs
+  const currentWordRef = useRef<HTMLDivElement>(null);
+  const letterTilesRef = useRef<HTMLDivElement>(null);
+  const wordListRef = useRef<HTMLUListElement>(null);
+  const feedbackRef = useRef<HTMLDivElement>(null);
+
+  // Game state
+  const [gameState, setGameState] = useState<GameState>({
+    difficulty: 'easy',
+    consecutiveWins: 0,
+    currentLevel: 1
+  });
+  const [score, setScore] = useState(0);
+  const [timer, setTimer] = useState(0);
+  const { isMuted } = useSound();
+  const [selectedLetterIndex, setSelectedLetterIndex] = useState(-1);
+  const [gameActive, setGameActive] = useState(false);
+  const [hintsUsed, setHintsUsed] = useState(0);
+  const [feedback, setFeedback] = useState({ message: '', type: 'info' });
+
+  // Game data
+  const [startWord, setStartWord] = useState('');
+  const [endWord, setEndWord] = useState('');
+  const [currentWord, setCurrentWord] = useState('');
+  const [ladderWords, setLadderWords] = useState<string[]>([]);
+  const [usedWords, setUsedWords] = useState<Set<string>>(new Set());
+  const [usedPairs, setUsedPairs] = useState<Set<string>>(new Set());
+  const [wordCache, setWordCache] = useState<Map<string, boolean>>(new Map());
+  const [currentSolutionPath, setCurrentSolutionPath] = useState<string[]>([]);
+
+  const timerInterval = useRef<NodeJS.Timeout| null>(null)
+
+  // Game configuration
+  const config: GameConfig = {
+    wordLength: {
+      easy: 5,
+      medium: 6,
+      hard: 7
+    },
+    timeLimit: {
+      easy: 300,   // 5 minutes
+      medium: 240, // 4 minutes
+      hard: 180    // 3 minutes
+    },
+    scorePerStep: {
+      easy: 50,
+      medium: 75,
+      hard: 100
+    },
+    bonusPerSecond: 5, // Bonus points per second remaining
+    maxHints: 3
+  };
+
+  // Word lists by length
+  const wordLists = {
+    4: [
+      'COLD', 'WARM', 'CORD', 'CARD', 'WARD', 'WORD', 'WORM', 'FARM', 'FIRE', 'FIVE',
+      'FINE', 'LINE', 'LION', 'LOAN', 'LOIN', 'RAIN', 'MAIN', 'MAID', 'MILD', 'MIND'
+    ],
+    5: [
+      'APPLE', 'AMPLY', 'AMBLE', 'ABLED', 'ABIDE', 'BRICK', 'TRICK', 'QUICK', 'SLICK',
+      'FLICK', 'CLICK', 'STICK', 'THICK', 'PRICK', 'CRACK', 'TRACK', 'STACK', 'BLACK'
+    ],
+    6: [
+      'CANNON', 'CANTON', 'CANTOR', 'CAPTOR', 'BLOOMS', 'GLOOMS', 'BROOMS', 'ROOMS',
+      'DOOMS', 'FLOODS', 'BLOODS', 'MOODS', 'GOODS', 'HOODS', 'WOODS', 'STANDS'
+    ]
+  };
+
+  // Initialize game
+  useEffect(() => {
+    event({action: 'word_ladder_started', category: 'word_ladder',label: 'word_ladder'});
+    loadGameState();
+    initGame();
+    return () => {
+      if (timerInterval.current) {
+        clearInterval(timerInterval.current);
+      }
+    };
+  }, []);
+
+  // Load game state from localStorage
+  const loadGameState = () => {
+    if (typeof window !== 'undefined') {
+      const savedState = localStorage.getItem('wordLadderGameState');
+      if (savedState) {
+        try {
+          const parsed = JSON.parse(savedState);
+          if (['easy', 'medium', 'hard'].includes(parsed.difficulty) &&
+              typeof parsed.consecutiveWins === 'number' &&
+              typeof parsed.currentLevel === 'number') {
+            setGameState(parsed);
+          }
+        } catch (e) {
+          console.error('Invalid saved game state', e);
+        }
+      }
+    }
+  };
+
+  // Save game state to localStorage
+  const saveGameState = () => {
+    localStorage.setItem('wordLadderGameState', JSON.stringify(gameState));
+  };
+
+  const fetchWordLadderFromFirebase = async (wordLength: number) => {
+    try {
+      const q = query(
+        collection(db, 'wordLadders'),
+        where('length', '==', wordLength),
+        where('difficulty', '==', gameState.difficulty),
+        limit(100)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        throw new Error('No ladders found');
+      }
+
+      const ladders = querySnapshot.docs.map(doc => doc.data());
+      const randomLadder = ladders[Math.floor(Math.random() * ladders.length)];
+
+      return {
+        startWord: randomLadder.startWord.toUpperCase(),
+        endWord: randomLadder.endWord.toUpperCase(),
+        path: randomLadder.path.map((w: string) => w.toUpperCase())
+      };
+    } catch (error) {
+      console.error('Error fetching from Firebase:', error);
+      throw error;
+    }
+  };
+
+  // Initialize game
+  const initGame = async () => {
+    if (timerInterval.current !== null) {
+      window.clearInterval(timerInterval.current);
+      timerInterval.current = null;
+    }
+    setTimer(config.timeLimit[gameState.difficulty]);
+    setScore(0);
+    setLadderWords([]);
+    setUsedWords(new Set());
+    setWordCache(new Map());
+    setHintsUsed(0);
+    setGameActive(true);
+    setSelectedLetterIndex(-1);
+    setFeedback({ message: '', type: 'info' });
+
+    const wordLength = config.wordLength[gameState.difficulty];
+
+    try {
+      // Try Firebase first
+      const { startWord, endWord, path } = await fetchWordLadderFromFirebase(wordLength);
+      
+      setStartWord(startWord);
+      setEndWord(endWord);
+      setCurrentWord(startWord);
+      setLadderWords([startWord]);
+      setUsedWords(new Set([startWord]));
+      setCurrentSolutionPath(path);
+
+      startTimer();
+      showFeedback('Game started! Transform the start word to the end word.', 'info');
+    } catch (error) {
+      console.error('Failed to fetch from Firebase, using local words:', error);
+      initGameWithLocalWords(wordLength);
+    }
+  };
+
+  const initGameWithLocalWords = (wordLength: number) => {
+    const availableWords = wordLists[wordLength as keyof typeof wordLists];
+    let validPair = false;
+    let attempts = 0;
+    const maxAttempts = 50;
+
+    let start = '';
+    let end = '';
+
+    while (!validPair && attempts < maxAttempts) {
+      start = availableWords[Math.floor(Math.random() * availableWords.length)];
+      const endCandidates = availableWords.filter(w => w !== start);
+
+      if (endCandidates.length > 0) {
+        end = endCandidates[Math.floor(Math.random() * endCandidates.length)];
+        const pairKey = `${start}-${end}`;
+        if (!usedPairs.has(pairKey)) {
+          validPair = true;
+          setUsedPairs(prev => new Set(prev).add(pairKey));
+        }
+      }
+      attempts++;
+    }
+
+    if (!validPair) {
+      const fallbackSequences = {
+        4: [['COLD', 'CORD', 'CARD', 'WARD', 'WARM']],
+        5: [['APPLE', 'AMPLY', 'AMBLE', 'ABLED', 'ABIDE']],
+        6: [['CANNON', 'CANTON', 'CANTOR', 'CAPTOR']]
+      };
+
+      const sequences = fallbackSequences[wordLength as keyof typeof fallbackSequences] || [];
+      for (const sequence of sequences) {
+        const pairKey = `${sequence[0]}-${sequence[sequence.length-1]}`;
+        if (!usedPairs.has(pairKey)) {
+          start = sequence[0];
+          end = sequence[sequence.length-1];
+          setUsedPairs(prev => new Set(prev).add(pairKey));
+          validPair = true;
+          break;
+        }
+      }
+
+      if (!validPair) {
+        start = availableWords[0];
+        end = availableWords[1];
+      }
+    }
+
+    setStartWord(start);
+    setEndWord(end);
+    setCurrentWord(start);
+    setLadderWords([start]);
+    setUsedWords(prev => new Set(prev).add(start));
+    setCurrentSolutionPath([start, end]); // Simplified for demo
+
+    startTimer();
+    showFeedback('Game started! Transform the start word to the end word.', 'info');
+  };
+
+  const renderCurrentWord = () => {
+    if (!currentWordRef.current) return;
+    currentWordRef.current.innerHTML = '';
+    
+    for (let i = 0; i < currentWord.length; i++) {
+      const letterSpan = document.createElement('span');
+      letterSpan.textContent = currentWord[i];
+      letterSpan.className = `letter-tile ${i === selectedLetterIndex ? 'selected' : ''}`;
+      letterSpan.addEventListener('click', () => selectLetter(i));
+      currentWordRef.current.appendChild(letterSpan);
+    }
+  };
+
+  const renderLetterTiles = () => {
+    if (!letterTilesRef.current) return;
+    letterTilesRef.current.innerHTML = '';
+    if (selectedLetterIndex === -1) return;
+
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (const letter of alphabet) {
+      const tile = document.createElement('div');
+      tile.textContent = letter;
+      tile.className = 'letter-tile';
+      tile.addEventListener('click', () => changeLetter(letter));
+      letterTilesRef.current.appendChild(tile);
+    }
+  };
+
+  const selectLetter = (index: number) => {
+    setSelectedLetterIndex(index);
+    playSound('select');
+  };
+
+  const changeLetter = async (newLetter: string) => {
+    if (selectedLetterIndex === -1 || !gameActive) return;
+
+    const newWord = currentWord.substring(0, selectedLetterIndex) + 
+                   newLetter + 
+                   currentWord.substring(selectedLetterIndex + 1);
+
+    if (await checkWord(newWord)) {
+      setCurrentWord(newWord);
+      setLadderWords(prev => [...prev, newWord]);
+      setUsedWords(prev => new Set(prev).add(newWord));
+
+      const points = config.scorePerStep[gameState.difficulty];
+      setScore(prev => prev + points);
+      playSound('found');
+
+      if (newWord === endWord) {
+        const timeBonus = timer * config.bonusPerSecond;
+        setScore(prev => prev + timeBonus);
+
+        if (timerInterval.current !== null) {
+          window.clearInterval(timerInterval.current);
+          timerInterval.current = null;
+        }
+        setGameActive(false);
+        showFeedback(`You won! +${points} points + ${timeBonus} time bonus`, 'success');
+        playSound('win');
+        handleGameWin();
+      } else {
+        showFeedback(`Valid: ${newWord} (+${points} points)`, 'success');
+      }
+
+      setSelectedLetterIndex(-1);
+    }
+  };
+
+  const renderWordList = () => {
+    if (!wordListRef.current) return;
+    wordListRef.current.innerHTML = '';
+    ladderWords.forEach(word => {
+      const li = document.createElement('li');
+      li.textContent = word;
+      wordListRef.current?.appendChild(li);
+    });
+  };
+
+  const updateTimer = () => {
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const startTimer = () => {
+    if (timerInterval.current !== null) {
+      window.clearInterval(timerInterval.current);
+      timerInterval.current = null;
+    }
+    setTimer(config.timeLimit[gameState.difficulty]);
+    timerInterval.current = setInterval(() => {
+      setTimer(prev => {
+        if (prev <= 0 && gameActive) {
+          if (timerInterval.current !== null) {
+            window.clearInterval(timerInterval.current);
+            timerInterval.current = null;
+          }
+          setGameActive(false);
+          showFeedback('Time\'s up!', 'error');
+          playSound('error');
+          setTimeout(initGame, 2000);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const showFeedback = (message: string, type: 'success' | 'error' | 'info') => {
+    setFeedback({ message, type });
+    if (type === 'error') {
+      playSound('error');
+    }
+  };
+
+  const checkWord = async (word: string) => {
+    if (!gameActive) return false;
+    if (word.length !== currentWord.length) {
+      showFeedback(`Word must be ${currentWord.length} letters long`, 'error');
+      return false;
+    }
+    if (word === currentWord) {
+      showFeedback('Word must be different from current word', 'error');
+      return false;
+    }
+    if (usedWords.has(word)) {
+      showFeedback('Word already used in this ladder', 'error');
+      return false;
+    }
+
+    let diffCount = 0;
+    for (let i = 0; i < currentWord.length; i++) {
+      if (currentWord[i] !== word[i]) diffCount++;
+      if (diffCount > 1) {
+        showFeedback('Only one letter can be changed at a time', 'error');
+        return false;
+      }
+    }
+
+    let isValid = false;
+    if (wordCache.has(word.toLowerCase())) {
+      isValid = wordCache.get(word.toLowerCase())!;
+    } else {
+      try {
+        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`);
+        isValid = response.ok;
+        setWordCache(prev => new Map(prev).set(word.toLowerCase(), isValid));
+      } catch (error) {
+        isValid = wordLists[word.length as keyof typeof wordLists]?.includes(word.toUpperCase()) || false;
+        setWordCache(prev => new Map(prev).set(word.toLowerCase(), isValid));
+      }
+    }
+
+    if (!isValid) {
+      showFeedback('Not a valid English word', 'error');
+      return false;
+    }
+
+    return true;
+  };
+
+  const provideHint = () => {
+    if (!gameActive || hintsUsed >= config.maxHints) {
+        showFeedback('No more hints available', 'error');
+        return;
+    }
+
+    // Find current position in solution path
+    const currentIndex = currentSolutionPath.findIndex(word => 
+        word === currentWord || countMatchingLetters(word, currentWord) >= currentWord.length - 1
+    );
+
+    if (currentIndex === -1 || currentIndex >= currentSolutionPath.length - 1) {
+        showFeedback('No hints available for this step', 'error');
+        return;
+    }
+
+    const nextWord = currentSolutionPath[currentIndex + 1];
+    let changeIndex = -1;
+    
+    // Find which letter changes
+    for (let i = 0; i < currentWord.length; i++) {
+        if (currentWord[i] !== nextWord[i]) {
+        changeIndex = i;
+        break;
+        }
+    }
+
+    setHintsUsed(prev => prev + 1);
+    
+    if (changeIndex !== -1) {
+        setSelectedLetterIndex(changeIndex);
+        showFeedback(
+        `Change ${ordinal(changeIndex + 1)} letter to ${nextWord[changeIndex]} (→ ${nextWord})`, 
+        'info'
+        );
+    } else {
+        showFeedback(`Next step: ${nextWord}`, 'info');
+    }
+  };
+
+  const countMatchingLetters = (word1: string, word2: string) => {
+    let count = 0;
+    for (let i = 0; i < word1.length; i++) {
+        if (word1[i] === word2[i]) count++;
+    }
+    return count;
+  };
+
+  const ordinal = (n: number) => {
+    const s = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  };
+
+  const showConfetti = (options = {}) => {
+    const defaults = {
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
+    };
+
+    confetti({
+      ...defaults,
+      ...options
+    });
+  };
+
+  const handleGameWin = () => {
+    const newConsecutiveWins = gameState.consecutiveWins + 1;
+    let newDifficulty = gameState.difficulty;
+    let levelUp = false;
+    let victoryMessage = '';
+
+    if (newConsecutiveWins >= 3) {
+      if (gameState.difficulty === 'easy') {
+        newDifficulty = 'medium';
+        levelUp = true;
+        victoryMessage = `🎉 Advanced to Medium level! 🎉`;
+      } else if (gameState.difficulty === 'medium') {
+        newDifficulty = 'hard';
+        levelUp = true;
+        victoryMessage = `🎉 Advanced to Hard level! 🎉`;
+      } else {
+        victoryMessage = `🎉 Mastered Hard level! Continuing at max difficulty. 🎉`;
+      }
+    } else {
+      victoryMessage = `🎉 Level ${gameState.currentLevel} Complete! 🎉`;
+    }
+
+    showConfetti();
+    showFeedback(victoryMessage, 'success');
+
+    setTimeout(() => {
+      setGameState(prev => ({
+        difficulty: levelUp ? newDifficulty : prev.difficulty,
+        consecutiveWins: levelUp ? 0 : newConsecutiveWins,
+        currentLevel: levelUp ? prev.currentLevel : prev.currentLevel + 1
+      }));
+      saveGameState();
+      initGame();
+    }, 3000);
+  };
+
+  const playSound = (type: string) => {
+    if (isMuted) return;
+    const sounds: Record<string, string> = {
+      select: '/sounds/click.mp3',
+      found: '/sounds/correct.mp3',
+      error: '/sounds/incorrect.mp3',
+      win: '/sounds/win.mp3'
+    };
+    try {
+      const audio = new Audio(sounds[type]);
+      audio.play().catch(err => console.error(`Error playing ${type} sound:`, err));
+    } catch (error) {
+      console.error('Sound error:', error);
+    }
+  };
+
+  // Update renders when state changes
+  useEffect(() => {
+    renderCurrentWord();
+    renderLetterTiles();
+    renderWordList();
+  }, [currentWord, selectedLetterIndex, ladderWords]);
+
+  return (
+    <div className="word-ladder-game max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <div className="game-header flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Word Ladder Game</h1>
+          <div className="text-gray-600">
+            Level: {gameState.currentLevel} ({gameState.difficulty})
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full timer-value">
+            ⏱️ {updateTimer()}
+          </div>
+          <div className="font-bold text-blue-600">
+            Score: {score}
+          </div>
+        </div>
+      </div>
+
+      <div className="word-display">
+        <div className="start-end-words">
+          <span>{startWord}</span>
+          <span>→</span>
+          <span>{endWord}</span>
+        </div>
+        <div ref={currentWordRef} className="current-word"></div>
+        <div ref={letterTilesRef} className="letter-tiles"></div>
+      </div>
+
+      <div ref={feedbackRef} className={`feedback ${feedback.type}`}>
+        {feedback.message}
+      </div>
+
+      <div className="word-list-container">
+        <h3>Word Ladder:</h3>
+        <ul ref={wordListRef} className="word-list"></ul>
+      </div>
+
+      <div className="game-controls">
+        <button onClick={initGame} className="new-game-button">
+          New Game
+        </button>
+        <button onClick={provideHint} className="hint-button">
+          Hint ({config.maxHints - hintsUsed} left)
+        </button>
+      </div>
+    </div>
+  );
+}

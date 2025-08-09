@@ -1,0 +1,364 @@
+.postContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.postHeader {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.postTitle {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.postDate {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.postContent {
+  line-height: 1.7;
+}
+
+.postContent p {
+  margin-bottom: 1.25rem;
+}
+
+.postContent ul, .postContent ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.postContent li {
+  margin-bottom: 0.75rem;
+}
+
+/* Blog container */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Blog grid/list styles */
+.blogGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+/* Post preview/card styles */
+.postPreview, .blogCard {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+}
+
+.blogCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.blogCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.blogCard img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Content styles */
+.cardContent, .postContainer {
+  padding: 1.5rem;
+}
+
+.postTitle {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.postDate, .date {
+  color: #666;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.postExcerpt, .excerpt {
+  color: #333;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding: 1rem 0;
+}
+
+.paginationLink {
+  padding: 0.5rem 1rem;
+  background: #0066cc;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.paginationLink:hover {
+  background: #004499;
+}
+
+.pageInfo {
+  color: #666;
+}
+
+/* Single post page styles */
+.postContainer {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem 1rem;
+}
+
+.postContent {
+  line-height: 1.7;
+  margin: 2rem 0;
+}
+
+.postContent h1, 
+.postContent h2, 
+.postContent h3 {
+  margin: 1.5rem 0 1rem;
+}
+
+.postContent p {
+  margin-bottom: 1.25rem;
+}
+
+.postContent ul, 
+.postContent ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.postContent li {
+  margin-bottom: 0.5rem;
+}
+
+/* Links */
+.readMore, .backLink {
+  display: inline-block;
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.readMore:hover, .backLink:hover {
+  color: #004499;
+  text-decoration: underline;
+}
+
+.backLink {
+  margin-top: 2rem;
+}
+
+/* Trivia Bank Specific Styles */
+.tbank-navigation {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.search-filter {
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.alphabet-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.alpha-btn {
+  padding: 0.5rem;
+  min-width: 2.5rem;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.alpha-btn.active {
+  background: #0066cc;
+  color: white;
+  border-color: #0066cc;
+}
+
+.filter-criteria {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background: #f0f8ff;
+  border-radius: 4px;
+  display: none;
+}
+
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.tag {
+  background-color: #e0e0e0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+.blog-preview {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Answer Toggle Button - Keep this */
+.answerToggleBtn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  text-decoration: none;
+}
+
+.answerToggleBtn:hover {
+  background-color: #45a049;
+}
+
+.answerToggleBtn.active {
+  background-color: #f44336;
+}
+
+.answerToggleBtn.active:hover {
+  background-color: #d32f2f;
+}
+
+/* Answer styles - Only keep this single declaration */
+.answer {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 8px;
+  border-left: 3px solid #4CAF50;
+  display: block; /* Force display when rendered */
+}
+
+/* Level styles */
+.level-easy { color: #2e7d32; }
+.level-medium { color: #ed6c02; }
+.level-hard { color: #d32f2f; }
+
+/* Trivia Bank Grid Layout */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.blog-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.blog-card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+}
+
+.blog-card .post-excerpt {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.read-more {
+  display: inline-block;
+  color: #0066cc;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.read-more:hover {
+  color: #004499;
+  text-decoration: underline;
+}
+
+/* Level Styling */
+.level {
+  margin-bottom: 2.5rem;
+}
+
+.level-easy h2 {
+  color: #2e7d32;
+  border-bottom: 2px solid #2e7d32;
+  padding-bottom: 0.5rem;
+}
+
+.level-medium h2 {
+  color: #ed6c02;
+  border-bottom: 2px solid #ed6c02;
+  padding-bottom: 0.5rem;
+}
+
+.level-hard h2 {
+  color: #d32f2f;
+  border-bottom: 2px solid #d32f2f;
+  padding-bottom: 0.5rem;
+}

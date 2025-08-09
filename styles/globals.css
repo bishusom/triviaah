@@ -1,0 +1,1244 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Quiz option base style */
+  .quiz-option {
+    @apply relative overflow-hidden p-6 mb-4 text-left rounded-xl;
+    @apply bg-white/80 backdrop-blur-sm border border-gray-200/50;
+    @apply transition-all duration-300 ease-out;
+    @apply shadow-sm hover:shadow-md;
+    @apply hover:border-blue-400 hover:bg-white;
+    @apply cursor-pointer;
+  }
+
+  .quiz-option::before {
+    content: '';
+    @apply absolute left-0 top-0 h-full w-1 bg-transparent;
+    @apply transition-all duration-300;
+  }
+
+  .quiz-option:hover::before {
+    @apply bg-blue-400;
+  }
+
+  /* Correct answer */
+  .correct-answer {
+    @apply bg-green-50 border-green-400 text-green-800;
+    @apply shadow-green-100 shadow-inner;
+  }
+
+  /* Incorrect answer */
+  .incorrect-answer {
+    @apply bg-red-50 border-red-300 text-red-800;
+  }
+
+  /* Selected state */
+  .selected-option {
+    @apply border-blue-400 bg-blue-50/50;
+    @apply shadow-blue-500/10;
+    @apply ring-2 ring-blue-200;
+  }
+  /* Feedback icon */
+  .feedback-icon {
+    @apply ml-2 inline-block;
+  }
+}
+
+/* Animation (outside layer) */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(5px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.feedback-animate {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Timer styling */
+.timer {
+  @apply bg-blue-100 text-blue-800 px-3 py-1 rounded-full;
+}
+
+/* Titbit styling */
+.titbit-box {
+  @apply bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4;
+  @apply text-yellow-800;
+}
+
+/* Summary screen */
+.summary-screen {
+  @apply max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md text-center;
+}
+
+.score-display {
+  @apply text-4xl font-bold text-blue-600 mb-6;
+}
+
+.daily-quiz-card {
+  aspect-ratio: 1/1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Trivia Catalog Styles */
+.quiz-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+
+
+@layer components {
+    categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .category-card {
+    @apply relative overflow-hidden rounded-2xl p-6;
+    @apply bg-white/80 backdrop-blur-md border border-white/20;
+    @apply shadow-lg hover:shadow-xl transition-all duration-300;
+    @apply transform hover:-translate-y-2;
+    @apply before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/30 before:to-transparent before:opacity-0 before:transition-opacity before:duration-300;
+  }
+
+  .category-card:hover {
+    @apply before:opacity-100;
+  }
+
+  .category-card:hover .category-image {
+    transform: scale(1.05);
+  }
+
+  .category-image {
+    @apply w-full h-32 object-cover rounded-xl mb-4 transition-transform duration-500;
+    @apply shadow-md;
+  }
+
+  .category-card span {
+    font-weight: 600;
+    color: #2d3748;
+    text-align: center;
+  }
+  /* Category card container */
+  .category-image-container {
+    @apply relative h-32 w-full overflow-hidden rounded-xl;
+  }
+
+  .placeholder-image {
+    @apply absolute inset-0 flex items-center justify-center bg-gray-200;
+  }
+
+  .placeholder-image span {
+    @apply text-gray-500 text-lg font-medium;
+  }
+
+  /* Category content */
+  .category-content {
+    @apply p-4;
+  }
+
+  .category-title {
+    @apply font-bold text-lg mb-1 text-gray-800 group-hover:text-blue-600 transition-colors;
+  }
+
+  .category-description {
+    @apply text-sm text-gray-600 line-clamp-2;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+  
+  .category-card {
+    padding: 1rem;
+  }
+  
+  .category-image {
+    height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quiz-container {
+    padding: 1rem;
+  }
+  
+  .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .category-card span {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Make the header more compact */
+  .quiz-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  /* Stack the attributes and timer/score vertically */
+  .quiz-header > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Make attributes single line with wrapping */
+  .quiz-attributes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Adjust the question counter */
+  .question-counter {
+    margin-top: 0.5rem;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+/* Scramble game Styles */
+.letter-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.victory-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 1000;
+  text-align: center;
+  padding: 2rem;
+}
+
+.victory-screen h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.victory-screen p {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.countdown {
+  font-size: 1.25rem;
+  margin-top: 2rem;
+}
+
+/*Spelling Bee Styles */
+.hexagon-container {
+  position: relative;
+  width: 60px;
+  height: 70px;
+  margin: 0 1px;
+}
+
+.hexagon {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.hexagon-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  z-index: 2;
+}
+
+/* Hexagon grid layout */
+.hex-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.hex-row {
+  display: flex;
+}
+
+.hex-row-top {
+  margin-bottom: -13px;
+}
+
+.hex-row-bottom {
+  margin-top: -13px;
+}
+
+/* Boggle Game Specific Styles */
+.word-game-card {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(70, 23, 143, 0.3);
+  /*background-image: url('/imgs/word-game-bg.webp');*/
+}
+
+.word-game-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.word-game-header h2 {
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.word-game-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--accent);
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+
+.word-game-meta span {
+  white-space: nowrap;
+}
+
+.word-game-body {
+  margin: 1rem 0;
+}
+
+.boggle-grid {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0 auto 1.5rem;
+  position: relative;
+}
+
+.boggle-grid.easy {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.boggle-grid.medium, .boggle-grid.hard {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.boggle-cell {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  border: none;
+  padding: 0;
+}
+
+.boggle-cell:hover {
+  background-color: #e5e7eb;
+}
+
+.boggle-cell.selected {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.boggle-cell.highlight {
+  box-shadow: 0 0 0 2px #a5b4fc;
+}
+
+.boggle-cell.found {
+  background-color: #10b981;
+  color: white;
+}
+
+.boggle-found-words {
+  margin-top: 1.5rem;
+}
+
+.boggle-found-words h3 {
+  margin-bottom: 0.5rem;
+}
+
+.boggle-found-words ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.boggle-found-words li {
+  background-color: #e0e7ff;
+  color: #4f46e5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+/* Selection line styles */
+.selection-line {
+  position: absolute;
+  height: 3px;
+  background-color: rgba(79, 70, 229, 0.7); /* Match JS color */
+  transform-origin: left center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.word-game-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  @apply relative overflow-hidden px-6 py-3 rounded-xl font-medium;
+  @apply transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)];
+  @apply shadow-md hover:shadow-lg focus:outline-none;
+  @apply transform hover:-translate-y-0.5 active:translate-y-0;
+  @apply border-2 border-transparent;
+}
+
+.btn.primary {
+  @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white;
+  @apply hover:from-blue-600 hover:to-blue-700;
+  @apply focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50;
+  @apply shadow-blue-500/20;
+}
+
+.btn.secondary {
+  @apply bg-white text-blue-600 border-blue-500;
+  @apply hover:bg-blue-50 hover:border-blue-600;
+  @apply focus:ring-2 focus:ring-blue-200;
+}
+
+.btn.secondary:hover {
+  background-color: #4338ca;
+}
+
+/* Add a "shine" effect on hover */
+.btn::after {
+  content: '';
+  @apply absolute top-0 left-0 w-full h-full;
+  @apply bg-gradient-to-r from-white/20 to-transparent;
+  @apply opacity-0 transition-opacity duration-300;
+  transform: translateX(-100%);
+}
+
+.btn:hover::after {
+  @apply opacity-100;
+  transform: translateX(100%);
+  transition: transform 0.6s ease, opacity 0.3s ease;
+}
+
+/* Fancy tertiary button */
+.btn.tertiary {
+  @apply bg-gradient-to-r from-purple-500 to-pink-500 text-white;
+  @apply hover:from-purple-600 hover:to-pink-600;
+  @apply shadow-purple-500/20;
+}
+
+/* Danger button with pulse animation */
+.btn.danger {
+  @apply bg-gradient-to-r from-red-500 to-rose-500 text-white;
+  @apply hover:from-red-600 hover:to-rose-600;
+  @apply shadow-red-500/20;
+}
+
+.btn.danger:hover {
+  animation: pulse 1.5s infinite;
+}
+
+.btn.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+}
+
+.word-feedback {
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  min-height: 20px;
+}
+
+.word-feedback.info {
+  background: #e6f0fa;
+  color: #4fc3f7;
+}
+
+.word-feedback.success {
+  background: #e6ffe6;
+  color: #2e7d32;
+}
+
+.word-feedback.error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+@media (max-width: 768px) {
+  .boggle-cell {
+    font-size: 1rem;
+  }
+  
+  .word-game-meta {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .boggle-cell {
+    font-size: 0.9rem;
+  }
+  
+  .word-game-footer {
+    flex-direction: column;
+  }
+  
+  .word-game-footer .btn {
+    width: 100%;
+  }
+}
+
+/* Word Search Grid */
+.wordsearch-grid {
+  @apply border-2 border-gray-300 bg-gray-100 rounded-md mx-auto;
+  display: grid;
+  overflow: hidden;
+}
+
+/* Word Search Cell */
+.wordsearch-cell {
+  @apply flex items-center justify-center cursor-pointer select-none;
+  @apply bg-white hover:bg-gray-50;
+  @apply transition-all duration-200;
+  touch-action: none; /* Prevent default touch behaviors */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+/* Mobile-specific styles */
+@media (max-width: 640px) {
+  .wordsearch-grid {
+    @apply border-2 border-gray-300;
+    max-width: 100vw; /* Ensure grid doesn't exceed viewport width */
+    padding: 4px; /* Add slight padding for better appearance */
+  }
+
+  .wordsearch-cell {
+    @apply text-base; /* Increase font size for readability */
+    min-width: 28px; /* Match minCellSize from TS */
+    min-height: 28px;
+    line-height: 1; /* Ensure text is vertically centered */
+  }
+
+  /* Adjust grid for larger difficulties to prevent overflow */
+  .wordsearch-grid[style*="repeat(15"] .wordsearch-cell,
+  .wordsearch-grid[style*="repeat(20"] .wordsearch-cell {
+    min-width: 24px; /* Slightly smaller for larger grids to fit on screen */
+    min-height: 24px;
+    font-size: 0.9rem; /* Adjust font size for larger grids */
+  }
+
+  .word-game-card {
+    @apply p-3; /* Reduced padding for more screen space */
+  }
+
+  .word-game-meta {
+    @apply flex-col gap-1;
+  }
+}
+
+
+/* Word Ladder Game Styles */
+.word-ladder-game {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.level-display, .score-display, .timer-display {
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.word-display {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.start-end-words {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.current-word {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 15px 0;
+}
+
+.letter-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #e9ecef;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.letter-tile.selected {
+  background-color: #4dabf7;
+  color: white;
+  transform: scale(1.1);
+}
+
+.letter-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.feedback {
+  padding: 10px;
+  border-radius: 5px;
+  margin: 15px 0;
+  text-align: center;
+}
+
+.feedback.success {
+  background-color: #d3f9d8;
+  color: #2b8a3e;
+}
+
+.feedback.error {
+  background-color: #ffc9c9;
+  color: #c92a2a;
+}
+
+.feedback.info {
+  background-color: #d0ebff;
+  color: #1864ab;
+}
+
+.word-list-container {
+  margin: 20px 0;
+}
+
+.word-list {
+  list-style-type: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.word-list li {
+  padding: 5px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.word-list li:last-child {
+  border-bottom: none;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.new-game-button, .hint-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.new-game-button {
+  background-color: #40c057;
+  color: white;
+}
+
+.new-game-button:hover {
+  background-color: #37b24d;
+}
+
+.hint-button {
+  background-color: #4dabf7;
+  color: white;
+}
+
+.hint-button:hover {
+  background-color: #339af0;
+}
+
+.mute-button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Victory screen styles */
+.victory-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  z-index: 1000;
+  text-align: center;
+}
+
+.victory-screen h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.victory-screen p {
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+/* Number Scramble Game Styles */
+.scramble-game {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.timer-value {
+  font-size: 1.1rem;
+  font-weight: bold;
+  background-color: #f3f4f6;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.timer-value.time-critical {
+  color: #e03131;
+  animation: pulse 1s infinite;
+  background-color: #ffebee;
+}
+
+.mute-button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+  color: #495057;
+}
+.scramble-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: #e9ecef;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+
+.scramble-tile:hover:not(.used) {
+  background-color: #d0ebff;
+  border-color: #4dabf7;
+}
+
+.scramble-tile.used {
+  background-color: #f1f3f5;
+  color: #adb5bd;
+  cursor: not-allowed;
+}
+
+.timer-value {
+  font-weight: bold;
+  color: #495057;
+}
+
+.timer-value.time-critical {
+  color: #e03131;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.scramble-expression {
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  margin-bottom: 16px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.feedback {
+  transition: opacity 0.3s ease;
+}
+
+.feedback.hidden {
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.feedback-success {
+  background-color: #d3f9d8;
+  color: #2b8a3e;
+}
+
+.feedback-error {
+  background-color: #ffc9c9;
+  color: #c92a2a;
+}
+
+.feedback-info {
+  background-color: #d0ebff;
+  color: #1864ab;
+}
+
+.feedback-hint {
+  background-color: #fff3bf;
+  color: #5f3dc4;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn.primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn.secondary {
+  @apply bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500;
+}
+
+.btn.tertiary {
+  @apply bg-yellow-500 text-gray-800 hover:bg-yellow-600 focus:ring-yellow-500;
+}
+
+.btn.danger {
+  @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+}
+
+.btn.icon {
+  @apply p-2 rounded-full;
+}
+
+.game-controls {
+  @apply flex justify-center gap-4 mt-6;
+}
+
+.new-game-button {
+  @apply btn primary;
+}
+
+.hint-button {
+  @apply btn secondary;
+}
+
+.mute-button {
+  @apply btn icon;
+  background: none;
+  border: none;
+  color: inherit;
+}
+
+.difficulty-easy {
+  color: #2b8a3e;
+}
+
+.difficulty-medium {
+  color: #d9480f;
+}
+
+.difficulty-hard {
+  color: #c92a2a;
+}
+
+.difficulty-expert {
+  color: #5f3dc4;
+}
+
+/* Prime Hunter Styles */
+.hunter-grid {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1rem auto;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+.hunter-cell {
+  @apply flex items-center justify-center;
+  @apply text-lg font-bold rounded-lg;
+  @apply bg-white border border-gray-200;
+  @apply transition-all cursor-pointer;
+  aspect-ratio: 1;
+  width: 100%;
+  min-width: unset;
+  max-width: 100%;
+  font-size: clamp(1rem, 4vw, 1.5rem);
+}
+
+.hunter-cell:hover:not(:disabled) {
+  @apply bg-gray-50 border-blue-400;
+}
+
+.hunter-cell.prime {
+  @apply bg-green-100 border-green-400;
+}
+
+.hunter-cell.revealed-prime {
+  @apply bg-green-100 border-green-400;
+}
+
+.hunter-cell.correct-prime {
+  @apply bg-green-100 border-green-400;
+}
+
+.hunter-cell.wrong-selection {
+  @apply bg-red-100 border-red-400;
+}
+
+.hunter-cell:disabled {
+  @apply cursor-not-allowed opacity-70;
+}
+
+.hunter-cell:disabled {
+  @apply cursor-not-allowed opacity-70;
+}
+
+.hunter-feedback {
+  @apply p-3 rounded-lg text-center font-medium;
+}
+
+.hunter-feedback.success {
+  @apply bg-green-100 text-green-800 border border-green-200;
+}
+
+.hunter-feedback.error {
+  @apply bg-red-100 text-red-800 border border-red-200;
+}
+
+.hunter-feedback.info {
+  @apply bg-blue-100 text-blue-800 border border-blue-200;
+}
+
+.progress-fill {
+  @apply bg-blue-600;
+}
+
+.game-header {
+  @apply flex justify-between items-center;
+  @apply py-2 border-b border-gray-200;
+}
+
+.timer-value {
+  @apply font-bold;
+}
+
+.timer-value.time-critical {
+  @apply text-red-600 animate-pulse;
+}
+
+@media (min-width: 768px) {
+  .hunter-grid {
+    max-width: 600px;
+    gap: 0.75rem;
+  }
+  
+  .hunter-cell {
+    @apply h-16 text-xl;
+  }
+}
+
+@media (max-width: 640px) {
+  .hunter-grid {
+    gap: 0.25rem;
+    padding: 0 0.25rem;
+  }
+  
+  .hunter-cell {
+    font-size: clamp(0.8rem, 3.5vw, 1.2rem);
+    padding: 0.1rem;
+  }
+}
+
+
+@media (max-width: 640px) {
+  .hunter-grid[style*="repeat(6"] {
+    max-width: calc(100vw - 1rem);
+    overflow-x: hidden;
+  }
+  
+  .hunter-grid[style*="repeat(6"] .hunter-cell {
+    min-width: 0;
+    padding: 0.1rem;
+  }
+}
+
+/* Number Sequence Game Styles */
+.sequence-game {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.sequence-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sequence-number {
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  min-width: 60px;
+  text-align: center;
+}
+
+.sequence-number.missing {
+  background-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn.correct {
+  background-color: #10b981;
+}
+
+.btn.wrong {
+  background-color: #ef4444;
+}
+
+.btn-hint {
+  background-color: #8b5cf6;
+}
+
+.btn-hint:hover {
+  background-color: #7c3aed;
+}
+
+.btn-new {
+  background-color: #f59e0b;
+}
+
+.btn-new:hover {
+  background-color: #d97706;
+}
+
+.btn-mute {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.hint-text {
+  font-style: italic;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border-left: 4px solid #8b5cf6;
+}
+
+/* Sudoku specific styles */
+.sudoku-grid {
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.sudoku-cell {
+  transition: all 0.2s;
+}
+
+.number-selector {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.feedback {
+  @apply p-3 rounded-lg text-center font-medium;
+}
+
+.feedback-success {
+  @apply bg-green-100 text-green-800 border border-green-200;
+}
+
+.feedback-error {
+  @apply bg-red-100 text-red-800 border border-red-200;
+}
+
+.feedback-info {
+  @apply bg-blue-100 text-blue-800 border border-blue-200;
+}
+
+/* Reuse existing button styles */
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn.primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn.secondary {
+  @apply bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500;
+}
+
+.btn.tertiary {
+  @apply bg-yellow-500 text-gray-800 hover:bg-yellow-600 focus:ring-yellow-500;
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb-container {
+  @apply bg-blue-600 text-white py-2 px-4 shadow-md;
+}
+
+.breadcrumb-item {
+  @apply transition-colors duration-200;
+}
+
+.breadcrumb-separator {
+  @apply mx-2 text-blue-200;
+}
+
+.breadcrumb-current {
+  @apply font-semibold text-blue-100;
+}

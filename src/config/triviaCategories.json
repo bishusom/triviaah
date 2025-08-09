@@ -1,0 +1,162 @@
+{
+  "literature": {
+    "title": "Literature",
+    "description": "Questions about famous books, authors, and literary works.",
+    "related": ["famous-quotes"],
+    "keywords": ["books", "authors", "novels"],
+    "ogImage": "/imgs/literature.webp",
+    "displayName": "Literature"
+  },
+  "arts": {
+    "title": "Arts",
+    "description": "Test your knowledge of visual arts, painting, and sculpture.",
+    "related": ["literature", "fashion", "arts"],
+    "keywords": ["art", "painting", "sculpture"],
+    "ogImage": "/imgs/arts.webp",
+    "displayName": "Arts"
+  },
+  "animals": {
+    "title": "Animals",
+    "description": "Questions about wildlife, mammals, birds, and marine life.",
+    "related": ["science", "geography"],
+    "keywords": ["animals", "wildlife", "biology"],
+    "ogImage": "/imgs/animals.webp",
+    "displayName": "Animals"
+  },
+  "science": {
+    "title": "Science",
+    "description": "Test your knowledge of physics, chemistry, and biology.",
+    "related": ["animals", "technology", "geography"],
+    "keywords": ["science", "physics", "chemistry"],
+    "ogImage": "/imgs/science-rect.webp",
+    "displayName": "Science"
+  },
+  "history": {
+    "title": "History",
+    "description": "Questions about historical events, figures, and civilizations.",
+    "related": ["famous-quotes","literature","arts"],
+    "keywords": ["history", "historical events", "ancient"],
+    "ogImage": "/imgs/history-rect.webp",
+    "displayName": "History"
+  },
+  "geography": {
+    "title": "Geography",
+    "description": "Test your knowledge of countries, capitals, and landmarks.",
+    "related": ["science", "animals"],
+    "keywords": ["geography", "countries", "maps"],
+    "ogImage": "/imgs/geography-rect.webp",
+    "displayName": "Geography"
+  },
+  "movies": {
+    "title": "Movies",
+    "description": "Questions about films, actors, and cinema history.",
+    "related": ["tv", "celebrities"],
+    "keywords": ["movies", "films", "hollywood"],
+    "ogImage": "/imgs/movies.webp",
+    "displayName": "Movies"
+  },
+  "tv": {
+    "title": "TV/Web Series",
+    "description": "Test your knowledge of television shows and web series.",
+    "related": ["movies", "celebrities"],
+    "keywords": ["tv", "television", "series"],
+    "ogImage": "/imgs/tv.webp",
+    "displayName": "TV/Web Series"
+  },
+  "music": {
+    "title": "Music",
+    "description": "Questions about songs, artists, and music history.",
+    "related": ["celebrities"],
+    "keywords": ["music", "songs", "artists"],
+    "ogImage": "/imgs/music.webp",
+    "displayName": "Music"
+  },
+  "celebrities": {
+    "title": "Celebrities",
+    "description": "Test your knowledge of famous personalities.",
+    "related": ["movie", "music", "tv"],
+    "keywords": ["celebrities", "movies", "tv"],
+    "ogImage": "/imgs/celebrities.webp",
+    "displayName": "Celebrities"
+  },
+  "philosophy": {
+    "title": "Philosophy",
+    "description": "Questions about philosophers, school of thoughts, and rationality.",
+    "related": ["history"],
+    "keywords": ["philosophy", "thought", "history"],
+    "ogImage": "/imgs/philosophy.webp",
+    "displayName": "Philosophy"
+  },
+  "food": {
+    "title": "Food",
+    "description": "Test your knowledge of cuisines, dishes, and culinary arts.",
+    "related": [],
+    "keywords": ["food", "cuisine", "cooking"],
+    "ogImage": "/imgs/food.webp",
+    "displayName": "Food"
+  },
+  "sports": {
+    "title": "Sports",
+    "description": "Questions about athletes, teams, and sporting events.",
+    "related": ["celebrities","board-games","video-games"],
+    "keywords": ["sports", "athletes", "games"],
+    "ogImage": "/imgs/sports-rect.webp",
+    "displayName": "Sports"
+  },
+  "fashion": {
+    "title": "Fashion",
+    "description": "Test your knowledge of fashion trends and designers.",
+    "related": ["celebrities"],
+    "keywords": ["fashion", "designers", "style"],
+    "ogImage": "/imgs/fashion.webp",
+    "displayName": "Fashion"
+  },
+  "festivals": {
+    "title": "Festivals",
+    "description": "Questions about cultural and religious festivals worldwide.",
+    "related": ["geography"],
+    "keywords": ["festivals", "celebrations", "holidays"],
+    "ogImage": "/imgs/festivals.webp",
+    "displayName": "Festivals"
+  },
+  "business": {
+    "title": "Business",
+    "description": "Test your knowledge of companies, brands, and economics.",
+    "related": [],
+    "keywords": ["business", "companies", "economics"],
+    "ogImage": "/imgs/business.webp",
+    "displayName": "Business"
+  },
+  "board-games": {
+    "title": "Board Games",
+    "description": "Questions about classic and modern board games.",
+    "related": ["video-games","sports"],
+    "keywords": ["board games", "tabletop games"],
+    "ogImage": "/imgs/board-games.webp",
+    "displayName": "Board Games"
+  },
+  "video-games": {
+    "title": "Video Games",
+    "description": "Test your knowledge of video games and gaming culture.",
+    "related": ["board-games","sports"],
+    "keywords": ["video games", "gaming", "esports"],
+    "ogImage": "/imgs/video-games.webp",
+    "displayName": "Video Games"
+  },
+  "mythology": {
+    "title": "Mythology",
+    "description": "Questions about myths, legends, and folklore.",
+    "related": ["history"],
+    "keywords": ["mythology", "legends", "folklore"],
+    "ogImage": "/imgs/mythology.webp",
+    "displayName": "Mythology"
+  },
+   "famous-quotes": {
+    "title": "Famous Quotes",
+    "description": "Test your knowledge of iconic quotes from history, movies, and literature.",
+    "related": ["movies", "literature", "history","celebrities"],
+    "keywords": ["famous quotes", "movie lines", "literary quotes"],
+    "ogImage": "/imgs/famous-quotes.webp",
+    "displayName": "Famous Quotes"
+  }
+}
