@@ -136,7 +136,7 @@ async function generateImage(score: string, correct: string, total: string, cate
   // Website link
   ctx.font = footerFont;
   ctx.fillStyle = '#e5e7eb';
-  ctx.fillText('Play more at www.triviaah.com', width / 2, textStartY + 350);
+  ctx.fillText('Play more at www.triviaah.com', width / 2, textStartY + 330);
 
   return canvas.toBuffer('image/png');
 }

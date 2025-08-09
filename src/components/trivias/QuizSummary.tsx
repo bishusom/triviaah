@@ -170,29 +170,19 @@ export default function QuizSummary({
 
   const shareOnSocial = async (platform: string, result: QuizResult) => {
     const formattedCategory = formatCategory(result.category);
-    const shareUrl = `${window.location.origin}/trivia-result?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${encodeURIComponent(formattedCategory)}&time=${result.timeUsed}`;
+    const shareUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${formattedCategory}&time=${result.timeUsed}`;
     const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me?`;
 
     switch(platform) {
-      case 'facebook':
-        // Always use web URL for sharing - Facebook will handle mobile detection
-        window.open(
-          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
-          '_blank',
-          'width=600,height=400'
-        );
+      case 'facebook':    
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`, '_blank');
         break;
       case 'twitter':
         window.open(
-          `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, 
-          '_blank'
-        );
-        break;
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+      break;
       case 'whatsapp':
-        window.open(
-          `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, 
-          '_blank'
-        );
+        window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
         break;
     }
   };
