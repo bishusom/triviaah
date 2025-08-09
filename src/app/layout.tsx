@@ -1,13 +1,12 @@
 // app/layout.tsx
 import { AdBanner } from '@/components/Ads';
+import Script from 'next/script';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/../styles/globals.css";
 import { SoundProvider } from './context/SoundContext';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav';
 import { GoogleAnalytics } from '@next/third-parties/google';
-
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,11 +30,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet"
-        precedence="default"
-      />
+      <head>
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet"
+          precedence="default"
+        />
+        <Script
+          id="adsense-script"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164"
+        />
+      </head>
       <body className="antialiased">
         <SoundProvider>
           <div className="min-h-screen flex flex-col">

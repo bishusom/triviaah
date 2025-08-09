@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { MdInfo, MdEmail } from 'react-icons/md';
 import { FaCheckCircle } from 'react-icons/fa';
 import Image from 'next/image';
+import AdInit from '@/components/AdInit';
 
 export default function Home() {
   const [playedQuizzes, setPlayedQuizzes] = useState<Record<string, { played: boolean; timestamp: number }>>({})
@@ -152,6 +153,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      <AdInit /> {/* Add this near the top */}
       <header className="bg-blue-700 text-white py-4 px-4">
         <div className="container mx-auto flex items-center justify-center gap-4">
           <div className="flex items-center">
