@@ -36,12 +36,7 @@ export default function RootLayout({
           rel="stylesheet"
           precedence="default"
         />
-        <Script
-          id="adsense-script"
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164"
-        />
+
       </head>
       <body className="antialiased">
         <SoundProvider>
