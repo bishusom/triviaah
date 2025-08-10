@@ -168,106 +168,22 @@ export default function QuizSummary({
     }
   };
 
-  // Enhanced sharing function with mobile detection and fallbacks
   const shareOnSocial = async (platform: string, result: QuizResult) => {
     const formattedCategory = formatCategory(result.category);
-    
-    // Create a dedicated share page URL that contains proper Open Graph meta tags
-    const sharePageUrl = `${window.location.origin}/share/${result.category}/${result.score}/${result.correctCount}/${result.totalQuestions}/${result.timeUsed}`;
+    const shareUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${formattedCategory}&time=${result.timeUsed}`;
     const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me?`;
 
-    // Mobile detection
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
     switch(platform) {
-      case 'facebook':
-        if (isMobile) {
-          // For mobile, try the app URL scheme first, then fallback to web
-          const fbAppUrl = `fb://facewebmodal/f?href=${encodeURIComponent(sharePageUrl)}`;
-          const fbWebUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePageUrl)}&quote=${encodeURIComponent(shareText)}`;
-          
-          // Try to open Facebook app, fallback to web if it fails
-          try {
-            window.location.href = fbAppUrl;
-            // If app doesn't open within 2 seconds, redirect to web version
-            setTimeout(() => {
-              if (document.hasFocus()) {
-                window.open(fbWebUrl, '_blank');
-              }
-            }, 2000);
-          } catch {
-            window.open(fbWebUrl, '_blank');
-          }
-        } else {
-          // Desktop version with Facebook Share Dialog API
-          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePageUrl)}&quote=${encodeURIComponent(shareText)}`, '_blank', 'width=600,height=400');
-        }
+      case 'facebook':    
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`, '_blank');
         break;
-        
       case 'twitter':
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(sharePageUrl)}`;
-        if (isMobile) {
-          // Try Twitter app first
-          const twitterAppUrl = `twitter://post?message=${encodeURIComponent(shareText + ' ' + sharePageUrl)}`;
-          try {
-            window.location.href = twitterAppUrl;
-            setTimeout(() => {
-              if (document.hasFocus()) {
-                window.open(twitterUrl, '_blank');
-              }
-            }, 2000);
-          } catch {
-            window.open(twitterUrl, '_blank');
-          }
-        } else {
-          window.open(twitterUrl, '_blank', 'width=600,height=400');
-        }
-        break;
-        
+        window.open(
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+      break;
       case 'whatsapp':
-        const whatsappText = `${shareText} ${sharePageUrl}`;
-        if (isMobile) {
-          window.open(`whatsapp://send?text=${encodeURIComponent(whatsappText)}`);
-        } else {
-          window.open(`https://wa.me/?text=${encodeURIComponent(whatsappText)}`, '_blank');
-        }
+        window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
         break;
-
-      case 'native':
-        // Use Web Share API if available (mainly mobile browsers)
-        if (typeof navigator !== 'undefined' && navigator.share && typeof navigator.share === 'function') {
-          try {
-            await navigator.share({
-              title: `${formattedCategory} Trivia Results`,
-              text: shareText,
-              url: sharePageUrl
-            });
-          } catch (error) {
-            console.log('Share cancelled or failed');
-          }
-        }
-        break;
-    }
-  };
-
-  // Function to copy share link to clipboard
-  const copyShareLink = async () => {
-    const formattedCategory = formatCategory(result.category);
-    const shareUrl = `${window.location.origin}/share/${result.category}/${result.score}/${result.correctCount}/${result.totalQuestions}/${result.timeUsed}`;
-    
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      // You could add a toast notification here
-      alert('Share link copied to clipboard!');
-    } catch (error) {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = shareUrl;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      alert('Share link copied to clipboard!');
     }
   };
 
@@ -371,11 +287,11 @@ export default function QuizSummary({
         </div>
       </div>
 
-      {/* Enhanced Share section */}
+      {/* Share section */}
       <div className="mb-8 text-center">
         <h3 className="text-xl font-semibold mb-4">Share Your Score</h3>
         
-        {/* Share image preview */}
+        {/* Share image preview - now using server-generated image */}
         {shareImageUrl && (
           <div className="mb-6 mx-auto max-w-xs">
             <img 
@@ -386,7 +302,7 @@ export default function QuizSummary({
           </div>
         )}
         
-        <div className="flex justify-center gap-4 flex-wrap">
+        <div className="flex justify-center gap-4">
           <button
             onClick={() => shareOnSocial('facebook', result)}
             className="flex items-center justify-center w-10 h-10 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition-colors"
@@ -409,27 +325,6 @@ export default function QuizSummary({
             aria-label="Share on WhatsApp"
           >
             <FaWhatsapp size={20} />
-          </button>
-
-          {/* Native Share API button for mobile */}
-          {typeof navigator !== 'undefined' && 
-           typeof navigator.share === 'function' && (
-            <button
-              onClick={() => shareOnSocial('native', result)}
-              className="flex items-center justify-center w-10 h-10 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
-              aria-label="Share via device"
-            >
-              📤
-            </button>
-          )}
-
-          {/* Copy link button */}
-          <button
-            onClick={copyShareLink}
-            className="flex items-center justify-center w-10 h-10 bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-colors"
-            aria-label="Copy share link"
-          >
-            📋
           </button>
         </div>
       </div>
