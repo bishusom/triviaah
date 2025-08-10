@@ -199,17 +199,16 @@ export default function Home() {
       <header className="bg-blue-700 text-white py-4 px-4">
         <div className="container mx-auto flex items-center justify-center gap-4">
           <div className="flex items-center">
-            {/* Preconnect to image origin */}
             <link rel="preconnect" href="https://triviaah.com" />
-            
-            {/* Preload critical image */}
             <Image 
-              src="/logo-280x80.webp"  // Use optimized logo
+              src="/logo-280x80.webp"
               alt="Triviaah Logo"
               width={140}
-              height={40}  // Correct aspect ratio
+              height={40}
               priority
-              fetchPriority="high"
+              quality={80}
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-contain"
             />
             <h1 className="text-2xl md:text-3xl font-bold ml-2">Explore Fun Trivia Quizzes!</h1>
           </div>
@@ -343,13 +342,15 @@ const DailyQuizCard = memo(function DailyQuizCard({
         <div className="flex items-center justify-center mb-4">
           <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
             <Image 
-              src={quiz.image}  // Use the pre-optimized image path
+              src={quiz.image}
               alt={quiz.name}
               width={80}
               height={80}
               className="object-cover w-full h-full"
               priority={priorityImage}
               loading={priorityImage ? "eager" : "lazy"}
+              quality={85}
+              sizes="(max-width: 768px) 50vw, 33vw"
             />
           </div>
         </div>

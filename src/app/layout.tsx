@@ -8,15 +8,16 @@ import { SoundProvider } from './context/SoundContext';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -33,18 +34,28 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
         <link
+          rel="preload"
+          href={geistSans.variable ? undefined : geistSans.style.fontFamily}
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href={geistMono.variable ? undefined : geistMono.style.fontFamily}
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+        <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"
           precedence="default"
         />
-
       </head>
-      <Script
-        id="adsense-script"
-        strategy="afterInteractive"
-        crossOrigin="anonymous"
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164"
-        />
       <body className="antialiased">
         <SoundProvider>
           <div className="min-h-screen flex flex-col">
@@ -52,19 +63,25 @@ export default function RootLayout({
               <BreadcrumbNav />
             </header>
 
-            {/* Horizontal Banner - Below Header */}
             <AdBanner />    
 
             <main className="flex-grow">
               <GoogleAnalytics gaId="G-K4KZ7XR85V" />
               {children}
             </main>
-            {/* Horizontal Banner - Above footer */}
+            
             <div className="mt-auto">
               <AdBanner />
-              </div>
+            </div>
           </div>
         </SoundProvider>
+
+        <Script
+          id="adsense-script"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164"
+        />
       </body>
     </html>
   );
