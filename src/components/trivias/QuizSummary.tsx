@@ -173,7 +173,7 @@ export default function QuizSummary({
     const formattedCategory = formatCategory(result.category);
     
     // Create a dedicated share page URL that contains proper Open Graph meta tags
-    const sharePageUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${formattedCategory}&time=${result.timeUsed}`
+    const sharePageUrl = `${window.location.origin}/share/${result.category}/${result.score}/${result.correctCount}/${result.totalQuestions}/${result.timeUsed}`;
     const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me?`;
 
     // Mobile detection
@@ -247,6 +247,27 @@ export default function QuizSummary({
           }
         }
         break;
+    }
+  };
+
+  // Function to copy share link to clipboard
+  const copyShareLink = async () => {
+    const formattedCategory = formatCategory(result.category);
+    const shareUrl = `${window.location.origin}/share/${result.category}/${result.score}/${result.correctCount}/${result.totalQuestions}/${result.timeUsed}`;
+    
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      // You could add a toast notification here
+      alert('Share link copied to clipboard!');
+    } catch (error) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = shareUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Share link copied to clipboard!');
     }
   };
 
@@ -391,7 +412,7 @@ export default function QuizSummary({
           </button>
 
           {/* Native Share API button for mobile */}
-          {typeof navigator !== 'undefined' && typeof navigator.share === 'function' && typeof navigator.canShare === 'function' && (
+          {typeof navigator !== 'undefined' && navigator.share && 'canShare' in navigator && (
             <button
               onClick={() => shareOnSocial('native', result)}
               className="flex items-center justify-center w-10 h-10 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
@@ -400,6 +421,15 @@ export default function QuizSummary({
               📤
             </button>
           )}
+
+          {/* Copy link button */}
+          <button
+            onClick={copyShareLink}
+            className="flex items-center justify-center w-10 h-10 bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-colors"
+            aria-label="Copy share link"
+          >
+            📋
+          </button>
         </div>
       </div>
 
