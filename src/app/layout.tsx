@@ -1,5 +1,5 @@
 // app/layout.tsx
-//import { AdBanner, AdMultiplex } from '@/components/Ads';
+import { AdBanner } from '@/components/Ads';
 import Script from 'next/script';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -51,12 +51,18 @@ export default function RootLayout({
             <header className="sticky top-0 z-50">
               <BreadcrumbNav />
             </header>
- 
+
+            {/* Horizontal Banner - Below Header */}
+            <AdBanner />    
+
             <main className="flex-grow">
               <GoogleAnalytics gaId="G-K4KZ7XR85V" />
               {children}
             </main>
-        
+            {/* Horizontal Banner - Above footer */}
+            <div className="mt-auto">
+              <AdBanner />
+              </div>
           </div>
         </SoundProvider>
       </body>
