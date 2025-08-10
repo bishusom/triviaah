@@ -2,47 +2,53 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-type Props = {
-  params: Promise<{
+type PageProps = {
+  params: {
     category: string;
     score: string;
     correct: string;
     total: string;
     time: string;
-  }>;
+  };
 };
 
-// Generate dynamic metadata for Open Graph tags
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { category, score, correct, total, time } = await params;
-  
-  const formatCategory = (cat: string) => {
-    return cat
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('-');
-  };
+// Small helpers
+const formatCategory = (cat: string) =>
+  cat
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('-');
 
-  const formatTime = (seconds: string) => {
-    const secs = parseInt(seconds);
-    const mins = Math.floor(secs / 60);
-    const remainingSecs = secs % 60;
-    return `${mins}:${remainingSecs.toString().padStart(2, '0')}`;
-  };
+const formatTime = (seconds: string) => {
+  const secs = parseInt(seconds, 10);
+  const mins = Math.floor(secs / 60);
+  const remainingSecs = secs % 60;
+  return `${mins}:${remainingSecs.toString().padStart(2, '0')}`;
+};
 
+// ✅ SSR metadata — fully static HTML tags
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { category, score, correct, total, time } = params;
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://triviaah.com';
   const formattedCategory = formatCategory(category);
+
   const title = `${formattedCategory} Trivia Results - Score: ${score}`;
   const description = `I scored ${score} points in ${formattedCategory} trivia! Got ${correct}/${total} correct in ${formatTime(time)}. Can you beat me?`;
-  
-  // Generate or get the share image URL
-  const imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://triviaah.com'}/api/generate-share-image?score=${score}&correct=${correct}&total=${total}&category=${formattedCategory}&time=${time}`;
+
+  // MUST be an absolute URL & load instantly
+  const imageUrl = `${baseUrl}/api/generate-share-image?score=${score}&correct=${correct}&total=${total}&category=${encodeURIComponent(
+    formattedCategory
+  )}&time=${time}`;
 
   return {
     title,
     description,
+    metadataBase: new URL(baseUrl),
     openGraph: {
       title,
       description,
+      url: `${baseUrl}/share/${category}/${score}/${correct}/${total}/${time}`,
       images: [
         {
           url: imageUrl,
@@ -51,8 +57,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           alt: `${formattedCategory} Trivia Results`,
         },
       ],
-      type: 'website',
       siteName: 'Triviaah',
+      type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
@@ -60,28 +66,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       images: [imageUrl],
     },
-    // Additional meta tags for Facebook
     other: {
-      'fb:app_id': process.env.FACEBOOK_APP_ID || '', // Add your Facebook App ID if you have one
+      'fb:app_id': process.env.FACEBOOK_APP_ID || '',
       'og:image:width': '1200',
       'og:image:height': '630',
     },
   };
 }
 
-export default async function SharePage({ params }: Props) {
-  // This page redirects users to the main quiz page
-  // The main purpose is to provide Open Graph meta tags for social sharing
-  
-  const { category, score, correct, total } = await params;
-  
+export default function SharePage({ params }: PageProps) {
+  const { category, score, correct, total } = params;
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg text-center">
         <h1 className="text-2xl font-bold mb-4">Trivia Results</h1>
         <div className="space-y-2 mb-6">
           <p>Score: {score}</p>
-          <p>Correct: {correct}/{total}</p>
+          <p>
+            Correct: {correct}/{total}
+          </p>
           <p>Category: {category.replace(/-/g, ' ')}</p>
         </div>
         <div className="space-y-3">
