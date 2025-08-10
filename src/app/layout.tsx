@@ -1,5 +1,5 @@
 // app/layout.tsx
-import { AdBanner } from '@/components/Ads';
+import { AdBanner, AdMultiplex } from '@/components/Ads';
 import Script from 'next/script';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -60,7 +60,7 @@ export default function RootLayout({
               {children}
             </main>
             {/* Horizontal Banner - Above footer */}
-            <AdBanner />  
+            <AdMultiplex />  
           </div>
         </SoundProvider>
       </body>
