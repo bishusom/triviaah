@@ -173,7 +173,7 @@ export default function QuizSummary({
     const formattedCategory = formatCategory(result.category);
     
     // Create a dedicated share page URL that contains proper Open Graph meta tags
-    const sharePageUrl = `${window.location.origin}/share/${result.category}/${result.score}/${result.correctCount}/${result.totalQuestions}/${result.timeUsed}`;
+    const sharePageUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${formattedCategory}&time=${result.timeUsed}`
     const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me?`;
 
     // Mobile detection
