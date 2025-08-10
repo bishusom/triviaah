@@ -305,6 +305,10 @@
 }
 
 /* Boggle Game Specific Styles */
+.boggle-grid {
+  touch-action: none; /* Prevents browser touch behaviors like scrolling */
+}
+
 .word-game-card {
   width: 100%;
   max-width: 800px;

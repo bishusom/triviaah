@@ -748,19 +748,23 @@ export default function BoggleGame() {
               onMouseUp={() => handleCellInteraction(index, 'end')}
               onTouchStart={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 handleCellInteraction(index, 'start');
               }}
               onTouchMove={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 const touch = e.touches[0];
-                const target = document.elementFromPoint(touch.clientX, touch.clientY);
-                if (target?.classList.contains('boggle-cell')) {
-                  const idx = Array.from(target.parentNode?.children || []).indexOf(target);
+                const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+                const cell = elements.find(el => el.classList.contains('boggle-cell'));
+                if (cell) {
+                  const idx = Array.from(cell.parentNode?.children || []).indexOf(cell);
                   if (idx >= 0) handleCellInteraction(idx, 'continue');
                 }
               }}
               onTouchEnd={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 handleCellInteraction(index, 'end');
               }}
             >

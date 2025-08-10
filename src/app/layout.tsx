@@ -39,6 +39,12 @@ export default function RootLayout({
         />
 
       </head>
+      <Script
+        id="adsense-script"
+        strategy="afterInteractive"
+        crossOrigin="anonymous"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164"
+        />
       <body className="antialiased">
         <SoundProvider>
           <div className="min-h-screen flex flex-col">
