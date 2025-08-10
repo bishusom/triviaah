@@ -59,8 +59,10 @@ export default function RootLayout({
               <GoogleAnalytics gaId="G-K4KZ7XR85V" />
               {children}
             </main>
-            {/* Horizontal Banner - Above footer */}
-            <AdMultiplex />  
+            {/* Multiplex Banner - Above footer */}
+            <div className="mt-auto">
+              <AdMultiplex />
+            </div>
           </div>
         </SoundProvider>
       </body>
