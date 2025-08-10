@@ -52,6 +52,7 @@ export async function GET(request: Request) {
         <meta property="og:image:height" content="450" />
         <meta property="og:url" content="${request.url}" />
         <meta property="og:type" content="website" />
+        <meta property="fb:app_id" content="${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="I scored ${score} points in ${formattedCategory} trivia!" />
         <meta name="twitter:description" content="Got ${correct}/${total} correct in ${formatTime(time)}" />

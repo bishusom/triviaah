@@ -8,7 +8,6 @@ import type { createCanvas as createCanvasType } from 'canvas';
 
 let createCanvas: typeof createCanvasType | null = null;
 let canvasAvailable = false;
-let fontsRegistered = false;
 
 // Initialize canvas and fonts (moved to a separate async function)
 async function initializeCanvas() {
@@ -27,9 +26,7 @@ async function initializeCanvas() {
       });
       registerFont(path.join(fontPath, 'DejaVuSans.ttf'), {
         family: 'DejaVu Sans'
-      });
-      
-      fontsRegistered = true;
+      });     
     } catch (e) {
       console.error('Font registration failed:', e);
     }
@@ -293,7 +290,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { score, correct, total, category, time, text } = body;
+    const { score, correct, total, category, time } = body;
 
     // For POST requests, return the URL to the GET endpoint for consistency
     const baseUrl = request.nextUrl.origin;
