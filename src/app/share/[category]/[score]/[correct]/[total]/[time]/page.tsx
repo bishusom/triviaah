@@ -1,20 +1,20 @@
 // app/share/[category]/[score]/[correct]/[total]/[time]/page.tsx
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 type Props = {
-  params: {
+  params: Promise<{
     category: string;
     score: string;
     correct: string;
     total: string;
     time: string;
-  };
+  }>;
 };
 
 // Generate dynamic metadata for Open Graph tags
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { category, score, correct, total, time } = params;
+  const { category, score, correct, total, time } = await params;
   
   const formatCategory = (cat: string) => {
     return cat
@@ -69,32 +69,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function SharePage({ params }: Props) {
+export default async function SharePage({ params }: Props) {
   // This page redirects users to the main quiz page
   // The main purpose is to provide Open Graph meta tags for social sharing
+  
+  const { category, score, correct, total } = await params;
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg text-center">
         <h1 className="text-2xl font-bold mb-4">Trivia Results</h1>
         <div className="space-y-2 mb-6">
-          <p>Score: {params.score}</p>
-          <p>Correct: {params.correct}/{params.total}</p>
-          <p>Category: {params.category.replace(/-/g, ' ')}</p>
+          <p>Score: {score}</p>
+          <p>Correct: {correct}/{total}</p>
+          <p>Category: {category.replace(/-/g, ' ')}</p>
         </div>
         <div className="space-y-3">
-          <a
+          <Link
             href="/"
             className="block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors"
           >
             Take the Quiz
-          </a>
-          <a
+          </Link>
+          <Link
             href="/"
             className="block bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition-colors"
           >
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

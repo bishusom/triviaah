@@ -412,7 +412,8 @@ export default function QuizSummary({
           </button>
 
           {/* Native Share API button for mobile */}
-          {typeof navigator !== 'undefined' && navigator.share && 'canShare' in navigator && (
+          {typeof navigator !== 'undefined' && 
+           typeof navigator.share === 'function' && (
             <button
               onClick={() => shareOnSocial('native', result)}
               className="flex items-center justify-center w-10 h-10 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
