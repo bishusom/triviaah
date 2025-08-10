@@ -9,6 +9,7 @@ let adInitialized = false;
 const initializeAdSense = () => {
   if (adInitialized || typeof window === 'undefined') return;
   
+  
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({});
     adInitialized = true;
@@ -23,7 +24,8 @@ export const AdBanner = () => {
 
   useEffect(() => {
     if (!isVisible || !adRef.current || adRef.current.dataset.initialized) return;
-    
+    // Skip if inside a no-ads container
+    if (document.querySelector('.no-ads-page')) return;
     try {
       adRef.current.dataset.initialized = "true";
       if (!adInitialized) {
@@ -71,7 +73,8 @@ export const AdSquare = () => {
 
   useEffect(() => {
     if (!isVisible || !adRef.current || adRef.current.dataset.initialized) return;
-    
+    // Skip if inside a no-ads container
+    if (document.querySelector('.no-ads-page')) return;
     try {
       adRef.current.dataset.initialized = "true";
       if (!adInitialized) initializeAdSense();
@@ -114,7 +117,8 @@ export const AdMultiplex = () => {
 
   useEffect(() => {
     if (!isVisible || !adRef.current || adRef.current.dataset.initialized) return;
-    
+    // Skip if inside a no-ads container
+    if (document.querySelector('.no-ads-page')) return;
     try {
       adRef.current.dataset.initialized = "true";
       if (!adInitialized) initializeAdSense();
