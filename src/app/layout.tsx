@@ -1,5 +1,5 @@
 // app/layout.tsx
-//import { AdBanner } from '@/components/Ads';
+import { AdBanner } from '@/components/Ads';
 import Script from 'next/script';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -7,6 +7,7 @@ import "@/../styles/globals.css";
 import { SoundProvider } from './context/SoundContext';
 import BreadcrumbNav from '@/components/common/BreadcrumbNav';
 import { GoogleAnalytics } from '@next/third-parties/google';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,14 +47,14 @@ export default function RootLayout({
             </header>
 
             {/* Horizontal Banner - Below Header */}
-            
+            <AdBanner />    
 
             <main className="flex-grow">
               <GoogleAnalytics gaId="G-K4KZ7XR85V" />
               {children}
             </main>
             {/* Horizontal Banner - Above footer */}
-            
+            <AdBanner />  
           </div>
         </SoundProvider>
       </body>
