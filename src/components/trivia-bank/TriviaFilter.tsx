@@ -1,23 +1,36 @@
-// components/TriviaFilter.jsx
 'use client';
 
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import Link from 'next/link';
-import styles from "@/../styles/Blog.module.css";
+import styles from '@/../styles/Blog.module.css';
 
-export default function TriviaFilter({ categories }) {
-  const [activeLetter, setActiveLetter] = useState('All');
+// Define the type for category data (matching tbank.ts)
+interface Category {
+  slug: string;
+  title: string;
+  excerpt: string;
+  tags: string[];
+}
+
+// Define props for the component
+interface TriviaFilterProps {
+  categories: Category[];
+}
+
+const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
+  const [activeLetter, setActiveLetter] = useState<string>('All');
   
   // Extract all unique first letters from tags
-  const allLetters = Array.from(
+  const allLetters: string[] = Array.from(
     new Set(
       categories.flatMap(category => 
         category.tags.map(tag => tag.charAt(0).toUpperCase())
+      )
     )
-  )).sort();
+  ).sort();
 
   // Filter categories by active letter
-  const filteredCategories = activeLetter === 'All' 
+  const filteredCategories: Category[] = activeLetter === 'All' 
     ? categories 
     : categories.filter(category => 
         category.tags.some(tag => 
@@ -80,10 +93,12 @@ export default function TriviaFilter({ categories }) {
           ))
         ) : (
           <div className={styles['no-results']}>
-            <p>No trivia found with tags starting with "{activeLetter}"</p>
+            <p>No trivia found with tags starting with &quot;{activeLetter}&quot;</p>
           </div>
         )}
       </div>
     </>
   );
-}
+};
+
+export default TriviaFilter;

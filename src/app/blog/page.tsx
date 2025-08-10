@@ -4,15 +4,36 @@ import styles from '@/../styles/Blog.module.css';
 
 export const dynamic = 'force-dynamic';
 
-export default async function BlogListPage({ searchParams }) {
-  const page = parseInt(searchParams.page) || 1;
-  const postsPerPage = 5;
+// Define the type for searchParams
+interface SearchParams {
+  page?: string;
+}
+
+// Define the type for post data (matching markdown.ts)
+interface PostData {
+  slug: string;
+  title: string;
+  date: string;
+  isoDate: string;
+  excerpt: string;
+  image: string;
+}
+
+// Define props for the component
+interface BlogListPageProps {
+  searchParams: Promise<SearchParams>;
+}
+
+export default async function BlogListPage({ searchParams }: BlogListPageProps) {
+  const { page: pageParam } = await searchParams; // Await the searchParams Promise
+  const page: number = parseInt(pageParam || '1') || 1;
+  const postsPerPage: number = 5;
   
-  const allPosts = await getAllPosts();
-  const totalPages = Math.ceil(allPosts.length / postsPerPage);
+  const allPosts: PostData[] = await getAllPosts();
+  const totalPages: number = Math.ceil(allPosts.length / postsPerPage);
   
-  const startIndex = (page - 1) * postsPerPage;
-  const paginatedPosts = allPosts.slice(startIndex, startIndex + postsPerPage);
+  const startIndex: number = (page - 1) * postsPerPage;
+  const paginatedPosts: PostData[] = allPosts.slice(startIndex, startIndex + postsPerPage);
 
   return (
     <div className={styles.container}>

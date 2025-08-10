@@ -1,7 +1,21 @@
-import Link from "next/link";
-import styles from "@/../styles/Blog.module.css";
+import Link from 'next/link';
+import { FC } from 'react';
+import styles from '@/../styles/Blog.module.css';
 
-export default function BlogCard({ post }) {
+// Define the type for the post prop
+interface Post {
+  slug: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  image: string;
+}
+
+interface BlogCardProps {
+  post: Post;
+}
+
+const BlogCard: FC<BlogCardProps> = ({ post }) => {
   return (
     <div className={styles.blogCard}>
       <img src={post.image} alt={post.title} />
@@ -15,4 +29,6 @@ export default function BlogCard({ post }) {
       </div>
     </div>
   );
-}
+};
+
+export default BlogCard;

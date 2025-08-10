@@ -1,10 +1,30 @@
-// app/trivia-bank/[slug]/TriviaContent.js
 'use client';
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { FC } from 'react';
 
-export default function TriviaContent({ trivia, styles }) {
+// Define the type for trivia data (based on tbank.ts)
+interface TriviaData {
+  slug: string;
+  title: string;
+  excerpt: string;
+  tags: string[];
+  levels: {
+    [key: string]: Array<{
+      question: string;
+      answer: string;
+    }>;
+  };
+}
+
+// Define props for the component
+interface TriviaContentProps {
+  trivia: TriviaData;
+  styles: { [key: string]: string };
+}
+
+const TriviaContent: FC<TriviaContentProps> = ({ trivia, styles }) => {
   const searchParams = useSearchParams();
   const showAnswers = searchParams.get('show') === 'true';
 
@@ -50,4 +70,6 @@ export default function TriviaContent({ trivia, styles }) {
       </article>
     </div>
   );
-}
+};
+
+export default TriviaContent;

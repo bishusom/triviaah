@@ -1,9 +1,15 @@
-// components/AnswerToggle.jsx
 'use client';
 
+import { FC } from 'react';
 import styles from '@/../styles/Blog.module.css';
 
-export default function AnswerToggle({ showAnswers, toggleAnswers }) {
+// Define the props interface for TypeScript
+interface AnswerToggleProps {
+  showAnswers: boolean;
+  toggleAnswers: () => void;
+}
+
+const AnswerToggle: FC<AnswerToggleProps> = ({ showAnswers, toggleAnswers }) => {
   return (
     <button 
       onClick={toggleAnswers}
@@ -15,4 +21,6 @@ export default function AnswerToggle({ showAnswers, toggleAnswers }) {
       {showAnswers ? 'Hide Answers' : 'Show Answers'}
     </button>
   );
-}
+};
+
+export default AnswerToggle;

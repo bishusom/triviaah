@@ -1,5 +1,4 @@
-// lib/date-utils.js
-export function formatPostDate(dateInput) {
+export function formatPostDate(dateInput: string | Date) {
   // Handle both string dates and Date objects
   const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
   
@@ -11,5 +10,9 @@ export function formatPostDate(dateInput) {
     }),
     iso: date.toISOString(),
     raw: date
+  } as {
+    display: string;
+    iso: string;
+    raw: Date;
   };
 }
