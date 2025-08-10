@@ -33,7 +33,7 @@ export async function GET(request: Request) {
   const formattedCategory = formatCategory(category);
   // Determine the base URL (for local development vs production)
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
-                  (request.url.includes('localhost') ? 'http://localhost:3000' : 'https://triviaah.netlify.app');
+                  (request.url.includes('localhost') ? 'http://localhost:3000' : 'https://triviaah.com');
   
   const imageUrl = `${baseUrl}/api/generate-image?score=${score}&correct=${correct}&total=${total}&category=${encodeURIComponent(formattedCategory)}&time=${time}`;
   
