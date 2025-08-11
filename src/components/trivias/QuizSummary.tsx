@@ -170,9 +170,10 @@ export default function QuizSummary({
   };
 
   const shareOnSocial = async (platform: string, result: QuizResult) => {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    //const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const formattedCategory = formatCategory(result.category);
-    const shareUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${formattedCategory}&time=${result.timeUsed}`;
+    //const shareUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${formattedCategory}&time=${result.timeUsed}`;
+    const shareUrl = `${window.location.origin}/trivias/${formattedCategory}?share=1&score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&time=${result.timeUsed}`;
     const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me?`;
 
     try {
