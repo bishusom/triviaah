@@ -2,7 +2,7 @@
 import type { Metadata } from 'next';
 import { MdInfo } from 'react-icons/md';
 import DailyQuizzesGrid from '@/components/daily/DailyQuizzesGrid';
-//import Timer from '@/components/daily/dailyQuizTimer';
+import Timer from '@/components/daily/dailyQuizTimer';
 
 export const metadata: Metadata = {
   title: 'Daily Trivia Challenges | Triviaah',
@@ -84,6 +84,7 @@ export default async function DailyQuizzesPage() {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Fresh quizzes every 24 hours! Test your knowledge across various topics.
           </p>
+          <Timer />
         </div>
 
         {/* Quiz Grid - Client-side component */}

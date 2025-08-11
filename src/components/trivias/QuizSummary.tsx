@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { FaFacebook, FaWhatsapp, FaMedal, FaTrophy } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6'
+import { shareOnFacebook } from '@/lib/facebook';
 
 type QuizResult = {
   score: number;
@@ -177,18 +178,7 @@ export default function QuizSummary({
     try {
       switch(platform) {
         case 'facebook':
-          if ( isMobile ) {
-          // Special handling for mobile Facebook
-            window.location.href = `fb://share?u=${encodeURIComponent(shareUrl)}`;
-            setTimeout(() => {
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}&hashtag=TriviaQuiz`, '_blank');
-            }, 500);
-          } else {
-              window.open(
-              `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}&hashtag=TriviaQuiz`,
-              '_blank'
-            );
-          }
+          await shareOnFacebook(shareUrl, shareText);
           break;
         case 'twitter':
           window.open(
