@@ -44,7 +44,7 @@ export function getAllPostSlugs(): string[] {
       .filter(name => name.endsWith('.md') || name.endsWith('.mdx'))
       .map(name => name.replace(/\.(md|mdx)$/, ''));
   } catch (error) {
-    console.warn('Posts directory not found, returning empty array');
+    console.warn('Posts directory not found, returning empty array',error);
     return [];
   }
 }

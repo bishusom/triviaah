@@ -50,6 +50,7 @@ export async function getTriviaData(slug: string): Promise<TriviaData | null> {
   try {
     fileContents = await fs.readFile(filePath, 'utf8');
   } catch (error) {
+    console.log(`Error reading file for slug ${slug}:`, error);
     return null;
   }
   

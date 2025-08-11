@@ -5,8 +5,6 @@ import {
   collection, 
   query, 
   where,
-  doc,
-  getDoc, 
   getDocs,
   addDoc,
   limit, 

@@ -9,17 +9,9 @@ interface PuzzleMetadata {
   description: string;
 }
 
-interface GameState {
-  // Define your game state structure here
-  // Example properties:
-  score?: number;
-  level?: number;
-  timer?: number;
-  // Add other game-specific state properties
-}
-
 export default function NumberPuzzleComponent({ puzzleType }: { puzzleType: PuzzleType }) {
-  const [gameState, setGameState] = useState<GameState | null>(null);
+  // Removed unused gameState since it's not being used in the component
+  const [isLoading, setIsLoading] = useState(true); // Added loading state as example
   
   // Puzzle specific metadata
   const puzzleMetadata: Record<PuzzleType, PuzzleMetadata> = {
@@ -47,11 +39,12 @@ export default function NumberPuzzleComponent({ puzzleType }: { puzzleType: Puzz
 
   useEffect(() => {
     // Initialize puzzle based on puzzleType
-    // This would be your game logic implementation
-    setGameState({
-      // Initialize your game state here
-    });
+    setIsLoading(false); // Example of using state
   }, [puzzleType]);
+
+  if (isLoading) {
+    return <div>Loading puzzle...</div>;
+  }
 
   return (
     <>

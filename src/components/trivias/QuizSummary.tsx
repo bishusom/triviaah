@@ -169,21 +169,22 @@ export default function QuizSummary({
   };
 
   const shareOnSocial = async (platform: string, result: QuizResult) => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const formattedCategory = formatCategory(result.category);
     const shareUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${formattedCategory}&time=${result.timeUsed}`;
     const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me?`;
 
     try {
       switch(platform) {
-        case 'facebook':    
-          if (!process.env.NEXT_PUBLIC_FACEBOOK_APP_ID) {
-            console.error("Facebook App ID is not configured");
-            window.open(
-              `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
-              '_blank'
-            );
+        case 'facebook':
+          if ( isMobile ) {
+          // Special handling for mobile Facebook
+            window.location.href = `fb://share?u=${encodeURIComponent(shareUrl)}`;
+            setTimeout(() => {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}&hashtag=TriviaQuiz`, '_blank');
+            }, 500);
           } else {
-            window.open(
+              window.open(
               `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}&hashtag=TriviaQuiz`,
               '_blank'
             );

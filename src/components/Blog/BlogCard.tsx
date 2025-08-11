@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { FC } from 'react';
 import styles from '@/../styles/Blog.module.css';
+import Image from 'next/image'; // Import the Image component
 
 // Define the type for the post prop
 interface Post {
@@ -18,7 +19,13 @@ interface BlogCardProps {
 const BlogCard: FC<BlogCardProps> = ({ post }) => {
   return (
     <div className={styles.blogCard}>
-      <img src={post.image} alt={post.title} />
+      <Image 
+        src={post.image} 
+        alt={post.title} 
+        width={500} // Set appropriate width
+        height={300} // Set appropriate height
+        className={styles.image} // Add this to your CSS module if needed
+      />
       <div className={styles.cardContent}>
         <h2>{post.title}</h2>
         <p className={styles.excerpt}>{post.excerpt}</p>
