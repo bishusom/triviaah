@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { FaFacebook, FaWhatsapp, FaMedal, FaTrophy } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6'
-import { shareOnFacebook } from '@/lib/facebook';
 
 type QuizResult = {
   score: number;
@@ -173,13 +172,15 @@ export default function QuizSummary({
     //const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const formattedCategory = formatCategory(result.category);
     const shareUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${formattedCategory}&time=${result.timeUsed}`;
-    //const shareUrl = `${window.location.origin}/trivias/${formattedCategory}?share=1&score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&time=${result.timeUsed}`;
     const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me?`;
 
     try {
       switch(platform) {
         case 'facebook':
-          await shareOnFacebook(shareUrl, shareText);
+          window.open(
+              `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}&hashtag=TriviaQuiz`,
+              '_blank'
+            );
           break;
         case 'twitter':
           window.open(
