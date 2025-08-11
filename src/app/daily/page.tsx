@@ -2,7 +2,7 @@
 import type { Metadata } from 'next';
 import { MdInfo } from 'react-icons/md';
 import DailyQuizzesGrid from '@/components/daily/DailyQuizzesGrid';
-import Timer from '@/components/daily/DailyQuizTimer';
+import Timer from '@/components/daily/dailyQuizTimer';
 
 export const metadata: Metadata = {
   title: 'Daily Trivia Challenges | Triviaah',
