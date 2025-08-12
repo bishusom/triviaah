@@ -307,108 +307,122 @@ export default function QuizGame({
         </div>
       </div>
 
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">
-          {currentQuestion.question}
-        </h2>
-        
-        {questionImage && (
-          <div className="mb-4 relative h-48 rounded-lg overflow-hidden shadow-sm bg-gray-100">
-            <img 
-              src={questionImage} 
-              alt="Question illustration" 
-              className="absolute inset-0 w-full h-full object-cover"
-              loading="lazy"
-              onError={() => setQuestionImage(null)} // Fallback if image fails to load
-            />
-          </div>
-        )}
-        
-        <div className="space-y-3 mb-6">
-          {shuffledOptions.map((option, i) => {
-            const isCorrect = option === currentQuestion.correct;
-            const isSelected = selectedOption === option;
-            const showAsCorrect = showFeedback && isCorrect;
-
-            return (
-              <button
-                key={i}
-                onClick={() => handleAnswer(option)}
-                disabled={showFeedback || (isTimedMode && timeLeft === 0)}
-                className={`
-                  w-full text-left p-4 rounded-lg border transition-all
-                  transform ${!showFeedback ? 'hover:scale-[1.02]' : ''}
-                  ${isSelected ? 'scale-[1.03] shadow-md border-blue-500 bg-blue-50' : 'border-gray-200'}
-                  ${isSelected && !isCorrect ? 'border-red-500 bg-red-50' : ''}
-                  ${showAsCorrect ? 'border-green-500 bg-green-50' : ''}
-                  ${(isTimedMode && timeLeft === 0) ? 'opacity-70 cursor-not-allowed' : ''}
-                `}
-              >
-                <div className="flex justify-between items-center">
-                  <span>{option}</span>
-                  {isSelected && (
-                    <span className={`text-lg ${isCorrect ? 'text-green-500' : 'text-red-500'}`}>
-                      {isCorrect ? '✓' : '✗'}
-                    </span>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {showFeedback && (
-          <div className="space-y-3">
-            {titbit && (
-              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 animate-fade-in">
-                <p className="text-yellow-800">{titbit}</p>
-              </div>
-            )}
-            <div className="text-center mt-2 text-sm font-medium">
-              {selectedOption === currentQuestion.correct ? (
-                <span className="text-green-600">
-                  {['Nice!', 'Great job!', 'Perfect!', 'Brilliant!'][currentIndex % 4]}
-                </span>
+      {/* Question and Image Container */}
+      <div className="border border-gray-200 rounded-lg p-4 mb-6 bg-white shadow-sm">
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Image container with responsive sizing */}
+          <div className="w-full md:w-32 flex-shrink-0">
+            <div className={`relative aspect-square w-full rounded-md overflow-hidden bg-gray-100 ${questionImage ? '' : 'animate-pulse'}`}>
+              {questionImage ? (
+                <img 
+                  src={questionImage} 
+                  alt="Question illustration" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                  onError={() => setQuestionImage(null)}
+                />
               ) : (
-                <span className="text-red-600">Almost! The correct answer was highlighted.</span>
+                <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
+                  Loading image...
+                </div>
               )}
             </div>
           </div>
-        )}
-
-        {/* Confetti effect for correct answers */}
-        {showFeedback && selectedOption === currentQuestion.correct && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
-            {[...Array(50)].map((_, i) => {
-              const randomColor = [
-                'bg-yellow-400',
-                'bg-red-400',
-                'bg-blue-400',
-                'bg-green-400',
-                'bg-purple-400',
-                'bg-pink-400'
-              ][Math.floor(Math.random() * 6)];
-              
-              const randomShape = Math.random() > 0.5 ? 'rounded-full' : 'rounded-sm';
-              const size = Math.random() > 0.8 ? 'w-3 h-3' : 'w-2 h-2';
-              
-              return (
-                <div 
-                  key={i}
-                  className={`absolute ${randomColor} ${randomShape} ${size} animate-confetti`}
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: '100%',
-                    animationDelay: `${i * 0.05}s`,
-                    animationDuration: `${1 + Math.random() * 2}s`,
-                    transform: `rotate(${Math.random() * 360}deg)`
-                  }}
-                />
-              );
-            })}
+          
+          {/* Question text */}
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-800 break-words">
+              {currentQuestion.question}
+            </h2>
           </div>
-        )}
+        </div>
       </div>
+          
+      {/* Answer Options */}
+      <div className="space-y-3 mb-6">
+        {shuffledOptions.map((option, i) => {
+          const isCorrect = option === currentQuestion.correct;
+          const isSelected = selectedOption === option;
+          const showAsCorrect = showFeedback && isCorrect;
+
+          return (
+            <button
+              key={i}
+              onClick={() => handleAnswer(option)}
+              disabled={showFeedback || (isTimedMode && timeLeft === 0)}
+              className={`
+                w-full text-left p-4 rounded-lg border transition-all
+                transform ${!showFeedback ? 'hover:scale-[1.02]' : ''}
+                ${isSelected ? 'scale-[1.03] shadow-md border-blue-500 bg-blue-50' : 'border-gray-200'}
+                ${isSelected && !isCorrect ? 'border-red-500 bg-red-50' : ''}
+                ${showAsCorrect ? 'border-green-500 bg-green-50' : ''}
+                ${(isTimedMode && timeLeft === 0) ? 'opacity-70 cursor-not-allowed' : ''}
+              `}
+            >
+              <div className="flex justify-between items-center">
+                <span>{option}</span>
+                {isSelected && (
+                  <span className={`text-lg ${isCorrect ? 'text-green-500' : 'text-red-500'}`}>
+                    {isCorrect ? '✓' : '✗'}
+                  </span>
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {showFeedback && (
+        <div className="space-y-3">
+          {titbit && (
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 animate-fade-in">
+              <p className="text-yellow-800">{titbit}</p>
+            </div>
+          )}
+          <div className="text-center mt-2 text-sm font-medium">
+            {selectedOption === currentQuestion.correct ? (
+              <span className="text-green-600">
+                {['Nice!', 'Great job!', 'Perfect!', 'Brilliant!'][currentIndex % 4]}
+              </span>
+            ) : (
+              <span className="text-red-600">Almost! The correct answer was highlighted.</span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Confetti effect for correct answers */}
+      {showFeedback && selectedOption === currentQuestion.correct && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+          {[...Array(50)].map((_, i) => {
+            const randomColor = [
+              'bg-yellow-400',
+              'bg-red-400',
+              'bg-blue-400',
+              'bg-green-400',
+              'bg-purple-400',
+              'bg-pink-400'
+            ][Math.floor(Math.random() * 6)];
+            
+            const randomShape = Math.random() > 0.5 ? 'rounded-full' : 'rounded-sm';
+            const size = Math.random() > 0.8 ? 'w-3 h-3' : 'w-2 h-2';
+            
+            return (
+              <div 
+                key={i}
+                className={`absolute ${randomColor} ${randomShape} ${size} animate-confetti`}
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: '100%',
+                  animationDelay: `${i * 0.05}s`,
+                  animationDuration: `${1 + Math.random() * 2}s`,
+                  transform: `rotate(${Math.random() * 360}deg)`
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

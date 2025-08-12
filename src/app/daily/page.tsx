@@ -1,23 +1,22 @@
 // app/daily/page.tsx
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { MdInfo } from 'react-icons/md';
 import DailyQuizzesGrid from '@/components/daily/DailyQuizzesGrid';
 import Timer from '@/components/daily/dailyQuizTimer';
 
 export const metadata: Metadata = {
-  title: 'Daily Trivia Challenges | Triviaah',
-  description: 'Play fresh trivia quizzes every day. Test your knowledge with our daily challenges that reset every 24 hours!',
-  keywords: 'daily trivia, quiz challenges, daily quiz, trivia game, knowledge test',
+  title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Triviaah',
+  description: 'Play our free daily trivia game with new questions about history, pop culture, sports, and more! Test your knowledge daily with 10 fresh questions.', // More specific
+  keywords: 'daily trivia game, daily quiz, trivia challenges, fun quiz, knowledge test', // Added exact match
   openGraph: {
-    title: 'Daily Trivia Challenges | Triviaah',
-    description: 'Fresh trivia quizzes updated daily - play now!',
+    title: 'Daily Trivia Game - New Questions Every Day | Triviaah', // Updated
+    description: 'Challenge yourself with our daily trivia game. 10 fresh questions every 24 hours!', // More action-oriented
     url: 'https://triviaah.com/daily',
     images: [
       {
         url: '/imgs/daily-trivia-og.webp',
-        width: 1200,
-        height: 630,
-        alt: 'Daily Trivia Challenges',
+        alt: 'Daily Trivia Game - Play Now', // Updated alt text
       },
     ],
   },
@@ -75,14 +74,35 @@ export default async function DailyQuizzesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Script
+        id="qa-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "QAPage",
+            "mainEntity": {
+              "@type": "Question",
+              "name": "Daily Trivia Game Questions",
+              "text": "What topics are covered in today's daily trivia game?",
+              "answerCount": 6,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Today's trivia covers history, entertainment, sports, science, geography, and general knowledge. New questions refresh every 24 hours."
+              }
+            }
+          })
+        }}
+      />
+
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-            Daily Trivia Challenges
+            Daily Trivia Game <span className="text-blue-600">(New Questions Every 24h)</span>
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Fresh quizzes every 24 hours! Test your knowledge across various topics.
+            Play our free daily trivia challenge with 10 fresh questions about <strong>history, sports, science, and pop culture</strong>. 
           </p>
           <Timer />
         </div>
@@ -120,19 +140,23 @@ export default async function DailyQuizzesPage() {
 
         {/* SEO-Friendly Content */}
         <section className="prose max-w-none mb-12">
-          <h2 className="text-2xl font-bold text-gray-800">Daily Trivia Questions</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Daily Trivia Game Questions</h2> {/* Exact match */}
           <p>
-            Our daily trivia challenges offer a fun way to test your knowledge across various
-            topics including history, science, entertainment, and more. Each quiz consists of
-            10 carefully selected questions that refresh every 24 hours, giving you a new
-            challenge to look forward to each day.
+            Our <strong>daily trivia game</strong> is the perfect way to test your knowledge in just a few minutes. 
+            Each quiz features 10 hand-picked questions that reset at midnight, covering topics like:
           </p>
-          <h3>Why Play Daily Trivia?</h3>
           <ul>
-            <li>Expand your knowledge in bite-sized daily sessions</li>
-            <li>Discover interesting facts you might not encounter otherwise</li>
-            <li>Challenge yourself with questions that get progressively harder</li>
-            <li>Track your improvement over time</li>
+            <li><strong>History</strong>: Famous events, leaders, and discoveries</li>
+            <li><strong>Entertainment</strong>: Movies, music, and celebrity trivia</li>
+            <li><strong>Sports</strong>: Athletes, records, and iconic moments</li>
+            <li><strong>Science & Geography</strong>: Space, inventions, and world landmarks</li>
+          </ul>
+          
+          <h3>Why Players Love Our Daily Trivia Game:</h3>
+          <ul>
+            <li>Perfect for <strong>quick brain exercises</strong> during breaks</li>
+            <li>Great for <strong>family game nights</strong> or friendly competitions</li>
+            <li>Learn <strong>surprising facts</strong> daily</li>
           </ul>
         </section>
       </main>

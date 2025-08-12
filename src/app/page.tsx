@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { MdInfo, MdEmail } from 'react-icons/md';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import Script from 'next/script';
 
 // Optimize icon imports
 const FaCheckCircleIcon = dynamic(() => import('react-icons/fa').then(mod => mod.FaCheckCircle), { 
@@ -95,6 +96,35 @@ const ADDITIONAL_SECTIONS = [
     keywords: 'question database, trivia archive'
   }
 ];
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Triviaah",
+  "url": "https://triviaah.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://triviaah.com/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Triviaah",
+  "url": "https://triviaah.com",
+  "logo": "https://triviaah.com/logo-280x80.webp"
+};
+
+const quizCategorySchemas = DAILY_QUIZZES.map(quiz => ({
+  "@context": "https://schema.org",
+  "@type": "Quiz",
+  "name": `${quiz.name} Daily Trivia`,
+  "description": quiz.tagline,
+  "about": quiz.keywords.split(', ').join(', '),
+  "url": `https://triviaah.com/daily/${quiz.category}`
+}));
 
 export default function Home() {
   const [playedQuizzes, setPlayedQuizzes] = useState<Record<string, { played: boolean; timestamp: number }>>({});
@@ -196,6 +226,25 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Add these Script components right after the opening div */}
+      <Script
+        id="website-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <Script
+        id="organization-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      {quizCategorySchemas.map((schema, index) => (
+        <Script
+          key={`quiz-schema-${index}`}
+          id={`quiz-schema-${index}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
       <header className="bg-blue-700 text-white py-4 px-4">
         <div className="container mx-auto flex items-center justify-center gap-4">
           <div className="flex items-center">
