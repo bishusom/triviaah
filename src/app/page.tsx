@@ -97,85 +97,6 @@ const ADDITIONAL_SECTIONS = [
   }
 ];
 
-// Schema Markup
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Triviaah",
-  "url": "https://triviaah.com",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://triviaah.com/search?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-};
-
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Triviaah",
-  "url": "https://triviaah.com",
-  "logo": "https://triviaah.com/logo-280x80.webp",
-  "sameAs": [
-    "https://facebook.com/triviaah",
-    "https://twitter.com/triviaah",
-    "https://instagram.com/triviaah"
-  ]
-};
-
-const quizCategorySchemas = DAILY_QUIZZES.map(quiz => ({
-  "@context": "https://schema.org",
-  "@type": "Quiz",
-  "name": `${quiz.name} Daily Trivia`,
-  "description": quiz.tagline,
-  "about": quiz.keywords.split(', ').join(', '),
-  "url": `https://triviaah.com/daily/${quiz.category}`,
-  "mainEntity": {
-    "@type": "Question",
-    "name": `Sample ${quiz.name} question`,
-    "text": `What is an example question from ${quiz.name} category?`,
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": `This is an example answer from our ${quiz.name} trivia collection`
-    }
-  }
-}));
-
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://triviaah.com"
-    }
-  ]
-};
-
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How often do quizzes update?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "All quizzes update daily at midnight local time"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I play previous day's quizzes?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No, our daily quizzes are only available for 24 hours to keep the content fresh"
-      }
-    }
-  ]
-};
 
 export default function Home() {
   const [playedQuizzes, setPlayedQuizzes] = useState<Record<string, { played: boolean; timestamp: number }>>({});
@@ -276,21 +197,7 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
-              websiteSchema,
-              organizationSchema,
-              breadcrumbSchema,
-              faqSchema,
-              ...quizCategorySchemas
-            ])
-          }}
-        />
-      </Head>
-      
+        
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <header className="bg-blue-700 text-white py-4 px-4">
           <div className="container mx-auto flex items-center justify-center gap-4">
