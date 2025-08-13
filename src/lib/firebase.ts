@@ -38,6 +38,8 @@ export type Question = {
   subcategory?: string;
   titbits?: string;
   image_keyword?: string;
+  date?: string; // For "today-in-history" questions
+  year?: string; // For "today-in-history" questions
 };
 
 export async function getCategoryQuestions(category: string, count: number): Promise<Question[]> {
@@ -208,7 +210,9 @@ export async function getTodaysHistoryQuestions(count: number = 5): Promise<Ques
       category: 'today-in-history',
       subcategory: data.subcategory,
       ...(data.titbits && { titbits: data.titbits }),
-      ...(data.image_keyword && { image_keyword: data.image_keyword })
+      ...(data.image_keyword && { image_keyword: data.image_keyword }),
+      date: data.date,
+      year: data.year
     };
   });
 }

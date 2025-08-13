@@ -427,7 +427,7 @@ const DailyQuizCard = memo(function DailyQuizCard({
             </div>
           ) : (
             <Link 
-              href={quiz.category === 'today-in-history' ? '/today-in-history' : `/daily/${quiz.category}`}
+              href={quiz.category === 'today-in-history' ? '/daily/today-in-history' : `/daily/${quiz.category}`}
               onClick={() => onPlay(quiz.category)}
               className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors"
             >
