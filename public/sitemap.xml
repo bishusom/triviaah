@@ -325,12 +325,7 @@
         <priority>0.80</priority>
     </url>
     <url>
-        <loc>https://triviaah.com/word-games/word-search/</loc>
-        <lastmod>2025-08-13T09:04:54+00:00</lastmod>
-        <priority>0.80</priority>
-    </url>
-    <url>
-        <loc>https://triviaah.com/word-games/word-guess/</loc>
+        <loc>https://triviaah.com/word-games/word-ladder/</loc>
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
         <priority>0.80</priority>
     </url>
@@ -432,7 +427,7 @@
         <priority>0.64</priority>
     </url>
     <url>
-        <loc>https://triviaah.com/trivia-bank/famous-quotes-trivia/</loc>
+        <loc>https://triviaah.com/trivia-bank/famous-quotes-top-50-trivias/</loc>
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
         <priority>0.64</priority>
     </url>
@@ -452,7 +447,7 @@
         <priority>0.64</priority>
     </url>
     <url>
-        <loc>https://triviaah.com/trivia-bank/harry-potter-top_trivia/</loc>
+        <loc>https://triviaah.com/trivia-bank/harry-potter-top-50-trivias/</loc>
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
         <priority>0.64</priority>
     </url>
@@ -487,7 +482,7 @@
         <priority>0.64</priority>
     </url>
     <url>
-        <loc>https://triviaah.com/trivia-bank/nobel-prize.-top-50-trivias</loc>
+        <loc>https://triviaah.com/trivia-bank/nobel-prize-top-50-trivias</loc>
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
         <priority>0.64</priority>
     </url>
@@ -507,12 +502,12 @@
         <priority>0.64</priority>
     </url>
     <url>
-        <loc>https://triviaah.com/trivia-bank/star_wars-top-50-trivias/</loc>
+        <loc>https://triviaah.com/trivia-bank/star-wars-top-50-trivias/</loc>
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
         <priority>0.64</priority>
     </url>
     <url>
-        <loc>https://triviaah.com/trivia-bank/us-presidents-top-trivias/</loc>
+        <loc>https://triviaah.com/trivia-bank/us-presidents-top-50-trivias/</loc>
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
         <priority>0.64</priority>
     </url>
