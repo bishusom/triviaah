@@ -180,6 +180,40 @@ export async function getDailyQuizQuestions(category: string): Promise<Question[
   });
 }
 
+export async function getTodaysHistoryQuestions(count: number = 5): Promise<Question[]> {
+  const today = new Date();
+  const monthDay = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  
+  const q = query(
+    collection(db, 'daily_history_trivia'),
+    where('date', '==', monthDay),
+    limit(count)
+  );
+
+  const snapshot = await getDocs(q);
+  
+  if (snapshot.empty) {
+    // Fallback to general history questions if no specific ones exist
+    return getCategoryQuestions('history', count);
+  }
+
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      question: data.question,
+      correct: data.correct,
+      options: shuffleArray([...data.incorrect_answers, data.correct]),
+      difficulty: data.difficulty || 'medium',
+      category: 'today-in-history',
+      subcategory: data.subcategory,
+      ...(data.titbits && { titbits: data.titbits }),
+      ...(data.image_keyword && { image_keyword: data.image_keyword })
+    };
+  });
+}
+
+
 function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {

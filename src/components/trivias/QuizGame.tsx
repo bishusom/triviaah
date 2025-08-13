@@ -1,4 +1,5 @@
 'use client';
+import { format } from 'date-fns';
 import { event } from '@/lib/gtag';
 import { fetchPixabayImage } from '@/lib/pixabay';
 import { useState, useEffect, useRef } from 'react';
@@ -248,6 +249,11 @@ export default function QuizGame({
       <div className="mb-6">
         <div className="flex justify-between items-start">
           <div className="flex flex-wrap gap-2 items-center mb-2">
+            {currentQuestion.category === 'today-in-history' && (
+              <div className="text-xs italic text-gray-500 mt-1">
+                {format(new Date(), 'MMMM do')} • {currentQuestion.year}
+              </div>
+            )}
             <span className="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full flex items-center whitespace-nowrap">
               <MdCategory className="mr-1" size={12} />
               {currentQuestion.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}

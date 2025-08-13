@@ -29,19 +29,19 @@ const DAILY_QUIZZES = [
     tagline: 'Test your worldly wisdom with diverse topics',
     keywords: 'facts, trivia, knowledge quiz'
   },
+    {
+    category: 'today-in-history',
+    name: 'Today in History',
+    image: '/imgs/today-history-160x160.webp',
+    tagline: 'Discover historical events from this date',
+    keywords: 'historical events, on this day, history facts'
+  },
   {
     category: 'entertainment',
     name: 'Entertainment',
     image: '/imgs/entertainment-160x160.webp',
     tagline: 'Movies, music & pop culture challenges',
     keywords: 'film quiz, music trivia, celebrity questions'
-  },
-  {
-    category: 'history',
-    name: 'History',
-    image: '/imgs/history-160x160.webp',
-    tagline: 'Journey through time with historical facts',
-    keywords: 'world history, past events, historical figures'
   },
   {
     category: 'geography',
@@ -427,7 +427,7 @@ const DailyQuizCard = memo(function DailyQuizCard({
             </div>
           ) : (
             <Link 
-              href={`/daily/${quiz.category}`}
+              href={quiz.category === 'today-in-history' ? '/today-in-history' : `/daily/${quiz.category}`}
               onClick={() => onPlay(quiz.category)}
               className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors"
             >
