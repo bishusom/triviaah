@@ -3,10 +3,10 @@
 
 import { useEffect, useState, useMemo, memo, useCallback } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 import { MdInfo, MdEmail } from 'react-icons/md';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import Script from 'next/script';
 
 // Optimize icon imports
 const FaCheckCircleIcon = dynamic(() => import('react-icons/fa').then(mod => mod.FaCheckCircle), { 
@@ -29,7 +29,7 @@ const DAILY_QUIZZES = [
     tagline: 'Test your worldly wisdom with diverse topics',
     keywords: 'facts, trivia, knowledge quiz'
   },
-    {
+  {
     category: 'today-in-history',
     name: 'Today in History',
     image: '/imgs/today-history-160x160.webp',
@@ -97,6 +97,7 @@ const ADDITIONAL_SECTIONS = [
   }
 ];
 
+// Schema Markup
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -114,7 +115,12 @@ const organizationSchema = {
   "@type": "Organization",
   "name": "Triviaah",
   "url": "https://triviaah.com",
-  "logo": "https://triviaah.com/logo-280x80.webp"
+  "logo": "https://triviaah.com/logo-280x80.webp",
+  "sameAs": [
+    "https://facebook.com/triviaah",
+    "https://twitter.com/triviaah",
+    "https://instagram.com/triviaah"
+  ]
 };
 
 const quizCategorySchemas = DAILY_QUIZZES.map(quiz => ({
@@ -123,8 +129,53 @@ const quizCategorySchemas = DAILY_QUIZZES.map(quiz => ({
   "name": `${quiz.name} Daily Trivia`,
   "description": quiz.tagline,
   "about": quiz.keywords.split(', ').join(', '),
-  "url": `https://triviaah.com/daily/${quiz.category}`
+  "url": `https://triviaah.com/daily/${quiz.category}`,
+  "mainEntity": {
+    "@type": "Question",
+    "name": `Sample ${quiz.name} question`,
+    "text": `What is an example question from ${quiz.name} category?`,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": `This is an example answer from our ${quiz.name} trivia collection`
+    }
+  }
 }));
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://triviaah.com"
+    }
+  ]
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How often do quizzes update?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All quizzes update daily at midnight local time"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I play previous day's quizzes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, our daily quizzes are only available for 24 hours to keep the content fresh"
+      }
+    }
+  ]
+};
 
 export default function Home() {
   const [playedQuizzes, setPlayedQuizzes] = useState<Record<string, { played: boolean; timestamp: number }>>({});
@@ -163,7 +214,6 @@ export default function Home() {
 
   useEffect(() => {
     updateTimer();
-    // Reduce to 10 min intervals
     const interval = setInterval(updateTimer, 600000);
     return () => clearInterval(interval);
   }, [updateTimer]);
@@ -189,7 +239,7 @@ export default function Home() {
         playedQuizzes={playedQuizzes}
         timeLeft={timeLeft}
         onPlay={handleQuizPlay}
-        priorityImage={index < 3} // Preload first 3 images
+        priorityImage={index < 3}
       />
     ))
   ), [playedQuizzes, timeLeft, handleQuizPlay]);
@@ -203,7 +253,7 @@ export default function Home() {
         <div className="flex items-center justify-center mb-4">
           <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
             <Image 
-              src={section.image}  // FIXED: Use section's own image
+              src={section.image}
               alt={section.name}
               width={80}
               height={80}
@@ -225,127 +275,124 @@ export default function Home() {
   ), []);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Add these Script components right after the opening div */}
-      <Script
-        id="website-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-      />
-      <Script
-        id="organization-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      {quizCategorySchemas.map((schema, index) => (
-        <Script
-          key={`quiz-schema-${index}`}
-          id={`quiz-schema-${index}`}
+    <>
+      <Head>
+        <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              websiteSchema,
+              organizationSchema,
+              breadcrumbSchema,
+              faqSchema,
+              ...quizCategorySchemas
+            ])
+          }}
         />
-      ))}
-      <header className="bg-blue-700 text-white py-4 px-4">
-        <div className="container mx-auto flex items-center justify-center gap-4">
-          <div className="flex items-center">
-            <link rel="preconnect" href="https://triviaah.com" />
-            <Image 
-              src="/logo-280x80.webp"
-              alt="Triviaah Logo"
-              width={140}
-              height={40}
-              priority
-              quality={80}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-contain"
-            />
-            <h1 className="text-2xl md:text-3xl font-bold ml-2">Explore Fun Trivia Quizzes!</h1>
-          </div>
-        </div>
-      </header>
+      </Head>
       
-      <main className="container mx-auto px-4 py-6 flex-grow">
-        {/* Add loading skeletons */}
-        {!timeLeft && (
-          <div className="text-center mb-8">
-            <div className="h-8 bg-gray-200 rounded w-1/4 mx-auto mb-4 animate-pulse"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/3 mx-auto animate-pulse"></div>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <header className="bg-blue-700 text-white py-4 px-4">
+          <div className="container mx-auto flex items-center justify-center gap-4">
+            <div className="flex items-center">
+              <link rel="preconnect" href="https://triviaah.com" />
+              <Image 
+                src="/logo-280x80.webp"
+                alt="Triviaah Logo"
+                width={140}
+                height={40}
+                priority
+                quality={80}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain"
+              />
+              <h1 className="text-2xl md:text-3xl font-bold ml-2">Explore Fun Trivia Quizzes!</h1>
+            </div>
           </div>
-        )}
+        </header>
         
-        {timeLeft && (
-          <>
+        <main className="container mx-auto px-4 py-6 flex-grow">
+          {!timeLeft && (
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Daily Trivia Challenges</h2>
-              <p className="text-gray-600">New quizzes every 24 hours!</p>
+              <div className="h-8 bg-gray-200 rounded w-1/4 mx-auto mb-4 animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/3 mx-auto animate-pulse"></div>
             </div>
+          )}
+          
+          {timeLeft && (
+            <>
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">Daily Trivia Challenges</h2>
+                <p className="text-gray-600">New quizzes every 24 hours!</p>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {DailyQuizCards}
-            </div>
-            
-            <div className="bg-blue-50 text-blue-800 p-4 rounded-lg text-center mb-8">
-              <p className="font-medium">All quizzes reset in <span className="font-bold">{timeLeft}</span></p>
-            </div>
-          </>
-        )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {DailyQuizCards}
+              </div>
+              
+              <div className="bg-blue-50 text-blue-800 p-4 rounded-lg text-center mb-8">
+                <p className="font-medium">All quizzes reset in <span className="font-bold">{timeLeft}</span></p>
+              </div>
+            </>
+          )}
 
-        <div className="mb-12">
-          <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">More Brain Challenges</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {AdditionalSectionCards}
+          <div className="mb-12">
+            <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">More Brain Challenges</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {AdditionalSectionCards}
+            </div>
           </div>
-        </div>
 
-        <div className="mb-12">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-bold text-gray-800">All Trivia Categories</h3>
-            <Link href="/trivias" className="text-blue-600 hover:underline" prefetch={false}>
-              View All →
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {['Movies', 'Science', 'History', 'Geography', 'Sports', 'Music'].map((category) => (
-              <Link
-                key={category}
-                href={`/trivias/${category.toLowerCase()}`}
-                className="bg-white hover:bg-blue-50 border border-gray-200 rounded-lg p-4 text-center transition-colors"
-                prefetch={false}
-              >
-                {category}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <ScrollButtons />
-      </main>
-      
-      <footer className="bg-gray-800 text-white py-6 px-4">
-        <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <h3 className="text-lg font-bold">Triviaah</h3>
-              <p className="text-gray-400">Daily trivia challenges</p>
-            </div>
-            <div className="flex gap-6">
-              <Link href="/about" className="flex items-center hover:text-blue-300 transition-colors" prefetch={false}>
-                <MdInfo className="mr-1" /> About
-              </Link>
-              <Link href="/contact" className="flex items-center hover:text-blue-300 transition-colors" prefetch={false}>
-                <MdEmail className="mr-1" /> Contact Us
-              </Link>
-              <Link href="/privacy" className="hover:text-blue-300 transition-colors" prefetch={false}>
-                Privacy Policy
+          <div className="mb-12">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-gray-800">All Trivia Categories</h3>
+              <Link href="/trivias" className="text-blue-600 hover:underline" prefetch={false}>
+                View All →
               </Link>
             </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {['Movies', 'Science', 'History', 'Geography', 'Sports', 'Music'].map((category) => (
+                <Link
+                  key={category}
+                  href={`/trivias/${category.toLowerCase()}`}
+                  className="bg-white hover:bg-blue-50 border border-gray-200 rounded-lg p-4 text-center transition-colors"
+                  prefetch={false}
+                >
+                  {category}
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="mt-6 text-center text-gray-400 text-sm">
-            © {new Date().getFullYear()} Triviaah. All rights reserved.
+
+          <ScrollButtons />
+        </main>
+        
+        <footer className="bg-gray-800 text-white py-6 px-4">
+          <div className="container mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="mb-4 md:mb-0">
+                <h3 className="text-lg font-bold">Triviaah</h3>
+                <p className="text-gray-400">Daily trivia challenges</p>
+              </div>
+              <div className="flex gap-6">
+                <Link href="/about" className="flex items-center hover:text-blue-300 transition-colors" prefetch={false}>
+                  <MdInfo className="mr-1" /> About
+                </Link>
+                <Link href="/contact" className="flex items-center hover:text-blue-300 transition-colors" prefetch={false}>
+                  <MdEmail className="mr-1" /> Contact Us
+                </Link>
+                <Link href="/privacy" className="hover:text-blue-300 transition-colors" prefetch={false}>
+                  Privacy Policy
+                </Link>
+              </div>
+            </div>
+            <div className="mt-6 text-center text-gray-400 text-sm">
+              © {new Date().getFullYear()} Triviaah. All rights reserved.
+            </div>
           </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </>
   );
 }
 
