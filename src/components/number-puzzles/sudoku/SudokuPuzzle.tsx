@@ -3,6 +3,8 @@ import { event } from '@/lib/gtag';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/app/context/SoundContext';
 import { useEffect, useState, useCallback, useRef } from 'react';
+import commonStyles from '@styles/NumberPuzzles/NumberPuzzles.common.module.css';
+import styles from '@styles/NumberPuzzles/SudokuPuzzle.module.css';
 
 
 type Difficulty = 'easy' | 'medium' | 'hard';
@@ -43,7 +45,10 @@ export default function SudokuPuzzle() {
     },
   });
 
-  const [feedback, setFeedback] = useState({ text: '', className: '' });
+  const [feedback, setFeedback] = useState<{
+    text: string;
+    type: 'success' | 'error' | 'info' | 'hint' | ''; // Add other types as needed
+  }>({ text: '', type: '' });
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const { isMuted } = useSound();
@@ -142,8 +147,9 @@ export default function SudokuPuzzle() {
     timerRef.current = setInterval(() => {
       setGameState(prev => ({ ...prev, timeElapsed: prev.timeElapsed + 1 }));
     }, 1000);
-    
-    setFeedback({ text: '', className: '' });
+
+    event({action: 'soduku_puzzle_started', category: 'soduku_puzzle',label: 'soduku_puzzle'});
+    setFeedback({ text: '', type: '' });
   }, [gameState.difficulty]); 
 
   // Initialize game - runs only once on mount
@@ -239,7 +245,7 @@ export default function SudokuPuzzle() {
       confetti({ particleCount: 100, spread: 70 });
       setFeedback({ 
         text: `🎉 Puzzle solved in ${formatTime(gameState.timeElapsed)}!`, 
-        className: 'feedback-success' 
+        type: 'success' 
       });
     } else {
       setGameState(prev => ({
@@ -250,14 +256,14 @@ export default function SudokuPuzzle() {
       
       if (!isCorrect) {
         playSound('error');
-        setFeedback({ text: 'Incorrect number', className: 'feedback-error' });
+        setFeedback({ text: 'Incorrect number', type: 'error'});
       }
     }
   };
 
   const provideHint = () => {
     if (gameState.hintsUsed >= gameState.maxHints) {
-      setFeedback({ text: 'No hints remaining', className: 'feedback-error' });
+      setFeedback({ text: 'No hints remaining', type: 'error' });
       return;
     }
     
@@ -286,7 +292,7 @@ export default function SudokuPuzzle() {
       emptyCells: prev.emptyCells - 1,
     }));
     
-    setFeedback({ text: 'Hint applied', className: 'feedback-info' });
+    setFeedback({ text: 'Hint applied', type: 'info' });
   };
 
   const checkBoard = () => {
@@ -308,7 +314,7 @@ export default function SudokuPuzzle() {
     
     setFeedback({
       text: hasErrors ? 'Errors found' : 'No errors found',
-      className: hasErrors ? 'feedback-error' : 'feedback-success'
+      type: hasErrors ? 'error' : 'success'
     });
   };
 
@@ -324,14 +330,14 @@ export default function SudokuPuzzle() {
   };
 
   return (
-    <div className="sudoku-game bg-white rounded-xl shadow-md p-6 max-w-3xl mx-auto">
-      <div className="game-header flex justify-between items-center mb-6">
+    <div className={styles.sudokuGame}>
+      <div className={styles.gameHeader}>
         <div className="text-lg font-semibold">
           Difficulty: 
           <select 
             value={gameState.difficulty}
             onChange={(e) => changeDifficulty(e.target.value as Difficulty)}
-            className="ml-2 p-1 border rounded"
+            className={styles.difficultySelect}
           >
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
@@ -351,28 +357,28 @@ export default function SudokuPuzzle() {
       </div>
 
       {feedback.text && (
-        <div className={`feedback ${feedback.className} text-center p-3 rounded-lg mb-4`}>
+        <div className={`${commonStyles.feedback} ${commonStyles[`feedback${feedback.type}`]}`}>
           {feedback.text}
         </div>
       )}
 
-      <div className="sudoku-grid grid grid-cols-9 gap-1 mb-6">
+      <div className={styles.sudokuGrid}>
         {gameState.board.map((row, rowIndex) => (
           row.map((cell, colIndex) => {
             const isSelected = gameState.selectedCell?.row === rowIndex && 
                               gameState.selectedCell?.col === colIndex;
             const isFixed = gameState.board[rowIndex][colIndex] !== 0 && 
-                           gameState.board[rowIndex][colIndex] === gameState.solution[rowIndex][colIndex];
+                          gameState.board[rowIndex][colIndex] === gameState.solution[rowIndex][colIndex];
             
             return (
               <div
                 key={`${rowIndex}-${colIndex}`}
                 onClick={() => selectCell(rowIndex, colIndex)}
-                className={`sudoku-cell aspect-square flex items-center justify-center text-xl font-bold border
-                  ${isSelected ? 'bg-blue-100 border-blue-400' : 'border-gray-300'}
-                  ${isFixed ? 'bg-gray-100 text-gray-800' : 'cursor-pointer hover:bg-gray-50'}
-                  ${rowIndex % 3 === 2 && rowIndex !== 8 ? 'border-b-2 border-gray-400' : ''}
-                  ${colIndex % 3 === 2 && colIndex !== 8 ? 'border-r-2 border-gray-400' : ''}
+                className={`${styles.sudokuCell} 
+                  ${isSelected ? styles.selected : ''}
+                  ${isFixed ? styles.fixed : ''}
+                  ${rowIndex % 3 === 2 && rowIndex !== 8 ? styles.borderBottomThick : ''}
+                  ${colIndex % 3 === 2 && colIndex !== 8 ? styles.borderRightThick : ''}
                 `}
               >
                 {cell !== 0 ? cell : ''}
@@ -382,12 +388,12 @@ export default function SudokuPuzzle() {
         ))}
       </div>
 
-      <div className="number-selector grid grid-cols-5 gap-2 mb-6">
+      <div className={styles.numberSelector}>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
           <button
             key={num}
             onClick={() => fillCell(num)}
-            className="number-btn p-3 bg-blue-100 hover:bg-blue-200 rounded-lg font-bold text-lg"
+            className={styles.numberBtn}
           >
             {num}
           </button>
@@ -409,7 +415,7 @@ export default function SudokuPuzzle() {
               }
             }
           }}
-          className="number-btn p-3 bg-red-100 hover:bg-red-200 rounded-lg font-bold text-lg"
+          className={`${styles.numberBtn} ${styles.clear}`}
         >
           Clear
         </button>
@@ -419,7 +425,7 @@ export default function SudokuPuzzle() {
         <button
           onClick={provideHint}
           disabled={gameState.hintsUsed >= gameState.maxHints}
-          className="btn secondary px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50"
+          className={`${commonStyles.btn} ${commonStyles.secondary}`}
         >
           Hint
         </button>
@@ -437,12 +443,12 @@ export default function SudokuPuzzle() {
         </button>
       </div>
 
-      <div className="stats mt-6 p-4 bg-gray-50 rounded-lg">
-        <h3 className="font-bold mb-2">Stats</h3>
-        <div className="grid grid-cols-3 gap-4 text-center">
+      <div className={styles.statsContainer}>
+        <h3 className={styles.statsTitle}>Stats</h3>
+        <div className={styles.statsGrid}>
           <div>
-            <p className="text-sm text-gray-600">Games Played</p>
-            <p className="text-xl font-bold">{gameState.stats.gamesPlayed}</p>
+            <p className={styles.statsLabel}>Games Played</p>
+            <p className={styles.statsValue}>{gameState.stats.gamesPlayed}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Games Won</p>

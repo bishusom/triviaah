@@ -1,9 +1,10 @@
 'use client';
-import Head from 'next/head';
 import { event } from '@/lib/gtag';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/app/context/SoundContext';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import commonStyles from '@styles/NumberPuzzles/NumberPuzzles.common.module.css';
+import styles from '@styles/NumberPuzzles/PrimeHunter.module.css';
 
 export default function PrimeHunterPuzzle() {
   const [gameState, setGameState] = useState({
@@ -17,7 +18,7 @@ export default function PrimeHunterPuzzle() {
   });
 
   const [feedback, setFeedback] = useState({ message: '', type: '' });
-  const timerInterval = useRef<NodeJS.Timeout| null>(null)
+  const timerInterval = useRef<NodeJS.Timeout| null>(null);
   const audioElements = useRef<Record<string, HTMLAudioElement | null>>({
     select: null,
     correct: null,
@@ -26,11 +27,9 @@ export default function PrimeHunterPuzzle() {
   });
 
   const handleFirstInteraction = () => {
-  // Remove the event listener after first interaction
     document.removeEventListener('click', handleFirstInteraction);
     document.removeEventListener('keydown', handleFirstInteraction);
     
-    // Unmute all audio elements
     Object.values(audioElements.current).forEach(audio => {
       if (audio) {
         audio.muted = false;
@@ -38,43 +37,38 @@ export default function PrimeHunterPuzzle() {
     });
   };
 
-  // Initialize game
   useEffect(() => {
-      setGameState(prev => ({
-          ...prev
-      }));
+    setGameState(prev => ({ ...prev }));
+    event({action: 'prime_hunter_started', category: 'prime_hunter',label: 'prime_hunter'});
+    initGame();
 
-      event({action: 'prime_hunter_started', category: 'prime_hunter',label: 'prime_hunter'});
-      
-      initGame();
-
-      return () => {
-          if (timerInterval.current) {
-          clearInterval(timerInterval.current);
-          }
-      };
-    }, []);
+    return () => {
+      if (timerInterval.current) {
+        clearInterval(timerInterval.current);
+      }
+    };
+  }, []);
 
   const { isMuted } = useSound();
 
   type SoundType = 'select' | 'found' | 'win' | 'error'; 
 
   const playSound = useCallback((type: SoundType) => {
-      if (isMuted) return;
-      const sounds: Record<SoundType, string> = {
-        select: '/sounds/click.mp3',
-        found: '/sounds/correct.mp3',
-        win: '/sounds/win.mp3',
-        error: '/sounds/incorrect.mp3'
-      };
-      
-      try {
-        const audio = new Audio(sounds[type]);
-        audio.play().catch(err => console.error(`Error playing ${type} sound:`, err));
-      } catch (error) {
-        console.error('Sound error:', error);
-      }
-    }, [isMuted]);  
+    if (isMuted) return;
+    const sounds: Record<SoundType, string> = {
+      select: '/sounds/click.mp3',
+      found: '/sounds/correct.mp3',
+      win: '/sounds/win.mp3',
+      error: '/sounds/incorrect.mp3'
+    };
+    
+    try {
+      const audio = new Audio(sounds[type]);
+      audio.play().catch(err => console.error(`Error playing ${type} sound:`, err));
+    } catch (error) {
+      console.error('Sound error:', error);
+    }
+  }, [isMuted]);  
 
   const showConfetti = () => {
     confetti({
@@ -109,7 +103,6 @@ export default function PrimeHunterPuzzle() {
     const numbers: number[] = [];
     const primesSet = new Set<number>();
 
-    // Ensure exactly gridSize x gridSize numbers
     const totalCells = gridSize * gridSize;
     let attempts = 0;
     const MAX_ATTEMPTS = 100;
@@ -121,7 +114,6 @@ export default function PrimeHunterPuzzle() {
       attempts++;
     }
 
-    // Fallback if we didn't get enough primes
     if (primesSet.size < 1) {
       const backupPrimes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31];
       const randomPrime = backupPrimes[Math.floor(Math.random() * backupPrimes.length)];
@@ -132,7 +124,7 @@ export default function PrimeHunterPuzzle() {
 
     setGameState(prev => ({
       ...prev,
-      currentNumbers: numbers.slice(0, totalCells), // Ensure correct size
+      currentNumbers: numbers.slice(0, totalCells),
       primesInGrid: primesSet.size,
       primesCollected: 0,
       gameActive: true
@@ -140,7 +132,6 @@ export default function PrimeHunterPuzzle() {
   };
 
   const getGridSize = () => {
-    // Use gameState.level directly since this is called after state updates
     if (gameState.level <= 3) return 4;
     if (gameState.level <= 6) return 5;
     return 6;
@@ -171,7 +162,6 @@ export default function PrimeHunterPuzzle() {
     playSound('select');
 
     if (prime) {
-      // Count how many of this prime exist in the grid
       const primeCount = gameState.currentNumbers
         .filter(n => Math.abs(n) === num && n > 0).length;
 
@@ -194,11 +184,10 @@ export default function PrimeHunterPuzzle() {
         ...prev,
         timeLeft: Math.max(5, prev.timeLeft - 5),
       }));
-      // Mark this cell as wrong selection
       setGameState(prev => ({
         ...prev,
         currentNumbers: prev.currentNumbers.map((n, i) => 
-          i === index ? -n-1 : n // Mark wrong selections with -(n+1)
+          i === index ? -n-1 : n
         )
       }));
       playSound('error');
@@ -210,10 +199,10 @@ export default function PrimeHunterPuzzle() {
     if (timerInterval.current) {
       clearInterval(timerInterval.current);
     }
-    setFeedback({ message: '', type: '' });  // Clear feedback first
+    setFeedback({ message: '', type: '' });
 
     const bonus = gameState.level * 20;
-    setTimeout(() => {  // Delay the success message slightly
+    setTimeout(() => {
       setFeedback({ 
         message: `Level Complete! +${bonus} bonus points!`, 
         type: 'success' 
@@ -230,7 +219,7 @@ export default function PrimeHunterPuzzle() {
     showConfetti();
 
     setTimeout(() => {
-      setFeedback({ message: '', type: '' });  // Clear feedback before next level
+      setFeedback({ message: '', type: '' });
       setGameState(prev => ({
         ...prev,
         timeLeft: 60,
@@ -261,7 +250,7 @@ export default function PrimeHunterPuzzle() {
 
   const gameOver = () => {
     setGameState(prev => ({ ...prev, gameActive: false }));
-    setFeedback({ message: '', type: '' }); // Clear feedback first
+    setFeedback({ message: '', type: '' });
     setFeedback({ 
       message: `Game Over! Final Score: ${gameState.score}`, 
       type: 'error' 
@@ -272,20 +261,12 @@ export default function PrimeHunterPuzzle() {
   const showHint = () => {
     if (!gameState.gameActive) return;
     playSound('select');
-    // Hint logic would go here
     setFeedback({ message: "Look for numbers divisible only by 1 and themselves", type: 'info' });
   };
-
 
   const gridSize = getGridSize();
 
   return (
-    <>
-      <Head>
-        <title>Prime Hunter | Triviaah</title>
-        <meta name="description" content="Find all prime numbers in the grid before time runs out" />
-      </Head>
-
       <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
           Prime Hunter
@@ -294,31 +275,25 @@ export default function PrimeHunterPuzzle() {
           Find all prime numbers in the grid before time runs out
         </p>
 
-        {/* Game Header */}
-        <div className="game-header mb-6">
-          <div className="flex items-center gap-4">
-            <div className="text-lg font-semibold">
-              Level: {gameState.level}
-            </div>
+        <div className="flex justify-between items-center mb-6">
+          <div className="text-lg font-semibold">
+            Level: {gameState.level}
           </div>
-          
-          <div className={`timer-value ${gameState.timeLeft <= 10 ? 'time-critical' : ''}`}>
+          <div className={`text-lg font-semibold ${gameState.timeLeft <= 10 ? commonStyles.timeCritical : ''}`}>
             Time: {gameState.timeLeft}s
           </div>
-          
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <div className="text-lg font-semibold">
               Score: {gameState.score}
             </div>
           </div>
         </div>
         
-        {/* Game Board */}
+        
         <div className="bg-gray-100 rounded-lg p-6 mb-6">
-          {/* Progress */}
           <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
             <div 
-              className="progress-fill h-2.5 rounded-full" 
+              className={styles.progressFill} 
               style={{ 
                 width: `${gameState.primesInGrid > 0 ? (gameState.primesCollected / gameState.primesInGrid) * 100 : 0}%` 
               }}
@@ -330,41 +305,37 @@ export default function PrimeHunterPuzzle() {
             <div>Total Primes: {gameState.primesInGrid}</div>
           </div>
 
-          {/* Feedback */}
           {feedback.message && (
-            <div className={`hunter-feedback ${feedback.type} mb-4`}>
+            <div className={`${styles.feedback} ${styles[`feedback${feedback.type}`]}`}>
               {feedback.message}
             </div>
           )}
 
-          {/* Grid */}
           <div 
-              className="hunter-grid mb-6" 
-              style={{ 
-                gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
-                gap: '0.5rem',
-                width: '100%',
-                maxWidth: '100%',
-                margin: '1rem auto'
-              }}
-            >
-            {Array.from({ length: gridSize * gridSize }).map((_, index) => {
-              const num = gameState.currentNumbers[index] || 0;
+            className={styles.hunterGrid} 
+            style={{ 
+              gridTemplateColumns: `repeat(${gridSize}, minmax(60px, 80px))`,
+              justifyContent: 'center'
+            }}
+          >
+            {gameState.currentNumbers.map((num, index) => {
               const absoluteNum = Math.abs(num);
               const isCorrectPrime = num < 0 && isPrime(absoluteNum);
               const isWrongSelection = num < -1;
+              const isDisabled = isCorrectPrime || isWrongSelection || !gameState.gameActive;
               
               return (
                 <button
                   key={index}
-                  onClick={() => handleCellClick(absoluteNum, index)}
-                  className={`hunter-cell ${
-                    isCorrectPrime ? 'correct-prime' : 
-                    isWrongSelection ? 'wrong-selection' : ''
+                  onClick={() => !isDisabled && handleCellClick(absoluteNum, index)}
+                  className={`${styles.hunterCell} ${
+                    isCorrectPrime ? styles.correctPrime : 
+                    isWrongSelection ? styles.wrongSelection : ''
                   } ${
-                    !gameState.gameActive && isPrime(absoluteNum) ? 'revealed-prime' : ''
+                    !gameState.gameActive && isPrime(absoluteNum) ? styles.revealedPrime : ''
                   }`}
-                  disabled={isCorrectPrime || isWrongSelection || !gameState.gameActive}
+                  disabled={isDisabled}
+                  aria-label={`Number ${absoluteNum}`}
                 >
                   {absoluteNum}
                 </button>
@@ -372,17 +343,16 @@ export default function PrimeHunterPuzzle() {
             })}
           </div>
 
-          {/* Controls */}
           <div className="flex flex-wrap gap-2">
             <button 
               onClick={showHint}
-              className="btn secondary"
+              className={`${commonStyles.btn} ${commonStyles.secondary}`}
             >
               Hint
             </button>
             <button 
               onClick={initGame}
-              className="btn primary"
+              className={`${commonStyles.btn} ${commonStyles.primary}`}
             >
               New Game
             </button>
@@ -399,6 +369,5 @@ export default function PrimeHunterPuzzle() {
           </ul>
         </div>
       </div>
-    </>
   );
 }

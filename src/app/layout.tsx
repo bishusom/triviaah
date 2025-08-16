@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Triviaah: Free Daily Trivia, Word Games & Number Puzzles | 20+ Categories, 10,000+ Questions",
+  title: "Triviaah: Free Daily Trivia & Word Games | 20+ Categories",
   description: "Test your knowledge with our trivia game",
 };
 

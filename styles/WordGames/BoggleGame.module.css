@@ -1,0 +1,164 @@
+/* BoggleGame.module.css */
+/* Grid container */
+.gridContainer {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Grid layout */
+.grid {
+  display: grid;
+  width: 100%;
+  gap: 10px;
+}
+
+/* Cell styles */
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ffffff;
+  color: #2d3748;
+  border: none;
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.1),
+    0 1px 0 rgba(255,255,255,0.8) inset,
+    0 -1px 2px rgba(0,0,0,0.1) inset;
+  transform: translateY(0);
+  position: relative;
+  overflow: hidden;
+}
+
+.cell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 60%);
+  border-radius: 8px;
+}
+
+.cell:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+  box-shadow: 
+    0 3px 6px rgba(0,0,0,0.15),
+    0 1px 0 rgba(255,255,255,0.8) inset,
+    0 -1px 2px rgba(0,0,0,0.1) inset;
+}
+
+.cell:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 1px 2px rgba(0,0,0,0.1),
+    0 -1px 0 rgba(255,255,255,0.8) inset,
+    0 1px 2px rgba(0,0,0,0.2) inset;
+}
+
+/* Selected state */
+.cellSelected {
+  background: #4f46e5;
+  color: white;
+  box-shadow: 
+    0 2px 4px rgba(79, 70, 229, 0.3),
+    0 1px 0 rgba(255,255,255,0.4) inset,
+    0 -1px 2px rgba(0,0,0,0.2) inset;
+}
+
+/* Highlight state */
+.cellHighlight {
+  box-shadow: 
+    0 0 0 3px rgba(79, 70, 229, 0.3),
+    0 2px 4px rgba(0,0,0,0.1),
+    0 1px 0 rgba(255,255,255,0.8) inset,
+    0 -1px 2px rgba(0,0,0,0.1) inset;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(79, 70, 229, 0.15); }
+}
+
+/* Found state */
+.cellFound {
+  background: #10b981;
+  color: white;
+  box-shadow: 
+    0 2px 4px rgba(16, 185, 129, 0.3),
+    0 1px 0 rgba(255,255,255,0.4) inset,
+    0 -1px 2px rgba(0,0,0,0.2) inset;
+}
+
+/* Selection line */
+.selectionLine {
+  position: absolute;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(79, 70, 229, 0.8), rgba(79, 70, 229, 0.4));
+  transform-origin: 0 0;
+  z-index: 10;
+  pointer-events: none;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Feedback message */
+.feedback {
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.feedbackError {
+  background-color: rgb(254, 226, 226);
+  color: rgb(153, 27, 27);
+}
+
+.feedbackSuccess {
+  background-color: rgb(220, 252, 231);
+  color: rgb(22, 101, 52);
+}
+
+.feedbackInfo {
+  background-color: rgb(219, 234, 254);
+  color: rgb(29, 78, 216);
+}
+
+/* Found words */
+.foundWordsContainer {
+  margin-top: 1.5rem;
+}
+
+.foundWordsTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.foundWordsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.wordPill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background-color: rgb(220, 252, 231);
+  color: rgb(22, 101, 52);
+}

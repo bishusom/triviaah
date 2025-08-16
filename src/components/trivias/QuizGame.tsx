@@ -315,9 +315,9 @@ export default function QuizGame({
 
       {/* Question and Image Container */}
       <div className="border border-gray-200 rounded-lg p-4 mb-6 bg-white shadow-sm">
-        <div className="flex flex-col md:flex-row gap-4">
+       <div className="flex flex-col md:flex-row gap-4 items-center md:items-start">
           {/* Image container with responsive sizing */}
-          <div className="w-full md:w-32 flex-shrink-0">
+          <div className="w-24 h-24 flex-shrink-0"> {/* Changed from w-full md:w-32 */}
             <div className={`relative aspect-square w-full rounded-md overflow-hidden bg-gray-100 ${questionImage ? '' : 'animate-pulse'}`}>
               {questionImage ? (
                 <img 

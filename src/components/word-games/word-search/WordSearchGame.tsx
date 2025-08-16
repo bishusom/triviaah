@@ -1,10 +1,12 @@
 'use client';
 import { event } from '@/lib/gtag';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { db } from '@/lib/firebase';
 import { useSound } from '@/app/context/SoundContext';
 import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
+import gameStyles from '@styles/WordGames/WordSearch.module.css';
+import commonStyles from '@styles/WordGames/WordGames.common.module.css';
 
 type DifficultyLevel = 'easy' | 'medium' | 'hard';
 
@@ -32,7 +34,7 @@ type DirectionCounts = {
   horizontal: number;
   vertical: number;
   diagonal: number;
-  [key: string]: number; // Add index signature
+  [key: string]: number;
 };
 
 export default function WordSearchGame() {
@@ -67,6 +69,7 @@ export default function WordSearchGame() {
   const [countdown, setCountdown] = useState(5);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [gridKey, setGridKey] = useState(0); // Unique key for grid to force re-render
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const usedWordsRef = useRef<Set<string>>(new Set());
@@ -75,44 +78,42 @@ export default function WordSearchGame() {
   const gridRef = useRef<HTMLDivElement>(null);
   const startCellRef = useRef<number | null>(null);
 
+  // Calculate cell size based on screen width
+  const calculateCellSize = useCallback(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    const maxWidth = typeof window !== 'undefined' ? window.innerWidth - 32 : 760;
+    const minCellSize = isMobile ? 28 : 36;
+    const calculatedSize = Math.floor(maxWidth / config[difficulty].gridCols);
+    return Math.max(minCellSize, Math.min(calculatedSize, 30));
+  }, [difficulty]);
+
+  const [cellSize, setCellSize] = useState(calculateCellSize());
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCellSize(calculateCellSize());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [calculateCellSize]);
+
   useEffect(() => {
     event({
       action: 'word_search_started',
       category: 'word_search',
-      label: difficulty, // Track the difficulty level
-      game_type: 'word_search', // Additional parameter
-      level: currentLevel // Track current level
+      label: difficulty,
+      game_type: 'word_search',
+      level: currentLevel
     });
-  }, []);
-
-  // Load saved state
-  useEffect(() => {
-    // Only initialize game if difficulty changes, not on mount
-    const savedState = localStorage.getItem('wordSearchState');
-    if (savedState) {
-      const parsed = JSON.parse(savedState);
-      if (parsed.difficulty && parsed.difficulty !== difficulty) {
-        setDifficulty(parsed.difficulty);
-      }
-      if (parsed.currentLevel) {
-        setCurrentLevel(parsed.currentLevel);
-      }
-      if (parsed.consecutiveWins) {
-        setConsecutiveWins(parsed.consecutiveWins);
-      }
-    } else {
-      // Initial game load
-      initGame();
-    }
-  }, []);
+  }, [currentLevel, difficulty]);
 
   useEffect(() => {
-    // This will handle difficulty changes
     if (difficulty) {
       initGame();
     }
   }, [difficulty]);
-    
+
   // Save game state
   useEffect(() => {
     localStorage.setItem('wordSearchState', JSON.stringify({
@@ -123,21 +124,21 @@ export default function WordSearchGame() {
   }, [difficulty, consecutiveWins, currentLevel]);
 
   // Sound functions
-    const playSound = (type: string) => {
-      if (isMuted) return;
-      const sounds: Record<string, string> = {
-        select: '/sounds/click.mp3',
-        found: '/sounds/correct.mp3',
-        error: '/sounds/incorrect.mp3',
-        win: '/sounds/win.mp3'
-      };
-      try {
-        const audio = new Audio(sounds[type]);
-        audio.play().catch(err => console.error(`Error playing ${type} sound:`, err));
-      } catch (error) {
-        console.error('Sound error:', error);
-      }
+  const playSound = (type: string) => {
+    if (isMuted) return;
+    const sounds: Record<string, string> = {
+      select: '/sounds/click.mp3',
+      found: '/sounds/correct.mp3',
+      error: '/sounds/incorrect.mp3',
+      win: '/sounds/win.mp3'
     };
+    try {
+      const audio = new Audio(sounds[type]);
+      audio.play().catch(err => console.error(`Error playing ${type} sound:`, err));
+    } catch (error) {
+      console.error('Sound error:', error);
+    }
+  };
 
   // Timer functions
   const startTimer = () => {
@@ -203,10 +204,10 @@ export default function WordSearchGame() {
     for (let i = 0; i < letters.length; i++) {
       let r = row, c = col;
       switch (direction) {
-        case 0: c += i; break; // horizontal
-        case 1: r += i; break; // vertical
-        case 2: r += i; c += i; break; // diagonal down-right
-        case 3: r -= i; c += i; break; // diagonal up-right
+        case 0: c += i; break;
+        case 1: r += i; break;
+        case 2: r += i; c += i; break;
+        case 3: r -= i; c += i; break;
       }
       if (r < 0 || r >= config[difficulty].gridRows || c < 0 || c >= config[difficulty].gridCols) {
         return false;
@@ -243,6 +244,7 @@ export default function WordSearchGame() {
   };
 
   const tryPlaceWord = (localGrid: Cell[], wordObj: WordObj, directionQuotas: DirectionCounts) => {
+    
     const directions = [
       { id: 0, type: 'horizontal', rowStep: 0, colStep: 1 },
       { id: 1, type: 'vertical', rowStep: 1, colStep: 0 },
@@ -341,152 +343,103 @@ export default function WordSearchGame() {
 
   // Game initialization
   const initGame = async (attemptedWordCount: number = config[difficulty].wordCount) => {
-    console.log('init game ',difficulty);
     setIsLoading(true);
     setError('');
-    setSelectedCells([]);
-    setFoundWords([]);
-    setIsSelecting(false);
-    usedWordsRef.current.clear();
-    directionCountsRef.current = { horizontal: 0, vertical: 0, diagonal: 0 };
-    setShowVictory(false);
     setFeedback({ message: '', type: '' });
+    setFoundWords([]);
+    setSelectedCells([]);
+    setIsSelecting(false);
+    setGridKey(prev => prev + 1); // Increment gridKey to force re-render
 
-    // Clear previous game styles from DOM
-    const gridElement = gridRef.current;
-    if (gridElement) {
-      const cells = gridElement.querySelectorAll('.wordsearch-cell');
-      cells.forEach(cell => {
-        cell.classList.remove('found');
-        (cell as HTMLElement).style.backgroundColor = '';
-        (cell as HTMLElement).style.boxShadow = '';
-      });
-    }
-
-    // Initialize grid
-    const initialGrid: Cell[] = Array(config[difficulty].gridCols * config[difficulty].gridRows)
-    .fill(null)
-    .map(() => ({ letter: '', word: null, element: null }));
-    setGrid(initialGrid);
+    // Reset styles of existing grid cells
+    grid.forEach(cell => {
+      if (cell.element) {
+        cell.element.style.backgroundColor = '';
+        cell.element.style.boxShadow = '';
+        cell.element.classList.remove(gameStyles.found);
+      }
+    });
 
     try {
-      // Generate and sort words
-      let wordList = await generateWordList(config[difficulty], attemptedWordCount);
-      wordList.sort((a, b) => b.letters.length - a.letters.length);
-      setWords(wordList);
+      const diffConfig = config[difficulty];
+      const newWords = await generateWordList(diffConfig, attemptedWordCount);
+      if (newWords.length === 0) {
+        throw new Error('No words could be generated');
+      }
 
-      let placedSuccessfully = false;
-      let totalGameAttempts = 0;
-      const maxGameAttempts = 10;
-      let localGrid = [...initialGrid];
-      let placedWords: WordObj[] = [];
+      let newGrid: Cell[] = Array(diffConfig.gridRows * diffConfig.gridCols)
+        .fill(null)
+        .map(() => ({ letter: '', word: null, element: null }));
 
-      while (!placedSuccessfully && totalGameAttempts < maxGameAttempts) {
-        totalGameAttempts++;
-        localGrid = [...initialGrid];
-        let totalAttempts = 0;
-        placedWords = [];
-        let availableWords = [...wordList];
+      directionCountsRef.current = { horizontal: 0, vertical: 0, diagonal: 0 };
+      const directionQuotas: DirectionCounts = {
+        horizontal: Math.ceil(newWords.length / 3),
+        vertical: Math.ceil(newWords.length / 3),
+        diagonal: Math.ceil(newWords.length / 3)
+      };
 
-        const totalWords = attemptedWordCount;
-        const minPerDirection = Math.floor(totalWords / 3);
-        const directionQuotas: DirectionCounts = {
-          horizontal: minPerDirection,
-          vertical: minPerDirection,
-          diagonal: totalWords - 2 * minPerDirection
-        };
+      let totalAttempts = 0;
+      for (const wordObj of newWords) {
+        let wordPlaced = false;
+        const currentGrid = [...newGrid];
 
-        while (placedWords.length < attemptedWordCount && totalAttempts < config.maxTotalAttempts) {
-          if (availableWords.length === 0) {
-            availableWords = [...wordList].filter(wordObj => !placedWords.some(p => p.word === wordObj.word));
-          }
-          if (availableWords.length === 0) {
-            break;
-          }
-          const wordObj = availableWords[0];
-          const result = tryPlaceWord(localGrid, wordObj, directionQuotas);
+        while (!wordPlaced && totalAttempts < config.maxTotalAttempts) {
+          const result = tryPlaceWord(currentGrid, wordObj, directionQuotas);
+          totalAttempts++;
           if (result.success) {
-            placedWords.push(wordObj);
+            newGrid = result.grid;
+            wordPlaced = true;
             usedWordsRef.current.add(wordObj.word);
-            localGrid = result.grid;
-            availableWords.shift();
-          } else {
-            availableWords.shift();
-            totalAttempts++;
-          }
-        }
-
-        if (placedWords.length < attemptedWordCount) {
-          const remainingWordsNeeded = attemptedWordCount - placedWords.length;
-          const simplerWords = await generateWordList(config[difficulty], remainingWordsNeeded);
-          const simplerAvailableWords = simplerWords.filter(wordObj => !usedWordsRef.current.has(wordObj.word));
-          let simplerAttempts = 0;
-
-          while (placedWords.length < attemptedWordCount && simplerAttempts < config.maxTotalAttempts && simplerAvailableWords.length > 0) {
-            const wordObj = simplerAvailableWords[0];
-            const result = tryPlaceWord(localGrid, wordObj, directionQuotas);
-            if (result.success) {
-              placedWords.push(wordObj);
-              usedWordsRef.current.add(wordObj.word);
-              localGrid = result.grid;
-              simplerAvailableWords.shift();
+          } else if (totalAttempts >= config.maxTotalAttempts) {
+            if (retryCountRef.current < config.maxRetries) {
+              retryCountRef.current++;
+              setTimeout(() => initGame(attemptedWordCount - 1), 0);
+              setError(`Could not place all words, retrying with ${attemptedWordCount - 1} words... (${retryCountRef.current}/${config.maxRetries})`);
+              return;
             } else {
-              simplerAvailableWords.shift();
-              simplerAttempts++;
+              setError('Failed to generate a valid puzzle after maximum retries.');
+              setIsLoading(false);
+              return;
             }
           }
         }
-
-        if (placedWords.length === attemptedWordCount) {
-          placedSuccessfully = true;
-          setWords(placedWords);
-          const finalGrid = fillEmptyCells(localGrid);
-          setGrid(finalGrid);
-          startTimer();
-          showFeedback(`Find ${placedWords.length} hidden words!`, 'info');
-          retryCountRef.current = 0;
-        } else {
-          usedWordsRef.current.clear();
-          wordList = await generateWordList(config[difficulty], attemptedWordCount);
-          wordList.sort((a, b) => b.letters.length - a.letters.length);
-          directionCountsRef.current = { horizontal: 0, vertical: 0, diagonal: 0 };
-        }
       }
 
-      if (!placedSuccessfully) {
-        if (attemptedWordCount > 3) {
-          return initGame(attemptedWordCount - 1);
-        }
-        throw new Error(`Could only place ${placedWords.length} out of ${attemptedWordCount} words after ${maxGameAttempts} attempts`);
-      }
+      newGrid = fillEmptyCells(newGrid);
+      setGrid(newGrid);
+      setWords(newWords);
+      setIsLoading(false);
+      showFeedback('Find all the words in the grid!', 'info');
+      startTimer();
     } catch (error) {
-      console.error("Game initialization failed:", error);
-      setError("Failed to load puzzle. Retrying...");
-      retryCountRef.current++;
-      if (retryCountRef.current >= config.maxRetries) {
-        setError("Failed to load puzzle after multiple attempts. Please try again.");
-        setIsLoading(false);
-        return;
-      }
-      setTimeout(() => {
-        const staticWords = [
-          'CAT', 'DOG', 'HAT', 'PEN', 'SUN', 'TWO',
-          'BOOK', 'GAME', 'TREE', 'FISH', 'MOON', 'STAR',
-          'RIVER', 'HOUSE', 'CLOUD', 'STONE', 'WIND', 'PATH'
-        ].filter(word => word.length >= config[difficulty].minWordLength && word.length <= config[difficulty].maxWordLength);
-        const uniqueStaticWords = [...new Set(staticWords)].filter(word => !usedWordsRef.current.has(word));
-        const finalWords = shuffleArray(uniqueStaticWords).slice(0, attemptedWordCount)
-          .map(word => ({ word, letters: word.split('') }));
-        setWords(finalWords.sort((a, b) => b.letters.length - a.letters.length));
-        initGame(attemptedWordCount);
-      }, 2000);
-    } finally {
+      console.error('Game initialization error:', error);
+      setError('Failed to initialize the game. Please try again.');
       setIsLoading(false);
     }
   };
 
-  // Selection handling
+  // Load saved state
+  useEffect(() => {
+    const savedState = localStorage.getItem('wordSearchState');
+    if (savedState) {
+      const parsed = JSON.parse(savedState);
+      if (parsed.difficulty && parsed.difficulty !== difficulty) {
+        setDifficulty(parsed.difficulty);
+      }
+      if (parsed.currentLevel) {
+        setCurrentLevel(parsed.currentLevel);
+      }
+      if (parsed.consecutiveWins) {
+        setConsecutiveWins(parsed.consecutiveWins);
+      }
+    } else {
+      initGame();
+    }
+  }, [initGame, difficulty]);
+
+  // Selection handlers
   const startSelection = (index: number) => {
+    if (isLoading) return;
     setIsSelecting(true);
     setSelectedCells([index]);
     startCellRef.current = index;
@@ -494,20 +447,18 @@ export default function WordSearchGame() {
   };
 
   const continueSelection = (index: number) => {
-    if (!isSelecting || !startCellRef.current || selectedCells.includes(index)) return;
+    if (!isSelecting || !startCellRef.current) return;
 
     const size = config[difficulty].gridCols;
-    const startIndex = startCellRef.current;
-    const startRow = Math.floor(startIndex / size);
-    const startCol = startIndex % size;
-    const currentRow = Math.floor(index / size);
-    const currentCol = index % size;
+    const startRow = Math.floor(startCellRef.current / size);
+    const startCol = startCellRef.current % size;
+    const endRow = Math.floor(index / size);
+    const endCol = index % size;
 
-    const rowDiff = currentRow - startRow;
-    const colDiff = currentCol - startCol;
-
-    // Determine direction
+    const rowDiff = endRow - startRow;
+    const colDiff = endCol - startCol;
     let direction = '';
+
     if (Math.abs(rowDiff) <= 0 && Math.abs(colDiff) > 0) {
       direction = 'horizontal';
     } else if (Math.abs(colDiff) <= 0 && Math.abs(rowDiff) > 0) {
@@ -515,11 +466,10 @@ export default function WordSearchGame() {
     } else if (Math.abs(rowDiff) === Math.abs(colDiff)) {
       direction = 'diagonal';
     } else {
-      return; // Not a straight line
+      return;
     }
 
-    // Calculate all cells in this direction
-    const newSelectedCells = [startIndex];
+    const newSelectedCells = [startCellRef.current];
     const steps = Math.max(Math.abs(rowDiff), Math.abs(colDiff));
     const rowStep = rowDiff === 0 ? 0 : rowDiff > 0 ? 1 : -1;
     const colStep = colDiff === 0 ? 0 : colDiff > 0 ? 1 : -1;
@@ -577,15 +527,9 @@ export default function WordSearchGame() {
       const newGrid = grid.map((cell, index) => {
         if (orderedCells.includes(index)) {
           const element = cell.element || document.querySelector(`[data-index="${index}"]`);
-          if (element) {
-            const currentBg = element instanceof HTMLElement ? element.style.backgroundColor : '';
-            if (currentBg && currentBg !== 'transparent') {
-              element.style.backgroundColor = colors[colorIndex];
-              element.style.boxShadow = `inset 0 0 0 2px ${currentBg}`;
-            } else {
-              element.style.backgroundColor = colors[colorIndex];
-            }
-            element.classList.add('found');
+          if (element instanceof HTMLElement) {
+            element.style.backgroundColor = colors[colorIndex];
+            element.classList.add(gameStyles.found);
           }
           return { ...cell, element };
         }
@@ -608,58 +552,60 @@ export default function WordSearchGame() {
 
   const handleGameWin = () => {
     playSound('win');
-    showConfetti();
-
-    const newConsecutiveWins = consecutiveWins + 1;
-    const newCurrentLevel = currentLevel + 1;
-    let levelUp = false;
-    let message = '';
-    let newDifficulty = difficulty;
-
-    if (newConsecutiveWins >= 3) {
-      if (difficulty === 'easy') {
-        newDifficulty = 'medium';
-        levelUp = true;
-        message = `🎉 Advanced to Medium level! 🎉`;
-      } else if (difficulty === 'medium') {
-        newDifficulty = 'hard';
-        levelUp = true;
-        message = `🏆 Advanced to Hard level! 🏆`;
-      } else {
-        message = `👑 Mastered Hard level! Continuing at max difficulty. 👑`;
-      }
-      if (levelUp) {
-        setTimeout(() => showConfetti({ particleCount: 200, spread: 100 }), 1000);
-      }
-    } else {
-      message = `🎊 Level ${newCurrentLevel} UnLocked! 🎊`;
-    }
-
-    // Update state first
-    setCurrentLevel(newCurrentLevel);
-    setConsecutiveWins(levelUp ? 0 : newConsecutiveWins);
-    if (levelUp) {
-      setDifficulty(newDifficulty);
-    }
     
-    setVictoryMessage(message);
-    setShowVictory(true);
+    // Add a small delay before showing confetti and victory message
+    setTimeout(() => {
+      showConfetti();
 
-    let count = 5;
-    setCountdown(count);
-    const countdownInterval = setInterval(() => {
-      count--;
-      setCountdown(count);
-      if (count <= 0) {
-        clearInterval(countdownInterval);
-        setShowVictory(false);
-        // Only initialize game after countdown if we didn't level up
-        // (level up already triggers initGame via useEffect)
-        if (!levelUp) {
-          initGame();
+      const newConsecutiveWins = consecutiveWins + 1;
+      const newCurrentLevel = currentLevel + 1;
+      let levelUp = false;
+      let message = '';
+      let newDifficulty = difficulty;
+
+      if (newConsecutiveWins >= 3) {
+        if (difficulty === 'easy') {
+          newDifficulty = 'medium';
+          levelUp = true;
+          message = `🎉 Advanced to Medium level! 🎉`;
+        } else if (difficulty === 'medium') {
+          newDifficulty = 'hard';
+          levelUp = true;
+          message = `🏆 Advanced to Hard level! 🏆`;
+        } else {
+          message = `👑 Mastered Hard level! Continuing at max difficulty. 👑`;
         }
+        if (levelUp) {
+          setTimeout(() => showConfetti({ particleCount: 200, spread: 100 }), 1000);
+        }
+      } else {
+        message = `🎊 Level ${newCurrentLevel} UnLocked! 🎊`;
       }
-    }, 1000);
+
+      // Update state first
+      setCurrentLevel(newCurrentLevel);
+      setConsecutiveWins(levelUp ? 0 : newConsecutiveWins);
+      if (levelUp) {
+        setDifficulty(newDifficulty);
+      }
+      
+      setVictoryMessage(message);
+      setShowVictory(true);
+
+      let count = 5;
+      setCountdown(count);
+      const countdownInterval = setInterval(() => {
+        count--;
+        setCountdown(count);
+        if (count <= 0) {
+          clearInterval(countdownInterval);
+          setShowVictory(false);
+          if (!levelUp) {
+            initGame();
+          }
+        }
+      }, 1000);
+    }, 500); // 500ms delay
   };
 
   const giveHint = () => {
@@ -673,48 +619,28 @@ export default function WordSearchGame() {
     }
   };
 
-  // Calculate cell size based on screen width
-  const calculateCellSize = () => {
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
-    const maxWidth = typeof window !== 'undefined' ? window.innerWidth - 32 : 760; // Reduced padding to 16px per side
-    const minCellSize = isMobile ? 28 : 36; // Increased minCellSize for better touch targets (28px for mobile, 36px for desktop)
-    const calculatedSize = Math.floor(maxWidth / config[difficulty].gridCols);
-    return Math.max(minCellSize, Math.min(calculatedSize, 30)); // Cap max cell size at 40px to prevent oversized cells
-  };
-
-  const [cellSize, setCellSize] = useState(calculateCellSize());
-
-  useEffect(() => {
-    const handleResize = () => {
-      setCellSize(calculateCellSize());
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [difficulty]);
-
   return (
-    <div className="word-game-card max-w-3xl mx-auto p-4 bg-white rounded-lg shadow-md">
-      <div className="word-game-meta flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+    <div className={commonStyles.container}>
+      <div className={commonStyles.header}>
         <div>
-          <h1 className="text-xl font-bold text-gray-800">Word Search</h1>
-          <div className="text-sm text-gray-600">
+          <h1 className={commonStyles.title}>Word Search</h1>
+          <div className={commonStyles.levelText}>
             Level: {currentLevel} ({difficulty})
             {difficulty !== 'hard' ? (
               consecutiveWins < 3 ? ` • Wins to next difficulty: ${3 - consecutiveWins}` : ' • Ready to advance!'
             ) : ' • Max difficulty!'}
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
+        <div className="flex items-center gap-4">
+          <div className={commonStyles.timerContainer}>
             ⏱️ {formatTime(timer)}
           </div>
-          <div className="font-bold text-blue-600 text-sm">
+          <div className={commonStyles.scoreText}>
             Words: {words.length - foundWords.length}/{words.length}
           </div>
         </div>
       </div>
-
+   
       {isLoading && (
         <div className="p-3 rounded mb-4 bg-blue-100 text-blue-800 text-center">
           <div className="flex items-center justify-center gap-2">
@@ -737,29 +663,27 @@ export default function WordSearchGame() {
       )}
 
       <div
+        key={`grid-${gridKey}`}
         ref={gridRef}
-        className="wordsearch-grid mb-2 bg-gray-100 rounded-md mx-auto" // Reduced margin-bottom here
+        className={`${gameStyles.wordSearchGrid}`}
         style={{
           gridTemplateColumns: `repeat(${config[difficulty].gridCols}, ${cellSize}px)`,
           gridTemplateRows: `repeat(${config[difficulty].gridRows}, ${cellSize}px)`,
           width: `${cellSize * config[difficulty].gridCols}px`,
           height: `${cellSize * config[difficulty].gridRows}px`,
-          display: 'grid',
-          overflow: 'hidden'
         }}
       >
         {grid.map((cell, index) => (
           <div
-            key={index}
+            key={`cell-${index}-${gridKey}`}
             data-index={index}
-            className={`wordsearch-cell flex items-center justify-center cursor-pointer select-none
-              ${selectedCells.includes(index) ? 'bg-blue-200' : cell.element?.classList.contains('found') ? 'found' : 'bg-white hover:bg-gray-50'}`}
+            className={`${gameStyles.wordSearchCell} ${
+              selectedCells.includes(index) ? gameStyles.selected : ''
+            } ${cell.element?.classList.contains('found') ? gameStyles.found : ''}`}
             style={{
               width: `${cellSize}px`,
               height: `${cellSize}px`,
               fontSize: `${Math.max(12, cellSize * 0.6)}px`,
-              userSelect: 'none',
-              touchAction: 'none'
             }}
             onMouseDown={() => startSelection(index)}
             onMouseEnter={() => continueSelection(index)}
@@ -772,7 +696,7 @@ export default function WordSearchGame() {
               e.preventDefault();
               const touch = e.touches[0];
               const target = document.elementFromPoint(touch.clientX, touch.clientY);
-              if (target && target.classList.contains('wordsearch-cell')) {
+              if (target && target.classList.contains(gameStyles.wordSearchCell)) {
                 const index = parseInt(target.getAttribute('data-index') || '');
                 if (!isNaN(index)) continueSelection(index);
               }
@@ -787,26 +711,21 @@ export default function WordSearchGame() {
         ))}
       </div>
 
-      {/* Feedback moved below the grid */}
       {feedback.message && !isLoading && (
-        <div className={`mb-4 p-3 rounded text-center ${
-          feedback.type === 'error' ? 'bg-red-100 text-red-800' : 
-          feedback.type === 'success' ? 'bg-green-100 text-green-800' : 
-          'bg-blue-100 text-blue-800'
-        }`}>
+        <div className={`mb-4 p-3 rounded text-center ${gameStyles[feedback.type]}`}>
           {feedback.message}
         </div>
       )}
 
-      <div className="mb-4">
-        <h3 className="text-md font-semibold mb-2">Words to Find:</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1 sm:gap-2 max-h-40 overflow-y-auto">
+      <div className={gameStyles.wordsToFind}>
+        <h3 className={gameStyles.wordsHeader}>Words to Find:</h3>
+        <div className={gameStyles.wordsGrid}>
           {words
             .sort((a, b) => a.word.localeCompare(b.word))
             .map((wordObj, i) => (
               <div
                 key={i}
-                className={`p-1 text-sm sm:text-base ${foundWords.includes(wordObj.word) ? 'hidden' : 'text-gray-800'}`}
+                className={`${gameStyles.wordItem} ${foundWords.includes(wordObj.word) ? gameStyles.hidden : ''}`}
               >
                 {wordObj.word}
               </div>
@@ -814,17 +733,17 @@ export default function WordSearchGame() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className={`${commonStyles.actionButtons}`}>
         <button
           onClick={() => initGame()}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded text-sm sm:text-base"
+          className={`${commonStyles.actionButton} ${commonStyles.playAgainButton}`}
           disabled={isLoading}
         >
           New Game
         </button>
         <button
           onClick={giveHint}
-          className="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded text-sm sm:text-base"
+          className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}
           disabled={isLoading}
         >
           Hint
@@ -833,11 +752,11 @@ export default function WordSearchGame() {
 
       {showVictory && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-            <h2 className="text-xl font-bold mb-4">Victory!</h2>
-            <p className="mb-2">{victoryMessage}</p>
-            <p className="mb-4">Words Found: {foundWords.length}</p>
-            <div className="text-center text-gray-600">
+          <div className={gameStyles.victoryContent}>
+            <h2 className={gameStyles.victoryTitle}>Victory!</h2>
+            <p className={gameStyles.victoryMessage}>{victoryMessage}</p>
+            <p className={gameStyles.victoryStats}>Words Found: {foundWords.length}</p>
+            <div className={gameStyles.countdown}>
               Next level in {countdown}...
             </div>
           </div>

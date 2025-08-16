@@ -1,0 +1,137 @@
+/* Shared layout/container styles */
+.container {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Shared header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgb(31, 41, 55);
+}
+
+/* Shared score/timer styles */
+.scoreText {
+  font-weight: 700;
+  color: rgb(37, 99, 235);
+}
+
+.timerContainer {
+  background-color: rgb(219, 234, 254);
+  color: rgb(29, 78, 216);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.timeCritical {
+  color: #e03131;
+  animation: pulse 1s infinite;
+}
+
+/* Shared feedback messages */
+.feedback {
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.feedbackInfo {
+  background-color: rgb(220, 232, 252);
+  color: rgb(22, 101, 52);
+}
+
+.feedbackError {
+  background-color: rgb(254, 226, 226);
+  color: rgb(153, 27, 27);
+}
+
+.feedbackSuccess {
+  background-color: rgb(220, 252, 231);
+  color: rgb(22, 101, 52);
+}
+
+/* Shared buttons */
+.actionButtons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.actionButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  color: white;
+  transition-property: background-color;
+  transition-duration: 200ms;
+}
+
+.submitButton {
+  background-color: rgb(22, 163, 74);
+}
+
+.submitButton:hover {
+  background-color: rgb(21, 128, 61);
+}
+
+.clearButton {
+  background-color: rgb(75, 85, 99);
+}
+
+.clearButton:hover {
+  background-color: rgb(55, 65, 81);
+}
+
+.shuffleButton {
+  background-color: rgb(37, 99, 235);
+}
+
+.shuffleButton:hover {
+  background-color: rgb(29, 78, 216);
+}
+
+.hintButton {
+  background-color: rgb(202, 138, 4);
+}
+
+.hintButton:hover {
+  background-color: rgb(161, 98, 7);
+}
+
+.giveUpButton {
+  background-color: rgb(220, 38, 38);
+  grid-column: span 2;
+}
+
+.giveUpButton:hover {
+  background-color: rgb(185, 28, 28);
+}
+
+.playAgainButton {
+  background-color: rgb(37, 99, 235);
+}
+
+.playAgainButton:hover {
+  background-color: rgb(29, 78, 216);
+}
+
+.homeButton {
+  background-color: rgb(75, 85, 99);
+}
+
+.homeButton:hover {
+  background-color: rgb(55, 65, 81);
+}

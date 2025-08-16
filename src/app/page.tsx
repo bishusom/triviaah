@@ -3,7 +3,6 @@
 
 import { useEffect, useState, useMemo, memo, useCallback } from 'react';
 import Link from 'next/link';
-import Head from 'next/head';
 import { MdInfo, MdEmail } from 'react-icons/md';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -102,24 +101,31 @@ export default function Home() {
   const [playedQuizzes, setPlayedQuizzes] = useState<Record<string, { played: boolean; timestamp: number }>>({});
   const [timeLeft, setTimeLeft] = useState<string>('');
 
+  // Load played quizzes in the background without blocking render
   useEffect(() => {
-    const stored = localStorage.getItem('playedQuizzes');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        const updated: Record<string, { played: boolean; timestamp: number }> = {};
-        for (const key in parsed) {
-          if (typeof parsed[key] === 'boolean') {
-            updated[key] = { played: parsed[key], timestamp: 0 };
-          } else {
-            updated[key] = parsed[key];
+    const loadPlayedQuizzes = async () => {
+      const stored = localStorage.getItem('playedQuizzes');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          const updated: Record<string, { played: boolean; timestamp: number }> = {};
+          for (const key in parsed) {
+            if (typeof parsed[key] === 'boolean') {
+              updated[key] = { played: parsed[key], timestamp: 0 };
+            } else {
+              updated[key] = parsed[key];
+            }
           }
+          setPlayedQuizzes(updated);
+        } catch (e) {
+          console.error('Error parsing playedQuizzes', e);
         }
-        setPlayedQuizzes(updated);
-      } catch (e) {
-        console.error('Error parsing playedQuizzes', e);
       }
-    }
+    };
+
+    // Small delay to prioritize rendering the main content
+    const timer = setTimeout(loadPlayedQuizzes, 50);
+    return () => clearTimeout(timer);
   }, []);
 
   const updateTimer = useCallback(() => {
@@ -322,26 +328,40 @@ const DailyQuizCard = memo(function DailyQuizCard({
   onPlay: (category: string) => void;
   priorityImage?: boolean;
 }) {
-  const shouldResetQuiz = (category: string) => {
-    if (!playedQuizzes[category]) return true;
-    
-    const lastPlayed = new Date(playedQuizzes[category].timestamp);
-    const now = new Date();
-    
-    return (
-      lastPlayed.getDate() !== now.getDate() ||
-      lastPlayed.getMonth() !== now.getMonth() ||
-      lastPlayed.getFullYear() !== now.getFullYear()
-    );
-  };
+  const [isPlayed, setIsPlayed] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
 
-  const wasPlayed = playedQuizzes[quiz.category]?.played || false;
-  const shouldReset = shouldResetQuiz(quiz.category);
-  const showAsPlayed = wasPlayed && !shouldReset;
+  useEffect(() => {
+    // Check played status in the background
+    const checkPlayedStatus = () => {
+      if (!playedQuizzes[quiz.category]) {
+        setIsPlayed(false);
+        setIsChecking(false);
+        return;
+      }
+      
+      const lastPlayed = new Date(playedQuizzes[quiz.category].timestamp);
+      const now = new Date();
+      
+      const shouldReset = (
+        lastPlayed.getDate() !== now.getDate() ||
+        lastPlayed.getMonth() !== now.getMonth() ||
+        lastPlayed.getFullYear() !== now.getFullYear()
+      );
+      
+      setIsPlayed(playedQuizzes[quiz.category].played && !shouldReset);
+      setIsChecking(false);
+    };
+
+    // Small delay to prioritize rendering the main content
+    const timer = setTimeout(checkPlayedStatus, 50);
+    return () => clearTimeout(timer);
+  }, [playedQuizzes, quiz.category]);
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400">
       <div className="p-6 flex flex-col h-full">
+        {/* Image section - always visible */}
         <div className="flex items-center justify-center mb-4">
           <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
             <Image 
@@ -358,6 +378,7 @@ const DailyQuizCard = memo(function DailyQuizCard({
           </div>
         </div>
         
+        {/* Text content - always visible */}
         <div className="text-center mb-4">
           <h3 className="text-lg font-bold text-gray-800 mb-1">{quiz.name}</h3>
           <div className="text-sm text-gray-600 italic mb-2">
@@ -368,8 +389,18 @@ const DailyQuizCard = memo(function DailyQuizCard({
           </div>
         </div>
         
+        {/* Button section - changes based on status */}
         <div className="mt-auto">
-          {showAsPlayed ? (
+          {isChecking ? (
+            // Show the Play Now button while checking status
+            <Link 
+              href={quiz.category === 'today-in-history' ? '/daily/today-in-history' : `/daily/${quiz.category}`}
+              onClick={() => onPlay(quiz.category)}
+              className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors"
+            >
+              Play Now
+            </Link>
+          ) : isPlayed ? (
             <div className="text-center">
               <div className="inline-flex items-center bg-gray-100 text-gray-600 text-sm px-4 py-2 rounded-full">
                 <FaCheckCircleIcon className="mr-2 text-green-500" />

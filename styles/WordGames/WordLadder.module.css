@@ -1,0 +1,149 @@
+/* WordLadder.module.css */
+
+/* Word Display Styles */
+.wordDisplay {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.startEndWords {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.currentWord {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+/* Tile Styles */
+.letterTile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 
+              0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2d3748;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.letterTile::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0));
+  border-radius: 6px;
+}
+
+.letterTile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1), 
+              0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.letterTile.selected {
+  background: linear-gradient(145deg, #3b82f6, #2563eb);
+  color: white;
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Letter Tiles Container */
+.letterTiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1.5rem auto;
+  max-width: 600px;
+  padding: 1rem;
+  background: rgba(249, 250, 251, 0.7);
+  border-radius: 6px;
+}
+
+/* Feedback Messages */
+.feedback {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 1.5rem auto;
+  max-width: 600px;
+  font-weight: 500;
+}
+
+.success {
+  background: linear-gradient(145deg, #ebfbee, #d3f9d8);
+  color: #2b8a3e;
+  border-left: 4px solid #40c057;
+}
+
+.error {
+  background: linear-gradient(145deg, #fff5f5, #ffebeb);
+  color: #c92a2a;
+  border-left: 4px solid #ff6b6b;
+}
+
+.info {
+  background: linear-gradient(145deg, #f0f7ff, #e5f3ff);
+  color: #1864ab;
+  border-left: 4px solid #4dabf7;
+}
+
+/* Word List Styles */
+.wordListContainer {
+  margin: 2rem 0;
+}
+
+.wordList {
+  list-style-type: none;
+  padding: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+}
+
+.wordList li {
+  padding: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  font-weight: 500;
+  color: #4b5563;
+  transition: all 0.2s;
+}
+
+.wordList li:last-child {
+  border-bottom: none;
+}
+
+.wordList li:hover {
+  background-color: #f9fafb;
+  color: #1f2937;
+}
+
+/* Animation */
+@keyframes tileBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.letterTile.selected {
+  animation: tileBounce 0.3s ease;
+}

@@ -3,6 +3,8 @@ import { event } from '@/lib/gtag';
 import { useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/app/context/SoundContext';
+import commonStyles from '@styles/WordGames/WordGames.common.module.css';
+import gameStyles from '@styles/WordGames/SpellingBee.module.css';
 
 type FeedbackType = 'error' | 'success' | 'info' | 'hint';
 type HexagonPosition = 'top' | 'bottom' | 'left' | 'right' | 'center';
@@ -282,37 +284,37 @@ export default function SpellingBeeGame() {
   const HexagonButton = ({ letter, onClick, position }: HexagonButtonProps) => {
     const getColor = () => {
       switch (position) {
-        case 'center': return 'bg-yellow-200 hover:bg-yellow-300';
-        default: return 'bg-blue-100 hover:bg-blue-200';
+        case 'center': return `${gameStyles.hexagon} bg-yellow-200 hover:bg-yellow-300`;
+        default: return `${gameStyles.hexagon} bg-blue-100 hover:bg-blue-200`;
       }
     };
 
     return (
-      <div className="hexagon-container">
+      <div className={gameStyles.hexagonContainer}>
         <button
           onClick={onClick}
-          className={`hexagon ${getColor()} transition-colors duration-200`}
+          className={getColor()}
         >
-          <span className="hexagon-text">{letter}</span>
+          <span className={gameStyles.hexagonText}>{letter}</span>
         </button>
       </div>
     );
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md relative">
-      <h1 className="text-2xl font-bold text-center mb-4">Spelling Bee</h1>
+    <div className={commonStyles.container}>
+      <h1 className={commonStyles.title}>Spelling Bee</h1>
+      
       {/* Center letter display */}
-      <div className="text-center mb-4">
-        <div className="text-lg font-semibold">Rank: {rank}</div>
-        <div className="text-xl font-bold animate-pulse">Score: {score}</div>
+      <div className={gameStyles.scoreContainer}>
+        <div className={commonStyles.rankText}>Rank: {rank}</div>
+        <div className={commonStyles.scoreText}>Score: {score}</div>
       </div>
       
-      
       {/* Hexagonal letter grid */}
-      <div className="hex-grid">
+      <div className={gameStyles.hexGrid}>
         {/* Top row (2 letters) */}
-        <div className="hex-row hex-row-top">
+        <div className={`${gameStyles.hexRow} ${gameStyles.hexRowTop}`}>
           {letters.slice(1, 3).map((letter, index) => (
             <HexagonButton
               key={index}
@@ -324,7 +326,7 @@ export default function SpellingBeeGame() {
         </div>
         
         {/* Middle row (3 letters - left, center, right) */}
-        <div className="hex-row hex-row-middle">
+        <div className={gameStyles.hexRow}>
           {letters.slice(3, 4).map((letter, index) => (
             <HexagonButton
               key={index}
@@ -349,7 +351,7 @@ export default function SpellingBeeGame() {
         </div>
         
         {/* Bottom row (2 letters) */}
-        <div className="hex-row hex-row-bottom">
+        <div className={`${gameStyles.hexRow} ${gameStyles.hexRowBottom}`}>
           {letters.slice(5, 7).map((letter, index) => (
             <HexagonButton
               key={index}
@@ -361,55 +363,55 @@ export default function SpellingBeeGame() {
         </div>
       </div>
       
-       {/* Feedback message */}
+      {/* Feedback message */}
       {feedback.message && (
-        <div className={`p-2 mb-4 rounded text-center transition-all duration-300 ${
-          feedback.type === 'error' ? 'bg-red-100 text-red-800' :
-          feedback.type === 'success' ? 'bg-green-100 text-green-800' :
-          feedback.type === 'hint' ? 'bg-yellow-100 text-yellow-800' :
-          'bg-blue-100 text-blue-800'
+        <div className={`${commonStyles.feedback} ${
+          feedback.type === 'error' ? commonStyles.feedbackError :
+          feedback.type === 'success' ? commonStyles.feedbackSuccess :
+          feedback.type === 'hint' ? commonStyles.feedbackHint :
+          commonStyles.feedbackInfo
         }`}>
           {feedback.message}
         </div>
       )}
 
       {/* Current word */}
-      <div className="mb-6 text-center">
-        <h3 className="text-lg font-semibold mb-2">Current Word:</h3>
-        <div className="text-2xl font-bold min-h-10 transition-all duration-200">
-          {currentWord.join('') || <span className="opacity-30">Select letters</span>}
+      <div className={gameStyles.currentWordContainer}>
+        <h3 className={gameStyles.currentWordTitle}>Current Word:</h3>
+        <div className={gameStyles.currentWordText}>
+          {currentWord.join('') || <span className={gameStyles.currentWordPlaceholder}>Select letters</span>}
         </div>
       </div>
       
       {/* Action buttons */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
+      <div className={commonStyles.actionButtons}>
         <button
           onClick={submitWord}
-          className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition-colors duration-200"
+          className={`${commonStyles.actionButton} ${commonStyles.submitButton}`}
         >
           Submit
         </button>
         <button
           onClick={clearCurrentWord}
-          className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded transition-colors duration-200"
+          className={`${commonStyles.actionButton} ${commonStyles.clearButton}`}
         >
           Clear
         </button>
         <button
           onClick={shuffleLetters}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors duration-200"
+          className={`${commonStyles.actionButton} ${commonStyles.shuffleButton}`}
         >
           Shuffle
         </button>
         <button
           onClick={showHint}
-          className="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded transition-colors duration-200"
+          className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}
         >
           Hint
         </button>
         <button
           onClick={giveUp}
-          className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded col-span-2 transition-colors duration-200"
+          className={`${commonStyles.actionButton} ${commonStyles.giveUpButton}`}
         >
           Give Up
         </button>
@@ -417,17 +419,17 @@ export default function SpellingBeeGame() {
       
       {/* Found words */}
       {foundWords.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2">Found Words ({foundWords.length}):</h3>
-          <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2">
+        <div className={gameStyles.foundWordsContainer}>
+          <h3 className={gameStyles.foundWordsTitle}>Found Words ({foundWords.length}):</h3>
+          <div className={gameStyles.foundWordsList}>
             {foundWords
               .sort((a, b) => b.length - a.length)
               .map((word, index) => (
                 <span
                   key={index}
-                  className={`px-3 py-1 rounded-full transition-all duration-200 ${
+                  className={`${commonStyles.wordPill} ${
                     new Set(word.split('')).size === 7 ? 
-                    'bg-purple-100 text-purple-800 font-bold' : 'bg-green-100 text-green-800'
+                    gameStyles.pangramWord : gameStyles.normalWord
                   }`}
                 >
                   {word}
@@ -439,22 +441,22 @@ export default function SpellingBeeGame() {
       
       {/* Game over modal */}
       {showGameOverModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4 animate-fade-in">
-            <h2 className="text-xl font-bold mb-4">Game Over!</h2>
-            <p className="mb-2">Final Score: <span className="font-bold">{score}</span></p>
-            <p className="mb-2">Rank: <span className="font-bold">{rank}</span></p>
-            <p className="mb-6">Words Found: {foundWords.length}</p>
-            <div className="grid grid-cols-2 gap-3">
+        <div className={gameStyles.modalOverlay}>
+          <div className={gameStyles.modalContent}>
+            <h2 className={gameStyles.modalTitle}>Game Over!</h2>
+            <p className={gameStyles.modalText}>Final Score: <span className="font-bold">{score}</span></p>
+            <p className={gameStyles.modalText}>Rank: <span className="font-bold">{rank}</span></p>
+            <p className={gameStyles.modalText}>Words Found: {foundWords.length}</p>
+            <div className={gameStyles.modalButtons}>
               <button
                 onClick={initGame}
-                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors duration-200"
+                className={`${gameStyles.modalButton} ${gameStyles.playAgainButton}`}
               >
                 Play Again
               </button>
               <button
                 onClick={() => window.location.href = '/'}
-                className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded transition-colors duration-200"
+                className={`${gameStyles.modalButton} ${gameStyles.homeButton}`}
               >
                 Back to Home
               </button>

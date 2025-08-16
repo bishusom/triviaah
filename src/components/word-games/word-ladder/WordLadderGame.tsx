@@ -2,9 +2,11 @@
 import { event } from '@/lib/gtag';
 import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { db } from '@/lib/firebase'; // Import your Firebase config
+import { db } from '@/lib/firebase';
 import { useSound } from '@/app/context/SoundContext';
-import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
+import { collection, query, where, limit, getDocs } from 'firebase/firestore';
+import gameStyles from '@styles/WordGames/WordLadder.module.css';
+import commonStyles from '@styles/WordGames/WordGames.common.module.css';
 
 interface GameConfig {
   wordLength: {
@@ -63,7 +65,7 @@ export default function WordLadderGame() {
   const [wordCache, setWordCache] = useState<Map<string, boolean>>(new Map());
   const [currentSolutionPath, setCurrentSolutionPath] = useState<string[]>([]);
 
-  const timerInterval = useRef<NodeJS.Timeout| null>(null)
+  const timerInterval = useRef<NodeJS.Timeout | null>(null);
 
   // Game configuration
   const config: GameConfig = {
@@ -73,16 +75,16 @@ export default function WordLadderGame() {
       hard: 7
     },
     timeLimit: {
-      easy: 300,   // 5 minutes
-      medium: 240, // 4 minutes
-      hard: 180    // 3 minutes
+      easy: 300,
+      medium: 240,
+      hard: 180
     },
     scorePerStep: {
       easy: 50,
       medium: 75,
       hard: 100
     },
-    bonusPerSecond: 5, // Bonus points per second remaining
+    bonusPerSecond: 5,
     maxHints: 3
   };
 
@@ -104,7 +106,7 @@ export default function WordLadderGame() {
 
   // Initialize game
   useEffect(() => {
-    event({action: 'word_ladder_started', category: 'word_ladder',label: 'word_ladder'});
+    event({ action: 'word_ladder_started', category: 'word_ladder', label: 'word_ladder' });
     loadGameState();
     initGame();
     return () => {
@@ -185,7 +187,6 @@ export default function WordLadderGame() {
     const wordLength = config.wordLength[gameState.difficulty];
 
     try {
-      // Try Firebase first
       const { startWord, endWord, path } = await fetchWordLadderFromFirebase(wordLength);
       
       setStartWord(startWord);
@@ -257,7 +258,7 @@ export default function WordLadderGame() {
     setCurrentWord(start);
     setLadderWords([start]);
     setUsedWords(prev => new Set(prev).add(start));
-    setCurrentSolutionPath([start, end]); // Simplified for demo
+    setCurrentSolutionPath([start, end]);
 
     startTimer();
     showFeedback('Game started! Transform the start word to the end word.', 'info');
@@ -270,7 +271,7 @@ export default function WordLadderGame() {
     for (let i = 0; i < currentWord.length; i++) {
       const letterSpan = document.createElement('span');
       letterSpan.textContent = currentWord[i];
-      letterSpan.className = `letter-tile ${i === selectedLetterIndex ? 'selected' : ''}`;
+      letterSpan.className = `${gameStyles.letterTile} ${i === selectedLetterIndex ? gameStyles.selected : ''}`;
       letterSpan.addEventListener('click', () => selectLetter(i));
       currentWordRef.current.appendChild(letterSpan);
     }
@@ -285,7 +286,7 @@ export default function WordLadderGame() {
     for (const letter of alphabet) {
       const tile = document.createElement('div');
       tile.textContent = letter;
-      tile.className = 'letter-tile';
+      tile.className = `${gameStyles.letterTile}`;
       tile.addEventListener('click', () => changeLetter(letter));
       letterTilesRef.current.appendChild(tile);
     }
@@ -427,48 +428,46 @@ export default function WordLadderGame() {
 
   const provideHint = () => {
     if (!gameActive || hintsUsed >= config.maxHints) {
-        showFeedback('No more hints available', 'error');
-        return;
+      showFeedback('No more hints available', 'error');
+      return;
     }
 
-    // Find current position in solution path
     const currentIndex = currentSolutionPath.findIndex(word => 
-        word === currentWord || countMatchingLetters(word, currentWord) >= currentWord.length - 1
+      word === currentWord || countMatchingLetters(word, currentWord) >= currentWord.length - 1
     );
 
     if (currentIndex === -1 || currentIndex >= currentSolutionPath.length - 1) {
-        showFeedback('No hints available for this step', 'error');
-        return;
+      showFeedback('No hints available for this step', 'error');
+      return;
     }
 
     const nextWord = currentSolutionPath[currentIndex + 1];
     let changeIndex = -1;
     
-    // Find which letter changes
     for (let i = 0; i < currentWord.length; i++) {
-        if (currentWord[i] !== nextWord[i]) {
+      if (currentWord[i] !== nextWord[i]) {
         changeIndex = i;
         break;
-        }
+      }
     }
 
     setHintsUsed(prev => prev + 1);
     
     if (changeIndex !== -1) {
-        setSelectedLetterIndex(changeIndex);
-        showFeedback(
+      setSelectedLetterIndex(changeIndex);
+      showFeedback(
         `Change ${ordinal(changeIndex + 1)} letter to ${nextWord[changeIndex]} (→ ${nextWord})`, 
         'info'
-        );
+      );
     } else {
-        showFeedback(`Next step: ${nextWord}`, 'info');
+      showFeedback(`Next step: ${nextWord}`, 'info');
     }
   };
 
   const countMatchingLetters = (word1: string, word2: string) => {
     let count = 0;
     for (let i = 0; i < word1.length; i++) {
-        if (word1[i] === word2[i]) count++;
+      if (word1[i] === word2[i]) count++;
     }
     return count;
   };
@@ -553,48 +552,53 @@ export default function WordLadderGame() {
   }, [currentWord, selectedLetterIndex, ladderWords]);
 
   return (
-    <div className="word-ladder-game max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <div className="game-header flex justify-between items-center mb-6">
+    <div className={`${commonStyles.container}`}>
+      <div className={`${commonStyles.header}`}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Word Ladder Game</h1>
-          <div className="text-gray-600">
+          <h1 className={commonStyles.title}>Word Ladder Game</h1>
+          <div className={commonStyles.levelText}>
             Level: {gameState.currentLevel} ({gameState.difficulty})
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full timer-value">
+         <div className="flex items-center gap-4">
+          <div className={`${commonStyles.timerContainer} ${timer <= 10 ? commonStyles.timeCritical : ''}`}>
             ⏱️ {updateTimer()}
           </div>
-          <div className="font-bold text-blue-600">
+          <div className={commonStyles.scoreText}>
             Score: {score}
           </div>
         </div>
       </div>
 
-      <div className="word-display">
-        <div className="start-end-words">
+      <div className={gameStyles.wordDisplay}>
+        <div className={gameStyles.startEndWords}>
           <span>{startWord}</span>
           <span>→</span>
           <span>{endWord}</span>
         </div>
-        <div ref={currentWordRef} className="current-word"></div>
-        <div ref={letterTilesRef} className="letter-tiles"></div>
+        <div ref={currentWordRef} className={gameStyles.currentWord}></div>
+        <div ref={letterTilesRef} className={gameStyles.letterTiles}></div>
       </div>
 
-      <div ref={feedbackRef} className={`feedback ${feedback.type}`}>
+      <div ref={feedbackRef} 
+      className={`${commonStyles.feedback} ${
+        feedback.type === 'error' ? commonStyles.feedbackError : 
+        feedback.type === 'success' ? commonStyles.feedbackSuccess : 
+        commonStyles.feedbackInfo
+      }`}>
         {feedback.message}
       </div>
 
-      <div className="word-list-container">
+      <div className={gameStyles.wordListContainer}>
         <h3>Word Ladder:</h3>
-        <ul ref={wordListRef} className="word-list"></ul>
+        <ul ref={wordListRef} className={gameStyles.wordList}></ul>
       </div>
 
-      <div className="game-controls">
-        <button onClick={initGame} className="new-game-button">
+      <div className={`${commonStyles.actionButtons}`}>
+        <button onClick={initGame} className={`${commonStyles.actionButton} ${commonStyles.playAgainButton}`}>
           New Game
         </button>
-        <button onClick={provideHint} className="hint-button">
+        <button onClick={provideHint} className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}>
           Hint ({config.maxHints - hintsUsed} left)
         </button>
       </div>

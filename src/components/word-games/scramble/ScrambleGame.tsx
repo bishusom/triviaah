@@ -5,6 +5,8 @@ import confetti from 'canvas-confetti';
 import { db } from '@/lib/firebase'; // Import your Firebase config
 import { useSound } from '@/app/context/SoundContext';
 import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
+import gameStyles from '@styles/WordGames/ScrambleGame.module.css';
+import commonStyles from '@styles/WordGames/WordGames.common.module.css';
 
 type DifficultyLevel = {
   difficulty: string;
@@ -345,19 +347,19 @@ export default function ScrambleGame() {
   }, []);
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-6">
+    <div className={`${commonStyles.container}`}>
+      <div className={`${commonStyles.header}`}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Scramble Game</h1>
-          <div className="text-gray-600">
+          <h1 className={commonStyles.title}>Word Scramble Game</h1>
+          <div className={commonStyles.levelText}>
             Level: {currentLevel} ({getCurrentDifficulty(currentLevel).difficulty})
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+         <div className="flex items-center gap-4">
+          <div className={`${commonStyles.timerContainer} ${timer <= 10 ? commonStyles.timeCritical : ''}`}>
             ⏱️ {formatTime(timer)}
           </div>
-          <div className="font-bold text-blue-600">
+          <div className={commonStyles.scoreText}>
             Score: {score}
           </div>
         </div>
@@ -389,7 +391,7 @@ export default function ScrambleGame() {
           <h3 className="text-lg font-semibold mb-2">Current Attempt:</h3>
           <div className="flex flex-wrap gap-2 min-h-10" id="current-attempt">
             {currentWord.map((index, i) => (
-              <span key={i} className="letter-tile bg-blue-200">
+              <span key={i} className={`${gameStyles.letterTile} bg-blue-200`}>
                 {scrambledLetters[index]}
               </span>
             ))}
@@ -401,28 +403,28 @@ export default function ScrambleGame() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className={`${commonStyles.actionButtons}`}>
         <button 
           onClick={submitWord}
-          className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
+          className={`${commonStyles.actionButton} ${commonStyles.submitButton}`}
         >
           Submit
         </button>
         <button 
           onClick={clearCurrentAttempt}
-          className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded"
+          className={`${commonStyles.actionButton} ${commonStyles.clearButton}`}
         >
           Clear
         </button>
         <button 
           onClick={shuffleLetters}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+          className={`${commonStyles.actionButton} ${commonStyles.shuffleButton}`}
         >
           Shuffle
         </button>
         <button 
           onClick={showHint}
-          className="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded"
+          className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}
         >
           Hint
         </button>
@@ -434,7 +436,7 @@ export default function ScrambleGame() {
         </button>
         <button 
           onClick={initGame}
-          className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded"
+          className={`${commonStyles.actionButton} ${commonStyles.playAgainButton}`}
         >
           New Word
         </button>

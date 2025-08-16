@@ -31,5 +31,10 @@ export default async function QuizPage({
     return notFound();
   }
 
-  return <QuizGame initialQuestions={questions} category={category} />;
+  return (
+    <div className="quiz-container">
+      <h1 className="sr-only">{category} Questions - Triviaah</h1>
+      <QuizGame initialQuestions={questions} category={category} />
+    </div>
+  );
 }

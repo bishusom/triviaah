@@ -3,6 +3,8 @@ import { event } from '@/lib/gtag';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/app/context/SoundContext';
+import commonStyles from '@styles/NumberPuzzles/NumberPuzzles.common.module.css';
+import styles from '@styles/NumberPuzzles/NumberScramble.module.css';
 
 type Difficulty = 'easy' | 'medium' | 'hard' | 'expert';
 
@@ -23,11 +25,10 @@ interface GameState {
   };
 }
 
-
 export default function ScramblePuzzle() {
   const [gameState, setGameState] = useState<GameState>({
-    numbers: [1, 2, 3, 4, 5, 6], // Add default numbers
-    target: 10, // Add default target
+    numbers: [1, 2, 3, 4, 5, 6],
+    target: 10,
     score: 0,
     currentExpression: '',
     usedIndices: [],
@@ -43,7 +44,7 @@ export default function ScramblePuzzle() {
   });
 
   const [feedback, setFeedback] = useState({ message: '', type: '' });
-  const timerInterval = useRef<NodeJS.Timeout| null>(null)
+  const timerInterval = useRef<NodeJS.Timeout| null>(null);
   const { isMuted } = useSound();
 
   type SoundType = 'select' | 'found' | 'win' | 'error';
@@ -91,14 +92,13 @@ export default function ScramblePuzzle() {
   }, [playSound]);
 
   const generateNumbers = useCallback((difficulty: Difficulty, level: number): number[] => {
-    const count = 6 + Math.floor(level / 5); // Increase count every 5 levels
+    const count = 6 + Math.floor(level / 5);
     const numbers = [];
     for (let i = 0; i < count; i++) {
       let max = 9;
       if (difficulty === 'medium') max = 15;
       if (difficulty === 'hard') max = 25;
       if (difficulty === 'expert') max = 50;
-      // Make numbers slightly larger as level increases
       const levelMultiplier = 1 + (level * 0.05);
       numbers.push(Math.floor(Math.random() * max * levelMultiplier) + 1);
     }
@@ -117,7 +117,6 @@ export default function ScramblePuzzle() {
       min = 200;
       max = 1000;
     }
-    // Scale target range with level
     const levelMultiplier = 1 + (level * 0.1);
     return Math.floor(Math.random() * (max * levelMultiplier - min * levelMultiplier + 1)) + min * levelMultiplier;
   }, []);
@@ -128,8 +127,8 @@ export default function ScramblePuzzle() {
       ...prev,
       currentExpression: '',
       usedIndices: [],
-      numbers: generateNumbers(prev.difficulty, prev.level), // Pass current level
-      target: generateTarget(prev.difficulty, prev.level) // Pass current level
+      numbers: generateNumbers(prev.difficulty, prev.level),
+      target: generateTarget(prev.difficulty, prev.level)
     }));
     startTimer();
   }, [generateNumbers, generateTarget, startTimer]);
@@ -175,13 +174,12 @@ export default function ScramblePuzzle() {
       ? gameState.consecutiveHardWins + 1 
       : 0;
 
-    // Increment level after every correct solution
     const newLevel = gameState.level + 1;
 
     setGameState(prev => ({
       ...prev,
       score: prev.score + points,
-      level: newLevel, // Add this line to update the level
+      level: newLevel,
       stats: {
         ...prev.stats,
         puzzlesSolved: prev.stats.puzzlesSolved + 1,
@@ -224,7 +222,6 @@ export default function ScramblePuzzle() {
       return;
     }
 
-    // Check if at least one operator is used
     const hasOperator = ['+', '-', '*', '/'].some(op => 
       gameState.currentExpression.includes(op)
     );
@@ -250,7 +247,6 @@ export default function ScramblePuzzle() {
       playSound('error');
     }
   }, [gameState.currentExpression, gameState.target, playSound, handleCorrectSolution, handleIncorrectSolution]);
-
 
   const showHint = useCallback(() => {
     if (gameState.numbers.length > 0) {
@@ -280,8 +276,6 @@ export default function ScramblePuzzle() {
 
   useEffect(() => {
     event({action: 'number_scramble_started', category: 'number_scramble',label: 'number_scramble'});
-    
-    // Initialize with a new puzzle
     generateNewPuzzle();
     
     return () => {
@@ -292,12 +286,19 @@ export default function ScramblePuzzle() {
   }, [generateNewPuzzle]); 
   
   return (
-    <div className="scramble-game">
+    <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        Number Scramble
+      </h1>
+      <p className="text-gray-600 mb-6">
+        Combine numbers with operators to reach the target
+      </p>
+
       <div className="flex justify-between items-center mb-6">
         <div className="text-lg font-semibold">
           Level: {gameState.level}
         </div>
-        <div className={`text-lg font-semibold ${gameState.timeLeft <= 10 ? 'text-red-500' : ''}`}>
+        <div className={`text-lg font-semibold ${gameState.timeLeft <= 10 ? styles.timeCritical : ''}`}>
           Time: {formatTime(gameState.timeLeft)}
         </div>
         <div className="flex items-center gap-2">
@@ -314,7 +315,12 @@ export default function ScramblePuzzle() {
           </div>
         </div>
 
-        <div className={`scramble-expression mb-4 ${feedback.type ? 'feedback-' + feedback.type : ''}`}>
+        <div 
+        className={`${styles.scrambleExpression} ${
+          feedback.type === 'error' ? styles.feedbackError : 
+          feedback.type === 'success' ? styles.feedbackSuccess : 
+          styles.feedbackInfo
+        }`}>
           {feedback.message || `Current: ${gameState.currentExpression || 'Empty'}`}
         </div>
 
@@ -324,7 +330,7 @@ export default function ScramblePuzzle() {
               key={index}
               onClick={() => selectNumber(index)}
               disabled={gameState.usedIndices.includes(index)}
-              className={`scramble-tile ${gameState.usedIndices.includes(index) ? 'used' : ''}`}
+              className={`${styles.scrambleTile} ${gameState.usedIndices.includes(index) ? styles.used : ''}`}
             >
               {num}
             </button>
@@ -336,7 +342,7 @@ export default function ScramblePuzzle() {
             <button
               key={`op-${op}`}
               onClick={() => addOperator(op)}
-              className="scramble-tile"
+              className={styles.scrambleTile}
             >
               {op}
             </button>
@@ -346,25 +352,25 @@ export default function ScramblePuzzle() {
         <div className="flex flex-wrap gap-2">
           <button 
             onClick={submitSolution}
-            className="btn primary"
+            className={`${commonStyles.btn} ${commonStyles.primary}`}
           >
             Submit
           </button>
           <button 
             onClick={clearInput}
-            className="btn secondary"
+            className={`${commonStyles.btn} ${commonStyles.secondary}`}
           >
             Clear
           </button>
           <button 
             onClick={generateNewPuzzle}
-            className="btn secondary"
+            className={`${commonStyles.btn} ${commonStyles.secondary}`}
           >
             New Puzzle
           </button>
           <button 
             onClick={showHint}
-            className="btn tertiary"
+            className={`${commonStyles.btn} ${commonStyles.tertiary}`}
           >
             Hint
           </button>
@@ -382,4 +388,4 @@ export default function ScramblePuzzle() {
       </div>
     </div>
   );
-} 
+}

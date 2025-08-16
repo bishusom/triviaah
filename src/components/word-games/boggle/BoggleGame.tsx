@@ -3,6 +3,8 @@ import { event } from '@/lib/gtag';
 import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/app/context/SoundContext';
+import commonStyles from '@styles/WordGames/WordGames.common.module.css';
+import gameStyles from '@styles/WordGames/BoggleGame.module.css'; 
 
 interface GridCell {
   letter: string;
@@ -178,50 +180,47 @@ export default function BoggleGame() {
 
   // Add selection line effect
   useEffect(() => {
-    const updateSelectionLine = () => {
-      const existingLines = document.querySelectorAll('.selection-line');
-      existingLines.forEach(line => line.remove());
+  const updateSelectionLine = () => {
+    const existingLines = document.querySelectorAll(`.${gameStyles.selectionLine}`);
+    existingLines.forEach(line => line.remove());
 
-      if (selectedCells.length < 2 || !gridElement.current) return;
+    if (selectedCells.length < 2 || !gridElement.current) return;
 
-      const gridEl = gridElement.current;
-      const gridRect = gridEl.getBoundingClientRect();
+    const gridEl = gridElement.current;
+    const gridRect = gridEl.getBoundingClientRect();
+    const gridInner = gridEl.firstChild as HTMLElement;
 
-      for (let i = 0; i < selectedCells.length - 1; i++) {
-        const startCell = gridEl.children[selectedCells[i]] as HTMLElement;
-        const endCell = gridEl.children[selectedCells[i + 1]] as HTMLElement;
+    for (let i = 0; i < selectedCells.length - 1; i++) {
+      const startCell = gridInner.children[selectedCells[i]] as HTMLElement;
+      const endCell = gridInner.children[selectedCells[i + 1]] as HTMLElement;
 
-        if (!startCell || !endCell) continue;
+      if (!startCell || !endCell) continue;
 
-        const startRect = startCell.getBoundingClientRect();
-        const endRect = endCell.getBoundingClientRect();
+      const startRect = startCell.getBoundingClientRect();
+      const endRect = endCell.getBoundingClientRect();
 
-        const startX = startRect.left + startRect.width / 2 - gridRect.left;
-        const startY = startRect.top + startRect.height / 2 - gridRect.top;
-        const endX = endRect.left + endRect.width / 2 - gridRect.left;
-        const endY = endRect.top + endRect.height / 2 - gridRect.top;
+      // Calculate positions relative to the grid container
+      const startX = startRect.left + startRect.width / 2 - gridRect.left;
+      const startY = startRect.top + startRect.height / 2 - gridRect.top;
+      const endX = endRect.left + endRect.width / 2 - gridRect.left;
+      const endY = endRect.top + endRect.height / 2 - gridRect.top;
 
-        const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
-        const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+      const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+      const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
 
-        const line = document.createElement('div');
-        line.className = 'selection-line';
-        line.style.position = 'absolute';
-        line.style.width = `${length}px`;
-        line.style.height = '3px';
-        line.style.backgroundColor = 'rgba(79, 70, 229, 0.7)';
-        line.style.transformOrigin = '0 0';
-        line.style.left = `${startX}px`;
-        line.style.top = `${startY}px`;
-        line.style.transform = `rotate(${angle}deg)`;
-        line.style.zIndex = '10';
-        line.style.pointerEvents = 'none';
-        gridEl.appendChild(line);
-      }
-    };
+      const line = document.createElement('div');
+      line.className = gameStyles.selectionLine;
+      line.style.width = `${length}px`;
+      line.style.transform = `rotate(${angle}deg)`;
+      line.style.left = `${startX}px`;
+      line.style.top = `${startY}px`;
+      
+      gridEl.appendChild(line);
+    }
+  };
 
-    updateSelectionLine();
-  }, [selectedCells, grid]);
+  updateSelectionLine();
+  }, [selectedCells, grid, gameStyles.selectionLine]);
 
   // Load game state from localStorage
   const loadGameState = () => {
@@ -382,9 +381,8 @@ export default function BoggleGame() {
         
         if (selectedCells.length >= 2) {
           checkSelectedWord();
-        } else {
-          setSelectedCells([]);
         }
+        // Don't clear selectedCells here - let checkSelectedWord handle it
         break;
     }
   };
@@ -409,16 +407,16 @@ export default function BoggleGame() {
   // Check selected word
   const checkSelectedWord = async () => {
     const minWordLength = currentLevel >= 4 
-      ? extendedLevels[currentExtendedLevel]?.minWordLength || config.minWordLength[difficulty]
-      : config.minWordLength[difficulty];
+    ? extendedLevels[currentExtendedLevel]?.minWordLength || config.minWordLength[difficulty]
+    : config.minWordLength[difficulty];
 
-    if (selectedCells.length < minWordLength) {
-      showFeedback({ message: `Word too short (min ${minWordLength} letters)`, type: 'error' });
-      setSelectedCells([]);
-      return;
-    }
+  if (selectedCells.length < minWordLength) {
+    showFeedback({ message: `Word too short (min ${minWordLength} letters)`, type: 'error' });
+    setSelectedCells([]);
+    return;
+  }
 
-    const selectedWord = selectedCells.map(index => grid[index].letter).join('');
+  const selectedWord = selectedCells.map(index => grid[index].letter).join('');
     if (foundWords.has(selectedWord)) {
       showFeedback({ message: 'Word already found', type: 'error' });
       setSelectedCells([]);
@@ -701,47 +699,45 @@ export default function BoggleGame() {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
-  return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Boggle Game</h1>
-          <div className="text-gray-600">
-            {currentLevel >= 4 
-              ? `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`
-              : `Level: ${currentLevel} (${difficulty})`}
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-            ⏱️ {formatTime(timer)}
-          </div>
-          <div className="font-bold text-blue-600">
-            Score: {score}
-          </div>
+return (
+  <div className={commonStyles.container}>
+    <div className={commonStyles.header}>
+      <div>
+        <h1 className={commonStyles.title}>Boggle Game</h1>
+        <div className={commonStyles.levelText}>
+          {currentLevel >= 4 
+            ? `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`
+            : `Level: ${currentLevel} (${difficulty})`}
         </div>
       </div>
+      <div className="flex items-center gap-4">
+        <div className={commonStyles.timerContainer}>
+          ⏱️ {formatTime(timer)}
+        </div>
+        <div className={commonStyles.scoreText}>
+          Score: {score}
+        </div>
+      </div>
+    </div>
 
-      <div className="mb-6">
+    <div className="mb-6">
+      <div ref={gridElement} className={gameStyles.gridContainer}>
         <div 
-          ref={gridElement} 
-          className={`boggle-grid ${difficulty}`}
+          className={gameStyles.grid}
           style={{ 
             gridTemplateColumns: `repeat(${config.gridSize[difficulty]}, 1fr)`,
             gridTemplateRows: `repeat(${config.gridSize[difficulty]}, 1fr)`,
-            maxWidth: '400px',
-            margin: '0 auto'
           }}
         >
           {grid.map((cell, index) => (
             <button
               key={index}
-              className={`boggle-cell ${
-                selectedCells.includes(index) ? 'selected' : ''
+              className={`${gameStyles.cell} ${
+                selectedCells.includes(index) ? gameStyles.cellSelected : ''
               } ${
-                selectedCells[selectedCells.length - 1] === index ? 'highlight' : ''
+                selectedCells[selectedCells.length - 1] === index ? gameStyles.cellHighlight : ''
               } ${
-                cell.found ? 'found' : ''
+                cell.found ? gameStyles.cellFound : ''
               }`}
               onMouseDown={() => handleCellInteraction(index, 'start')}
               onMouseEnter={() => handleCellInteraction(index, 'continue')}
@@ -756,7 +752,7 @@ export default function BoggleGame() {
                 e.stopPropagation();
                 const touch = e.touches[0];
                 const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
-                const cell = elements.find(el => el.classList.contains('boggle-cell'));
+                const cell = elements.find(el => el.classList.contains(gameStyles.cell));
                 if (cell) {
                   const idx = Array.from(cell.parentNode?.children || []).indexOf(cell);
                   if (idx >= 0) handleCellInteraction(idx, 'continue');
@@ -768,47 +764,49 @@ export default function BoggleGame() {
                 handleCellInteraction(index, 'end');
               }}
             >
-              {cell.letter || `[${index}]`}
+              {cell.letter}
             </button>
           ))}
         </div>
-
-        <div className={`p-3 rounded mb-4 ${
-          feedback.type === 'error' ? 'bg-red-100 text-red-800' : 
-          feedback.type === 'success' ? 'bg-green-100 text-green-800' : 
-          'bg-blue-100 text-blue-800'
-        }`}>
-          {feedback.message}
-        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <button 
-          onClick={handleNewGame}
-          className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
-        >
-          New Game
-        </button>
-        <button 
-          onClick={handleHint}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
-        >
-          Hint
-        </button>
+      {/* Feedback message */}
+      <div className={`${commonStyles.feedback} ${
+        feedback.type === 'error' ? commonStyles.feedbackError : 
+        feedback.type === 'success' ? commonStyles.feedbackSuccess : 
+        commonStyles.feedbackInfo
+      }`}>
+        {feedback.message}
       </div>
-
-      {foundWords.size > 0 && (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2">Found Words:</h3>
-          <div className="flex flex-wrap gap-2">
-            {Array.from(foundWords).sort().map((word, i) => (
-              <span key={i} className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
-                {word}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
-  );
+
+    <div className={commonStyles.actionButtons}>
+      <button 
+        onClick={handleNewGame}
+        className={`${commonStyles.actionButton} ${commonStyles.playAgainButton}`}
+      >
+        New Game
+      </button>
+      <button 
+        onClick={handleHint}
+        className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}
+      >
+        Hint
+      </button>
+    </div>
+
+    {foundWords.size > 0 && (
+      <div className={gameStyles.foundWordsContainer}>
+        <h3 className={gameStyles.foundWordsTitle}>Found Words:</h3>
+        <div className={gameStyles.foundWordsList}>
+          {Array.from(foundWords).sort().map((word, i) => (
+            <span key={i} className={gameStyles.wordPill}>
+              {word}
+            </span>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+);
 }
