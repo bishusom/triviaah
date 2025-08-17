@@ -1,34 +1,18 @@
-// app/page.tsx
-'use client';
-
-import { useEffect, useState, useMemo, memo, useCallback } from 'react';
 import Link from 'next/link';
-import Head from 'next/head';
-import { MdInfo, MdEmail } from 'react-icons/md';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
+import { FaCheckCircle } from 'react-icons/fa';
+import { MdInfo, MdEmail } from 'react-icons/md';
 import { AdSquare } from '@/components/Ads';
+import ScrollButtons from '@/components/ScrollButtons';
+import DailyQuizClient from '@/components/daily/DailyQuizClient';
+
+export const metadata = {
+  title: 'Free Daily Trivia Challenges & Online Quiz Games | Triviaah',
+  description: 'Play free daily trivia challenges and online quiz games! Test your knowledge with pop culture trivia quizzes, science questions, history facts, and word games.',
+};
 
 // --------------------------
-// 1. Lazy-load non-critical UI
-// --------------------------
-const FaCheckCircleIcon = dynamic(
-  () => import('react-icons/fa').then((mod) => mod.FaCheckCircle),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="inline-block w-4 h-4 bg-gray-200 animate-pulse rounded-full" />
-    ),
-  }
-);
-
-const ScrollButtons = dynamic(() => import('@/components/ScrollButtons'), {
-  ssr: false,
-  loading: () => <div className="fixed right-4 bottom-4 w-12 h-12" />,
-});
-
-// --------------------------
-// 2. Static data with SEO-enhanced keywords
+// 1. Static data (unchanged)
 // --------------------------
 const DAILY_QUIZZES = [
   {
@@ -107,244 +91,110 @@ const ADDITIONAL_SECTIONS = [
 ] as const;
 
 // --------------------------
-// 3. SEO-Enhanced Home component
+// 2. Precompute timer on server
 // --------------------------
+function getTimeLeft() {
+  const now = new Date();
+  const midnight = new Date();
+  midnight.setHours(24, 0, 0, 0);
+  const diff = midnight.getTime() - now.getTime();
+  const h = Math.floor(diff / (1000 * 60 * 60));
+  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  return `${h}h ${m}m`;
+}
+
 export default function Home() {
-  const [playedQuizzes, setPlayedQuizzes] = useState<
-    Record<string, { played: boolean; timestamp: number }>
-  >({});
+  const timeLeft = getTimeLeft();
 
-  const [timeLeft, setTimeLeft] = useState('');
-
-  // --------------------------
-  // 4. Load "played" state
-  // --------------------------
-  useEffect(() => {
-    const load = () => {
-      try {
-        const raw = localStorage.getItem('playedQuizzes');
-        if (!raw) return;
-        const parsed = JSON.parse(raw);
-        const next: Record<string, { played: boolean; timestamp: number }> = {};
-        for (const k in parsed) {
-          next[k] =
-            typeof parsed[k] === 'boolean'
-              ? { played: parsed[k], timestamp: 0 }
-              : parsed[k];
-        }
-        setPlayedQuizzes(next);
-      } catch {
-        /* ignore malformed data */
-      }
-    };
-    const t = setTimeout(load, 50);
-    return () => clearTimeout(t);
-  }, []);
-
-  // --------------------------
-  // 5. Countdown timer
-  // --------------------------
-  const updateTimer = useCallback(() => {
-    const now = new Date();
-    const midnight = new Date();
-    midnight.setHours(24, 0, 0, 0);
-    const diff = midnight.getTime() - now.getTime();
-    const h = Math.floor(diff / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    setTimeLeft(`${h}h ${m}m`);
-  }, []);
-
-  useEffect(() => {
-    updateTimer();
-    const i = setInterval(updateTimer, 60_000);
-    return () => clearInterval(i);
-  }, [updateTimer]);
-
-  // --------------------------
-  // 6. Persist "played"
-  // --------------------------
-  const handleQuizPlay = useCallback(
-    (category: string) => {
-      const next = {
-        ...playedQuizzes,
-        [category]: { played: true, timestamp: Date.now() },
-      };
-      setPlayedQuizzes(next);
-      localStorage.setItem('playedQuizzes', JSON.stringify(next));
-    },
-    [playedQuizzes]
-  );
-
-  // --------------------------
-  // 7. Memoised card grids
-  // --------------------------
-  const dailyQuizCards = useMemo(
-    () =>
-      DAILY_QUIZZES.map((quiz, idx) => (
-        <DailyQuizCard
-          key={quiz.category}
-          quiz={quiz}
-          playedQuizzes={playedQuizzes}
-          timeLeft={timeLeft}
-          onPlay={handleQuizPlay}
-          priorityImage={idx < 3}
-        />
-      )),
-    [playedQuizzes, timeLeft, handleQuizPlay]
-  );
-
-  const additionalSectionCards = useMemo(
-    () =>
-      ADDITIONAL_SECTIONS.map((s) => (
-        <div
-          key={s.category}
-          className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow p-6 text-center hover:border-blue-400"
-        >
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
-              <Image
-                src={s.image}
-                alt={s.name}
-                width={80}
-                height={80}
-                loading="lazy"
-              />
-            </div>
-          </div>
-          <h3 className="text-lg font-bold text-gray-800 mb-1">{s.name}</h3>
-          <p className="text-sm text-gray-600 mb-4">{s.tagline}</p>
-          <Link
-            href={`/${s.category}`}
-            className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors"
-            prefetch={false}
-          >
-            Explore
-          </Link>
-        </div>
-      )),
-    []
-  );
-
-  // --------------------------
-  // 8. Render with SEO enhancements
-  // --------------------------
   return (
-    <>
-      <Head>
-        {/* Enhanced Meta Tags */}
-        <title>Free Daily Trivia Challenges & Online Quiz Games | Triviaah</title>
-        <meta 
-          name="description" 
-          content="Play free daily trivia challenges and online quiz games! Test your knowledge with pop culture trivia quizzes, science questions, history facts, and word games. New trivia every 24 hours!" 
-        />
-        <meta 
-          name="keywords" 
-          content="daily trivia challenges, free online trivia games, pop culture trivia quizzes, trivia quiz, word games, science trivia, history quiz, geography trivia, entertainment quiz, brain games, quiz questions" 
-        />
-        
-        {/* Structured Data for SEO */}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "Triviaah",
-            "description": "Free daily trivia challenges and online quiz games",
-            "url": "https://triviaah.com",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://triviaah.com/search?q={search_term_string}",
-              "query-input": "required name=search_term_string"
-            }
-          })
-        }} />
-
-        {/* Preload hero + first 3 quiz images */}
-        <link
-          rel="preload"
-          href="/logo-280x80.webp"
-          as="image"
-          type="image/webp"
-        />
-        {DAILY_QUIZZES.slice(0, 3).map((q) => (
-          <link
-            key={q.image}
-            rel="preload"
-            href={q.image}
-            as="image"
-            type="image/webp"
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <header className="bg-blue-700 text-white py-4 px-4">
+        <div className="container mx-auto flex items-center justify-center gap-4">
+          <Image
+            src="/logo-280x80.webp"
+            alt="Triviaah - Free Daily Trivia Games"
+            width={140}
+            height={40}
+            priority
+            quality={75}
+            className="object-contain"
           />
-        ))}
-      </Head>
+        </div>
+      </header>
 
-      <div className="min-h-screen bg-gray-50 flex flex-col">
-        {/* SEO-Enhanced Header */}
-        <header className="bg-blue-700 text-white py-4 px-4">
-          <div className="container mx-auto flex items-center justify-center gap-4">
-            <Image
-              src="/logo-280x80.webp"
-              alt="Triviaah - Free Daily Trivia Games"
-              width={140}
-              height={40}
-              priority
-              quality={80}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-contain"
+      <main className="container mx-auto px-4 py-6 flex-grow">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">
+            Play Free Online Trivia Games Daily
+          </h1>
+          <p className="text-gray-600 mb-4">
+            New free online trivia games every 24 hours.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {DAILY_QUIZZES.map((quiz, idx) => (
+            <DailyQuizClient 
+              key={quiz.category}
+              quiz={quiz}
+              priorityImage={idx < 2}
+              timeLeft={timeLeft}
             />
-            <h1 className="text-2xl md:text-3xl font-bold ml-2">
-              Free Daily Trivia Challenges & Quiz Games
-            </h1>
+          ))}
+        </div>
+
+        {/* More Brain Puzzles Section */}
+        <div className="mb-12">
+          <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
+            More Free Online Brain Games & Word Puzzles
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {ADDITIONAL_SECTIONS.map((s) => (
+              <div 
+                key={s.category} 
+                className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400"
+              >
+                <div className="p-6 flex flex-col h-full">
+                  {/* Image */}
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
+                      <Image
+                        src={s.image}
+                        alt={s.name}
+                        width={80}
+                        height={80}
+                        className="object-cover w-full h-full"
+                        loading="lazy"
+                        quality={75}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Text Content (hidden on mobile) */}
+                  <div className="text-center mb-4 flex-grow">
+                    <h3 className="text-lg font-bold text-gray-800 mb-1">{s.name}</h3>
+                    <p className="text-sm text-gray-600 italic hidden sm:block mb-2">
+                      {s.tagline}
+                    </p>
+                    {/* SEO Keywords (hidden but crawlable) */}
+                    <div className="sr-only" aria-hidden="true">
+                      Keywords: {s.keywords}
+                    </div>
+                  </div>
+
+                  {/* Button */}
+                  <Link 
+                      href={`/${s.category}`}
+                      className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-center transition-colors"
+                    >
+                      Explore
+                  </Link>
+                  </div>
+                </div>
+              ))}
           </div>
-        </header>
-
-        <main className="container mx-auto px-4 py-6 flex-grow">
-          {!timeLeft && (
-            <div className="text-center mb-8">
-              <div className="h-8 bg-gray-200 rounded w-1/4 mx-auto mb-4 animate-pulse"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/3 mx-auto animate-pulse"></div>
-            </div>
-          )}
-
-          {timeLeft && (
-            <>
-              {/* SEO-Enhanced Intro Section */}
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                  Play Free Online Trivia Games Daily
-                </h2>
-                <p className="text-gray-600 mb-4">
-                  Challenge yourself with our daily trivia challenges featuring pop culture trivia quizzes, 
-                  science questions, history facts, and more! New free online trivia games every 24 hours.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                {dailyQuizCards}
-              </div>
-
-              {/* Ad placement between sections */}
-              <div className="flex justify-center mb-8">
-                <AdSquare />
-              </div>
-
-              <div className="bg-blue-50 text-blue-800 p-4 rounded-lg text-center mb-8">
-                <p className="font-medium">
-                  🎯 All daily trivia challenges reset in{' '}
-                  <span className="font-bold">{timeLeft}</span>
-                </p>
-              </div>
-            </>
-          )}
-
-          {/* SEO-Enhanced Additional Games Section */}
-          <div className="mb-12">
-            <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
-              More Free Online Brain Games & Word Puzzles
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {additionalSectionCards}
-            </div>
-          </div>
-
+        </div>
+          
           {/* SEO-Enhanced Categories Section */}
           <div className="mb-12">
             <div className="flex justify-between items-center mb-6">
@@ -404,10 +254,10 @@ export default function Home() {
             </div>
           </section>
 
-          <ScrollButtons />
-        </main>
+          <ScrollButtons />  
 
-        {/* Enhanced Footer */}
+        </main>
+         {/* Enhanced Footer */}
         <footer className="bg-gray-800 text-white py-6 px-4">
           <div className="container mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center">
@@ -433,109 +283,5 @@ export default function Home() {
           </div>
         </footer>
       </div>
-    </>
   );
 }
-
-// --------------------------
-// 9. DailyQuizCard (memoised)
-// --------------------------
-const DailyQuizCard = memo(function DailyQuizCard({
-  quiz,
-  playedQuizzes,
-  timeLeft,
-  onPlay,
-  priorityImage = false,
-}: {
-  quiz: {
-    category: string;
-    name: string;
-    image: string;
-    tagline: string;
-    keywords: string;
-  };
-  playedQuizzes: Record<string, { played: boolean; timestamp: number }>;
-  timeLeft: string;
-  onPlay: (category: string) => void;
-  priorityImage?: boolean;
-}) {
-  const [isPlayed, setIsPlayed] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
-
-  useEffect(() => {
-    const check = () => {
-      if (!playedQuizzes[quiz.category]) {
-        setIsPlayed(false);
-        setIsChecking(false);
-        return;
-      }
-      const last = new Date(playedQuizzes[quiz.category].timestamp);
-      const now = new Date();
-      const reset =
-        last.getDate() !== now.getDate() ||
-        last.getMonth() !== now.getMonth() ||
-        last.getFullYear() !== now.getFullYear();
-      setIsPlayed(playedQuizzes[quiz.category].played && !reset);
-      setIsChecking(false);
-    };
-    const t = setTimeout(check, 50);
-    return () => clearTimeout(t);
-  }, [playedQuizzes, quiz.category]);
-
-  return (
-    <article className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400">
-      <div className="p-6 flex flex-col h-full">
-        <div className="flex items-center justify-center mb-4">
-          <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
-            <Image
-              src={quiz.image}
-              alt={`${quiz.name} - Daily Trivia Challenge`}
-              width={80}
-              height={80}
-              className="object-cover w-full h-full"
-              priority={priorityImage}
-              loading={priorityImage ? 'eager' : 'lazy'}
-              quality={85}
-              sizes="(max-width: 768px) 50vw, 33vw"
-            />
-          </div>
-        </div>
-
-        <div className="text-center mb-4">
-          <h3 className="text-lg font-bold text-gray-800 mb-1">{quiz.name}</h3>
-          <div className="text-sm text-gray-600 italic mb-2">{quiz.tagline}</div>
-          <div className="text-xs text-gray-600">Keywords: {quiz.keywords}</div>
-        </div>
-
-        <div className="mt-auto">
-          {isChecking ? (
-            <div className="w-full bg-gray-200 animate-pulse h-10 rounded-lg"></div>
-          ) : isPlayed ? (
-            <div className="text-center">
-              <div className="inline-flex items-center bg-gray-100 text-gray-600 text-sm px-4 py-2 rounded-full">
-                <FaCheckCircleIcon className="mr-2 text-green-500" />
-                <span>Completed Today</span>
-              </div>
-              <div className="text-xs text-gray-400 mt-2">
-                New challenge in {timeLeft}
-              </div>
-            </div>
-          ) : (
-            <Link
-              href={
-                quiz.category === 'today-in-history'
-                  ? '/daily/today-in-history'
-                  : `/daily/${quiz.category}`
-              }
-              onClick={() => onPlay(quiz.category)}
-              className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              aria-label={`Play ${quiz.name} daily trivia challenge`}
-            >
-              Play Daily Challenge
-            </Link>
-          )}
-        </div>
-      </div>
-    </article>
-  );
-});
