@@ -22,7 +22,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Triviaah: Free Daily Trivia & Word Games | 20+ Categories",
-  description: "Test your knowledge with our trivia game",
+  description: "Play free daily trivia challenges, word games, and quiz yourself on entertainment, science, history, geography and more. New trivia questions every 24 hours!",
+  keywords: "daily trivia challenges, free online trivia games, trivia quiz, word games, pop culture trivia quizzes, science trivia, history quiz, geography trivia, entertainment quiz, brain games",
+  openGraph: {
+    title: "Triviaah: Free Daily Trivia & Word Games",
+    description: "Test your knowledge with daily trivia challenges and word games. Free online quizzes with new questions every day!",
+    type: "website",
+  }
 };
 
 export default function RootLayout({
@@ -50,6 +56,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" />
         <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"
@@ -63,19 +70,22 @@ export default function RootLayout({
               <BreadcrumbNav />
             </header>
 
-            <AdBanner />    
+            {/* Header Ad */}
+            <AdBanner position="header" />    
 
             <main className="flex-grow">
               <GoogleAnalytics gaId="G-K4KZ7XR85V" />
               {children}
             </main>
             
+            {/* Footer Ad */}
             <div className="mt-auto">
-              <AdBanner />
+              <AdBanner position="footer" />
             </div>
           </div>
         </SoundProvider>
 
+        {/* AdSense Script - Load early but after interaction */}
         <Script
           id="adsense-script"
           strategy="afterInteractive"

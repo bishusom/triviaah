@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { MdInfo, MdEmail } from 'react-icons/md';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import { AdSquare } from '@/components/Ads';
 
 // --------------------------
 // 1. Lazy-load non-critical UI
@@ -27,50 +28,50 @@ const ScrollButtons = dynamic(() => import('@/components/ScrollButtons'), {
 });
 
 // --------------------------
-// 2. Static data
+// 2. Static data with SEO-enhanced keywords
 // --------------------------
 const DAILY_QUIZZES = [
   {
     category: 'general-knowledge',
     name: 'General Knowledge',
     image: '/imgs/general-knowledge-160x160.webp',
-    tagline: 'Test your worldly wisdom with diverse topics',
-    keywords: 'facts, trivia, knowledge quiz',
+    tagline: 'Test your worldly wisdom with diverse daily trivia challenges',
+    keywords: 'general knowledge quiz, daily trivia facts, world trivia questions',
   },
   {
     category: 'today-in-history',
     name: 'Today in History',
     image: '/imgs/today-history-160x160.webp',
-    tagline: 'Discover historical events from this date',
-    keywords: 'historical events, on this day, history facts',
+    tagline: 'Discover historical events from this date in free online trivia',
+    keywords: 'historical trivia quiz, on this day trivia, history facts game',
   },
   {
     category: 'entertainment',
     name: 'Entertainment',
     image: '/imgs/entertainment-160x160.webp',
-    tagline: 'Movies, music & pop culture challenges',
-    keywords: 'film quiz, music trivia, celebrity questions',
+    tagline: 'Pop culture trivia quizzes featuring movies, music & celebrities',
+    keywords: 'pop culture trivia quizzes, movie trivia game, celebrity quiz',
   },
   {
     category: 'geography',
     name: 'Geography',
     image: '/imgs/geography-160x160.webp',
-    tagline: 'Explore the world without leaving home',
-    keywords: 'countries, capitals, landmarks, maps',
+    tagline: 'Explore world geography through interactive trivia challenges',
+    keywords: 'geography trivia quiz, world capitals game, countries trivia',
   },
   {
     category: 'science',
     name: 'Science',
     image: '/imgs/science-160x160.webp',
-    tagline: 'Discover the wonders of science',
-    keywords: 'biology, physics, chemistry, space',
+    tagline: 'Discover scientific wonders in our free online science trivia',
+    keywords: 'science trivia quiz, biology quiz game, physics trivia questions',
   },
   {
     category: 'sports',
     name: 'Sports',
     image: '/imgs/sports-160x160.webp',
-    tagline: 'For the ultimate sports fanatic',
-    keywords: 'football, basketball, olympics, athletes',
+    tagline: 'Ultimate sports trivia challenges for true sports fanatics',
+    keywords: 'sports trivia quiz, football trivia game, basketball quiz',
   },
 ] as const;
 
@@ -79,34 +80,34 @@ const ADDITIONAL_SECTIONS = [
     category: 'word-games',
     name: 'Word Games',
     image: '/imgs/word-games-160x160.webp',
-    tagline: 'Challenge your vocabulary and word skills',
-    keywords: 'word puzzles, anagrams, word search',
+    tagline: 'Challenge your vocabulary with free online word puzzle games',
+    keywords: 'word puzzle games, vocabulary quiz, word trivia challenge',
   },
   {
     category: 'number-puzzles',
     name: 'Number Puzzles',
     image: '/imgs/number-puzzles-160x160.webp',
-    tagline: 'Exercise your mathematics and logic skills',
-    keywords: 'math games, sudoku, number challenges',
+    tagline: 'Exercise your brain with mathematical trivia and logic puzzles',
+    keywords: 'math trivia games, number puzzle quiz, logic brain games',
   },
   {
     category: 'blog',
     name: 'Trivia Blog',
     image: '/imgs/blog-160x160.webp',
-    tagline: 'Learn interesting facts and trivia stories',
-    keywords: 'trivia articles, fun facts, knowledge',
+    tagline: 'Learn fascinating trivia facts and quiz strategies',
+    keywords: 'trivia facts blog, quiz tips, interesting trivia articles',
   },
   {
     category: 'trivia-bank',
     name: 'Trivia Bank',
     image: '/imgs/tbank-160x160.webp',
-    tagline: 'Access our complete collection of questions',
-    keywords: 'question database, trivia archive',
+    tagline: 'Access our complete collection of free trivia questions',
+    keywords: 'trivia question database, quiz question bank, trivia archive',
   },
 ] as const;
 
 // --------------------------
-// 3. Home component
+// 3. SEO-Enhanced Home component
 // --------------------------
 export default function Home() {
   const [playedQuizzes, setPlayedQuizzes] = useState<
@@ -116,7 +117,7 @@ export default function Home() {
   const [timeLeft, setTimeLeft] = useState('');
 
   // --------------------------
-  // 4. Load “played” state
+  // 4. Load "played" state
   // --------------------------
   useEffect(() => {
     const load = () => {
@@ -160,7 +161,7 @@ export default function Home() {
   }, [updateTimer]);
 
   // --------------------------
-  // 6. Persist “played”
+  // 6. Persist "played"
   // --------------------------
   const handleQuizPlay = useCallback(
     (category: string) => {
@@ -225,11 +226,38 @@ export default function Home() {
   );
 
   // --------------------------
-  // 8. Render
+  // 8. Render with SEO enhancements
   // --------------------------
   return (
     <>
       <Head>
+        {/* Enhanced Meta Tags */}
+        <title>Free Daily Trivia Challenges & Online Quiz Games | Triviaah</title>
+        <meta 
+          name="description" 
+          content="Play free daily trivia challenges and online quiz games! Test your knowledge with pop culture trivia quizzes, science questions, history facts, and word games. New trivia every 24 hours!" 
+        />
+        <meta 
+          name="keywords" 
+          content="daily trivia challenges, free online trivia games, pop culture trivia quizzes, trivia quiz, word games, science trivia, history quiz, geography trivia, entertainment quiz, brain games, quiz questions" 
+        />
+        
+        {/* Structured Data for SEO */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Triviaah",
+            "description": "Free daily trivia challenges and online quiz games",
+            "url": "https://triviaah.com",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://triviaah.com/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          })
+        }} />
+
         {/* Preload hero + first 3 quiz images */}
         <link
           rel="preload"
@@ -249,12 +277,12 @@ export default function Home() {
       </Head>
 
       <div className="min-h-screen bg-gray-50 flex flex-col">
-        {/* Header */}
+        {/* SEO-Enhanced Header */}
         <header className="bg-blue-700 text-white py-4 px-4">
           <div className="container mx-auto flex items-center justify-center gap-4">
             <Image
               src="/logo-280x80.webp"
-              alt="Triviaah Logo"
+              alt="Triviaah - Free Daily Trivia Games"
               width={140}
               height={40}
               priority
@@ -263,7 +291,7 @@ export default function Home() {
               className="object-contain"
             />
             <h1 className="text-2xl md:text-3xl font-bold ml-2">
-              Explore Fun Trivia Quizzes!
+              Free Daily Trivia Challenges & Quiz Games
             </h1>
           </div>
         </header>
@@ -278,70 +306,114 @@ export default function Home() {
 
           {timeLeft && (
             <>
+              {/* SEO-Enhanced Intro Section */}
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                  Daily Trivia Challenges
+                  Play Free Online Trivia Games Daily
                 </h2>
-                <p className="text-gray-600">New quizzes every 24 hours!</p>
+                <p className="text-gray-600 mb-4">
+                  Challenge yourself with our daily trivia challenges featuring pop culture trivia quizzes, 
+                  science questions, history facts, and more! New free online trivia games every 24 hours.
+                </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                 {dailyQuizCards}
               </div>
 
+              {/* Ad placement between sections */}
+              <div className="flex justify-center mb-8">
+                <AdSquare />
+              </div>
+
               <div className="bg-blue-50 text-blue-800 p-4 rounded-lg text-center mb-8">
                 <p className="font-medium">
-                  All quizzes reset in{' '}
+                  🎯 All daily trivia challenges reset in{' '}
                   <span className="font-bold">{timeLeft}</span>
                 </p>
               </div>
             </>
           )}
 
+          {/* SEO-Enhanced Additional Games Section */}
           <div className="mb-12">
             <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
-              More Brain Challenges
+              More Free Online Brain Games & Word Puzzles
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {additionalSectionCards}
             </div>
           </div>
 
+          {/* SEO-Enhanced Categories Section */}
           <div className="mb-12">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-gray-800">
-                All Trivia Categories
+                Popular Trivia Quiz Categories
               </h3>
               <Link href="/trivias" className="text-blue-600 hover:underline" prefetch={false}>
-                View All →
+                View All Categories →
               </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {['Movies', 'Science', 'History', 'Geography', 'Sports', 'Music'].map(
-                (c) => (
-                  <Link
-                    key={c}
-                    href={`/trivias/${c.toLowerCase()}`}
-                    className="bg-white hover:bg-blue-50 border border-gray-200 rounded-lg p-4 text-center transition-colors"
-                    prefetch={false}
-                  >
-                    {c}
-                  </Link>
-                )
-              )}
+              {[
+                { name: 'Movies', desc: 'Film trivia & cinema quiz' },
+                { name: 'Science', desc: 'Biology, physics & chemistry' },
+                { name: 'History', desc: 'Historical events & facts' },
+                { name: 'Geography', desc: 'World capitals & countries' },
+                { name: 'Sports', desc: 'Athletics & sports trivia' },
+                { name: 'Music', desc: 'Music trivia & song quiz' }
+              ].map((c) => (
+                <Link
+                  key={c.name}
+                  href={`/trivias/${c.name.toLowerCase()}`}
+                  className="bg-white hover:bg-blue-50 border border-gray-200 rounded-lg p-4 text-center transition-colors group"
+                  prefetch={false}
+                  title={c.desc}
+                >
+                  <div className="font-medium text-gray-800 group-hover:text-blue-600">
+                    {c.name}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {c.desc}
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
+
+          {/* SEO Content Section */}
+          <section className="bg-white rounded-lg p-6 mb-8 shadow-sm">
+            <h4 className="text-lg font-semibold text-gray-800 mb-4">
+              Why Choose Triviaah for Your Daily Trivia Challenge?
+            </h4>
+            <div className="prose text-gray-600">
+              <p className="mb-4">
+                Triviaah offers the best collection of <strong>free online trivia games</strong> with fresh 
+                <strong> daily trivia challenges</strong> across 20+ categories. Whether you're into 
+                <strong> pop culture trivia quizzes</strong>, science facts, or history questions, 
+                we have something for every trivia enthusiast.
+              </p>
+              <ul className="list-disc ml-6 mb-4">
+                <li>New <strong>daily trivia challenges</strong> every 24 hours</li>
+                <li>Wide variety of <strong>free online trivia games</strong></li>
+                <li>Popular <strong>pop culture trivia quizzes</strong> and entertainment questions</li>
+                <li>Educational content covering science, history, and geography</li>
+                <li>Word games and brain teasers for mental exercise</li>
+              </ul>
+            </div>
+          </section>
 
           <ScrollButtons />
         </main>
 
-        {/* Footer */}
+        {/* Enhanced Footer */}
         <footer className="bg-gray-800 text-white py-6 px-4">
           <div className="container mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-4 md:mb-0">
                 <h3 className="text-lg font-bold">Triviaah</h3>
-                <p className="text-gray-400">Daily trivia challenges</p>
+                <p className="text-gray-400">Free daily trivia challenges & online quiz games</p>
               </div>
               <div className="flex gap-6">
                 <Link href="/about" className="flex items-center hover:text-blue-300" prefetch={false}>
@@ -356,7 +428,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mt-6 text-center text-gray-400 text-sm">
-              © {new Date().getFullYear()} Triviaah. All rights reserved.
+              © {new Date().getFullYear()} Triviaah. Play free daily trivia challenges and online quiz games.
             </div>
           </div>
         </footer>
@@ -411,13 +483,13 @@ const DailyQuizCard = memo(function DailyQuizCard({
   }, [playedQuizzes, quiz.category]);
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400">
+    <article className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400">
       <div className="p-6 flex flex-col h-full">
         <div className="flex items-center justify-center mb-4">
           <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
             <Image
               src={quiz.image}
-              alt={quiz.name}
+              alt={`${quiz.name} - Daily Trivia Challenge`}
               width={80}
               height={80}
               className="object-cover w-full h-full"
@@ -432,31 +504,20 @@ const DailyQuizCard = memo(function DailyQuizCard({
         <div className="text-center mb-4">
           <h3 className="text-lg font-bold text-gray-800 mb-1">{quiz.name}</h3>
           <div className="text-sm text-gray-600 italic mb-2">{quiz.tagline}</div>
-          {/* 🔧 Colour-contrast fix: 400 → 600 */}
           <div className="text-xs text-gray-600">Keywords: {quiz.keywords}</div>
         </div>
 
         <div className="mt-auto">
           {isChecking ? (
-            <Link
-              href={
-                quiz.category === 'today-in-history'
-                  ? '/daily/today-in-history'
-                  : `/daily/${quiz.category}`
-              }
-              onClick={() => onPlay(quiz.category)}
-              className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors"
-            >
-              Play Now
-            </Link>
+            <div className="w-full bg-gray-200 animate-pulse h-10 rounded-lg"></div>
           ) : isPlayed ? (
             <div className="text-center">
               <div className="inline-flex items-center bg-gray-100 text-gray-600 text-sm px-4 py-2 rounded-full">
                 <FaCheckCircleIcon className="mr-2 text-green-500" />
-                <span>Played</span>
+                <span>Completed Today</span>
               </div>
               <div className="text-xs text-gray-400 mt-2">
-                Resets in {timeLeft}
+                New challenge in {timeLeft}
               </div>
             </div>
           ) : (
@@ -467,13 +528,14 @@ const DailyQuizCard = memo(function DailyQuizCard({
                   : `/daily/${quiz.category}`
               }
               onClick={() => onPlay(quiz.category)}
-              className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors"
+              className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label={`Play ${quiz.name} daily trivia challenge`}
             >
-              Play Now
+              Play Daily Challenge
             </Link>
           )}
         </div>
       </div>
-    </div>
+    </article>
   );
 });
