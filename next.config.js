@@ -11,11 +11,27 @@ const nextConfig = {
     // ------------ LOCAL vs PROD CSP ------------
     const isDev = process.env.NODE_ENV === 'development';
 
-    const devCsp =
-      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' fonts.gstatic.com; connect-src 'self' vitals.vercel-insights.com;";
+  // 🔓 Dev needs unsafe-eval for HMR
+  const devCsp =
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self' fonts.gstatic.com; " +
+    "connect-src 'self' https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com; " +
+    "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
+    "frame-ancestors 'none'; upgrade-insecure-requests;";
 
-    const prodCsp =
-      "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' fonts.gstatic.com; connect-src 'self' vitals.vercel-insights.com; frame-ancestors 'none'; upgrade-insecure-requests;";
+  // 🔒 Production keeps strict CSP
+  const prodCsp =
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self' fonts.gstatic.com; " +
+    "connect-src 'self' https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com; " +
+    "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
+    "frame-ancestors 'none'; upgrade-insecure-requests;";
 
     return [
       {
