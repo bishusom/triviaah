@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           crossOrigin="anonymous"
         />
       </head>
-      <body>
+      <body className={`${geist.variable} font-[Geist,Geist-fallback]`}>
         <SoundProvider>
           <Breadcrumbs />
           {children}

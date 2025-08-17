@@ -5,7 +5,18 @@ const nextConfig = {
   
   // Image optimization
   images: {
-    domains: ['cdn.pixabay.com', 'pixabay.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.pixabay.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pixabay.com',
+        pathname: '/**',
+      }
+    ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     minimumCacheTTL: 3600, // Cache optimized images for 1 hour
@@ -19,7 +30,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable', // 1 year for static assets
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
@@ -28,26 +39,24 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable', // 1 year for Next.js static files
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
       {
-        source: '/:path*', // Fallback for HTML pages
+        source: '/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=600, stale-while-revalidate=300', // 10min cache, 5min SWR
+            value: 'public, max-age=600, stale-while-revalidate=300',
           },
         ],
       },
     ];
   },
 
-  // Netlify-specific ISR (via On-Demand Revalidation)
   experimental: {
-    // Next.js 15+ uses built-in ISR handling
-    isrFlushToDisk: true, // Persist cache to disk for Netlify
+    isrFlushToDisk: true,
   }
 };
 

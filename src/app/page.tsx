@@ -117,7 +117,7 @@ export default function Home() {
             height={40}
             priority
             quality={75}
-            className="object-contain"
+            className="object-contain lcp-priority"
           />
         </div>
       </header>
@@ -139,6 +139,7 @@ export default function Home() {
               quiz={quiz}
               priorityImage={idx < 2}
               timeLeft={timeLeft}
+              className={idx < 2 ? "lcp-priority" : ""}
             />
           ))}
         </div>

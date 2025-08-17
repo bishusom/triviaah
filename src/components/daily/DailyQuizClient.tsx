@@ -18,10 +18,12 @@ export default function DailyQuizClient({
   quiz,
   priorityImage = false,
   timeLeft: initialTimeLeft,
+  className = "" 
 }: {
   quiz: Quiz;
   priorityImage?: boolean;
   timeLeft: string;
+  className?: string;
 }) {
   const [played, setPlayed] = useState(false);
   const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
