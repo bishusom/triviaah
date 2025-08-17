@@ -21,9 +21,9 @@ const nextConfig: NextConfig = {
               "default-src 'self'; " +
               "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com; " +
               "style-src 'self' 'unsafe-inline'; " +
-              "img-src 'self' data: https:; " +
+              "img-src 'self' data: https: pixabay.com *.pixabay.com;" +
               "font-src 'self' fonts.gstatic.com; " +
-              "connect-src 'self' vitals.vercel-insights.com; " +
+              "connect-src 'self' vitals.vercel-insights.com pixabay.com *.pixabay.com;" +
               "frame-ancestors 'none'; " +
               "upgrade-insecure-requests;",
           },

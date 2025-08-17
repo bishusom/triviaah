@@ -390,7 +390,7 @@ export default function Home() {
             <div className="prose text-gray-600">
               <p className="mb-4">
                 Triviaah offers the best collection of <strong>free online trivia games</strong> with fresh 
-                <strong> daily trivia challenges</strong> across 20+ categories. Whether you're into 
+                <strong> daily trivia challenges</strong> across 20+ categories. Whether you&apos;re into 
                 <strong> pop culture trivia quizzes</strong>, science facts, or history questions, 
                 we have something for every trivia enthusiast.
               </p>

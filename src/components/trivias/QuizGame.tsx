@@ -1,8 +1,9 @@
 'use client';
+import Image from 'next/image';
 import { format } from 'date-fns';
 import { event } from '@/lib/gtag';
 import { fetchPixabayImage } from '@/lib/pixabay';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { type Question } from '@/lib/firebase';
 import QuizSummary from './QuizSummary';
 import { useSound } from '@/app/context/SoundContext';
@@ -27,7 +28,7 @@ export default function QuizGame({
   const [titbit, setTitbit] = useState('');
   const [timeUsed, setTimeUsed] = useState(0);
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
-  const [isTimedMode, setIsTimedMode] = useState(true);
+  const isTimedMode = true;
   const [questionImage, setQuestionImage] = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   
@@ -48,7 +49,7 @@ export default function QuizGame({
       quiz_category: category.replace(/-/g, ' '),
       difficulty: initialQuestions[0]?.difficulty || 'unknown'
     });
-  }, [category]);
+  }, [category, initialQuestions]);
 
   useEffect(() => {
     correctSound.current = new Audio('/sounds/correct.mp3');
@@ -184,7 +185,7 @@ export default function QuizGame({
     }, 3000);
   };
 
-  const handleTimeUp = () => {
+  const handleTimeUp = useCallback(() => {
     playSound('timeUp');
     setSelectedOption('timeout');
     setShowFeedback(true);
@@ -199,7 +200,24 @@ export default function QuizGame({
       setSelectedOption(null);
       setShowFeedback(false);
     }, 1500);
-  };
+  }, [currentIndex, questions.length, playSound]);
+
+  // Update the useEffect dependency array to include handleTimeUp
+  useEffect(() => {
+    if (timeLeft > 0 && !showFeedback && !showSummary) {
+      const timer = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+        setTimeUsed(prev => prev + 1);
+        
+        if (timeLeft <= 5 && !isMuted) {
+          tickSound.current?.play().catch(e => console.error('Error playing tick sound:', e));
+        }
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0) {
+      handleTimeUp();
+    }
+  }, [timeLeft, showFeedback, isMuted, handleTimeUp, showSummary]);
 
   const getDifficultyColor = (difficulty?: string) => {
     switch(difficulty?.toLowerCase()) {
@@ -320,7 +338,7 @@ export default function QuizGame({
           <div className="w-24 h-24 flex-shrink-0"> {/* Changed from w-full md:w-32 */}
             <div className={`relative aspect-square w-full rounded-md overflow-hidden bg-gray-100 ${questionImage ? '' : 'animate-pulse'}`}>
               {questionImage ? (
-                <img 
+                <Image 
                   src={questionImage} 
                   alt="Question illustration" 
                   className="absolute inset-0 w-full h-full object-cover"

@@ -16,9 +16,9 @@ const nextConfig = {
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
     "style-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data: https:; " +
+    "img-src 'self' data: https: pixabay.com *.pixabay.com;" +
     "font-src 'self' fonts.gstatic.com; " +
-    "connect-src 'self' https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com; " +
+    "connect-src 'self' https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com pixabay.com *.pixabay.com;" +
     "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
     "frame-ancestors 'none'; upgrade-insecure-requests;";
 
@@ -27,9 +27,9 @@ const nextConfig = {
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
     "style-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data: https:; " +
+    "img-src 'self' data: https: pixabay.com *.pixabay.com;" +
     "font-src 'self' fonts.gstatic.com; " +
-    "connect-src 'self' https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com; " +
+    "connect-src 'self' https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com pixabay.com *.pixabay.com;" +
     "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
     "frame-ancestors 'none'; upgrade-insecure-requests;";
 
