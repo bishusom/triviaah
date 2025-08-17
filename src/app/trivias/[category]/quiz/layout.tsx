@@ -1,7 +1,14 @@
-// app/trivias/[category]/quiz/layout.tsx
-'use client';
-
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import MuteButton from '@/components/MuteButton';
+
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://triviaah.com'),
+  title: 'Trivia Quizzes | Triviaah',
+  description: 'Challenge yourself with our collection of trivia quizzes',
+};
 
 export default function QuizLayout({
   children,
@@ -9,14 +16,15 @@ export default function QuizLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-    <div className="no-ads-page">
-      {/* Fixed mute button at top-right */}
-      <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
-        <MuteButton />
+    <div className={`${inter.className} bg-gray-50 min-h-screen`}>
+      <div className="no-ads-page">
+        <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
+          <MuteButton />
+        </div>
+        <main className="pb-20">
+          {children}
+        </main>
       </div>
-      {children}
     </div>
-    </>
   );
 }

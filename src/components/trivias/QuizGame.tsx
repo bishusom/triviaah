@@ -341,6 +341,8 @@ export default function QuizGame({
                 <Image 
                   src={questionImage} 
                   alt="Question illustration" 
+                  width={96}  // matches your w-24 (24 * 4 = 96)
+                  height={96} // matches your h-24
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
                   onError={() => setQuestionImage(null)}
