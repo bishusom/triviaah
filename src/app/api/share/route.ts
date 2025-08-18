@@ -33,8 +33,9 @@ export async function GET(request: Request) {
   const formattedCategory = formatCategory(category);
   // Determine the base URL (for local development vs production)
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
-                  (request.url.includes('localhost') ? 'http://localhost:3000' : 'https://triviaah.com');
-  
+                (request.url.includes('localhost') ? 'http://localhost:3000' : 'https://triviaah.com');
+
+  const shareUrl = `${baseUrl}/api/share?score=${score}&correct=${correct}&total=${total}&category=${encodeURIComponent(formattedCategory)}&time=${time}`;
   const imageUrl = `${baseUrl}/api/generate-image?score=${score}&correct=${correct}&total=${total}&category=${encodeURIComponent(formattedCategory)}&time=${time}`;
   
   // Generate the HTML response
@@ -43,12 +44,15 @@ export async function GET(request: Request) {
   <html>
     <head>
       <title>My Quiz Score - ${formattedCategory}</title>
+      <meta property="fb:app_id" content="${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}" />
       <meta property="og:title" content="I scored ${score} points in ${formattedCategory} trivia!" />
       <meta property="og:description" content="Got ${correct}/${total} correct in ${formatTime(time)}" />
       <meta property="og:image" content="${imageUrl}" />
-      <meta property="og:url" content="${request.url}" />
+      <meta property="og:url" content="${shareUrl}" />
+      <link rel="canonical" href="${shareUrl}" />
       <meta property="og:type" content="website" />
-      <meta http-equiv="refresh" content="0;url=${request.url}" />
+      <meta property="twitter:image" content="${imageUrl}"} />
+      <meta property="twitter:card" content="summary_large_image" />
     </head>
     <body>
       <div style="text-align: center; padding: 20px;">
