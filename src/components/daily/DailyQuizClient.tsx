@@ -29,14 +29,32 @@ export default function DailyQuizClient({
   const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
   const [isMounted, setIsMounted] = useState(false);
 
+
   useEffect(() => {
     setIsMounted(true);
     
-    // Only run client-side code
-    const playedQuizzes = JSON.parse(
-      localStorage.getItem('playedQuizzes') || '{}'
-    );
-    setPlayed(!!playedQuizzes[quiz.category]?.played);
+    const updatePlayedState = () => {
+      const playedQuizzes = JSON.parse(localStorage.getItem('playedQuizzes') || '{}');
+      const quizData = playedQuizzes[quiz.category];
+      
+      if (quizData) {
+        const playedDate = new Date(quizData.timestamp);
+        const today = new Date();
+        
+        // More robust date comparison that handles midnight properly
+        const isSameDay = (
+          playedDate.getDate() === today.getDate() &&
+          playedDate.getMonth() === today.getMonth() &&
+          playedDate.getFullYear() === today.getFullYear()
+        );
+        
+        setPlayed(isSameDay);
+      } else {
+        setPlayed(false);
+      }
+    };
+
+    updatePlayedState();
 
     const interval = setInterval(() => {
       const now = new Date();
@@ -46,7 +64,15 @@ export default function DailyQuizClient({
       const h = Math.floor(diff / (1000 * 60 * 60));
       const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       setTimeLeft(`${h}h ${m}m`);
-    }, 60000);
+      
+      // Update played state every minute to catch date changes
+      updatePlayedState();
+      
+      // Force reset at midnight
+      if (diff < 60000) { // Less than 1 minute to midnight
+        setPlayed(false);
+      }
+    }, 60000); // Update every minute
 
     return () => clearInterval(interval);
   }, [quiz.category]);
