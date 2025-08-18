@@ -23,6 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="font/woff2"
           crossOrigin="anonymous"
         />
+        {/* Add preconnect for Google Ads */}
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" />  
       </head>
       <body className={`${geist.variable} font-[Geist,Geist-fallback]`}>
         <SoundProvider>

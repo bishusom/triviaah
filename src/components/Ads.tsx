@@ -11,42 +11,55 @@ const generateAdId = (component: string, position?: string) => {
   return `${component}-${position || 'default'}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 };
 
-// Header Ad Banner
 export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'footer' }) => {
   const adRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [adId] = useState(() => generateAdId('banner', position));
+  const [isIntersecting, setIsIntersecting] = useState(false);
 
+  // Intersection Observer to load ads when they're about to enter viewport
   useEffect(() => {
     if (!isVisible || !adRef.current || typeof window === 'undefined') return;
     
     // Skip if inside a no-ads container or already initialized
     if (document.querySelector('.no-ads-page') || initializedAds.has(adId)) return;
     
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' } // Load when 200px away from viewport
+    );
+
+    observer.observe(adRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isVisible, adId, position]);
+
+  // Initialize ad when it's intersecting
+  useEffect(() => {
+    if (!isIntersecting) return;
+
     const timer = setTimeout(() => {
       try {
         if (adRef.current && !initializedAds.has(adId)) {
-          // Mark as initialized before pushing
           initializedAds.add(adId);
-          
-          // Initialize AdSense array if needed
           window.adsbygoogle = window.adsbygoogle || [];
-          
-          // Push this specific ad
           window.adsbygoogle.push({});
         }
       } catch (e) {
         console.error(`AdSense error for ${adId}:`, e);
-        // Remove from initialized set on error so it can retry
         initializedAds.delete(adId);
       }
     }, position === 'header' ? 100 : 300); // Different delays for header vs footer
 
-    return () => {
-      clearTimeout(timer);
-      // Don't remove from set on cleanup to prevent re-initialization
-    };
-  }, [isVisible, adId, position]);
+    return () => clearTimeout(timer);
+  }, [isIntersecting, adId, position]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -63,10 +76,9 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
     : process.env.NEXT_PUBLIC_ADSENSE_SLOT_FOOTER || process.env.NEXT_PUBLIC_ADSENSE_SLOT_HEADER;
 
   return (
-    <div className="relative w-full bg-white">
-      <div ref={adRef} className="py-2 px-4">
+    <div className="relative w-full bg-white" ref={adRef}>
+      <div className="py-2 px-4">
         <ins
-          key={adId} // Unique key for React
           className="adsbygoogle"
           style={{ 
             display: 'block',
@@ -96,38 +108,49 @@ export const AdSquare = () => {
   const adRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [adId] = useState(() => generateAdId('square'));
+  const [isIntersecting, setIsIntersecting] = useState(false);
 
   useEffect(() => {
     if (!isVisible || !adRef.current || typeof window === 'undefined') return;
     
-    // Skip if inside a no-ads container or already initialized
     if (document.querySelector('.no-ads-page') || initializedAds.has(adId)) return;
     
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    observer.observe(adRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isVisible, adId]);
+
+  useEffect(() => {
+    if (!isIntersecting) return;
+
     const timer = setTimeout(() => {
       try {
         if (adRef.current && !initializedAds.has(adId)) {
-          // Mark as initialized before pushing
           initializedAds.add(adId);
-          
-          // Initialize AdSense array if needed
           window.adsbygoogle = window.adsbygoogle || [];
-          
-          // Push this specific ad
           window.adsbygoogle.push({});
         }
       } catch (e) {
         console.error(`AdSense error for ${adId}:`, e);
-        // Remove from initialized set on error so it can retry
         initializedAds.delete(adId);
       }
     }, 500); // Longer delay for square ads
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [isVisible, adId]);
+    return () => clearTimeout(timer);
+  }, [isIntersecting, adId]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       initializedAds.delete(adId);
@@ -137,10 +160,9 @@ export const AdSquare = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="relative my-4">
-      <div ref={adRef} className="flex justify-center">
+    <div className="relative my-4" ref={adRef}>
+      <div className="flex justify-center">
         <ins
-          key={adId} // Unique key for React
           className="adsbygoogle"
           style={{ 
             display: 'inline-block', 
@@ -167,38 +189,49 @@ export const AdMultiplex = () => {
   const adRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [adId] = useState(() => generateAdId('multiplex'));
+  const [isIntersecting, setIsIntersecting] = useState(false);
 
   useEffect(() => {
     if (!isVisible || !adRef.current || typeof window === 'undefined') return;
     
-    // Skip if inside a no-ads container or already initialized
     if (document.querySelector('.no-ads-page') || initializedAds.has(adId)) return;
     
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '300px' } // Larger margin for multiplex ads
+    );
+
+    observer.observe(adRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isVisible, adId]);
+
+  useEffect(() => {
+    if (!isIntersecting) return;
+
     const timer = setTimeout(() => {
       try {
         if (adRef.current && !initializedAds.has(adId)) {
-          // Mark as initialized before pushing
           initializedAds.add(adId);
-          
-          // Initialize AdSense array if needed
           window.adsbygoogle = window.adsbygoogle || [];
-          
-          // Push this specific ad
           window.adsbygoogle.push({});
         }
       } catch (e) {
         console.error(`AdSense error for ${adId}:`, e);
-        // Remove from initialized set on error so it can retry
         initializedAds.delete(adId);
       }
     }, 800); // Longest delay for multiplex ads
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [isVisible, adId]);
+    return () => clearTimeout(timer);
+  }, [isIntersecting, adId]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       initializedAds.delete(adId);
@@ -208,10 +241,9 @@ export const AdMultiplex = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="relative hidden md:block w-[300px]">
-      <div ref={adRef}>
+    <div className="relative hidden md:block w-[300px]" ref={adRef}>
+      <div>
         <ins
-          key={adId} // Unique key for React
           className="adsbygoogle"
           style={{ display: 'block' }}
           data-ad-client="ca-pub-4386714040098164"

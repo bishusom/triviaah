@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaCheckCircle } from 'react-icons/fa';
+//import { FaCheckCircle } from 'react-icons/fa';
 import { MdInfo, MdEmail } from 'react-icons/md';
-import { AdSquare } from '@/components/Ads';
+import { AdBanner, AdSquare } from '@/components/Ads';
 import ScrollButtons from '@/components/ScrollButtons';
 import DailyQuizClient from '@/components/daily/DailyQuizClient';
 
@@ -108,6 +108,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Header Banner Ad - placed after header */}
       <header className="bg-blue-700 text-white py-4 px-4">
         <div className="container mx-auto flex items-center justify-center gap-4">
           <Image
@@ -121,6 +122,7 @@ export default function Home() {
           />
         </div>
       </header>
+      <AdBanner position="header" />
 
       <main className="container mx-auto px-4 py-6 flex-grow">
         <div className="text-center mb-8">
@@ -143,6 +145,8 @@ export default function Home() {
             />
           ))}
         </div>
+        {/* Square Ad placed after first content section */}
+        <AdSquare />
 
         {/* More Brain Puzzles Section */}
         <div className="mb-12">
@@ -258,7 +262,11 @@ export default function Home() {
           <ScrollButtons />  
 
         </main>
-         {/* Enhanced Footer */}
+
+        {/* Footer Banner Ad */}
+        <AdBanner position="footer" />    
+          
+        {/* Enhanced Footer */}
         <footer className="bg-gray-800 text-white py-6 px-4">
           <div className="container mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center">
