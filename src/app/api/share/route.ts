@@ -49,7 +49,6 @@ export async function GET(request: Request) {
       <meta property="og:description" content="Got ${correct}/${total} correct in ${formatTime(time)}" />
       <meta property="og:image" content="${imageUrl}" />
       <meta property="og:url" content="${shareUrl}" />
-      <link rel="canonical" href="${shareUrl}" />
       <meta property="og:type" content="website" />
       <meta property="twitter:image" content="${imageUrl}"} />
       <meta property="twitter:card" content="summary_large_image" />
