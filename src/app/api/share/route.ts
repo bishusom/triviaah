@@ -39,15 +39,17 @@ export async function GET(request: Request) {
   const imageUrl = `${baseUrl}/api/generate-image?score=${score}&correct=${correct}&total=${total}&category=${encodeURIComponent(formattedCategory)}&time=${time}`;
   
   // Generate the HTML response
+  // Don't add app id as it screws up the url
   const html = `
   <!DOCTYPE html>
   <html>
     <head>
       <title>My Quiz Score - ${formattedCategory}</title>
-      <meta property="fb:app_id" content="${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}" />
       <meta property="og:title" content="I scored ${score} points in ${formattedCategory} trivia!" />
       <meta property="og:description" content="Got ${correct}/${total} correct in ${formatTime(time)}" />
       <meta property="og:image" content="${imageUrl}" />
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
       <meta property="og:url" content="${shareUrl}" />
       <meta property="og:type" content="website" />
       <meta property="twitter:image" content="${imageUrl}"} />
