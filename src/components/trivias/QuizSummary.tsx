@@ -23,43 +23,43 @@ type HighScore = {
 };
 
 const MESSAGES = {
-    gold: [
-        "🏆 Trivia Deity! The knowledge gods bow before you! Can you maintain your reign?",
-        "🧠 Mind = Blown! Think you can top this perfect score? Try again!",
-        "🤯 Unstoppable Genius! Ready for an even bigger challenge next round?",
-        "🎖️ Absolute Legend! The leaderboard needs your name again!"
-    ],
-    silver: [
-        "✨ Brainiac Alert! One more round could push you to perfection!",
-        "🚀 Knowledge Rocket! You're just one launch away from trivia greatness!",
-        "💎 Diamond Mind! Polish your skills further with another game!",
-        "🧩 Puzzle Master! Can you complete the picture perfectly next time?"
-    ],
-    bronze: [
-        "👍 Solid Effort! Your next attempt could be your breakthrough!",
-        "📚 Bookworm Rising! Every replay makes you wiser - try again!",
-        "💡 Bright Spark! Your knowledge is growing - fuel it with another round!",
-        "🏅 Contender Status! The podium is within reach - one more try!"
-    ],
-    zero: [
-        "💥 Knowledge Explosion Incoming! Stick around - the next attempt will be better!",
-        "🎯 Fresh Start! Now that you've warmed up, the real game begins!",
-        "🔥 Fueling Curiosity! Your learning journey starts here - play again!",
-        "🚀 Launch Pad Ready! First attempts are just practice - try for real now!",
-        "🌱 Seeds of Knowledge Planted! Water them with another try!"
-    ],
-    default: [
-        "🌱 Sprouting Scholar! Every replay makes you stronger - continue your journey!",
-        "🦉 Wise Owl in Training! The more you play, the wiser you become!",
-        "📖 Chapter 1 Complete! Turn the page to your next knowledge adventure!",
-        "🧭 Learning Compass Active! Your next game could be your true north!"
-    ]
+  gold: [
+    "🏆 Trivia Deity! The knowledge gods bow before you! Can you maintain your reign?",
+    "🧠 Mind = Blown! Think you can top this perfect score? Try again!",
+    "🤯 Unstoppable Genius! Ready for an even bigger challenge next round?",
+    "🎖️ Absolute Legend! The leaderboard needs your name again!"
+  ],
+  silver: [
+    "✨ Brainiac Alert! One more round could push you to perfection!",
+    "🚀 Knowledge Rocket! You're just one launch away from trivia greatness!",
+    "💎 Diamond Mind! Polish your skills further with another game!",
+    "🧩 Puzzle Master! Can you complete the picture perfectly next time?"
+  ],
+  bronze: [
+    "👍 Solid Effort! Your next attempt could be your breakthrough!",
+    "📚 Bookworm Rising! Every replay makes you wiser - try again!",
+    "💡 Bright Spark! Your knowledge is growing - fuel it with another round!",
+    "🏅 Contender Status! The podium is within reach - one more try!"
+  ],
+  zero: [
+    "💥 Knowledge Explosion Incoming! Stick around - the next attempt will be better!",
+    "🎯 Fresh Start! Now that you've warmed up, the real game begins!",
+    "🔥 Fueling Curiosity! Your learning journey starts here - play again!",
+    "🚀 Launch Pad Ready! First attempts are just practice - try for real now!",
+    "🌱 Seeds of Knowledge Planted! Water them with another try!"
+  ],
+  default: [
+    "🌱 Sprouting Scholar! Every replay makes you stronger - continue your journey!",
+    "🦉 Wise Owl in Training! The more you play, the wiser you become!",
+    "📖 Chapter 1 Complete! Turn the page to your next knowledge adventure!",
+    "🧭 Learning Compass Active! Your next game could be your true north!"
+  ]
 };
 
-export default function QuizSummary({ 
+export default function QuizSummary({
   result,
-  onRestart 
-}: { 
+  onRestart
+}: {
   result: QuizResult;
   onRestart: () => void;
 }) {
@@ -100,7 +100,7 @@ export default function QuizSummary({
     try {
       const res = await fetch(`/api/highscores?category=${result.category}`);
       if (!res.ok) throw new Error('Failed to fetch');
-      
+
       const data = await res.json();
       setHighScores(data.localHighScores || []);
       setGlobalHigh(data.globalHigh || null);
@@ -120,7 +120,7 @@ export default function QuizSummary({
   const generateShareImage = async (result: QuizResult) => {
     const formattedCategory = formatCategory(result.category);
     const shareText = `I scored ${result.score} points in ${formattedCategory} trivia!`;
-    
+
     try {
       const response = await fetch('/api/generate-image', {
         method: 'POST',
@@ -134,7 +134,7 @@ export default function QuizSummary({
           text: shareText
         })
       });
-      
+
       if (!response.ok) throw new Error('Image generation failed');
       const data = await response.json();
       setShareImageUrl(data.imageUrl || '');
@@ -149,7 +149,7 @@ export default function QuizSummary({
 
   const saveScore = async () => {
     if (!playerName.trim()) return;
-    
+
     try {
       const response = await fetch('/api/highscores', {
         method: 'POST',
@@ -161,9 +161,9 @@ export default function QuizSummary({
           difficulty: 'mixed'
         })
       });
-      
+
       if (!response.ok) throw new Error('Failed to save');
-      
+
       setIsSubmitted(true);
       await fetchHighScores();
     } catch (error) {
@@ -173,7 +173,7 @@ export default function QuizSummary({
 
   const shareOnSocial = async (platform: string, result: QuizResult) => {
     const formattedCategory = formatCategory(result.category);
-    const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me?`;
+    const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me? #TriviaQuiz`;
     const shareUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${encodeURIComponent(formattedCategory)}&time=${result.timeUsed}`;
 
     switch (platform) {
@@ -182,8 +182,7 @@ export default function QuizSummary({
           window.FB.ui({
             method: 'share',
             href: shareUrl,
-            quote: shareText,
-            hashtag: '#TriviaQuiz'
+            quote: shareText
           }, (response) => {
             if (response && !response.error_message) {
               console.log('Shared successfully:', response);
@@ -191,7 +190,7 @@ export default function QuizSummary({
               console.error('Share failed:', response?.error_message);
               // Fallback to sharer.php
               window.open(
-                `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}&hashtag=TriviaQuiz`,
+                `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}`,
                 '_blank'
               );
             }
@@ -200,7 +199,7 @@ export default function QuizSummary({
           console.error('Facebook SDK not loaded');
           // Fallback to sharer.php
           window.open(
-            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}&hashtag=TriviaQuiz`,
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}`,
             '_blank'
           );
         }
@@ -221,7 +220,7 @@ export default function QuizSummary({
   };
 
   const getMedalIcon = (index: number) => {
-    switch(index) {
+    switch (index) {
       case 0: return <FaTrophy className="text-yellow-500 mr-2" />;
       case 1: return <FaMedal className="text-gray-400 mr-2" />;
       case 2: return <FaMedal className="text-amber-600 mr-2" />;
@@ -238,10 +237,10 @@ export default function QuizSummary({
         crossOrigin="anonymous"
         onLoad={() => {
           window.FB.init({
-            appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID,
+            appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || '',
             autoLogAppEvents: true,
             xfbml: true,
-            version: 'v20.0'
+            version: 'v2.4'
           });
           console.log('Facebook SDK initialized');
         }}
@@ -331,9 +330,9 @@ export default function QuizSummary({
           <h3 className="text-xl font-semibold mb-4">Share Your Score</h3>
           {shareImageUrl && (
             <div className="mb-6 mx-auto max-w-xs">
-              <img 
-                src={shareImageUrl} 
-                alt="Share preview" 
+              <img
+                src={shareImageUrl}
+                alt="Share preview"
                 className="rounded-lg border-2 border-gray-200 shadow-md"
               />
             </div>

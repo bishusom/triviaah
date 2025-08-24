@@ -28,6 +28,7 @@ export default function QuizGame({
   const [titbit, setTitbit] = useState('');
   const [timeUsed, setTimeUsed] = useState(0);
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const isTimedMode = true;
   const [questionImage, setQuestionImage] = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
@@ -89,6 +90,13 @@ export default function QuizGame({
   }, [timeLeft, showFeedback, isMuted, isTimedMode]);
 
   useEffect(() => {
+    // Set a timeout to ensure loading doesn't get stuck for first question
+    const loadingTimeout = setTimeout(() => {
+      if (currentIndex === 0) {
+        setIsLoading(false);
+      }
+    }, 3000); // Max 3 seconds loading time for first question
+
     const fetchImage = async () => {
       setQuestionImage(null);
       
@@ -105,26 +113,64 @@ export default function QuizGame({
       
       if (category && keywords.length > 0) {
         const combinedImage = await fetchPixabayImage(keywords[0], category);
-        if (combinedImage) return setQuestionImage(combinedImage);
+        if (combinedImage) {
+          setQuestionImage(combinedImage);
+          if (currentIndex === 0) {
+            setIsLoading(false);
+            clearTimeout(loadingTimeout);
+          }
+          return;
+        }
       }
 
       if (category) {
         const categoryImage = await fetchPixabayImage('', category);
-        if (categoryImage) return setQuestionImage(categoryImage);
+        if (categoryImage) {
+          setQuestionImage(categoryImage);
+          if (currentIndex === 0) {
+            setIsLoading(false);
+            clearTimeout(loadingTimeout);
+          }
+          return;
+        }
       }
 
       for (const keyword of keywords) {
         const imageUrl = await fetchPixabayImage(keyword);
         if (imageUrl) {
           setQuestionImage(imageUrl);
+          if (currentIndex === 0) {
+            setIsLoading(false);
+            clearTimeout(loadingTimeout);
+          }
           break;
         }
+      }
+      
+      // If no image was found but we're on the first question, clear loading
+      if (currentIndex === 0) {
+        setIsLoading(false);
+        clearTimeout(loadingTimeout);
       }
     };
 
     const debounceTimer = setTimeout(fetchImage, 300);
-    return () => clearTimeout(debounceTimer);
-  }, [currentQuestion]);
+    return () => {
+      clearTimeout(debounceTimer);
+      clearTimeout(loadingTimeout);
+    };
+  }, [currentQuestion, currentIndex]);
+
+  // Add this effect to handle initial loading state
+  useEffect(() => {
+    // If we already have questions and no image loading is needed for first question
+    if (currentIndex === 0 && questions.length > 0) {
+      const timeout = setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [questions, currentIndex]);
 
   const playSound = (sound: 'correct' | 'incorrect' | 'timeUp' | 'tick') => {
     if (isMuted) return;
@@ -170,6 +216,7 @@ export default function QuizGame({
       if (currentIndex < questions.length - 1) {
         setCurrentIndex(prev => prev + 1);
         setTimeLeft(30);
+        // Don't set isLoading for subsequent questions
       } else {
         event({
           action: 'quiz_completed', 
@@ -194,6 +241,7 @@ export default function QuizGame({
       if (currentIndex < questions.length - 1) {
         setCurrentIndex(prev => prev + 1);
         setTimeLeft(30);
+        // Don't set isLoading for subsequent questions
       } else {
         setShowSummary(true);
       }
@@ -246,11 +294,42 @@ export default function QuizGame({
           setTimeLeft(30);
           setShowSummary(false);
           setTimeUsed(0);
+          setIsLoading(true);
         }}
       />
     );
   }
 
+  // Loading state - only for first question
+  if (isLoading && currentIndex === 0) {
+    return (
+      <div className="relative max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-30 -z-10"></div>
+        
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="relative w-20 h-20 mb-6">
+            <div className="absolute inset-0 rounded-full border-4 border-blue-200"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-600 animate-spin"></div>
+          </div>
+          
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">Loading Question</h2>
+          <p className="text-gray-600 text-center">
+            Getting everything ready for your quiz...
+          </p>
+          
+          <div className="mt-8 flex space-x-2">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="w-3 h-3 bg-blue-600 rounded-full animate-bounce"
+                style={{ animationDelay: `${i * 0.1}s` }}
+              ></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md overflow-hidden">
