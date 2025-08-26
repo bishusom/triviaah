@@ -24,6 +24,13 @@ export const metadata: Metadata = {
 
 async function getDailyQuizzes() {
   return [
+     {
+      category: 'trordle',
+      name: 'Trordle',
+      image: '/imgs/trordle-160x160.webp',
+      tagline: 'Wordle-inspired trivia challenges for curious minds',
+      keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
+    },
     {
       category: 'general-knowledge',
       name: 'General Knowledge',
@@ -32,18 +39,18 @@ async function getDailyQuizzes() {
       keywords: 'facts, trivia, knowledge quiz',
     },
     {
+      category: 'today-in-history',
+      name: 'Today in History',
+      image: '/imgs/today-history-160x160.webp',
+      tagline: 'Discover historical events from this date in free online trivia',
+      keywords: 'historical trivia quiz, on this day trivia, history facts game',
+    },
+    {
       category: 'entertainment',
       name: 'Entertainment',
       image: '/imgs/entertainment-160x160.webp',
       tagline: 'Movies, music & pop culture challenges',
       keywords: 'film quiz, music trivia, celebrity questions',
-    },
-    {
-      category: 'history',
-      name: 'History',
-      image: '/imgs/history-160x160.webp',
-      tagline: 'Journey through time with historical facts',
-      keywords: 'world history, past events, historical figures',
     },
     {
       category: 'geography',
@@ -58,13 +65,6 @@ async function getDailyQuizzes() {
       image: '/imgs/science-160x160.webp',
       tagline: 'Discover the wonders of science',
       keywords: 'biology, physics, chemistry, space',
-    },
-    {
-      category: 'sports',
-      name: 'Sports',
-      image: '/imgs/sports-160x160.webp',
-      tagline: 'For the ultimate sports fanatic',
-      keywords: 'football, basketball, olympics, athletes',
     },
   ];
 }

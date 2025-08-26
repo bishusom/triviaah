@@ -16,6 +16,13 @@ export const metadata = {
 // --------------------------
 const DAILY_QUIZZES = [
   {
+    category: 'trordle',
+    name: 'Trordle',
+    image: '/imgs/trordle-160x160.webp',
+    tagline: 'Wordle-inspired trivia challenges for curious minds',
+    keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
+    },
+  {
     category: 'general-knowledge',
     name: 'General Knowledge',
     image: '/imgs/general-knowledge-160x160.webp',
@@ -49,13 +56,6 @@ const DAILY_QUIZZES = [
     image: '/imgs/science-160x160.webp',
     tagline: 'Discover scientific wonders in our free online science trivia',
     keywords: 'science trivia quiz, biology quiz game, physics trivia questions',
-  },
-  {
-    category: 'sports',
-    name: 'Sports',
-    image: '/imgs/sports-160x160.webp',
-    tagline: 'Ultimate sports trivia challenges for true sports fanatics',
-    keywords: 'sports trivia quiz, football trivia game, basketball quiz',
   },
 ] as const;
 

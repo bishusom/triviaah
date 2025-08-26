@@ -6,6 +6,11 @@
     </url>
     <!--Daily Trivas Section -->
     <url>
+        <loc>https://triviaah.com/daily/trordle/</loc>
+        <lastmod>2025-08-26T23:34:54+00:00</lastmod>
+        <priority>1.00</priority>
+    </url>
+    <url>
         <loc>https://triviaah.com/daily/</loc>
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
         <priority>1.00</priority>
@@ -40,14 +45,9 @@
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
         <priority>1.00</priority>
     </url>
-    <url>
-        <loc>https://triviaah.com/daily/sports/</loc>
-        <lastmod>2025-08-13T09:04:54+00:00</lastmod>
-        <priority>1.00</priority>
-    </url>
     <!--All Trivas Section -->
     <url>
-    <loc>https://triviaah.com/daily/trivias/</loc>
+    <loc>https://triviaah.com/trivias/</loc>
     <lastmod>2025-08-13T09:04:54+00:00</lastmod>
     <priority>1.00</priority>
     </url>
