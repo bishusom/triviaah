@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { checkTrordleGuess, TrordleData, TrordleGuessResult } from '@/lib/trordle-logic';
 import { addTrordleResult } from '@/lib/trordle-fb';
 import confetti from 'canvas-confetti';
-import { event } from '@/lib/gtag'; // Import the analytics event function
+import { event } from '@/lib/gtag';
 
 interface TrordleComponentProps {
   initialData: TrordleData;
@@ -19,6 +19,52 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
   const [showHistory, setShowHistory] = useState(false);
   const [showLastGuess, setShowLastGuess] = useState(false);
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
+  
+  // Sound effects
+  const correctSound = useRef<HTMLAudioElement | null>(null);
+  const incorrectSound = useRef<HTMLAudioElement | null>(null);
+  const winSound = useRef<HTMLAudioElement | null>(null);
+  const loseSound = useRef<HTMLAudioElement | null>(null);
+  const clickSound = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Initialize sound effects
+    correctSound.current = new Audio('/sounds/correct.mp3');
+    incorrectSound.current = new Audio('/sounds/incorrect.mp3');
+    winSound.current = new Audio('/sounds/win.mp3');
+    loseSound.current = new Audio('/sounds/lose.mp3');
+    clickSound.current = new Audio('/sounds/click.mp3');
+
+    return () => {
+      [correctSound, incorrectSound, winSound, loseSound, clickSound].forEach(sound => {
+        sound.current?.pause();
+      });
+    };
+  }, []);
+
+  const playSound = (soundType: 'correct' | 'incorrect' | 'win' | 'lose' | 'click') => {
+    try {
+      switch(soundType) {
+        case 'correct':
+          correctSound.current?.play();
+          break;
+        case 'incorrect':
+          incorrectSound.current?.play();
+          break;
+        case 'win':
+          winSound.current?.play();
+          break;
+        case 'lose':
+          loseSound.current?.play();
+          break;
+        case 'click':
+          clickSound.current?.play();
+          break;
+      }
+    } catch (error) {
+      console.error('Error playing sound:', error);
+    }
+  };
 
   useEffect(() => {
     const savedProgress = localStorage.getItem(`trordle-${puzzleData.id}`);
@@ -69,6 +115,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
     if (gameState !== 'playing' || attempts.length >= 6) return;
     
     setSelectedOption(option);
+    playSound('click');
     
     setTimeout(() => {
       const result = checkTrordleGuess(option, puzzleData);
@@ -81,6 +128,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       if (result.isCorrect) {
         setGameState('won');
         triggerConfetti();
+        playSound('win');
         addTrordleResult(puzzleData.id, true, newAttempts.length);
         // Analytics event for winning
         event({
@@ -91,6 +139,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
         });
       } else if (newAttempts.length >= 6) {
         setGameState('lost');
+        playSound('lose');
         addTrordleResult(puzzleData.id, false, 6);
         // Analytics event for losing
         event({
@@ -99,13 +148,15 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
           label: 'max_attempts'
         });
       } else {
-        // Analytics event for incorrect guess
-        event({
-          action: 'trordle_guess',
-          category: 'trordle',
-          label: `attempt_${newAttempts.length}`,
-          value: newAttempts.length
-        });
+        // Play correct/incorrect sound based on if any attributes are correct/partial
+        const hasCorrectOrPartial = result.attributes.some(attr => 
+          attr.status === 'correct' || attr.status === 'partial'
+        );
+        if (hasCorrectOrPartial) {
+          playSound('correct');
+        } else {
+          playSound('incorrect');
+        }
       }
       
       setSelectedOption(null);
@@ -140,12 +191,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
     navigator.clipboard.writeText(text).then(() => {
       setShareMessage('Copied to clipboard!');
       setTimeout(() => setShareMessage(''), 2000);
-      // Analytics event for sharing results
-      event({
-        action: 'trordle_shared',
-        category: 'trordle',
-        label: gameState === 'won' ? 'win' : 'loss'
-      });
+      playSound('click');
     });
   };
 
@@ -156,22 +202,12 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
     setShowHistory(false);
     setShowLastGuess(false);
     localStorage.removeItem(`trordle-${puzzleData.id}`);
-    // Analytics event for game reset
-    event({
-      action: 'trordle_reset',
-      category: 'trordle',
-      label: 'manual_reset'
-    });
+    playSound('click');
   };
 
   const toggleHistory = () => {
     setShowHistory(!showHistory);
-    // Analytics event for viewing history
-    event({
-      action: 'trordle_history_toggle',
-      category: 'trordle',
-      label: showHistory ? 'hide' : 'show'
-    });
+    playSound('click');
   };
 
   const getDotColor = (attempt: TrordleGuessResult) => {

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
-import { FaFacebook, FaWhatsapp, FaMedal, FaTrophy } from 'react-icons/fa';
+import { FaFacebook, FaWhatsapp, FaMedal, FaTrophy, FaCopy } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 
 type QuizResult = {
@@ -216,6 +216,15 @@ export default function QuizSummary({
           '_blank'
         );
         break;
+      case 'copy':
+      try {
+        await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+        alert('Copied to clipboard!');
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+        alert('Failed to copy to clipboard');
+      }
+      break;  
     }
   };
 
@@ -240,7 +249,7 @@ export default function QuizSummary({
             appId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || '',
             autoLogAppEvents: true,
             xfbml: true,
-            version: 'v2.4'
+            version: 'v2.7'
           });
           console.log('Facebook SDK initialized');
         }}
@@ -358,6 +367,13 @@ export default function QuizSummary({
               aria-label="Share on WhatsApp"
             >
               <FaWhatsapp size={20} />
+            </button>
+            <button
+              onClick={() => shareOnSocial('copy', result)}
+              className="flex items-center justify-center w-10 h-10 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
+              aria-label="Copy to clipboard"
+            >
+              <FaCopy size={18} />
             </button>
           </div>
         </div>
