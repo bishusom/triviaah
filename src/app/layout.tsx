@@ -3,13 +3,36 @@ import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
 import { SoundProvider } from './context/SoundContext';
+import { Metadata } from 'next';
 import '@styles/globals.css';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 
-export const metadata = {
+export const metadata: Metadata = {
+  metadataBase: new URL('https://triviaah.com'),
   title: 'Triviaah: Free Daily Trivia & Quiz Games',
   description: 'Play free daily trivia challenges across 20+ categories. New questions every 24 hours!',
+  openGraph: {
+    title: 'Triviaah: Free Daily Trivia & Quiz Games',
+    description: 'Play free daily trivia challenges across 20+ categories. New questions every 24 hours!',
+    url: 'https://triviaah.com',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/triviaah-og.webp', // This will resolve to https://triviaah.com/imgs/triviaah-og.webp
+        width: 1200,
+        height: 630,
+        alt: 'Triviaah - Free Daily Trivia & Quiz Games'
+      }
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Triviaah: Free Daily Trivia & Quiz Games',
+    description: 'Play free daily trivia challenges across 20+ categories. New questions every 24 hours!',
+    images: ['/imgs/triviaah-og.webp'], // This will also resolve to the full URL
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
