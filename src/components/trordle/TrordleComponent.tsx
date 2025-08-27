@@ -182,7 +182,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       shareText += '\n';
     });
     
-    shareText += '\nPlay daily at triviaah.com/daily/trordle';
+    shareText += '\nPlay daily at triviaah.com/trordle';
     return shareText;
   };
 

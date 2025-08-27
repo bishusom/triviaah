@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Trordle - Daily Trivia Puzzle | Triviaah',
     description: 'Guess the answer to today\'s trivia puzzle with limited attempts, similar to Wordle but with trivia questions.',
-    url: 'https://triviaah.com/daily/trordle',
+    url: 'https://triviaah.com/trordle',
     siteName: 'Triviaah',
     images: [
       {

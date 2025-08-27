@@ -9,6 +9,7 @@ import { FaCheckCircle } from 'react-icons/fa';
 type Quiz = {
   category: string;
   name: string;
+  path: string;
   image: string;
   tagline: string;
   keywords: string;
@@ -126,7 +127,7 @@ export default function DailyQuizClient({
           </div>
         ) : (
           <Link
-            href={`/daily/${quiz.category}`}
+             href={quiz.path} 
             onClick={() => {
               const next = { 
                 ...JSON.parse(localStorage.getItem('playedQuizzes') || '{}'), 

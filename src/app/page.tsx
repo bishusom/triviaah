@@ -18,6 +18,7 @@ const DAILY_QUIZZES = [
   {
     category: 'trordle',
     name: 'Trordle',
+    path: '/trordle',
     image: '/imgs/trordle-160x160.webp',
     tagline: 'Wordle-inspired trivia challenges for curious minds',
     keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
@@ -25,6 +26,7 @@ const DAILY_QUIZZES = [
   {
     category: 'general-knowledge',
     name: 'General Knowledge',
+    path: '/daily/general-knowledge',
     image: '/imgs/general-knowledge-160x160.webp',
     tagline: 'Test your worldly wisdom with diverse daily trivia challenges',
     keywords: 'general knowledge quiz, daily trivia facts, world trivia questions',
@@ -32,6 +34,7 @@ const DAILY_QUIZZES = [
   {
     category: 'today-in-history',
     name: 'Today in History',
+    path: '/today-in-history',
     image: '/imgs/today-history-160x160.webp',
     tagline: 'Discover historical events from this date in free online trivia',
     keywords: 'historical trivia quiz, on this day trivia, history facts game',
@@ -39,6 +42,7 @@ const DAILY_QUIZZES = [
   {
     category: 'entertainment',
     name: 'Entertainment',
+    path: '/daily/entertainment',
     image: '/imgs/entertainment-160x160.webp',
     tagline: 'Pop culture trivia quizzes featuring movies, music & celebrities',
     keywords: 'pop culture trivia quizzes, movie trivia game, celebrity quiz',
@@ -46,6 +50,7 @@ const DAILY_QUIZZES = [
   {
     category: 'geography',
     name: 'Geography',
+    path: '/daily/geography',
     image: '/imgs/geography-160x160.webp',
     tagline: 'Explore world geography through interactive trivia challenges',
     keywords: 'geography trivia quiz, world capitals game, countries trivia',
@@ -53,6 +58,7 @@ const DAILY_QUIZZES = [
   {
     category: 'science',
     name: 'Science',
+    path: '/daily/science',
     image: '/imgs/science-160x160.webp',
     tagline: 'Discover scientific wonders in our free online science trivia',
     keywords: 'science trivia quiz, biology quiz game, physics trivia questions',

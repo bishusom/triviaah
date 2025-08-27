@@ -27,6 +27,7 @@ async function getDailyQuizzes() {
      {
       category: 'trordle',
       name: 'Trordle',
+      path: '/trordle',
       image: '/imgs/trordle-160x160.webp',
       tagline: 'Wordle-inspired trivia challenges for curious minds',
       keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
@@ -34,6 +35,7 @@ async function getDailyQuizzes() {
     {
       category: 'general-knowledge',
       name: 'General Knowledge',
+      path: '/daily/general-knowledge',
       image: '/imgs/general-knowledge-160x160.webp',
       tagline: 'Test your worldly wisdom with diverse topics',
       keywords: 'facts, trivia, knowledge quiz',
@@ -41,6 +43,7 @@ async function getDailyQuizzes() {
     {
       category: 'today-in-history',
       name: 'Today in History',
+      path: '/today-in-history',
       image: '/imgs/today-history-160x160.webp',
       tagline: 'Discover historical events from this date in free online trivia',
       keywords: 'historical trivia quiz, on this day trivia, history facts game',
@@ -48,6 +51,7 @@ async function getDailyQuizzes() {
     {
       category: 'entertainment',
       name: 'Entertainment',
+      path: '/daily/entertainment',
       image: '/imgs/entertainment-160x160.webp',
       tagline: 'Movies, music & pop culture challenges',
       keywords: 'film quiz, music trivia, celebrity questions',
@@ -55,6 +59,7 @@ async function getDailyQuizzes() {
     {
       category: 'geography',
       name: 'Geography',
+      path: '/daily/geography',
       image: '/imgs/geography-160x160.webp',
       tagline: 'Explore the world without leaving home',
       keywords: 'countries, capitals, landmarks, maps',
@@ -62,6 +67,7 @@ async function getDailyQuizzes() {
     {
       category: 'science',
       name: 'Science',
+      path: '/daily/science',
       image: '/imgs/science-160x160.webp',
       tagline: 'Discover the wonders of science',
       keywords: 'biology, physics, chemistry, space',

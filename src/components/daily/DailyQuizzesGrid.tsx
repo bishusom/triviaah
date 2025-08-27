@@ -9,6 +9,7 @@ import { FaCheckCircle } from 'react-icons/fa';
 interface Quiz {
   category: string;
   name: string;
+  path: string;
   image: string;
   tagline: string;
   keywords: string;
@@ -107,7 +108,7 @@ export default function DailyQuizzesGrid({ quizzes }: { quizzes: Quiz[] }) {
                   </div>
                 ) : (
                   <Link
-                    href={`/daily/${quiz.category}`}
+                    href={quiz.path} 
                     onClick={() => handleQuizPlay(quiz.category)}
                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors"
                   >
