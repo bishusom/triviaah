@@ -43,14 +43,21 @@ export default function QuizGame({
   const currentQuestion = questions[currentIndex];
 
   useEffect(() => {
-    event({
-      action: 'quiz_started',
-      category: category,
-      label: category,
-      quiz_category: category.replace(/-/g, ' '),
-      difficulty: initialQuestions[0]?.difficulty || 'unknown'
-    });
-  }, [category, initialQuestions]);
+      const checkGtag = setInterval(() => {
+        if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+          event({
+            action: 'quiz_started',
+            category: category,
+            label: category,
+            quiz_category: category.replace(/-/g, ' '),
+            difficulty: initialQuestions[0]?.difficulty || 'unknown'
+          });
+          clearInterval(checkGtag);
+        }
+      }, 100);
+
+      return () => clearInterval(checkGtag);
+    }, [category, initialQuestions]);
 
   useEffect(() => {
     correctSound.current = new Audio('/sounds/correct.mp3');

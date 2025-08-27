@@ -90,7 +90,14 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
 
   // Add analytics event for game start
   useEffect(() => {
-    event({action: 'trordle_started', category: 'trordle', label: 'trordle'});
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'trordle_started', category: 'trordle', label: 'trordle'});
+        clearInterval(checkGtag);
+      }
+    }, 100);
+
+    return () => clearInterval(checkGtag);
   }, []);
 
   const triggerConfetti = () => {
