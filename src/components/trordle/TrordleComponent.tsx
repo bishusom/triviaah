@@ -5,6 +5,8 @@ import { checkTrordleGuess, TrordleData, TrordleGuessResult } from '@/lib/trordl
 import { addTrordleResult } from '@/lib/trordle-fb';
 import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
+import Image from 'next/image';
+import { fetchPixabayImage } from '@/lib/pixabay';
 
 interface TrordleComponentProps {
   initialData: TrordleData;
@@ -18,6 +20,8 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
   const [shareMessage, setShareMessage] = useState('');
   const [showHistory, setShowHistory] = useState(false);
   const [showLastGuess, setShowLastGuess] = useState(false);
+  const [categoryImage, setCategoryImage] = useState<string | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
   
   // Sound effects
@@ -41,6 +45,20 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       });
     };
   }, []);
+
+  useEffect(() => {
+    // Fetch category image
+    const fetchImage = async () => {
+      setIsImageLoading(true);
+      const imageUrl = await fetchPixabayImage('', puzzleData.category);
+      if (imageUrl) {
+        setCategoryImage(imageUrl);
+      }
+      setIsImageLoading(false);
+    };
+
+    fetchImage();
+  }, [puzzleData.category]);
 
   const playSound = (soundType: 'correct' | 'incorrect' | 'win' | 'lose' | 'click') => {
     try {
@@ -245,7 +263,38 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
           </div>
         </div>
         
-        <p className="text-lg mb-6">{puzzleData.question}</p>
+        {/* Question and Image Container */}
+        <div className="border border-gray-200 rounded-lg p-4 mb-6 bg-white shadow-sm">
+          <div className="flex flex-col md:flex-row gap-4 items-center md:items-start">
+            {/* Image container with responsive sizing */}
+            <div className="w-24 h-24 flex-shrink-0">
+              <div className={`relative aspect-square w-full rounded-md overflow-hidden bg-gray-100 ${categoryImage ? '' : 'animate-pulse'}`}>
+                {categoryImage ? (
+                  <Image 
+                    src={categoryImage} 
+                    alt={`${puzzleData.category} illustration`}
+                    width={96}
+                    height={96}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    onError={() => setCategoryImage(null)}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
+                    {isImageLoading ? 'Loading image...' : 'No image available'}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Question text */}
+            <div className="flex-1 min-w-0">
+              <p className="text-lg md:text-xl font-semibold text-gray-800 break-words">
+                {puzzleData.question}
+              </p>
+            </div>
+          </div>
+        </div>
         
         {/* Collapsible Attempt History */}
         {attempts.length > 0 && (
