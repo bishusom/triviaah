@@ -43,12 +43,17 @@ export default async function TrordlePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-2">Trordle</h1>
-      <MuteButton />
-      <p className="text-gray-600 text-center mb-6">The trivia version of Wordle. Guess the answer in 6 tries!</p>
-      
-      <TrordleComponent initialData={trordleData} />
+    <div className="no-ads-page">
+      <div className="max-w-2xl mx-auto p-4">
+        <h1 className="text-3xl font-bold text-center mb-2">Trordle</h1>
+        <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
+          <MuteButton />
+        </div>
+        <p className="text-gray-600 text-center mb-6">The trivia version of Wordle. Guess the answer in 6 tries!</p>
+        
+        <TrordleComponent initialData={trordleData} />
+      </div>
     </div>
+    
   );
 }

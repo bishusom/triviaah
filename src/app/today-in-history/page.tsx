@@ -89,19 +89,22 @@ export default async function TodayInHistoryPage() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-center mb-2">
-            On This Day in History
-          </h1>
-          <p className="text-center text-gray-600 mb-8">
-            {formattedDate} • Daily Historical Events Quiz
-          </p>
-          <MuteButton />
-          <QuizGame 
-            initialQuestions={questions} 
-            category="today-in-history" 
-          />
+        <div className="no-ads-page">
+          <div className="max-w-7xl mx-auto px-4 py-8">
+            <h1 className="text-3xl font-bold text-center mb-2">
+              On This Day in History
+            </h1>
+            <p className="text-center text-gray-600 mb-8">
+              {formattedDate} • Daily Historical Events Quiz
+            </p>
+            <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
+              <MuteButton />
+            </div>
+            <QuizGame 
+              initialQuestions={questions} 
+              category="today-in-history" 
+            />
+          </div>
         </div>
       </>
     );
