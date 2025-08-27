@@ -1,5 +1,6 @@
 import QuizGame from '@/components/trivias/QuizGame';
 import { getTodaysHistoryQuestions } from '@/lib/firebase';
+import MuteButton from '@/components/MuteButton';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
@@ -96,6 +97,7 @@ export default async function TodayInHistoryPage() {
           <p className="text-center text-gray-600 mb-8">
             {formattedDate} • Daily Historical Events Quiz
           </p>
+          <MuteButton />
           <QuizGame 
             initialQuestions={questions} 
             category="today-in-history" 

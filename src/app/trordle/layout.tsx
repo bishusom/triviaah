@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import MuteButton from '@/components/MuteButton';
-//import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -46,7 +46,7 @@ export default function TrordleLayout({
           {children}
         </main>
       </div>
-      { /* <GoogleAnalytics gaId="G-K4KZ7XR85V" /> */ }
+      <GoogleAnalytics gaId="G-K4KZ7XR85V" />
     </div>
   );
 }
