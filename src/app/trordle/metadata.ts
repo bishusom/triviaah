@@ -5,6 +5,7 @@ export function generateTrordleMetadata(): Metadata {
   return {
     title: 'Trordle - Daily Trivia Puzzle | Triviaah',
     description: 'Guess the answer to today\'s trivia puzzle with limited attempts, similar to Wordle but with trivia questions.',
+    keywords: 'trordle, trivia puzzle, daily trivia, wordle trivia, trivia game, word guessing game, educational games, free trivia, online trivia games, daily puzzle',
     openGraph: {
       title: 'Trordle - Daily Trivia Puzzle | Triviaah',
       description: 'Guess the answer to today\'s trivia puzzle with limited attempts, similar to Wordle but with trivia questions.',

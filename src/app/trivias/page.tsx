@@ -6,8 +6,8 @@ import ScrollButtons from '@/components/ScrollButtons'; // Import ScrollButtons 
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Trivia Categories',
-    description: 'Browse our collection of trivia quizzes',
+    title: 'Free Online Trivia Categories | Quiz Games Online Free',
+    description: 'Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.',
   };
 }
 
@@ -63,6 +63,22 @@ export default function TriviasPage() {
           </Link>
         ))}
       </div>
+      {/* Add SEO content section */}
+      <section className="mt-12 bg-gray-50 rounded-lg p-6">
+        <h2 className="text-2xl font-bold mb-4">Free Online Quiz Games & Trivia Categories</h2>
+        <p className="text-gray-600 mb-4">
+          Explore our extensive collection of free online trivia games and quiz categories. 
+          Whether you&apos;re looking for free quiz games for personal enjoyment or free virtual trivia games for work, 
+          we have categories to suit all interests. Our platform offers some of the best online trivia games 
+          available completely free of charge.
+        </p>
+        <p className="text-gray-600">
+          From history and science to entertainment and sports, our free online quizzes for fun 
+          provide endless entertainment and learning opportunities. Enjoy quiz games online free 
+          with no registration required, and discover why we&apos;re considered one of the top free quiz sites 
+          for trivia enthusiasts.
+        </p>
+      </section>
       <ScrollButtons /> {/* Add ScrollButtons component at the bottom */}
     </div>
   );

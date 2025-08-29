@@ -146,8 +146,13 @@ export default function BoggleGame() {
 
   const { isMuted } = useSound();
 
+  const isTouchDevice = useRef(false);
+
   // Initialize game on mount
-  useEffect(() => {
+   useEffect(() => {
+    // Detect if it's a touch device
+    isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
     event({action: 'boggle_started', category: 'boggle',label: 'boggle'});
     const generateExtendedLevels = () => {
       const levels: ExtendedLevel[] = [];
@@ -166,12 +171,23 @@ export default function BoggleGame() {
     setExtendedLevels(generateExtendedLevels());
     loadGameState();
     initGame();
-    return () => {
-      if (timerInterval.current) {
-        clearInterval(timerInterval.current);
+
+    // Prevent default touch behavior to avoid scrolling
+    const preventDefault = (e: TouchEvent) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
       }
     };
-  }, []);
+    
+    document.addEventListener('touchmove', preventDefault, { passive: false });
+
+    return () => {
+          if (timerInterval.current) {
+            clearInterval(timerInterval.current);
+          }
+          document.removeEventListener('touchmove', preventDefault);
+        };
+      }, []);
 
   // Regenerate grid when difficulty or level changes
   useEffect(() => {
@@ -699,114 +715,119 @@ export default function BoggleGame() {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
-return (
-  <div className={commonStyles.container}>
-    <div className={commonStyles.header}>
-      <div>
-        <h1 className={commonStyles.title}>Boggle Game</h1>
-        <div className={commonStyles.levelText}>
-          {currentLevel >= 4 
-            ? `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`
-            : `Level: ${currentLevel} (${difficulty})`}
+  return (
+    <div className={commonStyles.container} style={{ touchAction: 'none', overflow: 'hidden' }}>
+      <div className={commonStyles.header}>
+        <div>
+          <h1 className={commonStyles.title}>Boggle Game</h1>
+          <div className={commonStyles.levelText}>
+            {currentLevel >= 4 
+              ? `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`
+              : `Level: ${currentLevel} (${difficulty})`}
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className={commonStyles.timerContainer}>
+            ⏱️ {formatTime(timer)}
+          </div>
+          <div className={commonStyles.scoreText}>
+            Score: {score}
+          </div>
         </div>
       </div>
-      <div className="flex items-center gap-4">
-        <div className={commonStyles.timerContainer}>
-          ⏱️ {formatTime(timer)}
-        </div>
-        <div className={commonStyles.scoreText}>
-          Score: {score}
-        </div>
-      </div>
-    </div>
 
-    <div className="mb-6">
-      <div ref={gridElement} className={gameStyles.gridContainer}>
-        <div 
-          className={gameStyles.grid}
-          style={{ 
-            gridTemplateColumns: `repeat(${config.gridSize[difficulty]}, 1fr)`,
-            gridTemplateRows: `repeat(${config.gridSize[difficulty]}, 1fr)`,
-          }}
+      <div className="mb-6" style={{ overflow: 'hidden' }}>
+        <div ref={gridElement} className={gameStyles.gridContainer} style={{ overflow: 'hidden' }}>
+          <div 
+            className={gameStyles.grid}
+            style={{ 
+              gridTemplateColumns: `repeat(${config.gridSize[difficulty]}, 1fr)`,
+              gridTemplateRows: `repeat(${config.gridSize[difficulty]}, 1fr)`,
+              touchAction: 'none'
+            }}
+          >
+            {grid.map((cell, index) => (
+              <button
+                key={index}
+                className={`${gameStyles.cell} ${
+                  selectedCells.includes(index) ? gameStyles.cellSelected : ''
+                } ${
+                  selectedCells[selectedCells.length - 1] === index ? gameStyles.cellHighlight : ''
+                } ${
+                  cell.found ? gameStyles.cellFound : ''
+                }`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleCellInteraction(index, 'start');
+                }}
+                onMouseEnter={() => handleCellInteraction(index, 'continue')}
+                onMouseUp={() => handleCellInteraction(index, 'end')}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  handleCellInteraction(index, 'start');
+                }}
+                onTouchMove={(e) => {
+                  e.preventDefault();
+                  const touch = e.touches[0];
+                  const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                  
+                  if (element && element.classList.contains(gameStyles.cell)) {
+                    const cells = Array.from(gridElement.current?.querySelectorAll(`.${gameStyles.cell}`) || []);
+                    const idx = cells.indexOf(element);
+                    if (idx >= 0) {
+                      handleCellInteraction(idx, 'continue');
+                    }
+                  }
+                }}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  handleCellInteraction(index, 'end');
+                }}
+                onContextMenu={(e) => e.preventDefault()}
+              >
+                {cell.letter}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Feedback message */}
+        <div className={`${commonStyles.feedback} ${
+          feedback.type === 'error' ? commonStyles.feedbackError : 
+          feedback.type === 'success' ? commonStyles.feedbackSuccess : 
+          commonStyles.feedbackInfo
+        }`}>
+          {feedback.message}
+        </div>
+      </div>
+
+      <div className={commonStyles.actionButtons}>
+        <button 
+          onClick={handleNewGame}
+          className={`${commonStyles.actionButton} ${commonStyles.playAgainButton}`}
         >
-          {grid.map((cell, index) => (
-            <button
-              key={index}
-              className={`${gameStyles.cell} ${
-                selectedCells.includes(index) ? gameStyles.cellSelected : ''
-              } ${
-                selectedCells[selectedCells.length - 1] === index ? gameStyles.cellHighlight : ''
-              } ${
-                cell.found ? gameStyles.cellFound : ''
-              }`}
-              onMouseDown={() => handleCellInteraction(index, 'start')}
-              onMouseEnter={() => handleCellInteraction(index, 'continue')}
-              onMouseUp={() => handleCellInteraction(index, 'end')}
-              onTouchStart={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleCellInteraction(index, 'start');
-              }}
-              onTouchMove={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const touch = e.touches[0];
-                const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
-                const cell = elements.find(el => el.classList.contains(gameStyles.cell));
-                if (cell) {
-                  const idx = Array.from(cell.parentNode?.children || []).indexOf(cell);
-                  if (idx >= 0) handleCellInteraction(idx, 'continue');
-                }
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleCellInteraction(index, 'end');
-              }}
-            >
-              {cell.letter}
-            </button>
-          ))}
+          New Game
+        </button>
+        <button 
+          onClick={handleHint}
+          className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}
+        >
+          Hint
+        </button>
+      </div>
+
+      {foundWords.size > 0 && (
+        <div className={gameStyles.foundWordsContainer}>
+          <h3 className={gameStyles.foundWordsTitle}>Found Words:</h3>
+          <div className={gameStyles.foundWordsList}>
+            {Array.from(foundWords).sort().map((word, i) => (
+              <span key={i} className={gameStyles.wordPill}>
+                {word}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
-
-      {/* Feedback message */}
-      <div className={`${commonStyles.feedback} ${
-        feedback.type === 'error' ? commonStyles.feedbackError : 
-        feedback.type === 'success' ? commonStyles.feedbackSuccess : 
-        commonStyles.feedbackInfo
-      }`}>
-        {feedback.message}
-      </div>
+      )}
     </div>
-
-    <div className={commonStyles.actionButtons}>
-      <button 
-        onClick={handleNewGame}
-        className={`${commonStyles.actionButton} ${commonStyles.playAgainButton}`}
-      >
-        New Game
-      </button>
-      <button 
-        onClick={handleHint}
-        className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}
-      >
-        Hint
-      </button>
-    </div>
-
-    {foundWords.size > 0 && (
-      <div className={gameStyles.foundWordsContainer}>
-        <h3 className={gameStyles.foundWordsTitle}>Found Words:</h3>
-        <div className={gameStyles.foundWordsList}>
-          {Array.from(foundWords).sort().map((word, i) => (
-            <span key={i} className={gameStyles.wordPill}>
-              {word}
-            </span>
-          ))}
-        </div>
-      </div>
-    )}
-  </div>
-);
+  );
 }

@@ -9,6 +9,11 @@
   background: #f8f9fa;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Grid layout */
@@ -16,6 +21,7 @@
   display: grid;
   width: 100%;
   gap: 10px;
+  touch-action: none;
 }
 
 /* Cell styles */
@@ -39,6 +45,8 @@
   transform: translateY(0);
   position: relative;
   overflow: hidden;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .cell::before {
@@ -102,6 +110,14 @@
     0 2px 4px rgba(16, 185, 129, 0.3),
     0 1px 0 rgba(255,255,255,0.4) inset,
     0 -1px 2px rgba(0,0,0,0.2) inset;
+}
+
+/* For the container to prevent body scrolling */
+.noScroll {
+  position: fixed;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 /* Selection line */

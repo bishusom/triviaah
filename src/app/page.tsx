@@ -7,9 +7,10 @@ import ScrollButtons from '@/components/ScrollButtons';
 import DailyQuizClient from '@/components/daily/DailyQuizClient';
 
 export const metadata = {
-  title: 'Free Daily Trivia Challenges & Online Quiz Games | Triviaah',
-  description: 'Play free daily trivia challenges and online quiz games! Test your knowledge with pop culture trivia quizzes, science questions, history facts, and word games.',
+  title: 'Free Online Trivia Games & Daily Quiz Challenges | Triviaah',
+  description: 'Play free online trivia games and daily quiz challenges. Enjoy fun quiz games online free, create your own trivia game free, and join virtual trivia games for work or team building.',
 };
+
 
 // --------------------------
 // 1. Static data (unchanged)
@@ -243,25 +244,42 @@ export default function Home() {
             </div>
           </div>
 
-          {/* SEO Content Section */}
+          {/* Enhanced SEO Content Section */}
           <section className="bg-white rounded-lg p-6 mb-8 shadow-sm">
             <h4 className="text-lg font-semibold text-gray-800 mb-4">
-              Why Choose Triviaah for Your Daily Trivia Challenge?
+              Play Free Online Trivia Games & Daily Quiz Challenges
             </h4>
             <div className="prose text-gray-600">
               <p className="mb-4">
                 Triviaah offers the best collection of <strong>free online trivia games</strong> with fresh 
-                <strong> daily trivia challenges</strong> across 20+ categories. Whether you&apos;re into 
-                <strong> pop culture trivia quizzes</strong>, science facts, or history questions, 
+                <strong> daily trivia challenges</strong> across 20+ categories. Enjoy our <strong>free trivia games online</strong> 
+                including <strong>trivia games to play with friends online</strong> and <strong>virtual trivia games for work</strong>. 
+                Whether you&apos;re into <strong>pop culture trivia quizzes</strong>, science facts, or history questions, 
                 we have something for every trivia enthusiast.
               </p>
+              <p className="mb-4">
+                Looking for <strong>free online quiz for team building</strong> or <strong>trivia games for adults online</strong>? 
+                Our platform allows you to <strong>create your own trivia game free</strong> and enjoy 
+                <strong> fun quiz games online free</strong> of charge. As one of the <strong>best online trivia games</strong> 
+                platforms, we provide <strong>free virtual trivia</strong> experiences that everyone can enjoy.
+              </p>
               <ul className="list-disc ml-6 mb-4">
-                <li>New <strong>daily trivia challenges</strong> every 24 hours</li>
-                <li>Wide variety of <strong>free online trivia games</strong></li>
+                <li>New <strong>daily free trivia</strong> challenges every 24 hours</li>
+                <li>Wide variety of <strong>free online trivia games</strong> and <strong>quiz games online free</strong></li>
+                <li><strong>Free online quizzes for fun</strong> and learning</li>
                 <li>Popular <strong>pop culture trivia quizzes</strong> and entertainment questions</li>
+                <li><strong>Create your own online quiz</strong> for friends and family</li>
+                <li>Perfect for <strong>free online trivia games for groups</strong> and <strong>team building</strong></li>
                 <li>Educational content covering science, history, and geography</li>
                 <li>Word games and brain teasers for mental exercise</li>
               </ul>
+              <p>
+                As a <strong>free quiz website</strong>, we provide tools to <strong>create online trivia game free</strong> 
+                of charge. Our platform is among the <strong>best online quiz tools free</strong> available, 
+                allowing you to <strong>create quiz game online free</strong> and share with others. 
+                Enjoy our <strong>live quiz online free</strong> events and <strong>online trivia game with friends</strong> 
+                features that make learning fun!
+              </p>
             </div>
           </section>
 
