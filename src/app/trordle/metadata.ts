@@ -1,0 +1,30 @@
+// src/app/trordle/metadata.ts
+import { Metadata } from 'next';
+
+export function generateTrordleMetadata(): Metadata {
+  return {
+    title: 'Trordle - Daily Trivia Puzzle | Triviaah',
+    description: 'Guess the answer to today\'s trivia puzzle with limited attempts, similar to Wordle but with trivia questions.',
+    openGraph: {
+      title: 'Trordle - Daily Trivia Puzzle | Triviaah',
+      description: 'Guess the answer to today\'s trivia puzzle with limited attempts, similar to Wordle but with trivia questions.',
+      url: 'https://triviaah.com/trordle',
+      siteName: 'Triviaah',
+      images: [
+        {
+          url: '/imgs/trordle-og.webp',
+          width: 1200,
+          height: 630,
+          alt: 'Trordle - Daily Trivia Puzzle Game'
+        }
+      ],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Trordle - Daily Trivia Puzzle | Triviaah',
+      description: 'Guess the answer to today\'s trivia puzzle with limited attempts, similar to Wordle but with trivia questions.',
+      images: ['/imgs/trordle-og.webp'],
+    },
+  };
+}

@@ -1,7 +1,8 @@
 import { 
   collection, 
   query, 
-  where, 
+  where,
+  limit, 
   getDocs, 
   addDoc, 
   Timestamp 
@@ -34,13 +35,16 @@ export interface TrordleResult {
   timestamp: Date;
 }
 
-export async function getDailyTrordle(): Promise<TrordlePuzzle | null> {
+export async function getDailyTrordle(customDate?: Date) {
   try {
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    const date = customDate || new Date(); // Use provided date or current date
+    const dateString = date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
     
+    const trordleRef = collection(db, 'trordlePuzzles');
     const q = query(
-      collection(db, 'trordlePuzzles'),
-      where('date', '==', today)
+      trordleRef,
+      where('date', '==', dateString),
+      limit(1)
     );
     
     const querySnapshot = await getDocs(q);
