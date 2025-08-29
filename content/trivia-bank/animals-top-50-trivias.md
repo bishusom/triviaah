@@ -1,5 +1,6 @@
 ---
-title: "🦁 Wild Wisdom! Test Your Animal Kingdom Knowledge: Top 50 Trivia!"
+title: "Animals Top 50 Trivia!"
+header: "🦁 Wild Wisdom! Test Your Animal Kingdom Knowledge: Top 50 Trivia!"
 excerpt: "From the depths of the ocean to the savannah plains, prove you’re the alpha of animal trivia with this roaring quiz!"
 tags: ['Animal Trivia', 'Wildlife Quiz', 'Zoology', 'Mammals', 'Birds', 'Reptiles', 'Insects', 'Nature Facts']
 ---

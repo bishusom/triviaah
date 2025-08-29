@@ -1,5 +1,6 @@
 ---
-title: "Turn Back Time! Test Your Historical Knowledge: Top 50 Years in History Trivia!"
+title: "Years in History - Top 50 Trivia"
+header: "Turn Back Time! Test Your Historical Knowledge: Top 50 Years in History Trivia!"
 excerpt: "Can you place these pivotal moments in history? Challenge yourself with our timeline of 50 significant years and events that shaped our world!"
 tags: ['History Trivia', 'Historical Events', 'World History', 'Important Years', 'Timeline Quiz', 'History Buff']
 ---

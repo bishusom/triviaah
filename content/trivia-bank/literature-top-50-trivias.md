@@ -1,5 +1,6 @@
 ---
-title: "📚 Page-Turner Challenge! Test Your Literary Knowledge: Top 50 Trivia!"
+title: "Literature Top 50 Trivia!"
+header: "📚 Page-Turner Challenge! Test Your Literary Knowledge: Top 50 Trivia!"
 excerpt: "From Shakespeare to sci-fi, prove your mastery of the written word with this novel-worthy quiz!"
 tags: ['Literature', 'Trivia', 'Quiz', 'Books', 'Authors', 'Novels', 'Poetry', 'Classics', 'Literary History']
 ---

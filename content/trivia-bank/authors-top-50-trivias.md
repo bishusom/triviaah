@@ -1,5 +1,6 @@
 ---
-title: "📚 Literary Legends! Test Your Author Knowledge: Top 50 Trivia!"
+title: "Authors Top 50 Trivia!"
+header: "📚 Literary Legends! Test Your Author Knowledge: Top 50 Trivia!"
 excerpt: "How well do you know the world's most famous authors and their works? Challenge yourself with these fascinating literary questions!"
 tags: ['Authors Trivia', 'Literature Quiz', 'Famous Writers', 'Book Trivia', 'Literary Questions', 'Classic Novels', 'Author Facts']
 ---

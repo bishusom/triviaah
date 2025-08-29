@@ -1,5 +1,6 @@
 ---
-title: "🚩 Flag Frenzy! Test Your World Flag Knowledge: Top 50 Trivia Questions!"
+title: "Flags Top 50 Trivia!"
+header: "🚩 Flag Frenzy! Test Your World Flag Knowledge: Top 50 Trivia Questions!"
 excerpt: "How well do you know the flags of the world? Challenge yourself with our colorful collection of 50 flag trivia questions!"
 tags: ['Flags Trivia', 'World Flags', 'Country Flags', 'Flag Identification', 'Geography Quiz', 'National Flags']
 ---

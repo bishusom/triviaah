@@ -1,6 +1,7 @@
 ---
-title: "🎵 Top 50 Music Trivia: Test Your Knowledge! (Easy, Medium, Hard)"
-excerpt: "Who is often called the 'King of Pop'?"
+title: "Music Top 50 Trivia!"
+header: "🎵 Top 50 Music Trivia: Test Your Knowledge! (Easy, Medium, Hard)"
+excerpt: "Turn up the volume! Test your music knowledge with our hit-packed trivia challenge. From classic rock to modern pop, see if you have what it takes to be a music maestro!"
 tags: ['music trivia', 'music quiz', 'trivia questions', 'music knowledge', 'easy trivia', 'medium trivia', 'hard trivia', 'music games']
 ---
 

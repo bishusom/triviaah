@@ -1,5 +1,6 @@
 ---
-title: "🧠 Body of Knowledge! Test Your Anatomy Smarts: Top 50 Trivia!"
+title: "Anatomy top 50 Trivias"
+header: "🧠 Body of Knowledge! Test Your Anatomy Smarts: Top 50 Trivia!"
 excerpt: "How well do you know your body? Challenge yourself with these fascinating questions about human anatomy!"
 tags: ['Anatomy Trivia', 'Human Body Quiz', 'Medical Trivia', 'Biology Questions', 'Organ Systems', 'Physiology Facts', 'Body Parts']
 ---

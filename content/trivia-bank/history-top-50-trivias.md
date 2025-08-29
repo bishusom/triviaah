@@ -1,5 +1,6 @@
 ---
-title: "⌛ Time Travel Challenge! Test Your History Knowledge: Top 50 Trivia!"
+title: "History Top 50 Trivia!"
+header: "⌛ Time Travel Challenge! Test Your History Knowledge: Top 50 Trivia!"
 excerpt: "From ancient empires to modern revolutions, prove your mastery of the past with this epic historical quiz!"
 tags: ['History Trivia', 'World History', 'Ancient Civilizations', 'Historical Events', 'Famous Figures', 'Battles', 'Empires']
 ---

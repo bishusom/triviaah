@@ -1,5 +1,6 @@
 ---
-title: "🔠 Short & Sweet! Test Your Abbreviation Knowledge: Top 50 Trivia!"
+title: "Acronyms Top 50 Trivia!"
+header: "🔠 Short & Sweet! Test Your Abbreviation Knowledge: Top 50 Trivia!"
 excerpt: "How well do you know common abbreviations and acronyms? Challenge yourself with these questions about shortened word forms!"
 tags: ['Abbreviations Trivia', 'Acronyms Quiz', 'Short Forms', 'Language Trivia', 'Word Shortcuts', 'Common Acronyms', 'Initialisms']
 ---

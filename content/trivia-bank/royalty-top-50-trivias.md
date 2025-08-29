@@ -1,5 +1,6 @@
 ---
-title: "👑 Long Live the Quiz! Test Your Royal Knowledge: Top 50 Kings & Queens Trivia!"
+title: "Royalty Top 50 Trivia!"
+header: "👑 Long Live the Quiz! Test Your Royal Knowledge: Top 50 Kings & Queens Trivia!"
 excerpt: "Are you a true history enthusiast? Think you know everything about the monarchs who shaped nations? Put your royal knowledge to the test with our comprehensive list of 50 Kings & Queens trivia questions and answers!"
 tags: ['Kings', 'Queens', 'Royalty', 'Monarchs', 'History', 'Trivia', 'Quiz', 'British Monarchy', 'European History']
 ---

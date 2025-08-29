@@ -1,6 +1,7 @@
 ---
-title: "🎬 Lights, Camera, Trivia! Top 50 Movie Trivia Questions & Answers"
-excerpt: "What is the name of the spaceship in the movie 'Alien'?"
+title: "Movies Top 50 Trivia!"
+header: "🎬 Lights, Camera, Trivia! Top 50 Movie Trivia Questions & Answers"
+excerpt: "Lights, camera, action! Test your film knowledge with our blockbuster movie trivia challenge. From classic cinema to modern masterpieces, see if you have what it takes to be a movie buff champion!"
 tags: ['movie trivia', 'film quiz', 'movie questions', 'movie answers', 'easy movie trivia', 'medium movie trivia', 'hard movie trivia', 'film facts', 'cinema trivia']
 ---
 

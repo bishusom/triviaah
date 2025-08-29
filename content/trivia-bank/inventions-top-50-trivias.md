@@ -1,5 +1,6 @@
 ---
-title: "💡 Eureka Challenge! Test Your Knowledge about Inventions: Top 50 Trivia!"
+title: "Inventions Top 50 Trivia!"
+header: "💡 Eureka Challenge! Test Your Knowledge about Inventions: Top 50 Trivia!"
 excerpt: "From light bulbs to the internet, prove you know the stories behind history's greatest innovations!"
 tags: ['Inventions Trivia', 'Technology', 'Inventors', 'Scientific Discoveries', 'Patents', 'Innovation History']
 ---

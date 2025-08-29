@@ -1,5 +1,6 @@
 ---
-title: "🇺🇸 Hail to the Quiz! Test Your Presidential Knowledge: Top 50 U.S. Presidents Trivia!"
+title: "US Presidents Top 50 Trivia!"
+headers: "🇺🇸 Hail to the Quiz! Test Your Presidential Knowledge: Top 50 U.S. Presidents Trivia!"
 excerpt: "Are you a true history buff? Think you know everything about the leaders who shaped America? Put your presidential knowledge to the test with our comprehensive list of 50 U.S. Presidents trivia questions and answers!"
 tags: ['US Presidents', 'American History', 'White House', 'Presidential Trivia', 'Founding Fathers', 'POTUS', 'Government', 'Politics']
 ---

@@ -1,5 +1,6 @@
 ---
-title: "🦈 Dive into the Deep End! Test Your Shark Knowledge: Top 50 Shark Trivia Questions!"
+title: "Sharks Top 50 Trivia!"
+header: "🦈 Dive into the Deep End! Test Your Shark Knowledge: Top 50 Shark Trivia Questions!"
 excerpt: "Are you fascinated by the ocean's apex predators? Think you know all there is about sharks? Test your knowledge with our ultimate list of 50 shark trivia"
 tags: ['Sharks', 'Marine Life', 'Ocean', 'Wildlife', 'Trivia', 'Quiz', 'Marine Biology', 'Sea Creatures']
 ---

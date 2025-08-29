@@ -1,5 +1,6 @@
 ---
-title: "🦖 Jurassic Challenge! Test Your Dinosaur Knowledge: Top 50 Trivia!"
+title: "Dinosaur Top 50 Trivia!"
+header: "🦖 Jurassic Challenge! Test Your Dinosaur Knowledge: Top 50 Trivia!"
 excerpt: "From towering predators to armored herbivores, prove you’re a dino-expert with this prehistoric quiz!"
 tags: ['Dinosaur Trivia', 'Paleontology', 'Fossils', 'Prehistoric Life', 'Mesozoic Era', 'Tyrannosaurus Rex', 'Stegosaurus']
 ---

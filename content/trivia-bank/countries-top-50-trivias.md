@@ -1,5 +1,6 @@
 ---
-title: "🌎 Global Explorer Challenge! Test Your Geography Knowledge: Top 50 Trivia!"
+title: "Countries Top 50 Trivia!"
+header: "🌎 Global Explorer Challenge! Test Your Geography Knowledge: Top 50 Trivia!"
 excerpt: "From soaring mountains to cultural wonders, prove you're a geography guru with this world-tour quiz!"
 tags: ['Geography Trivia', 'Countries Quiz', 'Capitals', 'Flags', 'World Cultures', 'Maps', 'Travel']
 ---

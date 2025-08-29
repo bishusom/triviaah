@@ -1,5 +1,6 @@
 ---
-title: "🏛️ Architectural Marvels! Test Your Building Knowledge: Top 50 Trivia!"
+title: "Architecture Top 50 Trivia!"
+header: "🏛️ Architectural Marvels! Test Your Building Knowledge: Top 50 Trivia!"
 excerpt: "From ancient wonders to modern skyscrapers, challenge your knowledge of the world's most iconic structures!"
 tags: ['Architecture Trivia', 'Famous Buildings', 'Architectural Styles', 'Architects Quiz', 'Design History', 'World Landmarks', 'Construction']
 ---

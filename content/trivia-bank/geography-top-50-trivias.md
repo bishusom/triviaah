@@ -1,6 +1,7 @@
 ---
-title: "🌍 Top 50 Geography Trivia: Test Your World Knowledge! 🗺️"
-excerpt: "What is the capital city of India?"
+title: "Geography Top 50 Trivia!"
+header: "🌍 Top 50 Geography Trivia: Test Your World Knowledge! 🗺️"
+excerpt: "Test your world knowledge with our challenging geography quiz! From capitals to landmarks, see if you can conquer all 50 questions."
 tags: ['geography trivia', 'world quiz', 'geography questions', 'trivia with answers', 'easy geography', 'medium geography', 'hard geography', 'world knowledge', 'quiz questions']
 ---
 

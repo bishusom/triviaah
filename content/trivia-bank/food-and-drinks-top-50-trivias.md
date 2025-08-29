@@ -1,5 +1,6 @@
 ---
-title: "🍔 Feast Your Mind! Test Your Food & Drinks Knowledge: Top 50 Trivia!"
+title: "Food and Drinks Top 50 Trivia!"
+header: "🍔 Feast Your Mind! Test Your Food & Drinks Knowledge: Top 50 Trivia!"
 excerpt: "From global cuisines to cocktail secrets, prove your palate for trivia with this delectable quiz!"
 tags: ['Food Trivia', 'Drinks Quiz', 'Cuisine', 'Recipes', 'Culinary History', 'Cooking', 'Beverages']
 ---

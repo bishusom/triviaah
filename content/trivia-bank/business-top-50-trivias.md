@@ -1,5 +1,6 @@
 ---
-title: "💼 Boardroom Challenge! Test Your Business Knowledge: Top 50 Trivia!"
+title: "Business Top 50 Trivia!"
+header: "💼 Boardroom Challenge! Test Your Business Knowledge: Top 50 Trivia!"
 excerpt: "From Fortune 500 giants to startup legends, prove you’re CEO material with this high-stakes quiz!"
 tags: ['Business Trivia', 'Entrepreneurship', 'Economics', 'Finance', 'Companies', 'Startups', 'Corporate History']
 ---

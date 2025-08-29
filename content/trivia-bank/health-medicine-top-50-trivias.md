@@ -1,5 +1,6 @@
 ---
-title: "🏥 Diagnose Your Knowledge! Test Your Health & Medicine Expertise: Top 50 Trivia!"
+title: "Health & Medicine Top 50 Trivia!"
+header: "🏥 Diagnose Your Knowledge! Test Your Health & Medicine Expertise: Top 50 Trivia!"
 excerpt: "From anatomy to medical breakthroughs, prove you’ve got the prescription for trivia mastery with this pulse-pounding quiz!"
 tags: ['Health Trivia', 'Medicine Quiz', 'Human Body', 'Diseases', 'Medical History', 'Anatomy', 'Biology', 'Healthcare']
 ---

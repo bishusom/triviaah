@@ -12,6 +12,7 @@ interface Question {
 interface TriviaData {
   slug: string;
   title: string;
+  header: string;
   excerpt: string;
   tags: string[];
   levels: {
@@ -22,6 +23,7 @@ interface TriviaData {
 interface TriviaPreview {
   slug: string;
   title: string;
+  header: string;
   excerpt: string;
   tags: string[];
 }
@@ -66,48 +68,60 @@ export async function getTriviaData(slug: string): Promise<TriviaData | null> {
     return null;
   }
   const tags = Array.isArray(data.tags) ? data.tags : [];
+  const header = data.header || data.title; // Use header if provided, fallback to title
 
   const levels: { [key: string]: Question[] } = {};
   let currentLevel: string = '';
   
-  // Split by lines
+  // Split by lines and process content
   const lines = content.split('\n');
   
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
     
-    // Handle section headers
+    // Skip empty lines
+    if (!line) continue;
+    
+    // Handle section headers (## Easy Level, ## Medium Level, ## Hard Level)
     if (line.startsWith('## ')) {
-      currentLevel = line.replace('## ', '').replace(' Level', '').trim().toLowerCase();
-      levels[currentLevel] = [];
+      const levelMatch = line.match(/^##\s+(.+?)\s*Level/i);
+      if (levelMatch) {
+        currentLevel = levelMatch[1].toLowerCase().trim();
+        levels[currentLevel] = [];
+      }
       continue;
     }
     
-    // Handle questions
-    if (/^\d+\./.test(line)) {
-      // Extract question text (remove number and trim)
-      const question = line.replace(/^\d+\.\s*\*\*/, '').replace(/\*\*\s*$/, '').trim();
-      
-      // Get the next line for answer
-      const answerLine = i + 1 < lines.length ? lines[i + 1].trim() : '';
-      let answer = '';
-      
-      // Extract answer if properly formatted
-      if (answerLine.startsWith('**Answer:**')) {
-        answer = answerLine.replace('**Answer:**', '').trim();
-        i++; // Skip the answer line
+    // Handle questions (numbered list items)
+    if (/^\d+\.\s+\*\*/.test(line)) {
+      // Extract question number and text
+      const questionMatch = line.match(/^\d+\.\s+\*\*(.+?)\*\*\s*$/);
+      if (questionMatch && currentLevel) {
+        const questionText = questionMatch[1].trim();
+        
+        // Look for answer in the next line
+        let answerText = '';
+        if (i + 1 < lines.length) {
+          const nextLine = lines[i + 1].trim();
+          const answerMatch = nextLine.match(/^\*\*Answer:\*\*\s*(.+)$/);
+          if (answerMatch) {
+            answerText = answerMatch[1].trim();
+            i++; // Skip the answer line
+          }
+        }
+        
+        levels[currentLevel].push({
+          question: questionText,
+          answer: answerText
+        });
       }
-      
-      levels[currentLevel].push({
-        question,
-        answer
-      });
     }
   }
   
   return {
     slug,
     title: data.title,
+    header: header,
     excerpt: data.excerpt,
     tags,
     levels
@@ -120,25 +134,32 @@ export async function getAllTriviaPreviews(): Promise<TriviaPreview[]> {
   const { fs } = await getServerSideFs();
   
   return Promise.all(slugs.map(async (slug: string) => {
-    const fileContents = await fs.readFile(path.join(triviaDir, `${slug}.md`), 'utf8');
-    const { data } = matter(fileContents);
-    
-    // Validate frontmatter data
-    if (!data.title || typeof data.title !== 'string') {
-      console.error(`Missing or invalid title in frontmatter for slug: ${slug}`);
-      return null;
-    }
-    if (!data.excerpt || typeof data.excerpt !== 'string') {
-      console.error(`Missing or invalid excerpt in frontmatter for slug: ${slug}`);
-      return null;
-    }
-    const tags = Array.isArray(data.tags) ? data.tags : [];
+    try {
+      const fileContents = await fs.readFile(path.join(triviaDir, `${slug}.md`), 'utf8');
+      const { data } = matter(fileContents);
+      
+      // Validate frontmatter data
+      if (!data.title || typeof data.title !== 'string') {
+        console.error(`Missing or invalid title in frontmatter for slug: ${slug}`);
+        return null;
+      }
+      if (!data.excerpt || typeof data.excerpt !== 'string') {
+        console.error(`Missing or invalid excerpt in frontmatter for slug: ${slug}`);
+        return null;
+      }
+      const tags = Array.isArray(data.tags) ? data.tags : [];
+      const header = data.header || data.title; // Use header if provided, fallback to title
 
-    return {
-      slug,
-      title: data.title,
-      excerpt: data.excerpt,
-      tags
-    };
+      return {
+        slug,
+        title: data.title,
+        header: header,
+        excerpt: data.excerpt,
+        tags
+      };
+    } catch (error) {
+      console.error(`Error reading file for slug ${slug}:`, error);
+      return null;
+    }
   })).then(results => results.filter((result): result is TriviaPreview => result !== null));
 }

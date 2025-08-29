@@ -1,6 +1,7 @@
 ---
-title: "⚔️ Unleash Your Inner Jedi: The Ultimate Star Wars Trivia Challenge"
-excerpt: "What is Luke Skywalker's home planet?"
+title: "Star Wars Top 50 Trivia!"
+header: "⚔️ Unleash Your Inner Jedi: The Ultimate Star Wars Trivia Challenge"
+excerpt: "May the Force be with you! Test your knowledge of the galaxy far, far away with our ultimate Star Wars trivia challenge covering all eras of the saga."
 tags: ['Star Wars', 'trivia', 'quiz', 'questions', 'answers', 'easy', 'medium', 'hard', 'Jedi', 'Sith', 'Skywalker', 'Millennium Falcon', 'lightsaber']
 ---
 

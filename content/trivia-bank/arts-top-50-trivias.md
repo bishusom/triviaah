@@ -1,5 +1,6 @@
 ---
-title: "👩🏻‍🎨 Masterpiece Challenge! Test Your Art Knowledge: Top 50 Trivia!"
+title: "Arts Top 50 Trivia!"
+header: "👩🏻‍🎨 Masterpiece Challenge! Test Your Art Knowledge: Top 50 Trivia!"
 excerpt: "From Renaissance masters to modern visionaries, prove your artistic expertise with this colorful quiz!"
 tags: ['Art Trivia', 'Famous Painters', 'Art History', 'Art Movements', 'Painting Quiz', 'Renaissance Art', 'Modern Art', 'Impressionism']
 ---

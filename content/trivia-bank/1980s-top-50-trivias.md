@@ -1,5 +1,6 @@
 ---
-title: "📼 Radical Retro Challenge! Test Your 1980s Pop Culture Knowledge: Top 50 Trivia!"
+title: "1980s Top 50 Trivia"
+header: "📼 Radical Retro Challenge! Test Your 1980s Pop Culture Knowledge: Top 50 Trivia!"
 excerpt: "Ready to time-travel back to the era of leg warmers and cassette tapes? Prove your mastery of all things 80s with our gnarly trivia quiz!"
 tags: ['1980s', 'Pop Culture', 'Trivia', 'Quiz', 'Retro', 'Movies', 'Music', 'TV Shows', 'Nostalgia']
 ---

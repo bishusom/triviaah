@@ -1,5 +1,6 @@
 ---
-title: "🏅 For the Greatest Benefit to Humankind! Test Your Nobel Prize Knowledge: Top 50 Trivia Questions!"
+title: "Nobel Prize Top 50 Trivia!"
+header: "🏅 For the Greatest Benefit to Humankind! Test Your Nobel Prize Knowledge: Top 50 Trivia Questions!"
 excerpt: "How well do you know the Nobel Prizes and their laureates? Challenge yourself with our comprehensive list of 50 Nobel Prize trivia questions spanning all categories!"
 tags: ['Nobel Prize', 'Nobel Laureates', 'Physics', 'Chemistry', 'Medicine', 'Literature', 'Peace', 'Economics', 'Alfred Nobel', 'Prize Winners']
 ---

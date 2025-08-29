@@ -2,15 +2,11 @@ import { getAllTriviaPreviews } from '@/lib/tbank';
 import styles from '@/../styles/Blog.module.css';
 import TriviaFilter from '@/components/trivia-bank/TriviaFilter';
 
-export const metadata = {
-  title: 'Free Trivia Question Bank | Create Your Own Quiz Games',
-  description: 'Access our free trivia question bank to create your own online quiz. Build custom trivia games for free, perfect for virtual trivia games for work or fun with friends.',
-};
-
 // Define the type for trivia category previews (matching tbank.ts TriviaPreview)
 interface TriviaCategory {
   slug: string;
   title: string;
+  header: string;
   excerpt: string;
   tags: string[];
 }
@@ -22,6 +18,9 @@ export default async function TriviaBankPage() {
     <div className={styles.container}>
       <div className={styles['blog-header']}>
         <h1>Trivia Question Bank</h1>
+        <p className={styles.description}>
+          Browse our collection of trivia categories to find questions for your next quiz game
+        </p>
         <div className={styles['tbank-navigation']}>
         </div>
       </div>

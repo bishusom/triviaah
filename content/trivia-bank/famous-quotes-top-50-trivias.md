@@ -1,5 +1,6 @@
 ---
-title: "🎙 Words of Wisdom! Test Your Quote Knowledge: Top 50 Trivia!"
+title: "Famous Quotes Top 50 Trivia!"
+header: "🎙 Words of Wisdom! Test Your Quote Knowledge: Top 50 Trivia!"
 excerpt: "From ancient philosophers to movie legends, prove you know who said what with this quotable quiz!"
 tags: ['Quotation Trivia', 'Famous Sayings', 'Literary Quotes', 'Historical Quotes', 'Philosophy', 'Pop Culture']
 ---

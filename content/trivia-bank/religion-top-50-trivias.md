@@ -1,5 +1,6 @@
 ---
-title: "🙏 Divine Challenge! Test Your Religious Knowledge: Top 50 Trivia!"
+title: "Religion Top 50 Trivia!"
+header: "🙏 Divine Challenge! Test Your Religious Knowledge: Top 50 Trivia!"
 excerpt: "From sacred texts to ancient rituals, prove your spiritual wisdom with this enlightening quiz!"
 tags: ['Religion Trivia', 'World Religions', 'Christianity', 'Islam', 'Hinduism', 'Buddhism', 'Judaism', 'Theology', 'Religious History']
 ---

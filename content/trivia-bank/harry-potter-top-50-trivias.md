@@ -1,5 +1,6 @@
 ---
-title: "🧙🏻‍♀️ Accio Knowledge! Test Your Wizarding World Wisdom: Top 50 Harry Potter Trivia!"
+title: "Harry Potter Top 50 Trivia!"
+header: "🧙🏻‍♀️ Accio Knowledge! Test Your Wizarding World Wisdom: Top 50 Harry Potter Trivia!"
 excerpt: "Are you a true Potterhead? Think you know everything about the Boy Who Lived and the magical world he inhabits? Put your knowledge to the ultimate test with our comprehensive list of 50 Harry Potter trivia questions and answers!"
 tags: ['Harry Potter', 'Trivia', 'Quiz', 'Wizarding World', 'Hogwarts', 'Magic', 'Books', 'Movies', 'Potterhead']
 ---

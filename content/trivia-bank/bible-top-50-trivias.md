@@ -1,6 +1,7 @@
 ---
-title: "✝️ Top 50 Bible Trivia: Test Your Scripture Knowledge!"
-excerpt: "Answer: Noah"
+title: "Bible Top 50 Trivia!"
+header: "✝️ Top 50 Bible Trivia: Test Your Scripture Knowledge!"
+excerpt: "How well do you know your scriptures from Old Testaments to New Testaments"
 tags: ['Bible trivia', 'Bible quiz', 'Christian trivia', 'Sunday School trivia', 'Bible questions and answers', 'religious trivia', 'easy Bible trivia', 'medium Bible trivia', 'hard Bible trivia']
 ---
 
