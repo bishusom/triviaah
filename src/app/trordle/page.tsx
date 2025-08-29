@@ -4,11 +4,12 @@ import TrordleComponent from '@/components/trordle/TrordleComponent';
 import { getDailyTrordle } from '@/lib/trordle-fb';
 import MuteButton from '@/components/MuteButton';
 import { useState, useEffect } from 'react';
+import { TrordleData } from '@/lib/trordle-logic'; // Import the correct type
 
 export default function TrordlePage() {
-  const [trordleData, setTrordleData] = useState(null);
+  const [trordleData, setTrordleData] = useState<TrordleData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDailyTrordle = async () => {
@@ -18,7 +19,7 @@ export default function TrordlePage() {
         const data = await getDailyTrordle();
         setTrordleData(data);
       } catch (err) {
-        setError(err.message);
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setIsLoading(false);
       }
@@ -43,6 +44,7 @@ export default function TrordlePage() {
       <div className="max-w-2xl mx-auto p-6 text-center">
         <h1 className="text-2xl font-bold mb-4">Daily Trordle</h1>
         <p className="text-gray-600">No puzzle available for today. Please check back tomorrow!</p>
+        {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
       </div>
     );
   }

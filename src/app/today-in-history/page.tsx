@@ -4,8 +4,6 @@ import MuteButton from '@/components/MuteButton';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
-import { Suspense } from 'react';
-import QuizGameClient from './QuizGameClient';
 
 export async function generateMetadata(): Promise<Metadata> {
   const today = new Date();
