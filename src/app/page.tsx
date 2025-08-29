@@ -7,10 +7,9 @@ import ScrollButtons from '@/components/ScrollButtons';
 import DailyQuizClient from '@/components/daily/DailyQuizClient';
 
 export const metadata = {
-  title: 'Free Online Trivia Games & Daily Quiz Challenges | Triviaah',
-  description: 'Play free online trivia games and daily quiz challenges. Enjoy fun quiz games online free, create your own trivia game free, and join virtual trivia games for work or team building.',
+  title: 'Free Daily Quiz with Answers | Online Trivia Games & Challenges | Triviaah',
+  description: 'Play free daily quiz with answers and explanations. Enjoy online trivia games, test your knowledge with instant feedback, and learn with our educational quiz platform.',
 };
-
 
 // --------------------------
 // 1. Static data (unchanged)
@@ -30,7 +29,7 @@ const DAILY_QUIZZES = [
     path: '/daily/general-knowledge',
     image: '/imgs/general-knowledge-160x160.webp',
     tagline: 'Test your worldly wisdom with diverse daily trivia challenges',
-    keywords: 'general knowledge quiz, daily trivia facts, world trivia questions',
+    keywords: 'general knowledge quiz, daily trivia facts, world trivia questions, daily quiz with answers',
   },
   {
     category: 'today-in-history',
@@ -38,7 +37,7 @@ const DAILY_QUIZZES = [
     path: '/today-in-history',
     image: '/imgs/today-history-160x160.webp',
     tagline: 'Discover historical events from this date in free online trivia',
-    keywords: 'historical trivia quiz, on this day trivia, history facts game',
+    keywords: 'historical trivia quiz, on this day trivia, history facts game, history quiz with answers',
   },
   {
     category: 'entertainment',
@@ -46,7 +45,7 @@ const DAILY_QUIZZES = [
     path: '/daily/entertainment',
     image: '/imgs/entertainment-160x160.webp',
     tagline: 'Pop culture trivia quizzes featuring movies, music & celebrities',
-    keywords: 'pop culture trivia quizzes, movie trivia game, celebrity quiz',
+    keywords: 'pop culture trivia quizzes, movie trivia game, celebrity quiz, entertainment quiz answers',
   },
   {
     category: 'geography',
@@ -54,7 +53,7 @@ const DAILY_QUIZZES = [
     path: '/daily/geography',
     image: '/imgs/geography-160x160.webp',
     tagline: 'Explore world geography through interactive trivia challenges',
-    keywords: 'geography trivia quiz, world capitals game, countries trivia',
+    keywords: 'geography trivia quiz, world capitals game, countries trivia, geography quiz with answers',
   },
   {
     category: 'science',
@@ -62,7 +61,7 @@ const DAILY_QUIZZES = [
     path: '/daily/science',
     image: '/imgs/science-160x160.webp',
     tagline: 'Discover scientific wonders in our free online science trivia',
-    keywords: 'science trivia quiz, biology quiz game, physics trivia questions',
+    keywords: 'science trivia quiz, biology quiz game, physics trivia questions, science quiz with answers',
   },
 ] as const;
 
@@ -86,14 +85,14 @@ const ADDITIONAL_SECTIONS = [
     name: 'Trivia Blog',
     image: '/imgs/blog-160x160.webp',
     tagline: 'Learn fascinating trivia facts and quiz strategies',
-    keywords: 'trivia facts blog, quiz tips, interesting trivia articles',
+    keywords: 'trivia facts blog, quiz tips, interesting trivia articles, quiz answers explained',
   },
   {
     category: 'trivia-bank',
     name: 'Trivia Bank',
     image: '/imgs/tbank-160x160.webp',
     tagline: 'Access our complete collection of free trivia questions',
-    keywords: 'trivia question database, quiz question bank, trivia archive',
+    keywords: 'trivia question database, quiz question bank, trivia archive, quiz with answers',
   },
 ] as const;
 
@@ -134,10 +133,10 @@ export default function Home() {
       <main className="container mx-auto px-4 py-6 flex-grow">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">
-            Play Free Online Trivia Games Daily
+            Free Daily Quiz with Answers & Explanations
           </h1>
           <p className="text-gray-600 mb-4">
-            New free online trivia games every 24 hours.
+            New free online trivia games with answers every 24 hours. Test your knowledge and learn instantly!
           </p>
         </div>
 
@@ -211,7 +210,7 @@ export default function Home() {
           <div className="mb-12">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-gray-800">
-                Popular Trivia Quiz Categories
+                Popular Daily Quiz Categories with Answers
               </h3>
               <Link href="/trivias" className="text-blue-600 hover:underline" prefetch={false}>
                 View All Categories →
@@ -219,12 +218,12 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {[
-                { name: 'Movies', desc: 'Film trivia & cinema quiz' },
-                { name: 'Science', desc: 'Biology, physics & chemistry' },
-                { name: 'History', desc: 'Historical events & facts' },
-                { name: 'Geography', desc: 'World capitals & countries' },
-                { name: 'Sports', desc: 'Athletics & sports trivia' },
-                { name: 'Music', desc: 'Music trivia & song quiz' }
+                { name: 'Movies', desc: 'Film trivia & cinema quiz with answers' },
+                { name: 'Science', desc: 'Biology, physics & chemistry explanations' },
+                { name: 'History', desc: 'Historical events & facts with context' },
+                { name: 'Geography', desc: 'World capitals & countries explained' },
+                { name: 'Sports', desc: 'Athletics & sports trivia answers' },
+                { name: 'Music', desc: 'Music trivia & song quiz explanations' }
               ].map((c) => (
                 <Link
                   key={c.name}
@@ -247,39 +246,68 @@ export default function Home() {
           {/* Enhanced SEO Content Section */}
           <section className="bg-white rounded-lg p-6 mb-8 shadow-sm">
             <h4 className="text-lg font-semibold text-gray-800 mb-4">
-              Play Free Online Trivia Games & Daily Quiz Challenges
+              Free Daily Quiz with Answers & Explanations
             </h4>
             <div className="prose text-gray-600">
               <p className="mb-4">
-                Triviaah offers the best collection of <strong>free online trivia games</strong> with fresh 
-                <strong> daily trivia challenges</strong> across 20+ categories. Enjoy our <strong>free trivia games online</strong> 
+                Triviaah offers the best collection of <strong>free daily quiz with answers</strong> and detailed explanations 
+                across multiple categories. Our <strong>daily quiz with answers</strong> format helps you learn while you play, 
+                with instant feedback on every question. Enjoy our <strong>free trivia games online</strong> 
                 including <strong>trivia games to play with friends online</strong> and <strong>virtual trivia games for work</strong>. 
-                Whether you&apos;re into <strong>pop culture trivia quizzes</strong>, science facts, or history questions, 
-                we have something for every trivia enthusiast.
               </p>
               <p className="mb-4">
-                Looking for <strong>free online quiz for team building</strong> or <strong>trivia games for adults online</strong>? 
-                Our platform allows you to <strong>create your own trivia game free</strong> and enjoy 
-                <strong> fun quiz games online free</strong> of charge. As one of the <strong>best online trivia games</strong> 
-                platforms, we provide <strong>free virtual trivia</strong> experiences that everyone can enjoy.
+                Looking for <strong>daily quiz with answers free</strong> resources? Our platform provides 
+                <strong> quiz with answers and explanations</strong> that make learning engaging and effective. 
+                Whether you&apos;re preparing for a test, hosting a <strong>virtual trivia night with answers</strong>, 
+                or just expanding your knowledge, our <strong>daily trivia with answers</strong> format is perfect for all learners.
               </p>
               <ul className="list-disc ml-6 mb-4">
-                <li>New <strong>daily free trivia</strong> challenges every 24 hours</li>
-                <li>Wide variety of <strong>free online trivia games</strong> and <strong>quiz games online free</strong></li>
-                <li><strong>Free online quizzes for fun</strong> and learning</li>
-                <li>Popular <strong>pop culture trivia quizzes</strong> and entertainment questions</li>
-                <li><strong>Create your own online quiz</strong> for friends and family</li>
-                <li>Perfect for <strong>free online trivia games for groups</strong> and <strong>team building</strong></li>
-                <li>Educational content covering science, history, and geography</li>
-                <li>Word games and brain teasers for mental exercise</li>
+                <li><strong>Daily quiz with answers</strong> updated every 24 hours</li>
+                <li>Detailed explanations for every question in our <strong>quiz with answers</strong></li>
+                <li>Instant feedback on your <strong>daily trivia challenges</strong></li>
+                <li>Educational <strong>trivia with answers</strong> across all categories</li>
+                <li>Perfect for <strong>team building quizzes with answers</strong></li>
+                <li>Learn while you play with our <strong>quiz games with answers</strong></li>
+                <li>Track your progress with our <strong>daily quiz challenge with answers</strong></li>
+                <li>Share your scores on <strong>social media trivia with answers</strong></li>
               </ul>
               <p>
-                As a <strong>free quiz website</strong>, we provide tools to <strong>create online trivia game free</strong> 
-                of charge. Our platform is among the <strong>best online quiz tools free</strong> available, 
-                allowing you to <strong>create quiz game online free</strong> and share with others. 
-                Enjoy our <strong>live quiz online free</strong> events and <strong>online trivia game with friends</strong> 
-                features that make learning fun!
+                As a leading <strong>free quiz website with answers</strong>, we provide comprehensive 
+                <strong> daily quizzes with explanations</strong> that help you understand why answers are correct. 
+                Our <strong>trivia with answers and facts</strong> approach ensures you not only test your knowledge 
+                but also expand it with every game. Join thousands of players who enjoy our 
+                <strong> educational quiz with answers</strong> platform daily!
               </p>
+            </div>
+          </section>
+
+          {/* New Section: How Our Daily Quiz with Answers Works */}
+          <section className="bg-blue-50 rounded-lg p-6 mb-8">
+            <h4 className="text-lg font-semibold text-gray-800 mb-4">
+              How Our Daily Quiz with Answers Works
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-md">
+                  <span className="text-2xl font-bold text-blue-600">1</span>
+                </div>
+                <h5 className="font-semibold mb-2">Play Daily Quiz</h5>
+                <p className="text-sm text-gray-600">Choose from multiple categories and test your knowledge with our daily updated quizzes</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-md">
+                  <span className="text-2xl font-bold text-blue-600">2</span>
+                </div>
+                <h5 className="font-semibold mb-2">Get Instant Answers</h5>
+                <p className="text-sm text-gray-600">Receive immediate feedback with detailed explanations for each question</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-md">
+                  <span className="text-2xl font-bold text-blue-600">3</span>
+                </div>
+                <h5 className="font-semibold mb-2">Learn & Improve</h5>
+                <p className="text-sm text-gray-600">Track your progress, learn new facts, and improve your scores over time</p>
+              </div>
             </div>
           </section>
 
@@ -296,7 +324,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="mb-4 md:mb-0">
                 <h3 className="text-lg font-bold">Triviaah</h3>
-                <p className="text-gray-400">Free daily trivia challenges & online quiz games</p>
+                <p className="text-gray-400">Free daily trivia challenges with answers & online quiz games</p>
               </div>
               <div className="flex gap-6">
                 <Link href="/about" className="flex items-center hover:text-blue-300" prefetch={false}>
@@ -311,7 +339,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mt-6 text-center text-gray-400 text-sm">
-              © {new Date().getFullYear()} Triviaah. Play free daily trivia challenges and online quiz games.
+              © {new Date().getFullYear()} Triviaah. Play free daily trivia challenges with answers and online quiz games.
             </div>
           </div>
         </footer>

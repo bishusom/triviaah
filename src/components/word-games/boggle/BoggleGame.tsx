@@ -153,7 +153,13 @@ export default function BoggleGame() {
     // Detect if it's a touch device
     isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     
-    event({action: 'boggle_started', category: 'boggle',label: 'boggle'});
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'boggle_started', category: 'boggle',label: 'boggle'});
+        clearInterval(checkGtag);
+      }
+    }, 100)
+
     const generateExtendedLevels = () => {
       const levels: ExtendedLevel[] = [];
       for (let i = 0; i < 20; i++) {

@@ -62,7 +62,12 @@ export default function NumberSequenceGame() {
 
   /* ---------- LIFECYCLE ---------- */
   useEffect(() => {
-    event({ action: 'number_sequence_started', category: 'number_sequence', label: 'number_sequence' });
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'number_sequence_started', category: 'number_sequence',label: 'number_sequence'});
+        clearInterval(checkGtag);
+      }
+    }, 100);
     generateSequence();
 
     return () => {

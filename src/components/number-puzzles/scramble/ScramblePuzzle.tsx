@@ -275,7 +275,12 @@ export default function ScramblePuzzle() {
   };
 
   useEffect(() => {
-    event({action: 'number_scramble_started', category: 'number_scramble',label: 'number_scramble'});
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'number_scramble_started', category: 'number_scramble',label: 'number_scramble'});
+        clearInterval(checkGtag);
+      }
+    }, 100);
     generateNewPuzzle();
     
     return () => {

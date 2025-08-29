@@ -39,7 +39,12 @@ export default function PrimeHunterPuzzle() {
 
   useEffect(() => {
     setGameState(prev => ({ ...prev }));
-    event({action: 'prime_hunter_started', category: 'prime_hunter',label: 'prime_hunter'});
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'prime_hunter_started', category: 'prime_hunter',label: 'prime_hunter'});
+        clearInterval(checkGtag);
+      }
+    }, 100);
     initGame();
 
     return () => {

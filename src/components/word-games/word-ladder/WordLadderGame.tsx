@@ -106,7 +106,12 @@ export default function WordLadderGame() {
 
   // Initialize game
   useEffect(() => {
-    event({ action: 'word_ladder_started', category: 'word_ladder', label: 'word_ladder' });
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'word_ladder_started', category: 'word_ladder',label: 'word_ladder'});
+        clearInterval(checkGtag);
+      }
+    }, 100)
     loadGameState();
     initGame();
     return () => {

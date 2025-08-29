@@ -99,13 +99,15 @@ export default function WordSearchGame() {
   }, [calculateCellSize]);
 
   useEffect(() => {
-    event({
-      action: 'word_search_started',
-      category: 'word_search',
-      label: difficulty,
-      game_type: 'word_search',
-      level: currentLevel
-    });
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'word_search_started', category: 'word_search', label: difficulty,
+              game_type: 'word_search',level: currentLevel });
+        clearInterval(checkGtag);
+      }
+    }, 100);
+
+    return () => clearInterval(checkGtag);
   }, [currentLevel, difficulty]);
 
   useEffect(() => {

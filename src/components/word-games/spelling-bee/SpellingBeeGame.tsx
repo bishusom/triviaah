@@ -276,7 +276,12 @@ export default function SpellingBeeGame() {
 
   // Initialize game on mount
   useEffect(() => {
-    event({action: 'spelling_bee_started', category: 'spelling_bee',label: 'spelling_bee'});
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'spellingbee_started', category: 'spellingbee',label: 'spellingbee'});
+        clearInterval(checkGtag);
+      }
+    }, 100);
     initGame();
   }, [initGame]);
 

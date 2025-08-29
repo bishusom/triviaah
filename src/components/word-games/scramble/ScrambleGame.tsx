@@ -336,7 +336,12 @@ export default function ScrambleGame() {
 
   // Initialize game on mount
   useEffect(() => {
-    event({action: 'word_scramble_started', category: 'word_scramble',label: 'word_scramble'});
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'word_scramble_started', category: 'word_scramble',label: 'word_scramble'});
+        clearInterval(checkGtag);
+      }
+    }, 100)
     initGame();
     return () => {
         if (timerInterval.current !== null) {

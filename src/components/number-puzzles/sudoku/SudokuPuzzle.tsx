@@ -148,7 +148,13 @@ export default function SudokuPuzzle() {
       setGameState(prev => ({ ...prev, timeElapsed: prev.timeElapsed + 1 }));
     }, 1000);
 
-    event({action: 'soduku_puzzle_started', category: 'soduku_puzzle',label: 'soduku_puzzle'});
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'sudoku_started', category: 'sudoku',label: 'sudoku'});
+        clearInterval(checkGtag);
+      }
+    }, 100);
+
     setFeedback({ text: '', type: '' });
   }, [gameState.difficulty]); 
 
