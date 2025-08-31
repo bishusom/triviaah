@@ -1,60 +1,63 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Basic performance optimizations
-  compress: true,
-  poweredByHeader: false,
+  // Netlify compatibility
+  trailingSlash: true,
   
-  // Configuration for static export
-  //trailingSlash: true,
-  //output: 'export',
-  
-  // Image optimization settings for static export
+  // Image optimization
   images: {
-    unoptimized: true, // Required for static export
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.pixabay.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pixabay.com',
+        pathname: '/**',
+      }
+    ],
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    minimumCacheTTL: 3600, // Cache optimized images for 1 hour
   },
 
-  // Experimental features (only valid ones for Next.js 15)
+  // Cache-Control headers for static assets
+  async headers() {
+    return [
+      {
+        source: '/:path*.(jpg|jpeg|png|webp|avif|ico|svg|css|js)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=600, stale-while-revalidate=300',
+          },
+        ],
+      },
+    ];
+  },
+
   experimental: {
-    optimizeCss: true,
-    scrollRestoration: true,
-  },
-
-  // Custom webpack config for performance
-  webpack: (config, { dev, isServer }) => {
-    // Production optimizations
-    if (!dev && !isServer) {
-      // Optimize chunk splitting for better caching
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          default: {
-            minChunks: 2,
-            priority: -20,
-            reuseExistingChunk: true,
-          },
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            priority: -10,
-            chunks: 'all',
-          },
-          react: {
-            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-            name: 'react',
-            chunks: 'all',
-            priority: 10,
-          },
-        },
-      };
-    }
-
-    return config;
-  },
-
-  // Environment variables (if needed)
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
-  },
+    isrFlushToDisk: true,
+  }
 };
 
-module.exports = nextConfig;  
+module.exports = nextConfig;

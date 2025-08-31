@@ -1,9 +1,9 @@
-// components/daily/DailyQuizClient.tsx - Further optimized
+// app/components/daily/DailyQuizClient.tsx
 'use client';
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import OptimizedImage from '@/components/optimized/Image';
+import Image from 'next/image';
 import { FaCheckCircle } from 'react-icons/fa';
 
 type Quiz = {
@@ -18,119 +18,100 @@ type Quiz = {
 export default function DailyQuizClient({
   quiz,
   priorityImage = false,
+  timeLeft: initialTimeLeft,
   className = "" 
 }: {
   quiz: Quiz;
   priorityImage?: boolean;
+  timeLeft: string;
   className?: string;
 }) {
   const [played, setPlayed] = useState(false);
-  const [timeLeft, setTimeLeft] = useState('');
+  const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
   const [isMounted, setIsMounted] = useState(false);
 
-  // Memoize the quiz data to prevent unnecessary re-renders
-  const quizData = useMemo(() => quiz, [quiz]);
-
-  const calculateTimeLeft = useCallback((lastPlayedTimestamp: number) => {
-    const now = Date.now();
-    const timeSinceLastPlayed = now - lastPlayedTimestamp;
-    const twentyFourHours = 24 * 60 * 60 * 1000;
-    const timeUntilReset = twentyFourHours - timeSinceLastPlayed;
-    
-    if (timeUntilReset <= 0) return '0h 0m';
-    
-    const hours = Math.floor(timeUntilReset / (1000 * 60 * 60));
-    const minutes = Math.floor((timeUntilReset % (1000 * 60 * 60)) / (1000 * 60));
-    
-    return `${hours}h ${minutes}m`;
-  }, []);
-
-  const updatePlayedState = useCallback(() => {
-    if (typeof window === 'undefined') return;
-    
-    try {
-      const playedQuizzes = JSON.parse(localStorage.getItem('playedQuizzes') || '{}');
-      const quizData = playedQuizzes[quiz.category];
-      
-      if (quizData?.timestamp) {
-        const lastPlayedTimestamp = quizData.timestamp;
-        const now = Date.now();
-        const twentyFourHours = 24 * 60 * 60 * 1000;
-        
-        if (now - lastPlayedTimestamp < twentyFourHours) {
-          setPlayed(true);
-          setTimeLeft(calculateTimeLeft(lastPlayedTimestamp));
-        } else {
-          setPlayed(false);
-          // Clean up expired entry
-          const updatedQuizzes = { ...playedQuizzes };
-          delete updatedQuizzes[quiz.category];
-          localStorage.setItem('playedQuizzes', JSON.stringify(updatedQuizzes));
-        }
-      } else {
-        setPlayed(false);
-      }
-    } catch (e) {
-      console.error('Error reading from localStorage', e);
-      setPlayed(false);
-    }
-  }, [quiz.category, calculateTimeLeft]);
 
   useEffect(() => {
     setIsMounted(true);
+    
+    const updatePlayedState = () => {
+      const playedQuizzes = JSON.parse(localStorage.getItem('playedQuizzes') || '{}');
+      const quizData = playedQuizzes[quiz.category];
+      
+      if (quizData) {
+        const playedDate = new Date(quizData.timestamp);
+        const today = new Date();
+        
+        // More robust date comparison that handles midnight properly
+        const isSameDay = (
+          playedDate.getDate() === today.getDate() &&
+          playedDate.getMonth() === today.getMonth() &&
+          playedDate.getFullYear() === today.getFullYear()
+        );
+        
+        setPlayed(isSameDay);
+      } else {
+        setPlayed(false);
+      }
+    };
+
     updatePlayedState();
 
-    // Update timer every minute (reduced from 60s to 5min for better performance)
-    const interval = setInterval(updatePlayedState, 300000);
+    const interval = setInterval(() => {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0);
+      const diff = midnight.getTime() - now.getTime();
+      const h = Math.floor(diff / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      setTimeLeft(`${h}h ${m}m`);
+      
+      // Update played state every minute to catch date changes
+      updatePlayedState();
+      
+      // Force reset at midnight
+      if (diff < 60000) { // Less than 1 minute to midnight
+        setPlayed(false);
+      }
+    }, 60000); // Update every minute
 
     return () => clearInterval(interval);
-  }, [updatePlayedState]);
-
-  const handleQuizClick = useCallback(() => {
-    try {
-      const playedQuizzes = JSON.parse(localStorage.getItem('playedQuizzes') || '{}');
-      const now = Date.now();
-      
-      playedQuizzes[quiz.category] = { 
-        played: true, 
-        timestamp: now 
-      };
-      
-      localStorage.setItem('playedQuizzes', JSON.stringify(playedQuizzes));
-      setPlayed(true);
-      setTimeLeft(calculateTimeLeft(now));
-    } catch (e) {
-      console.error('Error writing to localStorage', e);
-    }
-  }, [quiz.category, calculateTimeLeft]);
+  }, [quiz.category]);
 
   return (
-    <div className={`bg-white rounded-xl shadow-md p-6 flex flex-col h-full ${className}`}>
-      <div className="flex items-center justify-center mb-4 w-20 h-20 mx-auto">
-        <OptimizedImage
-          src={quizData.image}
-          alt={`${quizData.name} Trivia Challenge`}
-          width={80}
-          height={80}
-          priority={priorityImage}
-          className="rounded-full bg-blue-100"
-        />
+    <div className="bg-white rounded-xl shadow-md p-6 flex flex-col h-full">
+      {/* Image Container */}
+      <div className="flex items-center justify-center mb-4">
+        <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
+          <Image
+            src={quiz.image}
+            alt={`${quiz.name} Trivia Challenge`}
+            width={80}
+            height={80}
+            className="object-cover"
+            priority={priorityImage}
+            loading={priorityImage ? 'eager' : 'lazy'}
+            quality={75}
+          />
+        </div>
       </div>
 
+      {/* Text Content */}
       <div className="text-center mb-4 flex-grow">
-        <h3 className="text-lg font-bold text-gray-800 mb-1">{quizData.name}</h3>
+        <h3 className="text-lg font-bold text-gray-800 mb-1">{quiz.name}</h3>
         {isMounted && (
           <>
             <p className="text-sm text-gray-600 italic hidden sm:block mb-2">
-              {quizData.tagline}
+              {quiz.tagline}
             </p>
             <div className="sr-only" aria-hidden="true">
-              Keywords: {quizData.keywords}
+              Keywords: {quiz.keywords}
             </div>
           </>
         )}
       </div>
 
+      {/* Button/Timer */}
       <div className="mt-auto">
         {!isMounted ? (
           <div className="w-full bg-gray-200 animate-pulse h-10 rounded-lg"></div>
@@ -138,7 +119,7 @@ export default function DailyQuizClient({
           <div className="text-center">
             <div className="inline-flex items-center bg-gray-100 text-gray-600 text-sm px-4 py-2 rounded-full">
               <FaCheckCircle className="mr-2 text-green-500" />
-              <span>Completed</span>
+              <span>Completed Today</span>
             </div>
             <div className="text-xs text-gray-500 mt-2">
               New challenge in {timeLeft}
@@ -146,10 +127,15 @@ export default function DailyQuizClient({
           </div>
         ) : (
           <Link
-            href={quizData.path} 
-            onClick={handleQuizClick}
+             href={quiz.path} 
+            onClick={() => {
+              const next = { 
+                ...JSON.parse(localStorage.getItem('playedQuizzes') || '{}'), 
+                [quiz.category]: { played: true, timestamp: Date.now() } 
+              };
+              localStorage.setItem('playedQuizzes', JSON.stringify(next));
+            }}
             className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors"
-            prefetch={false}
           >
             Play Daily Challenge
           </Link>
