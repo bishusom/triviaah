@@ -1,4 +1,4 @@
-// layout.tsx - Updated with better performance optimizations
+// layout.tsx - Fixed with correct preload implementation
 import { Geist } from 'next/font/google';
 import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -12,11 +12,15 @@ const geist = Geist({
   variable: '--font-geist',
   display: 'swap',
   preload: true,
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://triviaah.com'),
-  title: 'Triviaah: Free Daily Trivia & Quiz Games',
+  title: {
+    default: 'Triviaah: Free Daily Trivia & Quiz Games',
+    template: '%s | Triviaah'
+  },
   description: 'Play free daily trivia challenges across 20+ categories. New questions every 24 hours!',
   openGraph: {
     title: 'Triviaah: Free Daily Trivia & Quiz Games',
@@ -52,13 +56,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           as="image"
           type="image/webp"
         />
+        
+        {/* Preload high priority images for different resolutions */}
+        <link
+          rel="preload"
+          href="/logo-280x80.webp"
+          as="image"
+          media="(max-width: 640px)"
+        />
+        <link
+          rel="preload"
+          href="/logo-560x160.webp"
+          as="image"
+          media="(min-width: 641px)"
+        />
+        
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
         <link rel="preconnect" href="https://googleads.g.doubleclick.net" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://googleads.g.doubleclick.net" />
         
-        {/* Inline critical CSS */}
+        {/* Inline critical CSS with improved CLS prevention */}
         <style dangerouslySetInnerHTML={{ __html: `
           /* Critical above-the-fold CSS */
           .lcp-priority {
@@ -67,8 +86,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }
           body {
             font-family: var(--font-geist), system-ui, -apple-system, sans-serif;
+            position: relative;
           }
-          /* Add other critical styles as needed */
+          /* Prevent layout shifts for images */
+          img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+          }
+          /* Skeleton loading for images */
+          .img-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+          }
+          @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+          }
         `}} />
       </head>
       <body className={`${geist.variable} font-sans`}>

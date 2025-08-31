@@ -1,9 +1,9 @@
-// components/daily/DailyQuizClient.tsx - Updated with universal 24-hour timer
+// components/daily/DailyQuizClient.tsx - Further optimized
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import OptimizedImage from '@/components/optimized/Image';
 import { FaCheckCircle } from 'react-icons/fa';
 
 type Quiz = {
@@ -14,8 +14,6 @@ type Quiz = {
   tagline: string;
   keywords: string;
 };
-
-const blurDataURL = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaUMk8Ybf4RfLkNW2WYqCzq6gS2Ml6U5kkyR8Yya4n//2Q==";
 
 export default function DailyQuizClient({
   quiz,
@@ -30,16 +28,16 @@ export default function DailyQuizClient({
   const [timeLeft, setTimeLeft] = useState('');
   const [isMounted, setIsMounted] = useState(false);
 
-  // Calculate time until next reset (24 hours from when user last played)
+  // Memoize the quiz data to prevent unnecessary re-renders
+  const quizData = useMemo(() => quiz, [quiz]);
+
   const calculateTimeLeft = useCallback((lastPlayedTimestamp: number) => {
     const now = Date.now();
     const timeSinceLastPlayed = now - lastPlayedTimestamp;
     const twentyFourHours = 24 * 60 * 60 * 1000;
     const timeUntilReset = twentyFourHours - timeSinceLastPlayed;
     
-    if (timeUntilReset <= 0) {
-      return '0h 0m';
-    }
+    if (timeUntilReset <= 0) return '0h 0m';
     
     const hours = Math.floor(timeUntilReset / (1000 * 60 * 60));
     const minutes = Math.floor((timeUntilReset % (1000 * 60 * 60)) / (1000 * 60));
@@ -54,12 +52,11 @@ export default function DailyQuizClient({
       const playedQuizzes = JSON.parse(localStorage.getItem('playedQuizzes') || '{}');
       const quizData = playedQuizzes[quiz.category];
       
-      if (quizData && quizData.timestamp) {
+      if (quizData?.timestamp) {
         const lastPlayedTimestamp = quizData.timestamp;
         const now = Date.now();
         const twentyFourHours = 24 * 60 * 60 * 1000;
         
-        // Check if 24 hours have passed since last play
         if (now - lastPlayedTimestamp < twentyFourHours) {
           setPlayed(true);
           setTimeLeft(calculateTimeLeft(lastPlayedTimestamp));
@@ -83,13 +80,11 @@ export default function DailyQuizClient({
     setIsMounted(true);
     updatePlayedState();
 
-    // Update timer every minute
-    const interval = setInterval(() => {
-      updatePlayedState();
-    }, 60000);
+    // Update timer every minute (reduced from 60s to 5min for better performance)
+    const interval = setInterval(updatePlayedState, 300000);
 
     return () => clearInterval(interval);
-  }, [quiz.category, updatePlayedState]);
+  }, [updatePlayedState]);
 
   const handleQuizClick = useCallback(() => {
     try {
@@ -112,29 +107,25 @@ export default function DailyQuizClient({
   return (
     <div className={`bg-white rounded-xl shadow-md p-6 flex flex-col h-full ${className}`}>
       <div className="flex items-center justify-center mb-4 w-20 h-20 mx-auto">
-        <Image
-          src={quiz.image}
-          alt={`${quiz.name} Trivia Challenge`}
+        <OptimizedImage
+          src={quizData.image}
+          alt={`${quizData.name} Trivia Challenge`}
           width={80}
           height={80}
-          className="object-cover rounded-full bg-blue-100"
           priority={priorityImage}
-          loading={priorityImage ? 'eager' : 'lazy'}
-          quality={75}
-          placeholder="blur"
-          blurDataURL={blurDataURL}
+          className="rounded-full bg-blue-100"
         />
       </div>
 
       <div className="text-center mb-4 flex-grow">
-        <h3 className="text-lg font-bold text-gray-800 mb-1">{quiz.name}</h3>
+        <h3 className="text-lg font-bold text-gray-800 mb-1">{quizData.name}</h3>
         {isMounted && (
           <>
             <p className="text-sm text-gray-600 italic hidden sm:block mb-2">
-              {quiz.tagline}
+              {quizData.tagline}
             </p>
             <div className="sr-only" aria-hidden="true">
-              Keywords: {quiz.keywords}
+              Keywords: {quizData.keywords}
             </div>
           </>
         )}
@@ -155,7 +146,7 @@ export default function DailyQuizClient({
           </div>
         ) : (
           <Link
-            href={quiz.path} 
+            href={quizData.path} 
             onClick={handleQuizClick}
             className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors"
             prefetch={false}

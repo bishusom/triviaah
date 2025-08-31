@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Add to the TOP of globals.css (before Tailwind directives) */
-/* Critical Above-the-Fold CSS */
+/* Critical Above-the-Fold CSS - Optimized for performance */
 @layer base {
   /* LCP Element Optimization */
   .lcp-priority {
@@ -11,7 +10,7 @@
     contain-intrinsic-size: 1px 500px;
   }
 
-  /* Font Face with Fallback */
+  /* Font optimization with proper fallback */
   @font-face {
     font-family: 'Geist-fallback';
     src: local('Arial');
@@ -28,14 +27,25 @@
     min-height: 100vh;
   }
 
-  /* Pre-render animations */
-  @keyframes preload-fade {
-    0% { opacity: 0.4; }
-    100% { opacity: 1; }
+  /* Prevent layout shifts */
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Skeleton loading for images */
+  .img-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+
+  @keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 }
 
-/* Add after Tailwind directives */
 @layer utilities {
   /* Critical component states */
   .critical-visible {
@@ -90,9 +100,36 @@
     @apply shadow-blue-500/10;
     @apply ring-2 ring-blue-200;
   }
+  
   /* Feedback icon */
   .feedback-icon {
     @apply ml-2 inline-block;
+  }
+
+  /* Category card container */
+  .category-image-container {
+    @apply relative h-32 w-full overflow-hidden rounded-xl;
+  }
+
+  .placeholder-image {
+    @apply absolute inset-0 flex items-center justify-center bg-gray-200;
+  }
+
+  .placeholder-image span {
+    @apply text-gray-500 text-lg font-medium;
+  }
+
+  /* Category content */
+  .category-content {
+    @apply p-4;
+  }
+
+  .category-title {
+    @apply font-bold text-lg mb-1 text-gray-800 group-hover:text-blue-600 transition-colors;
+  }
+
+  .category-description {
+    @apply text-sm text-gray-600 line-clamp-2;
   }
 }
 
@@ -155,65 +192,106 @@
   padding: 2rem;
 }
 
-@layer components {
-    categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
-  }
+/* Categories grid */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
 
-  .category-card {
-    @apply relative overflow-hidden rounded-2xl p-6;
-    @apply bg-white/80 backdrop-blur-md border border-white/20;
-    @apply shadow-lg hover:shadow-xl transition-all duration-300;
-    @apply transform hover:-translate-y-2;
-    @apply before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/30 before:to-transparent before:opacity-0 before:transition-opacity before:duration-300;
-  }
+.category-card {
+  @apply relative overflow-hidden rounded-2xl p-6;
+  @apply bg-white/80 backdrop-blur-md border border-white/20;
+  @apply shadow-lg hover:shadow-xl transition-all duration-300;
+  @apply transform hover:-translate-y-2;
+  @apply before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/30 before:to-transparent before:opacity-0 before:transition-opacity before:duration-300;
+}
 
-  .category-card:hover {
-    @apply before:opacity-100;
-  }
+.category-card:hover {
+  @apply before:opacity-100;
+}
 
-  .category-card:hover .category-image {
-    transform: scale(1.05);
-  }
+.category-card:hover .category-image {
+  transform: scale(1.05);
+}
 
-  .category-image {
-    @apply w-full h-32 object-cover rounded-xl mb-4 transition-transform duration-500;
-    @apply shadow-md;
-  }
+.category-image {
+  @apply w-full h-32 object-cover rounded-xl mb-4 transition-transform duration-500;
+  @apply shadow-md;
+}
 
-  .category-card span {
-    font-weight: 600;
-    color: #2d3748;
-    text-align: center;
-  }
-  /* Category card container */
-  .category-image-container {
-    @apply relative h-32 w-full overflow-hidden rounded-xl;
-  }
+.category-card span {
+  font-weight: 600;
+  color: #2d3748;
+  text-align: center;
+}
 
-  .placeholder-image {
-    @apply absolute inset-0 flex items-center justify-center bg-gray-200;
-  }
+/* Reuse existing button styles */
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
 
-  .placeholder-image span {
-    @apply text-gray-500 text-lg font-medium;
-  }
+.btn.primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
 
-  /* Category content */
-  .category-content {
-    @apply p-4;
-  }
+.btn.secondary {
+  @apply bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500;
+}
 
-  .category-title {
-    @apply font-bold text-lg mb-1 text-gray-800 group-hover:text-blue-600 transition-colors;
-  }
+.btn.tertiary {
+  @apply bg-yellow-500 text-gray-800 hover:bg-yellow-600 focus:ring-yellow-500;
+}
 
-  .category-description {
-    @apply text-sm text-gray-600 line-clamp-2;
+/* Breadcrumb Navigation */
+.breadcrumb-container {
+  @apply bg-blue-600 text-white py-2 px-4 shadow-md;
+}
+
+.breadcrumb-item {
+  @apply transition-colors duration-200;
+}
+
+.breadcrumb-separator {
+  @apply mx-2 text-blue-200;
+}
+
+.breadcrumb-current {
+  @apply font-semibold text-blue-100;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+/* Improve button tap targets on mobile */
+@media (max-width: 768px) {
+  button, 
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Optimize focus styles for accessibility */
+:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Reduce CLS for ads */
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
 }
 
 /* Responsive adjustments */
@@ -274,39 +352,4 @@
     width: 100%;
     text-align: left;
   }
-} 
-
-/* Reuse existing button styles */
-.btn {
-  @apply px-4 py-2 rounded-lg font-medium transition-all;
-  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
-}
-
-.btn.primary {
-  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
-}
-
-.btn.secondary {
-  @apply bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500;
-}
-
-.btn.tertiary {
-  @apply bg-yellow-500 text-gray-800 hover:bg-yellow-600 focus:ring-yellow-500;
-}
-
-/* Breadcrumb Navigation */
-.breadcrumb-container {
-  @apply bg-blue-600 text-white py-2 px-4 shadow-md;
-}
-
-.breadcrumb-item {
-  @apply transition-colors duration-200;
-}
-
-.breadcrumb-separator {
-  @apply mx-2 text-blue-200;
-}
-
-.breadcrumb-current {
-  @apply font-semibold text-blue-100;
 }
