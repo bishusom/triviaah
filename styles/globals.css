@@ -155,8 +155,6 @@
   padding: 2rem;
 }
 
-
-
 @layer components {
     categories-grid {
     display: grid;

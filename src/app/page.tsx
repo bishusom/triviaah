@@ -1,6 +1,6 @@
+// page.tsx - Updated with client-side timing
 import Link from 'next/link';
 import Image from 'next/image';
-//import { FaCheckCircle } from 'react-icons/fa';
 import { MdInfo, MdEmail } from 'react-icons/md';
 import { AdBanner, AdSquare } from '@/components/Ads';
 import ScrollButtons from '@/components/ScrollButtons';
@@ -96,22 +96,10 @@ const ADDITIONAL_SECTIONS = [
   },
 ] as const;
 
-// --------------------------
-// 2. Precompute timer on server
-// --------------------------
-function getTimeLeft() {
-  const now = new Date();
-  const midnight = new Date();
-  midnight.setHours(24, 0, 0, 0);
-  const diff = midnight.getTime() - now.getTime();
-  const h = Math.floor(diff / (1000 * 60 * 60));
-  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  return `${h}h ${m}m`;
-}
+// Remove the server-side getTimeLeft function
 
 export default function Home() {
-  const timeLeft = getTimeLeft();
-
+  // Time left is now handled completely on the client side
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header Banner Ad - placed after header */}
@@ -146,7 +134,6 @@ export default function Home() {
               key={quiz.category}
               quiz={quiz}
               priorityImage={idx < 2}
-              timeLeft={timeLeft}
               className={idx < 2 ? "lcp-priority" : ""}
             />
           ))}
