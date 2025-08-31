@@ -10,7 +10,7 @@ interface TriviaData {
   title: string;
   header: string;
   excerpt: string;
-  tags: string[];
+  tags: string[] | string; // Allow both array and string
   levels: {
     [key: string]: Array<{
       question: string;
@@ -25,6 +25,17 @@ interface TriviaContentProps {
   styles: { [key: string]: string };
 }
 
+// Utility function to handle tags conversion
+function getTagsArray(tags: string[] | string): string[] {
+  if (Array.isArray(tags)) {
+    return tags;
+  }
+  if (typeof tags === 'string') {
+    return tags.split(',').map(tag => tag.trim());
+  }
+  return [];
+}
+
 // Create a component that uses useSearchParams
 function TriviaContentInner({ trivia, styles }: TriviaContentProps) {
   const searchParams = useSearchParams();
@@ -36,7 +47,7 @@ function TriviaContentInner({ trivia, styles }: TriviaContentProps) {
        <h1 className={styles.postTitle}>{trivia.header}</h1>
         <p className={styles.postExcerpt}>{trivia.excerpt}</p>
         <div className={styles.tags}>
-          {trivia.tags.map((tag, index) => (
+          {getTagsArray(trivia.tags).map((tag, index) => (
             <span key={index} className={styles.tag}>
               #{tag}
             </span>

@@ -1,3 +1,4 @@
+// layout.tsx - Updated with optimized resource loading
 import { Geist } from 'next/font/google';
 import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -6,7 +7,11 @@ import { SoundProvider } from './context/SoundContext';
 import { Metadata } from 'next';
 import '@styles/globals.css';
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
+const geist = Geist({ 
+  subsets: ['latin'], 
+  variable: '--font-geist',
+  display: 'swap' // Add this for better font loading
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://triviaah.com'),
@@ -19,7 +24,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/triviaah-og.webp', // This will resolve to https://triviaah.com/imgs/triviaah-og.webp
+        url: '/imgs/triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'Triviaah - Free Daily Trivia & Quiz Games'
@@ -31,7 +36,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Triviaah: Free Daily Trivia & Quiz Games',
     description: 'Play free daily trivia challenges across 20+ categories. New questions every 24 hours!',
-    images: ['/imgs/triviaah-og.webp'], // This will also resolve to the full URL
+    images: ['/imgs/triviaah-og.webp'],
   },
 };
 
@@ -39,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${geist.variable} antialiased`}>
       <head>
+        {/* Preload critical resources */}
         <link
           rel="preload"
           href={geist.variable ? undefined : geist.style.fontFamily}
@@ -46,9 +52,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        {/* Add preconnect for Google Ads */}
+        {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
-        <link rel="preconnect" href="https://googleads.g.doubleclick.net" />  
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" />
+        {/* Inline critical CSS - extract from globals.css and add here */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          /* Critical above-the-fold CSS */
+          .lcp-priority {
+            content-visibility: auto;
+            contain-intrinsic-size: 1px 500px;
+          }
+          #__next {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+          }
+          /* Add other critical styles as needed */
+        `}} />
       </head>
       <body className={`${geist.variable} font-[Geist,Geist-fallback]`}>
         <SoundProvider>
@@ -58,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <GoogleAnalytics gaId="G-K4KZ7XR85V" />
           <Script
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-            strategy="lazyOnload"
+            strategy="afterInteractive" // Changed from lazyOnload
             crossOrigin="anonymous"
           />
         </SoundProvider>

@@ -1,4 +1,4 @@
-// app/components/daily/DailyQuizClient.tsx
+// components/daily/DailyQuizClient.tsx - Updated with proper image sizing
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -30,7 +30,6 @@ export default function DailyQuizClient({
   const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
   const [isMounted, setIsMounted] = useState(false);
 
-
   useEffect(() => {
     setIsMounted(true);
     
@@ -42,7 +41,6 @@ export default function DailyQuizClient({
         const playedDate = new Date(quizData.timestamp);
         const today = new Date();
         
-        // More robust date comparison that handles midnight properly
         const isSameDay = (
           playedDate.getDate() === today.getDate() &&
           playedDate.getMonth() === today.getMonth() &&
@@ -66,37 +64,36 @@ export default function DailyQuizClient({
       const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       setTimeLeft(`${h}h ${m}m`);
       
-      // Update played state every minute to catch date changes
       updatePlayedState();
       
-      // Force reset at midnight
-      if (diff < 60000) { // Less than 1 minute to midnight
+      if (diff < 60000) {
         setPlayed(false);
       }
-    }, 60000); // Update every minute
+    }, 60000);
 
     return () => clearInterval(interval);
   }, [quiz.category]);
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 flex flex-col h-full">
-      {/* Image Container */}
-      <div className="flex items-center justify-center mb-4">
-        <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
-          <Image
-            src={quiz.image}
-            alt={`${quiz.name} Trivia Challenge`}
-            width={80}
-            height={80}
-            className="object-cover"
-            priority={priorityImage}
-            loading={priorityImage ? 'eager' : 'lazy'}
-            quality={75}
-          />
-        </div>
+    <div className={`bg-white rounded-xl shadow-md p-6 flex flex-col h-full ${className}`}>
+      {/* Image Container with explicit dimensions */}
+      <div className="flex items-center justify-center mb-4 w-20 h-20 mx-auto">
+        <Image
+          src={quiz.image}
+          alt={`${quiz.name} Trivia Challenge`}
+          width={80}
+          height={80}
+          className="object-cover rounded-full bg-blue-100"
+          priority={priorityImage}
+          loading={priorityImage ? 'eager' : 'lazy'}
+          quality={75}
+          // Add placeholder to prevent layout shift
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaUMk8Ybf4RfLkNW2WYqCzq6gS2Ml6U5kkyR8Yya4n//2Q=="
+        />
       </div>
 
-      {/* Text Content */}
+      {/* Rest of the component remains the same */}
       <div className="text-center mb-4 flex-grow">
         <h3 className="text-lg font-bold text-gray-800 mb-1">{quiz.name}</h3>
         {isMounted && (
@@ -111,7 +108,6 @@ export default function DailyQuizClient({
         )}
       </div>
 
-      {/* Button/Timer */}
       <div className="mt-auto">
         {!isMounted ? (
           <div className="w-full bg-gray-200 animate-pulse h-10 rounded-lg"></div>
@@ -127,7 +123,7 @@ export default function DailyQuizClient({
           </div>
         ) : (
           <Link
-             href={quiz.path} 
+            href={quiz.path} 
             onClick={() => {
               const next = { 
                 ...JSON.parse(localStorage.getItem('playedQuizzes') || '{}'), 

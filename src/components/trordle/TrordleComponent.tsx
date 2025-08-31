@@ -7,6 +7,7 @@ import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import Image from 'next/image';
 import { fetchPixabayImage } from '@/lib/pixabay';
+import styles from '@styles/Trordle.module.css';
 
 interface TrordleComponentProps {
   initialData: TrordleData;
@@ -248,8 +249,9 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
     option => !attempts.some(attempt => attempt.guess === option)
   );
 
+  // TrordleComponent.tsx - Full return statement with CSS module
   return (
-    <div className="trordle-container relative flex flex-col min-h-[calc(100vh-4rem)]">
+    <div className={`${styles.trordleContainer} relative flex flex-col min-h-[calc(100vh-4rem)]`}>
       <canvas 
         ref={confettiCanvasRef} 
         className="fixed top-0 left-0 w-full h-full pointer-events-none z-50"
@@ -305,15 +307,17 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
             >
               {showHistory ? 'Hide Guesses' : 'Show Your Guesses'}
             </button>
-            <div className="flex gap-2 mb-3">
+            <div className={styles.trordleAttempts}>
               {[...Array(6)].map((_, index) => (
-                <button
+                <div
                   key={index}
                   onClick={toggleHistory}
-                  className={`w-4 h-4 rounded-full ${
+                  className={`${styles.trordleAttemptDot} ${
                     index < attempts.length 
-                      ? getDotColor(attempts[index])
-                      : 'bg-gray-300'
+                      ? attempts[index].isCorrect 
+                        ? styles.correct 
+                        : styles.used
+                      : ''
                   }`}
                   title={index < attempts.length ? `Guess ${index + 1}` : 'Unused attempt'}
                 />
@@ -330,18 +334,18 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
                           key={attrIndex} 
                           className={`p-2 rounded-md border ${
                             attr.status === 'correct' 
-                              ? 'bg-green-100 border-green-400 text-green-800' 
+                              ? `${styles.trordleFeedbackCorrect} border-green-400 text-green-800` 
                               : attr.status === 'partial' 
-                              ? 'bg-yellow-100 border-yellow-400 text-yellow-800'
-                              : 'bg-gray-100 border-gray-300 text-gray-600'
+                              ? `${styles.trordleFeedbackPartial} border-yellow-400 text-yellow-800`
+                              : `${styles.trordleFeedbackIncorrect} border-gray-300 text-gray-600`
                           }`}
                         >
-                          <div className="text-xs font-semibold mb-1">{attr.name}:</div>
+                          <div className={styles.trordleAttribute}>{attr.name}:</div>
                           <div className="text-sm">{attr.value}</div>
                           <div className="text-xs mt-1">
                             {attr.status === 'correct' ? '🟩 Exact match' : 
-                             attr.status === 'partial' ? '🟨 Partial match' : 
-                             '⬜ No match'}
+                              attr.status === 'partial' ? '🟨 Partial match' : 
+                              '⬜ No match'}
                           </div>
                         </div>
                       ))}
@@ -367,25 +371,25 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
             <p>The answer was: <strong>{puzzleData.answer}</strong></p>
           </div>
         )}
-      </div>
-      
-      {/* Sticky Answer Options */}
-      {gameState === 'playing' && (
-        <div className="trordle-options-container sticky bottom-4 bg-white rounded-lg shadow-md p-4 z-10">
-          <div className="trordle-grid">
-            {availableOptions.map((option) => (
-              <button
-                key={option}
-                onClick={() => handleGuess(option)}
-                disabled={selectedOption === option}
-                className={`trordle-option ${selectedOption === option ? 'selected' : ''}`}
-              >
-                {option}
-              </button>
-            ))}
+        
+        {/* Sticky Answer Options */}
+        {gameState === 'playing' && (
+          <div className={`${styles.trordleOptionsContainer} sticky bottom-4 bg-white rounded-lg shadow-md p-4 z-10`}>
+            <div className={styles.trordleGrid}>
+              {availableOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => handleGuess(option)}
+                  disabled={selectedOption === option}
+                  className={`${styles.trordleOption} ${selectedOption === option ? styles.selected : ''}`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
       
       {/* Share results */}
       {(gameState === 'won' || gameState === 'lost') && (
@@ -400,17 +404,20 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
             <div className="mt-2 text-green-600">{shareMessage}</div>
           )}
           
-          <div className="trordle-share-grid">
+          <div className={styles.trordleShareGrid}>
             {attempts.flatMap(attempt => 
               attempt.attributes.map((attr, i) => (
-                <div key={`${attempt.guess}-${i}`} className={`trordle-share-cell ${attr.status}`}>
+                <div 
+                  key={`${attempt.guess}-${i}`} 
+                  className={`${styles.trordleShareCell} ${styles[attr.status]}`}
+                >
                   {attr.status === 'correct' ? '✓' : attr.status === 'partial' ? '~' : '✗'}
                 </div>
               ))
             )}
             {[...Array(6 - attempts.length)].flatMap((_, attemptIndex) => 
               [...Array(5)].map((_, attrIndex) => (
-                <div key={`empty-${attemptIndex}-${attrIndex}`} className="trordle-share-cell incorrect">
+                <div key={`empty-${attemptIndex}-${attrIndex}`} className={`${styles.trordleShareCell} ${styles.incorrect}`}>
                   ?
                 </div>
               ))

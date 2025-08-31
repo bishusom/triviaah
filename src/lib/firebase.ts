@@ -182,9 +182,9 @@ export async function getDailyQuizQuestions(category: string): Promise<Question[
   });
 }
 
-export async function getTodaysHistoryQuestions(count: number = 5): Promise<Question[]> {
-  const today = new Date();
-  const monthDay = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+export async function getTodaysHistoryQuestions(count: number, userDate?: Date): Promise<Question[]> {
+  const targetDate = userDate || new Date();
+  const monthDay = `${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
   
   const q = query(
     collection(db, 'daily_history_trivia'),

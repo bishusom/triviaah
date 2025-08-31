@@ -30,10 +30,16 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
   const postsPerPage: number = 5;
   
   const allPosts: PostData[] = await getAllPosts();
-  const totalPages: number = Math.ceil(allPosts.length / postsPerPage);
+  
+  // Sort posts by isoDate in descending order (newest first)
+  const sortedPosts = allPosts.sort((a, b) => {
+    return new Date(b.isoDate).getTime() - new Date(a.isoDate).getTime();
+  });
+  
+  const totalPages: number = Math.ceil(sortedPosts.length / postsPerPage);
   
   const startIndex: number = (page - 1) * postsPerPage;
-  const paginatedPosts: PostData[] = allPosts.slice(startIndex, startIndex + postsPerPage);
+  const paginatedPosts: PostData[] = sortedPosts.slice(startIndex, startIndex + postsPerPage);
 
   return (
     <div className={styles.container}>

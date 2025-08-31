@@ -1,7 +1,7 @@
 // src/app/trordle/layout.tsx
-import { generateTrordleMetadata } from './metadata';
+import { generateTodayInHistoryMetadata } from './metadata';
 
-export const metadata = generateTrordleMetadata();
+export const metadata = generateTodayInHistoryMetadata();
 
 export default function TodayInHistoryLayout({
   children,

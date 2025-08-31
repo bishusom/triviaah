@@ -10,6 +10,8 @@
     "lint:watch": "next lint --watch"
   },
   "dependencies": {
+    "@contentful/rich-text-html-renderer": "^17.1.0",
+    "@contentful/rich-text-types": "^17.1.0",
     "@next/third-parties": "^15.4.5",
     "@types/canvas-confetti": "^1.9.0",
     "@vercel/og": "^0.8.1",
@@ -17,6 +19,7 @@
     "canvas": "^3.1.2",
     "canvas-confetti": "^1.9.3",
     "compromise": "^14.14.4",
+    "contentful": "^11.7.15",
     "date-fns": "^4.1.0",
     "firebase": "^12.0.0",
     "gray-matter": "^4.0.3",
@@ -32,14 +35,15 @@
     "react-icons": "^5.5.0",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.20.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@rollup/plugin-babel": "^6.0.4",
     "@tailwindcss/postcss7-compat": "^2.2.17",
     "@types/gtag.js": "^0.0.20",
-    "@types/node": "^20.19.9",
+    "@types/node": "^24.3.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19",
     "eslint": "^9",

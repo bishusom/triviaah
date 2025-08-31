@@ -16,7 +16,7 @@ interface TriviaData {
   title: string;
   header: string;
   excerpt: string;
-  tags: string[];
+  tags: string[] | string; // Allow both array and string
   levels: {
     [key: string]: Array<{
       question: string;
@@ -41,11 +41,16 @@ export async function generateMetadata({ params }: TriviaPageProps): Promise<Met
       description: 'The requested trivia category could not be found.',
     };
   }
-  
+
+  // Convert tags to array if it's a string
+  const tagsArray = typeof trivia.tags === 'string' 
+    ? trivia.tags.split(',').map(tag => tag.trim())
+    : trivia.tags;
+
   return {
     title: `${trivia.title} Questions with Answers | Triviaah`,
     description: `${trivia.excerpt} Browse our ${trivia.title.toLowerCase()} trivia questions with answers for all difficulty levels.`,
-    keywords: `${trivia.title.toLowerCase()} trivia, ${trivia.title.toLowerCase()} quiz, ${trivia.title.toLowerCase()} questions and answers, ${trivia.tags.join(', ')}`,
+    keywords: `${trivia.title.toLowerCase()} trivia, ${trivia.title.toLowerCase()} quiz, ${trivia.title.toLowerCase()} questions and answers, ${tagsArray.join(', ')}`,
     alternates: {
       canonical: `https://triviaah.com/trivia-bank/${trivia.slug}`,
     },
@@ -53,7 +58,7 @@ export async function generateMetadata({ params }: TriviaPageProps): Promise<Met
       title: `${trivia.title} Questions | Triviaah`,
       description: trivia.excerpt,
       type: 'article',
-      tags: trivia.tags,
+      tags: tagsArray,
     },
   };
 }
@@ -77,7 +82,7 @@ function LoadingFallback() {
 }
 
 export default async function TriviaPage({ params }: TriviaPageProps) {
-  const { slug } = await params; // Await the params Promise
+  const { slug } = await params;
   const trivia: TriviaData | null = await getTriviaData(slug);
 
   if (!trivia) {
