@@ -1,117 +1,60 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Netlify compatibility
-  trailingSlash: true,
-  
-  // Image optimization
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'cdn.pixabay.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'pixabay.com',
-        pathname: '/**',
-      }
-    ],
-    formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 31536000, // 1 year for immutable assets
-  },
-
-  // Enable compression
+  // Basic performance optimizations
   compress: true,
-  
-  // Remove unnecessary headers
   poweredByHeader: false,
   
-  // Performance optimizations
-  generateEtags: false,
-  swcMinify: true,
-
-  // Cache-Control headers for static assets
-  async headers() {
-    return [
-      {
-        source: '/:path*.(jpg|jpeg|png|webp|avif|ico|svg|css|js)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/_next/image/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=600, stale-while-revalidate=300',
-          },
-        ],
-      },
-    ];
-  },
-
-  // Experimental features for performance
-  experimental: {
-    isrFlushToDisk: true,
-    // REMOVED: optimizeCss: true - causing critters module error
-  },
+  // Configuration for static export
+  //trailingSlash: true,
+  //output: 'export',
   
-  // Webpack optimizations
-  webpack: (config, { isServer }) => {
-    // Optimize client-side bundles
-    if (!isServer) {
+  // Image optimization settings for static export
+  images: {
+    unoptimized: true, // Required for static export
+  },
+
+  // Experimental features (only valid ones for Next.js 15)
+  experimental: {
+    optimizeCss: true,
+    scrollRestoration: true,
+  },
+
+  // Custom webpack config for performance
+  webpack: (config, { dev, isServer }) => {
+    // Production optimizations
+    if (!dev && !isServer) {
+      // Optimize chunk splitting for better caching
       config.optimization.splitChunks = {
         chunks: 'all',
         cacheGroups: {
-          default: false,
-          vendors: false,
-          // Vendor chunk
-          vendor: {
-            name: 'vendor',
-            test: /[\\/]node_modules[\\/]/,
-            chunks: 'all',
-            priority: 20,
-          },
-          // Common chunks
-          common: {
-            name: 'common',
+          default: {
             minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            priority: -10,
+            chunks: 'all',
+          },
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react',
             chunks: 'all',
             priority: 10,
-            reuseExistingChunk: true,
-            enforce: true,
           },
         },
       };
     }
-    
+
     return config;
-  }
+  },
+
+  // Environment variables (if needed)
+  env: {
+    CUSTOM_KEY: process.env.CUSTOM_KEY,
+  },
 };
 
-module.exports = nextConfig;
+module.exports = nextConfig;  
