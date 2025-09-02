@@ -196,6 +196,59 @@ export async function getDailyQuizQuestions(category: string, customDate?: Date)
   });
 }
 
+export async function getRandomQuestions(
+  qlimit: number = 7,
+  _difficulties: string[] = ['easy', 'medium', 'hard']
+): Promise<Question[]> {
+  try {
+    // 1️⃣  Pull a generous pool per difficulty
+    const oversample = 30; // plenty to shuffle
+    const pools = await Promise.all(
+      ['easy', 'medium', 'hard'].map(async (d) => {
+        const q = query(
+          collection(db, 'triviaQuestions'),
+          where('difficulty', '==', d),
+          limit(oversample)
+        );
+        const snap = await getDocs(q);
+        return snap.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            question: data.question,
+            correct: data.correct_answer,
+            options: shuffleArray([data.correct_answer, ...data.incorrect_answers]),
+            difficulty: d,
+            category: data.category,
+            ...(data.subcategory && { subcategory: data.subcategory }),
+            ...(data.titbits && { titbits: data.titbits }),
+            ...(data.image_keyword && { image_keyword: data.image_keyword }),
+          };
+        });
+      })
+    );
+
+    // 2️⃣  Pick counts
+    const easy = pools[0].sort(() => 0.5 - Math.random()).slice(0, 2);
+    const medium = pools[1].sort(() => 0.5 - Math.random()).slice(0, 2);
+    const hard = pools[2].sort(() => 0.5 - Math.random()).slice(0, 2);
+
+    // 3️⃣  One random-any bonus
+    const leftovers = [...pools[0], ...pools[1], ...pools[2]]
+      .filter((q) => ![...easy, ...medium, ...hard].some((p) => p.id === q.id));
+    const bonus = leftovers.length
+      ? [leftovers[Math.floor(Math.random() * leftovers.length)]]
+      : [];
+
+    // 4️⃣  Combine & final shuffle
+    const final = [...easy, ...medium, ...hard, ...bonus];
+    return shuffleArray(final);
+  } catch (err) {
+    console.error('getRandomQuestions error:', err);
+    return [];
+  }
+}
+
 export async function getTodaysHistoryQuestions(count: number, userDate?: Date): Promise<Question[]> {
   const targetDate = userDate || new Date();
   const monthDay = `${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;

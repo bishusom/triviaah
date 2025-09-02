@@ -52,7 +52,7 @@ export default function HeroSection() {
             </motion.p>
             
             {/* CTA Button */}
-            <Link href="/trordle" className="inline-block">
+            <Link href="/quick-fire" className="inline-block">
               <motion.button
                 whileHover={{ 
                   scale: 1.05,
@@ -61,7 +61,7 @@ export default function HeroSection() {
                 whileTap={{ scale: 0.95 }}
                 className="bg-white text-blue-600 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                Play Trordle Now →
+                Play 60 secs Quiz →
               </motion.button>
             </Link>
           </div>

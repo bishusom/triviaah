@@ -1,6 +1,62 @@
 import client from './contentful';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
-import { Document } from '@contentful/rich-text-types';
+import { Document, BLOCKS, INLINES, Block, Inline } from '@contentful/rich-text-types';
+
+// Define proper TypeScript interfaces for Contentful nodes
+interface ContentfulAsset {
+  fields: {
+    file: {
+      url: string;
+      details?: {
+        size: number;
+        image?: {
+          width: number;
+          height: number;
+        };
+      };
+      fileName: string;
+      contentType: string;
+    };
+    title: string;
+    description?: string;
+  };
+}
+
+interface ContentfulEntry {
+  fields: Record<string, unknown>;
+}
+
+const options = {
+  renderNode: {
+    [BLOCKS.EMBEDDED_ASSET]: (node: Block | Inline) => {
+      // Type guard to ensure we have the right node structure
+      if ('data' in node && node.data && typeof node.data === 'object' && 'target' in node.data) {
+        const target = node.data.target as ContentfulAsset;
+        const { file, title } = target.fields;
+        const imageUrl = file.url.startsWith('//') ? `https:${file.url}` : file.url;
+        return `
+          <div class="embedded-asset">
+            <img src="${imageUrl}" alt="${title}" style="max-width: 100%; height: auto;" />
+            ${title ? `<p class="asset-caption">${title}</p>` : ''}
+          </div>
+        `;
+      }
+      return '<div class="embedded-asset">Asset not available</div>';
+    },
+    [BLOCKS.EMBEDDED_ENTRY]: (node: Block | Inline) => {
+      // Handle embedded entries if needed
+      return `<div class="embedded-entry">Embedded content</div>`;
+    },
+    [INLINES.HYPERLINK]: (node: Block | Inline, next: (nodes: (Block | Inline)[]) => string) => {
+      if ('data' in node && node.data && typeof node.data === 'object' && 'uri' in node.data) {
+        const uri = node.data.uri as string;
+        const content = 'content' in node && Array.isArray(node.content) ? node.content : [];
+        return `<a href="${uri}" target="_blank" rel="noopener noreferrer">${next(content as (Block | Inline)[])}</a>`;
+      }
+      return '<a href="#">Link</a>';
+    },
+  },
+};
 
 export interface PostData {
   slug: string;
@@ -92,7 +148,7 @@ export async function getPostData(slug: string): Promise<PostData> {
 function convertRichTextToHtml(richText?: Document): string {
   if (!richText) return '';
   try {
-    return documentToHtmlString(richText);
+    return documentToHtmlString(richText, options);
   } catch (error) {
     console.error('Error converting rich text to HTML:', error);
     return '';
