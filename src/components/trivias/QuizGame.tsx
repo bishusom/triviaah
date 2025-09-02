@@ -1,3 +1,4 @@
+// components/trivias/QuizGame.tsx
 'use client';
 import Image from 'next/image';
 import { format } from 'date-fns';
@@ -10,6 +11,8 @@ import { useSound } from '@/app/context/SoundContext';
 import { MdCategory, MdSubject, MdStar } from 'react-icons/md';
 import CountUp from 'react-countup';
 import { extractKeywords } from '@/lib/nlpKeywords';
+import { useGuestSession } from '@/hooks/useGuestSession';
+import SignupModal from '@/components/SignupModal';
 
 export default function QuizGame({ 
   initialQuestions,
@@ -39,8 +42,19 @@ export default function QuizGame({
   const tickSound = useRef<HTMLAudioElement | null>(null);
 
   const { isMuted } = useSound();
-
   const currentQuestion = questions[currentIndex];
+
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const { startNewGame, completeGame, isGuest } = useGuestSession();
+
+  // Start the game with user context
+  useEffect(() => {
+    const startGame = async () => {
+      const newStreak = startNewGame(); // This now returns the current streak
+      console.log(`Starting game with ${newStreak}-day streak`);
+    };
+    startGame();
+  }, [startNewGame]);
 
   useEffect(() => {
       const checkGtag = setInterval(() => {
@@ -80,6 +94,99 @@ export default function QuizGame({
     }
   }, [currentIndex, questions]);
 
+  const playSound = useCallback((sound: 'correct' | 'incorrect' | 'timeUp' | 'tick') => {
+    if (isMuted) return;
+    try {
+      switch(sound) {
+        case 'correct': 
+          tickSound.current?.pause();
+          correctSound.current?.play(); 
+          break;
+        case 'incorrect': 
+          tickSound.current?.pause();
+          incorrectSound.current?.play(); 
+          break;
+        case 'timeUp': 
+          tickSound.current?.pause();
+          timeUpSound.current?.play(); 
+          break;
+        case 'tick':
+          tickSound.current?.play();
+          break;
+      }
+    } catch (error) {
+      console.error('Error playing sound:', error);
+    }
+  }, [isMuted]);
+
+  const handleGameComplete = useCallback((finalScore: number, finalCorrectCount: number, finalTimeUsed: number) => {
+    // Save to guest context
+    completeGame(finalScore);
+    
+    // Show signup modal if guest
+    if (isGuest()) {
+      setShowSignupModal(true);
+    }
+    
+    // Show summary
+    setShowSummary(true);
+    
+    // Track completion event
+    event({
+      action: 'quiz_completed', 
+      category: category,
+      label: category,
+      value: finalScore
+    });
+  }, [completeGame, isGuest, category]);
+
+  const handleAnswer = useCallback((option: string) => {
+    const isCorrect = option === questions[currentIndex].correct;
+    setSelectedOption(option);
+    setShowFeedback(true);
+    setTitbit(questions[currentIndex].titbits || '');
+
+    const newScore = isCorrect ? score + (isTimedMode ? (timeLeft * 10 + 50) : 100) : score;
+    const newCorrectCount = isCorrect ? correctCount + 1 : correctCount;
+
+    if (isCorrect) {
+      playSound('correct');
+    } else {
+      playSound('incorrect');
+    }
+
+    setTimeout(() => {
+      if (currentIndex < questions.length - 1) {
+        setCurrentIndex(prev => prev + 1);
+        setTimeLeft(30);
+        setScore(newScore);
+        setCorrectCount(newCorrectCount);
+      } else {
+        handleGameComplete(newScore, newCorrectCount, timeUsed + 1);
+      }
+      setSelectedOption(null);
+      setShowFeedback(false);
+      setTitbit('');
+    }, 3000);
+  }, [currentIndex, questions, timeLeft, isTimedMode, score, correctCount, playSound, timeUsed, handleGameComplete]);
+
+  const handleTimeUp = useCallback(() => {
+    playSound('timeUp');
+    setSelectedOption('timeout');
+    setShowFeedback(true);
+    
+    setTimeout(() => {
+      if (currentIndex < questions.length - 1) {
+        setCurrentIndex(prev => prev + 1);
+        setTimeLeft(30);
+      } else {
+        handleGameComplete(score, correctCount, timeUsed);
+      }
+      setSelectedOption(null);
+      setShowFeedback(false);
+    }, 1500);
+  }, [playSound, currentIndex, questions.length, handleGameComplete, score, correctCount, timeUsed]);
+
   useEffect(() => {
     if (timeLeft > 0 && !showFeedback && !showSummary) {
       const timer = setTimeout(() => {
@@ -94,7 +201,7 @@ export default function QuizGame({
     } else if (timeLeft === 0 && isTimedMode) {
       handleTimeUp();
     }
-  }, [timeLeft, showFeedback, isMuted, isTimedMode]);
+  }, [timeLeft, showFeedback, isMuted, isTimedMode, handleTimeUp, showSummary]);
 
   useEffect(() => {
     // Set a timeout to ensure loading doesn't get stuck for first question
@@ -102,7 +209,7 @@ export default function QuizGame({
       if (currentIndex === 0) {
         setIsLoading(false);
       }
-    }, 3000); // Max 3 seconds loading time for first question
+    }, 3000);
 
     const fetchImage = async () => {
       setQuestionImage(null);
@@ -112,7 +219,7 @@ export default function QuizGame({
       
       // Get category (formatted for search)
       const category = currentQuestion.category?.toLowerCase().replace(/-/g, ' ');
-
+      
       // Search priority:
       // 1. Category + best keyword (e.g. "sports baseball")
       // 2. Category alone
@@ -168,7 +275,6 @@ export default function QuizGame({
     };
   }, [currentQuestion, currentIndex]);
 
-  // Add this effect to handle initial loading state
   useEffect(() => {
     // If we already have questions and no image loading is needed for first question
     if (currentIndex === 0 && questions.length > 0) {
@@ -178,101 +284,6 @@ export default function QuizGame({
       return () => clearTimeout(timeout);
     }
   }, [questions, currentIndex]);
-
-  const playSound = (sound: 'correct' | 'incorrect' | 'timeUp' | 'tick') => {
-    if (isMuted) return;
-    try {
-      switch(sound) {
-        case 'correct': 
-          tickSound.current?.pause();
-          correctSound.current?.play(); 
-          break;
-        case 'incorrect': 
-          tickSound.current?.pause();
-          incorrectSound.current?.play(); 
-          break;
-        case 'timeUp': 
-          tickSound.current?.pause();
-          timeUpSound.current?.play(); 
-          break;
-        case 'tick':
-          tickSound.current?.play();
-          break;
-      }
-    } catch (error) {
-      console.error('Error playing sound:', error);
-    }
-  };
-
-  const handleAnswer = (option: string) => {
-    const isCorrect = option === questions[currentIndex].correct;
-    setSelectedOption(option);
-    setShowFeedback(true);
-    setTitbit(questions[currentIndex].titbits || '');
-
-    if (isCorrect) {
-      const points = isTimedMode ? (timeLeft * 10 + 50) : 100;
-      setScore(score + points);
-      setCorrectCount(prev => prev + 1); 
-      playSound('correct');
-    } else {
-      playSound('incorrect');
-    }
-
-    setTimeout(() => {
-      if (currentIndex < questions.length - 1) {
-        setCurrentIndex(prev => prev + 1);
-        setTimeLeft(30);
-        // Don't set isLoading for subsequent questions
-      } else {
-        event({
-          action: 'quiz_completed', 
-          category: category,
-          label: category,
-          value: score
-        });
-        setShowSummary(true);
-      }
-      setSelectedOption(null);
-      setShowFeedback(false);
-      setTitbit('');
-    }, 3000);
-  };
-
-  const handleTimeUp = useCallback(() => {
-    playSound('timeUp');
-    setSelectedOption('timeout');
-    setShowFeedback(true);
-    
-    setTimeout(() => {
-      if (currentIndex < questions.length - 1) {
-        setCurrentIndex(prev => prev + 1);
-        setTimeLeft(30);
-        // Don't set isLoading for subsequent questions
-      } else {
-        setShowSummary(true);
-      }
-      setSelectedOption(null);
-      setShowFeedback(false);
-    }, 1500);
-  }, [currentIndex, questions.length, playSound]);
-
-  // Update the useEffect dependency array to include handleTimeUp
-  useEffect(() => {
-    if (timeLeft > 0 && !showFeedback && !showSummary) {
-      const timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
-        setTimeUsed(prev => prev + 1);
-        
-        if (timeLeft <= 5 && !isMuted) {
-          tickSound.current?.play().catch(e => console.error('Error playing tick sound:', e));
-        }
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
-      handleTimeUp();
-    }
-  }, [timeLeft, showFeedback, isMuted, handleTimeUp, showSummary]);
 
   const getDifficultyColor = (difficulty?: string) => {
     switch(difficulty?.toLowerCase()) {
@@ -285,25 +296,35 @@ export default function QuizGame({
 
   if (showSummary) {
     return (
-      <QuizSummary 
-        result={{
-          score,
-          correctCount,
-          totalQuestions: questions.length,
-          timeUsed,
-          category,
-          isTimedMode
-        }} 
-        onRestart={() => {
-          setCurrentIndex(0);
-          setScore(0);
-          setCorrectCount(0);
-          setTimeLeft(30);
-          setShowSummary(false);
-          setTimeUsed(0);
-          setIsLoading(true);
-        }}
-      />
+      <>
+        <QuizSummary 
+          result={{
+            score,
+            correctCount,
+            totalQuestions: questions.length,
+            timeUsed,
+            category,
+            isTimedMode
+          }} 
+          onRestart={() => {
+            startNewGame(); // Update streak for new game
+            setCurrentIndex(0);
+            setScore(0);
+            setCorrectCount(0);
+            setTimeLeft(30);
+            setShowSummary(false);
+            setTimeUsed(0);
+            setIsLoading(true);
+            setShowSignupModal(false);
+          }}
+        />
+        <SignupModal
+          isOpen={showSignupModal}
+          onClose={() => setShowSignupModal(false)}
+          finalScore={score}
+          category={category}
+        />
+      </>
     );
   }
 
@@ -421,14 +442,14 @@ export default function QuizGame({
       <div className="border border-gray-200 rounded-lg p-4 mb-6 bg-white shadow-sm">
        <div className="flex flex-col md:flex-row gap-4 items-center md:items-start">
           {/* Image container with responsive sizing */}
-          <div className="w-24 h-24 flex-shrink-0"> {/* Changed from w-full md:w-32 */}
+          <div className="w-24 h-24 flex-shrink-0">
             <div className={`relative aspect-square w-full rounded-md overflow-hidden bg-gray-100 ${questionImage ? '' : 'animate-pulse'}`}>
               {questionImage ? (
                 <Image 
                   src={questionImage} 
                   alt="Question illustration" 
-                  width={96}  // matches your w-24 (24 * 4 = 96)
-                  height={96} // matches your h-24
+                  width={96}
+                  height={96}
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
                   onError={() => setQuestionImage(null)}

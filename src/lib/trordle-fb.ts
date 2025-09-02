@@ -35,10 +35,22 @@ export interface TrordleResult {
   timestamp: Date;
 }
 
+// Helper function to get client-side date string
+function getClientDateString(customDate?: Date): string {
+  const date = customDate || new Date();
+  // Use client's timezone to format the date
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 export async function getDailyTrordle(customDate?: Date) {
   try {
-    const date = customDate || new Date(); // Use provided date or current date
-    const dateString = date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    // Always use client-side date calculation
+    const dateString = getClientDateString(customDate);
+    
+    console.log('Fetching puzzle for date:', dateString); // Debug log
     
     const trordleRef = collection(db, 'trordlePuzzles');
     const q = query(
@@ -50,6 +62,7 @@ export async function getDailyTrordle(customDate?: Date) {
     const querySnapshot = await getDocs(q);
     
     if (querySnapshot.empty) {
+      console.log('No puzzle found for date:', dateString, '- getting random puzzle'); // Debug log
       // If no puzzle for today, get a random one as fallback
       return getRandomTrordle();
     }
@@ -64,6 +77,8 @@ export async function getDailyTrordle(customDate?: Date) {
       matchType: attr.matchType || 'contains',
       range: attr.range || 0
     }));
+    
+    console.log('Found puzzle:', doc.id, 'for date:', dateString); // Debug log
     
     return {
       id: doc.id,

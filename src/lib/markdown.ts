@@ -25,11 +25,28 @@ interface ContentfulFields {
       };
     };
   };
-  content?: Document; // Changed to Document type
+  content?: Document;
 }
 
 interface ContentfulItem {
   fields: ContentfulFields;
+}
+
+// Helper function to convert protocol-relative URLs to absolute URLs
+function normalizeImageUrl(imageUrl: string | undefined): string {
+  if (!imageUrl) return '/default-image.jpg';
+  
+  if (imageUrl.startsWith('//')) {
+    // Convert protocol-relative URL to HTTPS
+    return `https:${imageUrl}`;
+  }
+  
+  if (imageUrl.startsWith('/')) {
+    // Handle relative URLs (adjust if you have a different base URL)
+    return imageUrl; // Keep as is if it's a relative path
+  }
+  
+  return imageUrl;
 }
 
 export async function getAllPosts(): Promise<PostData[]> {
@@ -44,7 +61,7 @@ export async function getAllPosts(): Promise<PostData[]> {
     date: String(item.fields.date || ''),
     isoDate: String(item.fields.isoDate || ''),
     excerpt: String(item.fields.excerpt || ''),
-    image: item.fields.image?.fields?.file?.url || '/default-image.jpg',
+    image: normalizeImageUrl(item.fields.image?.fields?.file?.url),
     contentHtml: convertRichTextToHtml(item.fields.content),
   }));
 }
@@ -67,7 +84,7 @@ export async function getPostData(slug: string): Promise<PostData> {
     date: String(item.fields.date || ''),
     isoDate: String(item.fields.isoDate || ''),
     excerpt: String(item.fields.excerpt || ''),
-    image: item.fields.image?.fields?.file?.url || '/default-image.jpg',
+    image: normalizeImageUrl(item.fields.image?.fields?.file?.url),
     contentHtml: convertRichTextToHtml(item.fields.content),
   };
 }

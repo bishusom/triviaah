@@ -13,8 +13,6 @@ import {
   DocumentSnapshot
 } from 'firebase/firestore';
 
-
-
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -41,6 +39,16 @@ export type Question = {
   date?: string; // For "today-in-history" questions
   year?: string; // For "today-in-history" questions
 };
+
+// Helper function to get client-side date string
+function getClientDateString(customDate?: Date): string {
+  const date = customDate || new Date();
+  // Use client's timezone to format the date
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 export async function getCategoryQuestions(category: string, count: number): Promise<Question[]> {
   // First get all questions for the category
@@ -150,21 +158,27 @@ export async function getMoreQuestions(
   };
 }
 
-export async function getDailyQuizQuestions(category: string): Promise<Question[]> {
-  const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+export async function getDailyQuizQuestions(category: string, customDate?: Date): Promise<Question[]> {
+  // Always use client-side date calculation
+  const dateString = getClientDateString(customDate);
+  
+  console.log('Fetching daily quiz for category:', category, 'date:', dateString); // Debug log
   
   // Query for all questions with today's date
   const q = query(
     collection(db, 'dailyQuizzes'),
-    where('date', '==', today),
+    where('date', '==', dateString),
     where('category', '==', category)
   );
 
   const snapshot = await getDocs(q);
   
   if (snapshot.empty) {
+    console.log('No daily quiz found for category:', category, 'date:', dateString); // Debug log
     return [];
   }
+
+  console.log('Found', snapshot.docs.length, 'daily quiz questions for', category); // Debug log
 
   return snapshot.docs.map(doc => {
     const data = doc.data();
@@ -186,6 +200,8 @@ export async function getTodaysHistoryQuestions(count: number, userDate?: Date):
   const targetDate = userDate || new Date();
   const monthDay = `${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
   
+  console.log('Fetching today in history for date:', monthDay); // Debug log
+  
   const q = query(
     collection(db, 'daily_history_trivia'),
     where('date', '==', monthDay),
@@ -195,6 +211,7 @@ export async function getTodaysHistoryQuestions(count: number, userDate?: Date):
   const snapshot = await getDocs(q);
   
   if (snapshot.empty) {
+    console.log('No history questions found for date:', monthDay, '- using general history'); // Debug log
     // Fallback to general history questions if no specific ones exist
     return getCategoryQuestions('history', count);
   }
@@ -216,7 +233,6 @@ export async function getTodaysHistoryQuestions(count: number, userDate?: Date):
     };
   });
 }
-
 
 function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];

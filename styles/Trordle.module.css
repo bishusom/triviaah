@@ -46,7 +46,7 @@
 .trordleFeedbackCorrect {
   background-color: #dcfce7;
   border-color: #16a34a;
-  color: #166534;
+  color: #14532d;
 }
 
 .trordleFeedbackPartial {
@@ -58,7 +58,7 @@
 .trordleFeedbackIncorrect {
   background-color: #f3f4f6;
   border-color: #9ca3af;
-  color: #4b5563;
+  color: #374151;
 }
 
 .trordleAttribute {
@@ -81,6 +81,8 @@
   height: 0.75rem;
   border-radius: 50%;
   background-color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .trordleAttemptDot.used {
@@ -122,20 +124,171 @@
   background-color: #6b7280;
 }
 
-/* Responsive adjustments */
+/* Enhanced feedback styles */
+.trordleFeedbackCard {
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border: 2px solid;
+  transition: all 0.3s ease;
+}
+
+.trordleFeedbackHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.trordleFeedbackContent {
+  flex: 1;
+}
+
+.trordleAttributeName {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.trordleAttributeValue {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.trordleStatusIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.trordleStatusIcon.correct {
+  background: #16a34a;
+  color: white;
+}
+
+.trordleStatusIcon.partial {
+  background: #d97706;
+  color: white;
+}
+
+.trordleStatusIcon.incorrect {
+  background: #6b7280;
+  color: white;
+}
+
+.trordleHintText {
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 0.375rem;
+}
+
+.trordleHintCorrect {
+  color: #374151;
+  font-style: italic;
+}
+
+/* Progress hint styles */
+.progressHintContainer {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-width: 1px;
+}
+
+.progressHintSuccess {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  border-color: #16a34a;
+  color: #14532d;
+}
+
+.progressHintWarning {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-color: #d97706;
+  color: #92400e;
+}
+
+.progressHintInfo {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  border-color: #3b82f6;
+  color: #1e40af;
+}
+
+.progressHintFocus {
+  background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+  border-color: #7c3aed;
+  color: #5b21b6;
+}
+
+.progressHintCritical {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border-color: #dc2626;
+  color: #991b1b;
+}
+
+.progressHintContent {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.progressHintIcon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.progressHintText {
+  font-weight: 600;
+}
+
+.progressBar {
+  display: flex;
+  gap: 0.125rem;
+  margin-top: 0.5rem;
+}
+
+.progressSegment {
+  height: 0.25rem;
+  flex: 1;
+  border-radius: 0.125rem;
+}
+
+.progressCorrect {
+  background: #16a34a;
+}
+
+.progressPartial {
+  background: #d97706;
+}
+
+.progressIncorrect {
+  background: #9ca3af;
+}
+
+/* Mobile optimizations - 3x2 grid */
 @media (max-width: 640px) {
   .trordleContainer {
     padding: 0.5rem;
   }
   
   .trordleGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
   }
   
   .trordleOption {
-    min-height: 3.5rem;
-    font-size: 1rem;
+    min-height: 3rem;
+    font-size: 0.9rem;
+    padding: 0.75rem 0.5rem;
+    line-height: 1.2;
   }
   
   .trordleShareGrid {
@@ -149,4 +302,413 @@
     height: 2rem;
     font-size: 0.875rem;
   }
+}
+
+/* For very small screens, adjust to 2x3 grid */
+@media (max-width: 380px) {
+  .trordleGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .trordleOption {
+    min-height: 2.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Enhanced feedback styles */
+.trordleFeedbackContainer {
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+  border-width: 2px;
+}
+
+.trordleHintBox {
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+}
+
+/* Sticky options for mobile */
+.stickyOptions {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  padding: 1rem;
+  margin: 0 -1.5rem -1.5rem;
+}
+
+@media (max-width: 640px) {
+  .stickyOptions {
+    margin: 0 -0.5rem -0.5rem;
+    padding: 0.75rem;
+  }
+  
+  /* Mobile-specific feedback optimizations */
+  .trordleFeedbackCard {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .trordleStatusIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.75rem;
+  }
+  
+  .trordleHintText {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Modal styles */
+.trordleModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.trordleModal {
+  background: white;
+  border-radius: 1rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: trordleModalSlideIn 0.3s ease-out;
+  position: relative;
+}
+
+@keyframes trordleModalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.trordleModalClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.trordleModalClose:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.trordleModalHeader {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+  position: relative;
+}
+
+.trordleModalTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.trordleModalSubtitle {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.trordleModalBody {
+  padding: 1.5rem;
+}
+
+.trordleModalFooter {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.trordleModalButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.trordleModalButton.continue {
+  background: #3b82f6;
+  color: white;
+}
+
+.trordleModalButton.continue:hover {
+  background: #2563eb;
+}
+
+.trordleModalButton.viewHistory {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.trordleModalButton.viewHistory:hover {
+  background: #e5e7eb;
+}
+
+/* Timer styles */
+.trordleTimerDisplay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.timerCircle {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: #3b82f6;
+}
+
+.timerLabel {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.trordleAutoCloseProgress {
+  height: 3px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  margin: 0.5rem 0;
+  overflow: hidden;
+}
+
+.trordleAutoCloseProgressBar {
+  height: 100%;
+  background: #3b82f6;
+  width: 100%;
+  animation: trordleProgress 5s linear forwards;
+}
+
+@keyframes trordleProgress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* Timer indicator */
+.trordleTimerIndicator {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+  animation: trordlePulse 2s infinite;
+}
+
+@keyframes trordlePulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Question and image layout */
+.questionImageContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.questionImage {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.questionText {
+  flex: 1;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Mobile modal adjustments */
+@media (max-width: 640px) {
+  .trordleModalOverlay {
+    padding: 0.5rem;
+  }
+  
+  .trordleModal {
+    max-height: 90vh;
+    border-radius: 0.75rem;
+  }
+  
+  .trordleModalHeader,
+  .trordleModalBody,
+  .trordleModalFooter {
+    padding: 1rem;
+  }
+  
+  .trordleModalTitle {
+    font-size: 1.25rem;
+  }
+  
+  .trordleModalClose {
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 1.25rem;
+  }
+  
+  .questionImageContainer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .questionImage {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* ✅ Show/Hide guesses styles */
+.trordleGuessesContainer {
+  background: white;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.trordleGuessesHeader {
+  background: #f9fafb;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trordleGuessesTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.trordleGuessesToggle {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.trordleGuessesToggle:hover {
+  background: #eff6ff;
+}
+
+.trordleGuessesContent {
+  padding: 1rem;
+}
+
+.trordleGuessItem {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+
+.trordleGuessHeader {
+  background: #f9fafb;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trordleGuessText {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.trordleGuessStatus {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.trordleGuessAttributes {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+}
+
+/* ✅ Hide remaining answers styles */
+.trordleHiddenAnswers {
+  background: #f3f4f6;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.trordleShowAnswersButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.trordleShowAnswersButton:hover {
+  background: #2563eb;
 }

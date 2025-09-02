@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { FaFacebook, FaWhatsapp, FaMedal, FaTrophy, FaCopy } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
+import { useUser } from '@/context/UserContext';
 
 type QuizResult = {
   score: number;
@@ -70,6 +71,7 @@ export default function QuizSummary({
   const [isLoading, setIsLoading] = useState(true);
   const [shareImageUrl, setShareImageUrl] = useState('');
   const shareCardRef = useRef<HTMLDivElement>(null);
+  const { user, login } = useUser();
 
   const formatCategory = (category: string) => {
     return category
@@ -143,6 +145,13 @@ export default function QuizSummary({
     }
   };
 
+  // Pre-fill the name if user exists
+  useEffect(() => {
+    if (user?.name && !user.isGuest) {
+      setPlayerName(user.name);
+    }
+  }, [user]);
+
   useEffect(() => {
     generateShareImage(result);
   }, [result]);
@@ -151,6 +160,15 @@ export default function QuizSummary({
     if (!playerName.trim()) return;
 
     try {
+      // Update user context with the new name
+      if (user) {
+        login({
+          ...user,
+          name: playerName.trim(),
+          isGuest: false
+        });
+      }
+
       const response = await fetch('/api/highscores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -315,22 +333,29 @@ export default function QuizSummary({
             </div>
             {!isSubmitted && (
               <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold mb-4 border-b pb-2">Save your score</h3>
+                <h3 className="text-xl font-semibold mb-4 border-b pb-2">
+                  {user?.isGuest ? 'Save your score' : 'Update your score'}
+                </h3>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     value={playerName}
                     onChange={(e) => setPlayerName(e.target.value)}
-                    placeholder="Your name"
+                    placeholder={user?.isGuest ? "Your name" : "Your name"}
                     className="px-4 py-2 border rounded-lg flex-grow"
                   />
                   <button
                     onClick={saveScore}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg whitespace-nowrap"
                   >
-                    Save
+                    {user?.isGuest ? 'Save' : 'Update'}
                   </button>
                 </div>
+                {user?.isGuest && (
+                  <p className="text-sm text-gray-600 mt-2">
+                    Save to track your progress and compete on leaderboards!
+                  </p>
+                )}
               </div>
             )}
           </div>

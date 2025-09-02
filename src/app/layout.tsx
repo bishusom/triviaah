@@ -3,6 +3,8 @@ import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
 import { SoundProvider } from './context/SoundContext';
+import { UserProvider } from '@/context/UserContext';
+import WelcomeBanner from '@/components/WelcomeBanner'; 
 import { Metadata } from 'next';
 import '@styles/globals.css';
 
@@ -51,17 +53,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://googleads.g.doubleclick.net" />  
       </head>
       <body className={`${geist.variable} font-[Geist,Geist-fallback]`}>
-        <SoundProvider>
-          <Breadcrumbs />
-          {children}
-          <SeoBreadcrumbs />
-          <GoogleAnalytics gaId="G-K4KZ7XR85V" />
-          <Script
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-            strategy="lazyOnload"
-            crossOrigin="anonymous"
-          />
-        </SoundProvider>
+        <UserProvider> {/* Wrap your app with the provider */}
+          <WelcomeBanner />
+          <SoundProvider>
+            <Breadcrumbs />
+            {children}
+            <SeoBreadcrumbs />
+            <GoogleAnalytics gaId="G-K4KZ7XR85V" />
+            <Script
+              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+              strategy="lazyOnload"
+              crossOrigin="anonymous"
+            />
+          </SoundProvider>
+        </UserProvider>
       </body>
     </html>
   );

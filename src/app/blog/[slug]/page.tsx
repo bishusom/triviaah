@@ -1,5 +1,6 @@
 import { getPostData } from '@/lib/markdown';
 import styles from '@/../styles/Blog.module.css';
+import Image from 'next/image';
 
 // Define the type for params
 interface Params {
@@ -40,8 +41,8 @@ export async function generateMetadata({ params }: PostPageProps): Promise<{
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-  const { slug } = await params; // Await the params Promise
-  const post: PostContent = await getPostData(slug);
+  const { slug } = await params;
+  const post = await getPostData(slug);
 
   return (
     <div className={styles.postContainer}>
@@ -49,6 +50,21 @@ export default async function PostPage({ params }: PostPageProps) {
         <h1 className={styles.postTitle}>{post.title}</h1>
         <time className={styles.postDate} dateTime={post.isoDate}>{post.date}</time>
       </header>
+      
+      {/* Image will now work with proper absolute URL */}
+      {post.image && post.image !== '/default-image.jpg' && (
+        <div className={styles.postImageContainer}>
+          <Image
+            src={post.image}
+            alt={post.title}
+            width={800}
+            height={400}
+            className={styles.postImage}
+            priority
+          />
+        </div>
+      )}
+      
       <div 
         className={styles.postContent}
         dangerouslySetInnerHTML={{ __html: post.contentHtml }} 

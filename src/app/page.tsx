@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
-//import { FaCheckCircle } from 'react-icons/fa';
 import { MdInfo, MdEmail } from 'react-icons/md';
 import { AdBanner, AdSquare } from '@/components/Ads';
 import ScrollButtons from '@/components/ScrollButtons';
 import DailyQuizClient from '@/components/daily/DailyQuizClient';
+import HeroSectionClient from '@/components/Hero/HeroSectionClient'
+import StreakBadge from '@/components/StreakBadge';
 
 export const metadata = {
   title: 'Free Daily Quiz with Answers | Online Trivia Games & Challenges | Triviaah',
@@ -130,6 +131,9 @@ export default function Home() {
       </header>
       <AdBanner position="header" />
 
+      {/* Add the HeroSection here */}
+      <HeroSectionClient />
+
       <main className="container mx-auto px-4 py-6 flex-grow">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">
@@ -139,6 +143,8 @@ export default function Home() {
             New free online trivia games with answers every 24 hours. Test your knowledge and learn instantly!
           </p>
         </div>
+
+        <StreakBadge />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {DAILY_QUIZZES.map((quiz, idx) => (

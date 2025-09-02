@@ -15,6 +15,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'pixabay.com',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.ctfassets.net',
+        port: '',
+        pathname: '/**',
       }
     ],
     formats: ['image/avif', 'image/webp'],
