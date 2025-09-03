@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
 import { FaFacebook, FaWhatsapp, FaMedal, FaTrophy, FaCopy } from 'react-icons/fa';
+import { FaSmile, FaMeh, FaFrown, FaGrinStars, FaAngry } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { useUser } from '@/context/UserContext';
 
@@ -34,7 +35,7 @@ const MESSAGES = {
     '🚀 Knowledge Rocket! You are just one launch away from trivia greatness!',
   ],
   bronze: [
-    '👍 Solid Effort! Your next attempt could be your breakthrough!',
+    '👏 Solid Effort! Your next attempt could be your breakthrough!',
     '📚 Bookworm Rising! Every replay makes you wiser - try again!',
   ],
   zero: [
@@ -49,16 +50,18 @@ const MESSAGES = {
 export default function QuizSummary({
   result,
   onRestart,
+  scoreAlreadySaved = false
 }: {
   result: QuizResult;
   onRestart: () => void;
+  scoreAlreadySaved?: boolean;
 }) {
   const [highScores, setHighScores] = useState<HighScore[]>([]);
   const [globalHigh, setGlobalHigh] = useState<HighScore | null>(null);
   const [playerName, setPlayerName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const { user, login } = useUser();
+  const { user } = useUser();
 
   /* ---------- helpers ---------- */
   const formatCategory = (s: string) =>
@@ -69,46 +72,94 @@ export default function QuizSummary({
     return `${m}:${sec.toString().padStart(2, '0')}`;
   };
 
+  /* ------- feedback ------------ */
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+
+    const handleFeedback = async (rating: number) => {
+      try {
+        await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            rating,
+            category: result.category,
+            score: result.score,
+            correctCount: result.correctCount,
+            totalQuestions: result.totalQuestions
+          }),
+        });
+        setFeedbackSubmitted(true);
+      } catch (error) {
+        console.error('Failed to submit feedback:', error);
+      }
+    };
+
   /* ---------- fetch leaderboard ---------- */
   const fetchHighScores = async () => {
     setIsLoading(true);
-    const res = await fetch(`/api/highscores?category=${result.category}`);
-    const data = await res.json();
-    setHighScores(data.localHighScores || []);
-    setGlobalHigh(data.globalHigh || null);
-    setIsLoading(false);
+    try {
+      console.log('Fetching high scores for category:', result.category);
+      const res = await fetch(`/api/highscores?category=${result.category}`);
+      console.log('Response status:', res.status);
+      
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      
+      const data = await res.json();
+      console.log('API Response:', data);
+      
+      // Handle the response structure
+      if (data.localHighScores && Array.isArray(data.localHighScores)) {
+        setHighScores(data.localHighScores);
+        setGlobalHigh(data.globalHigh || null);
+      } else if (Array.isArray(data)) {
+        // Fallback for direct array response
+        setHighScores(data);
+      } else {
+        console.warn('Unexpected response structure:', data);
+        setHighScores([]);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      setHighScores([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   useEffect(() => {
     fetchHighScores();
   }, [result.category]);
 
-  /* ---------- core save ---------- */
+  /* ---------- core save (only for manual saves now) ---------- */
   const saveScoreCore = async (name: string) => {
-    if (saving) return;
+    if (saving || scoreAlreadySaved) return;
     setSaving(true);
-    await fetch('/api/highscores', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name,
-        score: result.score,
-        category: result.category,
-        difficulty: 'mixed',
-      }),
-    });
-    await fetchHighScores();
-    if (user?.isGuest && name !== 'Guest') {
-      login({ ...user, name, isGuest: false });
-    }
-    setSaving(false);
-  };
+    
+    try {
+      const response = await fetch('/api/highscores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          score: result.score,
+          category: result.category,
+          difficulty: 'mixed',
+        }),
+      });
 
-  /* ---------- auto-save on load ---------- */
-  useEffect(() => {
-    if (!user) return;
-    const nameToSave = !user.isGuest && user.name ? user.name : 'Guest';
-    saveScoreCore(nameToSave);
-  }, [user]);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      await fetchHighScores(); // Refresh leaderboard
+    } catch (error) {
+      console.error('Failed to save score:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   /* ---------- performance message ---------- */
   const ratio = result.correctCount / result.totalQuestions;
@@ -123,28 +174,38 @@ export default function QuizSummary({
 
     switch (platform) {
       case 'facebook':
-        if (window.FB) {
-          window.FB.ui({
-            method: 'share',
-            href: shareUrl,
-            quote: shareText
-          }, (response) => {
-            if (response && !response.error_message) {
-              console.log('Shared successfully:', response);
-            } else {
-              console.error('Share failed:', response?.error_message);
-              // Fallback to sharer.php
-              window.open(
-                `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}`,
-                '_blank'
-              );
-            }
-          });
+        // Check if FB SDK is loaded and properly initialized
+        if (typeof window !== 'undefined' && window.FB && window.FB.ui) {
+          try {
+            window.FB.ui({
+              method: 'share',
+              href: shareUrl,
+              quote: shareText
+            }, (response: { error_message?: string } | undefined) => {
+              if (response && !response.error_message) {
+                console.log('Shared successfully:', response);
+              } else {
+                console.error('Share failed:', response && 'error_message' in response ? response.error_message : 'Unknown error');
+                // Fallback to direct link
+                window.open(
+                  `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+                  '_blank'
+                );
+              }
+            });
+          } catch (error) {
+            console.error('Facebook share error:', error);
+            // Fallback to direct link
+            window.open(
+              `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+              '_blank'
+            );
+          }
         } else {
-          console.error('Facebook SDK not loaded');
-          // Fallback to sharer.php
+          console.log('Facebook SDK not available, using fallback');
+          // Direct fallback without app_id to avoid errors
           window.open(
-            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}&app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}`,
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
             '_blank'
           );
         }
@@ -162,14 +223,14 @@ export default function QuizSummary({
         );
         break;
       case 'copy':
-      try {
-        await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-        alert('Copied to clipboard!');
-      } catch (err) {
-        console.error('Failed to copy: ', err);
-        alert('Failed to copy to clipboard');
-      }
-      break;  
+        try {
+          await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+          alert('Copied to clipboard!');
+        } catch (err) {
+          console.error('Failed to copy: ', err);
+          alert('Failed to copy to clipboard');
+        }
+        break;  
     }
   };
 
@@ -214,19 +275,23 @@ export default function QuizSummary({
             <div className="bg-gray-50 p-6 rounded-lg">
               <h3 className="text-xl font-semibold mb-4 border-b pb-2">High Scores</h3>
               {isLoading ? (
-                <div className="text-center">Loading…</div>
+                <div className="text-center">Loading...</div>
+              ) : highScores.length === 0 ? (
+                <div className="text-center text-gray-500">No scores yet for this category</div>
               ) : (
-                highScores.slice(0, 5).map((s, i) => (
-                  <div key={i} className="flex justify-between items-center">
-                    <div className="flex items-center">{medalIcon(i)}{s.name}</div>
-                    <span>{s.score}</span>
-                  </div>
-                ))
+                <div className="space-y-2">
+                  {highScores.slice(0, 5).map((s, i) => (
+                    <div key={s.id || i} className="flex justify-between items-center">
+                      <div className="flex items-center">{medalIcon(i)}{s.name}</div>
+                      <span>{s.score}</span>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
 
-            {/* only show input to real guests */}
-            {user?.isGuest && (
+            {/* Only show manual save input if score hasn't been saved yet and user is guest */}
+            {!scoreAlreadySaved && user?.isGuest && (
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h3 className="text-xl font-semibold mb-4 border-b pb-2">Save your score</h3>
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -242,9 +307,18 @@ export default function QuizSummary({
                     disabled={saving || !playerName.trim()}
                     className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg"
                   >
-                    {saving ? 'Saving…' : 'Save'}
+                    {saving ? 'Saving...' : 'Save'}
                   </button>
                 </div>
+              </div>
+            )}
+
+            {/* Show confirmation if score was already saved */}
+            {scoreAlreadySaved && (
+              <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+                <p className="text-green-800 text-center">
+                  ✅ Score saved successfully!
+                </p>
               </div>
             )}
           </div>
@@ -276,6 +350,42 @@ export default function QuizSummary({
             </button>
           </div>
         </div>
+
+        {feedbackSubmitted ? (
+          <div className="mb-8 text-center">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="text-green-800 font-semibold">Thank you for your feedback! 💫</p>
+              <p className="text-green-800">For detailed feedback, use <a href="/contact" className="underline">our contact form</a>.</p>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-8 text-center">
+              <h3 className="text-xl font-semibold mb-4">How was your quiz experience?</h3>
+              <p className="text-gray-600 mb-4 text-sm">Your feedback helps us improve!</p>
+              <div className="flex justify-center gap-4">
+                {[
+                  { icon: FaGrinStars, label: 'Excellent', value: 5 },
+                  { icon: FaSmile, label: 'Good', value: 4 },
+                  { icon: FaMeh, label: 'Average', value: 3 },
+                  { icon: FaFrown, label: 'Poor', value: 2 },
+                  { icon: FaAngry, label: 'Bad', value: 1 }
+                ].map(({ icon: Icon, label, value }) => (
+                  <button
+                    key={value}
+                    onClick={() => handleFeedback(value)}
+                    className="flex flex-col items-center p-3 rounded-lg bg-gray-50 hover:bg-blue-50 transition-colors group"
+                    aria-label={label}
+                  >
+                    <Icon 
+                      size={28} 
+                      className="text-gray-500 group-hover:text-blue-600 transition-colors" 
+                    />
+                    <span className="text-xs text-gray-600 mt-1">{label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+        )}  
 
         <div className="flex justify-center">
           <Link

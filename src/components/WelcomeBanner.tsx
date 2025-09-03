@@ -10,6 +10,7 @@ export default function WelcomeBanner() {
   const [isVisible, setIsVisible] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
 
+  // Make getWelcomeMessage optional with safe access
   const welcomeMessage = getWelcomeMessage?.();
   const streak = user?.streak || 0;
 

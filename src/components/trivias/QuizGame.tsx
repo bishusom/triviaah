@@ -1,24 +1,18 @@
 // components/trivias/QuizGame.tsx
 'use client';
 import Image from 'next/image';
-import { format } from 'date-fns';
-import { event } from '@/lib/gtag';
-import { fetchPixabayImage } from '@/lib/pixabay';
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { type Question } from '@/lib/firebase';
 import QuizSummary from './QuizSummary';
 import { useSound } from '@/app/context/SoundContext';
-import { MdCategory, MdSubject, MdStar } from 'react-icons/md';
 import CountUp from 'react-countup';
 import { extractKeywords } from '@/lib/nlpKeywords';
 import { useGuestSession } from '@/hooks/useGuestSession';
+import { useUser } from '@/context/UserContext';
 import SignupModal from '@/components/SignupModal';
+import Confetti from 'react-confetti';
+import useWindowSize from 'react-use/lib/useWindowSize';
 
 interface QuizConfig {
   isQuickfire?: boolean;
@@ -35,39 +29,34 @@ export default function QuizGame({
   category: string;
   quizConfig?: QuizConfig;
 }) {
-  /* -------------------- Config -------------------- */
+  /* ---------- Config ---------- */
   const isQuickfire = quizConfig?.isQuickfire || category === 'quick-fire';
-  const quickfireTimePerQuestion =
-    quizConfig?.timePerQuestion ?? (isQuickfire ? 4 : 30);
+  const timePerQuestion = isQuickfire ? 15 : 30; // 15s for quick-fire, 30s for regular
   const hasBonusQuestion = quizConfig?.hasBonusQuestion ?? false;
 
-  /* -------------------- Questions -------------------- */
+  const { user, login } = useUser();
+  /* ---------- Data slicing ---------- */
   const [regularQuestions, setRegularQuestions] = useState<Question[]>([]);
   const [bonusQuestion, setBonusQuestion] = useState<Question | null>(null);
   const [showBonusQuestion, setShowBonusQuestion] = useState(false);
 
   useEffect(() => {
-    if (isQuickfire && hasBonusQuestion && initialQuestions.length > 0) {
-      // Last question is the bonus question
-      setRegularQuestions(initialQuestions.slice(0, initialQuestions.length - 1));
+    if (isQuickfire && hasBonusQuestion && initialQuestions.length) {
+      setRegularQuestions(initialQuestions.slice(0, -1));
       setBonusQuestion(initialQuestions[initialQuestions.length - 1]);
     } else {
       setRegularQuestions(initialQuestions);
-      setBonusQuestion(null);
     }
   }, [initialQuestions, isQuickfire, hasBonusQuestion]);
 
-  // Use regularQuestions for the main quiz, or bonus question when showing it
   const questions = showBonusQuestion && bonusQuestion ? [bonusQuestion] : regularQuestions;
 
-  /* -------------------- Game State -------------------- */
+  /* ---------- Game state ---------- */
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
-  const [timeLeft, setTimeLeft] = useState<number | null>(
-    isQuickfire ? quickfireTimePerQuestion : 30
-  );
+  const [timeLeft, setTimeLeft] = useState<number>(timePerQuestion);
   const [showSummary, setShowSummary] = useState(false);
   const [titbit, setTitbit] = useState('');
   const [timeUsed, setTimeUsed] = useState(0);
@@ -76,43 +65,74 @@ export default function QuizGame({
   const [questionImage, setQuestionImage] = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [imageLoadingFailed, setImageLoadingFailed] = useState(false);
-  const [isFirstQuestion, setIsFirstQuestion] = useState(true); // Track first question
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [scoreAlreadySaved, setScoreAlreadySaved] = useState(false);
+  const [timeUp, setTimeUp] = useState(false);
 
-  /* -------------------- Current Question -------------------- */
-  const currentQuestion = questions[currentIndex];
-  const isTimedMode = true;
+  const [imgKey, setImgKey] = useState(0);
 
-  /* -------------------- Sound Refs -------------------- */
+  /* ---------- Hooks ---------- */
+  const { isMuted } = useSound();
+  const { startNewGame, completeGame, isGuest } = useGuestSession();
+  const { width, height } = useWindowSize();
+
+  useEffect(() => { startNewGame(); }, [startNewGame]);
+
+  /* ---------- Handle game completion ---------- */
+  useEffect(() => {
+    if (showSummary) {
+      if (isGuest() && !scoreAlreadySaved) {
+        setShowSignupModal(true);
+      } else if (!isGuest()) {
+        saveScore(user?.name || 'User');
+      }
+    }
+  }, [showSummary, isGuest, scoreAlreadySaved, user]);
+
+  /* ---------- Save score function ---------- */
+  const saveScore = async (playerName: string) => {
+    if (scoreAlreadySaved) return;
+    
+    try {
+      await fetch('/api/highscores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          name: playerName, 
+          score, 
+          category 
+        }),
+      });
+      setScoreAlreadySaved(true);
+    } catch (error) {
+      console.error('Failed to save score:', error);
+    }
+  };
+
+  /* ---------- Handle signup modal actions ---------- */
+  const handleGuestSave = async (guestName: string) => {
+    await saveScore(guestName);
+    setShowSignupModal(false);
+    
+    if (user?.isGuest) {
+      login({ ...user, name: guestName, isGuest: false });
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowSignupModal(false);
+  };
+
+  /* ---------- Sound refs ---------- */
   const correctSound = useRef<HTMLAudioElement | null>(null);
   const incorrectSound = useRef<HTMLAudioElement | null>(null);
   const timeUpSound = useRef<HTMLAudioElement | null>(null);
   const tickSound = useRef<HTMLAudioElement | null>(null);
-  const { isMuted } = useSound();
 
-  /* -------------------- Guest / Modal -------------------- */
-  const [showSignupModal, setShowSignupModal] = useState(false);
-  const { startNewGame, completeGame, isGuest } = useGuestSession();
-
-  /* -------------------- Initialisation -------------------- */
-  useEffect(() => {
-    startNewGame();
-  }, [startNewGame]);
-
-  useEffect(() => {
-    const checkGtag = setInterval(() => {
-      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        event({
-          action: 'quiz_started',
-          category,
-          label: category,
-          quiz_category: category.replace(/-/g, ' '),
-          difficulty: initialQuestions[0]?.difficulty ?? 'unknown',
-        });
-        clearInterval(checkGtag);
-      }
-    }, 100);
-    return () => clearInterval(checkGtag);
-  }, [category, initialQuestions]);
+  /* ---------- Helpers ---------- */
+  const currentQuestion = questions[currentIndex];
+  const isTimedMode = true;
 
   useEffect(() => {
     correctSound.current = new Audio('/sounds/correct.mp3');
@@ -120,613 +140,380 @@ export default function QuizGame({
     timeUpSound.current = new Audio('/sounds/timeout.mp3');
     tickSound.current = new Audio('/sounds/tick.mp3');
     tickSound.current.loop = true;
-
     return () => {
-      correctSound.current?.pause();
-      incorrectSound.current?.pause();
-      timeUpSound.current?.pause();
-      tickSound.current?.pause();
+      [correctSound, incorrectSound, timeUpSound, tickSound].forEach(s => s.current?.pause());
     };
   }, []);
 
-  /* -------------------- Shuffle Options -------------------- */
-  // Create a stable reference to current question options to prevent infinite loops
-  const currentQuestionId = currentQuestion?.id || `${currentIndex}-${showBonusQuestion}`;
-  
-  useEffect(() => {
-    if (currentQuestion?.options) {
-      // Shuffle options only once per question change
-      const shuffleArray = (array: string[]) => {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
+  const playSound = useCallback(
+    (type: 'correct' | 'incorrect' | 'timeUp' | 'tick') => {
+      if (isMuted) return;
+      const map = {
+        correct: correctSound,
+        incorrect: incorrectSound,
+        timeUp: timeUpSound,
+        tick: tickSound,
       };
-      setShuffledOptions(shuffleArray(currentQuestion.options));
-    }
-  }, [currentQuestionId, currentQuestion?.options]); // Use stable ID instead of questions array
+      map[type].current?.play();
+    },
+    [isMuted]
+  );
 
-  /* -------------------- Image Loading -------------------- */
+  /* ---------- Shuffle options ---------- */
+  useEffect(() => {
+    if (!currentQuestion?.options) return;
+    const arr = [...currentQuestion.options];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    setShuffledOptions(arr);
+  }, [currentQuestion?.id]);
+
+  /* ---------- Image ---------- */
   useEffect(() => {
     if (!currentQuestion) return;
-    
-    if (isFirstQuestion) {
-      setIsLoading(true);
-    }
-    
-    const loadingTimeout = setTimeout(() => {
-      setIsLoading(false);
-      if (isFirstQuestion) setIsFirstQuestion(false);
-    }, 1500);
-
     const fetchImage = async () => {
+      setQuestionImage(null);
+      setImageLoadingFailed(false);
       try {
-        setQuestionImage(null);
-        setImageLoadingFailed(false);
-        
-        const keywords = extractKeywords(currentQuestion.question);
-        const cat = currentQuestion.category?.toLowerCase().replace(/-/g, ' ');
-        
-        const imageFetchPromise = (async () => {
-          if (cat && keywords.length) {
-            const img = await fetchPixabayImage(keywords[0], cat);
-            if (img) return img;
-          }
-          if (cat) {
-            const img = await fetchPixabayImage('', cat);
-            if (img) return img;
-          }
-          for (const kw of keywords) {
-            const img = await fetchPixabayImage(kw);
-            if (img) return img;
-          }
-          return null;
-        })();
-
-        const timeoutPromise = new Promise<null>((resolve) => 
-          setTimeout(() => resolve(null), 1000)
-        );
-
-        const image = await Promise.race([imageFetchPromise, timeoutPromise]);
-        
-        if (image) {
-          setQuestionImage(image);
-        } else {
-          setImageLoadingFailed(true);
-        }
-      } catch (error) {
-        console.error('Error fetching image:', error);
+        const { fetchPixabayImage } = await import('@/lib/pixabay');
+        const img = await fetchPixabayImage(extractKeywords(currentQuestion.question)[0] || '', category);
+        setQuestionImage(img || null);
+      } catch {
         setImageLoadingFailed(true);
       } finally {
-        if (isFirstQuestion) {
-          setIsLoading(false);
-          setIsFirstQuestion(false);
-        }
-        clearTimeout(loadingTimeout);
+        setIsLoading(false);
       }
     };
-
     fetchImage();
+  }, [currentQuestion?.id]);
 
-    return () => clearTimeout(loadingTimeout);
-  }, [currentQuestion, isFirstQuestion]);
+  useEffect(() => {
+    setImgKey(prev => prev + 1);
+  }, [currentQuestion?.id]);
 
-  /* -------------------- Helpers -------------------- */
-  const playSound = useCallback(
-    (sound: 'correct' | 'incorrect' | 'timeUp' | 'tick') => {
-      if (isMuted || showSummary) return; // Prevent sound when summary is shown
-      try {
-        switch (sound) {
-          case 'correct':
-            tickSound.current?.pause();
-            correctSound.current?.play();
-            break;
-          case 'incorrect':
-            tickSound.current?.pause();
-            incorrectSound.current?.play();
-            break;
-          case 'timeUp':
-            tickSound.current?.pause();
-            timeUpSound.current?.play();
-            break;
-          case 'tick':
-            tickSound.current?.play();
-            break;
+  /* ---------- Timer ---------- */
+  useEffect(() => {
+    if (timeLeft <= 0 || showFeedback || showSummary) return;
+    
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          // Time's up!
+          clearInterval(timer);
+          handleTimeUp();
+          return 0;
         }
-      } catch (error) {
-        console.error('Error playing sound:', error);
-      }
-    },
-    [isMuted, showSummary]
-  );
-
-  /* -------------------- End-Game -------------------- */
-  const handleGameComplete = useCallback(
-    (finalScore: number, finalCorrectCount: number, finalTimeUsed: number) => {
-      completeGame(finalScore);
-      if (isGuest()) setShowSignupModal(true);
-      setShowSummary(true);
-      event({
-        action: 'quiz_completed',
-        category,
-        label: category,
-        value: finalScore,
+        return prev - 1;
       });
-    },
-    [completeGame, isGuest, category]
-  );
+      setTimeUsed(u => u + 1);
+      
+      if (timeLeft <= 5) playSound('tick');
+    }, 1000);
 
-  /* -------------------- Answer Logic -------------------- */
+    return () => clearInterval(timer);
+  }, [timeLeft, showFeedback, showSummary, playSound]);
+
+  const handleTimeUp = useCallback(() => {
+    if (showFeedback || showSummary) return;
+    
+    setTimeUp(true);
+    playSound('timeUp');
+    setShowFeedback(true);
+    setTitbit(currentQuestion?.titbits || 'Time\'s up! No points awarded.');
+    
+    // Show correct answer
+    setSelectedOption(null);
+    
+    setTimeout(() => {
+      const finished = currentIndex >= questions.length - 1;
+      if (finished) {
+        completeGame(score);
+        setShowSummary(true);
+      } else {
+        moveToNextQuestion();
+      }
+    }, 2000);
+  }, [currentQuestion, currentIndex, questions.length, score, showFeedback, showSummary, playSound]);
+
+  const moveToNextQuestion = () => {
+    setCurrentIndex(i => i + 1);
+    setTimeLeft(timePerQuestion);
+    setSelectedOption(null);
+    setShowFeedback(false);
+    setTimeUp(false);
+  };
+
+  /* ---------- Answer & next ---------- */
   const handleAnswer = useCallback(
     (option: string) => {
-      if (!currentQuestion || showSummary) return; // Prevent if summary is shown
-      const isCorrect = option === currentQuestion.correct;
-
+      if (showFeedback || showSummary || timeUp) return;
+      
+      const correct = option === currentQuestion.correct;
+      const base = { easy: 100, medium: 200, hard: 300 }[currentQuestion.difficulty || 'easy'] || 100;
+      const earned = isQuickfire
+        ? (showBonusQuestion ? 500 : base + (timeLeft || 0) * 10)
+        : (timeLeft || 0) * 10 + 50;
+      
       setSelectedOption(option);
       setShowFeedback(true);
-      setTitbit(currentQuestion.titbits ?? '');
+      setTitbit(currentQuestion.titbits || '');
 
-      let pointsEarned = 0;
-      if (isCorrect) {
-        if (isQuickfire) {
-          if (showBonusQuestion) {
-            pointsEarned = 500;
-          } else {
-            const base =
-              currentQuestion.difficulty === 'easy'
-                ? 100
-                : currentQuestion.difficulty === 'medium'
-                ? 200
-                : 300;
-            pointsEarned = base + (timeLeft ?? 0) * 10;
-          }
-        } else {
-          pointsEarned = (timeLeft ?? 0) * 10 + 50;
-        }
+      if (correct) {
+        setScore(s => s + earned);
+        setCorrectCount(c => c + 1);
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 2000);
+        playSound('correct');
+      } else {
+        playSound('incorrect');
       }
-
-      const newScore = score + pointsEarned;
-      const newCorrectCount = isCorrect ? correctCount + 1 : correctCount;
-
-      isCorrect ? playSound('correct') : playSound('incorrect');
-
+      
       setTimeout(() => {
-        const shouldShowBonus = hasBonusQuestion && 
-                              !showBonusQuestion && 
-                              currentIndex >= regularQuestions.length - 1;
-
-        if (shouldShowBonus) {
-          setShowBonusQuestion(true);
-          setCurrentIndex(0); // Reset index for bonus
-          setTimeLeft(null); // No time limit for bonus
-        } 
-        else if (currentIndex >= questions.length - 1) {
-          handleGameComplete(newScore, newCorrectCount, timeUsed + 1);
-        } 
-        else {
-          setCurrentIndex((p) => p + 1);
-          setTimeLeft(isQuickfire && !showBonusQuestion ? quickfireTimePerQuestion : 30);
-          setScore(newScore);
-          setCorrectCount(newCorrectCount);
-          setImageLoadingFailed(false);
+        const finished = currentIndex >= questions.length - 1;
+        if (finished) {
+          completeGame(score + (correct ? earned : 0));
+          setShowSummary(true);
+        } else {
+          moveToNextQuestion();
         }
-
-        setSelectedOption(null);
-        setShowFeedback(false);
-        setTitbit('');
-      }, isQuickfire ? 1000 : 3000);
+      }, 1500);
     },
-    [
-      currentQuestion,
-      timeLeft,
-      score,
-      correctCount,
-      playSound,
-      timeUsed,
-      handleGameComplete,
-      isQuickfire,
-      quickfireTimePerQuestion,
-      showBonusQuestion,
-      hasBonusQuestion,
-      currentIndex,
-      regularQuestions.length,
-      questions.length,
-      showSummary,
-    ]
+    [currentQuestion, timeLeft, score, showSummary, playSound, timeUp]
   );
 
-  /* -------------------- Time-Up Logic -------------------- */
-  const handleTimeUp = useCallback(() => {
-    if (showSummary) return; // Prevent if summary is shown
-    playSound('timeUp');
-    setSelectedOption('timeout');
-    setShowFeedback(true);
+  /* ---------- Progress segments ---------- */
+  const progressSegments = Array.from({ length: 10 }, (_, i) => {
+    const segmentIndex = i;
+    const isCurrent = currentIndex === segmentIndex;
+    const isPast = currentIndex > segmentIndex;
+    const isCorrect = isPast && correctCount > segmentIndex;
+    
+    return {
+      index: segmentIndex,
+      isCurrent,
+      isPast,
+      isCorrect,
+      color: isCurrent ? 'bg-blue-500' : 
+             isPast ? (isCorrect ? 'bg-green-500' : 'bg-red-500') : 'bg-gray-300'
+    };
+  });
 
-    setTimeout(() => {
-      const shouldShowBonus = hasBonusQuestion && 
-                            !showBonusQuestion && 
-                            currentIndex >= regularQuestions.length - 1;
-
-      if (shouldShowBonus) {
-        setShowBonusQuestion(true);
-        setCurrentIndex(0); // Reset index for bonus
-        setTimeLeft(null);
-      } 
-      else if (currentIndex >= questions.length - 1) {
-        handleGameComplete(score, correctCount, timeUsed);
-      } 
-      else {
-        setCurrentIndex((p) => p + 1);
-        setTimeLeft(isQuickfire && !showBonusQuestion ? quickfireTimePerQuestion : 30);
-        setImageLoadingFailed(false);
-      }
-
-      setSelectedOption(null);
-      setShowFeedback(false);
-    }, 1500);
-  }, [
-    playSound,
-    handleGameComplete,
-    score,
-    correctCount,
-    timeUsed,
-    isQuickfire,
-    hasBonusQuestion,
-    showBonusQuestion,
-    currentIndex,
-    regularQuestions.length,
-    questions.length,
-    quickfireTimePerQuestion,
-    showSummary,
-  ]);
-
-  /* -------------------- Timer -------------------- */
-  useEffect(() => {
-    if (timeLeft !== null && timeLeft > 0 && !showFeedback && !showSummary && questions.length > 0) {
-      const timer = setTimeout(() => {
-        setTimeLeft((t) => (t !== null ? t - 1 : null));
-        setTimeUsed((u) => u + 1);
-        if ((timeLeft ?? 999) <= 5 && !isMuted) playSound('tick');
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft !== null && (timeLeft ?? 0) === 0 && questions.length > 0) {
-      handleTimeUp();
-    }
-  }, [timeLeft, showFeedback, showSummary, isMuted, playSound, handleTimeUp, questions.length]);
-
-  /* -------------------- Rendering -------------------- */
-  const result = useMemo(
-    () => ({
-      score,
-      correctCount,
-      totalQuestions: regularQuestions.length + (hasBonusQuestion && bonusQuestion ? 1 : 0),
-      timeUsed,
-      category,
-      isTimedMode,
-    }),
-    [score, correctCount, regularQuestions.length, timeUsed, category, isTimedMode, hasBonusQuestion, bonusQuestion]
-  );
-
-  if (showSummary)
+  /* ---------- Summary ---------- */
+  if (showSummary) {
     return (
       <>
+        {showConfetti && (
+          <Confetti
+            width={width}
+            height={height}
+            recycle={false}
+            numberOfPieces={120}
+            gravity={0.1}
+            initialVelocityY={-15}
+            initialVelocityX={{ min: -10, max: 10 }}
+          />
+        )}
         <QuizSummary
-          result={result}
-          onRestart={() => {
-            startNewGame();
-            setCurrentIndex(0);
-            setScore(0);
-            setCorrectCount(0);
-            setTimeLeft(isQuickfire ? quickfireTimePerQuestion : 30);
-            setShowSummary(false);
-            setTimeUsed(0);
-            setIsLoading(true);
-            setIsFirstQuestion(true);
-            setShowBonusQuestion(false);
-            setShowSignupModal(false);
-            setImageLoadingFailed(false);
+          result={{
+            score,
+            correctCount,
+            totalQuestions: questions.length,
+            timeUsed,
+            category,
+            isTimedMode,
           }}
+          onRestart={() => window.location.reload()}
+          scoreAlreadySaved={scoreAlreadySaved}
         />
         <SignupModal
           isOpen={showSignupModal}
-          onClose={() => setShowSignupModal(false)}
+          onClose={handleModalClose}
+          onGuestSave={handleGuestSave}
           finalScore={score}
           category={category}
         />
       </>
     );
-
-  if (isLoading)
-    return (
-      <div className="relative max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-30 -z-10"></div>
-        <div className="flex flex-col items-center justify-center min-h-[400px]">
-          <div className="relative w-20 h-20 mb-6">
-            <div className="absolute inset-0 rounded-full border-4 border-blue-200"></div>
-            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-600 animate-spin"></div>
-          </div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Loading Question</h2>
-          <p className="text-gray-600 text-center">
-            Getting everything ready for your quiz...
-          </p>
-          <div className="mt-8 flex space-x-2">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="w-3 h-3 bg-blue-600 rounded-full animate-bounce"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              ></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-
-  if (!currentQuestion) {
-    return (
-      <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Question Error</h2>
-          <p className="text-gray-600 mb-6">
-            There was a problem loading this question. Please try again.
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg"
-          >
-            Reload Quiz
-          </button>
-        </div>
-      </div>
-    );
   }
 
-  /* -------------------- UI -------------------- */
+  /* ---------- Loading ---------- */
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <motion.div
+          className="w-16 h-16 border-4 border-blue-600 border-dashed rounded-full"
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+        />
+      </div>
+    );
+
+  /* ---------- Render quiz ---------- */
   return (
-    <div className="relative max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-30 -z-10"></div>
-
-      {isQuickfire && (
-        <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-red-600 to-orange-500 text-white text-center py-2 font-bold">
-          {showBonusQuestion
-            ? '🎯 BONUS QUESTION - NO TIME LIMIT - 500 POINTS!'
-            : `⚡ QUICK-FIRE - ${quickfireTimePerQuestion}s PER QUESTION ⚡`}
+    <div className="relative max-w-3xl mx-auto p-4 md:p-6 bg-white rounded-2xl shadow-2xl overflow-hidden">
+      {showConfetti && <Confetti width={width} height={height} recycle={false} />}
+      
+      {/* Question header */}
+      <div className="flex justify-between items-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-lg border border-gray-200">
+        <div className="flex items-center gap-4">
+          <div className="bg-white px-3 py-1 rounded-full shadow-sm border">
+            <span className="text-sm font-semibold text-gray-700">
+              Q{currentIndex + 1}/{questions.length}
+            </span>
+          </div>
+          <div className="bg-white px-3 py-1 rounded-full shadow-sm border">
+            <span className="text-sm font-semibold text-gray-700 capitalize">
+              {currentQuestion.difficulty || 'easy'}
+            </span>
+          </div>
         </div>
-      )}
-
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2 mb-6 mt-8">
-        <div
-          className="bg-blue-600 h-2 rounded-full transition-all duration-500"
-          style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
-        ></div>
+        
+        <div className="flex items-center gap-4">
+          <div className="bg-white px-3 py-1 rounded-full shadow-sm border">
+            <span className="text-sm font-semibold text-blue-600">
+              ⏱ {timeLeft}s
+            </span>
+          </div>
+          <div className="bg-gradient-to-r from-blue-500 to-purple-500 px-3 py-1 rounded-full shadow-md">
+            <span className="text-sm font-semibold text-white">
+              <CountUp end={score} duration={0.3} />
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* Timer display */}
-      {isQuickfire && !showBonusQuestion && timeLeft !== null && (
-        <div className="mb-4 text-center">
-          <div
-            className={`text-2xl font-bold ${
-              (timeLeft ?? 999) <= 2 ? 'text-red-600 animate-pulse' : 'text-blue-600'
+      {/* Progress segments */}
+      <div className="flex gap-1 mb-6">
+        {Array.from({ length: questions.length }, (_, i) => {
+          const isCurrent = currentIndex === i;
+          const isPast = currentIndex > i;
+          const isCorrect = isPast && correctCount > i;
+          const isBonus = hasBonusQuestion && i === questions.length - 1;
+          
+          return (
+            <div
+              key={i}
+              className={`h-2 flex-1 rounded-full transition-all duration-300 ${
+                isCurrent ? 'bg-blue-500 animate-pulse' : 
+                isPast ? (isCorrect ? 'bg-green-500' : 'bg-red-500') : 'bg-gray-300'
+              } ${isBonus ? 'ring-2 ring-yellow-400 ring-opacity-50' : ''}`}
+              title={isBonus ? 'Bonus Question' : `Question ${i + 1}`}
+            />
+          );
+        })}
+      </div>
+
+      {/* Timer */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-bold text-blue-600">
+            <CountUp end={score} duration={0.3} />
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <motion.div
+            className={`font-mono text-lg font-bold ${
+              timeLeft <= 5 ? 'text-red-600 animate-pulse' : 'text-blue-600'
             }`}
           >
-            {timeLeft}s
-          </div>
-          <div className="text-sm text-gray-500">
-            Time bonus: +{(timeLeft ?? 0) * 10} points
-          </div>
-        </div>
-      )}
-
-      {/* Category / difficulty badges */}
-      <div className="mb-6">
-        <div className="flex justify-between items-start">
-          <div className="flex flex-wrap gap-2 items-center mb-2">
-            {currentQuestion.category === 'today-in-history' && (
-              <div className="text-xs italic text-gray-500 mt-1">
-                {format(new Date(), 'MMMM do')} • {currentQuestion.year}
-              </div>
-            )}
-            <span className="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full flex items-center whitespace-nowrap">
-              <MdCategory className="mr-1" size={12} />
-              {currentQuestion.category.replace(/-/g, ' ')}
-            </span>
-            {currentQuestion.subcategory && (
-              <span className="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full flex items-center whitespace-nowrap">
-                <MdSubject className="mr-1" size={12} />
-                {currentQuestion.subcategory}
-              </span>
-            )}
-            <span
-              className={`text-xs px-2 py-1 rounded-full flex items-center whitespace-nowrap ${(() => {
-                switch (currentQuestion.difficulty?.toLowerCase()) {
-                  case 'easy':
-                    return 'bg-green-100 text-green-800';
-                  case 'medium':
-                    return 'bg-yellow-100 text-yellow-800';
-                  case 'hard':
-                    return 'bg-red-100 text-red-800';
-                  default:
-                    return 'bg-gray-100 text-gray-800';
-                }
-              })()}`}
-            >
-              <MdStar className="mr-1" size={12} />
-              {currentQuestion.difficulty ?? 'Unknown'}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {correctCount > 1 && (
-              <div className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs flex items-center">
-                🔥 {correctCount} streak
-              </div>
-            )}
-            {isTimedMode && !showBonusQuestion && timeLeft !== null && (
-              <div className={`bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs whitespace-nowrap ${
-                timeLeft <= 5 ? 'bg-red-100 text-red-800 animate-pulse' : ''
-              }`}>
-                ⏱️ {timeLeft}s
-                {timeLeft > 20 && (
-                  <div className="text-xs text-green-600 mt-1 absolute">
-                    +{timeLeft * 10} bonus
-                  </div>
-                )}
-              </div>
-            )}
-            <div className="font-bold text-blue-600 text-lg whitespace-nowrap">
-              🏆 <CountUp end={score} duration={0.5} /> pts
-            </div>
-          </div>
-        </div>
-        <div className="text-gray-600 mt-2">
-          Question {currentIndex + 1} of {questions.length}
-          {hasBonusQuestion && !showBonusQuestion && ` (+1 bonus)`}
-          {showBonusQuestion && ` (Bonus Question)`}
+            ⏱ {timeLeft}s
+          </motion.div>
         </div>
       </div>
 
       {/* Question & Image */}
-      <div className="border border-gray-200 rounded-lg p-4 mb-6 bg-white shadow-sm">
-        <div className="flex flex-col md:flex-row gap-4 items-center md:items-start">
-          <div className="w-24 h-24 flex-shrink-0">
-            <div
-              className={`relative aspect-square w-full rounded-md overflow-hidden bg-gray-100 ${
-                questionImage ? '' : 'animate-pulse'
-              }`}
-            >
-              {questionImage ? (
-                <Image
-                  src={questionImage}
-                  alt="Question illustration"
-                  width={96}
-                  height={96}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  loading="lazy"
-                  onError={() => {
-                    setQuestionImage(null);
-                    setImageLoadingFailed(true);
-                  }}
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
-                  {imageLoadingFailed ? 'No image' : 'Loading image…'}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="text-lg md:text-xl font-semibold text-gray-800 break-words">
-              {currentQuestion.question}
-            </h2>
-          </div>
+      <motion.div
+        key={currentQuestion.id}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="flex gap-4 mb-4">
+          {questionImage && (
+            <Image
+              src={questionImage}
+              alt="question"
+              width={96}
+              height={96}
+              className="rounded-lg object-cover flex-shrink-0"
+            />
+          )}
+          <h2 className="text-xl md:text-2xl font-semibold text-gray-800">
+            {currentQuestion.question}
+          </h2>
         </div>
-      </div>
+      </motion.div>
 
       {/* Options */}
-      <div className="space-y-3 mb-6">
-        {shuffledOptions.map((option, i) => {
-          const isCorrect = option === currentQuestion.correct;
-          const isSelected = selectedOption === option;
-          const showAsCorrect = showFeedback && isCorrect;
-
-          return (
-            <button
-              key={i}
-              onClick={() => handleAnswer(option)}
-              disabled={
-                showFeedback ||
-                (isTimedMode && (timeLeft ?? 0) === 0 && !showBonusQuestion)
-              }
-              className={`
-                w-full text-left p-4 rounded-lg border transition-all
-                transform ${!showFeedback ? 'hover:scale-[1.02]' : ''}
-                ${
-                  isSelected
-                    ? 'scale-[1.03] shadow-md border-blue-500 bg-blue-50'
-                    : 'border-gray-200'
-                }
-                ${isSelected && !isCorrect ? 'border-red-500 bg-red-50' : ''}
-                ${showAsCorrect ? 'border-green-500 bg-green-50' : ''}
-                ${
-                  isTimedMode && (timeLeft ?? 0) === 0 && !showBonusQuestion
-                    ? 'opacity-70 cursor-not-allowed'
-                    : ''
-                }
-              `}
-            >
-              <div className="flex justify-between items-center">
-                <span>{option}</span>
-                {isSelected && (
-                  <span
-                    className={`text-lg ${
-                      isCorrect ? 'text-green-500' : 'text-red-500'
-                    }`}
-                  >
-                    {isCorrect ? '✓' : '✗'}
+      <div className="space-y-3">
+        <AnimatePresence>
+          {shuffledOptions.map((opt, idx) => {
+            const correct = opt === currentQuestion.correct;
+            const selected = selectedOption === opt;
+            const showCorrect = showFeedback && correct;
+            const bg = selected
+              ? correct
+                ? 'bg-green-500 text-white'
+                : 'bg-red-500 text-white'
+              : showCorrect
+              ? 'bg-green-200 text-green-900'
+              : timeUp && correct
+              ? 'bg-green-200 text-green-900 border-2 border-green-500'
+              : 'bg-slate-100 hover:bg-slate-200';
+            
+            return (
+              <motion.button
+                key={opt}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ delay: idx * 0.1 }}
+                disabled={showFeedback || timeUp}
+                whileHover={{ scale: showFeedback || timeUp ? 1 : 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => handleAnswer(opt)}
+                className={`w-full text-left p-4 rounded-lg border transition-all ${bg} ${
+                  (showFeedback || timeUp) && correct ? 'ring-2 ring-green-500' : ''
+                }`}
+              >
+                {opt}
+                {selected && (
+                  <span className="ml-2">
+                    {correct ? '✅' : '❌'}
                   </span>
                 )}
-              </div>
-            </button>
-          );
-        })}
+                {timeUp && correct && !selected && (
+                  <span className="ml-2">✅</span>
+                )}
+              </motion.button>
+            );
+          })}
+        </AnimatePresence>
       </div>
 
-      {showFeedback && (
-        <div className="space-y-3">
-          {titbit && (
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 animate-fade-in">
-              <p className="text-yellow-800">{titbit}</p>
-            </div>
-          )}
-          <div className="text-center mt-2 text-sm font-medium">
-            {selectedOption === currentQuestion.correct ? (
-              <span className="text-green-600">
-                {['Nice!', 'Great job!', 'Perfect!', 'Brilliant!'][
-                  currentIndex % 4
-                ]}
-              </span>
-            ) : (
-              <span className="text-red-600">
-                Almost! The correct answer was highlighted.
-              </span>
-            )}
-          </div>
-        </div>
+      {/* Titbit */}
+      {showFeedback && titbit && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          className="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 text-sm text-yellow-800"
+        >
+          {titbit}
+        </motion.div>
       )}
 
-
-      {/* Confetti */}
-      {showFeedback &&
-        selectedOption === currentQuestion.correct &&
-        [...Array(50)].map((_, i) => {
-          const colors = [
-            'bg-yellow-400',
-            'bg-red-400',
-            'bg-blue-400',
-            'bg-green-400',
-            'bg-purple-400',
-            'bg-pink-400',
-          ];
-          const color = colors[Math.floor(Math.random() * colors.length)];
-          const shape = Math.random() > 0.5 ? 'rounded-full' : 'rounded-sm';
-          const size = Math.random() > 0.8 ? 'w-3 h-3' : 'w-2 h-2';
-          return (
-            <div
-              key={i}
-              className={`absolute ${color} ${shape} ${size} animate-confetti pointer-events-none`}
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: '100%',
-                animationDelay: `${i * 0.05}s`,
-                animationDuration: `${1 + Math.random() * 2}s`,
-                transform: `rotate(${Math.random() * 360}deg)`,
-              }}
-            />
-          );
-        })}
+      {/* Time up message */}
+      {timeUp && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="mt-4 bg-red-50 border-l-4 border-red-400 p-3 text-sm text-red-800"
+        >
+          ⏰ Time&apos;s up! No points awarded for this question.
+        </motion.div>
+      )}
     </div>
   );
 }

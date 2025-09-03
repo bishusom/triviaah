@@ -2,117 +2,96 @@
 'use client';
 
 import { useState } from 'react';
-import { useUser } from '@/context/UserContext';
+import { signIn } from 'next-auth/react';
 
 interface SignupModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onGuestSave: (guestName: string) => Promise<void>;
   finalScore: number;
   category: string;
 }
 
-export default function SignupModal({ isOpen, onClose, finalScore, category }: SignupModalProps) {
+export default function SignupModal({ 
+  isOpen, 
+  onClose, 
+  onGuestSave,
+  finalScore, 
+  category 
+}: SignupModalProps) {
   const [username, setUsername] = useState('');
-  const { user, login } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSaveScore = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveGuest = async () => {
+    if (!username.trim() || isLoading) return;
     
-    if (!username.trim()) return;
-
-    // Update the user context with the new name
-    if (user) {
-      login({
-        ...user,
-        name: username.trim(),
-        isGuest: false // Mark as registered (even though it's just a local name)
-      });
-    }
-    
-    // Here you would typically send to your backend API
+    setIsLoading(true);
     try {
-      const response = await fetch('/api/save-score', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: username.trim(),
-          score: finalScore,
-          category: category,
-          userId: user?.id
-        })
-      });
-      
-      if (response.ok) {
-        console.log('Score saved successfully');
-      }
+      await onGuestSave(username.trim());
     } catch (error) {
-      console.error('Failed to save score:', error);
+      console.error('Failed to save guest score:', error);
+    } finally {
+      setIsLoading(false);
     }
-    
-    onClose();
   };
 
-  const handleContinueAsGuest = () => {
-    onClose();
+  const handleGoogleSignIn = () => {
+    signIn('google');
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+      <div className="bg-white p-6 rounded-lg max-w-md w-full">
         <h2 className="text-xl font-bold mb-4">Save Your Amazing Score! 🏆</h2>
-        
-        <div className="bg-blue-50 p-4 rounded-lg mb-4">
-          <p className="text-center text-lg font-semibold">
-            You scored <span className="text-blue-600">{finalScore} points</span>!
-          </p>
-          <p className="text-center text-sm text-gray-600 mt-1">
-            in {category.replace(/-/g, ' ')} trivia
-          </p>
-        </div>
+        <p className="text-gray-600 mb-6">
+          You scored {finalScore} points! Save your score to compete with others.
+        </p>
 
-        <form onSubmit={handleSaveScore} className="mb-4">
-          <label className="block mb-3">
-            <span className="text-sm font-medium text-gray-700 mb-1 block">
-              Choose a cool username:
-            </span>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="TriviaMaster2000"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              maxLength={20}
-            />
-          </label>
-          
-          <div className="flex gap-3">
-            <button
-              type="submit"
-              disabled={!username.trim()}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg flex-1 transition-colors"
-            >
-              Save Score
-            </button>
-            <button
-              type="button"
-              onClick={handleContinueAsGuest}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg flex-1 transition-colors"
-            >
-              Continue as Guest
-            </button>
-          </div>
-        </form>
+        <div className="space-y-3">
+          {/* Google OAuth */}
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
+            className="w-full bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white py-2 rounded-lg transition-colors"
+          >
+            Sign in with Google
+          </button>
 
-        <div className="text-center">
-          <p className="text-sm text-gray-600 mb-3">Save your score to:</p>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="bg-green-50 p-2 rounded">✓ Track progress</div>
-            <div className="bg-yellow-50 p-2 rounded">✓ Compete on leaderboards</div>
-            <div className="bg-purple-50 p-2 rounded">✓ Build your streak</div>
-            <div className="bg-blue-50 p-2 rounded">✓ Unlock achievements</div>
+          {/* Divider */}
+          <div className="flex items-center">
+            <div className="flex-1 border-t border-gray-300"></div>
+            <span className="px-3 text-gray-500 text-sm">or</span>
+            <div className="flex-1 border-t border-gray-300"></div>
           </div>
+
+          {/* Guest name */}
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter a guest name"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            maxLength={20}
+            disabled={isLoading}
+          />
+          <button
+            onClick={handleSaveGuest}
+            disabled={!username.trim() || isLoading}
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white py-2 rounded-lg transition-colors"
+          >
+            {isLoading ? 'Saving...' : 'Save as Guest'}
+          </button>
+
+          {/* Skip saving */}
+          <button
+            onClick={onClose}
+            disabled={isLoading}
+            className="w-full bg-gray-300 hover:bg-gray-400 disabled:bg-gray-200 text-gray-700 py-2 rounded-lg transition-colors"
+          >
+            Continue without saving
+          </button>
         </div>
       </div>
     </div>

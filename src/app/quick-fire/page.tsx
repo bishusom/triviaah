@@ -1,6 +1,5 @@
 'use client';
 
-import MuteButton from '@/components/MuteButton';
 import QuizGame from '@/components/trivias/QuizGame';
 import { getRandomQuestions } from '@/lib/firebase';
 import { useState, useEffect } from 'react';
@@ -71,10 +70,7 @@ export default function QuickFirePage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       
-          <div className="text-center mb-4 text-sm text-gray-500">
-            ⚡ 60-Second Quick-Fire Mode
-          </div>
-
+          <h1 className="text-3xl font-bold mb-2">⚡ Quick-Fire Quiz</h1>
           <QuizGame
             initialQuestions={questions}
             category="quick-fire"          // triggers quick-fire styling & speeds

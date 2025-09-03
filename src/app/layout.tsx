@@ -1,10 +1,12 @@
+// app/layout.tsx
 import { Geist } from 'next/font/google';
 import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
 import { SoundProvider } from './context/SoundContext';
 import { UserProvider } from '@/context/UserContext';
-import WelcomeBanner from '@/components/WelcomeBanner'; 
+import WelcomeBanner from '@/components/WelcomeBanner';
+import SessionProviderClient from '@/components/SessionProviderClient';
 import { Metadata } from 'next';
 import '@styles/globals.css';
 
@@ -21,7 +23,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/triviaah-og.webp', // This will resolve to https://triviaah.com/imgs/triviaah-og.webp
+        url: '/imgs/triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'Triviaah - Free Daily Trivia & Quiz Games'
@@ -33,7 +35,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Triviaah: Free Daily Trivia & Quiz Games',
     description: 'Play free daily trivia challenges across 20+ categories. New questions every 24 hours!',
-    images: ['/imgs/triviaah-og.webp'], // This will also resolve to the full URL
+    images: ['/imgs/triviaah-og.webp'],
   },
 };
 
@@ -48,25 +50,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        {/* Add preconnect for Google Ads */}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
-        <link rel="preconnect" href="https://googleads.g.doubleclick.net" />  
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" />
       </head>
+
       <body className={`${geist.variable} font-[Geist,Geist-fallback]`}>
-        <UserProvider> {/* Wrap your app with the provider */}
-          <WelcomeBanner />
-          <SoundProvider>
-            <Breadcrumbs />
-            {children}
-            <SeoBreadcrumbs />
-            <GoogleAnalytics gaId="G-K4KZ7XR85V" />
-            <Script
-              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-              strategy="lazyOnload"
-              crossOrigin="anonymous"
-            />
-          </SoundProvider>
-        </UserProvider>
+        <SessionProviderClient> {/* 🔐 Google-OAuth provider */}
+          <UserProvider>   {/* 💡 local user context */}
+            <WelcomeBanner />
+            <SoundProvider>
+              <Breadcrumbs />
+              {children}
+              <SeoBreadcrumbs />
+              <GoogleAnalytics gaId="G-K4KZ7XR85V" />
+              <Script
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+                strategy="lazyOnload"
+                crossOrigin="anonymous"
+              />
+            </SoundProvider>
+          </UserProvider>
+        </SessionProviderClient>
       </body>
     </html>
   );

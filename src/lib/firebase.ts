@@ -315,6 +315,7 @@ export async function getHighScores(
     orderBy('score', 'desc'),
     limit(limitCount)
   );
+  console.log("Fetched records for category",category);
 
   const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => ({
@@ -346,6 +347,27 @@ export async function addHighScore(scoreData: Omit<HighScore, 'id'>): Promise<st
   const docRef = await addDoc(collection(db, 'scores'), {
     ...scoreData,
     timestamp: new Date()
+  });
+  return docRef.id;
+}
+
+export type Feedback = {
+  id?: string;
+  rating: number;
+  category: string;
+  score: number;
+  correctCount: number;
+  totalQuestions: number;
+  timestamp?: Date;
+  userId?: string;
+  userAgent?: string;
+};
+
+export async function addFeedback(feedbackData: Omit<Feedback, 'id'>): Promise<string> {
+  const docRef = await addDoc(collection(db, 'feedback'), {
+    ...feedbackData,
+    timestamp: new Date(),
+    userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server'
   });
   return docRef.id;
 }
