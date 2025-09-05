@@ -4,10 +4,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
-import { FaMedal, FaTrophy, FaCopy, FaCheck } from 'react-icons/fa';
+import { FaFacebook, FaWhatsapp, FaMedal, FaTrophy, FaCopy } from 'react-icons/fa';
 import { FaSmile, FaMeh, FaFrown, FaGrinStars, FaAngry } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { useUser } from '@/context/UserContext';
-import { useSession } from 'next-auth/react';
 
 type QuizResult = {
   score: number;
@@ -27,54 +27,41 @@ type HighScore = {
 
 const MESSAGES = {
   gold: [
-        "🏆 Trivia Deity! The knowledge gods bow before you! Can you maintain your reign?",
-        "🧠 Mind = Blown! Think you can top this perfect score? Try again!",
-        "🤯 Unstoppable Genius! Ready for an even bigger challenge next round?",
-        "🎖️ Absolute Legend! The leaderboard needs your name again!"
-    ],
-    silver: [
-        "✨ Brainiac Alert! One more round could push you to perfection!",
-        "🚀 Knowledge Rocket! You're just one launch away from trivia greatness!",
-        "💎 Diamond Mind! Polish your skills further with another game!",
-        "🧩 Puzzle Master! Can you complete the picture perfectly next time?"
-    ],
-    bronze: [
-        "👍 Solid Effort! Your next attempt could be your breakthrough!",
-        "📚 Bookworm Rising! Every replay makes you wiser - try again!",
-        "💡 Bright Spark! Your knowledge is growing - fuel it with another round!",
-        "🏅 Contender Status! The podium is within reach - one more try!"
-    ],
-    zero: [
-        "💥 Knowledge Explosion Incoming! Stick around - the next attempt will be better!",
-        "🎯 Fresh Start! Now that you've warmed up, the real game begins!",
-        "🔥 Fueling Curiosity! Your learning journey starts here - play again!",
-        "🚀 Launch Pad Ready! First attempts are just practice - try for real now!",
-        "🌱 Seeds of Knowledge Planted! Water them with another try!"
-    ],
-    default: [
-        "🌱 Sprouting Scholar! Every replay makes you stronger - continue your journey!",
-        "🦉 Wise Owl in Training! The more you play, the wiser you become!",
-        "📖 Chapter 1 Complete! Turn the page to your next knowledge adventure!",
-        "🧭 Learning Compass Active! Your next game could be your true north!"
-    ]
+    '🏆 Trivia Deity! The knowledge gods bow before you! Can you maintain your reign?',
+    '🧠 Mind = Blown! Think you can top this perfect score? Try again!',
+  ],
+  silver: [
+    '✨ Brainiac Alert! One more round could push you to perfection!',
+    '🚀 Knowledge Rocket! You are just one launch away from trivia greatness!',
+  ],
+  bronze: [
+    '👏 Solid Effort! Your next attempt could be your breakthrough!',
+    '📚 Bookworm Rising! Every replay makes you wiser - try again!',
+  ],
+  zero: [
+    '💥 Knowledge Explosion Incoming! Stick around - the next attempt will be better!',
+    '🎯 Fresh Start! Now that you have warmed up, the real game begins!',
+  ],
+  default: [
+    '🌱 Sprouting Scholar! Every replay makes you stronger - continue your journey!',
+  ],
 };
 
 export default function QuizSummary({
   result,
   onRestart,
+  scoreAlreadySaved = false
 }: {
   result: QuizResult;
   onRestart: () => void;
+  scoreAlreadySaved?: boolean;
 }) {
   const [highScores, setHighScores] = useState<HighScore[]>([]);
   const [globalHigh, setGlobalHigh] = useState<HighScore | null>(null);
   const [playerName, setPlayerName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [scoreSaved, setScoreSaved] = useState(false);
   const { user } = useUser();
-  const { data: session, status } = useSession();
 
   /* ---------- helpers ---------- */
   const formatCategory = (s: string) =>
@@ -88,36 +75,39 @@ export default function QuizSummary({
   /* ------- feedback ------------ */
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
 
-  const handleFeedback = async (rating: number) => {
-    try {
-      await fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          rating,
-          category: result.category,
-          score: result.score,
-          correctCount: result.correctCount,
-          totalQuestions: result.totalQuestions
-        }),
-      });
-      setFeedbackSubmitted(true);
-    } catch (error) {
-      console.error('Failed to submit feedback:', error);
-    }
-  };
+    const handleFeedback = async (rating: number) => {
+      try {
+        await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            rating,
+            category: result.category,
+            score: result.score,
+            correctCount: result.correctCount,
+            totalQuestions: result.totalQuestions
+          }),
+        });
+        setFeedbackSubmitted(true);
+      } catch (error) {
+        console.error('Failed to submit feedback:', error);
+      }
+    };
 
   /* ---------- fetch leaderboard ---------- */
   const fetchHighScores = async () => {
     setIsLoading(true);
     try {
+      console.log('Fetching high scores for category:', result.category);
       const res = await fetch(`/api/highscores?category=${result.category}`);
+      console.log('Response status:', res.status);
       
       if (!res.ok) {
         throw new Error(`HTTP ${res.status}`);
       }
       
       const data = await res.json();
+      console.log('API Response:', data);
       
       // Handle the response structure
       if (data.localHighScores && Array.isArray(data.localHighScores)) {
@@ -142,44 +132,9 @@ export default function QuizSummary({
     fetchHighScores();
   }, [result.category]);
 
-  /* ---------- Save score for authenticated users automatically ---------- */
-  useEffect(() => {
-    const saveScoreForAuthenticatedUser = async () => {
-      if (status === 'authenticated' && session?.user && !scoreSaved) {
-        try {
-          setSaving(true);
-          const response = await fetch('/api/highscores', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: session.user.name || 'Anonymous',
-              score: result.score,
-              category: result.category,
-              difficulty: 'mixed',
-              correctCount: result.correctCount,
-              totalQuestions: result.totalQuestions,
-              timeUsed: result.timeUsed
-            }),
-          });
-
-          if (response.ok) {
-            setScoreSaved(true);
-            await fetchHighScores(); // Refresh leaderboard
-          }
-        } catch (error) {
-          console.error('Failed to save score:', error);
-        } finally {
-          setSaving(false);
-        }
-      }
-    };
-
-    saveScoreForAuthenticatedUser();
-  }, [status, session, result, scoreSaved]);
-
-  /* ---------- Manual save for guest users ---------- */
+  /* ---------- core save (only for manual saves now) ---------- */
   const saveScoreCore = async (name: string) => {
-    if (saving || scoreSaved) return;
+    if (saving || scoreAlreadySaved) return;
     setSaving(true);
     
     try {
@@ -194,10 +149,11 @@ export default function QuizSummary({
         }),
       });
 
-      if (response.ok) {
-        setScoreSaved(true);
-        await fetchHighScores(); // Refresh leaderboard
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
       }
+
+      await fetchHighScores(); // Refresh leaderboard
     } catch (error) {
       console.error('Failed to save score:', error);
     } finally {
@@ -205,36 +161,89 @@ export default function QuizSummary({
     }
   };
 
+  //Refresh leaderboard after scores are saved
+  useEffect(() => {
+    const handleScoreSaved = () => {
+      fetchHighScores(); // Refresh the leaderboard
+    };
+
+    window.addEventListener('scoreSaved', handleScoreSaved);
+    
+    return () => {
+      window.removeEventListener('scoreSaved', handleScoreSaved);
+    };
+  }, [fetchHighScores]);
+
   /* ---------- performance message ---------- */
   const ratio = result.correctCount / result.totalQuestions;
   const perf = ratio === 0 ? 'zero' : ratio >= 0.9 ? 'gold' : ratio >= 0.7 ? 'silver' : 'bronze';
   const randomMessage = MESSAGES[perf][Math.floor(Math.random() * MESSAGES[perf].length)];
 
-  /* ---------- share to clipboard ---------- */
-  const shareScore = async () => {
+  /* ---------- social share ---------- */
+  const shareOnSocial = async (platform: string, result: QuizResult) => {
     const formattedCategory = formatCategory(result.category);
-    const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me? ${window.location.origin}`;
+    const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me? #TriviaQuiz`;
     const shareUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${encodeURIComponent(formattedCategory)}&time=${result.timeUsed}`;
-    try {
-      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
-    } catch (err) {
-      console.error('Failed to copy: ', err);
-      // Fallback for browsers that don't support clipboard API
-      const textArea = document.createElement('textarea');
-      textArea.value = shareText;
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        setCopied(true);
-        setTimeout(() => setCopied(false), 3000);
-      } catch (fallbackErr) {
-        console.error('Fallback copy failed: ', fallbackErr);
-        alert('Failed to copy to clipboard. Please manually copy the text.');
-      }
-      document.body.removeChild(textArea);
+
+    switch (platform) {
+      case 'facebook':
+        // Check if FB SDK is loaded and properly initialized
+        if (typeof window !== 'undefined' && window.FB && window.FB.ui) {
+          try {
+            window.FB.ui({
+              method: 'share',
+              href: shareUrl,
+              quote: shareText
+            }, (response: { error_message?: string } | undefined) => {
+              if (response && !response.error_message) {
+                console.log('Shared successfully:', response);
+              } else {
+                console.error('Share failed:', response && 'error_message' in response ? response.error_message : 'Unknown error');
+                // Fallback to direct link
+                window.open(
+                  `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+                  '_blank'
+                );
+              }
+            });
+          } catch (error) {
+            console.error('Facebook share error:', error);
+            // Fallback to direct link
+            window.open(
+              `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+              '_blank'
+            );
+          }
+        } else {
+          console.log('Facebook SDK not available, using fallback');
+          // Direct fallback without app_id to avoid errors
+          window.open(
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+            '_blank'
+          );
+        }
+        break;
+      case 'twitter':
+        window.open(
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+          '_blank'
+        );
+        break;
+      case 'whatsapp':
+        window.open(
+          `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`,
+          '_blank'
+        );
+        break;
+      case 'copy':
+        try {
+          await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+          alert('Copied to clipboard!');
+        } catch (err) {
+          console.error('Failed to copy: ', err);
+          alert('Failed to copy to clipboard');
+        }
+        break;  
     }
   };
 
@@ -246,6 +255,7 @@ export default function QuizSummary({
 
   return (
     <>
+      <Script async defer src="https://connect.facebook.net/en_US/sdk.js#xfbml=true" crossOrigin="anonymous" />
       <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg">
         <div className="bg-blue-600 text-white rounded-lg p-6 mb-8 text-center">
           <h2 className="text-2xl font-bold mb-2">Quiz Complete!</h2>
@@ -261,12 +271,6 @@ export default function QuizSummary({
               <div className="flex justify-between"><span>Correct:</span><span>{result.correctCount}/{result.totalQuestions}</span></div>
               <div className="flex justify-between"><span>Time:</span><span>{formatTime(result.timeUsed)}</span></div>
               <div className="flex justify-between"><span>Category:</span><span>{formatCategory(result.category)}</span></div>
-              {status === 'authenticated' && (
-                <div className="flex justify-between text-green-600">
-                  <span>Player:</span>
-                  <span>{session.user?.name || 'Anonymous'}</span>
-                </div>
-              )}
             </div>
             {globalHigh && (
               <div className="mt-6 pt-4 border-t">
@@ -299,11 +303,10 @@ export default function QuizSummary({
               )}
             </div>
 
-            {/* Show manual save input for guest users */}
-            {status !== 'authenticated' && !scoreSaved && (
+            {/* Only show manual save input if score hasn't been saved yet and user is guest */}
+            {!scoreAlreadySaved && user?.isGuest && (
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h3 className="text-xl font-semibold mb-4 border-b pb-2">Save your score</h3>
-                <p className="text-sm text-gray-600 mb-3">Enter your name to save your score to the leaderboard</p>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
@@ -311,7 +314,6 @@ export default function QuizSummary({
                     onChange={(e) => setPlayerName(e.target.value)}
                     placeholder="Enter your name"
                     className="px-4 py-2 border rounded-lg flex-grow"
-                    maxLength={20}
                   />
                   <button
                     onClick={() => saveScoreCore(playerName.trim() || 'Guest')}
@@ -324,41 +326,42 @@ export default function QuizSummary({
               </div>
             )}
 
-            {/* Show confirmation if score was saved */}
-            {scoreSaved && (
+            {/* Show confirmation if score was already saved */}
+            {scoreAlreadySaved && (
               <div className="bg-green-50 p-6 rounded-lg border border-green-200">
                 <p className="text-green-800 text-center">
                   ✅ Score saved successfully!
-                  {status === 'authenticated' && session.user?.name && (
-                    <> as <span className="font-semibold">{session.user.name}</span></>
-                  )}
                 </p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Share button */}
+        {/* social */}
         <div className="mb-8 text-center">
-          <button 
-            onClick={shareScore}
-            className="flex items-center justify-center gap-2 mx-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-          >
-            {copied ? (
-              <>
-                <FaCheck className="text-green-300" />
-                Copied to Clipboard!
-              </>
-            ) : (
-              <>
-                <FaCopy />
-                Share Your Score
-              </>
-            )}
-          </button>
-          <p className="text-gray-600 text-sm mt-2">
-            Copy your results to share on any social media
-          </p>
+          <h3 className="text-xl font-semibold mb-4">Share Your Score</h3>
+          <div className="flex justify-center gap-4">
+            <button onClick={() => shareOnSocial('facebook', result)} 
+              className="flex items-center justify-center w-10 h-10 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition-colors"
+              aria-label="Share on Facebook">
+                <FaFacebook size={20} />
+            </button>
+            <button onClick={() => shareOnSocial('twitter', result)} 
+              className="flex items-center justify-center w-10 h-10 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
+              aria-label="Share on X">
+                <FaXTwitter size={20} />
+            </button>
+            <button onClick={() => shareOnSocial('whatsapp', result)} 
+              className="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
+              aria-label="Share on Whatsapp">
+                <FaWhatsapp size={20} />
+            </button>
+            <button onClick={() => shareOnSocial('copy', result)} 
+              className="flex items-center justify-center w-10 h-10 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
+              aria-label="Copy to clipboard">
+                <FaCopy size={18} />
+            </button>
+          </div>
         </div>
 
         {feedbackSubmitted ? (
@@ -397,10 +400,10 @@ export default function QuizSummary({
             </div>
         )}  
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
+        <div className="flex justify-center">
           <Link
             href="/"
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors text-center"
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors"
           >
             Back to Home
           </Link>

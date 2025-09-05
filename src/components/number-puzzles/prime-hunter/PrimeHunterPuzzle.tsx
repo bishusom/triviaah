@@ -1,7 +1,7 @@
 'use client';
 import { event } from '@/lib/gtag';
 import confetti from 'canvas-confetti';
-import { useSound } from '@/app/context/SoundContext';
+import { useSound } from '@/context/SoundContext';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import commonStyles from '@styles/NumberPuzzles/NumberPuzzles.common.module.css';
 import styles from '@styles/NumberPuzzles/PrimeHunter.module.css';

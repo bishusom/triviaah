@@ -3,7 +3,7 @@ import { event } from '@/lib/gtag';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { db } from '@/lib/firebase';
-import { useSound } from '@/app/context/SoundContext';
+import { useSound } from '@/context/SoundContext';
 import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 import gameStyles from '@styles/WordGames/WordSearch.module.css';
 import commonStyles from '@styles/WordGames/WordGames.common.module.css';

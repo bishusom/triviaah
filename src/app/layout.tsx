@@ -3,7 +3,7 @@ import { Geist } from 'next/font/google';
 import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
-import { SoundProvider } from './context/SoundContext';
+import { SoundProvider } from '@/context/SoundContext';
 import { UserProvider } from '@/context/UserContext';
 import WelcomeBanner from '@/components/WelcomeBanner';
 import SessionProviderClient from '@/components/SessionProviderClient';

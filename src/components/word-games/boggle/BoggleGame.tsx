@@ -2,7 +2,7 @@
 import { event } from '@/lib/gtag';
 import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { useSound } from '@/app/context/SoundContext';
+import { useSound } from '@/context/SoundContext';
 import commonStyles from '@styles/WordGames/WordGames.common.module.css';
 import gameStyles from '@styles/WordGames/BoggleGame.module.css'; 
 

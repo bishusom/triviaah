@@ -1,4 +1,4 @@
-// context/UserContext.tsx
+// context/UserContext.tsx (fixed)
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -19,9 +19,14 @@ const UserContext = createContext<{
   login: (u: Partial<User>) => void;
   logout: () => void;
   getWelcomeMessage?: () => string;
-}>({ user: null, login: () => {}, logout: () => {} });
+  authChecked: boolean; // Add this to track when auth state is determined
+}>({ 
+  user: null, 
+  login: () => {}, 
+  logout: () => {},
+  authChecked: false 
+});
 
-// Extend the default Session user type to include our custom properties
 interface ExtendedUser {
   id?: string;
   name?: string | null;
@@ -33,8 +38,9 @@ interface ExtendedUser {
 }
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [user, setUser] = useState<User | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
 
   const getWelcomeMessage = () => {
     if (!user) return '';
@@ -50,10 +56,17 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    if (status === 'loading') {
+      // Still loading, don't update state yet
+      return;
+    }
+
+    setAuthChecked(true);
+    
     if (session?.user) {
       const sessionUser = session.user as ExtendedUser;
       setUser({
-        id: sessionUser.id || sessionUser.email || 'unknown-id', // Use email as fallback for id
+        id: sessionUser.id || sessionUser.email || 'unknown-id',
         name: sessionUser.name || 'User',
         email: sessionUser.email || undefined,
         isGuest: false,
@@ -71,7 +84,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         previousStreak: 0,
       });
     }
-  }, [session]);
+  }, [session, status]);
 
   const login = (u: Partial<User>) => {
     setUser(prev => ({ ...prev!, ...u }));
@@ -81,7 +94,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <SessionProvider>
-      <UserContext.Provider value={{ user, login, logout, getWelcomeMessage }}>
+      <UserContext.Provider value={{ 
+        user, 
+        login, 
+        logout, 
+        getWelcomeMessage,
+        authChecked 
+      }}>
         {children}
       </UserContext.Provider>
     </SessionProvider>

@@ -201,48 +201,96 @@ export async function getRandomQuestions(
   _difficulties: string[] = ['easy', 'medium', 'hard']
 ): Promise<Question[]> {
   try {
-    // 1️⃣  Pull a generous pool per difficulty
-    const oversample = 30; // plenty to shuffle
-    const pools = await Promise.all(
-      ['easy', 'medium', 'hard'].map(async (d) => {
-        const q = query(
+    // Helper function to get random questions for a specific difficulty
+    const getRandomForDifficulty = async (difficulty: string, count: number): Promise<Question[]> => {
+      // Generate a random starting index between 0 and 999
+      const randomStart = Math.floor(Math.random() * 1000);
+      
+      // First query: documents where randomIndex >= randomStart
+      let q = query(
+        collection(db, 'triviaQuestions'),
+        where('difficulty', '==', difficulty),
+        where('randomIndex', '>=', randomStart),
+        orderBy('randomIndex'),
+        limit(count)
+      );
+      
+      let snapshot = await getDocs(q);
+      let questions: Question[] = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          question: data.question,
+          correct: data.correct_answer,
+          options: shuffleArray([data.correct_answer, ...data.incorrect_answers]),
+          difficulty: difficulty,
+          category: data.category,
+          ...(data.subcategory && { subcategory: data.subcategory }),
+          ...(data.titbits && { titbits: data.titbits }),
+          ...(data.image_keyword && { image_keyword: data.image_keyword }),
+        };
+      });
+      
+      // If we need more questions, wrap around to the beginning
+      const remaining = count - questions.length;
+      if (remaining > 0) {
+        // Query from the start (randomIndex >= 0) to fill the remaining count
+        q = query(
           collection(db, 'triviaQuestions'),
-          where('difficulty', '==', d),
-          limit(oversample)
+          where('difficulty', '==', difficulty),
+          where('randomIndex', '>=', 0),
+          orderBy('randomIndex'),
+          limit(remaining)
         );
-        const snap = await getDocs(q);
-        return snap.docs.map((doc) => {
+        
+        snapshot = await getDocs(q);
+        const additional = snapshot.docs.map(doc => {
           const data = doc.data();
           return {
             id: doc.id,
             question: data.question,
             correct: data.correct_answer,
             options: shuffleArray([data.correct_answer, ...data.incorrect_answers]),
-            difficulty: d,
+            difficulty: difficulty,
             category: data.category,
             ...(data.subcategory && { subcategory: data.subcategory }),
             ...(data.titbits && { titbits: data.titbits }),
             ...(data.image_keyword && { image_keyword: data.image_keyword }),
           };
         });
-      })
-    );
+        
+        questions = [...questions, ...additional];
+      }
+      
+      // If we still don't have enough questions, log a warning and return what we have
+      if (questions.length < count) {
+        console.warn(`Only found ${questions.length} questions for difficulty ${difficulty}, needed ${count}`);
+      }
+      
+      // Shuffle the selected questions for this difficulty
+      return shuffleArray(questions);
+    };
 
-    // 2️⃣  Pick counts
-    const easy = pools[0].sort(() => 0.5 - Math.random()).slice(0, 2);
-    const medium = pools[1].sort(() => 0.5 - Math.random()).slice(0, 2);
-    const hard = pools[2].sort(() => 0.5 - Math.random()).slice(0, 2);
+    // Get questions per difficulty (2 easy, 2 medium, 2 hard)
+    const easy = await getRandomForDifficulty('easy', 2);
+    const medium = await getRandomForDifficulty('medium', 2);
+    const hard = await getRandomForDifficulty('hard', 2);
 
-    // 3️⃣  One random-any bonus
-    const leftovers = [...pools[0], ...pools[1], ...pools[2]]
-      .filter((q) => ![...easy, ...medium, ...hard].some((p) => p.id === q.id));
-    const bonus = leftovers.length
-      ? [leftovers[Math.floor(Math.random() * leftovers.length)]]
-      : [];
+    // Get one bonus question from any difficulty
+    const bonusDifficulty = ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)];
+    const bonus = await getRandomForDifficulty(bonusDifficulty, 1);
 
-    // 4️⃣  Combine & final shuffle
+    // Combine all and shuffle
     const final = [...easy, ...medium, ...hard, ...bonus];
-    return shuffleArray(final);
+    
+    // Ensure we return exactly qlimit questions (default 7)
+    const result = shuffleArray(final).slice(0, qlimit);
+    
+    if (result.length < qlimit) {
+      console.warn(`Only returning ${result.length} questions, needed ${qlimit}`);
+    }
+    
+    return result;
   } catch (err) {
     console.error('getRandomQuestions error:', err);
     return [];

@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { SoundProvider } from './context/SoundContext';
+import { SoundProvider } from '../context/SoundContext';
 import MuteButton from './../components/MuteButton';
 
 export default function ClientLayout({

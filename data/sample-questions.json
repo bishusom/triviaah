@@ -8,62 +8,34 @@
   },
   {
     "id": 2,
-    "question": "What is the capital of Burkina Faso?",
-    "answer": "Ouagadougou",
-    "category": "Geography",
-    "titbits": "It was the capital of the historic Mossi kingdom of Wagadugu (founded in the 15th century) and the seat of the morho naba (“great king”) of the Mossi people."
-  },
-  {
-    "id": 3,
-    "question": "Who work rates as the Most Expensive Painting Ever Sold?",
+    "question": "Whose work rates as the Most Expensive Painting Ever Sold?",
     "answer": "Leonardo da Vinci",
     "category": "Art",
     "titbits" : "The world's most expensive painting, Salvator Mundi, fetched an astonishing $450 million at a Christie's auction in 2017"
   },
   {
-    "id": 4,
+    "id": 3,
     "question": "What is the largest mammal in the world?",
     "answer": "Blue Whale",
     "category": "Animals",
     "titbits" : "These marine mammals can grow to over 100 feet long and weigh up to 200 tons, and they are the largest animals known to have ever existed."
   },
   {
-    "id": 5,
-    "question": "Which is heaviest naturally occurring element?",
-    "answer": "Uranium",
-    "category": "Science",
-    "titbits": "It has an atomic number of 92, The most common isotope, uranium-238. Plutonium (atomic number 94) is so rare on earth that it is not considered naturally occuring."
-  },
-  {
-    "id": 6,
+    "id": 4,
     "question": "During World War II which food was called Liberty Steak?",
     "answer": "Hamburger",
     "category": "History",
     "titbits" : "To avoid using the German-sounding word 'hamburger', Americans referred to them as 'liberty steaks' during the war."
   },
   {
-    "id": 7,
-    "question": "What is the main ingredient in guacamole?",
-    "answer": "Avocado",
-    "category": "Food",
-    "titbits" : "The word avocado comes from the Aztec word 'āhuacatl', which also means 'testicle'."
-  },
-  {
-    "id": 8,
+    "id": 5,
     "question": "Which famous novel's first draft was eaten by author's dog'?",
     "answer": "Of Mice and Men",
     "category": "Literature",
     "titbits" : "John Steinbeck's first draft of Of Mice and Men was famously destroyed by his dog, Toby. The dog, a setter, chewed up the manuscript."
   },
   {
-    "id": 9,
-    "question": "Which is The Longest Mountain Range on Earth?",
-    "answer": "Mid-Ocean Ridge",
-    "category": "Geography",
-    "titbits" : "The longest mountain range on Earth is not on land, but underwater. The Mid-Ocean Ridge is a colossal chain of volcanoes and mountains that snakes its way around the globe for over 40,000 miles (65,000 kilometers)."
-  },
-  {
-    "id": 10,
+    "id": 6,
     "question": "Who holds the record for winning the most number of oscars?",
     "answer": "Walt Disney",
     "category": "Movies",

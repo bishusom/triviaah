@@ -2,7 +2,7 @@
 import { event } from '@/lib/gtag';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { useSound } from '@/app/context/SoundContext';
+import { useSound } from '@/context/SoundContext';
 import commonStyles from '@styles/NumberPuzzles/NumberPuzzles.common.module.css';
 import styles from '@styles/NumberPuzzles/NumberScramble.module.css';
 

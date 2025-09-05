@@ -7,7 +7,7 @@ import { event } from '@/lib/gtag';
 import Image from 'next/image';
 import { fetchPixabayImage } from '@/lib/pixabay';
 import styles from '@styles/Trordle.module.css';
-import { useSound } from '@/app/context/SoundContext';
+import { useSound } from '@/context/SoundContext';
 import { checkTrordleGuess, TrordleData, TrordleGuessResult } from '@/lib/trordle-logic';
 
 interface TrordleComponentProps {

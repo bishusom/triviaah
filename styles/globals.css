@@ -312,3 +312,11 @@
 .breadcrumb-current {
   @apply font-semibold text-blue-100;
 }
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

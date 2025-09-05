@@ -1,7 +1,7 @@
 // app/components/MuteButton.tsx
 'use client';
 
-import { useSound } from '@/app/context/SoundContext';
+import { useSound } from '@/context/SoundContext';
 
 export default function MuteButton() {
   const { isMuted, toggleMute } = useSound();
