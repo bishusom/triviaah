@@ -1,4 +1,4 @@
-// app/layout.tsx
+// app/layout.tsx (updated)
 import { Geist } from 'next/font/google';
 import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -43,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${geist.variable} antialiased`}>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
           rel="preload"
           href={geist.variable ? undefined : geist.style.fontFamily}
@@ -54,13 +55,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://googleads.g.doubleclick.net" />
       </head>
 
-      <body className={`${geist.variable} font-[Geist,Geist-fallback]`}>
+      <body className={`${geist.variable} font-[Geist,Geist-fallback] overflow-x-hidden`}>
         <SessionProviderClient> {/* 🔐 Google-OAuth provider */}
           <UserProvider>   {/* 💡 local user context */}
             <WelcomeBanner />
             <SoundProvider>
               <Breadcrumbs />
-              {children}
+              <div className="w-full overflow-x-hidden">
+                {children}
+              </div>
               <SeoBreadcrumbs />
               <GoogleAnalytics gaId="G-K4KZ7XR85V" />
               <Script

@@ -38,12 +38,12 @@ export default function HorizontalScrollSection({
   };
 
   return (
-    <div className="mb-12">
+    <div className="mb-12 w-full overflow-hidden"> {/* Added overflow-hidden here */}
       <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">
         {title}
       </h2>
       
-      <div className="relative">
+      <div className="relative w-full"> {/* Added w-full here */}
         {/* Desktop Grid - Updated for 4 columns for non-quiz sections */}
         <div className={`hidden sm:grid ${
           isQuizSection 
@@ -103,7 +103,7 @@ export default function HorizontalScrollSection({
         </div>
         
         {/* Mobile horizontal scroll with smaller cards */}
-        <div className="sm:hidden relative">
+        <div className="sm:hidden relative w-full overflow-hidden"> {/* Added overflow-hidden here */}
           {/* Left scroll indicator/button */}
           <button 
             onClick={() => scroll('left')}
@@ -113,10 +113,10 @@ export default function HorizontalScrollSection({
             <MdChevronLeft size={24} className="text-gray-600" />
           </button>
           
-          {/* Scroll container */}
+          {/* Scroll container - FIXED: Added max-w-full to prevent overflow */}
           <div 
             ref={scrollRef}
-            className="overflow-x-auto pb-4 flex space-x-4 px-2"
+            className="overflow-x-auto pb-4 flex space-x-4 px-2 max-w-full" // Added max-w-full here
             style={{ 
               scrollbarWidth: 'none', 
               msOverflowStyle: 'none',
@@ -124,7 +124,7 @@ export default function HorizontalScrollSection({
             }}
           >
             {items.map((item, idx) => (
-              <div key={item.category} className="w-56 flex-shrink-0">
+              <div key={item.category} className="w-56 flex-shrink-0 max-w-[85vw]"> {/* Added max-w-[85vw] */}
                 {isQuizSection && isQuizItem(item) ? (
                   <DailyQuizClient 
                     quiz={item}

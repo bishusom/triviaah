@@ -3,14 +3,6 @@ import { ReadonlyQuizItems, ReadonlySectionItems } from '@/types/home';
 
 export const DAILY_QUIZZES: ReadonlyQuizItems = [
   {
-    category: 'trordle',
-    name: 'Trordle',
-    path: '/trordle',
-    image: '/imgs/trordle-160x160.webp',
-    tagline: 'Wordle-inspired trivia challenges for curious minds',
-    keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
-    },
-  {
     category: 'general-knowledge',
     name: 'General Knowledge',
     path: '/daily/general-knowledge',
@@ -50,6 +42,14 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
     tagline: 'Discover scientific wonders in our free online science trivia',
     keywords: 'science trivia quiz, biology quiz game, physics trivia questions, science quiz with answers',
   },
+  {
+    category: 'trordle',
+    name: 'Trordle',
+    path: '/trordle',
+    image: '/imgs/trordle-160x160.webp',
+    tagline: 'Wordle-inspired trivia challenges for curious minds',
+    keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
+    },
 ] as const;
 
 export const ADDITIONAL_SECTIONS: ReadonlySectionItems = [

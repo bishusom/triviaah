@@ -213,7 +213,7 @@ export default function QuizSummary({
   /* ---------- share to clipboard ---------- */
   const shareScore = async () => {
     const formattedCategory = formatCategory(result.category);
-    const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me? ${window.location.origin}`;
+    const shareText = `I scored ${result.score} points in ${formattedCategory} trivia! Got ${result.correctCount}/${result.totalQuestions} correct in ${formatTime(result.timeUsed)}. Can you beat me?`;
     const shareUrl = `${window.location.origin}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${encodeURIComponent(formattedCategory)}&time=${result.timeUsed}`;
     try {
       await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
