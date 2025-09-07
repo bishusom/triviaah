@@ -12,16 +12,25 @@
     min-height: 100vh;
   }
 
-  /* Optimize image rendering */
+  /* Optimize image rendering - FIXED: Remove duplicate img rules */
   img {
     content-visibility: auto;
+    contain-intrinsic-size: 1px 1000px;
   }
   
   /* Reduce layout shifts */
-  .category-grid, .horizontal-scroll {
+  .category-grid, 
+  .horizontal-scroll,
+  .contain-layout {
     contain: layout style paint;
   }
   
+  /* Specific containment for critical elements */
+  .logo-container,
+  .category-image-placeholder {
+    contain: layout style paint;
+  }
+
   /* Focus styles for accessibility */
   button:focus-visible,
   a:focus-visible {
@@ -40,6 +49,28 @@
     display: none;
   }
   
+  /* Prevent layout shifts for specific elements */
+  .no-cls {
+    contain: layout style paint;
+  }
+  
+  /* Reserve space for common elements to prevent CLS */
+  .reserve-logo {
+    min-height: 40px;
+  }
+  
+  .reserve-category-image {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .reserve-button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   /* Animation reduction for users who prefer it */
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -65,6 +96,7 @@
   border: 1px solid rgba(209, 213, 219, 0.5);
   transition: all 0.3s ease-out;
   cursor: pointer;
+  contain: layout style paint; /* Add containment */
 }
 
 .correct-answer {
@@ -79,6 +111,12 @@
   color: rgba(153, 27, 27, 1);
 }
 
+/* Critical above-the-fold optimization classes */
+.lcp-priority {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .categories-grid {
@@ -88,10 +126,17 @@
   
   .category-card {
     padding: 1rem;
+    contain: layout style paint; /* Add containment */
   }
   
   .category-image {
     height: 100px;
+    contain: layout style paint; /* Add containment */
+  }
+  
+  /* Mobile-specific CLS prevention */
+  .mobile-contain {
+    contain: layout style paint;
   }
 }
 
@@ -100,6 +145,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+    contain: layout style paint; /* Add containment */
   }
 
   .quiz-attributes {
@@ -107,5 +153,51 @@
     flex-wrap: wrap;
     gap: 0.25rem;
     margin-bottom: 0.5rem;
+    contain: layout style paint; /* Add containment */
   }
+  
+  /* Ensure buttons don't shift layout on mobile */
+  button {
+    min-height: 44px;
+    contain: layout style paint;
+  }
+}
+
+/* Font loading optimization */
+@font-face {
+  font-family: 'Geist-fallback';
+  src: local('Arial');
+  size-adjust: 105%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: normal;
+}
+
+/* Loading states to prevent CLS during hydration */
+.loading-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+/* Ensure ads don't cause layout shifts */
+.ad-container {
+  min-height: 90px;
+  contain: layout style paint;
+  display: block;
+  overflow: hidden;
+}
+
+/* Optimize scrolling performance */
+.optimize-scrolling {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }

@@ -48,6 +48,49 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${geist.variable} antialiased`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+         {/* Critical CSS to prevent layout shifts */}
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+                /* Critical above-the-fold CSS to prevent CLS */
+                .logo-container { 
+                  min-height: 40px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  contain: layout style paint;
+                }
+                
+                .category-image-placeholder {
+                  width: 64px;
+                  height: 64px;
+                  border-radius: 50%;
+                  background-color: #dbeafe;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  contain: layout style paint;
+                }
+                
+                main { 
+                  min-height: 60vh;
+                  contain: layout style paint;
+                }
+                
+                /* Ensure containers don't collapse */
+                .container { 
+                  width: 100%; 
+                  margin-left: auto; 
+                  margin-right: auto; 
+                }
+                
+                @media (min-width: 640px) { .container { max-width: 640px; } }
+                @media (min-width: 768px) { .container { max-width: 768px; } }
+                @media (min-width: 1024px) { .container { max-width: 1024px; } }
+                @media (min-width: 1280px) { .container { max-width: 1280px; } }
+              `,
+            }}
+          />
       </head>
 
       <body className={`${geist.variable} font-[Geist,Geist-fallback] overflow-x-hidden`}>

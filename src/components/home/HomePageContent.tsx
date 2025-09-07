@@ -6,7 +6,8 @@ import StreakBadge from '@/components/StreakBadge';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
 import Footer from '@/components/home/Footer';
-import Image from 'next/image';
+//import Image from 'next/image';
+import Logo from '@/components/home/logo';
 import { DAILY_QUIZZES, ADDITIONAL_SECTIONS } from '@/../data/homeContent';
 
 export default function HomePageContent() {
@@ -14,16 +15,10 @@ export default function HomePageContent() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-blue-700 text-white py-4 px-4">
-        <div className="container mx-auto flex items-center justify-center gap-4">
-          <Image
-            src="/logo-280x80.webp"
-            alt="Triviaah - Free Daily Trivia Games"
-            width={140}
-            height={40}
-            priority
-            quality={75}
-            className="object-contain"
-          />
+        <div className="container mx-auto">
+          <div className="logo-container">
+            <Logo />
+          </div>
         </div>
       </header>
       <AdBanner position="header" />
