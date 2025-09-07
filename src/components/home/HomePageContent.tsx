@@ -4,7 +4,7 @@
 import { AdBanner } from '@/components/Ads';
 import ScrollButtons from '@/components/ScrollButtons';
 import StreakBadge from '@/components/StreakBadge';
-import HeroSection from '@/components/home/HeroSection';
+//import HeroSection from '@/components/home/HeroSection';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
 import CollapsibleSection from '@/components/home/CollapsibleSection';
 import CategoryGrid from '@/components/home/CategoryGrid';
@@ -31,8 +31,9 @@ export default function HomePageContent() {
       </header>
       <AdBanner position="header" />
 
-      {/* Add the HeroSection here */}
+      {/* Add the HeroSection here 
       <HeroSection />
+      */}
 
       <main className="container mx-auto px-4 py-6 flex-grow">
         <div className="text-center mb-8">
@@ -126,7 +127,8 @@ export default function HomePageContent() {
           </div>
         </CollapsibleSection>
 
-        <ScrollButtons />  
+        {/* <ScrollButtons />  */}
+        
       </main>
 
       {/* Footer Banner Ad */}
