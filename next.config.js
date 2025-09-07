@@ -3,6 +3,12 @@ const nextConfig = {
   // Netlify compatibility
   trailingSlash: true,
   
+  // Note: swcMinify is no longer needed in Next.js 15+
+  // SWC minification is now enabled by default and cannot be disabled
+  
+  // Compress responses
+  compress: true,
+  
   // Image optimization
   images: {
     remotePatterns: [
@@ -25,7 +31,47 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 3600, // Cache optimized images for 1 hour
+  },
+
+  // Enable experimental features for optimization
+  experimental: {
+    isrFlushToDisk: true,
+    optimizeCss: true, // This will help with CSS optimization
+  },
+
+  // Webpack configuration for better bundling
+  webpack: (config, { dev, isServer }) => {
+    // Optimize chunking strategy
+    if (!dev && !isServer) {
+      // Split chunks for better caching
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          // Vendor chunk
+          vendor: {
+            name: 'vendor',
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/]/,
+            priority: 20,
+          },
+          // Common chunks
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            priority: 10,
+            reuseExistingChunk: true,
+            enforce: true,
+          },
+        },
+      };
+    }
+
+    return config;
   },
 
   // Cache-Control headers for static assets
@@ -58,12 +104,29 @@ const nextConfig = {
           },
         ],
       },
+      // Add headers for font files
+      {
+        source: '/:path*.(woff|woff2|ttf|otf)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ];
   },
 
-  experimental: {
-    isrFlushToDisk: true,
-  }
+  // Enable output file tracing for smaller lambdas (if using serverless)
+  output: 'standalone',
 };
 
-module.exports = nextConfig;
+// Bundle analyzer for optimization insights (optional)
+if (process.env.ANALYZE === 'true') {
+  const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: true,
+  });
+  module.exports = withBundleAnalyzer(nextConfig);
+} else {
+  module.exports = nextConfig;
+}

@@ -1,4 +1,4 @@
-// app/layout.tsx (updated)
+// app/layout.tsx (simplified)
 import { Geist } from 'next/font/google';
 import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -10,7 +10,11 @@ import SessionProviderClient from '@/components/SessionProviderClient';
 import { Metadata } from 'next';
 import '@styles/globals.css';
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
+const geist = Geist({ 
+  subsets: ['latin'], 
+  variable: '--font-geist',
+  display: 'swap'
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://triviaah.com'),
@@ -44,20 +48,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${geist.variable} antialiased`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-          rel="preload"
-          href={geist.variable ? undefined : geist.style.fontFamily}
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
-        <link rel="preconnect" href="https://googleads.g.doubleclick.net" />
       </head>
 
       <body className={`${geist.variable} font-[Geist,Geist-fallback] overflow-x-hidden`}>
-        <SessionProviderClient> {/* 🔐 Google-OAuth provider */}
-          <UserProvider>   {/* 💡 local user context */}
+        <SessionProviderClient>
+          <UserProvider>
             <WelcomeBanner />
             <SoundProvider>
               <Breadcrumbs />

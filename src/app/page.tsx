@@ -1,6 +1,4 @@
-// app/page.tsx (simplified version)
-'use client';
-
+// app/page.tsx (simplified)
 import HomePageContent from '@/components/home/HomePageContent';
 
 export default function Home() {

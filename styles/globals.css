@@ -1,26 +1,10 @@
+/* Optimized globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Add to the TOP of globals.css (before Tailwind directives) */
-/* Critical Above-the-Fold CSS */
+/* Layer directives for optimal loading */
 @layer base {
-  /* LCP Element Optimization */
-  .lcp-priority {
-    content-visibility: auto;
-    contain-intrinsic-size: 1px 500px;
-  }
-
-  /* Font Face with Fallback */
-  @font-face {
-    font-family: 'Geist-fallback';
-    src: local('Arial');
-    size-adjust: 105%;
-    ascent-override: 90%;
-    descent-override: 22%;
-    line-gap-override: normal;
-  }
-
   /* Critical Layout Styles */
   #__next {
     display: flex;
@@ -28,192 +12,71 @@
     min-height: 100vh;
   }
 
-  /* Pre-render animations */
-  @keyframes preload-fade {
-    0% { opacity: 0.4; }
-    100% { opacity: 1; }
+  /* Optimize image rendering */
+  img {
+    content-visibility: auto;
+  }
+  
+  /* Reduce layout shifts */
+  .category-grid, .horizontal-scroll {
+    contain: layout style paint;
+  }
+  
+  /* Focus styles for accessibility */
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
   }
 }
 
-/* Add after Tailwind directives */
 @layer utilities {
-  /* Critical component states */
-  .critical-visible {
-    @apply visible opacity-100 translate-y-0;
+  /* Scrollbar hiding */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-
-  .critical-hidden {
-    @apply invisible opacity-0 translate-y-1;
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
-
-  /* Preload animation */
-  .preload-fade-in {
-    animation: preload-fade 0.8s ease-out forwards;
-  }
-}
-
-@layer components {
-  /* Quiz option base style */
-  .quiz-option {
-    @apply relative overflow-hidden p-6 mb-4 text-left rounded-xl;
-    @apply bg-white/80 backdrop-blur-sm border border-gray-200/50;
-    @apply transition-all duration-300 ease-out;
-    @apply shadow-sm hover:shadow-md;
-    @apply hover:border-blue-400 hover:bg-white;
-    @apply cursor-pointer;
-  }
-
-  .quiz-option::before {
-    content: '';
-    @apply absolute left-0 top-0 h-full w-1 bg-transparent;
-    @apply transition-all duration-300;
-  }
-
-  .quiz-option:hover::before {
-    @apply bg-blue-400;
-  }
-
-  /* Correct answer */
-  .correct-answer {
-    @apply bg-green-50 border-green-400 text-green-800;
-    @apply shadow-green-100 shadow-inner;
-  }
-
-  /* Incorrect answer */
-  .incorrect-answer {
-    @apply bg-red-50 border-red-300 text-red-800;
-  }
-
-  /* Selected state */
-  .selected-option {
-    @apply border-blue-400 bg-blue-50/50;
-    @apply shadow-blue-500/10;
-    @apply ring-2 ring-blue-200;
-  }
-  /* Feedback icon */
-  .feedback-icon {
-    @apply ml-2 inline-block;
+  
+  /* Animation reduction for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-/* Animation (outside layer) */
-@keyframes fadeIn {
-  0% { opacity: 0; transform: translateY(5px); }
-  100% { opacity: 1; transform: translateY(0); }
+/* Component styles - only what's absolutely necessary */
+.quiz-option {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: left;
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(209, 213, 219, 0.5);
+  transition: all 0.3s ease-out;
+  cursor: pointer;
 }
 
-.feedback-animate {
-  animation: fadeIn 0.3s ease-out;
+.correct-answer {
+  background-color: rgba(240, 253, 244, 1);
+  border-color: rgba(74, 222, 128, 1);
+  color: rgba(22, 101, 52, 1);
 }
 
-@keyframes confetti {
-  0% { 
-    transform: translateY(0) rotate(0deg); 
-    opacity: 1; 
-  }
-  100% { 
-    transform: translateY(-100vh) rotate(360deg); 
-    opacity: 0; 
-  }
-}
-
-.animate-confetti {
-  animation: confetti linear forwards;
-}
-
-/* Timer styling */
-.timer {
-  @apply bg-blue-100 text-blue-800 px-3 py-1 rounded-full;
-}
-
-/* Titbit styling */
-.titbit-box {
-  @apply bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4;
-  @apply text-yellow-800;
-}
-
-/* Summary screen */
-.summary-screen {
-  @apply max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md text-center;
-}
-
-.score-display {
-  @apply text-4xl font-bold text-blue-600 mb-6;
-}
-
-.daily-quiz-card {
-  aspect-ratio: 1/1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* Trivia Catalog Styles */
-.quiz-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-@layer components {
-    categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
-  }
-
-  .category-card {
-    @apply relative overflow-hidden rounded-2xl p-6;
-    @apply bg-white/80 backdrop-blur-md border border-white/20;
-    @apply shadow-lg hover:shadow-xl transition-all duration-300;
-    @apply transform hover:-translate-y-2;
-    @apply before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/30 before:to-transparent before:opacity-0 before:transition-opacity before:duration-300;
-  }
-
-  .category-card:hover {
-    @apply before:opacity-100;
-  }
-
-  .category-card:hover .category-image {
-    transform: scale(1.05);
-  }
-
-  .category-image {
-    @apply w-full h-32 object-cover rounded-xl mb-4 transition-transform duration-500;
-    @apply shadow-md;
-  }
-
-  .category-card span {
-    font-weight: 600;
-    color: #2d3748;
-    text-align: center;
-  }
-  /* Category card container */
-  .category-image-container {
-    @apply relative h-32 w-full overflow-hidden rounded-xl;
-  }
-
-  .placeholder-image {
-    @apply absolute inset-0 flex items-center justify-center bg-gray-200;
-  }
-
-  .placeholder-image span {
-    @apply text-gray-500 text-lg font-medium;
-  }
-
-  /* Category content */
-  .category-content {
-    @apply p-4;
-  }
-
-  .category-title {
-    @apply font-bold text-lg mb-1 text-gray-800 group-hover:text-blue-600 transition-colors;
-  }
-
-  .category-description {
-    @apply text-sm text-gray-600 line-clamp-2;
-  }
+.incorrect-answer {
+  background-color: rgba(254, 242, 242, 1);
+  border-color: rgba(252, 165, 165, 1);
+  color: rgba(153, 27, 27, 1);
 }
 
 /* Responsive adjustments */
@@ -232,89 +95,17 @@
   }
 }
 
-@media (max-width: 480px) {
-  .quiz-container {
-    padding: 1rem;
-  }
-  
-  .categories-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-  
-  .category-card span {
-    font-size: 0.875rem;
-  }
-}
-
 @media (max-width: 640px) {
-  /* Make the header more compact */
   .quiz-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
 
-  /* Stack the attributes and timer/score vertically */
-  .quiz-header > div {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  /* Make attributes single line with wrapping */
   .quiz-attributes {
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
     margin-bottom: 0.5rem;
   }
-
-  /* Adjust the question counter */
-  .question-counter {
-    margin-top: 0.5rem;
-    width: 100%;
-    text-align: left;
-  }
-} 
-
-/* Reuse existing button styles */
-.btn {
-  @apply px-4 py-2 rounded-lg font-medium transition-all;
-  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
-}
-
-.btn.primary {
-  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
-}
-
-.btn.secondary {
-  @apply bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500;
-}
-
-.btn.tertiary {
-  @apply bg-yellow-500 text-gray-800 hover:bg-yellow-600 focus:ring-yellow-500;
-}
-
-/* Breadcrumb Navigation */
-.breadcrumb-container {
-  @apply bg-blue-600 text-white py-2 px-4 shadow-md;
-}
-
-.breadcrumb-item {
-  @apply transition-colors duration-200;
-}
-
-.breadcrumb-separator {
-  @apply mx-2 text-blue-200;
-}
-
-.breadcrumb-current {
-  @apply font-semibold text-blue-100;
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
 }

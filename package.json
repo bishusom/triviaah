@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:watch": "next lint --watch"
+    "lint:watch": "next lint --watch",
+    "analyze": "ANALYZE=true next build",
+    "analyze:server": "ANALYZE=true next build --debug"
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^17.1.0",
@@ -46,6 +48,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^15.5.2",
     "@rollup/plugin-babel": "^6.0.4",
     "@tailwindcss/postcss7-compat": "^2.2.17",
     "@types/gtag.js": "^0.0.20",

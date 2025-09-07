@@ -1,4 +1,4 @@
-// components/home/CategoryGrid.tsx
+// components/home/CategoryGrid.tsx (optimized)
 import Link from 'next/link';
 
 const categories = [
@@ -20,7 +20,7 @@ export default function CategoryGrid() {
         <Link 
           href="/trivias" 
           className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors whitespace-nowrap"
-          prefetch={false}
+          prefetch={false} // Disable prefetch for better performance
         >
           View All Categories →
         </Link>
@@ -31,7 +31,7 @@ export default function CategoryGrid() {
             key={c.name}
             href={`/trivias/${c.name.toLowerCase()}`}
             className="bg-white hover:bg-blue-50 border border-gray-200 rounded-lg p-4 text-center transition-colors group"
-            prefetch={false}
+            prefetch={false} // Disable prefetch for better performance
             title={c.desc}
           >
             <div className="font-medium text-gray-800 group-hover:text-blue-600">
