@@ -84,6 +84,39 @@
   }
 }
 
+/* Component styles - only what's absolutely necessary */
+.quiz-option {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: left;
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(209, 213, 219, 0.5);
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+  contain: layout style paint; /* Add containment */
+}
+
+.correct-answer {
+  background-color: rgba(240, 253, 244, 1);
+  border-color: rgba(74, 222, 128, 1);
+  color: rgba(22, 101, 52, 1);
+}
+
+.incorrect-answer {
+  background-color: rgba(254, 242, 242, 1);
+  border-color: rgba(252, 165, 165, 1);
+  color: rgba(153, 27, 27, 1);
+}
+
+/* Critical above-the-fold optimization classes */
+.lcp-priority {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .categories-grid {
@@ -167,14 +200,4 @@
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
-}
-
-.adsbygoogle {
-  min-width: 300px !important;
-}
-
-@media (min-width: 768px) {
-  .adsbygoogle {
-    min-width: 728px !important;
-  }
 }

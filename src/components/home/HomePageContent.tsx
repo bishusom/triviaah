@@ -1,24 +1,40 @@
 // components/home/HomePageContent.tsx (simplified)
 'use client';
-
+import { useEffect, useState } from 'react';
 import { AdBanner } from '@/components/Ads';
 import StreakBadge from '@/components/StreakBadge';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
 import Footer from '@/components/home/Footer';
-//import Image from 'next/image';
-import Logo from '@/components/home/logo';
+import Image from 'next/image';
 import { DAILY_QUIZZES, ADDITIONAL_SECTIONS } from '@/../data/homeContent';
 
 export default function HomePageContent() {
+  const [isAboveTheFoldLoaded, setIsAboveTheFoldLoaded] = useState(false);
+
+  useEffect(() => {
+    // Mark above-the-fold content as loaded after a short delay
+    const timer = setTimeout(() => {
+      setIsAboveTheFoldLoaded(true);
+    }, 1000);
+  
+    return () => clearTimeout(timer);
+  }, []); 
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-blue-700 text-white py-4 px-4">
-        <div className="container mx-auto">
-          <div className="logo-container">
-            <Logo />
-          </div>
+        <div className="container mx-auto flex items-center justify-center gap-4">
+            <Image
+                src="/logo-new.webp"
+                alt="Triviaah - Free Daily Trivia Games"
+                width={280}
+                height={50}
+                priority
+                quality={75}
+                className="object-contain lcp-priority"
+            />
         </div>
       </header>
       <AdBanner position="header" />

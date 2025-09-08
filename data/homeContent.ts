@@ -39,7 +39,7 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
     name: 'Science & Nature',
     path: '/daily/science',
     image: '/imgs/science-160x160.webp',
-    tagline: 'Discover science and animal kingdom wonders in our free online science trivia',
+    tagline: 'Discover science & animal kingdom wonders in our free online trivia',
     keywords: 'science trivia quiz, biology quiz game, physics trivia questions, science quiz with answers',
   },
   {
