@@ -12,25 +12,12 @@
     min-height: 100vh;
   }
 
-  /* Optimize image rendering - FIXED: Remove duplicate img rules */
+  /* Optimize image rendering */
   img {
     content-visibility: auto;
     contain-intrinsic-size: 1px 1000px;
   }
   
-  /* Reduce layout shifts */
-  .category-grid, 
-  .horizontal-scroll,
-  .contain-layout {
-    contain: layout style paint;
-  }
-  
-  /* Specific containment for critical elements */
-  .logo-container,
-  .category-image-placeholder {
-    contain: layout style paint;
-  }
-
   /* Focus styles for accessibility */
   button:focus-visible,
   a:focus-visible {
@@ -49,28 +36,6 @@
     display: none;
   }
   
-  /* Prevent layout shifts for specific elements */
-  .no-cls {
-    contain: layout style paint;
-  }
-  
-  /* Reserve space for common elements to prevent CLS */
-  .reserve-logo {
-    min-height: 40px;
-  }
-  
-  .reserve-category-image {
-    width: 64px;
-    height: 64px;
-  }
-  
-  .reserve-button {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   /* Animation reduction for users who prefer it */
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -84,49 +49,28 @@
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .categories-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-  }
-  
-  .category-card {
-    padding: 1rem;
-    contain: layout style paint; /* Add containment */
-  }
-  
-  .category-image {
-    height: 100px;
-    contain: layout style paint; /* Add containment */
-  }
-  
-  /* Mobile-specific CLS prevention */
-  .mobile-contain {
-    contain: layout style paint;
-  }
+/* Critical above-the-fold styles for main heading */
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
-@media (max-width: 640px) {
-  .quiz-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    contain: layout style paint; /* Add containment */
-  }
+.font-bold {
+  font-weight: 700;
+}
 
-  .quiz-attributes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    margin-bottom: 0.5rem;
-    contain: layout style paint; /* Add containment */
-  }
-  
-  /* Ensure buttons don't shift layout on mobile */
-  button {
-    min-height: 44px;
-    contain: layout style paint;
+.text-gray-800 {
+  color: rgb(31 41 55);
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .text-2xl {
+    font-size: 1.3rem;
   }
 }
 
@@ -160,13 +104,6 @@
   contain: layout style paint;
   display: block;
   overflow: hidden;
-}
-
-/* Optimize scrolling performance */
-.optimize-scrolling {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
 }
 
 .adsbygoogle {
