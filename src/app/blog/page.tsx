@@ -1,5 +1,6 @@
-import { getAllPosts } from '@/lib/markdown';
 import Link from 'next/link';
+import Image from 'next/image';
+import { getAllPosts } from '@/lib/markdown';
 import styles from '@/../styles/Blog.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -44,7 +45,12 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
   return (
     <div className={styles.container}>
       <h1>Blog Posts</h1>
-      
+      <Image
+        src="/imgs/default-blog.webp"
+        alt="Blog Post Image"
+        width={800}
+        height={25}
+      />
       <div className={styles.blogGrid}>
         {paginatedPosts.map(post => (
           <div key={post.slug} className={styles.blogCard}>

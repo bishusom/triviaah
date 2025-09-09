@@ -3,8 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Script from 'next/script';
-import { FaMedal, FaTrophy, FaCopy, FaCheck } from 'react-icons/fa';
+import { MdShare } from "react-icons/md";
+import { FaMedal, FaTrophy, FaCheck } from 'react-icons/fa';
 import { FaSmile, FaMeh, FaFrown, FaGrinStars, FaAngry } from 'react-icons/fa';
 import { useUser } from '@/context/UserContext';
 import { useSession } from 'next-auth/react';
@@ -351,7 +351,7 @@ export default function QuizSummary({
               </>
             ) : (
               <>
-                <FaCopy />
+                <MdShare />
                 Share Your Score
               </>
             )}

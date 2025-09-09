@@ -138,7 +138,7 @@ export default function HomePageContent() {
 
         {/* New Section: How Our Daily Quiz with Answers Works - Now Collapsible */}
         <CollapsibleSection title="How Our Daily Quiz with Answers Works">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-blue-50 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-md">
                 <span className="text-2xl font-bold text-blue-600">1</span>

@@ -4,7 +4,6 @@
 import { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import DailyQuizClient from '@/components/daily/DailyQuizClient';
 import { getTimeLeft } from '@/utils/dateUtils';
 import { ReadonlyQuizItems, ReadonlySectionItems, ReadonlyQuizItem, ReadonlySectionItem } from '@/types/home';
@@ -33,54 +32,69 @@ export default function HorizontalScrollSection({
   isQuizSection = false 
 }: HorizontalScrollSectionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [showLeftButton, setShowLeftButton] = useState(false);
-  const [showRightButton, setShowRightButton] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [totalVisibleItems, setTotalVisibleItems] = useState(1);
 
-  const updateScrollButtons = () => {
+  const updateScrollPosition = () => {
     if (!scrollContainerRef.current) return;
     
     const container = scrollContainerRef.current;
     const scrollLeft = container.scrollLeft;
-    const scrollWidth = container.scrollWidth;
-    const clientWidth = container.clientWidth;
+    const itemWidth = container.querySelector('.w-56')?.clientWidth || 224; // Default to 224px (w-56)
+    const gap = 16; // space-x-4 equals 16px
     
-    setShowLeftButton(scrollLeft > 0);
-    setShowRightButton(scrollLeft < scrollWidth - clientWidth - 10); // 10px tolerance
+    // Calculate which item is currently in view
+    const newIndex = Math.round(scrollLeft / (itemWidth + gap));
+    setCurrentIndex(Math.max(0, newIndex)); // Ensure index is never negative
   };
 
   useEffect(() => {
-    updateScrollButtons();
+    // Calculate how many items are visible at once
+    const calculateVisibleItems = () => {
+      if (!scrollContainerRef.current) return;
+      
+      const container = scrollContainerRef.current;
+      const containerWidth = container.clientWidth;
+      const itemWidth = container.querySelector('.w-56')?.clientWidth || 224;
+      const gap = 16;
+      
+      const visibleCount = Math.max(1, Math.floor(containerWidth / (itemWidth + gap)));
+      setTotalVisibleItems(visibleCount);
+    };
+
+    calculateVisibleItems();
+    updateScrollPosition();
     
-    const handleResize = () => updateScrollButtons();
+    const handleResize = () => {
+      calculateVisibleItems();
+      updateScrollPosition();
+    };
+    
     window.addEventListener('resize', handleResize);
     
     return () => window.removeEventListener('resize', handleResize);
   }, [items]);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const scrollToIndex = (index: number) => {
     if (!scrollContainerRef.current) return;
 
     const container = scrollContainerRef.current;
-    const scrollAmount = 300;
-    const currentScroll = container.scrollLeft;
-    const maxScroll = container.scrollWidth - container.clientWidth;
-
-    let targetScroll: number;
-
-    if (direction === 'right') {
-      targetScroll = Math.min(currentScroll + scrollAmount, maxScroll);
-    } else {
-      targetScroll = Math.max(currentScroll - scrollAmount, 0);
-    }
+    const itemWidth = container.querySelector('.w-56')?.clientWidth || 224;
+    const gap = 16;
+    
+    const targetScroll = index * (itemWidth + gap);
 
     // Use GSAP for smooth scrolling
     gsap.to(container, {
       scrollTo: { x: targetScroll, autoKill: false },
       duration: 0.5,
       ease: "power2.out",
-      onComplete: updateScrollButtons
+      onComplete: () => setCurrentIndex(index)
     });
   };
+
+  // Calculate how many dot indicators we need - ensure it's always at least 1
+  const totalDots = Math.max(1, Math.ceil(items.length / Math.max(1, totalVisibleItems)));
 
   return (
     <div className="mb-12 w-full">
@@ -96,13 +110,17 @@ export default function HorizontalScrollSection({
             : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
         } gap-6`}>
           {items.map((item, idx) => isQuizSection && isQuizItem(item) ? (
-            <DailyQuizClient 
+            <div 
               key={item.category}
-              quiz={item}
-              priorityImage={idx < 2}
-              timeLeft={getTimeLeft()}
-              className={idx < 2 ? "lcp-priority" : ""}
-            />
+              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400"
+            >
+              <DailyQuizClient 
+                quiz={item}
+                priorityImage={idx < 2}
+                timeLeft={getTimeLeft()}
+                className={idx < 2 ? "lcp-priority" : ""}
+              />
+            </div>
           ) : (
             <div 
               key={item.category} 
@@ -146,22 +164,11 @@ export default function HorizontalScrollSection({
         
         {/* Mobile horizontal scroll with GSAP */}
         <div className="sm:hidden relative w-full">
-          {/* Left scroll button - conditionally shown */}
-          {showLeftButton && (
-            <button 
-              onClick={() => scroll('left')}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 rounded-full p-1 shadow-md hover:bg-white transition-opacity"
-              aria-label="Scroll left"
-            >
-              <MdChevronLeft size={24} className="text-gray-600" />
-            </button>
-          )}
-          
           {/* Scroll container */}
           <div 
             ref={scrollContainerRef}
             className="overflow-x-auto pb-4 flex space-x-4 px-2"
-            onScroll={updateScrollButtons}
+            onScroll={updateScrollPosition}
             style={{ 
               scrollbarWidth: 'none', 
               msOverflowStyle: 'none',
@@ -173,13 +180,15 @@ export default function HorizontalScrollSection({
                 className="w-56 flex-shrink-0"
               >
                 {isQuizSection && isQuizItem(item) ? (
-                  <DailyQuizClient 
-                    quiz={item}
-                    priorityImage={idx < 2}
-                    timeLeft={getTimeLeft()}
-                  />
+                  <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400 h-full">
+                    <DailyQuizClient 
+                      quiz={item}
+                      priorityImage={idx < 2}
+                      timeLeft={getTimeLeft()}
+                    />
+                  </div>
                 ) : (
-                  <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 h-full p-4 flex flex-col">
+                  <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400 h-full p-4 flex flex-col">
                     <div className="flex items-center justify-center mb-3">
                       <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
                         <Image
@@ -210,15 +219,22 @@ export default function HorizontalScrollSection({
             ))}
           </div>
           
-          {/* Right scroll button - conditionally shown */}
-          {showRightButton && (
-            <button 
-              onClick={() => scroll('right')}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 rounded-full p-1 shadow-md hover:bg-white transition-opacity"
-              aria-label="Scroll right"
-            >
-              <MdChevronRight size={24} className="text-gray-600" />
-            </button>
+          {/* Dot indicators */}
+          {totalDots > 1 && (
+            <div className="flex justify-center mt-4 space-x-2">
+              {Array.from({ length: totalDots }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => scrollToIndex(index * totalVisibleItems)}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    index === Math.floor(currentIndex / totalVisibleItems) 
+                      ? 'bg-blue-600' 
+                      : 'bg-gray-300'
+                  }`}
+                  aria-label={`Go to page ${index + 1}`}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>

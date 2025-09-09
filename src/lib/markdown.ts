@@ -90,7 +90,7 @@ interface ContentfulItem {
 
 // Helper function to convert protocol-relative URLs to absolute URLs
 function normalizeImageUrl(imageUrl: string | undefined): string {
-  if (!imageUrl) return '/default-image.jpg';
+  if (!imageUrl) return '/imgs/default-blog.webp';
   
   if (imageUrl.startsWith('//')) {
     // Convert protocol-relative URL to HTTPS

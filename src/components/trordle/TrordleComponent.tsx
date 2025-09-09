@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { fetchPixabayImage } from '@/lib/pixabay';
 import styles from '@styles/Trordle.module.css';
 import { useSound } from '@/context/SoundContext';
+import { MdShare } from "react-icons/md";
 import { checkTrordleGuess, TrordleData, TrordleGuessResult } from '@/lib/trordle-logic';
 
 interface TrordleComponentProps {
@@ -694,9 +695,9 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
         <div className="mt-6 text-center bg-white rounded-lg shadow-md p-6">
           <button
             onClick={copyToClipboard}
-            className="btn primary mb-4"
+            className="flex items-center justify-center gap-2 mx-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
           >
-            Share Results
+            <MdShare /> Share Results
           </button>
           {shareMessage && (
             <div className="mt-2 text-green-600">{shareMessage}</div>
@@ -721,13 +722,6 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
               ))
             )}
           </div>
-          
-          <button
-            onClick={resetGame}
-            className="mt-4 text-blue-500 hover:text-blue-700 underline"
-          >
-            Play Again
-          </button>
         </div>
       )}
       

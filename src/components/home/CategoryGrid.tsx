@@ -1,13 +1,46 @@
 // components/home/CategoryGrid.tsx (optimized)
 import Link from 'next/link';
+import { 
+  MdMovieFilter, 
+  MdOutlineScience, 
+  MdHistory, 
+  MdOutlineSportsVolleyball,
+  MdMusicNote 
+} from "react-icons/md";
+import { BiWorld } from "react-icons/bi";
+import { FaTheaterMasks } from "react-icons/fa";
 
 const categories = [
-  { name: 'Movies', desc: 'Film trivia & cinema quiz with answers' },
-  { name: 'Science', desc: 'Biology, physics & chemistry explanations' },
-  { name: 'History', desc: 'Historical events & facts with context' },
-  { name: 'Geography', desc: 'World capitals & countries explained' },
-  { name: 'Sports', desc: 'Athletics & sports trivia answers' },
-  { name: 'Music', desc: 'Music trivia & song quiz explanations' }
+  { 
+    name: 'Movies', 
+    desc: 'Film trivia & cinema quiz with answers',
+    icon: <MdMovieFilter className="text-2xl text-blue-600 mb-2" />
+  },
+  { 
+    name: 'Science', 
+    desc: 'Biology, physics & chemistry explanations',
+    icon: <MdOutlineScience className="text-2xl text-green-600 mb-2" />
+  },
+  { 
+    name: 'History', 
+    desc: 'Historical events & facts with context',
+    icon: <MdHistory className="text-2xl text-amber-600 mb-2" />
+  },
+  { 
+    name: 'Geography', 
+    desc: 'World capitals & countries explained',
+    icon: <BiWorld className="text-2xl text-green-600 mb-2" />
+  },
+  { 
+    name: 'Sports', 
+    desc: 'Athletics & sports trivia answers',
+    icon: <MdOutlineSportsVolleyball className="text-2xl text-red-600 mb-2" />
+  },
+  { 
+    name: 'Music', 
+    desc: 'Music trivia & song quiz explanations',
+    icon: <MdMusicNote className="text-2xl text-blue-600 mb-2" />
+  }
 ];
 
 export default function CategoryGrid() {
@@ -30,10 +63,11 @@ export default function CategoryGrid() {
           <Link
             key={c.name}
             href={`/trivias/${c.name.toLowerCase()}`}
-            className="bg-white hover:bg-blue-50 border border-gray-200 rounded-lg p-4 text-center transition-colors group"
+            className="bg-white hover:bg-blue-50 border border-gray-200 rounded-lg p-4 text-center transition-colors group flex flex-col items-center"
             prefetch={false} // Disable prefetch for better performance
             title={c.desc}
           >
+            {c.icon}
             <div className="font-medium text-gray-800 group-hover:text-blue-600">
               {c.name}
             </div>
