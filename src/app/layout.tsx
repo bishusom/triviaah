@@ -105,9 +105,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <SeoBreadcrumbs />
               <GoogleAnalytics gaId="G-K4KZ7XR85V" />
               <Script
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-                strategy="lazyOnload"
-                crossOrigin="anonymous"
+                id="adsense-config"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    (window.adsbygoogle = window.adsbygoogle || []).push({
+                      google_ad_client: "ca-pub-4386714040098164",
+                      enable_page_level_ads: false // Disable auto ads
+                    });
+                  `,
+                }}
               />
             </SoundProvider>
           </UserProvider>

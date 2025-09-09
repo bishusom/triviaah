@@ -1,4 +1,4 @@
-// components/home/HomePageContent.tsx (optimized with collapsible sections)
+// components/home/HomePageContent.tsx (with ad injection prevention)
 'use client';
 import { useEffect, useState } from 'react';
 import { AdBanner } from '@/components/Ads';
@@ -22,6 +22,15 @@ export default function HomePageContent() {
   
     return () => clearTimeout(timer);
   }, []); 
+
+  // Add this effect to prevent auto ad injection in specific sections
+  useEffect(() => {
+    // This prevents auto ads from being injected into these sections
+    const sections = document.querySelectorAll('.horizontal-scroll-section, .category-section');
+    sections.forEach(section => {
+      section.setAttribute('data-no-ads', 'true');
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -63,27 +72,33 @@ export default function HomePageContent() {
 
         <StreakBadge />
 
-        {/* Daily Quizzes with horizontal scroll on mobile */}
-        <HorizontalScrollSection 
-          title="Daily Quiz Challenges" 
-          items={DAILY_QUIZZES} 
-          isQuizSection={true}
-        />
+        {/* Daily Quizzes with horizontal scroll on mobile - Add data attribute to prevent ads */}
+        <div className="horizontal-scroll-section" data-no-ads="true">
+          <HorizontalScrollSection 
+            title="Daily Quiz Challenges" 
+            items={DAILY_QUIZZES} 
+            isQuizSection={true}
+          />
+        </div>
 
         <HeroSection />
 
-        {/* More Brain Puzzles Section with horizontal scroll on mobile */}
-        <HorizontalScrollSection 
-          title="More Free Online Brain Games & Word Puzzles" 
-          items={ADDITIONAL_SECTIONS} 
-        />
+        {/* More Brain Puzzles Section with horizontal scroll on mobile - Add data attribute */}
+        <div className="horizontal-scroll-section" data-no-ads="true">
+          <HorizontalScrollSection 
+            title="More Free Online Brain Games & Word Puzzles" 
+            items={ADDITIONAL_SECTIONS} 
+          />
+        </div>
 
-        {/* Simple Categories Section */}
-        <div className="mb-12">
-          <h2 className="text-xl font-bold text-gray-800 mb-6 text-center">
-            Popular Quiz Categories
-          </h2>
-          <CategoryGrid />
+        {/* Simple Categories Section - Add data attribute */}
+        <div className="category-section" data-no-ads="true">
+          <div className="mb-12">
+            <h2 className="text-xl font-bold text-gray-800 mb-6 text-center">
+              Popular Quiz Categories
+            </h2>
+            <CategoryGrid />
+          </div>
         </div>
 
         {/* Enhanced SEO Content Section - Now Collapsible */}
