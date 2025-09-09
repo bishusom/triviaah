@@ -2,7 +2,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { AdBanner } from '@/components/Ads';
-import StreakBadge from '@/components/StreakBadge';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
 import HeroSection from '@/components/home/HeroSection';
@@ -69,8 +68,6 @@ export default function HomePageContent() {
             New free online trivia games with answers every 24 hours. Test your knowledge and learn instantly!
           </p>
         </div>
-
-        <StreakBadge />
 
         {/* Daily Quizzes with horizontal scroll on mobile - Add data attribute to prevent ads */}
         <div className="horizontal-scroll-section" data-no-ads="true">

@@ -3,10 +3,7 @@ import { Geist } from 'next/font/google';
 import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
-import { SoundProvider } from '@/context/SoundContext';
-import { UserProvider } from '@/context/UserContext';
-import WelcomeBanner from '@/components/WelcomeBanner';
-import SessionProviderClient from '@/components/SessionProviderClient';
+import { SoundProvider } from '@/context/SoundContext';;
 import { Metadata } from 'next';
 import '@styles/globals.css';
 
@@ -94,37 +91,32 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
 
       <body className={`${geist.variable} font-[Geist,Geist-fallback] overflow-x-hidden`}>
-        <SessionProviderClient>
-          <UserProvider>
-            <WelcomeBanner />
-            <SoundProvider>
-              <Breadcrumbs />
-              <div className="w-full overflow-x-hidden">
-                {children}
-              </div>
-              <SeoBreadcrumbs />
-              <GoogleAnalytics gaId="G-K4KZ7XR85V" />
-              <Script
-                id="adsense-config"
-                strategy="afterInteractive"
-                dangerouslySetInnerHTML={{
-                  __html: `
-                    (window.adsbygoogle = window.adsbygoogle || []).push({
-                      google_ad_client: "ca-pub-4386714040098164",
-                      enable_page_level_ads: false // Disable auto ads
-                    });
-                  `,
-                }}
-              />
-              {/* ADD THIS BACK: */}
-              <Script
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-                strategy="lazyOnload"
-                crossOrigin="anonymous"
-              />
-            </SoundProvider>
-          </UserProvider>
-        </SessionProviderClient>
+        <SoundProvider>
+          <Breadcrumbs />
+          <div className="w-full overflow-x-hidden">
+            {children}
+          </div>
+          <SeoBreadcrumbs />
+          <GoogleAnalytics gaId="G-K4KZ7XR85V" />
+          <Script
+            id="adsense-config"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (window.adsbygoogle = window.adsbygoogle || []).push({
+                  google_ad_client: "ca-pub-4386714040098164",
+                  enable_page_level_ads: false // Disable auto ads
+                });
+              `,
+            }}
+          />
+          {/* ADD THIS BACK: */}
+          <Script
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+            strategy="lazyOnload"
+            crossOrigin="anonymous"
+          />
+        </SoundProvider>
       </body>
     </html>
   );

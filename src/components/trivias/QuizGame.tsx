@@ -8,13 +8,8 @@ import { event } from '@/lib/gtag';
 import { extractKeywords } from '@/lib/nlpKeywords';
 import { useSound } from '@/context/SoundContext';
 import CountUp from 'react-countup';
-import { useGuestSession } from '@/hooks/useGuestSession';
-import { useUser } from '@/context/UserContext';
 import Confetti from 'react-confetti';
 import useWindowSize from 'react-use/lib/useWindowSize';
-import { useRouter } from 'next/navigation';
-import { signIn, useSession } from 'next-auth/react';
-import QuizStartModal from '@/components/trivias/QuizStartModal';
 import QuizSummary from '@/components/trivias/QuizSummary';
 
 interface QuizConfig {
@@ -46,14 +41,6 @@ export default function QuizGame({
   const isQuickfire = quizConfig?.isQuickfire || category === 'quick-fire';
   const timePerQuestion = isQuickfire ? 15 : 30;
   const hasBonusQuestion = quizConfig?.hasBonusQuestion ?? (category === 'quick-fire');
-  
-  const { user } = useUser();
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  
-  /* ---------- Authentication State ---------- */
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authAttempted, setAuthAttempted] = useState(false);
 
   /* ---------- Data slicing ---------- */
   const [regularQuestions, setRegularQuestions] = useState<Question[]>([]);
@@ -97,83 +84,13 @@ export default function QuizGame({
 
   /* ---------- Hooks ---------- */
   const { isMuted } = useSound();
-  const { startNewGame, completeGame, isGuest } = useGuestSession();
+
   const { width, height } = useWindowSize();
 
-  useEffect(() => { 
-    if (gameStarted) {
-      startNewGame(); 
-    }
-  }, [startNewGame, gameStarted]);
-
-  /* ---------- Check for saved game state after authentication ---------- */
+  /* ---------- Start Game ---------- */
   useEffect(() => {
-    // Check if we're returning from authentication with saved game state
-    const savedGameState = sessionStorage.getItem('quizGameState');
-    const quizAfterAuth = sessionStorage.getItem('quizAfterAuth');
-    
-    if (savedGameState && quizAfterAuth === 'quiz') {
-      try {
-        const gameState = JSON.parse(savedGameState);
-        setRegularQuestions(gameState.questions);
-        setBonusQuestion(gameState.bonusQuestion);
-        setShowBonusQuestion(gameState.showBonusQuestion);
-        setScore(gameState.score);
-        setCorrectCount(gameState.correctCount);
-        setTimeUsed(gameState.timeUsed);
-        setCurrentIndex(gameState.currentIndex);
-        
-        // Clear the saved state
-        sessionStorage.removeItem('quizGameState');
-        sessionStorage.removeItem('quizAfterAuth');
-        
-        setGameStarted(true);
-      } catch (error) {
-        console.error('Error restoring game state:', error);
-      }
-    }
-  }, []);
-
-  /* ---------- Skip auth modal for authenticated users ---------- */
-  useEffect(() => {
-    if (status === 'loading') return;
-    
-    // Check if we have a saved game state first
-    const savedGameState = sessionStorage.getItem('quizGameState');
-    
-    if (session && !savedGameState) {
-      // User is authenticated and no saved state, start game immediately
-      setGameStarted(true);
-    } else if (!session && !savedGameState) {
-      // Show auth modal for unauthenticated users
-      setShowAuthModal(true);
-    }
-  }, [session, status]);
-
-  /* ---------- Authentication ---------- */
-  const handleAuthRedirect = () => {
-    // Save game state before redirecting
-    const gameState = {
-      score,
-      correctCount,
-      timeUsed,
-      currentIndex,
-      questions: regularQuestions,
-      bonusQuestion,
-      showBonusQuestion,
-      category
-    };
-    sessionStorage.setItem('quizGameState', JSON.stringify(gameState));
-    sessionStorage.setItem('quizAfterAuth', 'quiz');
-    
-    signIn('google', { callbackUrl: '/auth-redirect' });
-  };
-
-  const handleGuestContinue = () => {
-    setShowAuthModal(false);
-    setAuthAttempted(true);
     setGameStarted(true);
-  };
+  }, []);
 
   /* ---------- Sound refs ---------- */
   const correctSound = useRef<HTMLAudioElement | null>(null);
@@ -225,8 +142,10 @@ export default function QuizGame({
 
   /* ---------- Move to next question function ---------- */
   const moveToNextQuestion = useCallback(() => {
-    // Check if we should show bonus question
-    if (isQuickfire && hasBonusQuestion && currentIndex === regularQuestions.length - 1 && !showBonusQuestion) {
+    // Check if we should show bonus question (only for quickfire with bonus available)
+    if (isQuickfire && hasBonusQuestion && bonusQuestion && 
+        currentIndex === regularQuestions.length - 1 && 
+        !showBonusQuestion) {
       setShowBonusQuestion(true);
       setCurrentIndex(0); // Reset index for bonus question
     } else {
@@ -236,7 +155,7 @@ export default function QuizGame({
     setSelectedOption(null);
     setShowFeedback(false);
     setTimeUp(false);
-  }, [timePerQuestion, isQuickfire, hasBonusQuestion, currentIndex, regularQuestions.length, showBonusQuestion]);
+  }, [timePerQuestion, isQuickfire, hasBonusQuestion, currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion]);
 
   /* ---------- Save score and show summary ---------- */
   const saveScoreAndShowSummary = useCallback(async () => {
@@ -250,30 +169,10 @@ export default function QuizGame({
       isTimedMode: true
     };
     
-    // For authenticated users, save score automatically
-    if (session?.user) {
-      try {
-        await fetch('/api/highscores', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            name: session.user.name || 'Anonymous', 
-            score, 
-            category,
-            correctCount,
-            totalQuestions: questions.length,
-            timeUsed
-          }),
-        });
-      } catch (error) {
-        console.error('Failed to save score:', error);
-      }
-    }
-    
     // Set the result and show summary
     setQuizResult(quizResult);
     setShowSummary(true);
-  }, [session, score, correctCount, questions.length, timeUsed, category]);
+  }, [ score, correctCount, questions.length, timeUsed, category]);
 
   /* ---------- Shuffle options ---------- */
   useEffect(() => {
@@ -358,9 +257,7 @@ export default function QuizGame({
       setTimeout(() => {
         const finished = currentIndex >= questions.length - 1;
         if (finished) {
-          completeGame(score + (correct ? earned : 0));
           event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});
-          
           // Always show summary, don't redirect
           saveScoreAndShowSummary();
         } else {
@@ -368,7 +265,7 @@ export default function QuizGame({
         }
       }, 1500);
     },
-    [currentQuestion, timeLeft, score, playSound, timeUp, isQuickfire, showBonusQuestion, saveScoreAndShowSummary, moveToNextQuestion, completeGame, currentIndex, questions.length, gameStarted, showFeedback]
+    [currentQuestion, timeLeft, score, playSound, timeUp, isQuickfire, showBonusQuestion, saveScoreAndShowSummary, moveToNextQuestion, currentIndex, questions.length, gameStarted, showFeedback]
   );
 
   const handleTimeUp = useCallback(() => {
@@ -385,16 +282,15 @@ export default function QuizGame({
     setTimeout(() => {
       const finished = currentIndex >= questions.length - 1;
       if (finished) {
-        completeGame(score);
-        event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});
-        
+    
+        event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});    
         // Always show summary, don't redirect
         saveScoreAndShowSummary();
       } else {
         moveToNextQuestion();
       }
     }, 2000);
-  }, [currentQuestion, currentIndex, questions.length, score, showFeedback, playSound, saveScoreAndShowSummary, moveToNextQuestion, completeGame, gameStarted]);
+  }, [currentQuestion, currentIndex, questions.length, score, showFeedback, playSound, saveScoreAndShowSummary, moveToNextQuestion, gameStarted]);
 
   /* ---------- Loading ---------- */
   if (isLoading)
@@ -422,7 +318,6 @@ export default function QuizGame({
           setCorrectCount(0);
           setTimeUsed(0);
           setGameStarted(false);
-          setShowAuthModal(status === 'unauthenticated');
         }}
       />
     );
@@ -432,16 +327,6 @@ export default function QuizGame({
   return (
     <div className="relative max-w-3xl mx-auto p-4 md:p-6 bg-white rounded-2xl shadow-2xl overflow-hidden">
       {showConfetti && <Confetti width={width} height={height} recycle={false} />}
-      
-      {/* Authentication Modal at the start */}
-      <QuizStartModal
-        isOpen={showAuthModal && !gameStarted}
-        onClose={() => setShowAuthModal(false)}
-        onGuestSave={handleGuestContinue}
-        onStartGame={handleAuthRedirect}
-        category={category}
-        isAuthenticated={!!session}
-      />
       
       {!gameStarted && (
         <div className="flex items-center justify-center min-h-[400px]">

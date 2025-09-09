@@ -6,8 +6,7 @@ import Link from 'next/link';
 import { MdShare } from "react-icons/md";
 import { FaMedal, FaTrophy, FaCheck } from 'react-icons/fa';
 import { FaSmile, FaMeh, FaFrown, FaGrinStars, FaAngry } from 'react-icons/fa';
-import { useUser } from '@/context/UserContext';
-import { useSession } from 'next-auth/react';
+import { getPersistentGuestId, rerollGuestId } from '@/lib/guestId';
 
 type QuizResult = {
   score: number;
@@ -68,13 +67,12 @@ export default function QuizSummary({
 }) {
   const [highScores, setHighScores] = useState<HighScore[]>([]);
   const [globalHigh, setGlobalHigh] = useState<HighScore | null>(null);
-  const [playerName, setPlayerName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
   const [scoreSaved, setScoreSaved] = useState(false);
-  const { user } = useUser();
-  const { data: session, status } = useSession();
+  const alias = getPersistentGuestId();
+  const [displayName, setDisplayName] = useState(alias);
 
   /* ---------- helpers ---------- */
   const formatCategory = (s: string) =>
@@ -142,42 +140,8 @@ export default function QuizSummary({
     fetchHighScores();
   }, [result.category]);
 
-  /* ---------- Save score for authenticated users automatically ---------- */
-  useEffect(() => {
-    const saveScoreForAuthenticatedUser = async () => {
-      if (status === 'authenticated' && session?.user && !scoreSaved) {
-        try {
-          setSaving(true);
-          const response = await fetch('/api/highscores', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: session.user.name || 'Anonymous',
-              score: result.score,
-              category: result.category,
-              difficulty: 'mixed',
-              correctCount: result.correctCount,
-              totalQuestions: result.totalQuestions,
-              timeUsed: result.timeUsed
-            }),
-          });
-
-          if (response.ok) {
-            setScoreSaved(true);
-            await fetchHighScores(); // Refresh leaderboard
-          }
-        } catch (error) {
-          console.error('Failed to save score:', error);
-        } finally {
-          setSaving(false);
-        }
-      }
-    };
-
-    saveScoreForAuthenticatedUser();
-  }, [status, session, result, scoreSaved]);
-
-  /* ---------- Manual save for guest users ---------- */
+  
+  /* ---------- Manual save score ---------- */
   const saveScoreCore = async (name: string) => {
     if (saving || scoreSaved) return;
     setSaving(true);
@@ -205,6 +169,17 @@ export default function QuizSummary({
     }
   };
 
+  useEffect(() => {
+  if (!scoreSaved) saveScoreCore(displayName);
+  }, []);
+
+
+   /* ---------- tiny reroll icon ---------- */
+  const handleReroll = () => {
+    const newAlias = rerollGuestId();
+    setDisplayName(newAlias);
+    saveScoreCore(newAlias); // update the row in-place
+  }
   /* ---------- performance message ---------- */
   const ratio = result.correctCount / result.totalQuestions;
   const perf = ratio === 0 ? 'zero' : ratio >= 0.9 ? 'gold' : ratio >= 0.7 ? 'silver' : 'bronze';
@@ -261,12 +236,6 @@ export default function QuizSummary({
               <div className="flex justify-between"><span>Correct:</span><span>{result.correctCount}/{result.totalQuestions}</span></div>
               <div className="flex justify-between"><span>Time:</span><span>{formatTime(result.timeUsed)}</span></div>
               <div className="flex justify-between"><span>Category:</span><span>{formatCategory(result.category)}</span></div>
-              {status === 'authenticated' && (
-                <div className="flex justify-between text-green-600">
-                  <span>Player:</span>
-                  <span>{session.user?.name || 'Anonymous'}</span>
-                </div>
-              )}
             </div>
             {globalHigh && (
               <div className="mt-6 pt-4 border-t">
@@ -300,38 +269,25 @@ export default function QuizSummary({
             </div>
 
             {/* Show manual save input for guest users */}
-            {status !== 'authenticated' && !scoreSaved && (
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold mb-4 border-b pb-2">Save your score</h3>
-                <p className="text-sm text-gray-600 mb-3">Enter your name to save your score to the leaderboard</p>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <input
-                    type="text"
-                    value={playerName}
-                    onChange={(e) => setPlayerName(e.target.value)}
-                    placeholder="Enter your name"
-                    className="px-4 py-2 border rounded-lg flex-grow"
-                    maxLength={20}
-                  />
-                  <button
-                    onClick={() => saveScoreCore(playerName.trim() || 'Guest')}
-                    disabled={saving || !playerName.trim()}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg"
-                  >
-                    {saving ? 'Saving...' : 'Save'}
-                  </button>
-                </div>
-              </div>
-            )}
+            <div className="flex justify-between items-center">
+              <span className="flex items-center gap-2">
+                {displayName}
+                <button
+                  onClick={handleReroll}
+                  className="text-xs text-blue-600 hover:underline"
+                  title="Get a new random name"
+                >
+                  🔄
+                </button>
+              </span>
+              <span>{result.score}</span>
+            </div>
 
             {/* Show confirmation if score was saved */}
             {scoreSaved && (
               <div className="bg-green-50 p-6 rounded-lg border border-green-200">
                 <p className="text-green-800 text-center">
-                  ✅ Score saved successfully!
-                  {status === 'authenticated' && session.user?.name && (
-                    <> as <span className="font-semibold">{session.user.name}</span></>
-                  )}
+                  ✅ Score saved successfully! as <span className="font-semibold">{displayName}</span>
                 </p>
               </div>
             )}
