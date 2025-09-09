@@ -116,6 +116,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   `,
                 }}
               />
+              {/* ADD THIS BACK: */}
+              <Script
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+                strategy="lazyOnload"
+                crossOrigin="anonymous"
+              />
             </SoundProvider>
           </UserProvider>
         </SessionProviderClient>
