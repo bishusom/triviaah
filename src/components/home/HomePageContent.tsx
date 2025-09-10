@@ -39,15 +39,17 @@ export default function HomePageContent() {
             <Image
                 src="/logo-new.webp"
                 alt="Triviaah - Free Daily Trivia Games"
-                width={280}
-                height={50}
+                width={200} // Reduce from 280
+                height={36} // Reduce proportionally
                 priority
-                quality={75}
+                quality={85} // Increase from 75 for better compression
+                sizes="(max-width: 768px) 200px, 280px"
                 className="object-contain lcp-priority"
             />
         </div>
       </header>
-      <AdBanner position="header" />
+     
+     <AdBanner position="header" />
 
       <main className="container mx-auto px-4 py-6 flex-grow">
         {/* Critical heading with inline styles to prevent render delay */}
@@ -78,7 +80,9 @@ export default function HomePageContent() {
           />
         </div>
 
-        <HeroSection />
+        { /* ---Commenting hero section 
+          <HeroSection />
+        ---*/ }  
 
         {/* More Brain Puzzles Section with horizontal scroll on mobile - Add data attribute */}
         <div className="horizontal-scroll-section" data-no-ads="true">

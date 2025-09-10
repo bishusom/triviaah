@@ -10,7 +10,9 @@ import '@styles/globals.css';
 const geist = Geist({ 
   subsets: ['latin'], 
   variable: '--font-geist',
-  display: 'swap'
+  display: 'swap',
+  adjustFontFallback: true, 
+  fallback: ['system-ui', 'arial']
 });
 
 export const metadata: Metadata = {
@@ -51,13 +53,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               __html: `
                 /* Critical above-the-fold CSS to prevent CLS */
                 .logo-container { 
-                  min-height: 40px;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  contain: layout style paint;
-                }
-                
+                    min-height: 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    contain: layout style paint;
+                  }
+
+                  /* Text shouldn't shift during font load */
+                    h1, h2, h3 {
+                      font-size-adjust: 0.5;
+                    }
+
                 .category-image-placeholder {
                   width: 64px;
                   height: 64px;
@@ -79,6 +86,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   width: 100%; 
                   margin-left: auto; 
                   margin-right: auto; 
+                }
+
+                .hero-section { 
+                  min-height: 200px;
+                  contain: layout style paint;
+                }
+                
+                .category-grid {
+                  min-height: 400px;
+                  contain: layout style paint;
+                }
+                
+                /* Ad containers must reserve space */
+                .ad-container {
+                  min-height: 90px;
+                  background-color: #f5f5f5;
+                  contain: layout style paint;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
                 }
                 
                 @media (min-width: 640px) { .container { max-width: 640px; } }

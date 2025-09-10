@@ -1,3 +1,4 @@
+// components/Ads.tsx
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -69,7 +70,7 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
           observer.disconnect();
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: position === 'header' ? '0px' : '200px' } // Load header ad immediately
     );
 
     observer.observe(adRef.current);
@@ -94,14 +95,14 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
             window.adsbygoogle.push({});
             
             // Mark as loaded after a short delay
-            setTimeout(() => setIsLoaded(true), 100);
+            setTimeout(() => setIsLoaded(true), 50); // Reduced delay
           }
         }
       } catch (e) {
         console.error(`AdSense error for ${adId}:`, e);
         initializedAds.delete(adId);
       }
-    }, position === 'header' ? 100 : 300);
+    }, position === 'header' ? 0 : 100); // No delay for header, 100ms for footer
 
     return () => clearTimeout(timer);
   }, [isIntersecting, adId, position, hasWidth]);
@@ -113,7 +114,20 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
     };
   }, [adId]);
 
-  if (!isVisible) return null;
+  // Maintain space when ad is closed to prevent CLS
+  if (!isVisible) {
+    return (
+      <div 
+        className="w-full ad-container"
+        style={{ 
+          minHeight: '90px', 
+          maxWidth: '728px', 
+          margin: '0 auto',
+          contain: 'layout style paint'
+        }}
+      />
+    );
+  }
 
   // Different ad slots for header vs footer
   const adSlot = position === 'header' 
@@ -121,13 +135,18 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
     : process.env.NEXT_PUBLIC_ADSENSE_SLOT_FOOTER || process.env.NEXT_PUBLIC_ADSENSE_SLOT_HEADER;
 
   return (
-    <div className="relative w-full bg-white" ref={adRef}>
+    <div className="relative w-full bg-white ad-container" ref={adRef}>
       <div ref={adContainerRef} className="py-2 px-4">
         {/* Loading placeholder to prevent layout shifts */}
         {!isLoaded && (
           <div 
-            className="w-full bg-gray-100 flex items-center justify-center"
-            style={{ height: '90px', maxWidth: '728px', margin: '0 auto' }}
+            className="w-full bg-gray-100 flex items-center justify-center ad-container"
+            style={{ 
+              minHeight: '90px', 
+              maxWidth: '728px', 
+              margin: '0 auto',
+              contain: 'layout style paint'
+            }}
           >
             <div className="text-gray-400 text-sm">Loading ad...</div>
           </div>
@@ -137,7 +156,7 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
           className="adsbygoogle"
           style={{ 
             display: 'block',
-            height: '90px',
+            minHeight: '90px',
             width: '100%',
             maxWidth: '728px',
             margin: '0 auto',
@@ -147,11 +166,13 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
           data-ad-slot={adSlot}
           data-ad-format="auto"
           data-full-width-responsive="true"
+          data-adtest={process.env.NODE_ENV === 'development' ? 'on' : undefined} // Test ads in dev
         />
       </div>
       <button 
         onClick={() => setIsVisible(false)}
-        className="absolute top-1 right-1 md:top-2 md:right-2 bg-gray-200 rounded-full p-1 hover:bg-gray-300 transition-colors z-10"
+        className="absolute top-2 right-2 bg-gray-200 rounded-full p-1 hover:bg-gray-300 transition-colors z-10"
+        style={{ position: 'absolute' }} // Ensure no layout impact
         aria-label="Close ad"
       >
         <FaTimes className="text-gray-600 text-sm" />
@@ -159,8 +180,6 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
     </div>
   );
 };
-
-// Similar fixes for other ad components...
 
 export const AdSquare = () => {
   const adRef = useRef<HTMLDivElement>(null);
@@ -218,7 +237,7 @@ export const AdSquare = () => {
           observer.disconnect();
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: '500px' } // Load further from viewport to reduce CLS
     );
 
     observer.observe(adRef.current);
@@ -240,14 +259,14 @@ export const AdSquare = () => {
             window.adsbygoogle = window.adsbygoogle || [];
             window.adsbygoogle.push({});
             
-            setTimeout(() => setIsLoaded(true), 100);
+            setTimeout(() => setIsLoaded(true), 50); // Reduced delay
           }
         }
       } catch (e) {
         console.error(`AdSense error for ${adId}:`, e);
         initializedAds.delete(adId);
       }
-    }, 500);
+    }, 100); // Reduced delay
 
     return () => clearTimeout(timer);
   }, [isIntersecting, adId, hasWidth]);
@@ -258,16 +277,34 @@ export const AdSquare = () => {
     };
   }, [adId]);
 
-  if (!isVisible) return null;
+  // Maintain space when ad is closed to prevent CLS
+  if (!isVisible) {
+    return (
+      <div 
+        className="ad-square-container"
+        style={{ 
+          minWidth: '300px', 
+          minHeight: '250px', 
+          maxWidth: '100%',
+          contain: 'layout style paint'
+        }}
+      />
+    );
+  }
 
   return (
-    <div className="relative my-4" ref={adRef}>
+    <div className="relative my-4 ad-square-container" ref={adRef}>
       <div ref={adContainerRef} className="flex justify-center">
         {/* Loading placeholder */}
         {!isLoaded && (
           <div 
-            className="bg-gray-100 flex items-center justify-center"
-            style={{ width: '300px', height: '250px' }}
+            className="bg-gray-100 flex items-center justify-center ad-square-container"
+            style={{ 
+              minWidth: '300px', 
+              minHeight: '250px', 
+              maxWidth: '100%',
+              contain: 'layout style paint'
+            }}
           >
             <div className="text-gray-400 text-sm">Loading ad...</div>
           </div>
@@ -277,18 +314,20 @@ export const AdSquare = () => {
           className="adsbygoogle"
           style={{ 
             display: 'inline-block', 
-            width: '300px', 
-            height: '250px',
+            minWidth: '300px', 
+            minHeight: '250px',
             maxWidth: '100%',
             visibility: isLoaded ? 'visible' : 'hidden'
           }}
           data-ad-client="ca-pub-4386714040098164"
           data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_SQUARE}
+          data-adtest={process.env.NODE_ENV === 'development' ? 'on' : undefined} // Test ads in dev
         />
       </div>
       <button 
         onClick={() => setIsVisible(false)}
-        className="absolute top-0 right-0 md:right-2 bg-gray-200 rounded-full p-1 hover:bg-gray-300 transition-colors z-10"
+        className="absolute top-2 right-2 bg-gray-200 rounded-full p-1 hover:bg-gray-300 transition-colors z-10"
+        style={{ position: 'absolute' }} // Ensure no layout impact
         aria-label="Close ad"
       >
         <FaTimes className="text-gray-600 text-sm" />
@@ -301,7 +340,7 @@ export const AdMultiplex = () => {
   const adRef = useRef<HTMLDivElement>(null);
   const adContainerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [adId] = useState(() => generateAdId('square'));
+  const [adId] = useState(() => generateAdId('multiplex'));
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasWidth, setHasWidth] = useState(false);
@@ -353,7 +392,7 @@ export const AdMultiplex = () => {
           observer.disconnect();
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: '500px' } // Load further from viewport to reduce CLS
     );
 
     observer.observe(adRef.current);
@@ -375,14 +414,14 @@ export const AdMultiplex = () => {
             window.adsbygoogle = window.adsbygoogle || [];
             window.adsbygoogle.push({});
             
-            setTimeout(() => setIsLoaded(true), 100);
+            setTimeout(() => setIsLoaded(true), 50); // Reduced delay
           }
         }
       } catch (e) {
         console.error(`AdSense error for ${adId}:`, e);
         initializedAds.delete(adId);
       }
-    }, 500);
+    }, 100); // Reduced delay
 
     return () => clearTimeout(timer);
   }, [isIntersecting, adId, hasWidth]);
@@ -393,16 +432,34 @@ export const AdMultiplex = () => {
     };
   }, [adId]);
 
-  if (!isVisible) return null;
+  // Maintain space when ad is closed to prevent CLS
+  if (!isVisible) {
+    return (
+      <div 
+        className="ad-square-container"
+        style={{ 
+          minWidth: '300px', 
+          minHeight: '250px', 
+          maxWidth: '100%',
+          contain: 'layout style paint'
+        }}
+      />
+    );
+  }
 
   return (
-    <div className="relative my-4" ref={adRef}>
+    <div className="relative my-4 ad-square-container" ref={adRef}>
       <div ref={adContainerRef} className="flex justify-center">
         {/* Loading placeholder */}
         {!isLoaded && (
           <div 
-            className="bg-gray-100 flex items-center justify-center"
-            style={{ width: '300px', height: '250px' }}
+            className="bg-gray-100 flex items-center justify-center ad-square-container"
+            style={{ 
+              minWidth: '300px', 
+              minHeight: '250px', 
+              maxWidth: '100%',
+              contain: 'layout style paint'
+            }}
           >
             <div className="text-gray-400 text-sm">Loading ad...</div>
           </div>
@@ -412,18 +469,20 @@ export const AdMultiplex = () => {
           className="adsbygoogle"
           style={{ 
             display: 'inline-block', 
-            width: '300px', 
-            height: '250px',
+            minWidth: '300px', 
+            minHeight: '250px',
             maxWidth: '100%',
             visibility: isLoaded ? 'visible' : 'hidden'
           }}
           data-ad-client="ca-pub-4386714040098164"
           data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_MULTIPLEX}
+          data-adtest={process.env.NODE_ENV === 'development' ? 'on' : undefined} // Test ads in dev
         />
       </div>
       <button 
         onClick={() => setIsVisible(false)}
-        className="absolute top-0 right-0 md:right-2 bg-gray-200 rounded-full p-1 hover:bg-gray-300 transition-colors z-10"
+        className="absolute top-2 right-2 bg-gray-200 rounded-full p-1 hover:bg-gray-300 transition-colors z-10"
+        style={{ position: 'absolute' }} // Ensure no layout impact
         aria-label="Close ad"
       >
         <FaTimes className="text-gray-600 text-sm" />

@@ -1,4 +1,4 @@
-// components/home/HorizontalScrollSection.tsx
+// components/home/HorizontalScrollSection.tsx - Optimized without GSAP
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
@@ -7,13 +7,6 @@ import Image from 'next/image';
 import DailyQuizClient from '@/components/daily/DailyQuizClient';
 import { getTimeLeft } from '@/utils/dateUtils';
 import { ReadonlyQuizItems, ReadonlySectionItems, ReadonlyQuizItem, ReadonlySectionItem } from '@/types/home';
-import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-
-// Register ScrollToPlugin
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollToPlugin);
-}
 
 interface HorizontalScrollSectionProps {
   title: string;
@@ -34,6 +27,7 @@ export default function HorizontalScrollSection({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [totalVisibleItems, setTotalVisibleItems] = useState(1);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const updateScrollPosition = () => {
     if (!scrollContainerRef.current) return;
@@ -47,6 +41,30 @@ export default function HorizontalScrollSection({
     const newIndex = Math.round(scrollLeft / (itemWidth + gap));
     setCurrentIndex(Math.max(0, newIndex)); // Ensure index is never negative
   };
+
+  // Debounce scroll updates for better performance
+  useEffect(() => {
+    let scrollTimeout: NodeJS.Timeout;
+    
+    const handleScroll = () => {
+      setIsScrolling(true);
+      
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        updateScrollPosition();
+        setIsScrolling(false);
+      }, 150);
+    };
+
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll, { passive: true });
+      return () => {
+        container.removeEventListener('scroll', handleScroll);
+        clearTimeout(scrollTimeout);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     // Calculate how many items are visible at once
@@ -76,7 +94,7 @@ export default function HorizontalScrollSection({
   }, [items]);
 
   const scrollToIndex = (index: number) => {
-    if (!scrollContainerRef.current) return;
+    if (!scrollContainerRef.current || isScrolling) return;
 
     const container = scrollContainerRef.current;
     const itemWidth = container.querySelector('.w-56')?.clientWidth || 224;
@@ -84,13 +102,14 @@ export default function HorizontalScrollSection({
     
     const targetScroll = index * (itemWidth + gap);
 
-    // Use GSAP for smooth scrolling
-    gsap.to(container, {
-      scrollTo: { x: targetScroll, autoKill: false },
-      duration: 0.5,
-      ease: "power2.out",
-      onComplete: () => setCurrentIndex(index)
+    // Use native smooth scroll instead of GSAP
+    container.scrollTo({
+      left: targetScroll,
+      behavior: 'smooth'
     });
+
+    // Update index immediately for better UX
+    setCurrentIndex(index);
   };
 
   // Calculate how many dot indicators we need - ensure it's always at least 1
@@ -112,7 +131,7 @@ export default function HorizontalScrollSection({
           {items.map((item, idx) => isQuizSection && isQuizItem(item) ? (
             <div 
               key={item.category}
-              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400"
+              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-blue-400 hover:-translate-y-1"
             >
               <DailyQuizClient 
                 quiz={item}
@@ -124,11 +143,11 @@ export default function HorizontalScrollSection({
           ) : (
             <div 
               key={item.category} 
-              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400"
+              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-blue-400 hover:-translate-y-1"
             >
               <div className="p-5 flex flex-col h-full">
                 <div className="flex items-center justify-center mb-3">
-                  <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
+                  <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden transition-transform duration-300 hover:scale-110">
                     <Image
                       src={item.image}
                       alt={item.name}
@@ -153,7 +172,7 @@ export default function HorizontalScrollSection({
 
                 <Link 
                   href={`/${item.category}`}
-                  className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-center transition-colors text-sm"
+                  className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-center transition-all duration-300 text-sm hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   Explore
                 </Link>
@@ -162,25 +181,27 @@ export default function HorizontalScrollSection({
           ))}
         </div>
         
-        {/* Mobile horizontal scroll with GSAP */}
+        {/* Mobile horizontal scroll - Optimized */}
         <div className="sm:hidden relative w-full">
           {/* Scroll container */}
           <div 
             ref={scrollContainerRef}
-            className="overflow-x-auto pb-4 flex space-x-4 px-2"
-            onScroll={updateScrollPosition}
+            className="overflow-x-auto pb-4 flex space-x-4 px-2 scrollbar-hide"
             style={{ 
               scrollbarWidth: 'none', 
               msOverflowStyle: 'none',
+              scrollSnapType: 'x mandatory', // Native scroll snap
+              WebkitOverflowScrolling: 'touch' // Smooth iOS scrolling
             }}
           >
             {items.map((item, idx) => (
               <div 
                 key={item.category} 
                 className="w-56 flex-shrink-0"
+                style={{ scrollSnapAlign: 'start' }} // Snap to start of each item
               >
                 {isQuizSection && isQuizItem(item) ? (
-                  <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400 h-full">
+                  <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-blue-400 h-full">
                     <DailyQuizClient 
                       quiz={item}
                       priorityImage={idx < 2}
@@ -188,9 +209,9 @@ export default function HorizontalScrollSection({
                     />
                   </div>
                 ) : (
-                  <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400 h-full p-4 flex flex-col">
+                  <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-blue-400 h-full p-4 flex flex-col">
                     <div className="flex items-center justify-center mb-3">
-                      <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
+                      <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden transition-transform duration-300 hover:scale-110">
                         <Image
                           src={item.image}
                           alt={item.name}
@@ -209,7 +230,7 @@ export default function HorizontalScrollSection({
 
                     <Link 
                       href={`/${item.category}`}
-                      className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-center transition-colors text-sm"
+                      className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-center transition-all duration-300 text-sm active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
                       Explore
                     </Link>
@@ -219,19 +240,20 @@ export default function HorizontalScrollSection({
             ))}
           </div>
           
-          {/* Dot indicators */}
+          {/* Dot indicators - Only show if multiple pages */}
           {totalDots > 1 && (
             <div className="flex justify-center mt-4 space-x-2">
               {Array.from({ length: totalDots }).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => scrollToIndex(index * totalVisibleItems)}
-                  className={`w-2 h-2 rounded-full transition-colors ${
+                  className={`w-2 h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     index === Math.floor(currentIndex / totalVisibleItems) 
-                      ? 'bg-blue-600' 
-                      : 'bg-gray-300'
+                      ? 'bg-blue-600 scale-125' 
+                      : 'bg-gray-300 hover:bg-gray-400'
                   }`}
                   aria-label={`Go to page ${index + 1}`}
+                  disabled={isScrolling}
                 />
               ))}
             </div>
