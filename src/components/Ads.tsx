@@ -158,11 +158,10 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
             display: 'block',
             minHeight: '90px',
             width: '100%',
-            maxWidth: '728px',
             margin: '0 auto',
             visibility: isLoaded ? 'visible' : 'hidden'
           }}
-          data-ad-client="ca-pub-4386714040098164"
+          data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_ID}
           data-ad-slot={adSlot}
           data-ad-format="auto"
           data-full-width-responsive="true"
@@ -319,7 +318,7 @@ export const AdSquare = () => {
             maxWidth: '100%',
             visibility: isLoaded ? 'visible' : 'hidden'
           }}
-          data-ad-client="ca-pub-4386714040098164"
+          data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_ID}
           data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_SQUARE}
           data-adtest={process.env.NODE_ENV === 'development' ? 'on' : undefined} // Test ads in dev
         />
