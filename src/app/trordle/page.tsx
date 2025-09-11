@@ -1,10 +1,10 @@
 'use client';
 
 import TrordleComponent from '@/components/trordle/TrordleComponent';
-import { getDailyTrordle } from '@/lib/trordle-fb';
+import { getDailyTrordle } from '@/lib/trordle/trordle-fb';
 import MuteButton from '@/components/MuteButton';
 import { useState, useEffect } from 'react';
-import { TrordleData } from '@/lib/trordle-logic'; // Import the correct type
+import { TrordleData } from '@/lib/trordle/trordle-logic'; // Import the correct type
 
 export default function TrordlePage() {
   const [trordleData, setTrordleData] = useState<TrordleData | null>(null);

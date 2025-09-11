@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { addTrordleResult } from '@/lib/trordle-fb';
+import { addTrordleResult } from '@/lib/trordle/trordle-fb';
 import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import Image from 'next/image';
@@ -9,7 +9,7 @@ import { fetchPixabayImage } from '@/lib/pixabay';
 import styles from '@styles/Trordle.module.css';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
-import { checkTrordleGuess, TrordleData, TrordleGuessResult } from '@/lib/trordle-logic';
+import { checkTrordleGuess, TrordleData, TrordleGuessResult } from '@/lib/trordle/trordle-logic';
 
 interface TrordleComponentProps {
   initialData: TrordleData;

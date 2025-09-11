@@ -116,25 +116,19 @@ body {
 /* Ensure ads don't cause layout shifts */
 .ad-container {
   min-height: 90px;
-  min-width: 300px;
+  contain: layout style paint;
   display: block;
-  visibility: visible !important;
+  overflow: hidden;
 }
 
-/* Prevent layout shifts */
-.adsbygoogle, 
-.adsbygoogle iframe, 
-.adsbygoogle div {
-  height: 60px !important;
-  min-height: 60px !important;
-  max-height: 60px !important;
-  overflow: hidden !important;
+.adsbygoogle {
+  min-width: unset !important;
 }
 
-@media (min-width: 768px) {
-  .adsbygoogle {
-    min-width: 728px !important;
-  }
+/* Ensure container has proper width */
+.relative.w-full.bg-white {
+  width: 100% !important;
+  min-width: 100% !important;
 }
 
 @keyframes fade-in {

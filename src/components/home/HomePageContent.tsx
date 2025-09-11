@@ -1,10 +1,10 @@
 // components/home/HomePageContent.tsx (with ad injection prevention)
 'use client';
 import { useEffect, useState } from 'react';
-import { ThinAdBanner, AdBanner } from '@/components/Ads';
+import Ads from '@/components/Ads';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
-import HeroSection from '@/components/home/HeroSection';
+//import HeroSection from '@/components/home/HeroSection';
 import Footer from '@/components/home/Footer';
 import Image from 'next/image';
 import { DAILY_QUIZZES, ADDITIONAL_SECTIONS } from '@/../data/homeContent';
@@ -49,7 +49,7 @@ export default function HomePageContent() {
         </div>
       </header>
      
-     <ThinAdBanner position="header" />
+     <Ads />
 
       <main className="container mx-auto px-4 py-6 flex-grow">
         {/* Critical heading with inline styles to prevent render delay */}
@@ -166,7 +166,7 @@ export default function HomePageContent() {
       </main>
 
       {/* Footer Banner Ad */}
-      <ThinAdBanner position="footer" />   
+      <Ads />   
         
       {/* Footer */}
       <Footer />
