@@ -12,7 +12,7 @@ interface AdsProps {
 
 export default function Ads({
   className = '',
-  slot = `${process.env.NEXT_PUBLIC_ADSENSE_ID}`,
+  slot = '2207590813',
   format = 'auto',
   fullWidthResponsive = true,
   style = {}
@@ -30,7 +30,7 @@ export default function Ads({
       if (typeof window !== 'undefined' && window.adsbygoogle && insRef.current) {
         try {
           // Push the ad configuration
-          (window.adsbygoogle as any[]).push({});
+          (window.adsbygoogle as Record<string, unknown>[]).push({});
           setIsLoaded(true);
         } catch (error) {
           console.error('AdSense error:', error);
@@ -98,7 +98,7 @@ export default function Ads({
             display: 'block',
             ...style
           }}
-          data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_ID}
+          data-ad-client="ca-pub-4386714040098164"
           data-ad-slot={slot}
           data-ad-format={format}
           data-full-width-responsive={fullWidthResponsive.toString()}
@@ -118,6 +118,6 @@ export default function Ads({
 // Declare global types for TypeScript
 declare global {
   interface Window {
-    adsbygoogle: unknown[];
+    adsbygoogle: Record<string, unknown>[];
   }
 }
