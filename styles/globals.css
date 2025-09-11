@@ -116,13 +116,19 @@ body {
 /* Ensure ads don't cause layout shifts */
 .ad-container {
   min-height: 90px;
-  contain: layout style paint;
+  min-width: 300px;
   display: block;
-  overflow: hidden;
+  visibility: visible !important;
 }
 
-.adsbygoogle {
-  min-width: 300px !important;
+/* Prevent layout shifts */
+.adsbygoogle, 
+.adsbygoogle iframe, 
+.adsbygoogle div {
+  height: 60px !important;
+  min-height: 60px !important;
+  max-height: 60px !important;
+  overflow: hidden !important;
 }
 
 @media (min-width: 768px) {

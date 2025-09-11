@@ -14,63 +14,32 @@ const generateAdId = (component: string, position?: string) => {
 
 export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'footer' }) => {
   const adRef = useRef<HTMLDivElement>(null);
-  const adContainerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [adId] = useState(() => generateAdId('banner', position));
-  const [isIntersecting, setIsIntersecting] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [hasWidth, setHasWidth] = useState(false);
+  const [isInViewport, setIsInViewport] = useState(false);
 
-  // Check if container has width
+  // Use IntersectionObserver to detect when ad is in viewport AND has width
   useEffect(() => {
-    if (!adContainerRef.current) return;
+    if (!isVisible || !adRef.current || typeof window === 'undefined') return;
     
-    const checkWidth = () => {
-      if (adContainerRef.current && adContainerRef.current.offsetWidth > 0) {
-        setHasWidth(true);
-        return true;
-      }
-      return false;
-    };
-    
-    // Initial check
-    if (checkWidth()) return;
-    
-    // Set up resize observer to detect when container gets width
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.contentRect.width > 0) {
-          setHasWidth(true);
-          resizeObserver.disconnect();
-          break;
-        }
-      }
-    });
-    
-    if (adContainerRef.current) {
-      resizeObserver.observe(adContainerRef.current);
-    }
-    
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
-  // Intersection Observer to load ads when they're about to enter viewport
-  useEffect(() => {
-    if (!isVisible || !adRef.current || typeof window === 'undefined' || !hasWidth) return;
-    
-    // Skip if inside a no-ads container or already initialized
     if (document.querySelector('.no-ads-page') || initializedAds.has(adId)) return;
-    
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsIntersecting(true);
+          // Check if element has valid width when it becomes visible
+          const rect = entry.target.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) {
+            setIsInViewport(true);
+          }
           observer.disconnect();
         }
       },
-      { rootMargin: position === 'header' ? '0px' : '200px' } // Load header ad immediately
+      { 
+        rootMargin: '50px', // Load slightly before entering viewport
+        threshold: 0.1 // 10% of element visible
+      }
     );
 
     observer.observe(adRef.current);
@@ -78,34 +47,58 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
     return () => {
       observer.disconnect();
     };
-  }, [isVisible, adId, position, hasWidth]);
+  }, [isVisible, adId]);
 
-  // Initialize ad when it's intersecting AND has width
+  // Initialize ad only when in viewport and visible
   useEffect(() => {
-    if (!isIntersecting || !hasWidth) return;
+    if (!isInViewport || !isVisible || typeof window === 'undefined') return;
+    
+    if (initializedAds.has(adId)) return;
 
-    const timer = setTimeout(() => {
+    // Use Google's recommended approach with requestIdleCallback
+    const initializeAd = () => {
       try {
-        if (adRef.current && !initializedAds.has(adId) && hasWidth) {
-          initializedAds.add(adId);
-          
-          // Make sure the ad container is visible and has width
-          if (adContainerRef.current && adContainerRef.current.offsetWidth > 0) {
+        if (adRef.current && !initializedAds.has(adId)) {
+          // Final check to ensure element is still visible and has width
+          const rect = adRef.current.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0 && isElementInViewport(adRef.current)) {
+            initializedAds.add(adId);
+            
             window.adsbygoogle = window.adsbygoogle || [];
             window.adsbygoogle.push({});
             
-            // Mark as loaded after a short delay
-            setTimeout(() => setIsLoaded(true), 50); // Reduced delay
+            // Set loaded state after a delay to allow ad rendering
+            setTimeout(() => {
+              if (adRef.current && adRef.current.offsetWidth > 0) {
+                setIsLoaded(true);
+              }
+            }, 200);
           }
         }
       } catch (e) {
         console.error(`AdSense error for ${adId}:`, e);
         initializedAds.delete(adId);
       }
-    }, position === 'header' ? 0 : 100); // No delay for header, 100ms for footer
+    };
 
-    return () => clearTimeout(timer);
-  }, [isIntersecting, adId, position, hasWidth]);
+    // Use requestIdleCallback as recommended by Google for better performance
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(initializeAd, { timeout: 1000 });
+    } else {
+      setTimeout(initializeAd, 300);
+    }
+  }, [isInViewport, isVisible, adId]);
+
+  // Helper function to check if element is in viewport
+  const isElementInViewport = (el: HTMLElement) => {
+    const rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  };
 
   // Cleanup on unmount
   useEffect(() => {
@@ -114,64 +107,46 @@ export const AdBanner = ({ position = 'header' }: { position?: 'header' | 'foote
     };
   }, [adId]);
 
-  // Maintain space when ad is closed to prevent CLS
-  if (!isVisible) {
-    return (
-      <div 
-        className="w-full ad-container"
-        style={{ 
-          minHeight: '90px', 
-          maxWidth: '728px', 
-          margin: '0 auto',
-          contain: 'layout style paint'
-        }}
-      />
-    );
-  }
-
   // Different ad slots for header vs footer
   const adSlot = position === 'header' 
     ? process.env.NEXT_PUBLIC_ADSENSE_SLOT_HEADER 
     : process.env.NEXT_PUBLIC_ADSENSE_SLOT_FOOTER || process.env.NEXT_PUBLIC_ADSENSE_SLOT_HEADER;
 
   return (
-    <div className="relative w-full bg-white ad-container" ref={adRef}>
-      <div ref={adContainerRef} className="py-2 px-4">
-        {/* Loading placeholder to prevent layout shifts */}
+    <div className="relative w-full bg-white" ref={adRef}>
+      <div className="py-2 px-4">
+        {/* Loading placeholder - ensure it has proper dimensions */}
         {!isLoaded && (
           <div 
-            className="w-full bg-gray-100 flex items-center justify-center ad-container"
+            className="w-full bg-gray-100 flex items-center justify-center"
             style={{ 
-              minHeight: '90px', 
-              maxWidth: '728px', 
-              margin: '0 auto',
+              minHeight: '90px',
+              minWidth: '300px', // Minimum width for ads
               contain: 'layout style paint'
             }}
           >
-            <div className="text-gray-400 text-sm">Loading ad...</div>
+            <div className="text-gray-400 text-sm">
+              {isInViewport ? 'Loading ad...' : 'Ad will load soon...'}
+            </div>
           </div>
         )}
         
         <ins
           className="adsbygoogle"
           style={{ 
-            display: 'block',
+            display: isLoaded ? 'block' : 'none',
             minHeight: '90px',
             width: '100%',
-            margin: '0 auto',
-            visibility: isLoaded ? 'visible' : 'hidden'
           }}
           data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_ID}
           data-ad-slot={adSlot}
           data-ad-format="auto"
           data-full-width-responsive="true"
-          data-adtest={process.env.NODE_ENV === 'development' ? 'on' : undefined} // Test ads in dev
         />
       </div>
       <button 
         onClick={() => setIsVisible(false)}
         className="absolute top-2 right-2 bg-gray-200 rounded-full p-1 hover:bg-gray-300 transition-colors z-10"
-        style={{ position: 'absolute' }} // Ensure no layout impact
         aria-label="Close ad"
       >
         <FaTimes className="text-gray-600 text-sm" />
@@ -486,6 +461,58 @@ export const AdMultiplex = () => {
       >
         <FaTimes className="text-gray-600 text-sm" />
       </button>
+    </div>
+  );
+};
+
+export const ThinAdBanner = ({ position = 'header' }: { position?: 'header' | 'footer' }) => {
+  const adRef = useRef<HTMLDivElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (adRef.current && typeof window !== 'undefined') {
+        window.adsbygoogle = window.adsbygoogle || [];
+        window.adsbygoogle.push({});
+        setIsLoaded(true);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const adSlot = position === 'header' 
+    ? process.env.NEXT_PUBLIC_ADSENSE_SLOT_HEADER 
+    : process.env.NEXT_PUBLIC_ADSENSE_SLOT_FOOTER;
+
+  return (
+    <div className="w-full bg-transparent ad-container-thin" ref={adRef}>
+      {/* Show loading placeholder until ad loads */}
+      {!isLoaded && (
+        <div 
+          className="w-full bg-gray-100 flex items-center justify-center"
+          style={{ 
+            height: '50px',
+            width: '100%',
+          }}
+        >
+          <div className="text-gray-400 text-xs">Loading ad...</div>
+        </div>
+      )}
+      
+      <ins
+        className="adsbygoogle"
+        style={{
+          display: isLoaded ? 'block' : 'none',
+          height: '50px',
+          width: '100%',
+        }}
+        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_ID}
+        data-ad-slot={adSlot}
+        data-ad-format="autorelaxed"
+        data-full-width-responsive="true"
+        data-ad-layout-key="-fg+5n+6t-7i"
+      />
     </div>
   );
 };
