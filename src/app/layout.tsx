@@ -1,4 +1,4 @@
-// app/layout.tsx (simplified)
+// app/layout.tsx (fixed)
 import { Geist } from 'next/font/google';
 import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -44,7 +44,6 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const isProduction = process.env.NODE_ENV === 'production';
-  const isNotLocalhost = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
   
   return (
     <html lang="en" className={`${geist.variable} antialiased`}>
@@ -127,27 +126,32 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </div>
           <SeoBreadcrumbs />
-          { /* Run Google Analytics only for prod */
-          isProduction && isNotLocalhost && <GoogleAnalytics gaId="G-K4KZ7XR85V" />
-          }
-          <Script
-            id="adsense-config"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                (window.adsbygoogle = window.adsbygoogle || []).push({
-                  google_ad_client: "ca-pub-4386714040098164",
-                  enable_page_level_ads: false // Disable auto ads
-                });
-              `,
-            }}
-          />
-          {/* ADD THIS BACK: */}
-          <Script
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-            strategy="lazyOnload"
-            crossOrigin="anonymous"
-          />
+          
+          {/* Google Analytics - only load in production */}
+          {isProduction && <GoogleAnalytics gaId="G-K4KZ7XR85V" />}
+          
+          {/* AdSense Configuration */}
+          {isProduction && (
+            <>
+              <Script
+                id="adsense-config"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    (window.adsbygoogle = window.adsbygoogle || []).push({
+                      google_ad_client: "ca-pub-4386714040098164",
+                      enable_page_level_ads: false
+                    });
+                  `,
+                }}
+              />
+              <Script
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164"
+                strategy="lazyOnload"
+                crossOrigin="anonymous"
+              />
+            </>
+          )}
         </SoundProvider>
       </body>
     </html>
