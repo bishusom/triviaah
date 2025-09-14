@@ -14,6 +14,7 @@ interface SearchParams {
 interface PostData {
   slug: string;
   title: string;
+  header: string;
   date: string;
   isoDate: string;
   excerpt: string;
@@ -54,7 +55,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
       <div className={styles.blogGrid}>
         {paginatedPosts.map(post => (
           <div key={post.slug} className={styles.blogCard}>
-            <h2 className={styles.postTitle}>{post.title}</h2>
+            <h2 className={styles.postTitle}>{post.header}</h2>
             <time className={styles.postDate}>{post.date}</time>
             <p className={styles.postExcerpt}>{post.excerpt}</p>
             <Link href={`/blog/${post.slug}`} className={styles.readMore}>

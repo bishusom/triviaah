@@ -11,6 +11,7 @@ interface Params {
 interface PostContent {
   slug: string;
   title: string;
+  header: string;
   date: string;
   isoDate: string;
   excerpt: string;
@@ -47,7 +48,7 @@ export default async function PostPage({ params }: PostPageProps) {
   return (
     <div className={styles.postContainer}>
       <header className={styles.postHeader}>
-        <h1 className={styles.postTitle}>{post.title}</h1>
+        <h1 className={styles.postTitle}>{post.header}</h1>
         <time className={styles.postDate} dateTime={post.isoDate}>{post.date}</time>
       </header>
       

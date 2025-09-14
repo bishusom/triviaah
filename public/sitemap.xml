@@ -19,12 +19,7 @@
         <loc>https://triviaah.com/today-in-history</loc>
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
         <priority>1.00</priority>
-    </url>
-    <url>
-        <loc>https://triviaah.com/daily/history</loc>
-        <lastmod>2025-08-13T09:04:54+00:00</lastmod>
-        <priority>1.00</priority>
-    </url>    
+    </url>  
     <url>
         <loc>https://triviaah.com/daily/entertainment</loc>
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
@@ -68,12 +63,6 @@
     </url>
     <url>
         <loc>https://triviaah.com/brainwave/plotle</loc>
-        <lastmod>2025-08-13T09:04:54+00:00</lastmod>
-        <priority>1.00</priority>
-    </url>
-    <!-- Quick Fire Section -->
-    <url>
-        <loc>https://triviaah.com/quick-fire</loc>
         <lastmod>2025-08-13T09:04:54+00:00</lastmod>
         <priority>1.00</priority>
     </url>

@@ -61,6 +61,7 @@ const options = {
 export interface PostData {
   slug: string;
   title: string;
+  header: string
   date: string;
   isoDate: string;
   excerpt: string;
@@ -71,6 +72,7 @@ export interface PostData {
 interface ContentfulFields {
   slug?: unknown;
   title?: unknown;
+  header?: unknown;
   date?: unknown;
   isoDate?: unknown;
   excerpt?: unknown;
@@ -114,6 +116,7 @@ export async function getAllPosts(): Promise<PostData[]> {
   return entries.items.map((item: ContentfulItem) => ({
     slug: String(item.fields.slug || ''),
     title: String(item.fields.title || ''),
+    header: String(item.fields.header || ''),
     date: String(item.fields.date || ''),
     isoDate: String(item.fields.isoDate || ''),
     excerpt: String(item.fields.excerpt || ''),
@@ -137,6 +140,7 @@ export async function getPostData(slug: string): Promise<PostData> {
   return {
     slug: String(item.fields.slug || ''),
     title: String(item.fields.title || ''),
+    header: String(item.fields.header || ''),
     date: String(item.fields.date || ''),
     isoDate: String(item.fields.isoDate || ''),
     excerpt: String(item.fields.excerpt || ''),
