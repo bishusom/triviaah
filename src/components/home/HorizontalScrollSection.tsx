@@ -19,6 +19,16 @@ function isQuizItem(item: ReadonlyQuizItem | ReadonlySectionItem): item is Reado
   return 'path' in item;
 }
 
+// Helper function to get the correct path for any item
+function getItemPath(item: ReadonlyQuizItem | ReadonlySectionItem): string {
+  // If item has a custom path, use it
+  if ('path' in item && item.path) {
+    return item.path;
+  }
+  // Otherwise fall back to category-based path
+  return `/${item.category}`;
+}
+
 export default function HorizontalScrollSection({ 
   title, 
   items, 
@@ -171,7 +181,7 @@ export default function HorizontalScrollSection({
                 </div>
 
                 <Link 
-                  href={`/${item.category}`}
+                  href={getItemPath(item)}
                   className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-center transition-all duration-300 text-sm hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   Explore
@@ -229,7 +239,7 @@ export default function HorizontalScrollSection({
                     </div>
 
                     <Link 
-                      href={`/${item.category}`}
+                      href={getItemPath(item)}
                       className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg text-center transition-all duration-300 text-sm active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
                       Explore

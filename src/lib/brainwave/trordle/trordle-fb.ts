@@ -1,3 +1,4 @@
+// lib/trordle/trordle-fb.ts
 import { 
   collection, 
   query, 
@@ -5,7 +6,9 @@ import {
   limit, 
   getDocs, 
   addDoc, 
-  Timestamp 
+  Timestamp,
+  doc,
+  getDoc
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
@@ -35,6 +38,13 @@ export interface TrordleResult {
   timestamp: Date;
 }
 
+export interface DailyPuzzle {
+  id: string;
+  date: string;
+  category: string;
+  parent_document_id: string;
+}
+
 // Helper function to get client-side date string
 function getClientDateString(customDate?: Date): string {
   const date = customDate || new Date();
@@ -45,30 +55,45 @@ function getClientDateString(customDate?: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export async function getDailyTrordle(customDate?: Date) {
+export async function getDailyTrordle(customDate?: Date): Promise<TrordlePuzzle | null> {
   try {
     // Always use client-side date calculation
     const dateString = getClientDateString(customDate);
     
-    console.log('Fetching puzzle for date:', dateString); // Debug log
+    console.log('Fetching daily puzzle for date:', dateString);
     
-    const trordleRef = collection(db, 'trordlePuzzles');
-    const q = query(
-      trordleRef,
+    // First, get the daily puzzle entry
+    const dailyPuzzlesRef = collection(db, 'dailyPuzzles');
+    const dailyQuery = query(
+      dailyPuzzlesRef,
       where('date', '==', dateString),
+      where('category', '==', 'trordle'),
       limit(1)
     );
     
-    const querySnapshot = await getDocs(q);
+    const dailyQuerySnapshot = await getDocs(dailyQuery);
     
-    if (querySnapshot.empty) {
-      console.log('No puzzle found for date:', dateString, '- getting random puzzle'); // Debug log
-      // If no puzzle for today, get a random one as fallback
+    if (dailyQuerySnapshot.empty) {
+      console.log('No daily puzzle found for date:', dateString, '- getting random puzzle');
       return getRandomTrordle();
     }
     
-    const doc = querySnapshot.docs[0];
-    const data = doc.data();
+    const dailyDoc = dailyQuerySnapshot.docs[0];
+    const dailyData = dailyDoc.data() as DailyPuzzle;
+    const parentDocumentId = dailyData.parent_document_id;
+    
+    console.log('Found daily puzzle entry:', dailyDoc.id, 'with parent ID:', parentDocumentId);
+    
+    // Now fetch the actual puzzle data from trordlePuzzles
+    const trordleRef = doc(db, 'trordlePuzzles', parentDocumentId);
+    const trordleDoc = await getDoc(trordleRef);
+    
+    if (!trordleDoc.exists()) {
+      console.log('No trordle puzzle found with ID:', parentDocumentId, '- getting random puzzle');
+      return getRandomTrordle();
+    }
+    
+    const data = trordleDoc.data();
     
     // Ensure all attributes have optionValues with proper fallbacks
     const processedAttributes = data.attributes.map((attr: TrordleAttribute) => ({
@@ -78,10 +103,10 @@ export async function getDailyTrordle(customDate?: Date) {
       range: attr.range || 0
     }));
     
-    console.log('Found puzzle:', doc.id, 'for date:', dateString); // Debug log
+    console.log('Found trordle puzzle:', trordleDoc.id, 'for date:', dateString);
     
     return {
-      id: doc.id,
+      id: trordleDoc.id,
       ...data,
       attributes: processedAttributes
     } as TrordlePuzzle;
@@ -130,13 +155,12 @@ export async function getRandomTrordle(): Promise<TrordlePuzzle | null> {
 }
 
 export async function addTrordleResult(
-  puzzleId: string, 
   success: boolean, 
   attempts: number
 ): Promise<void> {
   try {
-    await addDoc(collection(db, 'trordleResults'), {
-      puzzleId,
+    await addDoc(collection(db, 'puzzleResults'), {
+      category: 'trordle',
       success,
       attempts,
       timestamp: Timestamp.now()
@@ -146,15 +170,15 @@ export async function addTrordleResult(
   }
 }
 
-export async function getTrordleStats(puzzleId: string): Promise<{
+export async function getTrordleStats(): Promise<{
   totalPlayers: number;
   successRate: number;
   averageAttempts: number;
 }> {
   try {
     const q = query(
-      collection(db, 'trordleResults'),
-      where('puzzleId', '==', puzzleId)
+      collection(db, 'puzzleResults'),
+      where('category', '==', 'trordle')
     );
     
     const querySnapshot = await getDocs(q);

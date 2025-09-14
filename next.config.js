@@ -27,6 +27,16 @@ const nextConfig = {
         hostname: 'images.ctfassets.net',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'commons.wikimedia.org',
+        pathname: '/**',
       }
     ],
     formats: ['image/avif', 'image/webp'],

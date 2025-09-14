@@ -43,13 +43,48 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
     keywords: 'science trivia quiz, biology quiz game, physics trivia questions, science quiz with answers',
   },
   {
+    category: 'sports',
+    name: 'Sports',
+    path: '/daily/sports',
+    image: '/imgs/sports-160x160.webp',
+    tagline: 'Test your knowledge of sports history, athletes, and events',
+    keywords: 'sports trivia quiz, athlete trivia, sports history game, sports quiz with answers',
+  },
+] as const;
+
+export const BRAIN_WAVES: ReadonlySectionItems = [
+  {
+    category: 'capitale',
+    name: 'Capitale',
+    path: '/brainwave/capitale',
+    image: '/imgs/capitale-160x160.webp',
+    tagline: 'Guess world capitals in this challenging geography puzzle',
+    keywords: 'capital cities game, geography puzzle, world capitals quiz'
+  },
+  {
+    category: 'plotle',
+    name: 'Plotle',
+    path: '/brainwave/plotle',
+    image: '/imgs/plotle-160x160.webp',
+    tagline: 'Guess the movie from its plot description',
+    keywords: 'movie plot game, film trivia, movie guessing game'
+  },
+  {
+    category: 'songle',
+    name: 'Songle',
+    path: '/brainwave/songle',
+    image: '/imgs/songle-160x160.webp',
+    tagline: 'Identify songs from lyrics snippets in this music challenge',
+    keywords: 'music lyrics game, song trivia, music guessing challenge'
+  },
+    {
     category: 'trordle',
     name: 'Trordle',
-    path: '/trordle',
+    path: '/brainwave/trordle',
     image: '/imgs/trordle-160x160.webp',
     tagline: 'Wordle-inspired trivia challenges for curious minds',
     keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
-    },
+  },
 ] as const;
 
 export const ADDITIONAL_SECTIONS: ReadonlySectionItems = [

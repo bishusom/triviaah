@@ -43,6 +43,9 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const isNotLocalhost = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+  
   return (
     <html lang="en" className={`${geist.variable} antialiased`}>
       <head>
@@ -124,7 +127,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </div>
           <SeoBreadcrumbs />
-          <GoogleAnalytics gaId="G-K4KZ7XR85V" />
+          { /* Run Google Analytics only for prod */
+          isProduction && isNotLocalhost && <GoogleAnalytics gaId="G-K4KZ7XR85V" />
+          }
           <Script
             id="adsense-config"
             strategy="afterInteractive"

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { addTrordleResult } from '@/lib/trordle/trordle-fb';
+import { addTrordleResult } from '@/lib/brainwave/trordle/trordle-fb';
 import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import Image from 'next/image';
@@ -9,7 +9,7 @@ import { fetchPixabayImage } from '@/lib/pixabay';
 import styles from '@styles/Trordle.module.css';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
-import { checkTrordleGuess, TrordleData, TrordleGuessResult } from '@/lib/trordle/trordle-logic';
+import { checkTrordleGuess, TrordleData, TrordleGuessResult } from '@/lib/brainwave/trordle/trordle-logic';
 
 interface TrordleComponentProps {
   initialData: TrordleData;
@@ -422,7 +422,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
         setGameState('won');
         triggerConfetti();
         playSound('win');
-        addTrordleResult(puzzleData.id, true, newAttempts.length);
+        addTrordleResult(true, newAttempts.length);
         event({
           action: 'trordle_won',
           category: 'trordle',
@@ -433,7 +433,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       } else if (newAttempts.length >= 6) {
         setGameState('lost');
         playSound('lose');
-        addTrordleResult(puzzleData.id, false, 6);
+        addTrordleResult(false, 6);
         event({
           action: 'trordle_lost',
           category: 'trordle',
@@ -502,7 +502,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       shareText += '\n';
     });
     
-    shareText += '\nPlay daily at triviaah.com/trordle';
+    shareText += '\nPlay daily at triviaah.com/brainwave/trordle';
     return shareText;
   };
 

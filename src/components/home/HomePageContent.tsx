@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react';
 import Ads from '@/components/Ads';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
-//import HeroSection from '@/components/home/HeroSection';
 import Footer from '@/components/home/Footer';
 import Image from 'next/image';
-import { DAILY_QUIZZES, ADDITIONAL_SECTIONS } from '@/../data/homeContent';
+import { DAILY_QUIZZES, ADDITIONAL_SECTIONS, BRAIN_WAVES } from '@/../data/homeContent';
 import CollapsibleSection from '@/components/home/CollapsibleSection';
 
 export default function HomePageContent() {
@@ -39,10 +38,10 @@ export default function HomePageContent() {
             <Image
                 src="/logo-new.webp"
                 alt="Triviaah - Free Daily Trivia Games"
-                width={200} // Reduce from 280
-                height={36} // Reduce proportionally
+                width={200}
+                height={36}
                 priority
-                quality={85} // Increase from 75 for better compression
+                quality={85}
                 sizes="(max-width: 768px) 200px, 280px"
                 className="object-contain lcp-priority"
             />
@@ -80,9 +79,13 @@ export default function HomePageContent() {
           />
         </div>
 
-        { /* ---Commenting hero section 
-          <HeroSection />
-        ---*/ }  
+        {/* Brain Waves Section with horizontal scroll on mobile - Add data attribute */}
+        <div className="horizontal-scroll-section" data-no-ads="true">
+          <HorizontalScrollSection 
+            title="Brain Waves - Daily Puzzle Games" 
+            items={BRAIN_WAVES} 
+          />
+        </div>
 
         {/* More Brain Puzzles Section with horizontal scroll on mobile - Add data attribute */}
         <div className="horizontal-scroll-section" data-no-ads="true">
