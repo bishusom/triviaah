@@ -24,14 +24,6 @@ export const metadata: Metadata = {
 
 async function getDailyQuizzes() {
   return [
-     {
-      category: 'trordle',
-      name: 'Trordle',
-      path: '/trordle',
-      image: '/imgs/trordle-160x160.webp',
-      tagline: 'Wordle-inspired trivia challenges for curious minds',
-      keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
-    },
     {
       category: 'general-knowledge',
       name: 'General Knowledge',
@@ -71,6 +63,14 @@ async function getDailyQuizzes() {
       image: '/imgs/science-160x160.webp',
       tagline: 'Discover the wonders of science',
       keywords: 'biology, physics, chemistry, space',
+    },
+    {
+    category: 'sports',
+    name: 'Sports',
+    path: '/daily/sports',
+    image: '/imgs/sports-160x160.webp',
+    tagline: 'Test your knowledge of sports history, athletes, and events',
+    keywords: 'sports trivia quiz, athlete trivia, sports history game, sports quiz with answers',
     },
   ];
 }
