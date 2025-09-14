@@ -1,10 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Netlify compatibility
-  trailingSlash: true,
-  
-  // Note: swcMinify is no longer needed in Next.js 15+
-  // SWC minification is now enabled by default and cannot be disabled
+  // REMOVED: trailingSlash: true (not needed for Vercel)
   
   // Compress responses
   compress: true,
@@ -47,8 +43,8 @@ const nextConfig = {
 
   // Enable experimental features for optimization
   experimental: {
-    isrFlushToDisk: true,
     optimizeCss: true, // This will help with CSS optimization
+    // Note: isrFlushToDisk removed as it's not needed for Vercel deployment
   },
 
   // Webpack configuration for better bundling
@@ -88,7 +84,7 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/:path*.(jpg|jpeg|png|webp|avif|ico|svg|css|js)',
+        source: '/:path*\\.(jpg|jpeg|png|webp|avif|ico|svg|css|js)',
         headers: [
           {
             key: 'Cache-Control',
@@ -106,7 +102,7 @@ const nextConfig = {
         ],
       },
       {
-        source: '/:path*',
+        source: '/((?!api).*)',
         headers: [
           {
             key: 'Cache-Control',
@@ -116,7 +112,7 @@ const nextConfig = {
       },
       // Add headers for font files
       {
-        source: '/:path*.(woff|woff2|ttf|otf)',
+        source: '/:path*\\.(woff|woff2|ttf|otf)',
         headers: [
           {
             key: 'Cache-Control',
@@ -127,8 +123,8 @@ const nextConfig = {
     ];
   },
 
-  // Enable output file tracing for smaller lambdas (if using serverless)
-  output: 'standalone',
+  // For Vercel, you don't need output: 'standalone' unless you're self-hosting
+  // REMOVED: output: 'standalone',
 };
 
 // Bundle analyzer for optimization insights (optional)

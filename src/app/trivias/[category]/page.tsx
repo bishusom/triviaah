@@ -20,6 +20,9 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     openGraph: {
       images: categoryData.ogImage ? [{ url: categoryData.ogImage }] : 'undefined',
     },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/trivias/${category}`,
+    }
   };
 }
 
