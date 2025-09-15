@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import { MdInfo } from 'react-icons/md';
 import DailyPuzzlesGrid from '@/components/daily/DailyPuzzlesGrid';
-import Timer from '@/components/daily/dailyQuizTimer';
 
 export const metadata: Metadata = {
   title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',

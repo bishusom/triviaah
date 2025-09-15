@@ -1,8 +1,6 @@
 // hooks/useCoverArt.ts
 import { useState, useEffect } from 'react';
-import { MusicBrainzCache, searchMusicBrainzRelease, getCoverArt } from '@/lib/musicbrainz-cache';
-
-const cache = new MusicBrainzCache();
+import { getSongCoverArt } from '@/lib/musicbrainz-cache';
 
 export function useCoverArt(songTitle: string, artist: string) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -17,40 +15,16 @@ export function useCoverArt(songTitle: string, artist: string) {
         setIsLoading(true);
         setError(null);
 
-        // First try to get from cache
-        const cachedUrl = await cache.getCoverArt(songTitle, artist);
-        if (cachedUrl) {
-          if (isMounted) {
-            setImageUrl(cachedUrl);
-            setIsLoading(false);
-          }
-          return;
-        }
-
-        // If not in cache, fetch from MusicBrainz
-        const release = await searchMusicBrainzRelease(songTitle, artist);
-        if (!release) {
-          if (isMounted) {
-            setError('No release found');
-            setIsLoading(false);
-          }
-          return;
-        }
-
-        const coverArtUrl = await getCoverArt(release.id);
-        if (coverArtUrl) {
-          // Save to cache
-          await cache.saveCoverArt(songTitle, artist, coverArtUrl);
-          
-          if (isMounted) {
+        // Use the enhanced function that includes both MusicBrainz and Wikipedia fallback
+        const coverArtUrl = await getSongCoverArt(songTitle, artist);
+        
+        if (isMounted) {
+          if (coverArtUrl) {
             setImageUrl(coverArtUrl);
-            setIsLoading(false);
-          }
-        } else {
-          if (isMounted) {
+          } else {
             setError('No cover art available');
-            setIsLoading(false);
           }
+          setIsLoading(false);
         }
       } catch (err) {
         if (isMounted) {

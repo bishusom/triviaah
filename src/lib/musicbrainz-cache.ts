@@ -1,4 +1,5 @@
 // lib/musicbrainz-cache.ts
+import { fetchArtistImageFromWikipedia } from './wikimedia';
 
 interface CoverArtCache {
   songKey: string;
@@ -177,22 +178,45 @@ export async function getSongCoverArt(songTitle: string, artist: string): Promis
   // Check cache first
   const cachedImage = await cache.getCoverArt(songTitle, artist);
   if (cachedImage) {
+    console.log(`Cache hit for ${artist} - ${songTitle}`);
     return cachedImage;
   }
   
-  // Search MusicBrainz for the release
-  const release = await searchMusicBrainzRelease(songTitle, artist);
-  if (!release) {
+  let source = 'none';
+  let imageUrl: string | null = null;
+  
+  try {
+    // Try MusicBrainz first
+    const release = await searchMusicBrainzRelease(songTitle, artist);
+    if (release) {
+      imageUrl = await getCoverArt(release.id);
+      if (imageUrl) {
+        source = 'musicbrainz';
+        console.log(`Found image on MusicBrainz for ${artist} - ${songTitle}`);
+      }
+    }
+    
+    // Fallback to Wikipedia if MusicBrainz failed
+    if (!imageUrl) {
+      console.log('MusicBrainz cover art not found, trying Wikipedia...');
+      imageUrl = await fetchArtistImageFromWikipedia(`${artist} music artist`);
+      if (imageUrl) {
+        source = 'wikipedia';
+        console.log(`Found image on Wikipedia for ${artist}`);
+      }
+    }
+    
+    // Cache the result if found
+    if (imageUrl) {
+      await cache.saveCoverArt(songTitle, artist, imageUrl);
+      console.log(`Cached image from ${source} for ${artist} - ${songTitle}`);
+    } else {
+      console.log(`No image found for ${artist} - ${songTitle}`);
+    }
+    
+    return imageUrl;
+  } catch (error) {
+    console.error(`Error getting cover art for ${artist} - ${songTitle}:`, error);
     return null;
   }
-  
-  // Get cover art for the release
-  const coverArtUrl = await getCoverArt(release.id);
-  if (coverArtUrl) {
-    // Cache the result
-    await cache.saveCoverArt(songTitle, artist, coverArtUrl);
-    return coverArtUrl;
-  }
-  
-  return null;
 }

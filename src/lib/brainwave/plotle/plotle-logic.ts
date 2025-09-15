@@ -1,10 +1,10 @@
-// src/lib/brainwave/plotle/plotle-logic.ts;
+// src/lib/brainwave/plotle/plotle-logic.ts
 
 export interface PlotleGuessResult {
   guess: string;
   emojis: string[];
   statuses: ('correct' | 'present' | 'absent')[];
-  letterStatuses?: ('correct' | 'present' | 'absent')[]; // Add this for letter-based feedback
+  letterStatuses?: ('correct' | 'present' | 'absent')[];
   isCorrect: boolean;
 }
 
@@ -25,49 +25,56 @@ export interface PlotleData {
 }
 
 export function checkLetterGuess(guessTitle: string, puzzle: PlotleData): PlotleGuessResult {
-  const normalizedGuess = normalizeMovieTitle(guessTitle);
-  const normalizedTarget = normalizeMovieTitle(puzzle.targetTitle);
+  // Don't normalize for letter comparison - we want to compare the actual titles
+  const guess = guessTitle.toLowerCase().trim();
+  const target = puzzle.targetTitle.toLowerCase().trim();
   
-  const isCorrect = normalizedGuess === normalizedTarget;
+  const isCorrect = guess === target;
   const letterStatuses: ('correct' | 'present' | 'absent')[] = [];
-  const targetLetters = normalizedTarget.split('');
-  const guessLetters = normalizedGuess.split('');
+  
+  // Convert to arrays for easier processing
+  const targetLetters = target.split('');
+  const guessLetters = guess.split('');
+  
+  // Initialize all as absent first
+  for (let i = 0; i < guessLetters.length; i++) {
+    letterStatuses[i] = 'absent';
+  }
   
   // First pass: mark correct letters (green)
-  for (let i = 0; i < Math.max(guessLetters.length, targetLetters.length); i++) {
-    if (i < guessLetters.length && i < targetLetters.length && guessLetters[i] === targetLetters[i]) {
+  for (let i = 0; i < Math.min(guessLetters.length, targetLetters.length); i++) {
+    if (guessLetters[i] === targetLetters[i]) {
       letterStatuses[i] = 'correct';
-    } else {
-      letterStatuses[i] = 'absent';
     }
   }
   
-  // Second pass: mark present letters (yellow)
-  const availableLetters = [...targetLetters];
-  
-  // Remove correct letters first
-  for (let i = 0; i < guessLetters.length; i++) {
-    if (letterStatuses[i] === 'correct' && i < availableLetters.length) {
-      availableLetters[i] = ''; // Mark as used
+  // Create a map to track available letters in target (not yet matched as correct)
+  const availableLetters = new Map<string, number>();
+  for (let i = 0; i < targetLetters.length; i++) {
+    // Only count letters that weren't marked as correct in the guess
+    if (i >= guessLetters.length || letterStatuses[i] !== 'correct') {
+      const letter = targetLetters[i];
+      availableLetters.set(letter, (availableLetters.get(letter) || 0) + 1);
     }
   }
   
-  // Mark present letters
+  // Second pass: mark present letters (yellow/amber)
   for (let i = 0; i < guessLetters.length; i++) {
     if (letterStatuses[i] !== 'correct') {
       const letter = guessLetters[i];
-      const foundIndex = availableLetters.findIndex(l => l === letter);
-      if (foundIndex !== -1) {
+      const count = availableLetters.get(letter) || 0;
+      
+      if (count > 0) {
         letterStatuses[i] = 'present';
-        availableLetters[foundIndex] = ''; // Mark as used
+        availableLetters.set(letter, count - 1);
       }
     }
   }
   
   return {
     guess: guessTitle,
-    emojis: [], // Empty since we're not using emojis
-    statuses: [], // Empty since we're not using emojis
+    emojis: [],
+    statuses: [],
     letterStatuses,
     isCorrect
   };
@@ -79,7 +86,7 @@ export function checkPlotleGuess(guessTitle: string, guessEmojis: string[], puzz
     throw new Error('Emoji sequence must be exactly 6 emojis');
   }
 
-  // Normalize titles for comparison
+  // Use normalized titles for overall comparison
   const normalizedGuess = normalizeMovieTitle(guessTitle);
   const normalizedTarget = normalizeMovieTitle(puzzle.targetTitle);
   

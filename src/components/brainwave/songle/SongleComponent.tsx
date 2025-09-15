@@ -15,6 +15,40 @@ interface SongleComponentProps {
   currentDate: Date;
 }
 
+// Block component for the pixelated reveal
+const PosterBlock = ({ 
+  x, 
+  y, 
+  gridCols, 
+  gridRows, 
+  isRevealed 
+}: {
+  x: number;
+  y: number;
+  gridCols: number;
+  gridRows: number;
+  isRevealed: boolean;
+}) => {
+  if (isRevealed) return null; // Transparent, let image show through
+  
+  const left = (x / gridCols) * 100;
+  const top = (y / gridRows) * 100;
+  const width = 100 / gridCols;
+  const height = 100 / gridRows;
+
+  return (
+    <div
+      className="absolute bg-black"
+      style={{
+        left: `${left}%`,
+        top: `${top}%`,
+        width: `${width}%`,
+        height: `${height}%`,
+      }}
+    />
+  );
+};
+
 export default function SongleComponent({ initialData, currentDate }: SongleComponentProps) {
   const [puzzleData] = useState(initialData);
   const [guess, setGuess] = useState('');
@@ -25,9 +59,62 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
   const [activeHintIndex, setActiveHintIndex] = useState(0);
   const hintsScrollRef = useRef<HTMLDivElement>(null);
-  const { imageUrl, isLoading, error } = useCoverArt(puzzleData.normalizedTitle, puzzleData.artist);
-  const [imageRevealLevel, setImageRevealLevel] = useState(0);
+  const { imageUrl, isLoading, error } = useCoverArt(puzzleData.targetTitle, puzzleData.artist);
+  const [revealPercentage, setRevealPercentage] = useState(0);
+  const [revealedBlocks, setRevealedBlocks] = useState<number[]>([]);
+  const blockRevealOrderRef = useRef<number[]>([]);
+  const [revealedLyricIndices, setRevealedLyricIndices] = useState<number[]>([]);
+  const lyricRevealOrderRef = useRef<number[]>([]);
   
+  // Grid settings for blocks
+  const GRID_COLS = 40; // For 120px width ~3px blocks
+  const GRID_ROWS = 40; // Square aspect
+  const totalBlocks = GRID_COLS * GRID_ROWS;
+  const containerWidth = 120; // px
+  const containerHeight = 120; // px
+  
+  // Lyrics settings
+  const lyricChars = puzzleData.lyricHint.split('');
+  const totalLyricChars = lyricChars.length;
+  
+  // Initialize spaced random reveal order on mount for poster
+  useEffect(() => {
+    if (blockRevealOrderRef.current.length === 0) {
+      const groups: number[][] = [[], [], [], []];
+      for (let row = 0; row < GRID_ROWS; row++) {
+        for (let col = 0; col < GRID_COLS; col++) {
+          const index = row * GRID_COLS + col;
+          const groupIdx = (row % 2) * 2 + (col % 2);
+          groups[groupIdx].push(index);
+        }
+      }
+      
+      const shuffledOrder: number[] = [];
+      groups.forEach(group => {
+        // Shuffle within group
+        for (let i = group.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [group[i], group[j]] = [group[j], group[i]];
+        }
+        shuffledOrder.push(...group);
+      });
+      
+      blockRevealOrderRef.current = shuffledOrder;
+    }
+  }, []);
+
+  // Initialize random reveal order for lyrics
+  useEffect(() => {
+    if (lyricRevealOrderRef.current.length === 0) {
+      const order = Array.from({ length: totalLyricChars }, (_, i) => i);
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      lyricRevealOrderRef.current = order;
+    }
+  }, [totalLyricChars]);
+
   // Sound effects
   const { isMuted } = useSound();
   const correctSound = useRef<HTMLAudioElement | null>(null);
@@ -73,19 +160,26 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
     }
   }, [attempts, gameState, puzzleData.id]);
 
-  // Add useEffect for image reveal
+  // Update reveal percentage and reveals based on attempts
   useEffect(() => {
-    // Update reveal percentage based on attempts
+    let newReveal = 0;
     if (attempts.length > 0 && gameState === 'playing') {
-      const newReveal = Math.min(attempts.length * 15, 75); // 15% per attempt, max 75%
-      setImageRevealLevel(newReveal);
+      newReveal = Math.min(attempts.length * 10, 60); // 10% per attempt, max 60%
+    } else if (gameState === 'won' || gameState === 'lost') {
+      newReveal = 100;
     }
-    
-    // Fully reveal when game ends
-    if (gameState === 'won' || gameState === 'lost') {
-      setImageRevealLevel(100);
-    }
-  }, [attempts.length, gameState]);
+    setRevealPercentage(newReveal);
+
+    // Poster blocks
+    const numBlocksToReveal = Math.floor(totalBlocks * (newReveal / 100));
+    const newRevealedBlocks = blockRevealOrderRef.current.slice(0, numBlocksToReveal);
+    setRevealedBlocks(newRevealedBlocks);
+
+    // Lyric letters (excluding spaces)
+    const numLyricsToReveal = Math.floor(totalLyricChars * (newReveal / 100));
+    const newRevealedLyrics = lyricRevealOrderRef.current.slice(0, numLyricsToReveal);
+    setRevealedLyricIndices(newRevealedLyrics);
+  }, [attempts.length, gameState, totalBlocks, totalLyricChars]);
 
   // Auto-advance to latest hint when new hints are revealed
   useEffect(() => {
@@ -231,16 +325,6 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
     });
   };
 
-  const resetGame = () => {
-    setAttempts([]);
-    setGameState('playing');
-    setGuess('');
-    setActiveHintIndex(0);
-    setImageRevealLevel(0);
-    localStorage.removeItem(`songle-${puzzleData.id}`);
-    playSound('click');
-  };
-
   const triesLeft = 6 - attempts.length;
   const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
 
@@ -353,6 +437,30 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
     );
   };
 
+  // Generate block grid
+  const blockGrid: { x: number; y: number }[] = [];
+  for (let row = 0; row < GRID_ROWS; row++) {
+    for (let col = 0; col < GRID_COLS; col++) {
+      blockGrid.push({ x: col, y: row });
+    }
+  }
+
+  // Check if a block is revealed
+  const isBlockRevealed = (index: number) => revealedBlocks.includes(index);
+
+  // Check if a lyric character is revealed (always reveal spaces)
+  const isLyricRevealed = (index: number, char: string) => {
+    return char === ' ' || revealedLyricIndices.includes(index);
+  };
+
+  // Helper function to ensure status array matches guess length
+  const getLetterStatus = (attempt: SongleGuessResult, index: number) => {
+    if (index < attempt.statuses.length) {
+      return attempt.statuses[index];
+    }
+    return 'absent'; // Default status for extra letters
+  };
+
   return (
     <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
       <canvas 
@@ -368,46 +476,83 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
           </div>
         </div>
 
-        {/* Cover art with progressive reveal */}
-        <div className="flex justify-center mb-4">
-          {isLoading ? (
-            <div className="w-32 h-32 bg-gray-200 rounded-lg animate-pulse flex items-center justify-center">
-              <span className="text-gray-400">Loading...</span>
-            </div>
-          ) : error ? (
-            <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
-              <span className="text-gray-400 text-sm text-center">No cover art available</span>
-            </div>
-          ) : imageUrl ? (
-            <div className="relative rounded-lg overflow-hidden bg-gray-100" style={{ height: '120px', width: '120px' }}>
-              <img
-                src={imageUrl}
-                alt={`${puzzleData.targetTitle} cover art`}
-                className="w-full h-full object-cover"
-                style={{
-                  filter: `blur(${Math.max(0, 20 - (imageRevealLevel * 0.2))}px)`,
-                  opacity: 0.2 + (imageRevealLevel * 0.008),
-                  transition: 'filter 0.5s ease, opacity 0.5s ease'
-                }}
-              />
+        {/* Cover and Lyrics Container */}
+        <div className="flex flex-col md:flex-row gap-4 mb-6 items-center">
+          {/* Cover Art */}
+          <div className="flex-shrink-0 relative">
+            {isLoading ? (
+              <div className="w-32 h-32 bg-gray-200 rounded-lg animate-pulse flex items-center justify-center">
+                <span className="text-gray-400">Loading...</span>
+              </div>
+            ) : error || !imageUrl ? (
+              <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
+                <span className="text-gray-400 text-sm text-center">No cover art available</span>
+              </div>
+            ) : (
               <div 
-                className="absolute inset-0 bg-black flex items-center justify-center transition-opacity duration-500"
-                style={{ opacity: (100 - imageRevealLevel) / 100 }}
+                className="relative rounded-lg overflow-hidden bg-gray-100" 
+                style={{ height: `${containerHeight}px`, width: `${containerWidth}px` }}
               >
-                <span className="text-white text-xl font-bold">?</span>
+                <img
+                  src={imageUrl}
+                  alt={`${puzzleData.targetTitle} cover art`}
+                  className="w-full h-full object-cover absolute inset-0 z-10"
+                />
+                {/* Block overlay container */}
+                <div className="absolute inset-0 z-20">
+                  {blockGrid.map((pos, index) => (
+                    <PosterBlock
+                      key={index}
+                      {...pos}
+                      gridCols={GRID_COLS}
+                      gridRows={GRID_ROWS}
+                      isRevealed={isBlockRevealed(index)}
+                    />
+                  ))}
+                </div>
+                {/* Center "?" overlay only initially */}
+                {revealPercentage === 0 && (
+                  <div className="absolute inset-0 flex items-center justify-center z-30">
+                    <span className="text-white text-2xl font-bold">?</span>
+                  </div>
+                )}
+                {/* Percentage badge */}
+                <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1 py-0.5 rounded z-30">
+                  {revealPercentage > 0 ? `${Math.round(revealPercentage)}%` : '?'}
+                </div>
               </div>
-              <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1 py-0.5 rounded">
-                {imageRevealLevel > 0 ? 
-                  `${Math.round(imageRevealLevel)}%` : 
-                  '?'
-                }
+            )}
+          </div>
+
+          {/* Lyrics Hint */}
+          <div className="flex-grow min-w-0">
+            <h4 className="font-semibold text-center mb-2">Lyric Hint:</h4>
+            <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-4 rounded-xl text-center font-serif text-base md:text-lg leading-relaxed whitespace-pre-wrap border-2 border-purple-200 shadow-inner min-h-[80px] flex items-center justify-center">
+              <div className="w-full">
+                {lyricChars.map((char, index) => (
+                  <span
+                    key={index}
+                    className={`inline-flex items-center justify-center transition-all duration-300 ${
+                      isLyricRevealed(index, char)
+                        ? 'text-purple-700 font-semibold'
+                        : 'text-transparent'
+                    } ${char === ' ' ? 'w-3' : 'w-5 h-5 mx-0.5'}`}
+                    style={{
+                      animation: isLyricRevealed(index, char) ? 'fadeIn 0.3s ease-in' : 'none'
+                    }}
+                  >
+                    {isLyricRevealed(index, char) ? (
+                      char
+                    ) : char === ' ' ? (
+                      ' '
+                    ) : (
+                      <span className="w-4 h-4 bg-gray-400 rounded-full inline-block"></span>
+                    )}
+                  </span>
+                ))}
               </div>
             </div>
-          ) : (
-            <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
-              <span className="text-gray-400 text-sm text-center">No cover art available</span>
-            </div>
-          )}
+          </div>
         </div>
 
         {/* Error message */}
@@ -417,12 +562,33 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
           </div>
         )}
         
-        {/* Enhanced progressive hints */}
-        <EnhancedProgressiveHint />
+        {/* Conditional rendering of hints or result */}
+        {gameState === 'playing' && (
+          <>
+            {/* Enhanced progressive hints */}
+            <EnhancedProgressiveHint />
+            
+            {/* Validation hints */}
+            <ValidationHints />
+          </>
+        )}
         
-        {/* Validation hints */}
-        <ValidationHints />
-
+        {/* Game result message */}
+        {gameState === 'won' && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            <h3 className="font-bold text-lg mb-2">Congratulations! 🎉</h3>
+            <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
+            <p className="mt-2">The song is &quot;{puzzleData.normalizedTitle.toUpperCase()}&quot; by {puzzleData.artist}.</p>
+          </div>
+        )}
+        
+        {gameState === 'lost' && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <h3 className="font-bold text-lg mb-2">Game Over</h3>
+            <p>The song was: <strong>&quot;{puzzleData.normalizedTitle.toUpperCase()}&quot;</strong> by {puzzleData.artist}</p>
+          </div>
+        )}
+        
         {/* Letter grid for previous attempts */}
         <div className="mb-6">
           {attempts.length > 0 && (
@@ -430,42 +596,23 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
           )}
           {attempts.map((attempt, index) => (
             <div key={index} className="flex justify-center mb-2">
-              {attempt.statuses.map((status, letterIndex) => {
-                const letter = attempt.guess[letterIndex] || '';
-                return (
-                  <div
-                    key={letterIndex}
-                    className={`w-12 h-12 flex items-center justify-center mx-1 text-xl font-bold border-2 rounded ${
-                      status === 'correct' 
-                        ? 'bg-green-500 text-white border-green-500' 
-                        : status === 'present' 
-                        ? 'bg-yellow-500 text-white border-yellow-500'
-                        : 'bg-gray-300 text-gray-700 border-gray-300'
-                    }`}
-                  >
-                    {letter.toUpperCase()}
-                  </div>
-                );
-              })}
+              {attempt.guess.replace(/\s+/g, '').split('').map((letter, letterIndex) => (
+                <div
+                  key={letterIndex}
+                  className={`w-12 h-12 flex items-center justify-center mx-1 text-xl font-bold border-2 rounded ${
+                    attempt.statuses[letterIndex] === 'correct' 
+                      ? 'bg-green-500 text-white border-green-500' 
+                      : attempt.statuses[letterIndex] === 'present' 
+                      ? 'bg-yellow-500 text-white border-yellow-500'
+                      : 'bg-gray-300 text-gray-700 border-gray-300'
+                  }`}
+                >
+                  {letter.toUpperCase()}
+                </div>
+              ))}
             </div>
           ))}
         </div>
-        
-        {/* Game result message */}
-        {gameState === 'won' && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            <h3 className="font-bold text-lg mb-2">Congratulations! 🎉</h3>
-            <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
-            <p className="mt-2">The song is &quot;{puzzleData.targetTitle}&quot; by {puzzleData.artist}.</p>
-          </div>
-        )}
-        
-        {gameState === 'lost' && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <h3 className="font-bold text-lg mb-2">Game Over</h3>
-            <p>The song was: <strong>&quot;{puzzleData.targetTitle}&quot;</strong> by {puzzleData.artist}</p>
-          </div>
-        )}
         
         {/* Input for guesses */}
         {gameState === 'playing' && (
@@ -516,7 +663,7 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
           <li>🟨 Yellow: Letter is in the title but wrong position</li>
           <li>⬜ Gray: Letter not in the title</li>
           <li>Hints are revealed after each attempt</li>
-          <li>You have 6 attempts to guess the movie</li>
+          <li>You have 6 attempts to guess the song</li>
         </ul>
       </div>
     </div>

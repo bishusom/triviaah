@@ -69,7 +69,7 @@ export default function DailyPuzzlesGrid({ quizzes }: { quizzes: Quiz[] }) {
   };
 
   return (
-    <div className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-4 gap-6 mb-12">
+    <div className="flex flex-col md:flex-row gap-6 mb-12">
       {quizzes.map((quiz) => {
         const wasPlayed = playedQuizzes[quiz.category]?.played || false;
         const shouldReset = shouldResetQuiz(quiz.category);
@@ -78,7 +78,7 @@ export default function DailyPuzzlesGrid({ quizzes }: { quizzes: Quiz[] }) {
         return (
           <div
             key={quiz.category}
-            className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400"
+            className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow hover:border-blue-400 flex-1"
           >
             <div className="p-6 flex flex-col h-full">
               <div className="flex items-center justify-center mb-4">

@@ -72,11 +72,24 @@ export function checkSongleGuess(guessTitle: string, puzzle: SongleData): Songle
 }
 
 export function normalizeSongTitle(title: string): string {
-  return title.toLowerCase()
+  let normalized = title.toLowerCase()
     .trim()
     .replace(/[^a-z0-9\s]/g, '')
-    .replace(/\s+/g, ' ')
-    .replace(/^(the|a|an)\s+/i, '');
+    .replace(/\s+/g, ' ');
+  
+  // Remove leading articles
+  if (normalized.startsWith('the ')) {
+    normalized = normalized.substring(4);
+  } else if (normalized.startsWith('a ')) {
+    normalized = normalized.substring(2);
+  } else if (normalized.startsWith('an ')) {
+    normalized = normalized.substring(3);
+  }
+  
+  // Remove all spaces for comparison
+  normalized = normalized.replace(/\s+/g, '');
+  
+  return normalized;
 }
 
 export async function validateSongGuess(
@@ -129,22 +142,21 @@ export function getProgressiveClues(puzzle: SongleData, attemptNumber: number): 
   if (attemptNumber >= 1) {
     clues.push(`Genre: ${puzzle.genre}`);
   }
-  
-  if (attemptNumber >= 2) {
-    clues.push(`Artist: ${puzzle.artist}`);
+
+  if (attemptNumber >= 2 && puzzle.validationHints.releaseYear) {
+    clues.push(`Released in ${puzzle.validationHints.releaseYear}`);
   }
   
   if (attemptNumber >= 3) {
-    clues.push(`Lyric: ${puzzle.lyricHint}`);
+    clues.push(`Artist: ${puzzle.artist}`);
   }
   
-  // Add additional hints from validation hints
   if (attemptNumber >= 4 && puzzle.validationHints.album) {
     clues.push(`Album: ${puzzle.validationHints.album}`);
   }
   
-  if (attemptNumber >= 5 && puzzle.validationHints.releaseYear) {
-    clues.push(`Released in ${puzzle.validationHints.releaseYear}`);
+  if (attemptNumber >= 5) {
+    clues.push(`Lyric: ${puzzle.lyricHint}`);
   }
   
   return clues;
