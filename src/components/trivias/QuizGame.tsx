@@ -39,7 +39,7 @@ export default function QuizGame({
 }) {
   /* ---------- Config ---------- */
   const isQuickfire = quizConfig?.isQuickfire || category === 'quick-fire';
-  const timePerQuestion = isQuickfire ? 15 : 30;
+  const timePerQuestion = isQuickfire ? 10 : 30;
   const hasBonusQuestion = quizConfig?.hasBonusQuestion ?? (category === 'quick-fire');
 
   /* ---------- Data slicing ---------- */
@@ -159,6 +159,11 @@ export default function QuizGame({
 
   /* ---------- Save score and show summary ---------- */
   const saveScoreAndShowSummary = useCallback(async () => {
+    // Stop the ticking sound
+  if (!isMuted && tickSound.current) {
+    tickSound.current.pause();
+    tickSound.current.currentTime = 0; // Reset sound to start
+  }
     // Prepare quiz result
     const quizResult = {
       score,

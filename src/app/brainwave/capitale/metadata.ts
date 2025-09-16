@@ -9,11 +9,11 @@ export function generateCapitaleMetadata(): Metadata {
     openGraph: {
       title: 'Capitale - Daily Trivia Puzzle | Triviaah',
       description: 'Guess the answer to today\'s capital city puzzle with limited attempts, similar to Wordle but with trivia questions.',
-      url: 'https://triviaah.com/Capitale',
+      url: 'https://triviaah.com/brainwave/capitale',
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/Capitale-og.webp',
+          url: '/imgs/capitale-og.webp',
           width: 1200,
           height: 630,
           alt: 'Capitale - Daily Trivia Puzzle Game'

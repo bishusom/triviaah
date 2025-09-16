@@ -9,7 +9,7 @@ export function generateSongleMetadata(): Metadata {
     openGraph: {
       title: 'Songle - Daily Song Guessing Puzzle | Triviaah',
       description: 'Guess the song from clues like lyrics, artist, and genre. Wordle-style music puzzle game.',
-      url: 'https://triviaah.com/songle',
+      url: 'https://triviaah.com/brainwave/songle',
       siteName: 'Triviaah',
       images: [
         {

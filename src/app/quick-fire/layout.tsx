@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/og-quiz-image.jpg', // Replace with your actual OG image
+        url: '/imgs/quick-fire-og.webp', // Replace with your actual OG image
         width: 1200,
         height: 630,
         alt: 'Triviaah Quick Fire Quiz Challenge',

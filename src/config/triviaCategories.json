@@ -1,7 +1,7 @@
 {
   "literature": {
     "title": "Literature",
-    "description": "Questions about famous books, authors, and literary works.",
+    "description": "Explore questions about famous books, renowned authors, classic novels, and literary works spanning centuries, from Shakespeare to modern bestsellers.",
     "related": ["famous-quotes"],
     "keywords": ["books", "authors", "novels"],
     "ogImage": "/imgs/literature.webp",
@@ -9,7 +9,7 @@
   },
   "arts": {
     "title": "Arts",
-    "description": "Test your knowledge of visual arts, painting, and sculpture.",
+    "description": "Test your knowledge of visual arts, including painting, sculpture, and architecture, from Renaissance masterpieces to contemporary art movements.",
     "related": ["literature", "fashion", "arts"],
     "keywords": ["art", "painting", "sculpture"],
     "ogImage": "/imgs/arts.webp",
@@ -17,7 +17,7 @@
   },
   "animals": {
     "title": "Animals",
-    "description": "Questions about wildlife, mammals, birds, and marine life.",
+    "description": "Challenge yourself with questions about wildlife, including mammals, birds, reptiles, and marine life, covering habitats, behaviors, and biology.",
     "related": ["science", "geography"],
     "keywords": ["animals", "wildlife", "biology"],
     "ogImage": "/imgs/animals.webp",
@@ -25,7 +25,7 @@
   },
   "science": {
     "title": "Science",
-    "description": "Test your knowledge of physics, chemistry, and biology.",
+    "description": "Dive into questions on physics, chemistry, biology, and astronomy, exploring scientific discoveries, theories, and breakthroughs that shape our world.",
     "related": ["animals", "technology", "geography"],
     "keywords": ["science", "physics", "chemistry"],
     "ogImage": "/imgs/science-rect.webp",
@@ -33,15 +33,15 @@
   },
   "history": {
     "title": "History",
-    "description": "Questions about historical events, figures, and civilizations.",
-    "related": ["famous-quotes","literature","arts"],
+    "description": "Answer questions about historical events, influential figures, ancient civilizations, and pivotal moments that have shaped human history across eras.",
+    "related": ["famous-quotes", "literature", "arts"],
     "keywords": ["history", "historical events", "ancient"],
     "ogImage": "/imgs/history-rect.webp",
     "displayName": "History"
   },
   "geography": {
     "title": "Geography",
-    "description": "Test your knowledge of countries, capitals, and landmarks.",
+    "description": "Test your knowledge of countries, capitals, landmarks, and physical geography, from towering mountains to vast oceans and cultural heritage sites.",
     "related": ["science", "animals"],
     "keywords": ["geography", "countries", "maps"],
     "ogImage": "/imgs/geography-rect.webp",
@@ -49,7 +49,7 @@
   },
   "movies": {
     "title": "Movies",
-    "description": "Questions about films, actors, and cinema history.",
+    "description": "Challenge yourself with questions about iconic films, famous actors, directors, and cinema history, from Hollywood blockbusters to indie gems.",
     "related": ["tv", "celebrities"],
     "keywords": ["movies", "films", "hollywood"],
     "ogImage": "/imgs/movies.webp",
@@ -57,7 +57,7 @@
   },
   "tv": {
     "title": "TV/Web Series",
-    "description": "Test your knowledge of television shows and web series.",
+    "description": "Explore questions about popular television shows, web series, streaming hits, and TV culture, from classic sitcoms to modern binge-worthy dramas.",
     "related": ["movies", "celebrities"],
     "keywords": ["tv", "television", "series"],
     "ogImage": "/imgs/tv.webp",
@@ -65,7 +65,7 @@
   },
   "music": {
     "title": "Music",
-    "description": "Questions about songs, artists, and music history.",
+    "description": "Test your knowledge of songs, artists, genres, and music history, from classical compositions to modern pop, rock, and hip-hop chart-toppers.",
     "related": ["celebrities"],
     "keywords": ["music", "songs", "artists"],
     "ogImage": "/imgs/music.webp",
@@ -73,15 +73,15 @@
   },
   "celebrities": {
     "title": "Celebrities",
-    "description": "Test your knowledge of famous personalities.",
-    "related": ["movie", "music", "tv"],
+    "description": "Answer questions about famous personalities, including actors, musicians, and influencers, exploring their careers, lives, and cultural impact.",
+    "related": ["movies", "music", "tv"],
     "keywords": ["celebrities", "movies", "tv"],
     "ogImage": "/imgs/celebrities.webp",
     "displayName": "Celebrities"
   },
   "philosophy": {
     "title": "Philosophy",
-    "description": "Questions about philosophers, school of thoughts, and rationality.",
+    "description": "Challenge yourself with questions about philosophers, schools of thought, ethical dilemmas, and rational ideas that shape human understanding.",
     "related": ["history"],
     "keywords": ["philosophy", "thought", "history"],
     "ogImage": "/imgs/philosophy.webp",
@@ -89,7 +89,7 @@
   },
   "food": {
     "title": "Food",
-    "description": "Test your knowledge of cuisines, dishes, and culinary arts.",
+    "description": "Explore questions about global cuisines, traditional dishes, culinary techniques, and food culture, from street food to fine dining experiences.",
     "related": [],
     "keywords": ["food", "cuisine", "cooking"],
     "ogImage": "/imgs/food.webp",
@@ -97,15 +97,15 @@
   },
   "sports": {
     "title": "Sports",
-    "description": "Questions about athletes, teams, and sporting events.",
-    "related": ["celebrities","board-games","video-games"],
+    "description": "Test your knowledge of athletes, teams, major sporting events, and sports history, from Olympic records to iconic moments in global competitions.",
+    "related": ["celebrities", "board-games", "video-games"],
     "keywords": ["sports", "athletes", "games"],
     "ogImage": "/imgs/sports-rect.webp",
     "displayName": "Sports"
   },
   "fashion": {
     "title": "Fashion",
-    "description": "Test your knowledge of fashion trends and designers.",
+    "description": "Answer questions about fashion trends, iconic designers, clothing styles, and the history of fashion, from haute couture to streetwear culture.",
     "related": ["celebrities"],
     "keywords": ["fashion", "designers", "style"],
     "ogImage": "/imgs/fashion.webp",
@@ -113,7 +113,7 @@
   },
   "festivals": {
     "title": "Festivals",
-    "description": "Questions about cultural and religious festivals worldwide.",
+    "description": "Explore questions about cultural, religious, and seasonal festivals worldwide, celebrating traditions, holidays, and vibrant global festivities.",
     "related": ["geography"],
     "keywords": ["festivals", "celebrations", "holidays"],
     "ogImage": "/imgs/festivals.webp",
@@ -121,7 +121,7 @@
   },
   "business": {
     "title": "Business",
-    "description": "Test your knowledge of companies, brands, and economics.",
+    "description": "Challenge yourself with questions about major companies, global brands, economic principles, and business leaders shaping the corporate world.",
     "related": [],
     "keywords": ["business", "companies", "economics"],
     "ogImage": "/imgs/business.webp",
@@ -129,32 +129,32 @@
   },
   "board-games": {
     "title": "Board Games",
-    "description": "Questions about classic and modern board games.",
-    "related": ["video-games","sports"],
+    "description": "Test your knowledge of classic and modern board games, from strategy-based tabletop titles to family-friendly games enjoyed worldwide.",
+    "related": ["video-games", "sports"],
     "keywords": ["board games", "tabletop games"],
     "ogImage": "/imgs/board-games.webp",
     "displayName": "Board Games"
   },
   "video-games": {
     "title": "Video Games",
-    "description": "Test your knowledge of video games and gaming culture.",
-    "related": ["board-games","sports"],
+    "description": "Answer questions about video games, gaming culture, iconic titles, and esports, from retro classics to cutting-edge modern gaming experiences.",
+    "related": ["board-games", "sports"],
     "keywords": ["video games", "gaming", "esports"],
     "ogImage": "/imgs/video-games.webp",
     "displayName": "Video Games"
   },
   "mythology": {
     "title": "Mythology",
-    "description": "Questions about myths, legends, and folklore.",
+    "description": "Explore questions about myths, legends, and folklore from ancient cultures, diving into gods, heroes, and epic tales from global traditions.",
     "related": ["history"],
     "keywords": ["mythology", "legends", "folklore"],
     "ogImage": "/imgs/mythology.webp",
     "displayName": "Mythology"
   },
-   "famous-quotes": {
+  "famous-quotes": {
     "title": "Famous Quotes",
-    "description": "Test your knowledge of iconic quotes from history, movies, and literature.",
-    "related": ["movies", "literature", "history","celebrities"],
+    "description": "Challenge yourself with questions about iconic quotes from history, movies, and literature, testing your recall of famous lines and their origins.",
+    "related": ["movies", "literature", "history", "celebrities"],
     "keywords": ["famous quotes", "movie lines", "literary quotes"],
     "ogImage": "/imgs/famous-quotes.webp",
     "displayName": "Famous Quotes"

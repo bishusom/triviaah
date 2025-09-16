@@ -9,7 +9,7 @@ export function generatePlotleMetadata(): Metadata {
     openGraph: {
       title: 'Plotle - Daily Movie Plot Puzzle | Triviaah',
       description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words.',
-      url: 'https://triviaah.com/plotle',
+      url: 'https://triviaah.com/brainwave/plotle',
       siteName: 'Triviaah',
       images: [
         {
