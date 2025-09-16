@@ -30,6 +30,26 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
   const [hasNoImage, setHasNoImage] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [revealPercentage, setRevealPercentage] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+
+    // Start game and trigger analytics
+  useEffect(() => {
+    setGameStarted(true);
+  }, []);
+
+  // Add analytics event for game start
+  useEffect(() => {
+    if (!gameStarted) return;
+    
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'capitale_started', category: 'capitale', label: 'capitale'});
+        clearInterval(checkGtag);
+      }
+    }, 100);
+
+    return () => clearInterval(checkGtag);
+  }, [gameStarted]);
   
   // Sound effects (unchanged)
   const { isMuted } = useSound();

@@ -2,6 +2,14 @@
 import { ReadonlyQuizItems, ReadonlySectionItems } from '@/types/home';
 
 export const DAILY_QUIZZES: ReadonlyQuizItems = [
+   {
+    category: 'quick-fire',
+    name: 'Quick Fire',
+    path: '/quick-fire',
+    image: '/imgs/quick-fire-160x160.webp',
+    tagline: 'Test your reaction time and knowledge with our 60-second challenge!',
+    keywords: 'rapid fire trivia, quick fire triva, general knowledge quiz, daily trivia, daily quiz with answers',
+  },
   {
     category: 'general-knowledge',
     name: 'General Knowledge',
@@ -41,6 +49,14 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
     image: '/imgs/science-160x160.webp',
     tagline: 'Discover science & animal kingdom wonders in our free online trivia',
     keywords: 'science trivia quiz, biology quiz game, physics trivia questions, science quiz with answers',
+  },
+  {
+    category: "arts-literature",
+    name: "Arts & Literature",
+    path: "/daily/arts-literature",
+    image: "/imgs/arts-n-literature-160x160.webp",
+    tagline: "Explore the world of great authors, artists, and literary masterpieces",
+    keywords: "literature trivia quiz, famous authors quiz, art history questions, classic books quiz, painting trivia, poetry quiz questions"
   },
   {
     category: 'sports',

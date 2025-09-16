@@ -65,6 +65,7 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
   const blockRevealOrderRef = useRef<number[]>([]);
   const [revealedLyricIndices, setRevealedLyricIndices] = useState<number[]>([]);
   const lyricRevealOrderRef = useRef<number[]>([]);
+  const [gameStarted, setGameStarted] = useState(false);
   
   // Grid settings for blocks
   const GRID_COLS = 40; // For 120px width ~3px blocks
@@ -114,6 +115,25 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
       lyricRevealOrderRef.current = order;
     }
   }, [totalLyricChars]);
+
+  // Start game and trigger analytics
+  useEffect(() => {
+    setGameStarted(true);
+  }, []);
+
+  // Add analytics event for game start
+  useEffect(() => {
+    if (!gameStarted) return;
+    
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'songle_started', category: 'songle', label: 'songle'});
+        clearInterval(checkGtag);
+      }
+    }, 100);
+
+    return () => clearInterval(checkGtag);
+  }, [gameStarted]);
 
   // Sound effects
   const { isMuted } = useSound();

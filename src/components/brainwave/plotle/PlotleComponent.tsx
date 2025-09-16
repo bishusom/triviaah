@@ -260,6 +260,7 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
   const [revealPercentage, setRevealPercentage] = useState(0);
   const [revealedBlocks, setRevealedBlocks] = useState<number[]>([]);
   const blockRevealOrderRef = useRef<number[]>([]);
+  const [gameStarted, setGameStarted] = useState(false);
   
   // Grid settings for blocks
   const GRID_COLS = 30; // Adjust for finer/coarser grid (higher = smaller blocks)
@@ -293,6 +294,25 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
       blockRevealOrderRef.current = shuffledOrder;
     }
   }, []);
+
+    // Start game and trigger analytics
+  useEffect(() => {
+    setGameStarted(true);
+  }, []);
+
+  // Add analytics event for game start
+  useEffect(() => {
+    if (!gameStarted) return;
+    
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'plotle_started', category: 'plotle', label: 'plotle'});
+        clearInterval(checkGtag);
+      }
+    }, 100);
+
+    return () => clearInterval(checkGtag);
+  }, [gameStarted]);
 
   // Sound effects
   const { isMuted } = useSound();

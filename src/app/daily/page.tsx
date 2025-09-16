@@ -25,6 +25,14 @@ export const metadata: Metadata = {
 async function getDailyQuizzes() {
   return [
     {
+    category: 'quick-fire',
+    name: 'Quick Fire',
+    path: '/quick-fire',
+    image: '/imgs/quick-fire-160x160.webp',
+    tagline: 'Test your reaction time and knowledge with our 60-second challenge!',
+    keywords: 'rapid fire trivia, quick fire triva, general knowledge quiz, daily trivia, daily quiz with answers',
+    },
+    {
       category: 'general-knowledge',
       name: 'General Knowledge',
       path: '/daily/general-knowledge',
@@ -63,6 +71,14 @@ async function getDailyQuizzes() {
       image: '/imgs/science-160x160.webp',
       tagline: 'Discover the wonders of science',
       keywords: 'biology, physics, chemistry, space',
+    },
+    {
+    category: "arts-literature",
+    name: "Arts & Literature",
+    path: "/daily/arts-literature",
+    image: "/imgs/arts-n-literature-160x160.webp",
+    tagline: "Explore the world of great authors, artists, and literary masterpieces",
+    keywords: "literature trivia quiz, famous authors quiz, art history questions, classic books quiz, painting trivia, poetry quiz questions"
     },
     {
     category: 'sports',
