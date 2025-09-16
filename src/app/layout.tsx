@@ -2,6 +2,7 @@
 import { Geist } from 'next/font/google';
 import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { SpeedInsights } from '@vercel/speed-insights/next'; // Add this import
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
 import { SoundProvider } from '@/context/SoundContext';;
 import { Metadata } from 'next';
@@ -129,6 +130,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           
           {/* Google Analytics - only load in production */}
           {isProduction && <GoogleAnalytics gaId="G-K4KZ7XR85V" />}
+          
+          {/* Vercel Speed Insights */}
+          {isProduction && <SpeedInsights />}
           
           {/* AdSense Configuration */}
           {isProduction && (
