@@ -328,7 +328,7 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
       shareText += '\n';
     });
     
-    shareText += '\nPlay daily at triviaah.com/brainwave/capitale';
+    shareText += '\nPlay daily at https://triviaah.com/brainwave/capitale';
     return shareText;
   };
 

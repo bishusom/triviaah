@@ -332,7 +332,7 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
       shareText += '\n';
     });
     
-    shareText += '\nPlay daily at triviaah.com/brainwave/songle';
+    shareText += '\nPlay daily at https://triviaah.com/brainwave/songle';
     return shareText;
   };
 

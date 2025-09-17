@@ -504,7 +504,7 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
       shareText += '\n';
     });
     
-    shareText += '\nPlay daily at triviaah.com/brainwave/plotle';
+    shareText += '\nPlay daily at https://triviaah.com/brainwave/plotle';
     return shareText;
   };
 
