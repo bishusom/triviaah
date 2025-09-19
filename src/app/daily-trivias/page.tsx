@@ -1,4 +1,4 @@
-// app/daily/page.tsx
+// app/daily-trivias/page.tsx
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { MdInfo } from 'react-icons/md';
@@ -35,7 +35,7 @@ async function getDailyQuizzes() {
     {
       category: 'general-knowledge',
       name: 'General Knowledge',
-      path: '/daily/general-knowledge',
+      path: '/daily-trivias/general-knowledge',
       image: '/imgs/general-knowledge-160x160.webp',
       tagline: 'Test your worldly wisdom with diverse topics',
       keywords: 'facts, trivia, knowledge quiz',
@@ -51,7 +51,7 @@ async function getDailyQuizzes() {
     {
       category: 'entertainment',
       name: 'Entertainment',
-      path: '/daily/entertainment',
+      path: '/daily-trivias/entertainment',
       image: '/imgs/entertainment-160x160.webp',
       tagline: 'Movies, music & pop culture challenges',
       keywords: 'film quiz, music trivia, celebrity questions',
@@ -59,7 +59,7 @@ async function getDailyQuizzes() {
     {
       category: 'geography',
       name: 'Geography',
-      path: '/daily/geography',
+      path: '/daily-trivias/geography',
       image: '/imgs/geography-160x160.webp',
       tagline: 'Explore the world without leaving home',
       keywords: 'countries, capitals, landmarks, maps',
@@ -67,7 +67,7 @@ async function getDailyQuizzes() {
     {
       category: 'science',
       name: 'Science',
-      path: '/daily/science',
+      path: '/daily-trivias/science',
       image: '/imgs/science-160x160.webp',
       tagline: 'Discover the wonders of science',
       keywords: 'biology, physics, chemistry, space',
@@ -75,7 +75,7 @@ async function getDailyQuizzes() {
     {
     category: "arts-literature",
     name: "Arts & Literature",
-    path: "/daily/arts-literature",
+    path: "/daily-trivias/arts-literature",
     image: "/imgs/arts-n-literature-160x160.webp",
     tagline: "Explore the world of great authors, artists, and literary masterpieces",
     keywords: "literature trivia quiz, famous authors quiz, art history questions, classic books quiz, painting trivia, poetry quiz questions"
@@ -83,7 +83,7 @@ async function getDailyQuizzes() {
     {
     category: 'sports',
     name: 'Sports',
-    path: '/daily/sports',
+    path: '/daily-trivias/sports',
     image: '/imgs/sports-160x160.webp',
     tagline: 'Test your knowledge of sports history, athletes, and events',
     keywords: 'sports trivia quiz, athlete trivia, sports history game, sports quiz with answers',

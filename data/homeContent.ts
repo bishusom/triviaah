@@ -13,7 +13,7 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
   {
     category: 'general-knowledge',
     name: 'General Knowledge',
-    path: '/daily/general-knowledge',
+    path: '/daily-trivias/general-knowledge',
     image: '/imgs/general-knowledge-160x160.webp',
     tagline: 'Test your worldly wisdom with diverse daily trivia challenges',
     keywords: 'general knowledge quiz, daily trivia facts, world trivia questions, daily quiz with answers',
@@ -29,7 +29,7 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
   {
     category: 'entertainment',
     name: 'Entertainment',
-    path: '/daily/entertainment',
+    path: '/daily-trivias/entertainment',
     image: '/imgs/entertainment-160x160.webp',
     tagline: 'Pop culture trivia quizzes featuring movies, music & celebrities',
     keywords: 'pop culture trivia quizzes, movie trivia game, celebrity quiz, entertainment quiz answers',
@@ -37,7 +37,7 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
   {
     category: 'geography',
     name: 'Geography',
-    path: '/daily/geography',
+    path: '/daily-trivias/geography',
     image: '/imgs/geography-160x160.webp',
     tagline: 'Explore world geography through interactive trivia challenges',
     keywords: 'geography trivia quiz, world capitals game, countries trivia, geography quiz with answers',
@@ -45,7 +45,7 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
   {
     category: 'science',
     name: 'Science & Nature',
-    path: '/daily/science',
+    path: '/daily-trivias/science',
     image: '/imgs/science-160x160.webp',
     tagline: 'Discover science & animal kingdom wonders in our free online trivia',
     keywords: 'science trivia quiz, biology quiz game, physics trivia questions, science quiz with answers',
@@ -53,7 +53,7 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
   {
     category: "arts-literature",
     name: "Arts & Literature",
-    path: "/daily/arts-literature",
+    path: "/daily-trivias/arts-literature",
     image: "/imgs/arts-n-literature-160x160.webp",
     tagline: "Explore the world of great authors, artists, and literary masterpieces",
     keywords: "literature trivia quiz, famous authors quiz, art history questions, classic books quiz, painting trivia, poetry quiz questions"
@@ -61,7 +61,7 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
   {
     category: 'sports',
     name: 'Sports',
-    path: '/daily/sports',
+    path: '/daily-trivias/sports',
     image: '/imgs/sports-160x160.webp',
     tagline: 'Test your knowledge of sports history, athletes, and events',
     keywords: 'sports trivia quiz, athlete trivia, sports history game, sports quiz with answers',

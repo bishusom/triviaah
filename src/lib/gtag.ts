@@ -32,7 +32,7 @@ interface EventParams {
 }
 
 export const event = (params: EventParams): void => {
-  if (typeof window !== 'undefined') {
+  if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
     ensureDataLayer();
     window.gtag('event', params.action, {
       event_category: params.category,
