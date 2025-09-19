@@ -114,29 +114,11 @@ body {
 }
 
 /* Ensure ads don't cause layout shifts */
-/* old one
 .ad-container {
   min-height: 90px;
   contain: layout style paint;
   display: block;
   overflow: hidden;
-} */
-
-.ad-container {
-  position: relative;
-  width: 100%;
-  max-height: 90px;            /* 1-line only */
-  overflow: hidden;
-  background: #f5f5f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  contain: layout style paint;
-}
-
-/* iframe can never grow */
-.ad-container iframe {
-  height: 90px !important;
 }
 
 .adsbygoogle {
@@ -162,9 +144,4 @@ body {
 .animate-fade-in {
   animation: fade-in 0.6s ease-out forwards;
   will-change: auto;
-}
-
-@media (max-width: 767px) {
-  .ad-container { max-height: 50px; }
-  .ad-container iframe { height: 50px !important; }
 }
