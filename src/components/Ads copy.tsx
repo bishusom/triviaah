@@ -12,12 +12,9 @@ interface AdsProps {
 
 export default function Ads({
   className = '',
-  //slot = '2207590813',
-  //format = 'auto',
-  //fullWidthResponsive = true,
-  slot = '2944922915',   // <-- your 728×90 slot ID
-  format = 'leaderboard',// <-- force single-line
-  fullWidthResponsive = false, // <-- disable expansion
+  slot = '2207590813',
+  format = 'auto',
+  fullWidthResponsive = true,
   style = {}
 }: AdsProps) {
   const [isVisible, setIsVisible] = useState(true);
