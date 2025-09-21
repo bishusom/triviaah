@@ -6,6 +6,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { type Question } from '@/lib/firebase';
 import { event } from '@/lib/gtag';
 import { extractKeywords } from '@/lib/nlpKeywords';
+import { fetchPixabayImage } from '@/lib/pixabay';
+import { fetchPexelsImage } from '@/lib/pexels';
 import { useSound } from '@/context/SoundContext';
 import CountUp from 'react-countup';
 import Confetti from 'react-confetti';
@@ -196,9 +198,15 @@ export default function QuizGame({
     const fetchImage = async () => {
       setQuestionImage(null);
       try {
-        const { fetchPixabayImage } = await import('@/lib/pixabay');
-        const img = await fetchPixabayImage(extractKeywords(currentQuestion.question)[0] || '', category);
-        setQuestionImage(img || null);
+        // First check if question has an image_url
+        if (currentQuestion.image_url) {
+          setQuestionImage(currentQuestion.image_url);
+        } else {
+          // Fallback to Pixabay search
+          
+          const img = await fetchPixabayImage(extractKeywords(currentQuestion.question)[0] || '', category);
+          setQuestionImage(img || null);
+        }
       } catch {
         // Silently fail if image can't be loaded
       } finally {

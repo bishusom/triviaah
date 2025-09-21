@@ -35,7 +35,7 @@ export type Question = {
   category: string;
   subcategory?: string;
   titbits?: string;
-  image_keyword?: string;
+  image_url?: string;
   date?: string; // For "today-in-history" questions
   year?: string; // For "today-in-history" questions
 };
@@ -81,7 +81,7 @@ export async function getCategoryQuestions(category: string, count: number): Pro
       difficulty: data.difficulty?.toLowerCase() || 'medium',
       ...(data.subcategory && { subcategory: data.subcategory }),
       ...(data.titbits && { titbits: data.titbits }),
-      ...(data.image_keyword && { image_keyword: data.image_keyword })
+      ...(data.image_url && { image_url: data.image_url })
     };
 
     if (question.difficulty === 'easy') {
@@ -151,7 +151,7 @@ export async function getMoreQuestions(
         difficulty: data.difficulty,
         ...(data.subcategory && { subcategory: data.subcategory }),
         ...(data.titbits && { titbits: data.titbits }),
-        ...(data.image_keyword && { image_keyword: data.image_keyword })
+        ...(data.image_url && { image_url: data.image_url })
       };
     }),
     lastVisible
@@ -191,7 +191,7 @@ export async function getDailyQuizQuestions(category: string, customDate?: Date)
       category: data.category,
       ...(data.subcategory && { subcategory: data.subcategory }),
       ...(data.titbits && { titbits: data.titbits }),
-      ...(data.image_keyword && { image_keyword: data.image_keyword })
+      ...(data.image_url && { image_url: data.image_url })
     };
   });
 }
@@ -227,7 +227,7 @@ export async function getRandomQuestions(
           category: data.category,
           ...(data.subcategory && { subcategory: data.subcategory }),
           ...(data.titbits && { titbits: data.titbits }),
-          ...(data.image_keyword && { image_keyword: data.image_keyword }),
+          ...(data.image_url && { image_url: data.image_url }),
         };
       });
       
@@ -255,7 +255,7 @@ export async function getRandomQuestions(
             category: data.category,
             ...(data.subcategory && { subcategory: data.subcategory }),
             ...(data.titbits && { titbits: data.titbits }),
-            ...(data.image_keyword && { image_keyword: data.image_keyword }),
+            ...(data.image_url && { image_url: data.image_url }),
           };
         });
         
@@ -328,7 +328,7 @@ export async function getTodaysHistoryQuestions(count: number, userDate?: Date):
       category: 'today-in-history',
       subcategory: data.subcategory,
       ...(data.titbits && { titbits: data.titbits }),
-      ...(data.image_keyword && { image_keyword: data.image_keyword }),
+      ...(data.image_url && { image_url: data.image_url }),
       date: data.date,
       year: data.year
     };
