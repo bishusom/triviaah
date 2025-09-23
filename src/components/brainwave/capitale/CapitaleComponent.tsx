@@ -31,8 +31,15 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [revealPercentage, setRevealPercentage] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
+  
+  // New state for autocomplete
+  const [suggestions, setSuggestions] = useState<CapitalInfo[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
-    // Start game and trigger analytics
+  // Start game and trigger analytics
   useEffect(() => {
     setGameStarted(true);
   }, []);
@@ -51,7 +58,7 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
     return () => clearInterval(checkGtag);
   }, [gameStarted]);
   
-  // Sound effects (unchanged)
+  // Sound effects
   const { isMuted } = useSound();
   const correctSound = useRef<HTMLAudioElement | null>(null);
   const incorrectSound = useRef<HTMLAudioElement | null>(null);
@@ -99,46 +106,46 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
   }, [attempts, gameState, puzzleData.id, hardMode]);
 
   // Add this useEffect to fetch the image
-    useEffect(() => {
-      // Fetch capital image when component mounts
-      const fetchImage = async () => {
-        setIsImageLoading(true);
-        setHasNoImage(false); // Reset no image state
-        
-        // Try multiple search terms in sequence
-        const searchTerms = getCapitalSearchTerms(
-          puzzleData.answer.toLowerCase(), 
-          puzzleData.country
-        );
-        
-        let imageUrl = null;
-        
-        for (const term of searchTerms) {
-          imageUrl = await fetchWikimediaImage(term);
-          if (imageUrl) {
-            console.log('Found image with search term:', term);
-            break;
-          }
-        }
-        
+  useEffect(() => {
+    // Fetch capital image when component mounts
+    const fetchImage = async () => {
+      setIsImageLoading(true);
+      setHasNoImage(false); // Reset no image state
+      
+      // Try multiple search terms in sequence
+      const searchTerms = getCapitalSearchTerms(
+        puzzleData.answer.toLowerCase(), 
+        puzzleData.country
+      );
+      
+      let imageUrl = null;
+      
+      for (const term of searchTerms) {
+        imageUrl = await fetchWikimediaImage(term);
         if (imageUrl) {
-          setCapitalImage(imageUrl);
-        } else {
-          console.log('No image found, skipping image display');
-          setCapitalImage(null);
-          setHasNoImage(true); // Mark that no image exists
+          console.log('Found image with search term:', term);
+          break;
         }
-        
-        setIsImageLoading(false);
-      };
-
-      // Only fetch if we haven't already determined there's no image
-      if (!hasNoImage) {
-        fetchImage();
-      } else {
-        setIsImageLoading(false);
       }
-    }, [puzzleData.answer, puzzleData.country, hasNoImage]);
+      
+      if (imageUrl) {
+        setCapitalImage(imageUrl);
+      } else {
+        console.log('No image found, skipping image display');
+        setCapitalImage(null);
+        setHasNoImage(true); // Mark that no image exists
+      }
+      
+      setIsImageLoading(false);
+    };
+
+    // Only fetch if we haven't already determined there's no image
+    if (!hasNoImage) {
+      fetchImage();
+    } else {
+      setIsImageLoading(false);
+    }
+  }, [puzzleData.answer, puzzleData.country, hasNoImage]);
 
   // Update the re-fetch logic to respect hasNoImage
   useEffect(() => {
@@ -177,7 +184,86 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
     }
   }, [attempts.length, gameState, capitalImage, puzzleData.answer, puzzleData.country, hasNoImage]);
 
-  // Add this helper function to determine the image source
+  // NEW: Autocomplete suggestion logic
+  useEffect(() => {
+    if (guess.trim().length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      setSelectedSuggestionIndex(-1);
+      return;
+    }
+
+    const normalizedGuess = guess.toLowerCase().trim();
+    const filtered = allCapitals
+      .filter(capital => 
+        capital.name.toLowerCase().includes(normalizedGuess)
+      )
+      .slice(0, 8); // Limit to 8 suggestions
+
+    setSuggestions(filtered);
+    setShowSuggestions(filtered.length > 0);
+    setSelectedSuggestionIndex(-1);
+  }, [guess, allCapitals]);
+
+  // NEW: Click outside to close suggestions
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        inputRef.current && 
+        !inputRef.current.contains(event.target as Node) &&
+        suggestionsRef.current && 
+        !suggestionsRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // NEW: Keyboard navigation for suggestions
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!showSuggestions) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedSuggestionIndex(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : 0
+        );
+        break;
+      
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedSuggestionIndex(prev => 
+          prev > 0 ? prev - 1 : suggestions.length - 1
+        );
+        break;
+      
+      case 'Enter':
+        e.preventDefault();
+        if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < suggestions.length) {
+          setGuess(suggestions[selectedSuggestionIndex].name);
+          setShowSuggestions(false);
+        }
+        break;
+      
+      case 'Escape':
+        setShowSuggestions(false);
+        setSelectedSuggestionIndex(-1);
+        break;
+    }
+  };
+
+  // NEW: Select suggestion
+  const selectSuggestion = (capital: CapitalInfo) => {
+    setGuess(capital.name);
+    setShowSuggestions(false);
+    setSelectedSuggestionIndex(-1);
+    inputRef.current?.focus();
+  };
+
   const getImageSource = (imageUrl: string | null): {name: string, url: string} => {
     if (!imageUrl) return { name: '', url: '' };
     
@@ -283,12 +369,13 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
       normalizedGuess,
       puzzleData,
       attempts.length + 1,
-      allCapitals  // Fixed: Pass allCapitals (CapitalInfo[]) here
+      allCapitals
     );
     const newAttempts = [...attempts, result];
     setAttempts(newAttempts);
     setGuess('');
     setShowHint(false);
+    setShowSuggestions(false); // Hide suggestions after guess
     
     if (result.isCorrect) {
       setGameState('won');
@@ -346,6 +433,7 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
     setGameState('playing');
     setGuess('');
     setShowHint(false);
+    setShowSuggestions(false);
     localStorage.removeItem(`capitale-${puzzleData.id}`);
     playSound('click');
   };
@@ -454,7 +542,7 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
             {hardMode ? 'Hard Mode: ON' : 'Hard Mode: OFF'}
           </button>
           
-          {hardMode && attempts.length > 0 && !showHint && (
+          {hardMode && attempts.length > 0 && !showHint && gameState === 'playing' && (
             <button
               onClick={toggleHint}
               className="px-3 py-1 bg-blue-500 text-white rounded text-sm"
@@ -487,8 +575,8 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
           </div>
         )}
         
-        {/* Geographic hints */}
-        {attempts.length > 0 && (showHint || !hardMode) && (
+        {/* Geographic hints - HIDDEN WHEN GAME ENDS */}
+        {gameState === 'playing' && attempts.length > 0 && (showHint || !hardMode) && (
             <div className="bg-blue-50 border border-blue-200 rounded p-3 mb-4">
               <h3 className="font-semibold text-blue-800 mb-1">Geographic Hint:</h3>
               <p>{attempts[attempts.length - 1].geographicHint}</p>
@@ -503,7 +591,6 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
                       e.currentTarget.style.display = 'none';
                     }}
                   />
-                  {/* UPDATE THE TEXT BELOW TO BE MORE GENERAL */}
                   <p className="text-xs text-gray-500 text-center mt-1">
                     Hint source:{' '}
                     <a 
@@ -542,25 +629,55 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
           ))}
         </div>
         
-        {/* Input for guesses */}
+        {/* Input for guesses with autocomplete */}
         {gameState === 'playing' && (
           <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 z-10 -mx-4 md:-mx-6 -mb-4 md:-mb-6">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={guess}
-                onChange={(e) => setGuess(e.target.value)}
-                placeholder="Enter a capital city"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
-              />
-              <button
-                onClick={handleGuess}
-                disabled={!guess.trim()}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-              >
-                Guess
-              </button>
+            <div className="relative">
+              <div className="flex gap-2">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={guess}
+                  onChange={(e) => setGuess(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => guess.length >= 2 && setShowSuggestions(true)}
+                  placeholder="Enter a capital city (type 2+ letters)"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
+                />
+                <button
+                  onClick={handleGuess}
+                  disabled={!guess.trim()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  Guess
+                </button>
+              </div>
+              
+              {/* Autocomplete suggestions dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div 
+                  ref={suggestionsRef}
+                  className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg z-20 mt-1 max-h-60 overflow-y-auto"
+                >
+                  {suggestions.map((capital, index) => (
+                    <button
+                      key={capital.name}
+                      type="button"
+                      onClick={() => selectSuggestion(capital)}
+                      className={`w-full text-left px-4 py-2 hover:bg-blue-50 focus:bg-blue-50 focus:outline-none ${
+                        index === selectedSuggestionIndex ? 'bg-blue-100' : ''
+                      } ${index > 0 ? 'border-t border-gray-100' : ''}`}
+                    >
+                      <div className="font-medium">{capital.name}</div>
+                      <div className="text-sm text-gray-600">{capital.country}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="text-xs text-gray-500 mt-1">
+              Start typing to see suggestions (minimum 2 characters)
             </div>
           </div>
         )}

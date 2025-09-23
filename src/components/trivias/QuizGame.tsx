@@ -7,7 +7,7 @@ import { type Question } from '@/lib/firebase';
 import { event } from '@/lib/gtag';
 import { extractKeywords } from '@/lib/nlpKeywords';
 import { fetchPixabayImage } from '@/lib/pixabay';
-import { fetchPexelsImage } from '@/lib/pexels';
+//import { fetchPexelsImage } from '@/lib/pexels';
 import { useSound } from '@/context/SoundContext';
 import CountUp from 'react-countup';
 import Confetti from 'react-confetti';
@@ -81,6 +81,7 @@ export default function QuizGame({
   const [timeUp, setTimeUp] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [imgKey, setImgKey] = useState(0);
+  const [showImageModal, setShowImageModal] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
@@ -116,7 +117,14 @@ export default function QuizGame({
 
   const playSound = useCallback(
     (type: 'correct' | 'incorrect' | 'timeUp' | 'tick') => {
-      if (isMuted) return;
+      if (isMuted) {
+        // Stop tick sound immediately if muted
+        if (type === 'tick' && tickSound.current) {
+          tickSound.current.pause();
+          tickSound.current.currentTime = 0;
+        }
+        return;
+      }
       const map = {
         correct: correctSound,
         incorrect: incorrectSound,
@@ -128,19 +136,12 @@ export default function QuizGame({
     [isMuted]
   );
 
-  // Add analytics event for game start
   useEffect(() => {
-    if (!gameStarted) return;
-    
-    const checkGtag = setInterval(() => {
-      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        event({action: 'quiz_started', category: 'quiz', label: 'quiz'});
-        clearInterval(checkGtag);
-      }
-    }, 100);
-
-    return () => clearInterval(checkGtag);
-  }, [gameStarted]);
+    if (isMuted && tickSound.current) {
+      tickSound.current.pause();
+      tickSound.current.currentTime = 0;
+    }
+  }, [isMuted]);
 
   /* ---------- Move to next question function ---------- */
   const moveToNextQuestion = useCallback(() => {
@@ -159,27 +160,19 @@ export default function QuizGame({
     setTimeUp(false);
   }, [timePerQuestion, isQuickfire, hasBonusQuestion, currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion]);
 
-  /* ---------- Save score and show summary ---------- */
-  const saveScoreAndShowSummary = useCallback(async () => {
-    // Stop the ticking sound
-  if (!isMuted && tickSound.current) {
-    tickSound.current.pause();
-    tickSound.current.currentTime = 0; // Reset sound to start
-  }
-    // Prepare quiz result
-    const quizResult = {
-      score,
-      correctCount,
-      totalQuestions: questions.length,
-      timeUsed,
-      category,
-      isTimedMode: true
-    };
+  /* ----- Add analytics event for game start ----- */
+  useEffect(() => {
+    if (!gameStarted) return;
     
-    // Set the result and show summary
-    setQuizResult(quizResult);
-    setShowSummary(true);
-  }, [ score, correctCount, questions.length, timeUsed, category]);
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'quiz_started', category: 'quiz', label: 'quiz'});
+        clearInterval(checkGtag);
+      }
+    }, 100);
+
+    return () => clearInterval(checkGtag);
+  }, [gameStarted]);
 
   /* ---------- Shuffle options ---------- */
   useEffect(() => {
@@ -216,9 +209,15 @@ export default function QuizGame({
     fetchImage();
   }, [currentQuestion?.id]);
 
+  /* ---------- Reset image key on question change ---------- */
   useEffect(() => {
     setImgKey(prev => prev + 1);
   }, [currentQuestion?.id]);
+
+  /* ---------- Close image modal on question change or feedback/timeup ---------- */
+  useEffect(() => {
+    setShowImageModal(false);
+  }, [currentQuestion?.id, showFeedback, timeUp]);
 
   /* ---------- Timer ---------- */
   useEffect(() => {
@@ -257,9 +256,12 @@ export default function QuizGame({
       setShowFeedback(true);
       setTitbit(currentQuestion.titbits || '');
 
+      // Calculate the new correct count FIRST
+      const newCorrectCount = correct ? correctCount + 1 : correctCount;
+
       if (correct) {
         setScore(s => s + earned);
-        setCorrectCount(c => c + 1);
+        setCorrectCount(newCorrectCount); // Use the calculated value
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 2000);
         playSound('correct');
@@ -268,17 +270,33 @@ export default function QuizGame({
       }
       
       setTimeout(() => {
-        const finished = currentIndex >= questions.length - 1;
+        // Fix: Properly check if quiz is finished considering bonus question
+        const isLastRegularQuestion = currentIndex >= regularQuestions.length - 1 && !showBonusQuestion;
+        const isLastBonusQuestion = showBonusQuestion;
+        const finished = isLastBonusQuestion || (isLastRegularQuestion && !bonusQuestion);
+        
         if (finished) {
           event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});
-          // Always show summary, don't redirect
-          saveScoreAndShowSummary();
+          
+          // Use the calculated correctCount instead of relying on state
+          const totalQuestions = regularQuestions.length + (bonusQuestion ? 1 : 0);
+          const quizResult = {
+            score: correct ? score + earned : score,
+            correctCount: newCorrectCount, // Use the calculated value
+            totalQuestions,
+            timeUsed,
+            category,
+            isTimedMode: true
+          };
+          
+          setQuizResult(quizResult);
+          setShowSummary(true);
         } else {
           moveToNextQuestion();
         }
       }, 1500);
     },
-    [currentQuestion, timeLeft, score, playSound, timeUp, isQuickfire, showBonusQuestion, saveScoreAndShowSummary, moveToNextQuestion, currentIndex, questions.length, gameStarted, showFeedback]
+    [currentQuestion, timeLeft, score, playSound, timeUp, isQuickfire, showBonusQuestion, moveToNextQuestion, currentIndex, regularQuestions.length, bonusQuestion, gameStarted, showFeedback, correctCount, timeUsed, category]
   );
 
   const handleTimeUp = useCallback(() => {
@@ -293,17 +311,32 @@ export default function QuizGame({
     setSelectedOption(null);
     
     setTimeout(() => {
-      const finished = currentIndex >= questions.length - 1;
+      // Fix: Properly check if quiz is finished considering bonus question
+      const isLastRegularQuestion = currentIndex >= regularQuestions.length - 1 && !showBonusQuestion;
+      const isLastBonusQuestion = showBonusQuestion;
+      const finished = isLastBonusQuestion || (isLastRegularQuestion && !bonusQuestion);
+      
       if (finished) {
-    
         event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});    
-        // Always show summary, don't redirect
-        saveScoreAndShowSummary();
+        
+        // Use the current correctCount directly since no points are added for time up
+        const totalQuestions = regularQuestions.length + (bonusQuestion ? 1 : 0);
+        const quizResult = {
+          score,
+          correctCount, // Use current state value
+          totalQuestions,
+          timeUsed,
+          category,
+          isTimedMode: true
+        };
+        
+        setQuizResult(quizResult);
+        setShowSummary(true);
       } else {
         moveToNextQuestion();
       }
     }, 2000);
-  }, [currentQuestion, currentIndex, questions.length, score, showFeedback, playSound, saveScoreAndShowSummary, moveToNextQuestion, gameStarted]);
+  }, [currentQuestion, currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion, score, showFeedback, playSound, moveToNextQuestion, gameStarted, correctCount, timeUsed, category]);
 
   /* ---------- Loading ---------- */
   if (isLoading)
@@ -363,8 +396,10 @@ export default function QuizGame({
             <div className="flex items-center gap-4">
               <div className="bg-white px-3 py-1 rounded-full shadow-sm border">
                 <span className="text-sm font-semibold text-gray-700">
-                  Q{currentIndex + 1}/{questions.length}
-                  {showBonusQuestion && ' (Bonus)'}
+                  {showBonusQuestion 
+                    ? `Bonus/${regularQuestions.length + 1}` 
+                    : `Q${currentIndex + 1}/${regularQuestions.length + (bonusQuestion ? 1 : 0)}`
+                  }
                 </span>
               </div>
               <div className="bg-white px-3 py-1 rounded-full shadow-sm border">
@@ -391,10 +426,37 @@ export default function QuizGame({
           {/* Progress segments */}
           <div className="flex gap-1 mb-6">
             {Array.from({ length: regularQuestions.length + (bonusQuestion ? 1 : 0) }, (_, i) => {
-              const isCurrent = currentIndex === i;
-              const isPast = currentIndex > i || (showBonusQuestion && i < regularQuestions.length);
-              const isCorrect = isPast && correctCount > i;
-              const isBonus = bonusQuestion && i === regularQuestions.length;
+              // Fix: Properly calculate current position considering bonus question
+              const totalRegularQuestions = regularQuestions.length;
+              const isBonusQuestion = bonusQuestion && i === totalRegularQuestions;
+              
+              // Current position logic
+              let isCurrent = false;
+              let isPast = false;
+              
+              if (showBonusQuestion) {
+                // We're in bonus question mode
+                isCurrent = !!isBonusQuestion;
+                isPast = i < totalRegularQuestions;
+              } else {
+                // We're in regular questions mode
+                isCurrent = currentIndex === i && !isBonusQuestion;
+                isPast = currentIndex > i;
+              }
+              
+              let isCorrect = false;
+              
+              if (isPast) {
+                if (isBonusQuestion) {
+                  // Bonus question is correct if the user answered all regular questions correctly
+                  // and then answered the bonus question correctly
+                  isCorrect = correctCount > totalRegularQuestions;
+                } else {
+                  // Regular question is correct if its index is less than the correctCount
+                  // (but only if we haven't reached the bonus question yet)
+                  isCorrect = i < correctCount;
+                }
+              }
               
               return (
                 <div
@@ -402,8 +464,8 @@ export default function QuizGame({
                   className={`h-2 flex-1 rounded-full transition-all duration-300 ${
                     isCurrent ? 'bg-blue-500 animate-pulse' : 
                     isPast ? (isCorrect ? 'bg-green-500' : 'bg-red-500') : 'bg-gray-300'
-                  } ${isBonus ? 'ring-2 ring-yellow-400 ring-opacity-50' : ''}`}
-                  title={isBonus ? 'Bonus Question' : `Question ${i + 1}`}
+                  } ${isBonusQuestion ? 'ring-2 ring-yellow-400 ring-opacity-50' : ''}`}
+                  title={isBonusQuestion ? 'Bonus Question' : `Question ${i + 1}`}
                 />
               );
             })}
@@ -435,16 +497,32 @@ export default function QuizGame({
             transition={{ duration: 0.3 }}
           >
             <div className={`flex gap-4 mb-4 ${questionImage ? 'items-start' : 'items-center'}`}>
-              {/* FIX: Load question image if available */}
+              {/* Clickable thumbnail for all images */}
               {questionImage && (
-                <div className="flex-shrink-0 w-24 h-24">
-                  <Image
-                    src={questionImage}
-                    alt="question"
-                    width={96}
-                    height={96}
-                    className="w-24 h-24 rounded-lg object-cover"
-                  />
+                <div className="flex-shrink-0 flex flex-col items-center">
+                  <div 
+                    className="w-24 h-24 cursor-pointer hover:opacity-80 transition-opacity relative group mb-1"
+                    onClick={() => setShowImageModal(true)}
+                  >
+                    <Image
+                      src={questionImage}
+                      alt="Click to enlarge"
+                      width={96}
+                      height={96}
+                      className="w-24 h-24 rounded-lg object-cover border-2 border-blue-200 hover:border-blue-400 transition-colors"
+                    />
+                    {/* Expand icon overlay */}
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg flex items-center justify-center transition-all">
+                      <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-xs text-gray-500 text-center cursor-pointer" onClick={() => setShowImageModal(true)}>
+                    Click to magnify
+                  </span>
                 </div>
               )}         
               <h2 className="text-xl md:text-2xl font-semibold text-gray-800 flex-1">
@@ -452,6 +530,33 @@ export default function QuizGame({
               </h2>
             </div>
           </motion.div>
+
+          {/* Image Modal */}
+          {showImageModal && questionImage && (
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+              onClick={() => setShowImageModal(false)}
+            >
+              <div className="relative max-w-4xl max-h-[90vh] w-full">
+                <button
+                  onClick={() => setShowImageModal(false)}
+                  className="absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 z-10"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                <Image
+                  src={questionImage}
+                  alt="Question image enlarged"
+                  width={800}
+                  height={600}
+                  className="w-full h-full object-contain rounded-lg"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+            </div>
+          )}
 
           {/* Options */}
           <div className="space-y-3">
