@@ -19,6 +19,7 @@ export interface PlotlePuzzle {
   yearBand: string;
   genre: string;
   date: string;
+  language?: string;
   validationHints: {
     releaseYear?: number;
     oscarCategories?: string[];

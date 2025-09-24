@@ -15,6 +15,7 @@ export interface PlotleData {
   yearBand: string;
   genre: string;
   date: string;
+  language?: string; 
   validationHints: {
     releaseYear?: number;
     oscarCategories?: string[];
@@ -147,21 +148,30 @@ export async function validateMovieGuess(
   }
   
   try {
-    // Always provide general hints about the target movie
     const hints = puzzleData.validationHints || {};
     const hintParts = [];
     
-    if (hints.releaseYear) {
+    if (hints.releaseYear && puzzleData.genre) {
+      hintParts.push(`a ${puzzleData.genre} film from ${hints.releaseYear}`);
+    } else if (hints.releaseYear) {
       hintParts.push(`released in ${hints.releaseYear}`);
-    }
-    if (puzzleData.genre) {
+    } else if (puzzleData.genre) {
       hintParts.push(`a ${puzzleData.genre} film`);
     }
     
+    if (puzzleData.language) {
+      const formattedLanguage = puzzleData.language.charAt(0).toUpperCase() + 
+                               puzzleData.language.slice(1).toLowerCase();
+      hintParts.push(`in ${formattedLanguage}`);
+    }
+    
     if (hintParts.length > 0) {
+      let hintText = "Today's movie is ";
+      hintText += hintParts.join(' and ');
+      
       return { 
         isValid: true, 
-        hint: `Today's movie was ${hintParts.join(' and ')}` 
+        hint: hintText
       };
     }
     
