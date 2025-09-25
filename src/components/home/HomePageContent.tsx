@@ -6,7 +6,7 @@ import CategoryGrid from '@/components/home/CategoryGrid';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
 import Footer from '@/components/home/Footer';
 import Image from 'next/image';
-import { LeaderboardAd, BannerAd } from '@/components/Ads';
+import Link from 'next/link';
 import { DAILY_QUIZZES, ADDITIONAL_SECTIONS, BRAIN_WAVES } from '@/../data/homeContent';
 import CollapsibleSection from '@/components/home/CollapsibleSection';
 
@@ -64,12 +64,7 @@ export default function HomePageContent() {
         </div>
       </header>
      
-     <div className="container mx-auto">
-          <LeaderboardAd 
-            slot="2944922915"
-            className="mb-4"
-          />
-      </div>
+     <Ads />
 
       <main className="container mx-auto px-4 py-6 flex-grow">
         {/* Critical heading with inline styles to prevent render delay */}
@@ -190,12 +185,8 @@ export default function HomePageContent() {
       </main>
 
       {/* Footer Banner Ad */}
-      <div className="container mx-auto">
-          <LeaderboardAd 
-            slot="2944922915"
-            className="mb-4"
-          />
-      </div>   
+      <Ads />   
+        
       {/* Footer */}
       <Footer />
     </div>
