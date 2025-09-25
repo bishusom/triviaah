@@ -1,7 +1,7 @@
 // components/trivias/QuizSummary.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { MdShare } from "react-icons/md";
 import { FaMedal, FaTrophy, FaCheck } from 'react-icons/fa';
@@ -38,7 +38,7 @@ const MESSAGES = {
         "🧩 Puzzle Master! Can you complete the picture perfectly next time?"
     ],
     bronze: [
-        "👍 Solid Effort! Your next attempt could be your breakthrough!",
+        "👏 Solid Effort! Your next attempt could be your breakthrough!",
         "📚 Bookworm Rising! Every replay makes you wiser - try again!",
         "💡 Bright Spark! Your knowledge is growing - fuel it with another round!",
         "🏅 Contender Status! The podium is within reach - one more try!"
@@ -73,6 +73,10 @@ export default function QuizSummary({
   const [scoreSaved, setScoreSaved] = useState(false);
   const alias = getPersistentGuestId();
   const [displayName, setDisplayName] = useState(alias);
+  
+  // Add refs to track save attempts and prevent duplicates
+  const saveAttemptedRef = useRef(false);
+  const mountedRef = useRef(true);
 
   /* ---------- helpers ---------- */
   const formatCategory = (s: string) =>
@@ -141,9 +145,21 @@ export default function QuizSummary({
   }, [result.category]);
 
   
-  /* ---------- Manual save score ---------- */
+  /* ---------- Improved save score with duplicate prevention ---------- */
   const saveScoreCore = async (name: string) => {
-    if (saving || scoreSaved) return;
+    // Multiple layers of duplicate prevention
+    if (saving || scoreSaved || saveAttemptedRef.current || !mountedRef.current) {
+      console.log('Save prevented:', { 
+        saving, 
+        scoreSaved, 
+        saveAttempted: saveAttemptedRef.current,
+        mounted: mountedRef.current 
+      });
+      return;
+    }
+    
+    console.log('Starting save process for:', name);
+    saveAttemptedRef.current = true;
     setSaving(true);
     
     try {
@@ -158,28 +174,65 @@ export default function QuizSummary({
         }),
       });
 
-      if (response.ok) {
+      if (response.ok && mountedRef.current) {
+        console.log('Score saved successfully');
         setScoreSaved(true);
         await fetchHighScores(); // Refresh leaderboard
       }
     } catch (error) {
       console.error('Failed to save score:', error);
+      // Reset the attempt flag on error so user can retry
+      saveAttemptedRef.current = false;
     } finally {
-      setSaving(false);
+      if (mountedRef.current) {
+        setSaving(false);
+      }
     }
   };
 
+  // Cleanup effect to track component mounting
   useEffect(() => {
-  if (!scoreSaved) saveScoreCore(displayName);
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
   }, []);
 
+  // Single effect to handle initial save with better guards
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    if (!saveAttemptedRef.current && !scoreSaved && !saving) {
+      // Add a small delay to avoid React StrictMode double execution
+      timeoutId = setTimeout(() => {
+        if (mountedRef.current && !saveAttemptedRef.current) {
+          console.log('Triggering initial save');
+          saveScoreCore(displayName);
+        }
+      }, 100);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, []); // Keep empty dependency array but add internal guards
 
    /* ---------- tiny reroll icon ---------- */
   const handleReroll = () => {
+    if (scoreSaved || saving) {
+      console.log('Reroll prevented - score already saved or saving in progress');
+      return;
+    }
+    
     const newAlias = rerollGuestId();
     setDisplayName(newAlias);
-    saveScoreCore(newAlias); // update the row in-place
+    // Reset the attempt flag and trigger a new save
+    saveAttemptedRef.current = false;
+    saveScoreCore(newAlias);
   }
+
   /* ---------- performance message ---------- */
   const ratio = result.correctCount / result.totalQuestions;
   const perf = ratio === 0 ? 'zero' : ratio >= 0.9 ? 'gold' : ratio >= 0.7 ? 'silver' : 'bronze';
@@ -274,8 +327,9 @@ export default function QuizSummary({
                 {displayName}
                 <button
                   onClick={handleReroll}
-                  className="text-xs text-blue-600 hover:underline"
-                  title="Get a new random name"
+                  disabled={scoreSaved || saving}
+                  className="text-xs text-blue-600 hover:underline disabled:text-gray-400 disabled:cursor-not-allowed"
+                  title={scoreSaved ? "Score already saved" : "Get a new random name"}
                 >
                   🔄
                 </button>
@@ -288,6 +342,15 @@ export default function QuizSummary({
               <div className="bg-green-50 p-6 rounded-lg border border-green-200">
                 <p className="text-green-800 text-center">
                   ✅ Score saved successfully! as <span className="font-semibold">{displayName}</span>
+                </p>
+              </div>
+            )}
+
+            {/* Show saving state */}
+            {saving && !scoreSaved && (
+              <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                <p className="text-blue-800 text-center">
+                  ⏳ Saving your score...
                 </p>
               </div>
             )}
