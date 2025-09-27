@@ -115,10 +115,10 @@ body {
 
 /* Ensure ads don't cause layout shifts */
 .ad-container {
-  min-height: 90px;
-  contain: layout style paint;
-  display: block;
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 12px 0;
 }
 
 /* 

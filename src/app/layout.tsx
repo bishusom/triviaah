@@ -103,16 +103,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 }
                 
                 /* Ad containers must reserve space */
-                .ad-container {
-                  min-height: 50px;
-                  max-height: 50px;
-                  overflow: hidden;
-                  margin: 8px 0;
-                  background-color: #f5f5f5;
-                  contain: layout style paint;
+               .ad-container {
                   display: flex;
-                  align-items: center;
                   justify-content: center;
+                  width: 100%;
+                  margin: 12px 0;
                 }
                 
                 @media (min-width: 640px) { .container { max-width: 640px; } }
