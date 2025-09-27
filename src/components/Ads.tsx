@@ -17,7 +17,7 @@ export default function Ads({ idSuffix = '1' }: { idSuffix?: string }) {
           overflow: 'hidden',
         }}
         data-ad-client="ca-pub-4386714040098164"
-        data-ad-slot="2207590813"
+        data-ad-slot="2944922915"
         data-ad-format="horizontal"
         data-full-width-responsive="true"
       />
