@@ -2,7 +2,7 @@
 import { Geist } from 'next/font/google';
 import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { SpeedInsights } from '@vercel/speed-insights/next'; // Add this import
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
 import { SoundProvider } from '@/context/SoundContext';;
 import { Metadata } from 'next';
@@ -102,64 +102,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   contain: layout style paint;
                 }
                 
-                /* Ad containers must reserve space and center properly */
+                /* Ad containers must reserve space */
                 .ad-container {
-                  width: 100% !important;
-                  max-width: 1200px;
-                  margin-left: auto !important;
-                  margin-right: auto !important;
                   min-height: 90px;
                   background-color: #f5f5f5;
                   contain: layout style paint;
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                  padding: 0 1rem;
                 }
                 
-                /* Ensure adsbygoogle elements are properly centered */
-                .adsbygoogle {
-                  display: block !important;
-                  margin-left: auto !important;
-                  margin-right: auto !important;
-                  text-align: center !important;
-                }
-                
-                /* Center the ins element specifically */
-                ins.adsbygoogle {
-                  margin: 0 auto !important;
-                  display: block !important;
-                  text-align: center !important;
-                }
-                
-                /* Container for ad content */
-                .ad-container > div {
-                  width: 100%;
-                  display: flex;
-                  justify-content: center;
-                }
-                
-                @media (min-width: 640px) { 
-                  .container { max-width: 640px; } 
-                  .ad-container { padding: 0 1.5rem; }
-                }
-                @media (min-width: 768px) { 
-                  .container { max-width: 768px; } 
-                  .ad-container { padding: 0 2rem; }
-                }
-                @media (min-width: 1024px) { 
-                  .container { max-width: 1024px; } 
-                }
-                @media (min-width: 1280px) { 
-                  .container { max-width: 1280px; } 
-                }
-                
-                /* Ensure body containers are properly constrained */
-                body > div {
-                  width: 100%;
-                  max-width: 100vw;
-                  overflow-x: hidden;
-                }
+                @media (min-width: 640px) { .container { max-width: 640px; } }
+                @media (min-width: 768px) { .container { max-width: 768px; } }
+                @media (min-width: 1024px) { .container { max-width: 1024px; } }
+                @media (min-width: 1280px) { .container { max-width: 1280px; } }
               `,
             }}
           />

@@ -25,9 +25,11 @@ export default function Ads({
   useEffect(() => {
     if (!isVisible) return;
 
+    // Wait for Google AdSense script to be available
     const loadAd = () => {
       if (typeof window !== 'undefined' && window.adsbygoogle && insRef.current) {
         try {
+          // Push the ad configuration
           (window.adsbygoogle as Record<string, unknown>[]).push({});
           setIsLoaded(true);
         } catch (error) {
@@ -36,9 +38,11 @@ export default function Ads({
       }
     };
 
+    // Check if adsbygoogle is already available
     if (typeof window !== 'undefined' && window.adsbygoogle) {
       loadAd();
     } else {
+      // Wait for the script to load
       const checkAdSense = setInterval(() => {
         if (typeof window !== 'undefined' && window.adsbygoogle) {
           clearInterval(checkAdSense);
@@ -46,7 +50,9 @@ export default function Ads({
         }
       }, 100);
 
+      // Cleanup interval after 10 seconds
       setTimeout(() => clearInterval(checkAdSense), 10000);
+
       return () => clearInterval(checkAdSense);
     }
   }, [isVisible]);
@@ -62,7 +68,7 @@ export default function Ads({
   return (
     <div 
       ref={adRef}
-      className={`relative ad-container mx-auto ${className}`}
+      className={`relative ad-container ${className}`}
       style={{
         minHeight: '90px',
         backgroundColor: '#f5f5f5',
@@ -70,8 +76,6 @@ export default function Ads({
         alignItems: 'center',
         justifyContent: 'center',
         contain: 'layout style paint',
-        width: '100%',
-        maxWidth: '1200px', // Add max-width constraint
         ...style
       }}
     >
@@ -85,14 +89,13 @@ export default function Ads({
         ×
       </button>
 
-      {/* Ad container with proper centering */}
-      <div className="w-full flex justify-center">
+      {/* Ad container */}
+      <div className="w-full">
         <ins
           ref={insRef}
           className="adsbygoogle"
           style={{
             display: 'block',
-            margin: '0 auto', // Ensure center alignment
             ...style
           }}
           data-ad-client="ca-pub-4386714040098164"
@@ -112,6 +115,7 @@ export default function Ads({
   );
 }
 
+// Declare global types for TypeScript
 declare global {
   interface Window {
     adsbygoogle: Record<string, unknown>[];
