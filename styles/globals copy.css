@@ -121,17 +121,8 @@ body {
   overflow: hidden;
 }
 
-/* 
 .adsbygoogle {
   min-width: unset !important;
-} 
-*/
-
-.adsbygoogle {
-  min-height: 50px;
-  max-height: 50px;
-  overflow: hidden;
-  margin: 8px 0;
 }
 
 /* Ensure container has proper width */
