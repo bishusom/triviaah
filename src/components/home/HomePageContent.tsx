@@ -64,10 +64,7 @@ export default function HomePageContent() {
         </div>
       </header>
      
-     <div className="ad-container">
-        {isAboveTheFoldLoaded && <Ads idSuffix="header" />}
-     </div>
-     
+     <Ads />
 
       <main className="container mx-auto px-4 py-6 flex-grow">
         {/* Critical heading with inline styles to prevent render delay */}
@@ -188,7 +185,7 @@ export default function HomePageContent() {
       </main>
 
       {/* Footer Banner Ad */}
-      <Ads idSuffix="footer" />
+      <Ads />   
         
       {/* Footer */}
       <Footer />

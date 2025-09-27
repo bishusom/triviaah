@@ -103,11 +103,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 }
                 
                 /* Ad containers must reserve space */
-               .ad-container {
+                .ad-container {
+                  min-height: 90px;
+                  background-color: #f5f5f5;
+                  contain: layout style paint;
                   display: flex;
+                  align-items: center;
                   justify-content: center;
-                  width: 100%;
-                  margin: 12px 0;
                 }
                 
                 @media (min-width: 640px) { .container { max-width: 640px; } }
@@ -133,6 +135,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* Vercel Speed Insights */}
           {isProduction && <SpeedInsights />}
           
+          {/* AdSense Configuration */}
+          {isProduction && (
+            <>
+              <Script
+                id="adsense-config"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    (window.adsbygoogle = window.adsbygoogle || []).push({
+                      google_ad_client: "ca-pub-4386714040098164",
+                      enable_page_level_ads: false
+                    });
+                  `,
+                }}
+              />
+              <Script
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164"
+                strategy="lazyOnload"
+                crossOrigin="anonymous"
+              />
+            </>
+          )}
         </SoundProvider>
       </body>
     </html>
