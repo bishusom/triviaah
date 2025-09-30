@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import { MdInfo } from 'react-icons/md';
 import DailyPuzzlesGrid from '@/components/daily/DailyPuzzlesGrid';
+import Ads from '@/components/Ads';
 
 export const metadata: Metadata = {
   title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',
@@ -153,6 +154,10 @@ export default async function DailyQuizzesPage() {
           </ul>
         </section>
       </main>
+      {/* Ads Section */}
+      <div className="max-w-3xl mx-auto p-6">
+        <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
+      </div>
     </div>
   );
 }

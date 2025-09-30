@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { MdInfo } from 'react-icons/md';
 import DailyQuizzesGrid from '@/components/daily/DailyQuizzesGrid';
 import Timer from '@/components/daily/dailyQuizTimer';
+import Ads from '@/components/Ads';
 
 export const metadata: Metadata = {
   title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Triviaah',
@@ -66,10 +67,10 @@ async function getDailyQuizzes() {
     },
     {
       category: 'science',
-      name: 'Science',
+      name: 'Science & Nature',
       path: '/daily-trivias/science',
       image: '/imgs/science-160x160.webp',
-      tagline: 'Discover the wonders of science',
+      tagline: 'Discover the wonders of science and the animal kingdom',
       keywords: 'biology, physics, chemistry, space',
     },
     {
@@ -129,6 +130,11 @@ export default async function DailyQuizzesPage() {
           <Timer />
         </div>
 
+        {/* Ads Section */}
+        <div className="max-w-3xl mx-auto p-6">
+          <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
+        </div>
+
         {/* Quiz Grid - Client-side component */}
         <DailyQuizzesGrid quizzes={dailyQuizzes} />
 
@@ -182,6 +188,7 @@ export default async function DailyQuizzesPage() {
           </ul>
         </section>
       </main>
+      
     </div>
   );
 }

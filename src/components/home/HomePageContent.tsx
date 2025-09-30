@@ -185,7 +185,7 @@ export default function HomePageContent() {
       </main>
 
       {/* Footer Banner Ad */}
-      <Ads />   
+      <Ads format="horizontal"/>   
         
       {/* Footer */}
       <Footer />

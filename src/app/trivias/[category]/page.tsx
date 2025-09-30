@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
 import triviaCategories from '@/config/triviaCategories.json';
+import Ads from '@/components/Ads';
 
 type CategoryKey = keyof typeof triviaCategories;
 
@@ -75,6 +76,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           </div>
         </div>
       )}
+      <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
     </div>
+    
   );
 }
