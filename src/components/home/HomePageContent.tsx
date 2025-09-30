@@ -64,7 +64,10 @@ export default function HomePageContent() {
         </div>
       </header>
      
-     <Ads format="horizontal"/>
+      {/* Top banner Ads Section */}
+      <div className="max-w-3xl mx-auto p-6">
+        <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
+      </div>
 
       <main className="container mx-auto px-4 py-6 flex-grow">
         {/* Critical heading with inline styles to prevent render delay */}
@@ -185,7 +188,9 @@ export default function HomePageContent() {
       </main>
 
       {/* Footer Banner Ad */}
-      <Ads format="horizontal"/>   
+      <div className="max-w-3xl mx-auto p-6">
+        <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
+      </div>
         
       {/* Footer */}
       <Footer />
