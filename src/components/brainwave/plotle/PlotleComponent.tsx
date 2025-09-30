@@ -3,7 +3,7 @@ import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
-import { addPlotleResult } from '@/lib/brainwave/plotle/plotle-fb';
+import { addPlotleResult } from '@/lib/brainwave/plotle/plotle-sb';
 import { checkLetterGuess, validateMovieGuess, type PlotleData, type PlotleGuessResult } from '@/lib/brainwave/plotle/plotle-logic';
 
 interface PlotleComponentProps {

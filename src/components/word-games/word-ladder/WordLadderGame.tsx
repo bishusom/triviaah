@@ -2,11 +2,15 @@
 import { event } from '@/lib/gtag';
 import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { db } from '@/lib/firebase';
+import { createClient } from '@supabase/supabase-js';
 import { useSound } from '@/context/SoundContext';
-import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 import gameStyles from '@styles/WordGames/WordLadder.module.css';
 import commonStyles from '@styles/WordGames/WordGames.common.module.css';
+
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 interface GameConfig {
   wordLength: {
@@ -88,7 +92,7 @@ export default function WordLadderGame() {
     maxHints: 3
   };
 
-  // Word lists by length
+  // Word lists by length (fallback)
   const wordLists = {
     4: [
       'COLD', 'WARM', 'CORD', 'CARD', 'WARD', 'WORD', 'WORM', 'FARM', 'FIRE', 'FIVE',
@@ -145,30 +149,33 @@ export default function WordLadderGame() {
     localStorage.setItem('wordLadderGameState', JSON.stringify(gameState));
   };
 
-  const fetchWordLadderFromFirebase = async (wordLength: number) => {
+  // Updated function to fetch from Supabase
+  const fetchWordLadderFromSupabase = async (wordLength: number) => {
     try {
-      const q = query(
-        collection(db, 'wordLadders'),
-        where('length', '==', wordLength),
-        where('difficulty', '==', gameState.difficulty),
-        limit(100)
-      );
+      const { data, error } = await supabase
+        .from('word_ladders')
+        .select('*')
+        .eq('length', wordLength)
+        .eq('difficulty', gameState.difficulty)
+        .limit(100);
       
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
+      if (error) {
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
         throw new Error('No ladders found');
       }
 
-      const ladders = querySnapshot.docs.map(doc => doc.data());
-      const randomLadder = ladders[Math.floor(Math.random() * ladders.length)];
+      const randomLadder = data[Math.floor(Math.random() * data.length)];
 
       return {
-        startWord: randomLadder.startWord.toUpperCase(),
-        endWord: randomLadder.endWord.toUpperCase(),
+        startWord: randomLadder.start_word.toUpperCase(),
+        endWord: randomLadder.end_word.toUpperCase(),
         path: randomLadder.path.map((w: string) => w.toUpperCase())
       };
     } catch (error) {
-      console.error('Error fetching from Firebase:', error);
+      console.error('Error fetching from Supabase:', error);
       throw error;
     }
   };
@@ -192,7 +199,7 @@ export default function WordLadderGame() {
     const wordLength = config.wordLength[gameState.difficulty];
 
     try {
-      const { startWord, endWord, path } = await fetchWordLadderFromFirebase(wordLength);
+      const { startWord, endWord, path } = await fetchWordLadderFromSupabase(wordLength);
       
       setStartWord(startWord);
       setEndWord(endWord);
@@ -204,11 +211,12 @@ export default function WordLadderGame() {
       startTimer();
       showFeedback('Game started! Transform the start word to the end word.', 'info');
     } catch (error) {
-      console.error('Failed to fetch from Firebase, using local words:', error);
+      console.error('Failed to fetch from Supabase, using local words:', error);
       initGameWithLocalWords(wordLength);
     }
   };
 
+  // Rest of the component remains the same...
   const initGameWithLocalWords = (wordLength: number) => {
     const availableWords = wordLists[wordLength as keyof typeof wordLists];
     let validPair = false;

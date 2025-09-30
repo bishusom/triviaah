@@ -1,5 +1,5 @@
 // lib/capitale-logic.ts
-import { CapitalePuzzle, getCapitalCoordinates, CapitalInfo } from '@/lib/brainwave/capitale/capitale-fb';  
+import { CapitalePuzzle, getCapitalCoordinates, CapitalInfo } from '@/lib/brainwave/capitale/capitale-sb';  
 
 export interface CapitaleGuessResult {
   guess: string;

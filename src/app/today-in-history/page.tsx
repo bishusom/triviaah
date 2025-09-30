@@ -1,10 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react';
 import QuizGame from '@/components/trivias/QuizGame';
-import { getTodaysHistoryQuestions } from '@/lib/firebase';
+import { getTodaysHistoryQuestions } from '@/lib/supabase';
 import MuteButton from '@/components/MuteButton';
 import Script from 'next/script';
-import type { Question } from '@/lib/firebase';
+import type { Question } from '@/lib/supabase';
 
 export default function TodayInHistoryPage() {
   const [questions, setQuestions] = useState<Question[] | null>(null);

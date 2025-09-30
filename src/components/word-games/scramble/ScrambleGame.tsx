@@ -2,11 +2,15 @@
 import { event } from '@/lib/gtag';
 import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { db } from '@/lib/firebase'; // Import your Firebase config
+import { createClient } from '@supabase/supabase-js';
 import { useSound } from '@/context/SoundContext';
-import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 import gameStyles from '@styles/WordGames/ScrambleGame.module.css';
 import commonStyles from '@styles/WordGames/WordGames.common.module.css';
+
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 type DifficultyLevel = {
   difficulty: string;
@@ -49,20 +53,15 @@ export default function ScrambleGame() {
 
   // Helper functions
   const scrambleWord = (word: string) => {
-    // Convert word to array of characters
     const letters = word.split('');
-    
-    // Keep shuffling until we get a different arrangement
     let scrambled;
     do {
       scrambled = [...letters];
-      // Fisher-Yates shuffle algorithm
       for (let i = scrambled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [scrambled[i], scrambled[j]] = [scrambled[j], scrambled[i]];
       }
-    } while (scrambled.join('') === word); // Keep trying if same as original
-
+    } while (scrambled.join('') === word);
     return scrambled.join('');
   };
 
@@ -113,18 +112,15 @@ export default function ScrambleGame() {
   const setupNewGame = (word: string) => {
     setBaseWord(word);
     setUsedBaseWords(prev => [...prev, word]);
-    
-    // Get a scrambled version that's definitely different
     const scrambled = scrambleWord(word);
     setScrambledLetters(scrambled.split(''));
-    
     setFoundWords([]);
     setCurrentWord([]);
     showFeedback('Unscramble the letters to form a valid word!', 'info');
     startTimer();
   };
 
-  // Game logic
+  // Updated to use Supabase
   const initGame = async () => {
     try {
         const currentDifficulty = getCurrentDifficulty(currentLevel);
@@ -136,34 +132,31 @@ export default function ScrambleGame() {
 
         try {
             const randomFloor = Math.floor(Math.random() * 900000);
-            const q = query(
-            collection(db, 'dictionary'),
-            where('length', '==', wordLength),
-            where('isCommon', '==', true),
-            where('randomIndex', '>=', randomFloor),
-            orderBy('randomIndex'),
-            limit(50)
-            );
+            
+            // Supabase query
+            const { data, error } = await supabase
+              .from('dictionary')
+              .select('word')
+              .eq('length', wordLength)
+              .eq('is_common', true)
+              .gte('random_index', randomFloor)
+              .order('random_index')
+              .limit(50);
 
-            const querySnapshot = await getDocs(q);
-            const wordList: string[] = [];
+            if (error) throw error;
 
-            querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const word = data.word.toUpperCase();
-            if (!usedBaseWords.includes(word)) {
-                wordList.push(word);
-            }
-            });
+            const wordList: string[] = (data || [])
+              .map(item => item.word.toUpperCase())
+              .filter(word => !usedBaseWords.includes(word));
 
             if (wordList.length > 0) {
             const newBaseWord = wordList[Math.floor(Math.random() * wordList.length)];
             return setupNewGame(newBaseWord);
             }
-        } catch (firestoreError) {
-            console.log('Using fallback word list due to Firestore error:', firestoreError);
+        } catch (supabaseError) {
+            console.log('Using fallback word list due to Supabase error:', supabaseError);
       }
-        // Updated word list with more options
+        // Fallback word list
         const localWordList = [
         'PICTURE', 'SILENCE', 'CAPTURE', 'MOUNTAIN', 'ADVENTURE', 
         'DISCOVERY', 'STANDARD', 'PARADISE', 'ELEPHANT', 'HOSPITAL',
@@ -190,6 +183,7 @@ export default function ScrambleGame() {
     }
     };
 
+  // ... rest of the ScrambleGame component remains the same
   const selectLetter = (index: number) => {
     if (currentWord.includes(index)) return;
     setCurrentWord(prev => [...prev, index]);
@@ -254,27 +248,20 @@ export default function ScrambleGame() {
   };
 
   const revealWord = () => {
-    // Stop the timer
     if (timerInterval.current !== null) {
       window.clearInterval(timerInterval.current);
       timerInterval.current = null;
     }
     
-    // Show the correct word
     showFeedback(`The word was: ${baseWord}`, 'info');
     
-    // Mark the word as found if not already
     if (!foundWords.includes(baseWord)) {
       setFoundWords(prev => [...prev, baseWord]);
     }
     
-    // Disable all letter buttons
     setCurrentWord([]);
+    playSound('error');
     
-    // Play sound effect
-    playSound('error'); // or create a new sound for reveal
-    
-    // Auto-start a new game after delay
     setTimeout(() => {
       checkLevelProgress();
     }, 3000);
@@ -288,7 +275,7 @@ export default function ScrambleGame() {
         return l;
       }
     }
-    return levels[0]; // fallback to first level
+    return levels[0];
   };
 
   const checkLevelProgress = () => {

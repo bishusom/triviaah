@@ -8,6 +8,7 @@ interface AdsProps {
   format?: string;
   fullWidthResponsive?: boolean;
   style?: React.CSSProperties;
+  closeButtonPosition?: 'top-left' | 'top-right';
 }
 
 export default function Ads({
@@ -15,7 +16,8 @@ export default function Ads({
   slot = '2207590813',
   format = 'auto',
   fullWidthResponsive = true,
-  style = {}
+  style = {},
+  closeButtonPosition = 'top-right' 
 }: AdsProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -65,6 +67,11 @@ export default function Ads({
     return null;
   }
 
+  // Determine the close button position class
+  const closeButtonClass = closeButtonPosition === 'top-left' 
+    ? 'absolute top-1 left-1 z-10 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200'
+    : 'absolute top-1 right-1 z-10 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200';
+
   return (
     <div 
       ref={adRef}
@@ -82,7 +89,7 @@ export default function Ads({
       {/* Close button */}
       <button
         onClick={handleClose}
-        className="absolute top-1 right-1 z-10 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200"
+        className={closeButtonClass}
         aria-label="Close advertisement"
         title="Close advertisement"
       >

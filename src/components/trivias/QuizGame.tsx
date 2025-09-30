@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { type Question } from '@/lib/firebase';
+import { type Question } from '@/lib/supabase';
 import { event } from '@/lib/gtag';
 import { extractKeywords } from '@/lib/nlpKeywords';
 import { fetchPixabayImage } from '@/lib/pixabay';
@@ -558,6 +558,17 @@ export default function QuizGame({
             </div>
           )}
 
+          {/* Titbit */}
+          {showFeedback && titbit && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              className="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 text-sm text-yellow-800"
+            >
+              {titbit}
+            </motion.div>
+          )}
+
           {/* Options */}
           <div className="space-y-3">
             <AnimatePresence>
@@ -604,17 +615,6 @@ export default function QuizGame({
               })}
             </AnimatePresence>
           </div>
-
-          {/* Titbit */}
-          {showFeedback && titbit && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              className="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 text-sm text-yellow-800"
-            >
-              {titbit}
-            </motion.div>
-          )}
 
           {/* Time up message */}
           {timeUp && (

@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { addTrordleResult } from '@/lib/brainwave/trordle/trordle-fb';
+import { addTrordleResult } from '@/lib/brainwave/trordle/trordle-sb';
 import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import Image from 'next/image';
-import { fetchPixabayImage } from '@/lib/pixabay';
+import { fetchPexelsImage } from '@/lib/pexels';
 import styles from '@styles/Trordle.module.css';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
@@ -325,7 +325,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       // Fetch category image
       const fetchImage = async () => {
         setIsImageLoading(true);
-        const imageUrl = await fetchPixabayImage('', puzzleData.category);
+        const imageUrl = await fetchPexelsImage('', puzzleData.category);
         if (imageUrl) {
           setCategoryImage(imageUrl);
         }

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import MuteButton from '@/components/MuteButton';
+import Ads from '@/components/Ads';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,13 +18,15 @@ export default function QuizLayout({
 }) {
   return (
     <div className={`${inter.className} bg-gray-50 min-h-screen`}>
-      <div className="no-ads-page">
+      <div className="page-with-ads">
+  
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
         <main className="pb-20">
           {children}
         </main>
+        <Ads />
       </div>
     </div>
   );

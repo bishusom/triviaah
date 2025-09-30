@@ -7,7 +7,7 @@ import { MdShare } from "react-icons/md";
 import { fetchWikimediaImage, getCapitalSearchTerms } from '@/lib/wikimedia';
 import { useSound } from '@/context/SoundContext';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { CapitalePuzzle, CapitalInfo, addCapitaleResult } from '@/lib/brainwave/capitale/capitale-fb';
+import { CapitalePuzzle, CapitalInfo, addCapitaleResult } from '@/lib/brainwave/capitale/capitale-sb';
 import { checkCapitaleGuess, CapitaleGuessResult, isValidCapital } from '@/lib/brainwave/capitale/capitale-logic';
 
 interface CapitaleComponentProps {

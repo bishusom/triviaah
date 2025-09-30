@@ -1,14 +1,12 @@
 // app/api/feedback/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { addFeedback } from '@/lib/firebase';
-import { getDocs, collection, query, orderBy, limit } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { addFeedback, getFeedback } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const { rating, category, score, correctCount, totalQuestions } = body;
+    const { rating, category, score, correctCount, totalQuestions, userId } = body;
     
     if (!rating || !category) {
       return NextResponse.json(
@@ -22,7 +20,8 @@ export async function POST(request: NextRequest) {
       category,
       score: Number(score || 0),
       correctCount: Number(correctCount || 0),
-      totalQuestions: Number(totalQuestions || 0)
+      totalQuestions: Number(totalQuestions || 0),
+      userId: userId || undefined
     });
 
     return NextResponse.json({ 
@@ -44,17 +43,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const limitCount = Number(searchParams.get('limit')) || 50;
     
-    const q = query(
-      collection(db, 'feedback'),
-      orderBy('timestamp', 'desc'),
-      limit(limitCount)
-    );
-
-    const snapshot = await getDocs(q);
-    const feedback = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const feedback = await getFeedback(limitCount);
 
     return NextResponse.json(feedback);
 

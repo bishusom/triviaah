@@ -4,7 +4,7 @@ import {
   getHighScores, 
   getGlobalHighScore, 
   addHighScore
-} from '@/lib/firebase';
+} from '@/lib/supabase';
 
 // Remove static export settings for dynamic queries
 export async function GET(request: Request) {

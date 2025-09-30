@@ -7,7 +7,7 @@ import { MdShare } from "react-icons/md";
 import { useSound } from '@/context/SoundContext';
 import { useCoverArt } from '@/hooks/useCoverArt';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { SonglePuzzle, addSongleResult } from '@/lib/brainwave/songle/songle-fb';
+import { SonglePuzzle, addSongleResult } from '@/lib/brainwave/songle/songle-sb';
 import { checkSongleGuess, SongleGuessResult, getProgressiveClues } from '@/lib/brainwave/songle/songle-logic';
 
 interface SongleComponentProps {

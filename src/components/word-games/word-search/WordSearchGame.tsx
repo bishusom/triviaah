@@ -2,11 +2,17 @@
 import { event } from '@/lib/gtag';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
-import { db } from '@/lib/firebase';
+import { createClient } from '@supabase/supabase-js';
 import { useSound } from '@/context/SoundContext';
 import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 import gameStyles from '@styles/WordGames/WordSearch.module.css';
 import commonStyles from '@styles/WordGames/WordGames.common.module.css';
+
+
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 type DifficultyLevel = 'easy' | 'medium' | 'hard';
 
@@ -299,32 +305,35 @@ export default function WordSearchGame() {
     try {
       const randomFloor = Math.floor(Math.random() * 900000);
       const xlimit = limitOverride || diffConfig.wordCount;
-      const q = query(
-        collection(db, 'dictionary'),
-        where('length', '>=', diffConfig.minWordLength),
-        where('length', '<=', diffConfig.maxWordLength),
-        where('randomIndex', '>=', randomFloor),
-        orderBy('randomIndex'),
-        limit(xlimit * 2)
-      );
+      
+      // Supabase query
+      const { data, error } = await supabase
+        .from('dictionary')
+        .select('word, letters')
+        .gte('length', diffConfig.minWordLength)
+        .lte('length', diffConfig.maxWordLength)
+        .gte('random_index', randomFloor)
+        .order('random_index')
+        .limit(xlimit * 2);
 
-      const snapshot = await getDocs(q);
+      if (error) throw error;
+
       const wordPoolSet = new Set<string>();
       const wordData: WordObj[] = [];
 
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        if (data.word && data.letters) {
-          const word = data.word.toUpperCase();
-          if (!usedWordsRef.current.has(word)) {
-            wordPoolSet.add(word);
-            wordData.push({ word, letters: word.split('').map((l: string) => l.toUpperCase()) });
-          }
+      (data || []).forEach(item => {
+        const word = item.word.toUpperCase();
+        if (!usedWordsRef.current.has(word)) {
+          wordPoolSet.add(word);
+          wordData.push({ 
+            word, 
+            letters: item.letters || word.split('').map((l: string) => l.toUpperCase()) 
+          });
         }
       });
 
       if (wordPoolSet.size === 0) {
-        throw new Error("No valid words found in Firebase");
+        throw new Error("No valid words found in Supabase");
       }
 
       const shuffledWordData = shuffleArray(wordData);
