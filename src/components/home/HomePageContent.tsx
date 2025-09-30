@@ -64,7 +64,7 @@ export default function HomePageContent() {
         </div>
       </header>
      
-     <Ads />
+     <Ads format="horizontal"/>
 
       <main className="container mx-auto px-4 py-6 flex-grow">
         {/* Critical heading with inline styles to prevent render delay */}
