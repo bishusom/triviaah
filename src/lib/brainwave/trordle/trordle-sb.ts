@@ -66,30 +66,32 @@ export async function getDailyTrordle(customDate?: Date): Promise<TrordlePuzzle 
     console.log('Fetching daily puzzle for date:', dateString);
     
     // Get daily puzzle entry
-    const { data: dailyPuzzle, error: dailyError } = await supabase
-      .from('daily_puzzles')
-      .select(`
-        puzzle_id,
-        trordle_puzzles (*)
-      `)
-      .eq('date', dateString)
-      .eq('category', 'trordle')
-      .single();
+    const { data: dailyPuzzles, error: dailyError } = await supabase
+          .from('daily_puzzles')
+          .select('*')
+          .eq('date', dateString)
+          .eq('category', 'trordle')
+          .limit(1);
     
-    if (dailyError || !dailyPuzzle) {
-      console.log('No daily puzzle found for date:', dateString, '- getting random puzzle');
-      return getRandomTrordle();
-    }
+        if (dailyError || !dailyPuzzles || dailyPuzzles.length === 0) {
+          console.log('No daily puzzle found for date:', dateString, '- getting random puzzle');
+          return getRandomTrordle();
+        }
+        
+        const dailyPuzzle = dailyPuzzles[0];
+        const puzzleId = dailyPuzzle.puzzle_id;
+        
+        // Now fetch the actual puzzle data from songle_puzzles
+        const { data: puzzleData, error: puzzleError } = await supabase
+          .from('trordle_puzzles')
+          .select('*')
+          .eq('id', puzzleId)
+          .single();
     
-    if (!dailyPuzzle.trordle_puzzles) {
-      console.log('No trordle puzzle found with ID:', dailyPuzzle.puzzle_id, '- getting random puzzle');
-      return getRandomTrordle();
-    }
-
-    // Handle the case where trordle_puzzles might be an array or an object
-    const puzzleData = Array.isArray(dailyPuzzle.trordle_puzzles)
-      ? dailyPuzzle.trordle_puzzles[0]
-      : dailyPuzzle.trordle_puzzles;
+        if (puzzleError || !puzzleData) {
+          console.log('No trordle puzzle found with ID:', puzzleId, '- getting random puzzle');
+          return getRandomTrordle();
+        }
 
     if (!puzzleData) {
       console.log('No valid trordle puzzle data found - getting random puzzle');

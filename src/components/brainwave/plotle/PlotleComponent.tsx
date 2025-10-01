@@ -141,7 +141,7 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: PlotleData, att
     ),
     hints.oscarCategories && attempts.length >= 2 && (
       <div key="oscarCategories" className="flex-none w-full text-sm">
-        🏆 Oscars: <strong>{hints.oscarCategories.join(', ')}</strong>
+        🏆 Oscars: <strong>{hints.oscarCategories.length > 0 ? hints.oscarCategories.join(', ') : 'None'}</strong>
       </div>
     ),
     hints.imdbRating && attempts.length >= 4 && (

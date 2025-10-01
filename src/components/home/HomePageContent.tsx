@@ -6,7 +6,6 @@ import CategoryGrid from '@/components/home/CategoryGrid';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
 import Footer from '@/components/home/Footer';
 import Image from 'next/image';
-import Link from 'next/link';
 import { DAILY_QUIZZES, ADDITIONAL_SECTIONS, BRAIN_WAVES } from '@/../data/homeContent';
 import CollapsibleSection from '@/components/home/CollapsibleSection';
 
