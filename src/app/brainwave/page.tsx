@@ -98,6 +98,11 @@ export default async function DailyQuizzesPage() {
         {/* Brainwave Grid - Client-side component */}
         <DailyPuzzlesGrid quizzes={dailyQuizzes} />
 
+        {/* Ads Section */}
+        <div className="max-w-3xl mx-auto p-6">
+          <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
+        </div>
+        
         {/* How It Works Section */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-12">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
@@ -154,10 +159,7 @@ export default async function DailyQuizzesPage() {
           </ul>
         </section>
       </main>
-      {/* Ads Section */}
-      <div className="max-w-3xl mx-auto p-6">
-        <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
-      </div>
+      
     </div>
   );
 }
