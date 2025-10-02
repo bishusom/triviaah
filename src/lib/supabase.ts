@@ -254,10 +254,9 @@ export async function getRandomQuestions(
   try {
     // Use PostgreSQL's random() function for true randomness
     const { data: questions, error } = await supabase
-      .from('trivia_questions')
+      .from('random_trivia_questions')
       .select('*')
       .in('difficulty', difficulties)
-      .order('random()')
       .limit(qlimit);
 
     if (error) throw error;

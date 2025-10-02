@@ -27,11 +27,9 @@ export default function Ads({
   useEffect(() => {
     if (!isVisible) return;
 
-    // Wait for Google AdSense script to be available
     const loadAd = () => {
       if (typeof window !== 'undefined' && window.adsbygoogle && insRef.current) {
         try {
-          // Push the ad configuration
           (window.adsbygoogle as Record<string, unknown>[]).push({});
           setIsLoaded(true);
         } catch (error) {
@@ -40,11 +38,9 @@ export default function Ads({
       }
     };
 
-    // Check if adsbygoogle is already available
     if (typeof window !== 'undefined' && window.adsbygoogle) {
       loadAd();
     } else {
-      // Wait for the script to load
       const checkAdSense = setInterval(() => {
         if (typeof window !== 'undefined' && window.adsbygoogle) {
           clearInterval(checkAdSense);
@@ -52,9 +48,7 @@ export default function Ads({
         }
       }, 100);
 
-      // Cleanup interval after 10 seconds
       setTimeout(() => clearInterval(checkAdSense), 10000);
-
       return () => clearInterval(checkAdSense);
     }
   }, [isVisible]);
@@ -67,7 +61,6 @@ export default function Ads({
     return null;
   }
 
-  // Determine the close button position class
   const closeButtonClass = closeButtonPosition === 'top-left' 
     ? 'absolute top-1 left-1 z-10 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200'
     : 'absolute top-1 right-1 z-10 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200';
@@ -96,13 +89,15 @@ export default function Ads({
         ×
       </button>
 
-      {/* Ad container */}
-      <div className="w-full">
+      {/* Ad container - FIXED: Added centering wrapper */}
+      <div className="flex justify-center items-center w-full">
         <ins
           ref={insRef}
           className="adsbygoogle"
           style={{
             display: 'block',
+            textAlign: 'center', // Added text alignment
+            margin: '0 auto', // Added auto margins for centering
             ...style
           }}
           data-ad-client="ca-pub-4386714040098164"
@@ -122,7 +117,6 @@ export default function Ads({
   );
 }
 
-// Declare global types for TypeScript
 declare global {
   interface Window {
     adsbygoogle: Record<string, unknown>[];

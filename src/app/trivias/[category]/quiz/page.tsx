@@ -1,5 +1,5 @@
 import QuizGame from '@/components/trivias/QuizGame';
-import { getCategoryQuestions } from '@/lib/firebase';
+import { getCategoryQuestions } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 

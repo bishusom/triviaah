@@ -1,9 +1,9 @@
 'use client';
 
 import QuizGame from '@/components/trivias/QuizGame';
-import { getRandomQuestions } from '@/lib/firebase';
+import { getRandomQuestions } from '@/lib/supabase';
 import { useState, useEffect } from 'react';
-import { type Question } from '@/lib/firebase';
+import { type Question } from '@/lib/supabase';
 
 export default function QuickFirePage() {
   const [questions, setQuestions] = useState<Question[] | null>(null);
