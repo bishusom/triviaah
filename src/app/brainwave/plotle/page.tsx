@@ -1,7 +1,7 @@
 // src/app/plotle/page.tsx
 'use client';
 
-import PlotleComponent from '@/components/brainwave/plotle/PlotleComponent';
+import PlotleComponent from '@/components/brainwave/PlotleComponent';
 import { getDailyPlotle } from '@/lib/brainwave/plotle/plotle-sb';
 import MuteButton from '@/components/MuteButton';
 import { useState, useEffect } from 'react';

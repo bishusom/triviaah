@@ -1,7 +1,7 @@
 // src/app/songle/page.tsx
 'use client';
 
-import SongleComponent from '@/components/brainwave/songle/SongleComponent';
+import SongleComponent from '@/components/brainwave/SongleComponent';
 import { getDailySongle } from '@/lib/brainwave/songle/songle-sb';
 import MuteButton from '@/components/MuteButton';
 import { useState, useEffect } from 'react';

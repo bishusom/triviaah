@@ -82,8 +82,24 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     name: 'Plotle',
     path: '/brainwave/plotle',
     image: '/imgs/plotle-160x160.webp',
-    tagline: 'Guess the movie from its plot description',
+    tagline: 'Guess the movie from its plot description in emojis',
     keywords: 'movie plot game, film trivia, movie guessing game'
+  },
+  {
+    category: 'celebrile',
+    name: 'Celebrile',
+    path: '/brainwave/celebrile',
+    image: '/imgs/celebrile-160x160.webp',
+    tagline: 'Guess the celebrity from fun facts in this star-studded quiz',
+    keywords: 'celebrity trivia game, famous people quiz, celebrity guessing game'    
+  },
+  {
+    category: 'literale',
+    name: 'Literale',
+    path: '/brainwave/literale',
+    image: '/imgs/literale-160x160.webp',
+    tagline: 'Guess the book from its opening line in this literary puzzle',
+    keywords: 'book opening game, literature trivia, book guessing puzzle'
   },
   {
     category: 'songle',
@@ -93,7 +109,23 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     tagline: 'Identify songs from lyrics snippets in this music challenge',
     keywords: 'music lyrics game, song trivia, music guessing challenge'
   },
-    {
+  {
+    category: 'historidle',
+    name: 'Historidle',
+    path: '/brainwave/historidle',
+    image: '/imgs/historidle-160x160.webp',
+    tagline: 'Guess the historical event from dates and other intriguing clues',
+    keywords: 'history trivia game, historical events quiz, history guessing game'
+  },
+  {
+    category: 'synonymle',
+    name: 'Synonymle',
+    path: '/brainwave/synonymle',
+    image: '/imgs/synonymle-160x160.webp',
+    tagline: 'Guess the word based on semantic similarity and synonyms',
+    keywords: 'synonymle, word puzzle, daily word, wordle vocabulary, synonym game, semantic game'
+  },
+  {
     category: 'trordle',
     name: 'Trordle',
     path: '/brainwave/trordle',

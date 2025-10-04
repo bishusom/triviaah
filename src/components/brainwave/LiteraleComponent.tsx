@@ -1,22 +1,32 @@
+// src/components/brainwave/literale/LiteraleComponent.tsx
 import { useState, useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
-import { addPlotleResult } from '@/lib/brainwave/plotle/plotle-sb';
-import { checkLetterGuess, validateMovieGuess, type PlotleData, type PlotleGuessResult } from '@/lib/brainwave/plotle/plotle-logic';
+import { getBookCover } from '@/lib/brainwave/literale/book-cover'
+import { addLiteraleResult } from '@/lib/brainwave/literale/literale-sb';
+import { 
+  checkLetterGuess, 
+  validateBookGuess, 
+  getRevealedClues,
+  type LiteraleData, 
+  type LiteraleGuessResult 
+} from '@/lib/brainwave/literale/literale-logic';
 
-interface PlotleComponentProps {
-  initialData: PlotleData;
+interface LiteraleComponentProps {
+  initialData: LiteraleData;
 }
 
-interface PlotleSavedProgress {
-  attempts: PlotleGuessResult[];
+interface LiteraleSavedProgress {
+  attempts: LiteraleGuessResult[];
   gameState: 'playing' | 'won' | 'lost';
 }
 
-// EnhancedProgressiveHint component
-const EnhancedProgressiveHint = ({ attempts }: { attempts: PlotleGuessResult[] }) => {
+// ProgressiveHint component for Literale
+const ProgressiveHint = ({ attempts }: { 
+  attempts: LiteraleGuessResult[]; 
+}) => {
   if (attempts.length === 0) return null;
   
   const latestAttempt = attempts[attempts.length - 1];
@@ -25,7 +35,7 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: PlotleGuessResult[] }
   
   const hints = [
     {
-      icon: "🎯",
+      icon: "📚",
       text: `Great start! You have ${correctLetters} correct letters.`,
       color: "bg-green-100 border-green-400 text-green-700"
     },
@@ -46,7 +56,7 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: PlotleGuessResult[] }
     },
     {
       icon: "⚡",
-      text: "Final attempt! Use all clues and think about movie titles that fit the pattern.",
+      text: "Final attempt! Use all clues and think about books that fit all hints.",
       color: "bg-red-100 border-red-400 text-red-700"
     }
   ];
@@ -76,35 +86,33 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: PlotleGuessResult[] }
   );
 };
 
-const ValidationHints = ({ puzzleData, attempts }: { puzzleData: PlotleData, attempts: PlotleGuessResult[] }) => {
+// ValidationHints component for Literale
+const ValidationHints = ({ puzzleData, attempts }: { 
+  puzzleData: LiteraleData; 
+  attempts: LiteraleGuessResult[]; 
+}) => {
   const hints = puzzleData.validationHints || {};
-  const hintsRevealed = Math.min(attempts.length, 5); // More hints based on attempts
+  const hintsRevealed = Math.min(attempts.length, 5);
   const [activeHintIndex, setActiveHintIndex] = useState(0);
   const hintsScrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-advance effect - triggers on attempts change
   useEffect(() => {
     if (attempts.length === 0) return;
     
-    // Calculate how many hints are visible
     const visibleHints = [
-      hints.releaseYear && attempts.length >= 1,
-      puzzleData.genre && attempts.length >= 2,
-      hints.director && attempts.length >= 3,
-      hints.featuredActors && attempts.length >= 3,
-      hints.oscarCategories && attempts.length >= 2,
-      hints.imdbRating && attempts.length >= 4,
-      attempts.length >= 4, // first letter
-      attempts.length >= 5, // word count
+      attempts.length >= 1, // Author + Year (count as 1 group)
+      attempts.length >= 2, // Genre
+      attempts.length >= 3, // Setting
+      attempts.length >= 4, // Awards + Page Count (count as 1 group)
+      attempts.length >= 5, // First Letter + Word Count (count as 1 group)
     ].filter(Boolean);
     
     const latestHintIndex = visibleHints.length - 1;
     if (latestHintIndex >= 0) {
       setActiveHintIndex(latestHintIndex);
     }
-  }, [attempts.length, hints.releaseYear, puzzleData.genre, hints.director, hints.featuredActors, hints.oscarCategories, hints.imdbRating]);
+  }, [attempts.length]);
 
-  // Scroll effect - triggers on activeHintIndex change
   useEffect(() => {
     const scrollContainer = hintsScrollRef.current;
     if (scrollContainer) {
@@ -115,55 +123,56 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: PlotleData, att
     }
   }, [activeHintIndex]);
 
-  // Early return after all hooks
   if (attempts.length === 0) return null;
 
   const hintItems = [
-    hints.releaseYear && attempts.length >= 1 && (
-      <div key="releaseYear" className="flex-none w-full text-sm">
-        🎬 Released in: <strong>{hints.releaseYear}</strong>
+    attempts.length >= 1 && (
+      <div key="basic" className="flex-none w-full">
+        <div className="text-sm mb-2">
+          ✍️ Author: <strong>{hints.author}</strong>
+          {hints.publishedYear ? <> / 📅 Published: <strong>{hints.publishedYear}</strong></> : ''}
+        </div>
       </div>
     ),
-    puzzleData.genre && attempts.length >= 2 && (
+    attempts.length >= 2 && hints.genre && (
       <div key="genre" className="flex-none w-full text-sm">
-        🎭 Genre: <strong>{puzzleData.genre}</strong>
+        📖 Genre: <strong>{hints.genre.join(', ')}</strong>
       </div>
     ),
-    hints.director && attempts.length >= 3 && (
-      <div key="director" className="flex-none w-full text-sm">
-        🎥 Director: <strong>{hints.director}</strong>
-      </div>
-    ),
-    hints.featuredActors && attempts.length >= 3 && (
-      <div key="featuredActors" className="flex-none w-full text-sm">
-        🌟 Stars: <strong>{hints.featuredActors.join(', ')}</strong>
-      </div>
-    ),
-    hints.oscarCategories && attempts.length >= 2 && (
-      <div key="oscarCategories" className="flex-none w-full text-sm">
-        🏆 Oscars: <strong>{hints.oscarCategories.length > 0 ? hints.oscarCategories.join(', ') : 'None'}</strong>
-      </div>
-    ),
-    hints.imdbRating && attempts.length >= 4 && (
-      <div key="imdbRating" className="flex-none w-full text-sm">
-        ⭐ IMDb Rating: <strong>{hints.imdbRating}/10</strong>
+    attempts.length >= 3 && hints.setting && (
+      <div key="setting" className="flex-none w-full text-sm">
+        🗺️ Setting: <strong>{hints.setting}</strong>
       </div>
     ),
     attempts.length >= 4 && (
-      <div key="firstLetter" className="flex-none w-full text-sm">
-        🔤 Starts with: <strong>{puzzleData.targetTitle.charAt(0).toUpperCase()}</strong>
+      <div key="details" className="flex-none w-full">
+        {hints.awards && (
+          <div className="text-sm mb-2">
+            🏆 Awards: <strong>{hints.awards.slice(0, 2).join(', ')}</strong>
+          </div>
+        )}
+        {hints.pageCount && (
+          <div className="text-sm">
+            📏 Length: <strong>{hints.pageCount} pages</strong>
+          </div>
+        )}
       </div>
     ),
     attempts.length >= 5 && (
-      <div key="wordCount" className="flex-none w-full text-sm">
-        📝 Title has: <strong>{puzzleData.targetTitle.split(' ').length} words</strong>
+      <div key="structural" className="flex-none w-full">
+        <div className="text-sm mb-2">
+          🔤 Starts with: <strong>{puzzleData.targetTitle.charAt(0).toUpperCase()}</strong>
+        </div>
+        <div className="text-sm">
+          📝 Title has: <strong>{puzzleData.targetTitle.split(' ').length} words</strong>
+        </div>
       </div>
     ),
-  ].filter(Boolean); // Remove null/undefined entries
+  ].filter(Boolean);
 
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-      <h4 className="font-semibold text-blue-800 mb-2">💡 Hints Revealed:</h4>
+      <h4 className="font-semibold text-blue-800 mb-2">💡 Book Hints:</h4>
       <div className="relative overflow-hidden">
         <div
           ref={hintsScrollRef}
@@ -198,22 +207,8 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: PlotleData, att
   );
 };
 
-async function fetchTMDBMoviePoster(movieTitle: string): Promise<string | null> {
-  try {
-    const response = await fetch(`/api/tmdb?title=${encodeURIComponent(movieTitle)}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch poster');
-    }
-    const data = await response.json();
-    return data.posterUrl;
-  } catch (error) {
-    console.error('Error fetching movie poster:', error);
-    return null;
-  }
-}
-
-// Block component for the pixelated reveal
-const PosterBlock = ({ 
+// Block component for pixelated reveal (same as Plotle)
+const BookBlock = ({ 
   x, 
   y, 
   gridCols, 
@@ -226,7 +221,8 @@ const PosterBlock = ({
   gridRows: number;
   isRevealed: boolean;
 }) => {
-  if (isRevealed) return null; // Transparent, let image show through
+  // Only render the black block if it's NOT revealed
+  if (isRevealed) return null;
   
   const left = (x / gridCols) * 100;
   const top = (y / gridRows) * 100;
@@ -246,30 +242,64 @@ const PosterBlock = ({
   );
 };
 
-export default function PlotleComponent({ initialData }: PlotleComponentProps) {
+async function fetchBookCover(puzzleData: LiteraleData): Promise<string | null> {
+  try {
+    const cover = puzzleData.imageUrl;
+    if (cover) {
+      // Test load
+      await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = cover!;
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+      return cover;
+    }
+
+    // Fallback to API
+    const apiCover = await getBookCover(puzzleData.targetTitle, puzzleData.validationHints.author);
+    if (apiCover) {
+      await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = apiCover;
+        console.log('Fetched cover from API:', apiCover);
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+      return apiCover;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error fetching book cover:', error);
+    return null;
+  }
+}
+
+export default function LiteraleComponent({ initialData }: LiteraleComponentProps) {
   const [puzzleData] = useState(initialData);
   const [guess, setGuess] = useState('');
-  const [attempts, setAttempts] = useState<PlotleGuessResult[]>([]);
+  const [attempts, setAttempts] = useState<LiteraleGuessResult[]>([]);
   const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing');
   const [shareMessage, setShareMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isGuessLoading, setIsGuessLoading] = useState(false);
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
-  const [moviePoster, setMoviePoster] = useState<string | null>(null);
+  const [bookImage, setBookImage] = useState<string | null>(null);
   const [revealPercentage, setRevealPercentage] = useState(0);
   const [revealedBlocks, setRevealedBlocks] = useState<number[]>([]);
   const blockRevealOrderRef = useRef<number[]>([]);
   const [gameStarted, setGameStarted] = useState(false);
   
-  // Grid settings for blocks
-  const GRID_COLS = 30; // Adjust for finer/coarser grid (higher = smaller blocks)
-  const GRID_ROWS = 40; // Aspect ratio ~90x120 = 3:4, so cols:rows ~ 3:4
+  // Grid settings for blocks (same as Plotle)
+  const GRID_COLS = 30;
+  const GRID_ROWS = 40;
   const totalBlocks = GRID_COLS * GRID_ROWS;
-  const containerWidth = 90; // px
-  const containerHeight = 120; // px
+  const containerWidth = 90;
+  const containerHeight = 120;
   
-  // Initialize spaced random reveal order on mount
+  // Initialize block reveal order (same as Plotle)
   useEffect(() => {
     if (blockRevealOrderRef.current.length === 0) {
       const groups: number[][] = [[], [], [], []];
@@ -283,10 +313,9 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
       
       const shuffledOrder: number[] = [];
       groups.forEach(group => {
-        // Shuffle within group
         for (let i = group.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
-          [group[i], group[j]] = [group[j], group[i]]; // Fixed syntax
+          [group[i], group[j]] = [group[j], group[i]];
         }
         shuffledOrder.push(...group);
       });
@@ -295,18 +324,26 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
     }
   }, []);
 
-    // Start game and trigger analytics
+  // Load book image (aligned to Plotle style)
+  useEffect(() => {
+    const fetchCover = async () => {
+      const cover = await fetchBookCover(puzzleData);
+      setBookImage(cover);
+    };
+    fetchCover();
+  }, [puzzleData]);
+
+  // Start game and analytics
   useEffect(() => {
     setGameStarted(true);
   }, []);
 
-  // Add analytics event for game start
   useEffect(() => {
     if (!gameStarted) return;
     
     const checkGtag = setInterval(() => {
       if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        event({action: 'plotle_started', category: 'plotle', label: 'plotle'});
+        event({action: 'literale_started', category: 'literale', label: 'literale'});
         clearInterval(checkGtag);
       }
     }, 100);
@@ -316,74 +353,6 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
 
   // Sound effects
   const { isMuted } = useSound();
-  const correctSound = useRef<HTMLAudioElement | null>(null);
-  const incorrectSound = useRef<HTMLAudioElement | null>(null);
-  const winSound = useRef<HTMLAudioElement | null>(null);
-  const loseSound = useRef<HTMLAudioElement | null>(null);
-  const clickSound = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    // Initialize sound effects
-    correctSound.current = new Audio('/sounds/correct.mp3');
-    incorrectSound.current = new Audio('/sounds/incorrect.mp3');
-    winSound.current = new Audio('/sounds/win.mp3');
-    loseSound.current = new Audio('/sounds/lose.mp3');
-    clickSound.current = new Audio('/sounds/click.mp3');
-
-    return () => {
-      [correctSound, incorrectSound, winSound, loseSound, clickSound].forEach(sound => {
-        sound.current?.pause();
-      });
-    };
-  }, []);
-
-  useEffect(() => {
-    const savedProgress = localStorage.getItem(`plotle-${puzzleData.id}`);
-    if (savedProgress) {
-      try {
-        const progress = JSON.parse(savedProgress);
-        setAttempts(progress.attempts || []);
-        setGameState(progress.gameState || 'playing');
-      } catch (e) {
-        console.error('Error loading saved progress:', e);
-      }
-    }
-  }, [puzzleData.id]);
-
-  useEffect(() => {
-    if (attempts.length > 0 || gameState !== 'playing') {
-      localStorage.setItem(`plotle-${puzzleData.id}`, JSON.stringify({
-        attempts,
-        gameState
-      }));
-    }
-  }, [attempts, gameState, puzzleData.id]);
-
-  // Add useEffect to fetch poster
-  useEffect(() => {
-    const fetchPoster = async () => {
-      const poster = await fetchTMDBMoviePoster(puzzleData.targetTitle);
-      setMoviePoster(poster);
-    };
-    fetchPoster();
-  }, [puzzleData.targetTitle]);
-
-  // Update reveal percentage and blocks based on attempts
-  useEffect(() => {
-    let newReveal = 0;
-    if (attempts.length > 0 && gameState === 'playing') {
-      newReveal = Math.min(attempts.length * 10, 60); // 10% per attempt, max 60%
-    } else if (gameState === 'won' || gameState === 'lost') {
-      newReveal = 100;
-    }
-    setRevealPercentage(newReveal);
-
-    // Calculate number of blocks to reveal
-    const numToReveal = Math.floor(totalBlocks * (newReveal / 100));
-    const newRevealed = blockRevealOrderRef.current.slice(0, numToReveal);
-    setRevealedBlocks(newRevealed);
-  }, [attempts.length, gameState]);
-
   const playSound = useCallback((soundType: 'correct' | 'incorrect' | 'win' | 'lose' | 'click') => {
     if (isMuted) return;
     
@@ -403,6 +372,45 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
     }
   }, [isMuted]);
 
+  // Load saved progress
+  useEffect(() => {
+    const savedProgress = localStorage.getItem(`literale-${puzzleData.id}`);
+    if (savedProgress) {
+      try {
+        const progress = JSON.parse(savedProgress);
+        setAttempts(progress.attempts || []);
+        setGameState(progress.gameState || 'playing');
+      } catch (e) {
+        console.error('Error loading saved progress:', e);
+      }
+    }
+  }, [puzzleData.id]);
+
+  // Save progress
+  useEffect(() => {
+    if (attempts.length > 0 || gameState !== 'playing') {
+      localStorage.setItem(`literale-${puzzleData.id}`, JSON.stringify({
+        attempts,
+        gameState
+      }));
+    }
+  }, [attempts, gameState, puzzleData.id]);
+
+  // Update reveal percentage and blocks (exact match to Plotle)
+  useEffect(() => {
+    let newReveal = 0;
+    if (attempts.length > 0 && gameState === 'playing') {
+      newReveal = Math.min(attempts.length * 10, 60);
+    } else if (gameState === 'won' || gameState === 'lost') {
+      newReveal = 100;
+    }
+    setRevealPercentage(newReveal);
+
+    const numToReveal = Math.floor(totalBlocks * (newReveal / 100));
+    const newRevealed = blockRevealOrderRef.current.slice(0, numToReveal);
+    setRevealedBlocks(newRevealed);
+  }, [attempts.length, gameState]);
+
   const triggerConfetti = () => {
     if (confettiCanvasRef.current) {
       const myConfetti = confetti.create(confettiCanvasRef.current, {
@@ -415,9 +423,6 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
         spread: 70,
         origin: { y: 0.6 }
       });
-      
-      setTimeout(() => myConfetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0 } }), 250);
-      setTimeout(() => myConfetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1 } }), 400);
     }
   };
 
@@ -427,9 +432,8 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
     const normalizedGuess = guess.trim();
     if (!normalizedGuess) return;
     
-    // Check if already guessed
     if (attempts.some(a => a.guess.toLowerCase() === normalizedGuess.toLowerCase())) {
-      setErrorMessage('Already guessed this movie');
+      setErrorMessage('Already guessed this book title');
       setTimeout(() => setErrorMessage(''), 3000);
       return;
     }
@@ -439,14 +443,12 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
     setValidationError(null);
     
     try {
-      // Validate the movie guess (for hints)
-      const validation = await validateMovieGuess(normalizedGuess, puzzleData);
+      const validation = await validateBookGuess(normalizedGuess, puzzleData);
       
-      if (validation.hint) {
+      if (validation.hint && !validation.isValid) {
         setValidationError(validation.hint);
       }
 
-      // Use letter-based comparison
       const result = checkLetterGuess(normalizedGuess, puzzleData);
       const newAttempts = [...attempts, result];
       setAttempts(newAttempts);
@@ -456,13 +458,13 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
         setGameState('won');
         triggerConfetti();
         playSound('win');
-        await addPlotleResult(true, newAttempts.length);
-        event({action: 'plotle_win', category: 'plotle', label: `attempts_${newAttempts.length}`});
+        await addLiteraleResult(true, newAttempts.length);
+        event({action: 'literale_win', category: 'literale', label: `attempts_${newAttempts.length}`});
       } else if (newAttempts.length >= 6) {
         setGameState('lost');
         playSound('lose');
-        await addPlotleResult(false, newAttempts.length);
-        event({action: 'plotle_loss', category: 'plotle', label: 'max_attempts'});
+        await addLiteraleResult(false, newAttempts.length);
+        event({action: 'literale_loss', category: 'literale', label: 'max_attempts'});
       } else {
         const hasCorrectOrPartial = result.letterStatuses?.some(status => 
           status === 'correct' || status === 'present'
@@ -489,9 +491,9 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
     const startDate = new Date(2024, 0, 1);
     const puzzleNumber = Math.floor((clientDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
     
-    let shareText = `Plotle #${puzzleNumber} ${gameState === 'won' ? attempts.length : 'X'}/6\n\n`;
+    let shareText = `Literale #${puzzleNumber} ${gameState === 'won' ? attempts.length : 'X'}/6\n\n`;
     
-    attempts.forEach(attempt => {
+    attempts.forEach((attempt, index) => {
       attempt.letterStatuses?.forEach(status => {
         if (status === 'correct') {
           shareText += '🟩';
@@ -501,10 +503,12 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
           shareText += '⬜';
         }
       });
-      shareText += '\n';
+      if (index < attempts.length - 1) {
+        shareText += '\n';
+      }
     });
     
-    shareText += '\nPlay daily at https://triviaah.com/brainwave/plotle';
+    shareText += '\n\nRead between the lines at https://triviaah.com/brainwave/literale';
     return shareText;
   };
 
@@ -522,17 +526,14 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
     setGameState('playing');
     setGuess('');
     setRevealedBlocks([]);
-    localStorage.removeItem(`plotle-${puzzleData.id}`);
+    localStorage.removeItem(`literale-${puzzleData.id}`);
     playSound('click');
   };
 
   const triesLeft = 6 - attempts.length;
   const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
 
-  // Display the emoji question
-  const puzzleEmojis = puzzleData.emojis.split(' ');
-
-  // Generate block grid
+  // Generate block grid (same as Plotle)
   const blockGrid: { x: number; y: number }[] = [];
   for (let row = 0; row < GRID_ROWS; row++) {
     for (let col = 0; col < GRID_COLS; col++) {
@@ -540,7 +541,6 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
     }
   }
 
-  // Check if a block is revealed
   const isBlockRevealed = (index: number) => revealedBlocks.includes(index);
 
   return (
@@ -551,34 +551,35 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
       />
       
       <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 flex-grow">
-        {/* Header with title and tries left on the same line */}
+        {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg md:text-xl font-semibold text-gray-800">
-            Guess the movie from its emoji plot!
+            Guess the book from the clues!
           </h2>
           <div className={`text-base font-bold ${triesLeftColor}`}>
             {triesLeft} {triesLeft === 1 ? 'try' : 'tries'} left
           </div>
         </div>
 
-        {/* Question and Image Container - simplified without title */}
-        <div className="flex flex-col md:flex-row gap-4 mb-6 items-center">
-          <div className="flex-shrink-0 relative">
+        {/* Book Cover and Clues Container */}
+        <div className="flex flex-col md:flex-row gap-6 mb-6">
+          {/* Book Cover Container */}
+          <div className="flex-shrink-0">
             <div 
-              className="relative rounded-lg overflow-hidden bg-gray-100" 
+              className="relative rounded-lg overflow-hidden bg-gray-100 shadow-lg" 
               style={{ height: `${containerHeight}px`, width: `${containerWidth}px` }}
             >
-              {moviePoster ? (
+              {bookImage ? (
                 <>
                   <img
-                    src={moviePoster}
-                    alt="Movie poster"
+                    src={bookImage}
+                    alt="Book Cover"
                     className="w-full h-full object-cover absolute inset-0 z-10"
                   />
-                  {/* Block overlay container */}
+                  {/* Block overlay - same as Plotle */}
                   <div className="absolute inset-0 z-20">
                     {blockGrid.map((pos, index) => (
-                      <PosterBlock
+                      <BookBlock
                         key={index}
                         {...pos}
                         gridCols={GRID_COLS}
@@ -587,13 +588,13 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
                       />
                     ))}
                   </div>
-                  {/* Center "?" overlay only initially */}
+                  {/* Center "?" overlay only initially - matched to Plotle */}
                   {revealPercentage === 0 && (
                     <div className="absolute inset-0 flex items-center justify-center z-30">
                       <span className="text-white text-2xl font-bold">?</span>
                     </div>
                   )}
-                  {/* Percentage badge */}
+                  {/* Percentage badge - same as Plotle */}
                   <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1 py-0.5 rounded z-30">
                     {revealPercentage > 0 ? `${Math.round(revealPercentage)}%` : '?'}
                   </div>
@@ -608,14 +609,17 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
               )}
             </div>
           </div>
+
+          {/* Clues Section */}
           <div className="flex-grow">
-            {/* Display the emoji sequence */}
-            <div className="flex justify-center items-center gap-2 text-4xl">
-              {puzzleEmojis.map((emoji, index) => (
-                <span key={index} className="p-2 bg-gray-100 rounded-md">
-                  {emoji}
-                </span>
-              ))}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="font-semibold text-blue-800 mb-2">📖 Opening Line</h4>
+              <p className="text-blue-700 italic">
+                {puzzleData.clues[0]}
+              </p>
+              <p className="text-xs text-blue-600 mt-2">
+                More clues will be revealed as you make guesses...
+              </p>
             </div>
           </div>
         </div>
@@ -627,6 +631,7 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
           </div>
         )}
         
+        {/* Validation error */}
         {validationError && (
           <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
             {validationError}
@@ -636,8 +641,8 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
         {/* Conditional rendering of hints or result */}
         {gameState === 'playing' && (
           <>
-            {/* Enhanced progressive hints */}
-            <EnhancedProgressiveHint attempts={attempts} />
+            {/* Progressive hints */}
+            <ProgressiveHint attempts={attempts} />
             
             {/* Validation hints */}
             <ValidationHints puzzleData={puzzleData} attempts={attempts} />
@@ -649,14 +654,14 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
             <h3 className="font-bold text-lg mb-2">Congratulations! 🎉</h3>
             <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
-            <p className="mt-2">The movie was: <strong>{puzzleData.targetTitle}</strong></p>
+            <p className="mt-2">The book was: <strong>{puzzleData.targetTitle}</strong></p>
           </div>
         )}
         
         {gameState === 'lost' && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             <h3 className="font-bold text-lg mb-2">Game Over</h3>
-            <p>The movie was: <strong>{puzzleData.targetTitle}</strong></p>
+            <p>The book was: <strong>{puzzleData.targetTitle}</strong></p>
           </div>
         )}
         
@@ -684,9 +689,6 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
                       );
                     })}
                   </div>
-                  <div className="text-center text-sm text-gray-600">
-                    {attempt.guess}
-                  </div>
                 </div>
               ))}
             </div>
@@ -701,7 +703,7 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
                 type="text"
                 value={guess}
                 onChange={(e) => setGuess(e.target.value)}
-                placeholder="Enter movie title"
+                placeholder="Enter book title"
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
                 disabled={isGuessLoading}
@@ -729,22 +731,22 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
             {shareMessage && (
               <div className="mt-2 text-blue-600">{shareMessage}</div>
             )}
-            
           </div>
         )}
       </div>
 
       {/* How to Play section */}
       <div className="bg-gray-100 rounded-lg p-4 mt-6">
-        <h3 className="font-bold mb-2">How to Play:</h3>
+        <h3 className="font-bold mb-2">How to Play Literale:</h3>
         <ul className="list-disc list-inside space-y-1 text-sm">
-          <li>Guess the movie by entering any movie title</li>
+          <li>Guess the book by entering its title</li>
           <li>Get letter-by-letter feedback compared to the answer</li>
           <li>🟩 Green: Letter in correct position</li>
           <li>🟨 Yellow: Letter is in the title but wrong position</li>
           <li>⬜ Gray: Letter not in the title</li>
-          <li>Hints are revealed after each attempt</li>
-          <li>You have 6 attempts to guess the movie</li>
+          <li>Additional book hints unlock with each attempt</li>
+          <li>You have 6 attempts to guess the book</li>
+          <li>The book cover becomes clearer with each attempt (max 60% during gameplay)</li>
         </ul>
       </div>
     </div>

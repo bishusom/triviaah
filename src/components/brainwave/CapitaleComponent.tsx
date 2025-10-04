@@ -123,7 +123,6 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
       for (const term of searchTerms) {
         imageUrl = await fetchWikimediaImage(term);
         if (imageUrl) {
-          console.log('Found image with search term:', term);
           break;
         }
       }
@@ -614,7 +613,7 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
               {attempt.letterFeedback.map((letter, letterIndex) => (
                 <div
                   key={letterIndex}
-                  className={`w-12 h-12 flex items-center justify-center mx-1 text-xl font-bold border-2 rounded ${
+                  className={`w-8 h-8 flex items-center justify-center mx-1 text-xl font-bold ${
                     letter.status === 'correct' 
                       ? 'bg-green-500 text-white border-green-500' 
                       : letter.status === 'present' 

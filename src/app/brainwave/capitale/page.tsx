@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import MuteButton from '@/components/MuteButton';
-import CapitaleComponent from '@/components/brainwave/capitale/CapitaleComponent';
+import CapitaleComponent from '@/components/brainwave/CapitaleComponent';
 import { getDailyCapitale, CapitalePuzzle, CapitalInfo} from '@/lib/brainwave/capitale/capitale-sb';
 import Ads from '@/components/Ads';
 

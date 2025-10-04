@@ -87,37 +87,45 @@ export default function HomePageContent() {
         </div>
 
         {/* Daily Quizzes with horizontal scroll on mobile - Add data attribute to prevent ads */}
-        <div className="horizontal-scroll-section" data-no-ads="true">
-          <HorizontalScrollSection 
-            title="Daily Quiz Challenges" 
-            items={DAILY_QUIZZES} 
-            isQuizSection={true}
-          />
+        <div className="border-2 border-blue-600 rounded-lg p-4 mb-8">
+          <div className="horizontal-scroll-section" data-no-ads="true">
+            <HorizontalScrollSection 
+              title="Daily Quiz Challenges" 
+              items={DAILY_QUIZZES} 
+              isQuizSection={true}
+            />
+          </div>
         </div>
 
         {/* Brain Waves Section with horizontal scroll on mobile - Add data attribute */}
-        <div className="horizontal-scroll-section" data-no-ads="true">
-          <HorizontalScrollSection 
-            title="Brain Waves - Daily Puzzle Games" 
-            items={BRAIN_WAVES} 
-          />
+        <div className="border-2 border-blue-600 rounded-lg p-4 mb-8">
+          <div className="horizontal-scroll-section" data-no-ads="true">
+            <HorizontalScrollSection 
+              title="Brain Waves - Daily Puzzle Games" 
+              items={BRAIN_WAVES} 
+            />
+          </div>
         </div>
 
         {/* More Brain Puzzles Section with horizontal scroll on mobile - Add data attribute */}
-        <div className="horizontal-scroll-section" data-no-ads="true">
-          <HorizontalScrollSection 
-            title="More Free Online Brain Games & Word Puzzles" 
-            items={ADDITIONAL_SECTIONS} 
-          />
+        <div className="border-2 border-blue-600 rounded-lg p-4 mb-8">
+          <div className="horizontal-scroll-section" data-no-ads="true">
+            <HorizontalScrollSection 
+              title="More Free Online Brain Games & Word Puzzles" 
+              items={ADDITIONAL_SECTIONS} 
+            />
+          </div>
         </div>
 
         {/* Simple Categories Section - Add data attribute */}
-        <div className="category-section" data-no-ads="true">
-          <div className="mb-12">
-            <h2 className="text-xl font-bold text-gray-800 mb-6 text-center">
-              Popular Quiz Categories
-            </h2>
-            <CategoryGrid />
+        <div className="border-2 border-blue-600 rounded-lg p-4 mb-8">
+          <div className="category-section" data-no-ads="true">
+            <div className="mb-4">
+              <h2 className="text-xl font-bold text-gray-800 mb-6 text-center">
+                Popular Quiz Categories
+              </h2>
+              <CategoryGrid />
+            </div>
           </div>
         </div>
 

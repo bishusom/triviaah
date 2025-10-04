@@ -416,7 +416,42 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
   const ValidationHints = () => {
     if (attempts.length === 0) return null;
     
-    const hints = getProgressiveClues(puzzleData, attempts.length);
+    // Define hint groups that get revealed at specific attempt levels
+    const hintGroups = [
+      {
+        attempt: 1,
+        hints: ['🎤 Artist clues and basic song information']
+      },
+      {
+        attempt: 2, 
+        hints: ['🎵 Genre and musical style hints']
+      },
+      {
+        attempt: 3,
+        hints: ['📅 Release year and era information']
+      },
+      {
+        attempt: 4,
+        hints: ['🏆 Chart performance or awards']
+      },
+      {
+        attempt: 5,
+        hints: ['💫 Fun facts or cultural significance']
+      }
+    ].filter(group => attempts.length >= group.attempt);
+
+    // Get actual hints based on the current attempt level
+    const currentClues = getProgressiveClues(puzzleData, attempts.length);
+    const displayedHints = hintGroups.map((group, index) => {
+      // Use actual hints if available, otherwise use placeholder
+      const actualHint = currentClues[index] || group.hints[0];
+      return {
+        ...group,
+        hints: [actualHint]
+      };
+    });
+
+    const hintsRevealed = displayedHints.length;
     
     return (
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
@@ -427,17 +462,19 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
             className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
             style={{ scrollSnapType: 'x mandatory' }}
           >
-            {hints.map((hint, index) => (
+            {displayedHints.map((group, index) => (
               <div key={index} className="flex-none w-full snap-center px-4">
                 <div className="text-sm bg-white p-3 rounded-lg shadow-sm">
-                  {hint}
+                  {group.hints.map((hint, hintIndex) => (
+                    <div key={hintIndex}>{hint}</div>
+                  ))}
                 </div>
               </div>
             ))}
           </div>
-          {hints.length > 1 && (
+          {displayedHints.length > 1 && (
             <div className="flex justify-center gap-2 mt-3">
-              {hints.map((_, index) => (
+              {displayedHints.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setActiveHintIndex(index)}
@@ -451,7 +488,7 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
           )}
         </div>
         <p className="text-xs text-blue-600 mt-2 text-center">
-          More hints unlock with each guess... ({attempts.length}/6 revealed)
+          More hints unlock with each guess... ({hintsRevealed}/5 revealed)
         </p>
       </div>
     );
@@ -619,7 +656,7 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
               {attempt.guess.replace(/\s+/g, '').split('').map((letter, letterIndex) => (
                 <div
                   key={letterIndex}
-                  className={`w-12 h-12 flex items-center justify-center mx-1 text-xl font-bold border-2 rounded ${
+                  className={`w-8 h-8 flex items-center justify-center mx-1 text-xl font-bold rounded ${
                     attempt.statuses[letterIndex] === 'correct' 
                       ? 'bg-green-500 text-white border-green-500' 
                       : attempt.statuses[letterIndex] === 'present' 

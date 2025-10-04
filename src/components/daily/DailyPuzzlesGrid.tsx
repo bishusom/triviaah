@@ -69,7 +69,7 @@ export default function DailyPuzzlesGrid({ quizzes }: { quizzes: Quiz[] }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 mb-12">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
       {quizzes.map((quiz) => {
         const wasPlayed = playedQuizzes[quiz.category]?.played || false;
         const shouldReset = shouldResetQuiz(quiz.category);
