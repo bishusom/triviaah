@@ -62,8 +62,8 @@ export default function Ads({
   }
 
   const closeButtonClass = closeButtonPosition === 'top-left' 
-    ? 'absolute top-1 left-1 z-10 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200'
-    : 'absolute top-1 right-1 z-10 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200';
+    ? 'absolute top-1 left-1 z-50 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200'
+    : 'absolute top-1 right-1 z-50 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200';
 
   return (
     <div 
@@ -76,28 +76,35 @@ export default function Ads({
         alignItems: 'center',
         justifyContent: 'center',
         contain: 'layout style paint',
+        // Mobile-first responsive constraints
+        maxWidth: '100%',
+        overflow: 'hidden',
         ...style
       }}
     >
-      {/* Close button */}
+      {/* Close button - FIXED: Increased z-index to z-50 */}
       <button
         onClick={handleClose}
         className={closeButtonClass}
         aria-label="Close advertisement"
         title="Close advertisement"
+        style={{ zIndex: 50 }}
       >
         ×
       </button>
 
-      {/* Ad container - FIXED: Added centering wrapper */}
-      <div className="flex justify-center items-center w-full">
+      {/* Ad container with responsive constraints */}
+      <div className="flex justify-center items-center w-full" style={{ maxWidth: '100%', overflow: 'hidden' }}>
         <ins
           ref={insRef}
           className="adsbygoogle"
           style={{
             display: 'block',
-            textAlign: 'center', // Added text alignment
-            margin: '0 auto', // Added auto margins for centering
+            textAlign: 'center',
+            margin: '0 auto',
+            // Responsive constraints for mobile
+            maxWidth: '100%',
+            overflow: 'hidden',
             ...style
           }}
           data-ad-client="ca-pub-4386714040098164"
