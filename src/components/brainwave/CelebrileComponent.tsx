@@ -7,20 +7,15 @@ import { MdShare } from "react-icons/md";
 import { addCelebrileResult } from '@/lib/brainwave/celebrile/celebrile-sb';
 import { 
   checkLetterGuess, 
-  validateCelebrityGuess, 
-  getRevealedClues,
+  validateCelebrityGuess,
   type CelebrileData, 
   type CelebrileGuessResult 
 } from '@/lib/brainwave/celebrile/celebrile-logic';
 import { fetchArtistImageFromWikipedia } from '@/lib/wikimedia';
+import Image from 'next/image';
 
 interface CelebrileComponentProps {
   initialData: CelebrileData;
-}
-
-interface CelebrileSavedProgress {
-  attempts: CelebrileGuessResult[];
-  gameState: 'playing' | 'won' | 'lost';
 }
 
 // Helper function to get correct article (a/an)
@@ -279,8 +274,8 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
   const containerWidth = 90;
   const containerHeight = 120;
   
-  // Get revealed clues based on attempts (we'll use this for progressive hint logic internally)
-  const revealedClues = getRevealedClues(attempts.length, puzzleData.clues);
+  // Remove unused revealedClues variable
+  // const revealedClues = getRevealedClues(attempts.length, puzzleData.clues);
 
   // Get the correct article for the category
   const categoryArticle = getArticle(puzzleData.category);
@@ -324,8 +319,8 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
           console.log('Image found:', imageUrl);
           setCelebrityImage(imageUrl);
           
-          // Preload the image to ensure it's cached
-          const img = new Image();
+          // Preload the image to ensure it's cached - FIXED: use window.Image
+          const img = new window.Image();
           img.src = imageUrl;
           img.onload = () => {
             setImageLoading(false);
@@ -540,14 +535,15 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
     });
   };
 
-  const resetGame = () => {
-    setAttempts([]);
-    setGameState('playing');
-    setGuess('');
-    setRevealedBlocks([]);
-    localStorage.removeItem(`celebrile-${puzzleData.id}`);
-    playSound('click');
-  };
+  // Remove unused resetGame function
+  // const resetGame = () => {
+  //   setAttempts([]);
+  //   setGameState('playing');
+  //   setGuess('');
+  //   setRevealedBlocks([]);
+  //   localStorage.removeItem(`celebrile-${puzzleData.id}`);
+  //   playSound('click');
+  // };
 
   const triesLeft = 6 - attempts.length;
   const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
@@ -613,10 +609,11 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
               
               {showImage && (
                 <>
-                  <img
+                  <Image
                     src={celebrityImage}
                     alt="Celebrity"
-                    className="w-full h-full object-cover absolute inset-0 z-10"
+                    fill
+                    className="object-cover absolute inset-0 z-10"
                     onError={() => {
                       console.error('Image failed to load:', celebrityImage);
                       setImageError(true);

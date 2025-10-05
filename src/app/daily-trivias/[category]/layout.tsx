@@ -94,7 +94,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   };
 }
 
-export default async function DailyLayout({ children, params }: Props) {
+export default async function DailyLayout({ children }: Props) {
   // Await the params if you need to use them in the layout
   // const resolvedParams = await params;
   // const category = resolvedParams.category;

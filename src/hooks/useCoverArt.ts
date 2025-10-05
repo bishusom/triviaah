@@ -26,7 +26,7 @@ export function useCoverArt(songTitle: string, artist: string) {
           }
           setIsLoading(false);
         }
-      } catch (err) {
+      } catch {
         if (isMounted) {
           setError('Failed to fetch cover art');
           setIsLoading(false);

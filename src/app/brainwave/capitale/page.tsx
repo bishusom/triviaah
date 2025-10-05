@@ -170,8 +170,7 @@ export default function CapitalePage() {
         
         <CapitaleComponent 
           initialData={dailyData.puzzle} 
-          allCapitals={dailyData.allCapitals} 
-          currentDate={currentDate} 
+          allCapitals={dailyData.allCapitals}
         />
       </div>
     </div>

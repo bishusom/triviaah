@@ -1,7 +1,7 @@
 // components/trivias/QuizSummary.tsx
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { MdShare } from "react-icons/md";
 import { FaMedal, FaTrophy, FaCheck } from 'react-icons/fa';
@@ -38,7 +38,7 @@ const MESSAGES = {
         "🧩 Puzzle Master! Can you complete the picture perfectly next time?"
     ],
     bronze: [
-        "👏 Solid Effort! Your next attempt could be your breakthrough!",
+        "👍 Solid Effort! Your next attempt could be your breakthrough!",
         "📚 Bookworm Rising! Every replay makes you wiser - try again!",
         "💡 Bright Spark! Your knowledge is growing - fuel it with another round!",
         "🏅 Contender Status! The podium is within reach - one more try!"
@@ -110,7 +110,7 @@ export default function QuizSummary({
   };
 
   /* ---------- fetch leaderboard ---------- */
-  const fetchHighScores = async () => {
+  const fetchHighScores = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await fetch(`/api/highscores?category=${result.category}`);
@@ -138,15 +138,15 @@ export default function QuizSummary({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [result.category]);
 
   useEffect(() => {
     fetchHighScores();
-  }, [result.category]);
+  }, [fetchHighScores]);
 
   
   /* ---------- Improved save score with duplicate prevention ---------- */
-  const saveScoreCore = async (name: string) => {
+  const saveScoreCore = useCallback(async (name: string) => {
     // Multiple layers of duplicate prevention
     if (saving || scoreSaved || saveAttemptedRef.current || !mountedRef.current) {
       console.log('Save prevented:', { 
@@ -188,7 +188,7 @@ export default function QuizSummary({
         setSaving(false);
       }
     }
-  };
+  }, [saving, scoreSaved, result.score, result.category, fetchHighScores]);
 
   // Cleanup effect to track component mounting
   useEffect(() => {
@@ -217,7 +217,7 @@ export default function QuizSummary({
         clearTimeout(timeoutId);
       }
     };
-  }, []); // Keep empty dependency array but add internal guards
+  }, [displayName, saveScoreCore, saving, scoreSaved]); // Now includes all dependencies
 
    /* ---------- tiny reroll icon ---------- */
   const handleReroll = () => {

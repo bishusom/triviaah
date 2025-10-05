@@ -147,7 +147,6 @@ export default function HorizontalScrollSection({
                 quiz={item}
                 priorityImage={idx < 2}
                 timeLeft={getTimeLeft()}
-                className={idx < 2 ? "lcp-priority" : ""}
               />
             </div>
           ) : (

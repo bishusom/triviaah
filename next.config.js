@@ -36,6 +36,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'vemaps.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'images.pexels.com',
         pathname: '/**',
       },

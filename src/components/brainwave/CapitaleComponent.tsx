@@ -9,14 +9,14 @@ import { useSound } from '@/context/SoundContext';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { CapitalePuzzle, CapitalInfo, addCapitaleResult } from '@/lib/brainwave/capitale/capitale-sb';
 import { checkCapitaleGuess, CapitaleGuessResult, isValidCapital } from '@/lib/brainwave/capitale/capitale-logic';
+import Image from 'next/image';
 
 interface CapitaleComponentProps {
   initialData: CapitalePuzzle;
   allCapitals: CapitalInfo[];
-  currentDate: Date;
 }
 
-export default function CapitaleComponent({ initialData, allCapitals, currentDate }: CapitaleComponentProps) {
+export default function CapitaleComponent({ initialData, allCapitals }: CapitaleComponentProps) {
   const [puzzleData] = useState(initialData);
   const [guess, setGuess] = useState('');
   const [attempts, setAttempts] = useState<CapitaleGuessResult[]>([]);
@@ -60,26 +60,6 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
   
   // Sound effects
   const { isMuted } = useSound();
-  const correctSound = useRef<HTMLAudioElement | null>(null);
-  const incorrectSound = useRef<HTMLAudioElement | null>(null);
-  const winSound = useRef<HTMLAudioElement | null>(null);
-  const loseSound = useRef<HTMLAudioElement | null>(null);
-  const clickSound = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    // Initialize sound effects
-    correctSound.current = new Audio('/sounds/correct.mp3');
-    incorrectSound.current = new Audio('/sounds/incorrect.mp3');
-    winSound.current = new Audio('/sounds/win.mp3');
-    loseSound.current = new Audio('/sounds/lose.mp3');
-    clickSound.current = new Audio('/sounds/click.mp3');
-
-    return () => {
-      [correctSound, incorrectSound, winSound, loseSound, clickSound].forEach(sound => {
-        sound.current?.pause();
-      });
-    };
-  }, []);
 
   useEffect(() => {
     const savedProgress = localStorage.getItem(`capitale-${puzzleData.id}`);
@@ -427,16 +407,6 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
     });
   };
 
-  const resetGame = () => {
-    setAttempts([]);
-    setGameState('playing');
-    setGuess('');
-    setShowHint(false);
-    setShowSuggestions(false);
-    localStorage.removeItem(`capitale-${puzzleData.id}`);
-    playSound('click');
-  };
-
   const toggleHardMode = () => {
     setHardMode(!hardMode);
     playSound('click');
@@ -473,14 +443,14 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
             <div className="relative mb-6 rounded-lg overflow-hidden bg-gray-100" style={{ height: '200px' }}>
               {capitalImage ? (
                 <>
-                  <img
+                  <Image
                     src={capitalImage}
                     alt="Mystery capital city"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     style={{ opacity: revealPercentage / 100 }}
-                    onError={(e) => {
+                    onError={() => {
                       // If image fails to load, hide the entire section
-                      e.currentTarget.style.display = 'none';
                       setCapitalImage(null);
                       setHasNoImage(true);
                     }}
@@ -581,15 +551,18 @@ export default function CapitaleComponent({ initialData, allCapitals, currentDat
               <p>{attempts[attempts.length - 1].geographicHint}</p>
               {attempts[attempts.length - 1].silhouetteUrl && (
                 <div className="mt-2">
-                  <img 
-                    src={attempts[attempts.length - 1].silhouetteUrl} 
-                    alt="Country silhouette"
-                    className="max-w-full h-auto max-h-32 object-contain mx-auto"
-                    onError={(e) => {
-                      // Fallback if image fails to load
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
+                  <div className="relative h-32 w-full max-w-xs mx-auto">
+                    <Image 
+                      src={attempts[attempts.length - 1].silhouetteUrl ?? ''} 
+                      alt="Country silhouette"
+                      fill
+                      className="object-contain"
+                      onError={(e) => {
+                        // Fallback if image fails to load - hide the parent container
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  </div>
                   <p className="text-xs text-gray-500 text-center mt-1">
                     Hint source:{' '}
                     <a 

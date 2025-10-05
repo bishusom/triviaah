@@ -1,6 +1,6 @@
 'use client';
 import { event } from '@/lib/gtag';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/context/SoundContext';
 import commonStyles from '@styles/WordGames/WordGames.common.module.css';
@@ -50,13 +50,6 @@ interface GameConfig {
   };
 }
 
-interface DifficultyLevel {
-  difficulty: 'easy' | 'medium' | 'hard';
-  wordLength: [number, number];
-  games: number;
-  timeLimit: number;
-}
-
 interface ExtendedLevel {
   level: number;
   winThreshold: number;
@@ -91,8 +84,8 @@ export default function BoggleGame() {
 
   const timerInterval = useRef<NodeJS.Timeout| null>(null)
 
-  // Game configuration
-  const config: GameConfig = {
+  // Game configuration - wrapped in useMemo to prevent recreating on every render
+  const config: GameConfig = useMemo(() => ({
     gridSize: {
       easy: 4,
       medium: 5,
@@ -128,124 +121,67 @@ export default function BoggleGame() {
       medium: 0.35,
       hard: 0.3
     }
-  };
+  }), []);
 
-  const levels: DifficultyLevel[] = [
-    { difficulty: 'easy', wordLength: [4, 5], games: 3, timeLimit: 180 },
-    { difficulty: 'medium', wordLength: [5, 6], games: 3, timeLimit: 240 },
-    { difficulty: 'hard', wordLength: [6, 7], games: 3, timeLimit: 300 }
-  ];
-
-  // Common words for fallback
-  const commonWords = [
+  // Common words for fallback - wrapped in useMemo to prevent recreating on every render
+  const commonWords = useMemo(() => [
     'CAT', 'DOG', 'HAT', 'RUN', 'SUN', 'PEN', 'RED', 'BLUE', 'TREE', 'BIRD',
     'FISH', 'STAR', 'MOON', 'PLAY', 'BOOK', 'FOOD', 'GOOD', 'LOVE', 'HOME', 'TIME',
     'BALL', 'GAME', 'CARS', 'SHIP', 'WIND', 'RAIN', 'SNOW', 'FIRE', 'WAVE', 'HILL',
     'HOUSE', 'TABLE', 'CHAIR', 'WINDOW', 'DOOR', 'FLOOR'
-  ].map(word => word.toUpperCase());
+  ].map(word => word.toUpperCase()), []);
 
   const { isMuted } = useSound();
 
   const isTouchDevice = useRef(false);
 
-  // Initialize game on mount
-   useEffect(() => {
-    // Detect if it's a touch device
-    isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    
-    const checkGtag = setInterval(() => {
-      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        event({action: 'boggle_started', category: 'boggle',label: 'boggle'});
-        clearInterval(checkGtag);
-      }
-    }, 100)
-
-    const generateExtendedLevels = () => {
-      const levels: ExtendedLevel[] = [];
-      for (let i = 0; i < 20; i++) {
-        levels.push({
-          level: i + 5,
-          winThreshold: 300 + (i * 50),
-          timeLimit: Math.max(120, 300 - (i * 5)),
-          minWordLength: 3 + Math.floor(i / 5),
-          scoreMultiplier: 1 + (i * 0.1)
-        });
-      }
-      return levels;
-    };
-
-    setExtendedLevels(generateExtendedLevels());
-    loadGameState();
-    initGame();
-
-    // Prevent default touch behavior to avoid scrolling
-    const preventDefault = (e: TouchEvent) => {
-      if (e.touches.length > 1) {
-        e.preventDefault();
-      }
+  // Play sound
+  const playSound = useCallback((type: string) => {
+    if (isMuted) return;
+    const sounds: Record<string, string> = {
+      select: '/sounds/click.mp3',
+      correct: '/sounds/correct.mp3',
+      error: '/sounds/incorrect.mp3',
+      win: '/sounds/win.mp3',
+      shuffle: '/sounds/shuffle.mp3'
     };
     
-    document.addEventListener('touchmove', preventDefault, { passive: false });
-
-    return () => {
-          if (timerInterval.current) {
-            clearInterval(timerInterval.current);
-          }
-          document.removeEventListener('touchmove', preventDefault);
-        };
-      }, []);
-
-  // Regenerate grid when difficulty or level changes
-  useEffect(() => {
-    generateGrid();
-  }, [difficulty, currentLevel]);
-
-  // Add selection line effect
-  useEffect(() => {
-  const updateSelectionLine = () => {
-    const existingLines = document.querySelectorAll(`.${gameStyles.selectionLine}`);
-    existingLines.forEach(line => line.remove());
-
-    if (selectedCells.length < 2 || !gridElement.current) return;
-
-    const gridEl = gridElement.current;
-    const gridRect = gridEl.getBoundingClientRect();
-    const gridInner = gridEl.firstChild as HTMLElement;
-
-    for (let i = 0; i < selectedCells.length - 1; i++) {
-      const startCell = gridInner.children[selectedCells[i]] as HTMLElement;
-      const endCell = gridInner.children[selectedCells[i + 1]] as HTMLElement;
-
-      if (!startCell || !endCell) continue;
-
-      const startRect = startCell.getBoundingClientRect();
-      const endRect = endCell.getBoundingClientRect();
-
-      // Calculate positions relative to the grid container
-      const startX = startRect.left + startRect.width / 2 - gridRect.left;
-      const startY = startRect.top + startRect.height / 2 - gridRect.top;
-      const endX = endRect.left + endRect.width / 2 - gridRect.left;
-      const endY = endRect.top + endRect.height / 2 - gridRect.top;
-
-      const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
-      const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
-
-      const line = document.createElement('div');
-      line.className = gameStyles.selectionLine;
-      line.style.width = `${length}px`;
-      line.style.transform = `rotate(${angle}deg)`;
-      line.style.left = `${startX}px`;
-      line.style.top = `${startY}px`;
-      
-      gridEl.appendChild(line);
+    try {
+      const audio = new Audio(sounds[type]);
+      audio.play().catch(err => console.error(`Error playing ${type} sound:`, err));
+    } catch (error) {
+      console.error('Sound error:', error);
     }
-  };
+  }, [isMuted]);
 
-  updateSelectionLine();
-  }, [selectedCells, grid, gameStyles.selectionLine]);
+  // Confetti effect
+  const fireConfetti = useCallback((options = {}) => {
+    const defaults = {
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
+    };
+
+    confetti({
+      ...defaults,
+      ...options
+    });
+
+    if (Math.random() > 0.5) {
+      setTimeout(() => {
+        confetti({
+          ...defaults,
+          ...options,
+          angle: Math.random() * 180 - 90,
+          origin: { x: Math.random(), y: 0.6 }
+        });
+      }, 300);
+    }
+  }, []);
 
   // Load game state from localStorage
-  const loadGameState = () => {
+  const loadGameState = useCallback(() => {
     if (typeof window !== 'undefined') {
       const savedState = localStorage.getItem('boggleGameState');
       if (savedState) {
@@ -263,10 +199,10 @@ export default function BoggleGame() {
         }
       }
     }
-  };
+  }, []);
 
   // Save game state to localStorage
-  const saveGameState = () => {
+  const saveGameState = useCallback(() => {
     const gameState = {
       difficulty,
       consecutiveWins,
@@ -274,48 +210,10 @@ export default function BoggleGame() {
       currentExtendedLevel
     };
     localStorage.setItem('boggleGameState', JSON.stringify(gameState));
-  };
-
-  // Initialize game
-  const initGame = () => {
-    if (timerInterval.current !== null) {
-      window.clearInterval(timerInterval.current);
-      timerInterval.current = null;
-    }
-    
-    if (currentLevel >= 4 && extendedLevels[currentExtendedLevel]) {
-      setTimer(extendedLevels[currentExtendedLevel].timeLimit);
-    } else {
-      setTimer(config.timeLimit[difficulty]);
-    }
-    
-    setScore(0);
-    setFoundWords(new Set());
-    setSelectedCells([]);
-    setUsedLetters(new Set());
-    setWordCache(new Map());
-    setIsSelecting(false);
-
-    generateGrid();
-    startTimer();
-    updateScore();
-    updateLevelInfo();
-    updateTimer();
-
-    const minLen = currentLevel >= 4 
-      ? extendedLevels[currentExtendedLevel]?.minWordLength || config.minWordLength[difficulty]
-      : config.minWordLength[difficulty];
-      
-    const maxLen = config.maxWordLength[difficulty];
-    
-    showFeedback({
-      message: `How to Play Boggle: Find words by selecting adjacent letters.\nWords must be ${minLen}-${maxLen} letters long.\nScore ${config.scorePerLetter[difficulty]} points per letter. Reach ${currentLevel >= 4 ? extendedLevels[currentExtendedLevel]?.winThreshold : config.winThreshold[difficulty]} points to win!`,
-      type: 'info'
-    });
-  };
+  }, [difficulty, consecutiveWins, currentLevel, currentExtendedLevel]);
 
   // Generate game grid
-  const generateGrid = () => {
+  const generateGrid = useCallback(() => {
     const size = config.gridSize[difficulty];
     const vowels = 'AEIOU';
     const minVowels = Math.ceil(size * size * config.vowelPercentage[difficulty]);
@@ -372,144 +270,114 @@ export default function BoggleGame() {
     }
 
     setGrid(newGrid);
-  };
+  }, [difficulty, config, commonWords]);
 
-  // Handle cell interaction
-  const handleCellInteraction = (index: number, action: 'start' | 'continue' | 'end') => {
-    switch (action) {
-      case 'start':
-        setIsSelecting(true);
-        setSelectedCells([index]);
-        setUsedLetters(new Set([index]));
-        highlightAdjacentCells(index);
-        playSound('select');
-        break;
-        
-      case 'continue':
-        if (!isSelecting || selectedCells.length === 0) return;
-        if (usedLetters.has(index)) return;
-        
-        const lastIndex = selectedCells[selectedCells.length - 1];
-        if (isAdjacent(lastIndex, index)) {
-          setSelectedCells(prev => [...prev, index]);
-          setUsedLetters(prev => new Set(prev).add(index));
-          highlightAdjacentCells(index);
-        }
-        break;
-        
-      case 'end':
-        if (!isSelecting) return;
-        setIsSelecting(false);
-        
-        if (selectedCells.length >= 2) {
-          checkSelectedWord();
-        }
-        // Don't clear selectedCells here - let checkSelectedWord handle it
-        break;
+  // Show feedback
+  const showFeedback = useCallback(({ message, type }: { message: string; type: 'success' | 'error' | 'info' }) => {
+    setFeedback({ message, type });
+  }, []);
+
+  // Update timer display
+  const updateTimer = useCallback(() => {
+    if (!timeElement.current) return;
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer % 60;
+    timeElement.current.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }, [timer]);
+
+  // Update score display
+  const updateScore = useCallback(() => {
+    if (!scoreElement.current) return;
+    scoreElement.current.textContent = `Score: ${score}`;
+  }, [score]);
+
+  // Update level info
+  const updateLevelInfo = useCallback(() => {
+    if (!levelElement.current || !gamesRemainingElement.current) return;
+    
+    if (currentLevel >= 4) {
+      levelElement.current.textContent = `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`;
+      gamesRemainingElement.current.textContent = `Next level: ${extendedLevels[currentExtendedLevel]?.winThreshold || 300} points`;
+    } else {
+      levelElement.current.textContent = `Level: ${currentLevel} (${difficulty})`;
+      if (difficulty !== 'hard') {
+        const winsNeeded = 3 - consecutiveWins;
+        gamesRemainingElement.current.textContent = winsNeeded > 0
+          ? `Wins to next difficulty: ${winsNeeded}`
+          : 'Ready to advance difficulty!';
+      } else {
+        gamesRemainingElement.current.textContent = 'Max difficulty reached!';
+      }
     }
-  };
+  }, [currentLevel, difficulty, consecutiveWins, extendedLevels, currentExtendedLevel]);
 
-  // Check if two cells are adjacent
-  const isAdjacent = (index1: number, index2: number) => {
-    const size = config.gridSize[difficulty];
-    const pos1 = { row: Math.floor(index1 / size), col: index1 % size };
-    const pos2 = { row: Math.floor(index2 / size), col: index2 % size };
+  // Start timer
+  const startTimer = useCallback(() => {
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current);
+    }
 
-    const rowDiff = Math.abs(pos2.row - pos1.row);
-    const colDiff = Math.abs(pos2.col - pos1.col);
+    timerInterval.current = setInterval(() => {
+      setTimer(prev => {
+        if (prev <= 0) {
+          clearInterval(timerInterval.current!);
+          showFeedback({ message: 'Time\'s up!', type: 'error' });
+          setTimeout(() => initGameRef.current(), 2000);
+          return 0;
+        }
+        return prev - 1;
+      });
+      updateTimer();
+    }, 1000);
+  }, [updateTimer, showFeedback]);
 
-    return (rowDiff <= 1 && colDiff <= 1) && !(rowDiff === 0 && colDiff === 0);
-  };
-
-  // Highlight adjacent cells
-  const highlightAdjacentCells = (currentIndex: number) => {
-    // This would be handled by CSS classes in the component
-  };
-
-  // Check selected word
-  const checkSelectedWord = async () => {
-    const minWordLength = currentLevel >= 4 
-    ? extendedLevels[currentExtendedLevel]?.minWordLength || config.minWordLength[difficulty]
-    : config.minWordLength[difficulty];
-
-  if (selectedCells.length < minWordLength) {
-    showFeedback({ message: `Word too short (min ${minWordLength} letters)`, type: 'error' });
+  // Initialize game
+  const initGame = useCallback(() => {
+    if (timerInterval.current !== null) {
+      window.clearInterval(timerInterval.current);
+      timerInterval.current = null;
+    }
+    
+    if (currentLevel >= 4 && extendedLevels[currentExtendedLevel]) {
+      setTimer(extendedLevels[currentExtendedLevel].timeLimit);
+    } else {
+      setTimer(config.timeLimit[difficulty]);
+    }
+    
+    setScore(0);
+    setFoundWords(new Set());
     setSelectedCells([]);
-    return;
-  }
-
-  const selectedWord = selectedCells.map(index => grid[index].letter).join('');
-    if (foundWords.has(selectedWord)) {
-      showFeedback({ message: 'Word already found', type: 'error' });
-      setSelectedCells([]);
-      return;
-    }
-
-    try {
-      let isValid = false;
-      if (wordCache.has(selectedWord.toLowerCase())) {
-        isValid = wordCache.get(selectedWord.toLowerCase())!;
-      } else {
-        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${selectedWord.toLowerCase()}`);
-        isValid = response.ok;
-        setWordCache(prev => new Map(prev).set(selectedWord.toLowerCase(), isValid));
-      }
-
-      if (isValid) {
-        const newFoundWords = new Set(foundWords);
-        newFoundWords.add(selectedWord);
-        setFoundWords(newFoundWords);
-
-        const scoreMultiplier = currentLevel >= 4 
-          ? extendedLevels[currentExtendedLevel]?.scoreMultiplier || 1 
-          : 1;
-        
-        const points = Math.floor(selectedWord.length * config.scorePerLetter[difficulty] * scoreMultiplier);
-        setScore(prev => prev + points);
-
-        setGrid(prev => 
-          prev.map((cell, idx) => 
-            selectedCells.includes(idx) ? { ...cell, found: true } : cell
-          )
-        );
-
-        showFeedback({ message: `Found: ${selectedWord} (+${points} points)`, type: 'success' });
-        playSound('correct');
-
-        const winThreshold = currentLevel >= 4 
-          ? extendedLevels[currentExtendedLevel]?.winThreshold || config.winThreshold[difficulty]
-          : config.winThreshold[difficulty];
-
-        if (score + points >= winThreshold) {
-          handleGameWin();
-        }
-      } else {
-        showFeedback({ message: 'Not a valid word', type: 'error' });
-        playSound('error');
-      }
-    } catch (error) {
-      console.error('Error checking word:', error);
-      if (commonWords.includes(selectedWord)) {
-        const newFoundWords = new Set(foundWords);
-        newFoundWords.add(selectedWord);
-        setFoundWords(newFoundWords);
-
-        const points = selectedWord.length * config.scorePerLetter[difficulty];
-        setScore(prev => prev + points);
-        showFeedback({ message: `Found: ${selectedWord} (+${points} points)`, type: 'success' });
-        playSound('found');
-      } else {
-        showFeedback({ message: 'Error checking word, try another', type: 'error' });
-        playSound('error');
-      }
-    }
-
-    setSelectedCells([]);
+    setUsedLetters(new Set());
+    setWordCache(new Map());
     setIsSelecting(false);
-  };
+
+    generateGrid();
+    startTimer();
+    updateScore();
+    updateLevelInfo();
+    updateTimer();
+
+    const minLen = currentLevel >= 4 
+      ? extendedLevels[currentExtendedLevel]?.minWordLength || config.minWordLength[difficulty]
+      : config.minWordLength[difficulty];
+      
+    const maxLen = config.maxWordLength[difficulty];
+    
+    showFeedback({
+      message: `How to Play Boggle: Find words by selecting adjacent letters.\nWords must be ${minLen}-${maxLen} letters long.\nScore ${config.scorePerLetter[difficulty]} points per letter. Reach ${currentLevel >= 4 ? extendedLevels[currentExtendedLevel]?.winThreshold : config.winThreshold[difficulty]} points to win!`,
+      type: 'info'
+    });
+  }, [currentLevel, extendedLevels, currentExtendedLevel, config, difficulty, generateGrid, startTimer, updateScore, updateLevelInfo, updateTimer, showFeedback]);
+
+  // Store initGame in ref for timer callback
+  const initGameRef = useRef(initGame);
+  
+  useEffect(() => {
+    initGameRef.current = initGame;
+  }, [initGame]);
 
   // Handle game win
-  const handleGameWin = () => {
+  const handleGameWin = useCallback(() => {
     const messages = [
       "Amazing! You're crushing it!",
       "Incredible skills!",
@@ -586,67 +454,235 @@ export default function BoggleGame() {
 
     // Increase delay to 5 seconds to let players see the message
     setTimeout(() => {
-      initGame();
+      initGameRef.current();
     }, 5000);
+  }, [consecutiveWins, currentLevel, currentExtendedLevel, difficulty, extendedLevels, fireConfetti, playSound, saveGameState, showFeedback]);
+
+  // Initialize game on mount
+  useEffect(() => {
+    // Detect if it's a touch device
+    isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({action: 'boggle_started', category: 'boggle',label: 'boggle'});
+        clearInterval(checkGtag);
+      }
+    }, 100)
+
+    const generateExtendedLevels = () => {
+      const levels: ExtendedLevel[] = [];
+      for (let i = 0; i < 20; i++) {
+        levels.push({
+          level: i + 5,
+          winThreshold: 300 + (i * 50),
+          timeLimit: Math.max(120, 300 - (i * 5)),
+          minWordLength: 3 + Math.floor(i / 5),
+          scoreMultiplier: 1 + (i * 0.1)
+        });
+      }
+      return levels;
+    };
+
+    setExtendedLevels(generateExtendedLevels());
+    loadGameState();
+    
+    // Use timeout to call initGame after state is loaded
+    setTimeout(() => {
+      initGameRef.current();
+    }, 0);
+
+    // Prevent default touch behavior to avoid scrolling
+    const preventDefault = (e: TouchEvent) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    };
+    
+    document.addEventListener('touchmove', preventDefault, { passive: false });
+
+    return () => {
+      if (timerInterval.current) {
+        clearInterval(timerInterval.current);
+      }
+      document.removeEventListener('touchmove', preventDefault);
+    };
+  }, [loadGameState]);
+
+  // Regenerate grid when difficulty or level changes
+  useEffect(() => {
+    generateGrid();
+  }, [generateGrid]);
+
+  // Add selection line effect
+  useEffect(() => {
+    const updateSelectionLine = () => {
+      const existingLines = document.querySelectorAll(`.${gameStyles.selectionLine}`);
+      existingLines.forEach(line => line.remove());
+
+      if (selectedCells.length < 2 || !gridElement.current) return;
+
+      const gridEl = gridElement.current;
+      const gridRect = gridEl.getBoundingClientRect();
+      const gridInner = gridEl.firstChild as HTMLElement;
+
+      for (let i = 0; i < selectedCells.length - 1; i++) {
+        const startCell = gridInner.children[selectedCells[i]] as HTMLElement;
+        const endCell = gridInner.children[selectedCells[i + 1]] as HTMLElement;
+
+        if (!startCell || !endCell) continue;
+
+        const startRect = startCell.getBoundingClientRect();
+        const endRect = endCell.getBoundingClientRect();
+
+        // Calculate positions relative to the grid container
+        const startX = startRect.left + startRect.width / 2 - gridRect.left;
+        const startY = startRect.top + startRect.height / 2 - gridRect.top;
+        const endX = endRect.left + endRect.width / 2 - gridRect.left;
+        const endY = endRect.top + endRect.height / 2 - gridRect.top;
+
+        const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+        const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+
+        const line = document.createElement('div');
+        line.className = gameStyles.selectionLine;
+        line.style.width = `${length}px`;
+        line.style.transform = `rotate(${angle}deg)`;
+        line.style.left = `${startX}px`;
+        line.style.top = `${startY}px`;
+        
+        gridEl.appendChild(line);
+      }
+    };
+
+    updateSelectionLine();
+  }, [selectedCells, grid]);
+
+  // Handle cell interaction
+  const handleCellInteraction = (index: number, action: 'start' | 'continue' | 'end') => {
+    switch (action) {
+      case 'start':
+        setIsSelecting(true);
+        setSelectedCells([index]);
+        setUsedLetters(new Set([index]));
+        playSound('select');
+        break;
+        
+      case 'continue':
+        if (!isSelecting || selectedCells.length === 0) return;
+        if (usedLetters.has(index)) return;
+        
+        const lastIndex = selectedCells[selectedCells.length - 1];
+        if (isAdjacent(lastIndex, index)) {
+          setSelectedCells(prev => [...prev, index]);
+          setUsedLetters(prev => new Set(prev).add(index));
+        }
+        break;
+        
+      case 'end':
+        if (!isSelecting) return;
+        setIsSelecting(false);
+        
+        if (selectedCells.length >= 2) {
+          checkSelectedWord();
+        }
+        // Don't clear selectedCells here - let checkSelectedWord handle it
+        break;
+    }
   };
 
-  // Start timer
-  const startTimer = () => {
-    if (timerInterval.current) {
-      clearInterval(timerInterval.current);
+  // Check if two cells are adjacent
+  const isAdjacent = (index1: number, index2: number) => {
+    const size = config.gridSize[difficulty];
+    const pos1 = { row: Math.floor(index1 / size), col: index1 % size };
+    const pos2 = { row: Math.floor(index2 / size), col: index2 % size };
+
+    const rowDiff = Math.abs(pos2.row - pos1.row);
+    const colDiff = Math.abs(pos2.col - pos1.col);
+
+    return (rowDiff <= 1 && colDiff <= 1) && !(rowDiff === 0 && colDiff === 0);
+  };
+
+  // Check selected word
+  const checkSelectedWord = async () => {
+    const minWordLength = currentLevel >= 4 
+    ? extendedLevels[currentExtendedLevel]?.minWordLength || config.minWordLength[difficulty]
+    : config.minWordLength[difficulty];
+
+  if (selectedCells.length < minWordLength) {
+    showFeedback({ message: `Word too short (min ${minWordLength} letters)`, type: 'error' });
+    setSelectedCells([]);
+    return;
+  }
+
+  const selectedWord = selectedCells.map(index => grid[index].letter).join('');
+    if (foundWords.has(selectedWord)) {
+      showFeedback({ message: 'Word already found', type: 'error' });
+      setSelectedCells([]);
+      return;
     }
 
-    timerInterval.current = setInterval(() => {
-      setTimer(prev => {
-        if (prev <= 0) {
-          clearInterval(timerInterval.current!);
-          showFeedback({ message: 'Time\'s up!', type: 'error' });
-          setTimeout(initGame, 2000);
-          return 0;
-        }
-        return prev - 1;
-      });
-      updateTimer();
-    }, 1000);
-  };
-
-  // Update timer display
-  const updateTimer = () => {
-    if (!timeElement.current) return;
-    const minutes = Math.floor(timer / 60);
-    const seconds = timer % 60;
-    timeElement.current.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  // Update score display
-  const updateScore = () => {
-    if (!scoreElement.current) return;
-    scoreElement.current.textContent = `Score: ${score}`;
-  };
-
-  // Update level info
-  const updateLevelInfo = () => {
-    if (!levelElement.current || !gamesRemainingElement.current) return;
-    
-    if (currentLevel >= 4) {
-      levelElement.current.textContent = `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`;
-      gamesRemainingElement.current.textContent = `Next level: ${extendedLevels[currentExtendedLevel]?.winThreshold || 300} points`;
-    } else {
-      levelElement.current.textContent = `Level: ${currentLevel} (${difficulty})`;
-      if (difficulty !== 'hard') {
-        const winsNeeded = 3 - consecutiveWins;
-        gamesRemainingElement.current.textContent = winsNeeded > 0
-          ? `Wins to next difficulty: ${winsNeeded}`
-          : 'Ready to advance difficulty!';
+    try {
+      let isValid = false;
+      if (wordCache.has(selectedWord.toLowerCase())) {
+        isValid = wordCache.get(selectedWord.toLowerCase())!;
       } else {
-        gamesRemainingElement.current.textContent = 'Max difficulty reached!';
+        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${selectedWord.toLowerCase()}`);
+        isValid = response.ok;
+        setWordCache(prev => new Map(prev).set(selectedWord.toLowerCase(), isValid));
+      }
+
+      if (isValid) {
+        const newFoundWords = new Set(foundWords);
+        newFoundWords.add(selectedWord);
+        setFoundWords(newFoundWords);
+
+        const scoreMultiplier = currentLevel >= 4 
+          ? extendedLevels[currentExtendedLevel]?.scoreMultiplier || 1 
+          : 1;
+        
+        const points = Math.floor(selectedWord.length * config.scorePerLetter[difficulty] * scoreMultiplier);
+        setScore(prev => prev + points);
+
+        setGrid(prev => 
+          prev.map((cell, idx) => 
+            selectedCells.includes(idx) ? { ...cell, found: true } : cell
+          )
+        );
+
+        showFeedback({ message: `Found: ${selectedWord} (+${points} points)`, type: 'success' });
+        playSound('correct');
+
+        const winThreshold = currentLevel >= 4 
+          ? extendedLevels[currentExtendedLevel]?.winThreshold || config.winThreshold[difficulty]
+          : config.winThreshold[difficulty];
+
+        if (score + points >= winThreshold) {
+          handleGameWin();
+        }
+      } else {
+        showFeedback({ message: 'Not a valid word', type: 'error' });
+        playSound('error');
+      }
+    } catch (error) {
+      console.error('Error checking word:', error);
+      if (commonWords.includes(selectedWord)) {
+        const newFoundWords = new Set(foundWords);
+        newFoundWords.add(selectedWord);
+        setFoundWords(newFoundWords);
+
+        const points = selectedWord.length * config.scorePerLetter[difficulty];
+        setScore(prev => prev + points);
+        showFeedback({ message: `Found: ${selectedWord} (+${points} points)`, type: 'success' });
+        playSound('correct');
+      } else {
+        showFeedback({ message: 'Error checking word, try another', type: 'error' });
+        playSound('error');
       }
     }
-  };
 
-  // Show feedback
-  const showFeedback = ({ message, type }: { message: string; type: 'success' | 'error' | 'info' }) => {
-    setFeedback({ message, type });
+    setSelectedCells([]);
+    setIsSelecting(false);
   };
 
   // Handle new game
@@ -666,51 +702,6 @@ export default function BoggleGame() {
       showFeedback({ message: `Hint: Try finding a word starting with ${hint[0]}`, type: 'success' });
     } else {
       showFeedback({ message: "No hints available", type: 'error' });
-    }
-  };
-
-  // Play sound
-  const playSound = (type: string) => {
-    if (isMuted) return;
-    const sounds: Record<string, string> = {
-      select: '/sounds/click.mp3',
-      correct: '/sounds/correct.mp3',
-      error: '/sounds/incorrect.mp3',
-      win: '/sounds/win.mp3',
-      shuffle: '/sounds/shuffle.mp3'
-    };
-    
-    try {
-      const audio = new Audio(sounds[type]);
-      audio.play().catch(err => console.error(`Error playing ${type} sound:`, err));
-    } catch (error) {
-      console.error('Sound error:', error);
-    }
-  };
-
-  // Confetti effect
-  const fireConfetti = (options = {}) => {
-    const defaults = {
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
-    };
-
-    confetti({
-      ...defaults,
-      ...options
-    });
-
-    if (Math.random() > 0.5) {
-      setTimeout(() => {
-        confetti({
-          ...defaults,
-          ...options,
-          angle: Math.random() * 180 - 90,
-          origin: { x: Math.random(), y: 0.6 }
-        });
-      }, 300);
     }
   };
 

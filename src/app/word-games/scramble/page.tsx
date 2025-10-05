@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import MuteButton from '@/components/MuteButton';
-import ScrambleGame from '@/components/word-games/scramble/ScrambleGame';
+import ScrambleGame from '@/components/word-games/ScrambleGame';
 
 export const metadata: Metadata = {
   title: 'Word Scramble Game | Triviaah',

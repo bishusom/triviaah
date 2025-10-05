@@ -1,5 +1,5 @@
 import MuteButton from '@/components/MuteButton';
-import WordSearchGame from '@/components/word-games/word-search/WordSearchGame';
+import WordSearchGame from '@/components/word-games/WordSearchGame';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

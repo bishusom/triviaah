@@ -5,15 +5,13 @@ import { event } from '@/lib/gtag';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
 import { addHistoridleResult } from '@/lib/brainwave/historidle/historidle-sb';
-import { checkHistoridleGuess, getProgressiveHint, validateHistoricalGuess, type HistoridleData, type HistoridleGuessResult } from '@/lib/brainwave/historidle/historidle-logic';
+import { checkHistoridleGuess, 
+        validateHistoricalGuess,
+        type HistoridleData, 
+        type HistoridleGuessResult } from '@/lib/brainwave/historidle/historidle-logic';
 
 interface HistoridleComponentProps {
   initialData: HistoridleData;
-}
-
-interface HistoridleSavedProgress {
-  attempts: HistoridleGuessResult[];
-  gameState: 'playing' | 'won' | 'lost';
 }
 
 // EnhancedProgressiveHint component
@@ -359,7 +357,7 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
     
     try {
       // Validate the historical guess
-      const validation = await validateHistoricalGuess(normalizedGuess, puzzleData);
+      const validation = await validateHistoricalGuess(normalizedGuess);
       
       if (!validation.isValid) {
         setErrorMessage(validation.hint || 'Invalid guess');

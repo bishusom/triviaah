@@ -290,7 +290,6 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
   const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing');
   const [shareMessage, setShareMessage] = useState('');
   const [showHistory, setShowHistory] = useState(false);
-  const [showLastGuess, setShowLastGuess] = useState(false);
   const [categoryImage, setCategoryImage] = useState<string | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -515,16 +514,6 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
     });
   };
 
-  const resetGame = () => {
-    setAttempts([]);
-    setGameState('playing');
-    setSelectedOption(null);
-    setShowHistory(false);
-    setShowLastGuess(false);
-    localStorage.removeItem(`trordle-${puzzleData.id}`);
-    playSound('click');
-  };
-
   const toggleHistory = () => {
     setShowHistory(!showHistory);
     playSound('click');
@@ -618,9 +607,9 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
               ))}
             </div>
             
-            {(showHistory || showLastGuess) && (
+            {showHistory && (
               <div className="space-y-3 mt-4">
-                {(showLastGuess ? attempts.slice(-1) : attempts).slice().reverse().map((attempt, index) => {
+                {attempts.slice().reverse().map((attempt, index) => {
                   const correctAnswer = puzzleData.answer;
                   
                   return (

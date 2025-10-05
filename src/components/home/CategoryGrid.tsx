@@ -8,7 +8,6 @@ import {
   MdMusicNote 
 } from "react-icons/md";
 import { BiWorld } from "react-icons/bi";
-import { FaTheaterMasks } from "react-icons/fa";
 
 const categories = [
   { 

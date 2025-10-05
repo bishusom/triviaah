@@ -9,10 +9,10 @@ import { useCoverArt } from '@/hooks/useCoverArt';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { SonglePuzzle, addSongleResult } from '@/lib/brainwave/songle/songle-sb';
 import { checkSongleGuess, SongleGuessResult, getProgressiveClues } from '@/lib/brainwave/songle/songle-logic';
+import Image from 'next/image';
 
 interface SongleComponentProps {
   initialData: SonglePuzzle;
-  currentDate: Date;
 }
 
 // Block component for the pixelated reveal
@@ -49,7 +49,7 @@ const PosterBlock = ({
   );
 };
 
-export default function SongleComponent({ initialData, currentDate }: SongleComponentProps) {
+export default function SongleComponent({ initialData }: SongleComponentProps) {
   const [puzzleData] = useState(initialData);
   const [guess, setGuess] = useState('');
   const [attempts, setAttempts] = useState<SongleGuessResult[]>([]);
@@ -348,9 +348,6 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
   const triesLeft = 6 - attempts.length;
   const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
 
-  // Get progressive clues based on attempt number
-  const clues = getProgressiveClues(puzzleData, attempts.length);
-
   // Enhanced progressive hints component
   const EnhancedProgressiveHint = () => {
     if (attempts.length === 0) return null;
@@ -510,14 +507,6 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
     return char === ' ' || revealedLyricIndices.includes(index);
   };
 
-  // Helper function to ensure status array matches guess length
-  const getLetterStatus = (attempt: SongleGuessResult, index: number) => {
-    if (index < attempt.statuses.length) {
-      return attempt.statuses[index];
-    }
-    return 'absent'; // Default status for extra letters
-  };
-
   return (
     <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
       <canvas 
@@ -550,10 +539,13 @@ export default function SongleComponent({ initialData, currentDate }: SongleComp
                 className="relative rounded-lg overflow-hidden bg-gray-100" 
                 style={{ height: `${containerHeight}px`, width: `${containerWidth}px` }}
               >
-                <img
+                <Image
                   src={imageUrl}
                   alt={`${puzzleData.targetTitle} cover art`}
-                  className="w-full h-full object-cover absolute inset-0 z-10"
+                  fill
+                  className="object-cover absolute inset-0 z-10"
+                  sizes="120px"
+                  priority={false}
                 />
                 {/* Block overlay container */}
                 <div className="absolute inset-0 z-20">

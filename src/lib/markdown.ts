@@ -22,10 +22,6 @@ interface ContentfulAsset {
   };
 }
 
-interface ContentfulEntry {
-  fields: Record<string, unknown>;
-}
-
 const options = {
   renderNode: {
     [BLOCKS.EMBEDDED_ASSET]: (node: Block | Inline) => {

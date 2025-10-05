@@ -5,14 +5,10 @@ import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
 import { addPlotleResult } from '@/lib/brainwave/plotle/plotle-sb';
 import { checkLetterGuess, validateMovieGuess, type PlotleData, type PlotleGuessResult } from '@/lib/brainwave/plotle/plotle-logic';
+import Image from 'next/image';
 
 interface PlotleComponentProps {
   initialData: PlotleData;
-}
-
-interface PlotleSavedProgress {
-  attempts: PlotleGuessResult[];
-  gameState: 'playing' | 'won' | 'lost';
 }
 
 // EnhancedProgressiveHint component
@@ -319,26 +315,6 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
 
   // Sound effects
   const { isMuted } = useSound();
-  const correctSound = useRef<HTMLAudioElement | null>(null);
-  const incorrectSound = useRef<HTMLAudioElement | null>(null);
-  const winSound = useRef<HTMLAudioElement | null>(null);
-  const loseSound = useRef<HTMLAudioElement | null>(null);
-  const clickSound = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    // Initialize sound effects
-    correctSound.current = new Audio('/sounds/correct.mp3');
-    incorrectSound.current = new Audio('/sounds/incorrect.mp3');
-    winSound.current = new Audio('/sounds/win.mp3');
-    loseSound.current = new Audio('/sounds/lose.mp3');
-    clickSound.current = new Audio('/sounds/click.mp3');
-
-    return () => {
-      [correctSound, incorrectSound, winSound, loseSound, clickSound].forEach(sound => {
-        sound.current?.pause();
-      });
-    };
-  }, []);
 
   useEffect(() => {
     const savedProgress = localStorage.getItem(`plotle-${puzzleData.id}`);
@@ -371,7 +347,7 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
     fetchPoster();
   }, [puzzleData.targetTitle]);
 
-  // Update reveal percentage and blocks based on attempts
+  // Update reveal percentage and blocks based on attempts - FIXED: added totalBlocks dependency
   useEffect(() => {
     let newReveal = 0;
     if (attempts.length > 0 && gameState === 'playing') {
@@ -385,7 +361,7 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
     const numToReveal = Math.floor(totalBlocks * (newReveal / 100));
     const newRevealed = blockRevealOrderRef.current.slice(0, numToReveal);
     setRevealedBlocks(newRevealed);
-  }, [attempts.length, gameState]);
+  }, [attempts.length, gameState, totalBlocks]);
 
   const playSound = useCallback((soundType: 'correct' | 'incorrect' | 'win' | 'lose' | 'click') => {
     if (isMuted) return;
@@ -520,14 +496,15 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
     });
   };
 
-  const resetGame = () => {
-    setAttempts([]);
-    setGameState('playing');
-    setGuess('');
-    setRevealedBlocks([]);
-    localStorage.removeItem(`plotle-${puzzleData.id}`);
-    playSound('click');
-  };
+  // Remove unused resetGame function
+  // const resetGame = () => {
+  //   setAttempts([]);
+  //   setGameState('playing');
+  //   setGuess('');
+  //   setRevealedBlocks([]);
+  //   localStorage.removeItem(`plotle-${puzzleData.id}`);
+  //   playSound('click');
+  // };
 
   const triesLeft = 6 - attempts.length;
   const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
@@ -573,10 +550,11 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
             >
               {moviePoster ? (
                 <>
-                  <img
+                  <Image
                     src={moviePoster}
                     alt="Movie poster"
-                    className="w-full h-full object-cover absolute inset-0 z-10"
+                    fill
+                    className="object-cover absolute inset-0 z-10"
                   />
                   {/* Block overlay container */}
                   <div className="absolute inset-0 z-20">

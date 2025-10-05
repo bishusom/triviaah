@@ -9,18 +9,13 @@ import { addLiteraleResult } from '@/lib/brainwave/literale/literale-sb';
 import { 
   checkLetterGuess, 
   validateBookGuess, 
-  getRevealedClues,
   type LiteraleData, 
   type LiteraleGuessResult 
 } from '@/lib/brainwave/literale/literale-logic';
+import Image from 'next/image';
 
 interface LiteraleComponentProps {
   initialData: LiteraleData;
-}
-
-interface LiteraleSavedProgress {
-  attempts: LiteraleGuessResult[];
-  gameState: 'playing' | 'won' | 'lost';
 }
 
 // ProgressiveHint component for Literale
@@ -246,9 +241,9 @@ async function fetchBookCover(puzzleData: LiteraleData): Promise<string | null> 
   try {
     const cover = puzzleData.imageUrl;
     if (cover) {
-      // Test load
+      // Test load - FIXED: use window.Image
       await new Promise((resolve, reject) => {
-        const img = new Image();
+        const img = new window.Image();
         img.src = cover!;
         img.onload = resolve;
         img.onerror = reject;
@@ -260,7 +255,7 @@ async function fetchBookCover(puzzleData: LiteraleData): Promise<string | null> 
     const apiCover = await getBookCover(puzzleData.targetTitle, puzzleData.validationHints.author);
     if (apiCover) {
       await new Promise((resolve, reject) => {
-        const img = new Image();
+        const img = new window.Image();
         img.src = apiCover;
         console.log('Fetched cover from API:', apiCover);
         img.onload = resolve;
@@ -396,7 +391,7 @@ export default function LiteraleComponent({ initialData }: LiteraleComponentProp
     }
   }, [attempts, gameState, puzzleData.id]);
 
-  // Update reveal percentage and blocks (exact match to Plotle)
+  // Update reveal percentage and blocks (exact match to Plotle) - FIXED: added totalBlocks dependency
   useEffect(() => {
     let newReveal = 0;
     if (attempts.length > 0 && gameState === 'playing') {
@@ -409,7 +404,7 @@ export default function LiteraleComponent({ initialData }: LiteraleComponentProp
     const numToReveal = Math.floor(totalBlocks * (newReveal / 100));
     const newRevealed = blockRevealOrderRef.current.slice(0, numToReveal);
     setRevealedBlocks(newRevealed);
-  }, [attempts.length, gameState]);
+  }, [attempts.length, gameState, totalBlocks]);
 
   const triggerConfetti = () => {
     if (confettiCanvasRef.current) {
@@ -521,14 +516,15 @@ export default function LiteraleComponent({ initialData }: LiteraleComponentProp
     });
   };
 
-  const resetGame = () => {
-    setAttempts([]);
-    setGameState('playing');
-    setGuess('');
-    setRevealedBlocks([]);
-    localStorage.removeItem(`literale-${puzzleData.id}`);
-    playSound('click');
-  };
+  // Remove unused resetGame function
+  // const resetGame = () => {
+  //   setAttempts([]);
+  //   setGameState('playing');
+  //   setGuess('');
+  //   setRevealedBlocks([]);
+  //   localStorage.removeItem(`literale-${puzzleData.id}`);
+  //   playSound('click');
+  // };
 
   const triesLeft = 6 - attempts.length;
   const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
@@ -571,10 +567,11 @@ export default function LiteraleComponent({ initialData }: LiteraleComponentProp
             >
               {bookImage ? (
                 <>
-                  <img
+                  <Image
                     src={bookImage}
                     alt="Book Cover"
-                    className="w-full h-full object-cover absolute inset-0 z-10"
+                    fill
+                    className="object-cover absolute inset-0 z-10"
                   />
                   {/* Block overlay - same as Plotle */}
                   <div className="absolute inset-0 z-20">

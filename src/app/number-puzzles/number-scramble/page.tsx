@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import MuteButton from '@/components/MuteButton';
-import ScramblePuzzle from '@/components/number-puzzles/scramble/ScramblePuzzle';
+import ScramblePuzzle from '@/components/number-puzzles/ScramblePuzzle';
 
 
 

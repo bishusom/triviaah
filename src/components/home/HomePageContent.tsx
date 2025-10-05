@@ -1,6 +1,6 @@
 // components/home/HomePageContent.tsx (with floating CTA addition)
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Ads from '@/components/Ads';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
@@ -10,9 +10,12 @@ import { DAILY_QUIZZES, ADDITIONAL_SECTIONS, BRAIN_WAVES } from '@/../data/homeC
 import CollapsibleSection from '@/components/home/CollapsibleSection';
 
 export default function HomePageContent() {
-  const [isAboveTheFoldLoaded, setIsAboveTheFoldLoaded] = useState(false);
-  const [showFloatingCTA, setShowFloatingCTA] = useState(false);
+  // Remove unused state variables
+  // const [isAboveTheFoldLoaded, setIsAboveTheFoldLoaded] = useState(false);
+  // const [showFloatingCTA, setShowFloatingCTA] = useState(false);
 
+  // Remove unused effects
+  /*
   useEffect(() => {
     // Mark above-the-fold content as loaded after a short delay
     const timer = setTimeout(() => {
@@ -35,6 +38,7 @@ export default function HomePageContent() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  */
 
   // Add this effect to prevent auto ad injection in specific sections
   useEffect(() => {

@@ -1,5 +1,5 @@
 import MuteButton from '@/components/MuteButton';
-import BoggleGame from '@/components/word-games/boggle/BoggleGame';
+import BoggleGame from '@/components/word-games/BoggleGame';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
 import MuteButton from '@/components/MuteButton';
-import NumberSequenceGame from "@/components/number-puzzles/number-sequence/NumberSequenceGame";
+import NumberSequenceGame from "@/components/number-puzzles/NumberSequenceGame";
 
 
 export default function NumberSequencePage() {

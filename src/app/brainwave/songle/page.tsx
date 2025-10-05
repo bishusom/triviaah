@@ -169,7 +169,7 @@ export default function SonglePage() {
         </div>
         <p className="text-gray-600 text-center mb-6">Guess the song from clues like lyrics, artist, and genre!</p>
         
-        <SongleComponent initialData={songleData} currentDate={currentDate} />
+        <SongleComponent initialData={songleData} />
       </div>
     </div>
   );

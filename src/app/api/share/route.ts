@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const total = searchParams.get('total');
   const category = searchParams.get('category');
   const time = searchParams.get('time');
-  const fbclid = searchParams.get('fbclid');
+  //const fbclid = searchParams.get('fbclid');
   const isFacebookCrawler = request.headers.get('user-agent')?.includes('facebookexternalhit') || 
                            request.headers.get('user-agent')?.includes('Facebot');
 

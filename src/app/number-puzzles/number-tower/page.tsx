@@ -1,5 +1,5 @@
 import MuteButton from '@/components/MuteButton';
-import NumberTowerGame from '@/components/number-puzzles/number-tower/NumberTowerGame';
+import NumberTowerGame from '@/components/number-puzzles/NumberTowerGame';
 
 export default function NumberTowerPage() {
   return (

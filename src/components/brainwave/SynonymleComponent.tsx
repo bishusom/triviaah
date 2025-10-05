@@ -20,13 +20,8 @@ interface SynonymleComponentProps {
   initialData: SynonymleData;
 }
 
-interface SynonymleSavedProgress {
-  attempts: SynonymleGuessResult[];
-  gameState: 'playing' | 'won' | 'lost';
-}
-
 // EnhancedProgressiveHint component for Synonymle
-const EnhancedProgressiveHint = ({ attempts, puzzleData }: { attempts: SynonymleGuessResult[], puzzleData: SynonymleData }) => {
+const EnhancedProgressiveHint = ({ attempts }: { attempts: SynonymleGuessResult[] }) => {
   if (attempts.length === 0) return null;
   
   const latestAttempt = attempts[attempts.length - 1];
@@ -455,14 +450,6 @@ export default function SynonymleComponent({ initialData }: SynonymleComponentPr
     });
   };
 
-  const resetGame = () => {
-    setAttempts([]);
-    setGameState('playing');
-    setGuess('');
-    localStorage.removeItem(`synonymle-${puzzleData.id}`);
-    playSound('click');
-  };
-
   const triesLeft = 6 - attempts.length;
   const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
 
@@ -507,7 +494,7 @@ export default function SynonymleComponent({ initialData }: SynonymleComponentPr
         {gameState === 'playing' && (
           <>
             {/* Enhanced progressive hints */}
-            <EnhancedProgressiveHint attempts={attempts} puzzleData={puzzleData} />
+            <EnhancedProgressiveHint attempts={attempts} />
             
             {/* Validation hints */}
             <ValidationHints puzzleData={puzzleData} attempts={attempts} />

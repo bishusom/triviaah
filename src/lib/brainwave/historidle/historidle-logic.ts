@@ -96,8 +96,7 @@ export function getProgressiveHint(attempts: number, puzzle: HistoridleData): st
 }
 
 export function validateHistoricalGuess(
-  guessTitle: string, 
-  puzzleData: HistoridleData
+  guessTitle: string,
 ): { isValid: boolean; hint?: string } {
   const normalizedGuess = normalizeHistoricalTitle(guessTitle);
   

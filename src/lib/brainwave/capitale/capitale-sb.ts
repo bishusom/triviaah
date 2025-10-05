@@ -101,7 +101,7 @@ export async function getDailyCapitale(customDate?: Date): Promise<{puzzle: Capi
     }
     
     // Get all capitals for validation
-    const { data: allPuzzles, error: capitalsError } = await supabase
+    const { data: allPuzzles } = await supabase
       .from('capitale_puzzles')
       .select('answer, country, latitude, longitude, continent, timezone, population, country_code');
     

@@ -80,7 +80,6 @@ export default function QuizGame({
   const [showConfetti, setShowConfetti] = useState(false);
   const [timeUp, setTimeUp] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const [imgKey, setImgKey] = useState(0);
   const [showImageModal, setShowImageModal] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
@@ -183,7 +182,7 @@ export default function QuizGame({
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     setShuffledOptions(arr);
-  }, [currentQuestion?.id, gameStarted]);
+  }, [currentQuestion?.id, currentQuestion?.options, gameStarted]);
 
   /* ---------- Image ---------- */
   useEffect(() => {
@@ -207,17 +206,52 @@ export default function QuizGame({
       }
     };
     fetchImage();
-  }, [currentQuestion?.id]);
-
-  /* ---------- Reset image key on question change ---------- */
-  useEffect(() => {
-    setImgKey(prev => prev + 1);
-  }, [currentQuestion?.id]);
+  }, [currentQuestion, category]);
 
   /* ---------- Close image modal on question change or feedback/timeup ---------- */
   useEffect(() => {
     setShowImageModal(false);
   }, [currentQuestion?.id, showFeedback, timeUp]);
+
+  /* ---------- handleTimeUp callback ---------- */
+  const handleTimeUp = useCallback(() => {
+    if (showFeedback || !gameStarted) return;
+    
+    setTimeUp(true);
+    playSound('timeUp');
+    setShowFeedback(true);
+    setTitbit(currentQuestion?.titbits || 'Time\'s up! No points awarded.');
+    
+    // Show correct answer
+    setSelectedOption(null);
+    
+    setTimeout(() => {
+      // Fix: Properly check if quiz is finished considering bonus question
+      const isLastRegularQuestion = currentIndex >= regularQuestions.length - 1 && !showBonusQuestion;
+      const isLastBonusQuestion = showBonusQuestion;
+      const finished = isLastBonusQuestion || (isLastRegularQuestion && !bonusQuestion);
+      
+      if (finished) {
+        event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});    
+        
+        // Use the current correctCount directly since no points are added for time up
+        const totalQuestions = regularQuestions.length + (bonusQuestion ? 1 : 0);
+        const quizResult = {
+          score,
+          correctCount, // Use current state value
+          totalQuestions,
+          timeUsed,
+          category,
+          isTimedMode: true
+        };
+        
+        setQuizResult(quizResult);
+        setShowSummary(true);
+      } else {
+        moveToNextQuestion();
+      }
+    }, 2000);
+  }, [currentQuestion, currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion, score, showFeedback, playSound, moveToNextQuestion, gameStarted, correctCount, timeUsed, category]);
 
   /* ---------- Timer ---------- */
   useEffect(() => {
@@ -239,7 +273,7 @@ export default function QuizGame({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, showFeedback, playSound, gameStarted]);
+  }, [timeLeft, showFeedback, playSound, gameStarted, handleTimeUp]);
 
   /* ---------- Answer & next ---------- */
   const handleAnswer = useCallback(
@@ -298,45 +332,6 @@ export default function QuizGame({
     },
     [currentQuestion, timeLeft, score, playSound, timeUp, isQuickfire, showBonusQuestion, moveToNextQuestion, currentIndex, regularQuestions.length, bonusQuestion, gameStarted, showFeedback, correctCount, timeUsed, category]
   );
-
-  const handleTimeUp = useCallback(() => {
-    if (showFeedback || !gameStarted) return;
-    
-    setTimeUp(true);
-    playSound('timeUp');
-    setShowFeedback(true);
-    setTitbit(currentQuestion?.titbits || 'Time\'s up! No points awarded.');
-    
-    // Show correct answer
-    setSelectedOption(null);
-    
-    setTimeout(() => {
-      // Fix: Properly check if quiz is finished considering bonus question
-      const isLastRegularQuestion = currentIndex >= regularQuestions.length - 1 && !showBonusQuestion;
-      const isLastBonusQuestion = showBonusQuestion;
-      const finished = isLastBonusQuestion || (isLastRegularQuestion && !bonusQuestion);
-      
-      if (finished) {
-        event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});    
-        
-        // Use the current correctCount directly since no points are added for time up
-        const totalQuestions = regularQuestions.length + (bonusQuestion ? 1 : 0);
-        const quizResult = {
-          score,
-          correctCount, // Use current state value
-          totalQuestions,
-          timeUsed,
-          category,
-          isTimedMode: true
-        };
-        
-        setQuizResult(quizResult);
-        setShowSummary(true);
-      } else {
-        moveToNextQuestion();
-      }
-    }, 2000);
-  }, [currentQuestion, currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion, score, showFeedback, playSound, moveToNextQuestion, gameStarted, correctCount, timeUsed, category]);
 
   /* ---------- Loading ---------- */
   if (isLoading)

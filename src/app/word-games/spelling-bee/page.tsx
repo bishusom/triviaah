@@ -1,5 +1,5 @@
 import MuteButton from '@/components/MuteButton';
-import SpellingBeeGame from '@/components/word-games/spelling-bee/SpellingBeeGame';
+import SpellingBeeGame from '@/components/word-games/SpellingBeeGame';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
 import MuteButton from '@/components/MuteButton';
-import SudokuPuzzle from '@/components/number-puzzles/sudoku/SudokuPuzzle';
+import SudokuPuzzle from '@/components/number-puzzles/SudokuPuzzle';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

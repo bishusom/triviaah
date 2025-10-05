@@ -18,13 +18,11 @@ type Quiz = {
 export default function DailyQuizClient({
   quiz,
   priorityImage = false,
-  timeLeft: initialTimeLeft,
-  className = "" 
+  timeLeft: initialTimeLeft
 }: {
   quiz: Quiz;
   priorityImage?: boolean;
   timeLeft: string;
-  className?: string;
 }) {
   const [played, setPlayed] = useState(false);
   const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
