@@ -17,6 +17,7 @@ export async function generateMetadata({
   return {
     title: `${formattedCategory} Quiz | Triviaah`,
     description: `Test your knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 questions!`,
+    robots: 'index, follow',
     keywords: [
       `${formattedCategory.toLowerCase()} quiz`,
       'trivia questions',

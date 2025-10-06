@@ -1,4 +1,4 @@
-// components/home/HorizontalScrollSection.tsx - Optimized without GSAP
+// components/home/HorizontalScrollSection.tsx - Updated with expandable desktop view
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
@@ -38,18 +38,18 @@ export default function HorizontalScrollSection({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [totalVisibleItems, setTotalVisibleItems] = useState(1);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [showAllDesktop, setShowAllDesktop] = useState(false); // New state for desktop expansion
 
   const updateScrollPosition = () => {
     if (!scrollContainerRef.current) return;
     
     const container = scrollContainerRef.current;
     const scrollLeft = container.scrollLeft;
-    const itemWidth = container.querySelector('.w-56')?.clientWidth || 224; // Default to 224px (w-56)
-    const gap = 16; // space-x-4 equals 16px
+    const itemWidth = container.querySelector('.w-56')?.clientWidth || 224;
+    const gap = 16;
     
-    // Calculate which item is currently in view
     const newIndex = Math.round(scrollLeft / (itemWidth + gap));
-    setCurrentIndex(Math.max(0, newIndex)); // Ensure index is never negative
+    setCurrentIndex(Math.max(0, newIndex));
   };
 
   // Debounce scroll updates for better performance
@@ -77,7 +77,6 @@ export default function HorizontalScrollSection({
   }, []);
 
   useEffect(() => {
-    // Calculate how many items are visible at once
     const calculateVisibleItems = () => {
       if (!scrollContainerRef.current) return;
       
@@ -112,17 +111,18 @@ export default function HorizontalScrollSection({
     
     const targetScroll = index * (itemWidth + gap);
 
-    // Use native smooth scroll instead of GSAP
     container.scrollTo({
       left: targetScroll,
       behavior: 'smooth'
     });
 
-    // Update index immediately for better UX
     setCurrentIndex(index);
   };
 
-  // Calculate how many dot indicators we need - ensure it's always at least 1
+  // Calculate items to show on desktop - first 4 when collapsed, all when expanded
+  const desktopItems = showAllDesktop ? items : items.slice(0, 4);
+  const canExpand = items.length > 4;
+
   const totalDots = Math.max(1, Math.ceil(items.length / Math.max(1, totalVisibleItems)));
 
   return (
@@ -132,13 +132,13 @@ export default function HorizontalScrollSection({
       </h2>
       
       <div className="relative w-full">
-        {/* Desktop Grid */}
+        {/* Desktop Grid - Now conditional based on showAllDesktop */}
         <div className={`hidden sm:grid ${
           isQuizSection 
             ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' 
             : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
         } gap-6`}>
-          {items.map((item, idx) => isQuizSection && isQuizItem(item) ? (
+          {desktopItems.map((item, idx) => isQuizSection && isQuizItem(item) ? (
             <div 
               key={item.category}
               className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-blue-400 hover:-translate-y-1"
@@ -189,25 +189,44 @@ export default function HorizontalScrollSection({
             </div>
           ))}
         </div>
+
+        {/* Expand/Collapse Button for Desktop */}
+        {canExpand && (
+          <div className="hidden sm:flex justify-center mt-6">
+            <button
+              onClick={() => setShowAllDesktop(!showAllDesktop)}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <span>{showAllDesktop ? 'Show Less' : `Show All ${items.length} Games`}</span>
+              <svg 
+                className={`w-4 h-4 transition-transform duration-300 ${showAllDesktop ? 'rotate-180' : ''}`}
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+        )}
         
-        {/* Mobile horizontal scroll - Optimized */}
+        {/* Mobile horizontal scroll - Unchanged */}
         <div className="sm:hidden relative w-full">
-          {/* Scroll container */}
           <div 
             ref={scrollContainerRef}
             className="overflow-x-auto pb-4 flex space-x-4 px-2 scrollbar-hide"
             style={{ 
               scrollbarWidth: 'none', 
               msOverflowStyle: 'none',
-              scrollSnapType: 'x mandatory', // Native scroll snap
-              WebkitOverflowScrolling: 'touch' // Smooth iOS scrolling
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch'
             }}
           >
             {items.map((item, idx) => (
               <div 
                 key={item.category} 
                 className="w-56 flex-shrink-0"
-                style={{ scrollSnapAlign: 'start' }} // Snap to start of each item
+                style={{ scrollSnapAlign: 'start' }}
               >
                 {isQuizSection && isQuizItem(item) ? (
                   <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-blue-400 h-full">

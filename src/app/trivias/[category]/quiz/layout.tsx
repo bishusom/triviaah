@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://triviaah.com'),
   title: 'Trivia Quizzes | Triviaah',
   description: 'Challenge yourself with our collection of trivia quizzes',
+  robots: 'index, follow',
 };
 
 export default function QuizLayout({

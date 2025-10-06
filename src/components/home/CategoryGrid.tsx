@@ -49,13 +49,6 @@ export default function CategoryGrid() {
         <h3 className="text-xl font-bold text-gray-800 text-center sm:text-left">
           Popular Daily Quiz Categories with Answers
         </h3>
-        <Link 
-          href="/trivias" 
-          className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors whitespace-nowrap"
-          prefetch={false} // Disable prefetch for better performance
-        >
-          View All Categories →
-        </Link>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {categories.map((c) => (
@@ -76,6 +69,15 @@ export default function CategoryGrid() {
           </Link>
         ))}
       </div>
+       <div className="flex justify-center mt-6">
+        <Link 
+          href="/trivias" 
+          className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors whitespace-nowrap"
+          prefetch={false} // Disable prefetch for better performance
+        >
+          View All Categories →
+        </Link>
+        </div>
     </div>
   );
 }
