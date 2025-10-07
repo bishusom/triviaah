@@ -9,6 +9,8 @@ interface AdsProps {
   fullWidthResponsive?: boolean;
   style?: React.CSSProperties;
   closeButtonPosition?: 'top-left' | 'top-right';
+  // New props for chroniclelive-style ads
+  variant?: 'default' | 'chronicle-thin' | 'minimal';
 }
 
 export default function Ads({
@@ -17,7 +19,8 @@ export default function Ads({
   format = 'auto',
   fullWidthResponsive = true,
   style = {},
-  closeButtonPosition = 'top-right' 
+  closeButtonPosition = 'top-right',
+  variant = 'default' // New prop with default value
 }: AdsProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -62,27 +65,65 @@ export default function Ads({
   }
 
   const closeButtonClass = closeButtonPosition === 'top-left' 
-    ? 'absolute top-1 left-1 z-50 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200'
-    : 'absolute top-1 right-1 z-50 w-6 h-6 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200';
+    ? 'absolute top-1 left-1 z-50 w-4 h-4 bg-gray-400 hover:bg-gray-600 text-white rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-200'
+    : 'absolute top-1 right-1 z-50 w-4 h-4 bg-gray-400 hover:bg-gray-600 text-white rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-200';
 
-  return (
-    <div 
-      ref={adRef}
-      className={`relative ad-container ${className}`}
-      style={{
+  // Chronicle-style thin ad configuration
+  const isChronicleStyle = variant === 'chronicle-thin';
+  
+  const containerStyle = isChronicleStyle 
+    ? {
+        minHeight: '32px', // Much thinner height
+        maxHeight: '50px',
+        backgroundColor: 'transparent', // No background color
+        border: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        contain: 'layout style paint',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        margin: '8px 0', // Small vertical spacing
+        ...style
+      }
+    : {
         minHeight: '90px',
         backgroundColor: '#f5f5f5',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         contain: 'layout style paint',
-        // Mobile-first responsive constraints
         maxWidth: '100%',
         overflow: 'hidden',
         ...style
-      }}
+      };
+
+  const adStyle = isChronicleStyle
+    ? {
+        display: 'block',
+        textAlign: 'center',
+        margin: '0 auto',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        minHeight: '32px',
+        ...style
+      }
+    : {
+        display: 'block',
+        textAlign: 'center',
+        margin: '0 auto',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        ...style
+      };
+
+  return (
+    <div 
+      ref={adRef}
+      className={`relative ad-container ${className} ${isChronicleStyle ? 'chronicle-thin-ad' : ''}`}
+      style={containerStyle}
     >
-      {/* Close button - FIXED: Increased z-index to z-50 */}
+      {/* Smaller close button for thin ads */}
       <button
         onClick={handleClose}
         className={closeButtonClass}
@@ -93,31 +134,39 @@ export default function Ads({
         ×
       </button>
 
-      {/* Ad container with responsive constraints */}
-      <div className="flex justify-center items-center w-full" style={{ maxWidth: '100%', overflow: 'hidden' }}>
+      {/* Ad container */}
+      <div 
+        className="flex justify-center items-center w-full" 
+        style={{ 
+          maxWidth: '100%', 
+          overflow: 'hidden',
+          ...(isChronicleStyle ? { minHeight: '32px' } : {})
+        }}
+      >
         <ins
           ref={insRef}
           className="adsbygoogle"
-          style={{
-            display: 'block',
-            textAlign: 'center',
-            margin: '0 auto',
-            // Responsive constraints for mobile
-            maxWidth: '100%',
-            overflow: 'hidden',
-            ...style
-          }}
+          style={adStyle as React.CSSProperties}
           data-ad-client="ca-pub-4386714040098164"
           data-ad-slot={slot}
-          data-ad-format={format}
+          data-ad-format={isChronicleStyle ? "horizontal" : format}
+          data-ad-layout={isChronicleStyle ? "in-article" : undefined}
           data-full-width-responsive={fullWidthResponsive.toString()}
         />
       </div>
 
-      {/* Loading placeholder */}
+      {/* Loading placeholder - smaller for thin ads */}
       {!isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-          <div className="text-gray-500 text-sm">Advertisement</div>
+        <div 
+          className="absolute inset-0 flex items-center justify-center"
+          style={{
+            backgroundColor: isChronicleStyle ? 'transparent' : '#f5f5f5',
+            minHeight: isChronicleStyle ? '32px' : '90px'
+          }}
+        >
+          <div className={`${isChronicleStyle ? 'text-gray-400 text-xs' : 'text-gray-500 text-sm'}`}>
+            Advertisement
+          </div>
         </div>
       )}
     </div>
