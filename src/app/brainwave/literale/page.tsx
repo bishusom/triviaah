@@ -68,7 +68,7 @@ export default function LiteralePage() {
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
           <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
-            <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
+            <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
           </div>
         )}
         
