@@ -84,7 +84,7 @@ export default function HomePageContent() {
               marginBottom: '0.5rem'
             }}
           >
-            Free Daily Quiz with Answers & Explanations
+            Free Daily Trivia Quiz with Answers & Explanations
           </h1>
           <p className="text-gray-600 mb-4">
             New free online trivia games with answers every 24 hours. Test your knowledge and learn instantly!

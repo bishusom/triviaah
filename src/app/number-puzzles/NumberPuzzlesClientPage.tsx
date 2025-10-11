@@ -11,13 +11,6 @@ const numberPuzzles = [
     keywords: 'math scramble, number challenge, arithmetic game',
   },
   {
-    slug: 'number-tower',
-    name: 'Number Tower',
-    image: '/imgs/number-tower.webp',
-    description: 'Build towers by adding numbers to reach specific sums',
-    keywords: 'addition game, math towers, number stacking',
-  },
-  {
     slug: 'prime-hunter',
     name: 'Prime Hunter',
     image: '/imgs/prime-hunter.webp',
@@ -30,6 +23,13 @@ const numberPuzzles = [
     image: '/imgs/number-sequence.webp',
     description: 'Find the pattern and complete the number sequence',
     keywords: 'number patterns, sequence puzzle, math logic',
+  },
+  {
+    slug: 'number-tower',
+    name: 'Number Tower',
+    image: '/imgs/number-tower.webp',
+    description: 'Stack numbers to reach the target sum in this tower challenge',
+    keywords: 'addition game, math towers, number stacking',
   },
   {
     slug: 'sudoku',

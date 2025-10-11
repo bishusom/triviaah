@@ -163,7 +163,7 @@ export default function HistoridlePage() {
       </div>
 
       <div className="max-w-2xl mx-auto p-4">
-        <h1 className="text-3xl font-bold text-center mb-2">🏛️ Historidle</h1>
+        <h1 className="text-3xl font-bold text-center mb-2">🏛️ Historidle - Guess the History Game</h1>
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>

@@ -163,7 +163,7 @@ export default function TrordlePage() {
       </div>
 
       <div className="max-w-2xl mx-auto p-4">
-        <h1 className="text-3xl font-bold text-center mb-2">Trordle</h1>
+        <h1 className="text-3xl font-bold text-center mb-2">﹖ Trordle - The Daily Trivia Game</h1>
         <div className="fixed right-8  z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>

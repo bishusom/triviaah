@@ -107,7 +107,7 @@ export default function LiteralePage() {
         )}
         
         <div className="max-w-2xl mx-auto p-6 text-center">
-          <h1 className="text-3xl font-bold mb-2">📚 Literale</h1>
+          <h1 className="text-3xl font-bold mb-2">📚 Literale - Guess the Book Game</h1>
           <p className="text-gray-600 mb-4">Guess the book from opening lines and clues in 6 tries!</p>
           <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
             <p className="mb-2">No puzzle available for today.</p>

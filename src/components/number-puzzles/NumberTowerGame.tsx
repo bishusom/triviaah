@@ -1,90 +1,77 @@
 "use client";
 import { event } from '@/lib/gtag';
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import confetti from "canvas-confetti";
+import { useState, useEffect, useCallback, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import { useSound } from '@/context/SoundContext';
-import commonStyles from '@styles/NumberPuzzles/NumberPuzzles.common.module.css';
-import styles from '@styles/NumberPuzzles/NumberSequence.module.css';
 
-/* ---------- TYPES ---------- */
-type GameState = {
-  currentSequence: number[];
-  correctAnswer: number;
-  level: number;
+type TowerLevel = number[];
+type Difficulty = 'easy' | 'medium' | 'hard';
+
+interface GameState {
+  tower: TowerLevel[];
+  currentLevel: number;
   score: number;
-  sequencesSolved: number;
-  timeoutId: NodeJS.Timeout | null;
+  isComplete: boolean;
   timeLeft: number;
-  timerInterval: NodeJS.Timeout | null;
-  description: string;
+  currentDifficulty: Difficulty;
+  globalLevel: number;
+  towerComplete: boolean;
+  feedbackText: string;
+  feedbackClass: string;
+}
+
+type SelectedNumber = {
+  number: number;
+  index: number;
 };
 
-type SequenceType = {
-  sequence: number[];
-  answer: number;
-  description: string;
+const difficultySettings = {
+  easy: {
+    operations: ['add', 'subtract'],
+    time: 120,
+    baseRange: [1, 15],
+    levels: 3
+  },
+  medium: {
+    operations: ['add', 'subtract', 'multiply'],
+    time: 100,
+    baseRange: [5, 25],
+    levels: 3
+  },
+  hard: {
+    operations: ['add', 'subtract', 'multiply', 'divide'],
+    time: 80,
+    baseRange: [10, 40],
+    levels: Infinity
+  }
 };
 
-type OptionProps = {
-  children: number;
-  onClick: () => void;
-  disabled?: boolean;
-  className?: string;
-};
-
-/* ---------- OPTION BUTTON COMPONENT ---------- */
-const OptionButton: React.FC<OptionProps> = ({ children, onClick, disabled, className }) => (
-  <button className={className} onClick={onClick} disabled={disabled}>
-    {children}
-  </button>
-);
-
-/* ---------- MAIN GAME COMPONENT ---------- */
-export default function NumberSequenceGame() {
+export default function NumberTowerGame() {
   const [gameState, setGameState] = useState<GameState>({
-    currentSequence: [],
-    correctAnswer: 0,
-    level: 1,
+    tower: [],
+    currentLevel: 0,
     score: 0,
-    sequencesSolved: 0,
-    timeoutId: null,
+    isComplete: false,
     timeLeft: 120,
-    timerInterval: null,
-    description: "",
+    currentDifficulty: 'easy',
+    globalLevel: 1,
+    towerComplete: false,
+    feedbackText: '',
+    feedbackClass: ''
   });
 
-  const [sequenceDisplay, setSequenceDisplay] = useState<React.ReactElement[]>([]);
-  const [sequenceOptions, setSequenceOptions] = useState<React.ReactElement<OptionProps>[]>([]);
-  const [feedback, setFeedback] = useState({ text: "", className: "" });
-  const [hintText, setHintText] = useState("");
-  const correctAnswerRef = useRef<number>(0);
+  const [selectedNumbers, setSelectedNumbers] = useState<SelectedNumber[]>([]);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const { isMuted } = useSound();
 
-  /* ---------- LIFECYCLE ---------- */
-  useEffect(() => {
-    const checkGtag = setInterval(() => {
-      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        event({action: 'number_sequence_started', category: 'number_sequence',label: 'number_sequence'});
-        clearInterval(checkGtag);
-      }
-    }, 100);
-    generateSequence();
-
-    return () => {
-      if (gameState.timeoutId) clearTimeout(gameState.timeoutId);
-      if (gameState.timerInterval) clearInterval(gameState.timerInterval);
-    };
-  }, []);
-
-  /* ---------- SOUND ---------- */
   type SoundType = 'select' | 'found' | 'win' | 'error';
-  const playSound = (type: SoundType) => {
+  const playSound = useCallback((type: SoundType) => {
     if (isMuted) return;
     const sounds: Record<SoundType, string> = {
       select: '/sounds/click.mp3',
       found: '/sounds/correct.mp3',
       error: '/sounds/incorrect.mp3',
-      win: '/sounds/win.mp3'
+      win: '/sounds/win.mp3',
     };
     try {
       const audio = new Audio(sounds[type]);
@@ -92,346 +79,394 @@ export default function NumberSequenceGame() {
     } catch (error) {
       console.error('Sound error:', error);
     }
-  };
+  }, [isMuted]);
 
-  /* ---------- TIMER ---------- */
-  const startTimer = useCallback(() => {
-    if (gameState.timerInterval) clearInterval(gameState.timerInterval);
-    setGameState(prev => ({ ...prev, timeLeft: 120 }));
-    const interval = setInterval(() => {
-      setGameState(prev => {
-        const newTimeLeft = Math.max(0, prev.timeLeft - 1);
-        if (newTimeLeft <= 0) {
-          clearInterval(interval);
-          setFeedback({ text: "Time's up!", className: "text-red-500" });
-          playSound("error");
-          setTimeout(generateSequence, 2000);
-          return { ...prev, timeLeft: newTimeLeft, timerInterval: null };
-        }
-        return { ...prev, timeLeft: newTimeLeft };
-      });
-    }, 1000);
-    setGameState(prev => ({ ...prev, timerInterval: interval }));
-  }, [playSound]);
-
-  /* ---------- SEQUENCE GENERATORS ---------- */
-  const generateArithmeticSequence = useCallback((): SequenceType => {
-    const start = Math.floor(Math.random() * 10) + 1;
-    const difference = Math.floor(Math.random() * 6) + 2;
-    const length = Math.floor(Math.random() * 3) + 4;
-    const sequence = [];
-    for (let i = 0; i < length; i++) sequence.push(start + i * difference);
-    const displayedSequence = sequence.slice(0, -1);
-    const lastNumber = displayedSequence[displayedSequence.length - 1];
-    const answer = lastNumber + difference;
-    return { sequence: displayedSequence, answer, description: `Arithmetic sequence: add ${difference} each time` };
-  }, []);
-
-  const generateGeometricSequence = useCallback((): SequenceType => {
-    const start = Math.floor(Math.random() * 5) + 1;
-    const ratio = Math.floor(Math.random() * 3) + 2;
-    const length = Math.floor(Math.random() * 3) + 4;
-    const sequence = [];
-    for (let i = 0; i < length; i++) sequence.push(start * Math.pow(ratio, i));
-    const displayedSequence = sequence.slice(0, -1);
-    const lastNumber = displayedSequence[displayedSequence.length - 1];
-    const answer = lastNumber * ratio;
-    return { sequence: displayedSequence, answer, description: `Geometric sequence: multiply by ${ratio} each time` };
-  }, []);
-
-  const generateSquareSequence = useCallback((): SequenceType => {
-    const start = Math.floor(Math.random() * 5) + 1;
-    const length = Math.floor(Math.random() * 3) + 4;
-    const sequence = [];
-    for (let i = 0; i < length; i++) sequence.push(Math.pow(start + i, 2));
-    const displayedSequence = sequence.slice(0, -1);
-    const lastIndex = displayedSequence.length;
-    const answer = Math.pow(start + lastIndex + 1, 2);
-    return { sequence: displayedSequence, answer, description: `Square numbers: n² where n starts at ${start}` };
-  }, []);
-
-  const generatePrimeSequence = useCallback((): SequenceType => {
-    const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29];
-    const start = Math.floor(Math.random() * 4);
-    const length = Math.floor(Math.random() * 3) + 4;
-    const sequence = primes.slice(start, start + length);
-    const displayedSequence = sequence.slice(0, -1);
-    const answer = sequence[sequence.length - 1];
-    return { sequence: displayedSequence, answer, description: `Prime number sequence` };
-  }, []);
-
-  const generateFibonacciLikeSequence = useCallback((): SequenceType => {
-    const a = Math.floor(Math.random() * 5) + 1;
-    const b = Math.floor(Math.random() * 5) + 1;
-    const length = Math.floor(Math.random() * 3) + 5;
-    const sequence = [a, b];
-    for (let i = 2; i < length; i++) sequence.push(sequence[i - 1] + sequence[i - 2]);
-    const displayedSequence = sequence.slice(0, -1);
-    const answer = sequence[sequence.length - 1] + sequence[sequence.length - 2];
-    return { sequence: displayedSequence, answer, description: `Fibonacci-like sequence: each number is the sum of the two preceding ones` };
-  }, []);
-
-  const generateMixedSequence = useCallback((): SequenceType => {
-    const types = [generateSquareSequence, generatePrimeSequence, generateFibonacciLikeSequence];
-    return types[Math.floor(Math.random() * types.length)]();
-  }, [generateSquareSequence, generatePrimeSequence, generateFibonacciLikeSequence]);
-
-  const generateOptions = useCallback((correctAnswer: number): number[] => {
-    const options = [correctAnswer];
-    while (options.length < 4) {
-      let wrongAnswer;
-      const variation = Math.floor(Math.random() * 3) + 1;
-      switch (variation) {
-        case 1: wrongAnswer = correctAnswer + (Math.floor(Math.random() * 5) + 1); break;
-        case 2: wrongAnswer = Math.max(1, correctAnswer - (Math.floor(Math.random() * 5) + 1)); break;
-        case 3: wrongAnswer = correctAnswer * (Math.floor(Math.random() * 2) + 1); break;
-        default: wrongAnswer = correctAnswer + 1;
-      }
-      if (wrongAnswer > 0 && !options.includes(wrongAnswer)) options.push(wrongAnswer);
-    }
-    return options.sort(() => Math.random() - 0.5);
-  }, []);
-
-  /* ---------- SEQUENCE / OPTIONS GENERATION ---------- */
-  const generateSequence = useCallback(() => {
-    setSequenceDisplay([]);
-    setSequenceOptions([]);
-    setFeedback({ text: "", className: "" });
-    setHintText("");
-
-    const sequenceTypes = [
-      generateArithmeticSequence,
-      generateGeometricSequence,
-      generateSquareSequence,
-      generatePrimeSequence,
-      generateFibonacciLikeSequence,
-      generateMixedSequence,
-    ];
-
-    let typeIndex;
-    if (gameState.level <= 2) typeIndex = Math.floor(Math.random() * 2);
-    else if (gameState.level <= 4) typeIndex = Math.random() < 0.7 ? Math.floor(Math.random() * 2) : 2 + Math.floor(Math.random() * 2);
-    else if (gameState.level <= 6) {
-      const rand = Math.random();
-      if (rand < 0.5) typeIndex = 2 + Math.floor(Math.random() * 2);
-      else if (rand < 0.8) typeIndex = Math.floor(Math.random() * 2);
-      else typeIndex = 4 + Math.floor(Math.random() * 2);
-    } else {
-      const rand = Math.random();
-      if (rand < 0.6) typeIndex = 4 + Math.floor(Math.random() * 2);
-      else if (rand < 0.9) typeIndex = 2 + Math.floor(Math.random() * 2);
-      else typeIndex = Math.floor(Math.random() * 2);
-    }
-
-    const { sequence, answer, description } = sequenceTypes[typeIndex]();
-    const displayElements = sequence.map((num, index) => (
-      <span key={index} className={styles.sequenceNumber}>
-        {num}
-      </span>
-    ));
-    displayElements.push(<span key={sequence.length} className={`${styles.sequenceNumber} ${styles.missing}`}>?</span>);
-    setSequenceDisplay(displayElements);
-
-    const options = generateOptions(answer);
-    const optionElements = options.map((option, index) => (
-      <OptionButton
-        key={index}
-        onClick={() => checkAnswer(option)}
-        disabled={false}
-        className={styles.btn}
-      >
-        {option}
-      </OptionButton>
-    ));
-    setSequenceOptions(optionElements);
-
-    correctAnswerRef.current = answer;
-    setGameState(prev => ({ ...prev, currentSequence: sequence, correctAnswer: answer, description }));
-    startTimer();
-  }, [
-    gameState.level,
-    generateArithmeticSequence,
-    generateGeometricSequence,
-    generateSquareSequence,
-    generatePrimeSequence,
-    generateFibonacciLikeSequence,
-    generateMixedSequence,
-    generateOptions,
-    startTimer,
-  ]);
-
-  /* ---------- ANSWER CHECK ---------- */
-  const checkAnswer = useCallback((selected: number) => {
-    playSound("select");
-
-    const disabledOptions = sequenceOptions.map(option =>
-      React.cloneElement(option, {
-        disabled: true,
-        className: `${commonStyles.btn} ${commonStyles.disabled}`,
-      })
-    );
-    setSequenceOptions(disabledOptions);
-
-    if (selected === correctAnswerRef.current) {
-      setFeedback({ text: "Correct! Well done!", className: `${commonStyles.feedback} ${commonStyles.success}` });
-      setGameState(prev => {
-        const newScore = prev.score + prev.level * 10;
-        const newSequencesSolved = prev.sequencesSolved + 1;
-        let newLevel = prev.level;
-        if (newSequencesSolved >= 3) {
-          newLevel++;
-          showConfetti({ particleCount: 150, spread: 80 });
-        } else {
-          showConfetti();
-        }
-        return { ...prev, score: newScore, sequencesSolved: newSequencesSolved >= 3 ? 0 : newSequencesSolved, level: newLevel };
-      });
-
-      const updatedOptions = sequenceOptions.map(option =>
-        React.cloneElement(option, {
-          disabled: true,
-          className: parseInt(option.props.children.toString()) === correctAnswerRef.current
-            ? `${commonStyles.btn} ${commonStyles.correct}`
-            : `${commonStyles.btn} ${commonStyles.disabled}`,
-        })
-      );
-      setSequenceOptions(updatedOptions);
-
-      if (gameState.timerInterval) clearInterval(gameState.timerInterval);
-      playSound("found");
-      const timeoutId = setTimeout(() => {
-        generateSequence();
-        setGameState(prev => ({ ...prev, timeoutId: null }));
-      }, 2500);
-      setGameState(prev => ({ ...prev, timeoutId, timerInterval: null }));
-    } else {
-      setFeedback({ text: "Incorrect. Try again!", className: `${commonStyles.feedback} ${commonStyles.error}` });
-      const updatedOptions = sequenceOptions.map(option =>
-        React.cloneElement(option, {
-          disabled: true,
-          className: parseInt(option.props.children.toString()) === selected
-            ? `${commonStyles.btn} ${commonStyles.wrong}`
-            : `${commonStyles.btn} ${commonStyles.disabled}`,
-        })
-      );
-      setSequenceOptions(updatedOptions);
-      playSound("error");
-      const timeoutId = setTimeout(() => {
-        const resetOptions = sequenceOptions.map(option =>
-          React.cloneElement(option, { disabled: false, className: `${commonStyles.btn}` })
-        );
-        setSequenceOptions(resetOptions);
-        setFeedback({ text: "", className: "" });
-      }, 1000);
-      setGameState(prev => ({ ...prev, timeoutId }));
-    }
-  }, [gameState.timerInterval, sequenceOptions, playSound, generateSequence]);
-
-  /* ---------- HINT / RESET / CONFETTI ---------- */
-  const showHint = useCallback(() => {
-    setHintText(gameState.description || "");
-    playSound("select");
-  }, [playSound, gameState.description]);
-
-  const showConfetti = useCallback((options = {}) => {
-    const defaults = {
+  const showConfetti = useCallback(() => {
+    confetti({
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
-      colors: ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff"],
-    };
-    confetti({ ...defaults, ...options });
-    if (Math.random() > 0.5) {
-      setTimeout(() => {
-        confetti({ ...defaults, ...options, angle: Math.random() * 180 - 90, origin: { x: Math.random(), y: 0.6 } });
-      }, 300);
-    }
+      colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'],
+    });
   }, []);
 
-  const initGame = useCallback(() => {
-    if (gameState.timeoutId) clearTimeout(gameState.timeoutId);
-    if (gameState.timerInterval) clearInterval(gameState.timerInterval);
-    setGameState({
-      currentSequence: [],
-      correctAnswer: 0,
-      level: 1,
-      score: 0,
-      sequencesSolved: 0,
-      timeoutId: null,
-      timeLeft: 120,
-      timerInterval: null,
-      description: "",
-    });
-    setSequenceDisplay([]);
-    setSequenceOptions([]);
-    setFeedback({ text: "", className: "" });
-    setHintText("");
-    generateSequence();
-    playSound("select");
-  }, [gameState.timeoutId, gameState.timerInterval, generateSequence, playSound]);
+  const determineDifficulty = useCallback((globalLevel: number): Difficulty => {
+    if (globalLevel <= difficultySettings.easy.levels) return 'easy';
+    if (globalLevel <= difficultySettings.easy.levels + difficultySettings.medium.levels) return 'medium';
+    return 'hard';
+  }, []);
 
-  /* ---------- UTIL ---------- */
-  const formatTime = (seconds: number) => {
+  const generateTower = useCallback((difficulty: Difficulty) => {
+    const { baseRange } = difficultySettings[difficulty];
+    const levels = 4 + Math.floor(Math.random() * 2); // 4-5 levels
+    const tower: TowerLevel[] = [];
+    
+    // Generate base level with simple numbers
+    const baseSize = 3 + Math.floor(Math.random() * 2); // 3-4 numbers
+    const baseLevel: number[] = [];
+    
+    for (let i = 0; i < baseSize; i++) {
+      const num = Math.floor(Math.random() * (baseRange[1] - baseRange[0])) + baseRange[0];
+      baseLevel.push(num);
+    }
+    
+    tower.push(baseLevel);
+    
+    // Build the pyramid by calculating sums going upward
+    for (let i = 1; i < levels; i++) {
+      const prevLevel = tower[i-1];
+      const currentLevel: number[] = [];
+      
+      // Each number in the current level is the sum of two adjacent numbers below
+      for (let j = 0; j < prevLevel.length - 1; j++) {
+        currentLevel.push(prevLevel[j] + prevLevel[j+1]);
+      }
+      
+      // Stop if we've reached a single number (top of pyramid)
+      if (currentLevel.length === 1) {
+        tower.push(currentLevel);
+        break;
+      }
+      
+      tower.push(currentLevel);
+    }
+    
+    return tower;
+  }, []);
+
+  const initializeGame = useCallback(() => {
+    // Clear existing timer
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
+    }
+
+    const difficulty = determineDifficulty(gameState.globalLevel);
+    const tower = generateTower(difficulty);
+    const time = difficultySettings[difficulty].time;
+    
+    setGameState(prev => ({
+      ...prev,
+      tower,
+      currentLevel: 0,
+      isComplete: false,
+      timeLeft: time,
+      currentDifficulty: difficulty,
+      towerComplete: false,
+      feedbackText: '',
+      feedbackClass: ''
+    }));
+    setSelectedNumbers([]);
+  }, [gameState.globalLevel, determineDifficulty, generateTower]);
+
+  const handleNumberSelect = useCallback((number: number, index: number) => {
+    if (gameState.isComplete || gameState.towerComplete) return;
+    
+    const existingSelection = selectedNumbers.find(n => n.index === index);
+    if (existingSelection) {
+      setSelectedNumbers([]);
+      setGameState(prev => ({ ...prev, feedbackText: '', feedbackClass: '' }));
+      return;
+    }
+
+    if (selectedNumbers.length === 0) {
+      setSelectedNumbers([{ number, index }]);
+      playSound('select');
+      return;
+    }
+
+    const firstSelection = selectedNumbers[0];
+    if (Math.abs(index - firstSelection.index) !== 1) {
+      setSelectedNumbers([{ number, index }]);
+      setGameState(prev => ({ 
+        ...prev, 
+        feedbackText: 'Numbers must be adjacent!', 
+        feedbackClass: 'bg-red-100 text-red-700' 
+      }));
+      playSound('error');
+      return;
+    }
+
+    const sum = firstSelection.number + number;
+    const nextLevel = gameState.currentLevel + 1;
+    const targetPosition = Math.min(firstSelection.index, index);
+    const targetNumber = gameState.tower[nextLevel][targetPosition];
+    
+    if (sum === targetNumber) {
+      setGameState(prev => ({ 
+        ...prev, 
+        feedbackText: 'Correct!', 
+        feedbackClass: 'bg-green-100 text-green-700' 
+      }));
+      setSelectedNumbers([]);
+      playSound('found');
+
+      setGameState(prev => {
+        const towerComplete = nextLevel >= prev.tower.length - 1;
+        const newScore = prev.score + (10 * (nextLevel + 1));
+        
+        if (towerComplete) {
+          playSound('win');
+          showConfetti();
+        }
+
+        return {
+          ...prev,
+          currentLevel: nextLevel,
+          score: newScore,
+          towerComplete: towerComplete,
+          feedbackText: towerComplete ? '🎉 Tower Complete! 🎉' : 'Correct!',
+          feedbackClass: towerComplete ? 'bg-yellow-100 text-yellow-700 font-bold text-xl' : 'bg-green-100 text-green-700'
+        };
+      });
+
+      setTimeout(() => {
+        setGameState(prev => ({ ...prev, feedbackText: '', feedbackClass: '' }));
+      }, 1500);
+    } else {
+      setGameState(prev => ({ 
+        ...prev, 
+        feedbackText: `Try again! Need ${targetNumber}`, 
+        feedbackClass: 'bg-red-100 text-red-700' 
+      }));
+      playSound('error');
+      
+      setTimeout(() => {
+        setSelectedNumbers([]);
+        setGameState(prev => ({ ...prev, feedbackText: '', feedbackClass: '' }));
+      }, 1500);
+    }
+  }, [gameState.isComplete, gameState.towerComplete, gameState.currentLevel, gameState.tower, selectedNumbers, playSound, showConfetti]);
+
+  const handleNextLevel = useCallback(() => {
+    setGameState(prev => ({
+      ...prev,
+      globalLevel: prev.globalLevel + 1,
+      towerComplete: false
+    }));
+    playSound('select');
+  }, [playSound]);
+
+  const initGame = useCallback(() => {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
+    }
+    
+    setGameState({
+      tower: [],
+      currentLevel: 0,
+      score: 0,
+      isComplete: false,
+      timeLeft: 120,
+      currentDifficulty: 'easy',
+      globalLevel: 1,
+      towerComplete: false,
+      feedbackText: '',
+      feedbackClass: ''
+    });
+    setSelectedNumbers([]);
+    
+    // Initialize with a new game after state reset
+    setTimeout(() => {
+      const difficulty = determineDifficulty(1);
+      const tower = generateTower(difficulty);
+      const time = difficultySettings[difficulty].time;
+      
+      setGameState(prev => ({
+        ...prev,
+        tower,
+        timeLeft: time,
+        currentDifficulty: difficulty
+      }));
+    }, 100);
+    
+    playSound('select');
+  }, [determineDifficulty, generateTower, playSound]);
+
+  const formatTime = useCallback((seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }, []);
 
-  /* ---------- RENDER ---------- */
+  // Timer effect
+  useEffect(() => {
+    if (!gameState.isComplete && !gameState.towerComplete && gameState.timeLeft > 0) {
+      timerIntervalRef.current = setInterval(() => {
+        setGameState(prev => {
+          const newTimeLeft = Math.max(0, prev.timeLeft - 1);
+          if (newTimeLeft <= 0) {
+            if (timerIntervalRef.current) {
+              clearInterval(timerIntervalRef.current);
+              timerIntervalRef.current = null;
+            }
+            return { 
+              ...prev, 
+              timeLeft: 0, 
+              isComplete: true,
+              feedbackText: "Time's up!",
+              feedbackClass: "bg-red-100 text-red-700"
+            };
+          }
+          return { ...prev, timeLeft: newTimeLeft };
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    };
+  }, [gameState.isComplete, gameState.towerComplete, gameState.timeLeft]);
+
+  // Initialize game when global level changes
+  useEffect(() => {
+    if (!gameState.towerComplete && gameState.globalLevel > 1) {
+      initializeGame();
+    }
+  }, [gameState.globalLevel, gameState.towerComplete, initializeGame]);
+
+  // Initial game setup
+  useEffect(() => {
+    const checkGtag = setInterval(() => {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        event({ action: 'number_tower_started', category: 'number_tower', label: 'number_tower' });
+        clearInterval(checkGtag);
+      }
+    }, 100);
+
+    // Initialize first game
+    const difficulty = determineDifficulty(1);
+    const tower = generateTower(difficulty);
+    const time = difficultySettings[difficulty].time;
+    
+    setGameState(prev => ({
+      ...prev,
+      tower,
+      timeLeft: time,
+      currentDifficulty: difficulty
+    }));
+
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
+  }, [determineDifficulty, generateTower]);
+
   return (
     <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">Number Sequence</h1>
-      <p className="text-gray-600 mb-6">Identify the pattern and select the next number</p>
+      <h1 className="text-3xl font-bold text-gray-800 mb-2">Number Tower</h1>
+      <p className="text-gray-600 mb-6">Combine adjacent numbers to build the tower</p>
 
-      <div className={styles.gameHeader}>
-        <div className="text-lg font-semibold">Level: {gameState.level}</div>
-        <div className={`text-lg font-semibold ${gameState.timeLeft <= 10 ? commonStyles.timeCritical : ""}`}>
+      <div className="flex justify-between items-center mb-6">
+        <div className="text-lg font-semibold">Level: {gameState.globalLevel}</div>
+        <div className={`text-lg font-semibold ${gameState.timeLeft <= 10 ? 'text-red-600 animate-pulse' : ''}`}>
           Time: {formatTime(gameState.timeLeft)}
         </div>
         <div className="text-lg font-semibold">Score: {gameState.score}</div>
       </div>
 
-      <div className={styles.progressBar}>
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
-          <div
-            className={styles.progressFill}
-            style={{ width: `${(gameState.sequencesSolved / 3) * 100}%` }}
-          ></div>
-        </div>
-        <div className="flex justify-between mt-2">
-          <span>Sequences Solved: {gameState.sequencesSolved}</span>
-          <span>Total to Level Up: 3</span>
-        </div>
+      <div className="flex items-center gap-2 mb-4">
+        <span className={`px-3 py-1 rounded-full text-sm font-semibold text-white ${
+          gameState.currentDifficulty === 'easy' ? 'bg-green-500' :
+          gameState.currentDifficulty === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
+        }`}>
+          {gameState.currentDifficulty.toUpperCase()}
+        </span>
+        <span className="text-sm text-gray-600">
+          Tower Level: {gameState.currentLevel + 1} of {gameState.tower.length}
+        </span>
       </div>
 
-      <div className={styles.sequenceDisplay}>{sequenceDisplay}</div>
-
-      {hintText && <div className={styles.hintText}>{hintText}</div>}
-
-      <div className={styles.sequenceOptions}>{sequenceOptions}</div>
-
-      {feedback.text && (
-        <div className={`${commonStyles.feedback} ${feedback.className} mb-4`}>{feedback.text}</div>
+      {gameState.feedbackText && (
+        <div className={`p-4 rounded-lg mb-6 font-mono text-lg ${gameState.feedbackClass}`}>
+          {gameState.feedbackText}
+        </div>
       )}
 
-      <div className="flex gap-2 mb-6">
-        <button onClick={showHint} className={`${commonStyles.btn} ${commonStyles.secondary}`}>
-          Show Hint
-        </button>
-        <button onClick={initGame} className={`${commonStyles.btn} ${commonStyles.primary}`}>
-          New Game
-        </button>
-      </div>
+      {gameState.towerComplete ? (
+        <div className="text-center bg-gray-100 rounded-lg p-6 mb-6">
+          <h2 className="text-3xl font-bold text-green-600 mb-4">🎉 Tower Complete! 🎉</h2>
+          <p className="text-xl mb-2">You completed Global Level {gameState.globalLevel}!</p>
+          <p className="text-lg mb-6">Current Score: {gameState.score}</p>
+          <button 
+            onClick={handleNextLevel}
+            className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-semibold text-lg"
+          >
+            Continue to Level {gameState.globalLevel + 1}
+          </button>
+        </div>
+      ) : gameState.isComplete ? (
+        <div className="text-center bg-gray-100 rounded-lg p-6 mb-6">
+          <h2 className="text-3xl font-bold text-red-600 mb-4">Time&apos;s Up!</h2>
+          <p className="text-xl mb-6">You reached Level {gameState.currentLevel + 1}</p>
+          <button 
+            onClick={initGame}
+            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-semibold text-lg"
+          >
+            Try Again
+          </button>
+        </div>
+      ) : (
+        <>
+          {/* Tower Display */}
+          <div className="flex flex-col items-center space-y-4 mb-8">
+            {gameState.tower.map((level, levelIndex) => (
+              <div 
+                key={levelIndex} 
+                className={`flex gap-2 ${
+                  levelIndex > gameState.currentLevel ? 'opacity-40' : 'opacity-100'
+                }`}
+              >
+                {level.map((number, numIndex) => {
+                  const isSelected = selectedNumbers.some(n => n.index === numIndex);
+                  const isActive = levelIndex === gameState.currentLevel;
+                  
+                  return (
+                    <button
+                      key={numIndex}
+                      onClick={() => isActive && handleNumberSelect(number, numIndex)}
+                      className={`w-16 h-16 rounded-lg font-bold text-lg transition-all duration-200 ${
+                        isSelected ? 'bg-blue-500 text-white scale-110 shadow-lg' :
+                        isActive ? 'bg-blue-100 text-blue-800 hover:bg-blue-200 shadow-md hover:scale-105' :
+                        'bg-gray-100 text-gray-500 cursor-not-allowed'
+                      } border-2 ${
+                        isSelected ? 'border-blue-600' :
+                        isActive ? 'border-blue-300' : 'border-gray-200'
+                      }`}
+                      disabled={!isActive || gameState.isComplete}
+                    >
+                      {number}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+
+          <div className="flex gap-2 mb-6">
+            <button
+              onClick={initGame}
+              className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-semibold"
+            >
+              New Game
+            </button>
+          </div>
+        </>
+      )}
 
       <div className="mt-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-2">How to Play</h2>
         <ul className="list-disc pl-5 space-y-1 text-gray-600">
-          <li>Identify the pattern in the number sequence</li>
-          <li>Select the correct next number from the options</li>
-          <li>Correct answers earn points based on your level</li>
-          <li>Solve 3 sequences in a row to level up</li>
-          <li>Higher levels feature more complex patterns</li>
-          <li>Use hints if you get stuck (but try without first!)</li>
+          <li>Select two adjacent numbers that sum to the number above them</li>
+          <li>Complete each level to build the tower to the top</li>
+          <li>Each completed tower advances you to the next global level</li>
+          <li>Higher levels feature more complex towers and shorter time limits</li>
+          <li>Easy: Levels 1-3, Medium: Levels 4-6, Hard: Level 7+</li>
         </ul>
       </div>
     </div>
