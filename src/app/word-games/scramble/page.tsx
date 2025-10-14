@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import MuteButton from '@/components/MuteButton';
+import MuteButton from '@/components/common/MuteButton';
 import ScrambleGame from '@/components/word-games/ScrambleGame';
 
 export const metadata: Metadata = {

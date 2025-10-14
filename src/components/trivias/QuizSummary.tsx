@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { MdShare } from "react-icons/md";
 import { FaMedal, FaTrophy, FaCheck } from 'react-icons/fa';
-import { FaSmile, FaMeh, FaFrown, FaGrinStars, FaAngry } from 'react-icons/fa';
+import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { getPersistentGuestId, rerollGuestId } from '@/lib/guestId';
 
 type QuizResult = {
@@ -87,27 +87,6 @@ export default function QuizSummary({
     return `${m}:${sec.toString().padStart(2, '0')}`;
   };
 
-  /* ------- feedback ------------ */
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
-
-  const handleFeedback = async (rating: number) => {
-    try {
-      await fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          rating,
-          category: result.category,
-          score: result.score,
-          correctCount: result.correctCount,
-          totalQuestions: result.totalQuestions
-        }),
-      });
-      setFeedbackSubmitted(true);
-    } catch (error) {
-      console.error('Failed to submit feedback:', error);
-    }
-  };
 
   /* ---------- fetch leaderboard ---------- */
   const fetchHighScores = useCallback(async () => {
@@ -380,42 +359,22 @@ export default function QuizSummary({
           </p>
         </div>
 
-        {feedbackSubmitted ? (
-          <div className="mb-8 text-center">
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <p className="text-green-800 font-semibold">Thank you for your feedback! 💫</p>
-              <p className="text-green-800">For detailed feedback, use <a href="/contact" className="underline">our contact form</a>.</p>
-            </div>
-          </div>
-        ) : (
-          <div className="mb-8 text-center">
-              <h3 className="text-xl font-semibold mb-4">How was your quiz experience?</h3>
-              <p className="text-gray-600 mb-4 text-sm">Your feedback helps us improve!</p>
-              <div className="flex justify-center gap-4">
-                {[
-                  { icon: FaGrinStars, label: 'Excellent', value: 5 },
-                  { icon: FaSmile, label: 'Good', value: 4 },
-                  { icon: FaMeh, label: 'Average', value: 3 },
-                  { icon: FaFrown, label: 'Poor', value: 2 },
-                  { icon: FaAngry, label: 'Bad', value: 1 }
-                ].map(({ icon: Icon, label, value }) => (
-                  <button
-                    key={value}
-                    onClick={() => handleFeedback(value)}
-                    className="flex flex-col items-center p-3 rounded-lg bg-gray-50 hover:bg-blue-50 transition-colors group"
-                    aria-label={label}
-                  >
-                    <Icon 
-                      size={28} 
-                      className="text-gray-500 group-hover:text-blue-600 transition-colors" 
-                    />
-                    <span className="text-xs text-gray-600 mt-1">{label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-        )}  
-
+        {/* Feedback component */}
+        <FeedbackComponent
+          gameType="trivia"
+          category={result.category}
+          metadata={{
+            score: result.score,
+            correctCount: result.correctCount,
+            totalQuestions: result.totalQuestions,
+            timeUsed: result.timeUsed,
+            performance: perf, // 'gold', 'silver', 'bronze', 'zero', 'default'
+            // Add any other relevant data
+            difficulty: 'mixed', // or extract from result if available
+            completedAt: new Date().toISOString()
+          }}
+        />
+        
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Link
             href="/"

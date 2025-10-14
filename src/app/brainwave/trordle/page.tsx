@@ -3,7 +3,7 @@
 
 import TrordleComponent from '@/components/brainwave/TrordleComponent';
 import { getDailyTrordle } from '@/lib/brainwave/trordle/trordle-sb';
-import MuteButton from '@/components/MuteButton';
+import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { TrordleData } from '@/lib/brainwave/trordle/trordle-logic';
 import Ads from '@/components/Ads';

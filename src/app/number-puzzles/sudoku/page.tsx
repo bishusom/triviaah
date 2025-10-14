@@ -1,4 +1,4 @@
-import MuteButton from '@/components/MuteButton';
+import MuteButton from '@/components/common/MuteButton';
 import SudokuPuzzle from '@/components/number-puzzles/SudokuPuzzle';
 import { Metadata } from 'next';
 

@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
+import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { getBookCover } from '@/lib/brainwave/literale/book-cover'
 import { addLiteraleResult } from '@/lib/brainwave/literale/literale-sb';
 import { 
@@ -728,6 +729,16 @@ export default function LiteraleComponent({ initialData }: LiteraleComponentProp
             {shareMessage && (
               <div className="mt-2 text-blue-600">{shareMessage}</div>
             )}
+
+            <FeedbackComponent
+              gameType="literale"
+              category="brainwave"
+              metadata={{
+                attempts: attempts.length,
+                won: gameState === 'won',
+                correctAnswer: puzzleData.targetTitle
+              }}
+            />
           </div>
         )}
       </div>

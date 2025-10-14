@@ -46,18 +46,6 @@ interface HistoryQuestionRow {
   image_url?: string;
 }
 
-interface FeedbackRow {
-  id: string;
-  rating: number;
-  category: string;
-  score: number;
-  correct_count: number;
-  total_questions: number;
-  user_id?: string;
-  user_agent?: string;
-  created_at: string;
-}
-
 // Helper function to get client-side date string
 function getClientDateString(customDate?: Date): string {
   const date = customDate || new Date();
@@ -434,13 +422,24 @@ export async function addHighScore(scoreData: Omit<HighScore, 'id'>): Promise<st
   }
 }
 
+// Define interface for database feedback row
+interface DatabaseFeedbackRow {
+  id: string;
+  rating: number;
+  category: string;
+  game_type: string;
+  metadata: Record<string, unknown>;
+  user_id?: string;
+  user_agent?: string;
+  created_at: string;
+}
+
 export type Feedback = {
   id?: string;
   rating: number;
   category: string;
-  score: number;
-  correctCount: number;
-  totalQuestions: number;
+  gameType: string;
+  metadata: Record<string, unknown>;
   timestamp?: Date;
   userId?: string;
   userAgent?: string;
@@ -453,9 +452,8 @@ export async function addFeedback(feedbackData: Omit<Feedback, 'id'>): Promise<s
       .insert([{
         rating: feedbackData.rating,
         category: feedbackData.category,
-        score: feedbackData.score,
-        correct_count: feedbackData.correctCount,
-        total_questions: feedbackData.totalQuestions,
+        game_type: feedbackData.gameType,
+        metadata: feedbackData.metadata,
         user_id: feedbackData.userId,
         user_agent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
         created_at: new Date().toISOString()
@@ -464,7 +462,6 @@ export async function addFeedback(feedbackData: Omit<Feedback, 'id'>): Promise<s
       .single();
 
     if (error) throw error;
-
     return data.id;
   } catch (error) {
     console.error('Error in addFeedback:', error);
@@ -472,35 +469,40 @@ export async function addFeedback(feedbackData: Omit<Feedback, 'id'>): Promise<s
   }
 }
 
-export async function getFeedback(limitCount: number = 50): Promise<Feedback[]> {
+export async function getFeedback(
+  limitCount: number = 50, 
+  gameType?: string | null
+): Promise<Feedback[]> {
   try {
-    const { data: feedback, error } = await supabase
+    let query = supabase
       .from('feedback')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(limitCount);
 
+    if (gameType) {
+      query = query.eq('game_type', gameType);
+    }
+
+    const { data: feedback, error } = await query;
+
     if (error) throw error;
 
-    return (feedback || []).map((item: FeedbackRow) => ({
+    return (feedback || []).map((item: DatabaseFeedbackRow) => ({
       id: item.id,
       rating: item.rating,
       category: item.category,
-      score: item.score,
-      correctCount: item.correct_count,
-      totalQuestions: item.total_questions,
+      gameType: item.game_type,
+      metadata: item.metadata || {},
       userId: item.user_id,
       userAgent: item.user_agent,
       timestamp: new Date(item.created_at)
     }));
-
   } catch (error) {
     console.error('Error in getFeedback:', error);
     return [];
   }
 }
-
-// Additional Supabase-specific utility functions
 
 export async function updateQuestionUsage(questionIds: string[]): Promise<void> {
   try {

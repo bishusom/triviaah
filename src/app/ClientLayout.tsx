@@ -3,7 +3,7 @@
 
 import { useEffect } from 'react';
 import { SoundProvider } from '../context/SoundContext';
-import MuteButton from './../components/MuteButton';
+import MuteButton from '../components/common/MuteButton';
 
 export default function ClientLayout({
   children,

@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import MuteButton from '@/components/MuteButton';
+import MuteButton from '@/components/common/MuteButton';
 import CapitaleComponent from '@/components/brainwave/CapitaleComponent';
 import { getDailyCapitale, CapitalePuzzle, CapitalInfo} from '@/lib/brainwave/capitale/capitale-sb';
 import Ads from '@/components/Ads';

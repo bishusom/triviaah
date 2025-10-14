@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
+import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { addHistoridleResult } from '@/lib/brainwave/historidle/historidle-sb';
 import { checkHistoridleGuess, 
         validateHistoricalGuess,
@@ -544,6 +545,18 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
             {shareMessage && (
               <div className="mt-2 text-blue-600">{shareMessage}</div>
             )}
+
+            <FeedbackComponent
+              gameType="historidle"
+              category="brainwave"
+              metadata={{
+                attempts: attempts.length,
+                won: gameState === 'won',
+                correctAnswer: puzzleData.targetTitle,
+                correctAnswerType: puzzleData.type,
+                correctAnswerCategory: puzzleData.category
+              }}
+            />
           </div>
         )}
       </div>

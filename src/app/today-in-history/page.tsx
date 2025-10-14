@@ -1,154 +1,201 @@
-'use client'
-import { useState, useEffect } from 'react';
+// app/today-in-history/page.tsx
 import QuizGame from '@/components/trivias/QuizGame';
 import { getTodaysHistoryQuestions } from '@/lib/supabase';
-import MuteButton from '@/components/MuteButton';
-import Script from 'next/script';
-import type { Question } from '@/lib/supabase';
+import { notFound } from 'next/navigation';
+import { WithTimezone } from '@/components/common/WithTimezone';
+import { TimezoneInfo } from '@/components/common/TimezoneInfo';
+import MuteButton from '@/components/common/MuteButton';
+import type { UserLocationInfo } from '@/types/location';
 
-export default function TodayInHistoryPage() {
-  const [questions, setQuestions] = useState<Question[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [formattedDate, setFormattedDate] = useState('');
-  const [userTimezone, setUserTimezone] = useState<string>('');
-
-  useEffect(() => {
-    const loadQuestions = async () => {
-      try {
-        // Get user's timezone and local date
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        setUserTimezone(timezone);
-        
-        // Create date in user's timezone
-        const today = new Date();
-        const localFormattedDate = today.toLocaleDateString('en-US', {
-          month: 'long',
-          day: 'numeric',
-          year: 'numeric'
-        });
-        
-        setFormattedDate(localFormattedDate);
-        
-        // Fetch questions based on user's local date
-        const fetchedQuestions = await getTodaysHistoryQuestions(10, today);
-        
-        if (!fetchedQuestions || fetchedQuestions.length === 0) {
-          setError(true);
-        } else {
-          setQuestions(fetchedQuestions);
-        }
-      } catch (err) {
-        console.error('Error loading questions:', err);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadQuestions();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex flex-col justify-center items-center min-h-64">
-          <div className="relative w-16 h-16 mb-4">
-            <div className="absolute inset-0 rounded-full border-4 border-blue-200"></div>
-            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-600 animate-spin"></div>
-          </div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">
-            Loading Today&apos;s History Quiz
-          </h2>
-          <p className="text-gray-600 text-center">
-            Getting questions for your local date...
-          </p>
-          <div className="mt-4 text-sm text-gray-500">
-            🌍 Detecting your timezone...
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !questions) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="text-center bg-white rounded-lg shadow-md p-8">
-          <div className="text-6xl mb-4">📅</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            No Quiz Available
-          </h2>
-          <p className="text-gray-600 mb-4">
-            We couldn&apos;t load today&apos;s history quiz for your date. This might be because:
-          </p>
-          <ul className="text-sm text-gray-500 mb-6 space-y-1">
-            <li>• No historical events are available for today&apos;s date</li>
-            <li>• There was a network issue loading the questions</li>
-            <li>• The quiz data is being updated</li>
-          </ul>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Quiz",
-    "name": `On This Day in History - ${formattedDate}`,
-    "description": `Historical events quiz for ${formattedDate} - Localized for your timezone`,
-    "about": "History, Historical Events, Famous Dates",
-    "educationalAlignment": {
-      "@type": "AlignmentObject",
-      "alignmentType": "educationalSubject",
-      "targetName": "History"
-    },
-    "hasPart": questions.map((q, index) => ({
-      "@type": "Question",
-      "name": q.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": q.correct
-      },
-      "position": index + 1
-    }))
-  };
-
+export default async function TodayInHistoryPage() {
   return (
-    <>
-      <Script
-        id="today-in-history-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+    <WithTimezone>
+      {(locationInfo) => (
+        <TodayInHistoryContent locationInfo={locationInfo} />
+      )}
+    </WithTimezone>
+  );
+}
+
+async function TodayInHistoryContent({ locationInfo }: { locationInfo: UserLocationInfo }) {
+  try {
+    // Fetch questions based on user's local date
+    const questions = await getTodaysHistoryQuestions(10, locationInfo.userLocalDate);
+    
+    if (!questions || questions.length === 0) {
+      notFound();
+    }
+
+    // Format date for display (using user's timezone)
+    const displayDate = locationInfo.userLocalDate.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: locationInfo.timezone
+    });
+
+    return (
       <div className="no-ads-page">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-center mb-2">
-            On This Day in History
-          </h1>
-          <p className="text-center text-gray-600 mb-2">
-            {formattedDate} • Daily Historical Events Quiz
-          </p>
-          {/* Show user's timezone for transparency */}
-          <p className="text-center text-xs text-gray-500 mb-8">
-            🌍 Showing events for your local date ({userTimezone})
-          </p>
+          {/* Structured Data for SEO */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Quiz",
+                "name": `On This Day in History - ${displayDate}`,
+                "description": `Historical events quiz for ${displayDate}. Test your knowledge of what happened on this day in history.`,
+                "dateCreated": locationInfo.userLocalDate.toISOString().split('T')[0],
+                "numberOfQuestions": questions.length,
+                "about": "History, Historical Events, Famous Dates",
+                "educationalAlignment": {
+                  "@type": "AlignmentObject",
+                  "alignmentType": "educationalSubject",
+                  "targetName": "History"
+                },
+                "hasPart": questions.map((q, index: number) => ({
+                  "@type": "Question",
+                  "name": q.question,
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": q.correct
+                  },
+                  "position": index + 1
+                })),
+              })
+            }}
+          />
+          
+          {/* Server-rendered SEO content */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold mb-2" itemProp="name">
+              On This Day in History
+            </h1>
+            <p className="text-gray-600 mb-3 text-lg">
+              {displayDate} • Daily Historical Events Quiz
+            </p>
+            <p className="text-sm text-gray-500 max-w-2xl mx-auto mb-4">
+              Test your knowledge of historical events that happened on this exact day throughout history. 
+              How well do you know your dates?
+            </p>
+            <TimezoneInfo locationInfo={locationInfo} />
+          </div>
+
+          {/* Hidden but indexable quiz content for SEO */}
+          <div className="sr-only" aria-hidden="false">
+            <h2>Today in History Quiz Questions</h2>
+            <p>Historical events quiz for {displayDate}. Test your knowledge with {questions.length} questions about what happened on this day in history.</p>
+            <div className="space-y-4">
+              <h3>About This Historical Quiz:</h3>
+              <ul className="list-disc list-inside space-y-1 text-gray-700">
+                <li>{questions.length} questions about historical events that occurred on {displayDate}</li>
+                <li>Questions cover various historical periods and events</li>
+                <li>Learn interesting facts and historical context</li>
+                <li>Perfect for history enthusiasts and trivia lovers</li>
+              </ul>
+              <div className="mt-4">
+                <h3>Sample Historical Topics:</h3>
+                <p>Questions cover historical events, famous birthdays, scientific discoveries, political milestones, 
+                   cultural events, and important anniversaries that all happened on this day in history.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Mute Button */}
           <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
             <MuteButton />
           </div>
-          
-          <QuizGame 
-            initialQuestions={questions} 
-            category="today-in-history" 
-          />
+
+          {/* Client-side interactive quiz */}
+          <div className="mb-8">
+            <QuizGame 
+              initialQuestions={questions} 
+              category="today-in-history"
+            />
+          </div>
+
+          {/* FAQ Section */}
+          <div className="mt-12 bg-gray-50 p-6 rounded-lg">
+            <details className="group">
+              <summary className="flex justify-between items-center cursor-pointer list-none">
+                <h2 className="text-xl font-bold">Historical Quiz Information</h2>
+                <span className="text-gray-500 group-open:rotate-180 transition-transform">
+                  ▼
+                </span>
+              </summary>
+              <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
+                <div itemScope itemType="https://schema.org/Question">
+                  <h3 className="font-semibold" itemProp="name">How does the `&quot;Today in History`&quot; quiz work?</h3>
+                  <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                    Each day features historical events that actually occurred on that exact date. 
+                    The quiz updates daily at midnight in your local timezone.
+                  </p>
+                </div>
+                <div itemScope itemType="https://schema.org/Question">
+                  <h3 className="font-semibold" itemProp="name">What types of historical events are included?</h3>
+                  <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                    We cover a wide range of historical events including political milestones, scientific discoveries, 
+                    cultural events, famous birthdays, and important anniversaries from throughout history.
+                  </p>
+                </div>
+                <div itemScope itemType="https://schema.org/Question">
+                  <h3 className="font-semibold" itemProp="name">Are the questions accurate?</h3>
+                  <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                    Yes! All historical events are verified from reliable sources. Each question includes 
+                    interesting context and facts to help you learn more about history.
+                  </p>
+                </div>
+                <div itemScope itemType="https://schema.org/Question">
+                  <h3 className="font-semibold" itemProp="name">Why do I see different dates than my friends?</h3>
+                  <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                    The quiz uses your local timezone to determine today`&quot;s date. If you and your friends 
+                    are in different timezones, you might see quizzes for different dates.
+                  </p>
+                </div>
+              </div>
+            </details>
+          </div>
         </div>
       </div>
-    </>
-  );
+    );
+  } catch (error) {
+    console.error('Error loading today in history quiz:', error);
+    notFound();
+  }
+}
+
+// Generate meta tags for SEO
+export async function generateMetadata() {
+  // Note: We can't use the timezone-aware date here since generateMetadata doesn't run in the same context
+  // But we can create a generic description that works for all users
+  const today = new Date();
+  const displayDate = today.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
+  const title = `On This Day in History - ${displayDate} | Triviaah`;
+  const description = `Test your historical knowledge with today's history quiz! Discover what happened on ${displayDate} throughout history. Free daily historical trivia.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: `https://triviaah.com/today-in-history`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    alternates: {
+      canonical: `https://triviaah.com/today-in-history`
+    },
+    keywords: ["today in history", "historical events", "history quiz", "on this day", "daily history", "historical facts"]
+  };
 }

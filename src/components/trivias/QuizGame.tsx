@@ -14,6 +14,12 @@ import Confetti from 'react-confetti';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import QuizSummary from '@/components/trivias/QuizSummary';
 
+interface QuizGameProps {
+  initialQuestions: Question[];
+  category: string;
+  quizConfig?: QuizConfig;
+}
+
 interface QuizConfig {
   isQuickfire?: boolean;
   timePerQuestion?: number;
@@ -34,11 +40,7 @@ export default function QuizGame({
   initialQuestions,
   category,
   quizConfig,
-}: {
-  initialQuestions: Question[];
-  category: string;
-  quizConfig?: QuizConfig;
-}) {
+}: QuizGameProps){
   /* ---------- Config ---------- */
   const isQuickfire = quizConfig?.isQuickfire || category === 'quick-fire';
   const timePerQuestion = isQuickfire ? 10 : 30;

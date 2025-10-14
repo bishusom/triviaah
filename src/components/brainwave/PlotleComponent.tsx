@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
+import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { addPlotleResult } from '@/lib/brainwave/plotle/plotle-sb';
 import { checkLetterGuess, validateMovieGuess, type PlotleData, type PlotleGuessResult } from '@/lib/brainwave/plotle/plotle-logic';
 import Image from 'next/image';
@@ -707,7 +708,17 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
             {shareMessage && (
               <div className="mt-2 text-blue-600">{shareMessage}</div>
             )}
-            
+
+            <FeedbackComponent
+              gameType="plotle"
+              category="brainwave"
+              metadata={{
+                attempts: attempts.length,
+                won: gameState === 'won',
+                correctAnswer: puzzleData.targetTitle
+              }}
+            />
+
           </div>
         )}
       </div>

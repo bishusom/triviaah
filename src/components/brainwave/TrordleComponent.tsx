@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { addTrordleResult } from '@/lib/brainwave/trordle/trordle-sb';
 import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import Image from 'next/image';
@@ -9,6 +8,8 @@ import { fetchPexelsImage } from '@/lib/pexels';
 import styles from '@styles/Trordle.module.css';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
+import { addTrordleResult } from '@/lib/brainwave/trordle/trordle-sb';
+import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { checkTrordleGuess, TrordleData, TrordleGuessResult } from '@/lib/brainwave/trordle/trordle-logic';
 
 interface TrordleComponentProps {
@@ -711,6 +712,17 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
               ))
             )}
           </div>
+
+          <FeedbackComponent
+            gameType="trordle"
+            category="brainwave"
+            metadata={{
+              attempts: attempts.length,
+              won: gameState === 'won',
+              puzzleQuestion: puzzleData.question,
+              puzzletAnswer: puzzleData.answer
+            }}
+          />
         </div>
       )}
       

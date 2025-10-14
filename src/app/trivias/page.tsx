@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import triviaCategories from '@/config/triviaCategories.json';
 import Image from 'next/image';
-import ScrollButtons from '@/components/ScrollButtons'; // Import ScrollButtons component
+import ScrollButtons from '@/components/common/ScrollButtons'; // Import ScrollButtons component
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

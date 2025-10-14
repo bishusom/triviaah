@@ -3,7 +3,7 @@
 
 import SongleComponent from '@/components/brainwave/SongleComponent';
 import { getDailySongle } from '@/lib/brainwave/songle/songle-sb';
-import MuteButton from '@/components/MuteButton';
+import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { SongleData } from '@/lib/brainwave/songle/songle-logic';
 import Ads from '@/components/Ads';

@@ -1,4 +1,4 @@
-// app/api/feedback/route.ts
+// app/api/feedback/route.ts - Clean version
 import { NextRequest, NextResponse } from 'next/server';
 import { addFeedback, getFeedback } from '@/lib/supabase';
 
@@ -6,23 +6,30 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const { rating, category, score, correctCount, totalQuestions, userId } = body;
+    const { 
+      rating, 
+      category, 
+      gameType = 'trivia', 
+      metadata = {},
+      userId 
+    } = body;
     
-    if (!rating || !category) {
+    if (!rating || !gameType) {
       return NextResponse.json(
-        { error: 'Rating and category are required' },
+        { error: 'Rating and gameType are required' },
         { status: 400 }
       );
     }
 
-    const feedbackId = await addFeedback({
+    const feedbackData = {
       rating: Number(rating),
-      category,
-      score: Number(score || 0),
-      correctCount: Number(correctCount || 0),
-      totalQuestions: Number(totalQuestions || 0),
+      category: category || gameType,
+      gameType,
+      metadata,
       userId: userId || undefined
-    });
+    };
+
+    const feedbackId = await addFeedback(feedbackData);
 
     return NextResponse.json({ 
       success: true, 
@@ -42,8 +49,9 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const limitCount = Number(searchParams.get('limit')) || 50;
+    const gameType = searchParams.get('gameType');
     
-    const feedback = await getFeedback(limitCount);
+    const feedback = await getFeedback(limitCount, gameType);
 
     return NextResponse.json(feedback);
 

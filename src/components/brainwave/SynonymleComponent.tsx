@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
+import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { addSynonymleResult } from '@/lib/brainwave/synonymle/synonymle-sb';
 import { 
   checkSynonymleGuess, 
@@ -564,6 +565,16 @@ export default function SynonymleComponent({ initialData }: SynonymleComponentPr
             {shareMessage && (
               <div className="mt-2 text-blue-600">{shareMessage}</div>
             )}
+
+            <FeedbackComponent
+              gameType="synonymle"
+              category="brainwave"
+              metadata={{
+                attempts: attempts.length,
+                won: gameState === 'won',
+                correctAnswer: puzzleData.targetWord
+              }}
+            />
           </div>
         )}
       </div>

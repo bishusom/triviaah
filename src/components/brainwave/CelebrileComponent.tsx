@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
+import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { addCelebrileResult } from '@/lib/brainwave/celebrile/celebrile-sb';
 import { 
   checkLetterGuess, 
@@ -770,6 +771,17 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
             {shareMessage && (
               <div className="mt-2 text-purple-600">{shareMessage}</div>
             )}
+
+            <FeedbackComponent
+              gameType="celebrile"
+              category="brainwave"
+              metadata={{
+                attempts: attempts.length,
+                won: gameState === 'won',
+                correctAnswer: puzzleData.targetName,
+                correctAnswerCategory: puzzleData.category
+              }}
+            />
           </div>
         )}
       </div>

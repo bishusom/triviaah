@@ -7,9 +7,11 @@ import { MdShare } from "react-icons/md";
 import { fetchWikimediaImage, getCapitalSearchTerms } from '@/lib/wikimedia';
 import { useSound } from '@/context/SoundContext';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { CapitalePuzzle, CapitalInfo, addCapitaleResult } from '@/lib/brainwave/capitale/capitale-sb';
 import { checkCapitaleGuess, CapitaleGuessResult, isValidCapital } from '@/lib/brainwave/capitale/capitale-logic';
 import Image from 'next/image';
+//import { im } from 'mathjs';
 
 interface CapitaleComponentProps {
   initialData: CapitalePuzzle;
@@ -654,7 +656,7 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
           </div>
         )}
         
-        {/* Share button */}
+        {/* Share button & feedback */}
         {(gameState === 'won' || gameState === 'lost') && (
           <div className="flex flex-col items-center mt-4">
             <button
@@ -666,6 +668,19 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
             {shareMessage && (
               <div className="mt-2 text-blue-600">{shareMessage}</div>
             )}
+
+            <FeedbackComponent
+              gameType="capitale"
+              category="brainwave"
+              metadata={{
+                attempts: attempts.length,
+                won: gameState === 'won',
+                targetCountry: puzzleData.country,
+                targetCapital: puzzleData.answer,
+                hardMode // if you track this
+              }}
+            />
+
           </div>
         )}
       </div>

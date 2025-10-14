@@ -3,7 +3,7 @@
 
 import PlotleComponent from '@/components/brainwave/PlotleComponent';
 import { getDailyPlotle } from '@/lib/brainwave/plotle/plotle-sb';
-import MuteButton from '@/components/MuteButton';
+import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { PlotleData } from '@/lib/brainwave/plotle/plotle-logic';
 import Ads from '@/components/Ads';

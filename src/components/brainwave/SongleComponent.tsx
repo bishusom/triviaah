@@ -7,6 +7,7 @@ import { MdShare } from "react-icons/md";
 import { useSound } from '@/context/SoundContext';
 import { useCoverArt } from '@/hooks/useCoverArt';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { SonglePuzzle, addSongleResult } from '@/lib/brainwave/songle/songle-sb';
 import { checkSongleGuess, SongleGuessResult, getProgressiveClues } from '@/lib/brainwave/songle/songle-logic';
 import Image from 'next/image';
@@ -698,6 +699,17 @@ export default function SongleComponent({ initialData }: SongleComponentProps) {
             {shareMessage && (
               <div className="mt-2 text-blue-600">{shareMessage}</div>
             )}
+
+            <FeedbackComponent
+              gameType="songle"
+              category="Music"
+              metadata={{
+                attempts: attempts.length,
+                won: gameState === 'won',
+                artist: puzzleData.artist,
+                songTitle: puzzleData.normalizedTitle
+              }}
+            />
           </div>
         )}
       </div>

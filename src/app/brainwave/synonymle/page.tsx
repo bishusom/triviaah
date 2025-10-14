@@ -3,7 +3,7 @@
 
 import SynonymleComponent from '@/components/brainwave/SynonymleComponent';
 import { getDailySynonymle } from '@/lib/brainwave/synonymle/synonymle-sb';
-import MuteButton from '@/components/MuteButton';
+import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { SynonymleData } from '@/lib/brainwave/synonymle/synonymle-logic';
 import Ads from '@/components/Ads';

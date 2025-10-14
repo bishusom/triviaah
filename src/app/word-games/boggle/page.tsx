@@ -1,4 +1,4 @@
-import MuteButton from '@/components/MuteButton';
+import MuteButton from '@/components/common/MuteButton';
 import BoggleGame from '@/components/word-games/BoggleGame';
 import { Metadata } from 'next';
 

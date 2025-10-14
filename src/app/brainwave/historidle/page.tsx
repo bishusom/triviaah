@@ -3,7 +3,7 @@
 
 import HistoridleComponent from '@/components/brainwave/HistoridleComponent';
 import { getDailyHistoridle } from '@/lib/brainwave/historidle/historidle-sb';
-import MuteButton from '@/components/MuteButton';
+import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { HistoridleData } from '@/lib/brainwave/historidle/historidle-logic';
 import Ads from '@/components/Ads';

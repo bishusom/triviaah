@@ -1,4 +1,4 @@
-import MuteButton from '@/components/MuteButton';
+import MuteButton from '@/components/common/MuteButton';
 import PrimeHunterPuzzle from '@/components/number-puzzles/PrimeHunterPuzzle';
 
 export default function PrimeHunterPage() {
