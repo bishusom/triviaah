@@ -6,6 +6,7 @@ import { WithTimezone } from '@/components/common/WithTimezone';
 import { TimezoneInfo } from '@/components/common/TimezoneInfo';
 import MuteButton from '@/components/common/MuteButton';
 import type { UserLocationInfo } from '@/types/location';
+export const dynamic = 'force-dynamic';
 
 export default async function TodayInHistoryPage() {
   return (
