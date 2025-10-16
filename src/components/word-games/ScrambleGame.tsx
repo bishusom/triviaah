@@ -1,11 +1,9 @@
 'use client';
 import { event } from '@/lib/gtag';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import confetti from 'canvas-confetti';
 import { createClient } from '@supabase/supabase-js';
 import { useSound } from '@/context/SoundContext';
-import gameStyles from '@styles/WordGames/ScrambleGame.module.css';
-import commonStyles from '@styles/WordGames/WordGames.common.module.css';
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -30,29 +28,32 @@ export default function ScrambleGame() {
   const [timer, setTimer] = useState(0);
   const { isMuted } = useSound();
   const [feedback, setFeedback] = useState({ message: '', type: '' });
+  const [wordSolved, setWordSolved] = useState(false);
 
   // Level system
   const [currentLevel, setCurrentLevel] = useState(1);
   const [gamesCompletedInCurrentDifficulty, setGamesCompletedInCurrentDifficulty] = useState(0);
-  const levels: DifficultyLevel[] = [
+  
+  const levels: DifficultyLevel[] = useMemo(() => [
     { difficulty: 'easy', wordLength: [6, 7], games: 3, timeLimit: 240 },
     { difficulty: 'medium', wordLength: [8, 9], games: 3, timeLimit: 300 },
     { difficulty: 'hard', wordLength: [10, 11, 12], games: 3, timeLimit: 500 }
-  ];
-  const totalGames = levels.reduce((sum, level) => sum + level.games, 0);
+  ], []);
+  const prevDifficulty = useRef<DifficultyLevel | null>(null);
 
-  
-  // Refs for sounds and timer
-  const timerInterval = useRef<NodeJS.Timeout| null>(null)
+  const totalGames = useMemo(() => levels.reduce((sum, level) => sum + level.games, 0), [levels]);
+
+  // Refs
+  const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const audioElements = useRef<Record<string, string>>({
     select: '/sounds/click.mp3',
     found: '/sounds/correct.mp3',
     win: '/sounds/win.mp3',
     error: '/sounds/incorrect.mp3'
-   }); 
+  });
 
   // Helper functions
-  const scrambleWord = (word: string) => {
+  const scrambleWord = useCallback((word: string) => {
     const letters = word.split('');
     let scrambled;
     do {
@@ -63,9 +64,9 @@ export default function ScrambleGame() {
       }
     } while (scrambled.join('') === word);
     return scrambled.join('');
-  };
+  }, []);
 
-  const playSound = (type: keyof typeof audioElements.current) => {
+  const playSound = useCallback((type: keyof typeof audioElements.current) => {
     if (isMuted) return;
     try {
       const audio = new Audio(audioElements.current[type]);
@@ -73,124 +74,126 @@ export default function ScrambleGame() {
     } catch (error) {
       console.error('Sound error:', error);
     }
-  };
+  }, [isMuted]);
 
-  const showFeedback = (message: string, type: string) => {
+  const showFeedback = useCallback((message: string, type: string) => {
     setFeedback({ message, type });
-  };
+  }, []);
 
-  // Timer functions
-  const startTimer = () => {
-    if (timerInterval.current !== null) {
-      window.clearInterval(timerInterval.current);
-      timerInterval.current = null;
+  const getCurrentDifficulty = useCallback((level: number) => {
+    let gamesCount = 0;
+    for (const l of levels) {
+      gamesCount += l.games;
+      if (level <= gamesCount) {
+        return l;
+      }
     }
-    const currentDifficulty = getCurrentDifficulty(currentLevel);
-    if (!currentDifficulty) return;
+    return levels[0];
+  }, [levels]);
 
-    setTimer(currentDifficulty.timeLimit);
+  const showConfetti = useCallback((options = {}) => {
+    const defaults = {
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
+    };
+    
+    confetti({
+      ...defaults,
+      ...options
+    });
+  }, []);
+
+  const formatTime = useCallback((seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }, []);
+
+  const calculateScore = useCallback((word: string) => {
+    return word.length * 5;
+  }, []);
+
+  // Timer management
+  const startTimer = useCallback((timeLimit: number) => {
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current);
+    }
+
+    setTimer(timeLimit);
     
     timerInterval.current = setInterval(() => {
       setTimer(prev => {
         if (prev <= 1) {
-          timerInterval.current = null;
+          if (timerInterval.current) {
+            clearInterval(timerInterval.current);
+            timerInterval.current = null;
+          }
           showFeedback('Time\'s up!', 'error');
-          setTimeout(checkLevelProgress, 2000);
+          // Don't auto-progress here, let user click "New Word"
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
-  };
+  }, [showFeedback]);
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const setupNewGame = (word: string) => {
-    setBaseWord(word);
-    setUsedBaseWords(prev => [...prev, word]);
-    const scrambled = scrambleWord(word);
-    setScrambledLetters(scrambled.split(''));
-    setFoundWords([]);
-    setCurrentWord([]);
-    showFeedback('Unscramble the letters to form a valid word!', 'info');
-    startTimer();
-  };
-
-  // Updated to use Supabase
-  const initGame = async () => {
-    try {
-        const currentDifficulty = getCurrentDifficulty(currentLevel);
-        if (!currentDifficulty) return;
-
-        const wordLength = currentDifficulty.wordLength[
-        Math.floor(Math.random() * currentDifficulty.wordLength.length)
-        ];
-
-        try {
-            const randomFloor = Math.floor(Math.random() * 900000);
-            
-            // Supabase query
-            const { data, error } = await supabase
-              .from('dictionary')
-              .select('word')
-              .eq('length', wordLength)
-              .eq('is_common', true)
-              .gte('random_index', randomFloor)
-              .order('random_index')
-              .limit(50);
-
-            if (error) throw error;
-
-            const wordList: string[] = (data || [])
-              .map(item => item.word.toUpperCase())
-              .filter(word => !usedBaseWords.includes(word));
-
-            if (wordList.length > 0) {
-            const newBaseWord = wordList[Math.floor(Math.random() * wordList.length)];
-            return setupNewGame(newBaseWord);
-            }
-        } catch (supabaseError) {
-            console.log('Using fallback word list due to Supabase error:', supabaseError);
-      }
-        // Fallback word list
-        const localWordList = [
-        'PICTURE', 'SILENCE', 'CAPTURE', 'MOUNTAIN', 'ADVENTURE', 
-        'DISCOVERY', 'STANDARD', 'PARADISE', 'ELEPHANT', 'HOSPITAL',
-        'BIRTHDAY', 'COMPUTER', 'TELEPHONE', 'BUTTERFLY', 'UNIVERSE'
-        ].filter(word => word.length === wordLength && !usedBaseWords.includes(word));
-
-        if (localWordList.length === 0) {
-        console.log('Resetting used words for new game');
-        setUsedBaseWords([]);
-        return initGame();
-        }
-
-        const newBaseWord = localWordList[Math.floor(Math.random() * localWordList.length)];
-        setBaseWord(newBaseWord);
-        setUsedBaseWords(prev => [...prev, newBaseWord]);
-        setScrambledLetters(scrambleWord(newBaseWord).split(''));
-        setFoundWords([]);
-        setCurrentWord([]);
-        showFeedback('Unscramble the letters to form the correct word!', 'info');
-        startTimer();
-    } catch (error) {
-        console.error('Error initializing game:', error);
-        showFeedback('Error starting game', 'error');
+  const stopTimer = useCallback(() => {
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current);
+      timerInterval.current = null;
     }
-    };
+  }, []);
 
-  // ... rest of the ScrambleGame component remains the same
-  const selectLetter = (index: number) => {
+  // Game progression
+  const checkLevelProgress = useCallback(() => {
+    const newGamesCompleted = gamesCompletedInCurrentDifficulty + 1;
+    setGamesCompletedInCurrentDifficulty(newGamesCompleted);
+
+    const currentDifficulty = getCurrentDifficulty(currentLevel);
+    
+    if (currentDifficulty && newGamesCompleted >= currentDifficulty.games) {
+      const newLevel = currentLevel + 1;
+      setCurrentLevel(newLevel);
+      setGamesCompletedInCurrentDifficulty(0);
+      showConfetti({ particleCount: 200, spread: 100 });
+      const next = getCurrentDifficulty(currentLevel + 1);
+      showFeedback(
+        `Level-up!  Next: ${next?.difficulty ?? 'finished'} difficulty`,
+        'success'
+      );
+      //showFeedback(`Level up! Now at ${getCurrentDifficulty(newLevel).difficulty} difficulty`, 'success');
+      
+      if (newLevel > totalGames) {
+        playSound('win');
+        showConfetti({ particleCount: 200, spread: 100 });
+        showFeedback('Congratulations! You completed all levels!', 'success');
+        setTimeout(() => {
+          setCurrentLevel(1);
+          setGamesCompletedInCurrentDifficulty(0);
+          setUsedBaseWords([]);
+          setScore(0);
+        }, 5000);
+        return;
+      }
+    }
+  }, [gamesCompletedInCurrentDifficulty, currentLevel, totalGames, playSound, showConfetti, getCurrentDifficulty, showFeedback]);
+
+  // Game actions
+  const selectLetter = useCallback((index: number) => {
     if (currentWord.includes(index)) return;
     setCurrentWord(prev => [...prev, index]);
     playSound('select');
-  };
+  }, [currentWord, playSound]);
 
-  const submitWord = () => {
+  const submitWord = useCallback(() => {
+    // Prevent submission if word was revealed or timer is stopped
+    if (timer === 0 && timerInterval.current === null) {
+      showFeedback('Game over! Start a new word.', 'error');
+      return;
+    }
+
     if (currentWord.length === 0) {
       showFeedback('Please select some letters first', 'error');
       playSound('error');
@@ -208,13 +211,11 @@ export default function ScrambleGame() {
     if (word === baseWord) {
       const newScore = score + calculateScore(word);
       setFoundWords(prev => [...prev, word]);
+      setWordSolved(true);
       setScore(newScore);
       showFeedback(`Correct! You found the word! +${calculateScore(word)} points`, 'success');
       playSound('found');
-      if (timerInterval.current !== null) {
-        window.clearInterval(timerInterval.current);
-        timerInterval.current = null;
-      }
+      stopTimer();
       showConfetti();
 
       setTimeout(() => {
@@ -224,35 +225,27 @@ export default function ScrambleGame() {
       showFeedback('Not the correct word', 'error');
       playSound('error');
     }
-  };
+  }, [currentWord, scrambledLetters, baseWord, score, calculateScore, showFeedback, playSound, showConfetti, checkLevelProgress, stopTimer, timer]);
 
-  const calculateScore = (word: string) => {
-    return word.length * 5;
-  };
-
-  const clearCurrentAttempt = () => {
+  const clearCurrentAttempt = useCallback(() => {
     setCurrentWord([]);
-  };
+  }, []);
 
-  const shuffleLetters = () => {
+  const shuffleLetters = useCallback(() => {
     setScrambledLetters(scrambleWord(baseWord).split(''));
-  };
+  }, [baseWord, scrambleWord]);
 
-  const showHint = () => {
+  const showHint = useCallback(() => {
     if (foundWords.includes(baseWord)) {
       showFeedback('You already found the word!', 'info');
     } else {
       const hint = baseWord.split('').slice(0, 2).join('');
       showFeedback(`Try starting with: ${hint}...`, 'info');
     }
-  };
+  }, [foundWords, baseWord, showFeedback]);
 
-  const revealWord = () => {
-    if (timerInterval.current !== null) {
-      window.clearInterval(timerInterval.current);
-      timerInterval.current = null;
-    }
-    
+  const giveUp = useCallback(() => {
+    stopTimer();
     showFeedback(`The word was: ${baseWord}`, 'info');
     
     if (!foundWords.includes(baseWord)) {
@@ -262,116 +255,164 @@ export default function ScrambleGame() {
     setCurrentWord([]);
     playSound('error');
     
+    // Disable further interactions and move to next word after delay
     setTimeout(() => {
       checkLevelProgress();
     }, 3000);
-  };
+  }, [baseWord, foundWords, showFeedback, playSound, stopTimer, checkLevelProgress]);
 
-  const getCurrentDifficulty = (level: number) => {
-    let gamesCount = 0;
-    for (const l of levels) {
-      gamesCount += l.games;
-      if (level <= gamesCount) {
-        return l;
-      }
-    }
-    return levels[0];
-  };
+  // Main game initialization - simplified to avoid loops
+  const initGame = useCallback(async () => {
+    try {
+      stopTimer();
 
-  const checkLevelProgress = () => {
-    const newGamesCompleted = gamesCompletedInCurrentDifficulty + 1;
-    setGamesCompletedInCurrentDifficulty(newGamesCompleted);
+      const currentDifficulty = getCurrentDifficulty(currentLevel);
+      if (!currentDifficulty) return;
 
-    const currentDifficulty = levels.find(level => 
-      currentLevel <= level.games + levels.slice(0, levels.indexOf(level)).reduce((sum, l) => sum + l.games, 0)
-    );
-
-    if (currentDifficulty && newGamesCompleted >= currentDifficulty.games) {
-      setCurrentLevel(prev => prev + 1);
-      setGamesCompletedInCurrentDifficulty(0);
-      showConfetti({ particleCount: 200, spread: 100 });
-    }
-
-    if (currentLevel >= totalGames) {
-      playSound('win');
-      showConfetti({ particleCount: 200, spread: 100 });
-      setTimeout(() => {
-        setCurrentLevel(1);
-        setGamesCompletedInCurrentDifficulty(0);
+      /* 1.  Clear used words when we just changed difficulty ---------- */
+      if (prevDifficulty.current?.difficulty !== currentDifficulty.difficulty) {
         setUsedBaseWords([]);
-        setScore(0);
-        initGame();
-      }, 5000);
-    } else {
-      initGame();
-    }
-  };
+        prevDifficulty.current = currentDifficulty;
+      }
 
-  const showConfetti = (options = {}) => {
-    const defaults = {
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
-    };
-    
-    confetti({
-      ...defaults,
-      ...options
-    });
-  };
+      const wordLength =
+        currentDifficulty.wordLength[
+          Math.floor(Math.random() * currentDifficulty.wordLength.length)
+        ];
+
+      let newBaseWord = '';
+
+      /* 2.  Try Supabase first --------------------------------------- */
+      try {
+        const randomFloor = Math.floor(Math.random() * 900_000);
+        const { data, error } = await supabase
+          .from('dictionary')
+          .select('word')
+          .eq('length', wordLength)
+          .eq('is_common', true)
+          .gte('random_index', randomFloor)
+          .order('random_index')
+          .limit(50);
+
+        if (!error && data?.length) {
+          const available = data
+            .map((i) => i.word.toUpperCase())
+            .filter((w) => !usedBaseWords.includes(w));
+          if (available.length) {
+            newBaseWord = available[Math.floor(Math.random() * available.length)];
+          }
+        }
+      } catch (e) {
+        console.warn('Supabase fetch failed, using local list', e);
+      }
+
+      /* 3.  Fallback local list -------------------------------------- */
+      if (!newBaseWord) {
+        const localList = [
+          'PICTURE','SILENCE','CAPTURE','MOUNTAIN','ADVENTURE',
+          'DISCOVERY','STANDARD','PARADISE','ELEPHANT','HOSPITAL',
+          'BIRTHDAY','COMPUTER','TELEPHONE','BUTTERFLY','UNIVERSE'
+        ]
+          .filter((w) => w.length === wordLength && !usedBaseWords.includes(w));
+
+        if (localList.length) {
+          newBaseWord = localList[Math.floor(Math.random() * localList.length)];
+        }
+      }
+
+      /* 4.  Last-resort reset --------------------------------------- */
+      if (!newBaseWord) {
+        setUsedBaseWords([]);                 // wipe and retry
+        newBaseWord =
+          ['PICTURE','SILENCE','CAPTURE','MOUNTAIN','ADVENTURE'][0] ?? 'EXAMPLE';
+      }
+
+      /* 5.  Update board -------------------------------------------- */
+      setBaseWord(newBaseWord);
+      setUsedBaseWords((prev) => [...prev, newBaseWord]);
+      setScrambledLetters(scrambleWord(newBaseWord).split(''));
+      setFoundWords([]);
+      setCurrentWord([]);
+      showFeedback('Unscramble the letters to form a valid word!', 'info');
+      startTimer(currentDifficulty.timeLimit);
+    } catch (err) {
+      console.error('initGame crash', err);
+      showFeedback('Error starting game', 'error');
+    }
+  }, [
+    currentLevel,
+    usedBaseWords,
+    getCurrentDifficulty,
+    scrambleWord,
+    showFeedback,
+    startTimer,
+    stopTimer
+  ]);
 
   // Initialize game on mount
   useEffect(() => {
     const checkGtag = setInterval(() => {
       if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        event({action: 'word_scramble_started', category: 'word_scramble',label: 'word_scramble'});
+        event({ action: 'word_scramble_started', category: 'word_scramble', label: 'word_scramble' });
         clearInterval(checkGtag);
       }
-    }, 100)
+    }, 100);
+
+    initGame();                 // first board
+
+    return () => stopTimer();   // clean-up
+  }, []);   
+
+  // Effect to handle game completion and start new game
+  useEffect(() => {
+    if (!wordSolved) return;
+    const t = setTimeout(() => {
+      setWordSolved(false);
+      initGame();
+    }, 2000);
+    return () => clearTimeout(t);
+  }, [wordSolved, initGame]);
+
+
+  const newWord = useCallback(() => {
+    stopTimer();
     initGame();
-    return () => {
-        if (timerInterval.current !== null) {
-          window.clearInterval(timerInterval.current);
-          timerInterval.current = null;
-        }
-    };
-  }, []);
+  }, [initGame, stopTimer]);
 
   return (
-    <div className={`${commonStyles.container}`}>
-      <div className={`${commonStyles.header}`}>
+    <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className={commonStyles.title}>Word Scramble Game</h1>
-          <div className={commonStyles.levelText}>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Word Scramble Game</h1>
+          <div className="text-lg font-semibold text-gray-600">
             Level: {currentLevel} ({getCurrentDifficulty(currentLevel).difficulty})
           </div>
         </div>
          <div className="flex items-center gap-4">
-          <div className={`${commonStyles.timerContainer} ${timer <= 10 ? commonStyles.timeCritical : ''}`}>
+          <div className={`text-lg font-semibold ${timer <= 10 ? 'text-red-600 animate-pulse' : 'text-gray-800'}`}>
             ⏱️ {formatTime(timer)}
           </div>
-          <div className={commonStyles.scoreText}>
+          <div className="text-lg font-semibold text-gray-800">
             Score: {score}
           </div>
         </div>
       </div>
 
       <div className="mb-6">
-        <div className="flex flex-wrap gap-2 mb-4" id="scrambled-letters">
+        <div className="flex flex-wrap gap-2 mb-4">
           {scrambledLetters.map((letter, index) => (
             <button
                 key={index}
                 onClick={() => selectLetter(index)}
                 disabled={currentWord.includes(index)}
                 className={`
-                    w-letter-tile h-letter-tile
+                    w-14 h-14
                     flex items-center justify-center
                     text-2xl font-bold rounded-lg
                     ${currentWord.includes(index) 
-                    ? 'bg-gray-200 cursor-not-allowed' 
-                    : 'bg-blue-100 hover:bg-blue-200 cursor-pointer'}
-                    transition-colors duration-200
+                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
+                    : 'bg-blue-500 text-white hover:bg-blue-600 cursor-pointer'}
+                    transition-all duration-200
                 `}
                 >
                 {letter}
@@ -380,55 +421,61 @@ export default function ScrambleGame() {
         </div>
 
         <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">Current Attempt:</h3>
-          <div className="flex flex-wrap gap-2 min-h-10" id="current-attempt">
+          <h3 className="text-lg font-semibold mb-2 text-gray-800">Current Attempt:</h3>
+          <div className="flex flex-wrap gap-2 min-h-14">
             {currentWord.map((index, i) => (
-              <span key={i} className={`${gameStyles.letterTile} bg-blue-200`}>
+              <span key={i} className="w-14 h-14 flex items-center justify-center text-2xl font-bold rounded-lg bg-blue-200 text-gray-800">
                 {scrambledLetters[index]}
               </span>
             ))}
           </div>
         </div>
 
-        <div className={`p-3 rounded mb-4 ${feedback.type === 'error' ? 'bg-red-100 text-red-800' : feedback.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
-          {feedback.message}
-        </div>
+        {feedback.message && (
+          <div className={`p-4 rounded-lg mb-4 font-mono text-lg ${
+            feedback.type === 'error' ? 'bg-red-100 text-red-700' : 
+            feedback.type === 'success' ? 'bg-green-100 text-green-700' : 
+            'bg-blue-50 text-blue-700'
+          }`}>
+            {feedback.message}
+          </div>
+        )}
       </div>
 
-      <div className={`${commonStyles.actionButtons}`}>
+      <div className="flex flex-wrap gap-2 mb-6">
         <button 
           onClick={submitWord}
-          className={`${commonStyles.actionButton} ${commonStyles.submitButton}`}
+          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-semibold"
         >
           Submit
         </button>
         <button 
           onClick={clearCurrentAttempt}
-          className={`${commonStyles.actionButton} ${commonStyles.clearButton}`}
+          className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all font-semibold"
         >
           Clear
         </button>
         <button 
           onClick={shuffleLetters}
-          className={`${commonStyles.actionButton} ${commonStyles.shuffleButton}`}
+          className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all font-semibold"
         >
           Shuffle
         </button>
         <button 
           onClick={showHint}
-          className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}
+          className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all font-semibold"
         >
           Hint
         </button>
         <button 
-          onClick={revealWord}
-          className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
+          onClick={giveUp}
+          className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all font-semibold"
         >
-          Reveal Word
+          Give Up
         </button>
         <button 
-          onClick={initGame}
-          className={`${commonStyles.actionButton} ${commonStyles.playAgainButton}`}
+          onClick={newWord}
+          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-semibold"
         >
           New Word
         </button>
@@ -436,16 +483,28 @@ export default function ScrambleGame() {
 
       {foundWords.length > 0 && (
         <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2">Found Words:</h3>
+          <h3 className="text-lg font-semibold mb-2 text-gray-800">Found Words:</h3>
           <div className="flex flex-wrap gap-2">
             {foundWords.map((word, i) => (
-              <span key={i} className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
+              <span key={i} className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">
                 {word}
               </span>
             ))}
           </div>
         </div>
       )}
+
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold text-gray-800 mb-2">How to Play</h2>
+        <ul className="list-disc pl-5 space-y-1 text-gray-600">
+          <li>Click on letters to unscramble them and form the correct word</li>
+          <li>Complete words before time runs out</li>
+          <li>Progress through easy, medium, and hard difficulty levels</li>
+          <li>Use hints if you get stuck (shows first 2 letters)</li>
+          <li>Shuffle the letters for a different view</li>
+          <li>Earn points based on word length (5 points per letter)</li>
+        </ul>
+      </div>
     </div>
   );
 }

@@ -18,6 +18,7 @@ export default function PrimeHunterPuzzle() {
   const [feedback, setFeedback] = useState({ message: '', type: '' });
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const { isMuted } = useSound();
+  const levelUpInProgress = useRef(false);
 
   type SoundType = 'select' | 'found' | 'win' | 'error';
 
@@ -47,18 +48,18 @@ export default function PrimeHunterPuzzle() {
     });
   }, []);
 
-  const getGridSize = useCallback(() => {
-    if (gameState.level <= 3) return 4;
-    if (gameState.level <= 6) return 5;
+  const getGridSize = useCallback((level: number) => {
+    if (level <= 3) return 4;
+    if (level <= 6) return 5;
     return 6;
-  }, [gameState.level]);
+  }, []);
 
-  const getNumberRange = useCallback(() => {
-    if (gameState.level <= 2) return 30;
-    if (gameState.level <= 4) return 50;
-    if (gameState.level <= 6) return 75;
+  const getNumberRange = useCallback((level: number) => {
+    if (level <= 2) return 30;
+    if (level <= 4) return 50;
+    if (level <= 6) return 75;
     return 100;
-  }, [gameState.level]);
+  }, []);
 
   const isPrime = useCallback((num: number) => {
     if (num <= 1) return false;
@@ -71,9 +72,9 @@ export default function PrimeHunterPuzzle() {
     return true;
   }, []);
 
-  const generateGrid = useCallback(() => {
-    const gridSize = getGridSize();
-    const numberRange = getNumberRange();
+  const generateGrid = useCallback((level: number) => {
+    const gridSize = getGridSize(level);
+    const numberRange = getNumberRange(level);
     const numbers: number[] = [];
     let primeCount = 0;
 
@@ -88,6 +89,7 @@ export default function PrimeHunterPuzzle() {
       attempts++;
     }
 
+    // Ensure we have at least 1 prime
     if (primeCount < 1) {
       const backupPrimes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31];
       const randomPrime = backupPrimes[Math.floor(Math.random() * backupPrimes.length)];
@@ -98,6 +100,8 @@ export default function PrimeHunterPuzzle() {
       }
     }
 
+    console.log(`Generated grid for level ${level}: ${primeCount} primes out of ${totalCells} cells`);
+
     setGameState(prev => ({
       ...prev,
       currentNumbers: numbers.slice(0, totalCells),
@@ -105,13 +109,40 @@ export default function PrimeHunterPuzzle() {
       primesCollected: 0,
       gameActive: true,
     }));
+
+    return primeCount;
   }, [getGridSize, getNumberRange, isPrime]);
+
+  const startTimer = useCallback(() => {
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current);
+    }
+
+    timerInterval.current = setInterval(() => {
+      setGameState(prev => {
+        const newTimeLeft = prev.timeLeft - 1;
+        if (newTimeLeft <= 0) {
+          if (timerInterval.current) {
+            clearInterval(timerInterval.current);
+            timerInterval.current = null;
+          }
+          setFeedback({ message: `Game Over! Final Score: ${prev.score}`, type: 'error' });
+          playSound('error');
+          return { ...prev, timeLeft: 0, gameActive: false };
+        }
+        return { ...prev, timeLeft: newTimeLeft };
+      });
+    }, 1000);
+  }, [playSound]);
 
   const initGame = useCallback(() => {
     // Clear existing timer
     if (timerInterval.current) {
       clearInterval(timerInterval.current);
+      timerInterval.current = null;
     }
+
+    levelUpInProgress.current = false;
 
     // Reset game state
     setFeedback({ message: '', type: '' });
@@ -125,44 +156,38 @@ export default function PrimeHunterPuzzle() {
       gameActive: false,
     });
 
-    // Generate grid
-    generateGrid();
-
-    // Start timer
-    timerInterval.current = setInterval(() => {
-      setGameState(prev => {
-        const newTimeLeft = prev.timeLeft - 1;
-        if (newTimeLeft <= 0) {
-          timerInterval.current = null;
-          // Game over logic
-          setGameState(prevState => ({ ...prevState, gameActive: false }));
-          setFeedback({ message: `Game Over! Final Score: ${prev.score}`, type: 'error' });
-          playSound('error');
-          return { ...prev, timeLeft: 0 };
-        }
-        return { ...prev, timeLeft: newTimeLeft };
-      });
-    }, 1000);
-  }, [generateGrid, playSound]);
+    // Generate grid and start timer
+    setTimeout(() => {
+      generateGrid(1);
+      startTimer();
+    }, 100);
+  }, [generateGrid, startTimer]);
 
   const levelUp = useCallback(() => {
+    if (levelUpInProgress.current) return;
+    levelUpInProgress.current = true;
+
+    console.log(`Leveling up from level ${gameState.level} to ${gameState.level + 1}`);
+
     // Stop game and timer
     setGameState(prev => ({ ...prev, gameActive: false }));
     if (timerInterval.current) {
       clearInterval(timerInterval.current);
+      timerInterval.current = null;
     }
-    setFeedback({ message: '', type: '' });
 
-    // Award bonus and update level
     const bonus = gameState.level * 20;
-    setTimeout(() => {
-      setFeedback({ message: `Level Complete! +${bonus} bonus points!`, type: 'success' });
-    }, 50);
+    const newLevel = gameState.level + 1;
+
+    setFeedback({ message: `Level Complete! +${bonus} bonus points!`, type: 'success' });
 
     setGameState(prev => ({
       ...prev,
       score: prev.score + bonus,
-      level: prev.level + 1,
+      level: newLevel,
+      timeLeft: 120,
+      primesCollected: 0,
+      gameActive: false,
     }));
 
     playSound('win');
@@ -170,53 +195,39 @@ export default function PrimeHunterPuzzle() {
 
     // Start new level after delay
     setTimeout(() => {
+      console.log(`Starting level ${newLevel}`);
       setFeedback({ message: '', type: '' });
-      setGameState(prev => ({
-        ...prev,
-        timeLeft: 120,
-        primesCollected: 0,
-        gameActive: true,
-      }));
-      generateGrid();
-      // Start timer
-      timerInterval.current = setInterval(() => {
-        setGameState(prev => {
-          const newTimeLeft = prev.timeLeft - 1;
-          if (newTimeLeft <= 0) {
-            timerInterval.current = null;
-            setGameState(prevState => ({ ...prevState, gameActive: false }));
-            setFeedback({ message: `Game Over! Final Score: ${prev.score}`, type: 'error' });
-            playSound('error');
-            return { ...prev, timeLeft: 0 };
-          }
-          return { ...prev, timeLeft: newTimeLeft };
-        });
-      }, 1000);
+      generateGrid(newLevel);
+      startTimer();
+      levelUpInProgress.current = false;
     }, 2000);
-  }, [generateGrid, playSound, showConfetti, gameState.level]);
+  }, [gameState.level, generateGrid, startTimer, playSound, showConfetti]);
 
   const handleCellClick = useCallback(
     (num: number, index: number) => {
-      if (!gameState.gameActive) return;
+      if (!gameState.gameActive || levelUpInProgress.current) return;
 
       const prime = isPrime(num);
       playSound('select');
 
       if (prime) {
-        setGameState(prev => ({
-          ...prev,
-          primesCollected: prev.primesCollected + 1,
-          score: prev.score + prev.level * 5,
-          currentNumbers: prev.currentNumbers.map((n, i) => 
-            i === index ? -Math.abs(n) : n
-          ),
-        }));
+        setGameState(prev => {
+          const newPrimesCollected = prev.primesCollected + 1;
+          const newScore = prev.score + prev.level * 5;
+          
+          console.log(`Prime found! ${newPrimesCollected}/${prev.primesInGrid} primes collected`);
+          
+          return {
+            ...prev,
+            primesCollected: newPrimesCollected,
+            score: newScore,
+            currentNumbers: prev.currentNumbers.map((n, i) => 
+              i === index ? -Math.abs(n) : n
+            ),
+          };
+        });
 
         playSound('found');
-
-        if (gameState.primesCollected + 1 >= gameState.primesInGrid) {
-          levelUp();
-        }
       } else {
         setGameState(prev => ({
           ...prev,
@@ -228,8 +239,19 @@ export default function PrimeHunterPuzzle() {
         playSound('error');
       }
     },
-    [gameState.gameActive, gameState.primesCollected, gameState.primesInGrid, gameState.level, isPrime, playSound, levelUp]
+    [gameState.gameActive, isPrime, playSound]
   );
+
+  // Check for level completion
+  useEffect(() => {
+    if (gameState.gameActive && 
+        !levelUpInProgress.current &&
+        gameState.primesInGrid > 0 &&
+        gameState.primesCollected >= gameState.primesInGrid) {
+      console.log(`Level completion detected: ${gameState.primesCollected}/${gameState.primesInGrid} primes`);
+      levelUp();
+    }
+  }, [gameState.primesCollected, gameState.primesInGrid, gameState.gameActive, levelUp]);
 
   const showHint = useCallback(() => {
     if (!gameState.gameActive) return;
@@ -244,7 +266,11 @@ export default function PrimeHunterPuzzle() {
         clearInterval(checkGtag);
       }
     }, 100);
-    initGame();
+    
+    // Initialize game after a short delay to ensure everything is loaded
+    setTimeout(() => {
+      initGame();
+    }, 500);
 
     return () => {
       if (timerInterval.current) {
@@ -253,7 +279,7 @@ export default function PrimeHunterPuzzle() {
     };
   }, [initGame]);
 
-  const gridSize = getGridSize();
+  const gridSize = getGridSize(gameState.level);
 
   return (
     <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">

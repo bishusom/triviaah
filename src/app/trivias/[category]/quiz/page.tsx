@@ -2,6 +2,7 @@ import QuizGame from '@/components/trivias/QuizGame';
 import { getCategoryQuestions } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import StructuredData from './structured-data';
 
 export async function generateMetadata({
   params,
@@ -64,6 +65,7 @@ export default async function QuizPage({
     return (
       <div className="quiz-container max-w-4xl mx-auto px-4 py-8">
         <h1 className="sr-only">{category.replace(/-/g, ' ')} Questions - Triviaah</h1>
+        <StructuredData params={params} />
         <QuizGame initialQuestions={questions} category={category} />
       </div>
     );

@@ -83,6 +83,7 @@ export default function BoggleGame() {
   const [currentExtendedLevel, setCurrentExtendedLevel] = useState(0);
 
   const timerInterval = useRef<NodeJS.Timeout| null>(null)
+  const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
 
   // Game configuration - wrapped in useMemo to prevent recreating on every render
   const config: GameConfig = useMemo(() => ({
@@ -331,6 +332,81 @@ export default function BoggleGame() {
     }, 1000);
   }, [updateTimer, showFeedback]);
 
+  // Validate word using Merriam-Webster API
+  const validateWord = useCallback(async (word: string) => {
+    const wordLower = word.toLowerCase();
+    
+    // Check cache first
+    if (wordCache.has(wordLower)) {
+      return wordCache.get(wordLower)!;
+    }
+
+    try {
+      const response = await fetch(
+        `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${wordLower}?key=${DICTIONARY_API_KEY}`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`API returned ${response.status}`);
+      }
+
+      const responseText = await response.text();
+      let data;
+      
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError, 'Response:', responseText);
+        throw new Error('Invalid JSON from API');
+      }
+
+      console.log('MW API response:', data);
+
+      // Handle different response types from Merriam-Webster
+      if (Array.isArray(data) && data.length > 0) {
+        // Check each entry in the array
+        for (const entry of data) {
+          // If it's a string, it's a suggestion (not a valid entry)
+          if (typeof entry === 'string') {
+            continue;
+          }
+          
+          // If it's an object with meta data, check if it matches our word
+          if (typeof entry === 'object' && entry !== null) {
+            // Check multiple possible ways the word might be represented
+            const wordMatches = 
+              // Check meta.id (might be "word:1" format)
+              (entry.meta?.id && entry.meta.id.split(':')[0].toUpperCase() === word.toUpperCase()) ||
+              // Check hwi.hw (headword)
+              (entry.hwi?.hw && entry.hwi.hw.replace(/\*/g, '').toUpperCase() === word.toUpperCase()) ||
+              // Check stems array
+              (entry.meta?.stems && entry.meta.stems.some((stem: string) => stem.toUpperCase() === word.toUpperCase()));
+            
+            if (wordMatches) {
+              console.log(`Word "${word}" validated via Merriam-Webster API.`);
+              setWordCache(prev => new Map(prev).set(wordLower, true));
+              return true;
+            }
+          }
+        }
+      }
+      
+      // Word not found in dictionary
+      setWordCache(prev => new Map(prev).set(wordLower, false));
+      return false;
+    } catch (error) {
+      console.error(`Error validating word "${word}":`, error);
+      
+      // Fallback to local word list
+      const isInLocalList = commonWords.includes(word.toUpperCase());
+      if (!isInLocalList) {
+        showFeedback({ message: 'Dictionary API unavailable. Using local word list.', type: 'info' });
+      }
+      setWordCache(prev => new Map(prev).set(wordLower, isInLocalList));
+      return isInLocalList;
+    }
+  }, [wordCache, commonWords, DICTIONARY_API_KEY, showFeedback]);
+
   // Initialize game
   const initGame = useCallback(() => {
     if (timerInterval.current !== null) {
@@ -558,6 +634,18 @@ export default function BoggleGame() {
     updateSelectionLine();
   }, [selectedCells, grid]);
 
+  // Check if two cells are adjacent
+  const isAdjacent = (index1: number, index2: number) => {
+    const size = config.gridSize[difficulty];
+    const pos1 = { row: Math.floor(index1 / size), col: index1 % size };
+    const pos2 = { row: Math.floor(index2 / size), col: index2 % size };
+
+    const rowDiff = Math.abs(pos2.row - pos1.row);
+    const colDiff = Math.abs(pos2.col - pos1.col);
+
+    return (rowDiff <= 1 && colDiff <= 1) && !(rowDiff === 0 && colDiff === 0);
+  };
+
   // Handle cell interaction
   const handleCellInteraction = (index: number, action: 'start' | 'continue' | 'end') => {
     switch (action) {
@@ -581,108 +669,86 @@ export default function BoggleGame() {
         
       case 'end':
         if (!isSelecting) return;
+        
+        // Create a copy of selectedCells before clearing them
+        const finalSelectedCells = [...selectedCells];
         setIsSelecting(false);
         
-        if (selectedCells.length >= 2) {
-          checkSelectedWord();
+        if (finalSelectedCells.length >= 2) {
+          // Pass the final selected cells to checkSelectedWord
+          checkSelectedWord(finalSelectedCells);
         }
-        // Don't clear selectedCells here - let checkSelectedWord handle it
         break;
     }
   };
 
-  // Check if two cells are adjacent
-  const isAdjacent = (index1: number, index2: number) => {
-    const size = config.gridSize[difficulty];
-    const pos1 = { row: Math.floor(index1 / size), col: index1 % size };
-    const pos2 = { row: Math.floor(index2 / size), col: index2 % size };
-
-    const rowDiff = Math.abs(pos2.row - pos1.row);
-    const colDiff = Math.abs(pos2.col - pos1.col);
-
-    return (rowDiff <= 1 && colDiff <= 1) && !(rowDiff === 0 && colDiff === 0);
-  };
-
   // Check selected word
-  const checkSelectedWord = async () => {
+  const checkSelectedWord = async (cellsToCheck: number[]) => {
     const minWordLength = currentLevel >= 4 
-    ? extendedLevels[currentExtendedLevel]?.minWordLength || config.minWordLength[difficulty]
-    : config.minWordLength[difficulty];
+      ? extendedLevels[currentExtendedLevel]?.minWordLength || config.minWordLength[difficulty]
+      : config.minWordLength[difficulty];
 
-  if (selectedCells.length < minWordLength) {
-    showFeedback({ message: `Word too short (min ${minWordLength} letters)`, type: 'error' });
-    setSelectedCells([]);
-    return;
-  }
-
-  const selectedWord = selectedCells.map(index => grid[index].letter).join('');
-    if (foundWords.has(selectedWord)) {
-      showFeedback({ message: 'Word already found', type: 'error' });
-      setSelectedCells([]);
+    if (cellsToCheck.length < minWordLength) {
+      showFeedback({ message: `Word too short (min ${minWordLength} letters)`, type: 'error' });
+      playSound('error');
+      
+      // Add a brief delay before clearing to show visual feedback
+      setTimeout(() => {
+        setSelectedCells([]);
+      }, 100);
       return;
     }
 
-    try {
-      let isValid = false;
-      if (wordCache.has(selectedWord.toLowerCase())) {
-        isValid = wordCache.get(selectedWord.toLowerCase())!;
-      } else {
-        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${selectedWord.toLowerCase()}`);
-        isValid = response.ok;
-        setWordCache(prev => new Map(prev).set(selectedWord.toLowerCase(), isValid));
-      }
-
-      if (isValid) {
-        const newFoundWords = new Set(foundWords);
-        newFoundWords.add(selectedWord);
-        setFoundWords(newFoundWords);
-
-        const scoreMultiplier = currentLevel >= 4 
-          ? extendedLevels[currentExtendedLevel]?.scoreMultiplier || 1 
-          : 1;
-        
-        const points = Math.floor(selectedWord.length * config.scorePerLetter[difficulty] * scoreMultiplier);
-        setScore(prev => prev + points);
-
-        setGrid(prev => 
-          prev.map((cell, idx) => 
-            selectedCells.includes(idx) ? { ...cell, found: true } : cell
-          )
-        );
-
-        showFeedback({ message: `Found: ${selectedWord} (+${points} points)`, type: 'success' });
-        playSound('correct');
-
-        const winThreshold = currentLevel >= 4 
-          ? extendedLevels[currentExtendedLevel]?.winThreshold || config.winThreshold[difficulty]
-          : config.winThreshold[difficulty];
-
-        if (score + points >= winThreshold) {
-          handleGameWin();
-        }
-      } else {
-        showFeedback({ message: 'Not a valid word', type: 'error' });
-        playSound('error');
-      }
-    } catch (error) {
-      console.error('Error checking word:', error);
-      if (commonWords.includes(selectedWord)) {
-        const newFoundWords = new Set(foundWords);
-        newFoundWords.add(selectedWord);
-        setFoundWords(newFoundWords);
-
-        const points = selectedWord.length * config.scorePerLetter[difficulty];
-        setScore(prev => prev + points);
-        showFeedback({ message: `Found: ${selectedWord} (+${points} points)`, type: 'success' });
-        playSound('correct');
-      } else {
-        showFeedback({ message: 'Error checking word, try another', type: 'error' });
-        playSound('error');
-      }
+    const selectedWord = cellsToCheck.map(index => grid[index].letter).join('');
+    
+    if (foundWords.has(selectedWord)) {
+      showFeedback({ message: 'Word already found', type: 'error' });
+      playSound('error');
+      
+      // Add a brief delay before clearing to show visual feedback
+      setTimeout(() => {
+        setSelectedCells([]);
+      }, 100);
+      return;
     }
 
+    const isValid = await validateWord(selectedWord);
+
+    if (isValid) {
+      const newFoundWords = new Set(foundWords);
+      newFoundWords.add(selectedWord);
+      setFoundWords(newFoundWords);
+
+      const scoreMultiplier = currentLevel >= 4 
+        ? extendedLevels[currentExtendedLevel]?.scoreMultiplier || 1 
+        : 1;
+      
+      const points = Math.floor(selectedWord.length * config.scorePerLetter[difficulty] * scoreMultiplier);
+      setScore(prev => prev + points);
+
+      setGrid(prev => 
+        prev.map((cell, idx) => 
+          cellsToCheck.includes(idx) ? { ...cell, found: true } : cell
+        )
+      );
+
+      showFeedback({ message: `Found: ${selectedWord} (+${points} points)`, type: 'success' });
+      playSound('correct');
+
+      const winThreshold = currentLevel >= 4 
+        ? extendedLevels[currentExtendedLevel]?.winThreshold || config.winThreshold[difficulty]
+        : config.winThreshold[difficulty];
+
+      if (score + points >= winThreshold) {
+        handleGameWin();
+      }
+    } else {
+      showFeedback({ message: 'Not a valid word', type: 'error' });
+      playSound('error');
+    }
+
+    // Clear the selection after validation
     setSelectedCells([]);
-    setIsSelecting(false);
   };
 
   // Handle new game
@@ -778,7 +844,12 @@ export default function BoggleGame() {
                 }}
                 onTouchEnd={(e) => {
                   e.preventDefault();
-                  handleCellInteraction(index, 'end');
+                  const finalSelectedCells = [...selectedCells];
+                  setIsSelecting(false);
+                  
+                  if (finalSelectedCells.length >= 2) {
+                    checkSelectedWord(finalSelectedCells);
+                  }
                 }}
                 onContextMenu={(e) => e.preventDefault()}
               >

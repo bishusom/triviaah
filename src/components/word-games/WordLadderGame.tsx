@@ -12,6 +12,9 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Add Merriam-Webster API key
+const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
+
 interface GameConfig {
   wordLength: {
     easy: number;
@@ -393,6 +396,7 @@ export default function WordLadderGame() {
     }
   };
 
+  // Updated checkWord function to use Merriam-Webster API
   const checkWord = async (word: string) => {
     if (!gameActive) return false;
     if (word.length !== currentWord.length) {
@@ -422,12 +426,55 @@ export default function WordLadderGame() {
       isValid = wordCache.get(word.toLowerCase())!;
     } else {
       try {
-        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`);
-        isValid = response.ok;
+        // Use Merriam-Webster API similar to BoggleGame
+        const response = await fetch(
+          `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word.toLowerCase()}?key=${DICTIONARY_API_KEY}`
+        );
+        
+        if (!response.ok) {
+          throw new Error(`API returned ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Handle Merriam-Webster API response
+        if (Array.isArray(data) && data.length > 0) {
+          // Check each entry in the array
+          for (const entry of data) {
+            // If it's a string, it's a suggestion (not a valid entry)
+            if (typeof entry === 'string') {
+              continue;
+            }
+            
+            // If it's an object with meta data, check if it matches our word
+            if (typeof entry === 'object' && entry !== null) {
+              // Check multiple possible ways the word might be represented
+              const wordMatches = 
+                // Check meta.id (might be "word:1" format)
+                (entry.meta?.id && entry.meta.id.split(':')[0].toUpperCase() === word.toUpperCase()) ||
+                // Check hwi.hw (headword)
+                (entry.hwi?.hw && entry.hwi.hw.replace(/\*/g, '').toUpperCase() === word.toUpperCase()) ||
+                // Check stems array
+                (entry.meta?.stems && entry.meta.stems.some((stem: string) => stem.toUpperCase() === word.toUpperCase()));
+              
+              if (wordMatches) {
+                isValid = true;
+                break;
+              }
+            }
+          }
+        }
+
         setWordCache(prev => new Map(prev).set(word.toLowerCase(), isValid));
       } catch (error) {
+        console.error(`Error validating word "${word}":`, error);
+        // Fallback to local word list
         isValid = wordLists[word.length as keyof typeof wordLists]?.includes(word.toUpperCase()) || false;
         setWordCache(prev => new Map(prev).set(word.toLowerCase(), isValid));
+        
+        if (!isValid) {
+          showFeedback('Dictionary API unavailable. Using local word list.', 'info');
+        }
       }
     }
 

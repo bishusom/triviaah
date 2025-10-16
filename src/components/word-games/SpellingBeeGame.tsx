@@ -5,7 +5,6 @@ import confetti from 'canvas-confetti';
 import { useSound } from '@/context/SoundContext';
 import commonStyles from '@styles/WordGames/WordGames.common.module.css';
 import gameStyles from '@styles/WordGames/SpellingBee.module.css';
-
 type FeedbackType = 'error' | 'success' | 'info' | 'hint';
 type HexagonPosition = 'top' | 'bottom' | 'left' | 'right' | 'center';
 
@@ -34,6 +33,7 @@ export default function SpellingBeeGame() {
   const [feedback, setFeedback] = useState<FeedbackState>({ message: '', type: '' });
   const { isMuted } = useSound();
   const [showGameOverModal, setShowGameOverModal] = useState(false);
+  const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
 
   // Sound effects
   const playSound = useCallback((type: string) => {
@@ -106,7 +106,7 @@ export default function SpellingBeeGame() {
     }
   }, []);
 
-  const validateWord = useCallback(async (word: string) => {
+ /*const validateWord = useCallback(async (word: string) => {
     const wordUpper = word.toUpperCase();
     
     if (!wordUpper.split('').every(l => letters.includes(l)) || !wordUpper.includes(centerLetter)) {
@@ -118,7 +118,9 @@ export default function SpellingBeeGame() {
     }
 
     try {
-      const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`);
+      console.log(`Validating word: ${wordUpper}`);
+      const response = await fetch(`/api/dictionary?word=${word.toLowerCase()}`);
+      console.log(`Dictionary API response for ${wordUpper}:`, response);
       if (response.ok) {
         setAllPossibleWords(prev => [...prev, wordUpper]);
         return true;
@@ -130,7 +132,85 @@ export default function SpellingBeeGame() {
       showFeedback('info', 'Network error. Using local word list.');
       return allPossibleWords.includes(wordUpper);
     }
-  }, [letters, centerLetter, allPossibleWords, showFeedback]);
+  }, [letters, centerLetter, allPossibleWords, showFeedback]); */
+
+  // More specific validation function
+const validateWord = useCallback(async (word: string) => {
+  const wordUpper = word.toUpperCase();
+  const wordLower = word.toLowerCase();
+  
+  // Basic validation
+  if (!wordUpper.split('').every(l => letters.includes(l)) || !wordUpper.includes(centerLetter)) {
+    return false;
+  }
+
+  if (allPossibleWords.includes(wordUpper)) {
+    return true;
+  }
+
+  try {
+    const response = await fetch(
+      `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${wordLower}?key=${DICTIONARY_API_KEY}`
+    );
+    
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`);
+    }
+
+    const responseText = await response.text();
+    let data;
+    
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError, 'Response:', responseText);
+      throw new Error('Invalid JSON from API');
+    }
+
+    console.log('MW API response:', data);
+
+    // Handle different response types from Merriam-Webster
+    if (Array.isArray(data) && data.length > 0) {
+      // Check each entry in the array
+      for (const entry of data) {
+        // If it's a string, it's a suggestion (not a valid entry)
+        if (typeof entry === 'string') {
+          continue;
+        }
+        
+        // If it's an object with meta data, check if it matches our word
+        if (typeof entry === 'object' && entry !== null) {
+          // Check multiple possible ways the word might be represented
+          const wordMatches = 
+            // Check meta.id (might be "word:1" format)
+            (entry.meta?.id && entry.meta.id.split(':')[0].toUpperCase() === wordUpper) ||
+            // Check hwi.hw (headword)
+            (entry.hwi?.hw && entry.hwi.hw.replace(/\*/g, '').toUpperCase() === wordUpper) ||
+            // Check stems array
+            (entry.meta?.stems && entry.meta.stems.some((stem: string) => stem.toUpperCase() === wordUpper));
+          
+          if (wordMatches) {
+            console.log(`Word "${wordUpper}" validated via Merriam-Webster API.`);
+            setAllPossibleWords(prev => [...prev, wordUpper]);
+            return true;
+          }
+        }
+      }
+    }
+    
+    showFeedback('info', `"${word}" is not in our dictionary.`);
+    return false;
+  } catch (error) {
+    console.error(`Error validating word "${wordUpper}":`, error);
+    
+    // Fallback to local word list
+    const isInLocalList = allPossibleWords.includes(wordUpper);
+    if (!isInLocalList) {
+      showFeedback('info', 'Dictionary API unavailable. Using local word list.');
+    }
+    return isInLocalList;
+  }
+}, [letters, centerLetter, allPossibleWords, showFeedback, DICTIONARY_API_KEY]);
 
   const initGame = useCallback(() => {
     const vowels = ['A', 'E', 'I', 'O', 'U'];
