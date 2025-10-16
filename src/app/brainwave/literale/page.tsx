@@ -66,11 +66,9 @@ export default function LiteralePage() {
         )}
         
         {/* Mobile Bottom Ad */}
-        {showMobileAd && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
-            <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
-          </div>
-        )}
+      {showMobileAd && (
+        <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} />
+      )}
         
         <div className="max-w-2xl mx-auto p-6 text-center">
           <h1 className="text-3xl font-bold mb-2">📚 Literale</h1>
@@ -101,9 +99,7 @@ export default function LiteralePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
-            <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
-          </div>
+          <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} />
         )}
         
         <div className="max-w-2xl mx-auto p-6 text-center">
@@ -141,9 +137,7 @@ export default function LiteralePage() {
       
       {/* Mobile Bottom Ad */}
       {showMobileAd && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
-          <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
-        </div>
+          <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} />
       )}
       
       {/* Ad Controls */}
