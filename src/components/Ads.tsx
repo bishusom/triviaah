@@ -10,7 +10,7 @@ interface AdsProps {
   fullWidthResponsive?: boolean;
   style?: React.CSSProperties;
   closeButtonPosition?: 'top-left' | 'top-right';
-  isMobileFooter?: boolean; // New prop for mobile footer style
+  isMobileFooter?: boolean;
 }
 
 export default function Ads({
@@ -20,7 +20,7 @@ export default function Ads({
   fullWidthResponsive = true,
   style = {},
   closeButtonPosition = 'top-right',
-  isMobileFooter = false // Default to false
+  isMobileFooter = false
 }: AdsProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -64,29 +64,30 @@ export default function Ads({
     return null;
   }
 
-  // Mobile footer style - similar to Independent.co.uk
+  // Compact mobile footer style - like Independent.co.uk
   if (isMobileFooter) {
     return (
       <div 
         ref={adRef}
         className={`fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 ${className}`}
         style={{
-          height: '100px', // Fixed height for footer ad
+          height: '60px', // Reduced from 100px to 60px
+          minHeight: '60px',
           ...style
         }}
       >
-        {/* Close button - positioned like Independent */}
+        {/* Minimal close button */}
         <button
           onClick={handleClose}
-          className="absolute top-2 right-2 z-50 w-6 h-6 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-200"
+          className="absolute top-1 right-1 z-50 w-5 h-5 bg-gray-200 hover:bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-xs font-normal transition-colors duration-200"
           aria-label="Close advertisement"
           title="Close advertisement"
         >
           ×
         </button>
 
-        {/* Ad container */}
-        <div className="flex justify-center items-center w-full h-full">
+        {/* Compact ad container */}
+        <div className="flex justify-center items-center w-full h-full px-2">
           <ins
             ref={insRef}
             className="adsbygoogle"
@@ -94,7 +95,7 @@ export default function Ads({
               display: 'block',
               width: '100%',
               height: '100%',
-              maxWidth: '728px', // Standard leaderboard width
+              maxWidth: '728px',
               margin: '0 auto'
             }}
             data-ad-client="ca-pub-4386714040098164"
@@ -104,10 +105,10 @@ export default function Ads({
           />
         </div>
 
-        {/* Loading placeholder */}
+        {/* Minimal loading placeholder */}
         {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-            <div className="text-gray-500 text-sm">Advertisement</div>
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+            <div className="text-gray-400 text-xs">Advertisement</div>
           </div>
         )}
       </div>
