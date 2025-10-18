@@ -71,8 +71,10 @@ export default function Ads({
         ref={adRef}
         className={`fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 ${className}`}
         style={{
-          height: '60px', // Reduced from 100px to 60px
+          height: '60px',
           minHeight: '60px',
+          maxHeight: '60px',
+          overflow: 'hidden',
           ...style
         }}
       >
@@ -87,21 +89,23 @@ export default function Ads({
         </button>
 
         {/* Compact ad container */}
-        <div className="flex justify-center items-center w-full h-full px-2">
+        <div className="flex justify-center items-center w-full h-full px-2 overflow-hidden">
           <ins
             ref={insRef}
             className="adsbygoogle"
             style={{
               display: 'block',
               width: '100%',
-              height: '100%',
+              height: '50px',
+              maxHeight: '50px',
               maxWidth: '728px',
-              margin: '0 auto'
+              margin: '0 auto',
+              overflow: 'hidden'
             }}
             data-ad-client="ca-pub-4386714040098164"
             data-ad-slot={slot}
-            data-ad-format={format === 'horizontal' ? 'horizontal' : 'auto'}
-            data-full-width-responsive={fullWidthResponsive.toString()}
+            data-ad-format="horizontal"
+            data-full-width-responsive="false"
           />
         </div>
 
