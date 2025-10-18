@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',
   description: 'Enjoy our collection of creative brainwave trivia games including word puzzles, movie guessing, music challenges and geography quizzes.', 
   keywords: 'brainwave games, trivia puzzles, word games, movie trivia, music trivia, geography quizzes', 
+  alternates: {
+    canonical: 'https://triviaah.com/brainwave',
+  },
   openGraph: {
     title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',
     description: 'Challenge your mind with our creative brainwave trivia games including Capitale, Plotle, Songle and more!',

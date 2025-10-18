@@ -4,7 +4,17 @@ const nextConfig = {
   
   // Compress responses
   compress: true,
-  
+  // Redirect www to non-www
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.triviaah.com' }],
+        destination: 'https://triviaah.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
   // Image optimization
   images: {
     remotePatterns: [
@@ -126,15 +136,6 @@ const nextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/((?!api).*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=600, stale-while-revalidate=300',
           },
         ],
       },

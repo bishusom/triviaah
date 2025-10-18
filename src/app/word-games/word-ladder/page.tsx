@@ -6,6 +6,30 @@ export const metadata: Metadata = {
   title: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Triviaah',
   description: 'Play free word ladder puzzles online. Transform one word into another by changing one letter at a time. Fun vocabulary game that improves spelling and logic skills.',
   keywords: 'word ladder, word ladder puzzles, vocabulary games, word games, spelling games, free word puzzles, online word games, brain games, word transformation game',
+  alternates: {
+    canonical: 'https://triviaah.com/word-games/word-ladder',
+  },
+  openGraph: {
+    title: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Triviaah',
+    description: 'Play free word ladder puzzles online. Transform one word into another by changing one letter at a time. Fun vocabulary game that improves spelling and logic skills.',
+    url: 'https://triviaah.com/word-games/word-ladder',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/word-ladder.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Free Word Ladder Puzzles Online'
+      }
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Triviaah',
+    description: 'Play free word ladder puzzles online. Transform one word into another by changing one letter at a time. Fun vocabulary game that improves spelling and logic skills.',
+    images: ['/imgs/word-ladder.webp'],
+  },
 };
 
 export default function WordLadderPage() {

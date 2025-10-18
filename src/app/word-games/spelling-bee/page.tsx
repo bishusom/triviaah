@@ -6,6 +6,30 @@ export const metadata: Metadata = {
   title: 'Free Spelling Bee Game Online | Vocabulary Challenge | Triviaah',
   description: 'Play free Spelling Bee game online. Create words from 7 letters with our daily puzzle challenge. Improve your vocabulary, spelling skills, and find all possible words.',
   keywords: 'spelling bee, spelling game, vocabulary game, word game, spelling challenge, daily puzzle, word finder, educational games, free spelling bee, online word games',
+  alternates: {
+    canonical: 'https://triviaah.com/word-games/spelling-bee',
+  },
+  openGraph: {
+    title: 'Free Spelling Bee Game Online | Vocabulary Challenge | Triviaah',
+    description: 'Play free Spelling Bee game online. Create words from 7 letters with our daily puzzle challenge. Improve your vocabulary, spelling skills, and find all possible words.',
+    url: 'https://triviaah.com/word-games/spelling-bee',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/spelling-bee-og.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Free Spelling Bee Game Online'
+      }
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Free Spelling Bee Game Online | Vocabulary Challenge | Triviaah',
+    description: 'Play free Spelling Bee game online. Create words from 7 letters with our daily puzzle challenge. Improve your vocabulary, spelling skills, and find all possible words.',
+    images: ['/imgs/spelling-bee-og.webp'],
+  },
 };
 
 export default function SpellingBeePage() {

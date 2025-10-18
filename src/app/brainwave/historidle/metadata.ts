@@ -2,10 +2,16 @@
 import { Metadata } from 'next';
 
 export function generateHistoridleMetadata(): Metadata {
+  const canonicalUrl = 'https://triviaah.com/brainwave/historidle';
+
   return {
     title: 'Historidle - Daily Historical Puzzle | Triviaah',
     description: 'Guess the historical figure or event from emojis and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
     keywords: 'historidle, historical puzzle, daily history, wordle history, historical figures game, history guessing game, trivia games, free history trivia, online puzzle games, daily brain teaser, emoji history game, historical events',
+    // ✅ ADD CANONICAL URL
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: 'Historidle - Daily Historical Puzzle | Triviaah',
       description: 'Guess the historical figure or event from emojis and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',

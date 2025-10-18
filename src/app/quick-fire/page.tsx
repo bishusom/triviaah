@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { WithTimezone } from '@/components/common/WithTimezone';
 import { TimezoneInfo } from '@/components/common/TimezoneInfo';
 import type { UserLocationInfo } from '@/types/location';
+import { i } from 'mathjs';
 export const dynamic = 'force-dynamic';
 
 export default async function QuickFirePage() {
@@ -150,11 +151,22 @@ export async function generateMetadata() {
   return {
     title,
     description,
+    alertnates: {
+      canonical: `https://triviaah.com/quick-fire`
+    },
     openGraph: {
       title,
       description,
       type: 'website',
       url: `https://triviaah.com/quick-fire`,
+      images: [
+        {
+          url: '/imgs/quick-fire.webp',
+          width: 1200,
+          height: 630,
+          alt: 'Quick-Fire Trivia Challenge - Triviaah'
+        }
+      ],
     },
     twitter: {
       card: 'summary_large_image',

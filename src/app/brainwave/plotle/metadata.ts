@@ -2,10 +2,15 @@
 import { Metadata } from 'next';
 
 export function generatePlotleMetadata(): Metadata {
+  const canonicalUrl = 'https://triviaah.com/brainwave/plotle';
+
   return {
     title: 'Plotle - Daily Movie Plot Puzzle | Triviaah',
     description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words.',
     keywords: 'plotle, movie puzzle, daily movie, wordle movie, plot game, movie guessing game, film games, free movie trivia, online movie games, daily puzzle',
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: 'Plotle - Daily Movie Plot Puzzle | Triviaah',
       description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words.',

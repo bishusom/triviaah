@@ -6,6 +6,30 @@ export const metadata: Metadata = {
   title: 'Free Word Search Puzzles Online | Printable Word Find Games | Triviaah',
   description: 'Play free word search puzzles online. Find hidden words in our themed word find games. Perfect for vocabulary practice, relaxation, and educational fun for all ages.',
   keywords: 'word search, word find puzzles, free word search, online word games, vocabulary games, word puzzles, printable word search, brain games, educational games',
+  alternates: {
+    canonical: 'https://triviaah.com/word-games/word-search',
+  },
+  openGraph: {
+    title: 'Free Word Search Puzzles Online | Printable Word Find Games | Triviaah',
+    description: 'Play free word search puzzles online. Find hidden words in our themed word find games. Perfect for vocabulary practice, relaxation, and educational fun for all ages.',
+    url: 'https://triviaah.com/word-games/word-search',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/word-search.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Free Word Search Puzzles Online | Printable Word Find Games | Triviaah'
+      }
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Free Word Search Puzzles Online | Printable Word Find Games | Triviaah',
+    description: 'Play free word search puzzles online. Find hidden words in our themed word find games. Perfect for vocabulary practice, relaxation, and educational fun for all ages.',
+    images: ['/imgs/word-search.webp'],
+  },
 };
 
 export default function WordSearchPage() {

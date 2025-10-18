@@ -2,23 +2,33 @@ import { Metadata } from 'next';
 import MuteButton from '@/components/common/MuteButton';
 import ScramblePuzzle from '@/components/number-puzzles/ScramblePuzzle';
 
-
-
 export const metadata: Metadata = {
-  title: 'Number Scramble | Triviaah',
-  description: 'Combine numbers and operators to reach the target value in this challenging math puzzle game',
-  keywords: 'number scramble, math puzzle, arithmetic game, number challenge',
+  title: 'Number Sequence - Free Number Puzzle Game | Triviaah',
+  description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
+  keywords: 'number sequence, number puzzle game, free number game, online math games, brain games, number pattern identification, educational games, free brain teasers, daily math challenges',
+  alternates: {
+    canonical: 'https://triviaah.com/number-puzzles/number-scramble',
+  },
   openGraph: {
-    title: 'Number Scramble | Triviaah',
-    description: 'Challenge your math skills with this number scramble puzzle game',
+    title: 'Number Sequence - Free Number Puzzle Game | Triviaah',
+    description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
+    url: 'https://triviaah.com/number-puzzles/number-scramble',
+    siteName: 'Triviaah',
     images: [
       {
-        url: '/number-scramble-og.jpg',
+        url: '/imgs/number-scramble.webp',
         width: 1200,
         height: 630,
-        alt: 'Triviaah Number Scramble',
-      },
+        alt: 'Number Sequence - Free Number Puzzle Game'
+      }
     ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Number Sequence - Free Number Puzzle Game | Triviaah',
+    description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
+    images: ['/imgs/number-scramble.webp'],
   },
 };
 

@@ -8,6 +8,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Free Online Trivia Categories | Quiz Games Online Free',
     description: 'Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.',
+    keywords: 'free online trivia, trivia categories, quiz games online free, free trivia quizzes, online quiz games, free trivia games, trivia quizzes by category',
+    alternates: {
+      canonical: 'https://triviaah.com/trivias',
+    }
   };
 }
 

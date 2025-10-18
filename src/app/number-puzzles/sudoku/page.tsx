@@ -6,6 +6,30 @@ export const metadata: Metadata = {
   title: 'Free Sudoku Puzzles Online - Play Daily Sudoku Games | Triviaah',
   description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
   keywords: 'sudoku, free sudoku puzzles, online sudoku, daily sudoku, sudoku game, number puzzle, logic game, brain game, free puzzle games',
+  alternates: {
+    canonical: 'https://triviaah.com/number-puzzles/sudoku',
+  },
+  openGraph: {
+    title: 'Free Sudoku Puzzles Online - Play Daily Sudoku Games | Triviaah',
+    description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
+    url: 'https://triviaah.com/number-puzzles/sudoku',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/sudoku.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Free Sudoku Puzzles Online - Triviaah'
+      }
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Free Sudoku Puzzles Online - Play Daily Sudoku Games | Triviaah',
+    description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
+    images: ['/imgs/sudoku.webp'],
+  },
 };
 
 export default function SudokuPage() {

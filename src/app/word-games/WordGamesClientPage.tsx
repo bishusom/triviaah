@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Metadata } from 'next';
 
 const wordGames = [
   {
@@ -39,6 +40,28 @@ const wordGames = [
     keywords: 'word transformation, Lewis Carroll game, vocabulary puzzle',
   },
 ];
+
+export const metadata: Metadata = {
+  title: 'Word Games Collection | Triviaah',
+  description: 'Challenge your vocabulary and language skills with our collection of word games including Boggle, Scramble, Spelling Bee, Word Search and Word Ladder',
+  keywords: 'word games, vocabulary games, boggle, scramble, spelling bee, word search, word ladder',
+  
+  alternates: {
+    canonical: 'https://triviaah.com/word-games',
+  },
+  openGraph: {
+    title: 'Number Puzzles Collection | Triviaah',
+    description: 'Play fun number puzzles to improve your math and problem-solving skills',
+    images: [
+      {
+        url: '/imgs/word-games.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Triviaah Word Games',
+      },
+    ],
+  },
+};
 
 export default function WordGamesClientPage() {
   return (
