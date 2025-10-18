@@ -67,7 +67,7 @@ export default function HistoridlePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} />
+           <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
         )}
         
         <div className="max-w-2xl mx-auto p-6 text-center">
@@ -99,7 +99,7 @@ export default function HistoridlePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} />
+          <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
         )}
         
         <div className="max-w-2xl mx-auto p-6 text-center">
@@ -137,7 +137,7 @@ export default function HistoridlePage() {
       
       {/* Mobile Bottom Ad */}
       {showMobileAd && (
-        <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} />
+         <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
       )}
       
       {/* Ad Controls */}

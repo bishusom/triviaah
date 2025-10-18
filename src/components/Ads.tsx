@@ -81,7 +81,7 @@ export default function Ads({
         {/* Minimal close button */}
         <button
           onClick={handleClose}
-          className="absolute top-1 right-1 z-50 w-5 h-5 bg-gray-200 hover:bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-xs font-normal transition-colors duration-200"
+          className="absolute top-1 right-1 z-50 w-5 h-5 bg-gray-600 hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-xs font-normal transition-colors duration-200"
           aria-label="Close advertisement"
           title="Close advertisement"
         >

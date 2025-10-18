@@ -66,9 +66,7 @@ export default function CapitalePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
-            <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
-          </div>
+           <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
         )}
         
         <div className="max-w-2xl mx-auto p-6 text-center">
@@ -100,9 +98,7 @@ export default function CapitalePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
-            <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
-          </div>
+           <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
         )} 
         
         <div className="max-w-2xl mx-auto p-6 text-center">
