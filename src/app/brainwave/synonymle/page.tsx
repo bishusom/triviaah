@@ -67,9 +67,7 @@ export default function SynonymlePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
-            <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%' }} />
-          </div>
+          <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
         )}
         
         <div className="max-w-2xl mx-auto p-6 text-center">
@@ -101,9 +99,7 @@ export default function SynonymlePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
-            <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%' }} />
-          </div>
+          <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
         )}
         
         <div className="max-w-2xl mx-auto p-6 text-center">
@@ -141,9 +137,7 @@ export default function SynonymlePage() {
       
       {/* Mobile Bottom Ad */}
       {showMobileAd && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
-          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%' }} />
-        </div>
+        <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
       )}
       
       {/* Ad Controls */}
