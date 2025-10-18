@@ -165,38 +165,3 @@ async function TodayInHistoryContent({ locationInfo }: { locationInfo: UserLocat
     notFound();
   }
 }
-
-// Generate meta tags for SEO
-export async function generateMetadata() {
-  // Note: We can't use the timezone-aware date here since generateMetadata doesn't run in the same context
-  // But we can create a generic description that works for all users
-  const today = new Date();
-  const displayDate = today.toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric'
-  });
-
-  const title = `On This Day in History - ${displayDate} | Triviaah`;
-  const description = `Test your historical knowledge with today's history quiz! Discover what happened on ${displayDate} throughout history. Free daily historical trivia.`;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: 'website',
-      url: `https://triviaah.com/today-in-history`,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-    },
-    alternates: {
-      canonical: `https://triviaah.com/today-in-history`
-    },
-    keywords: ["today in history", "historical events", "history quiz", "on this day", "daily history", "historical facts"]
-  };
-}
