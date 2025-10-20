@@ -1,5 +1,22 @@
 import { MetadataRoute } from 'next'
 
+// Contentful response types
+interface ContentfulSys {
+  updatedAt: string
+}
+
+interface ContentfulItem {
+  fields: {
+    slug: string
+    [key: string]: unknown
+  }
+  sys: ContentfulSys
+}
+
+interface ContentfulResponse {
+  items: ContentfulItem[]
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://triviaah.com'
 
@@ -117,7 +134,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 
   // Word games (static)
-  const wordGames = [ 'boggle', 'scramble', 'spelling-bee', 'word-search', 'word=ladder']
+  const wordGames = [ 'boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder']
   const wordGamePages: MetadataRoute.Sitemap = wordGames.flatMap(game => [
     {
       url: `${baseUrl}/word-games/${game}`,
@@ -198,9 +215,9 @@ async function fetchTriviaBankPages(baseUrl: string): Promise<MetadataRoute.Site
       throw new Error('Failed to fetch trivia banks from Contentful')
     }
 
-    const data = await response.json()
+    const data = await response.json() as ContentfulResponse
 
-    data.items.forEach((item: any) => {
+    data.items.forEach((item: ContentfulItem) => {
       const slug = item.fields.slug
       const updatedAt = item.sys.updatedAt
 
@@ -241,9 +258,9 @@ async function fetchBlogPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
       throw new Error('Failed to fetch blog posts from Contentful')
     }
 
-    const data = await response.json()
+    const data = await response.json() as ContentfulResponse
 
-    data.items.forEach((item: any) => {
+    data.items.forEach((item: ContentfulItem) => {
       const slug = item.fields.slug
       const updatedAt = item.sys.updatedAt
 
