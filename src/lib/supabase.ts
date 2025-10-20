@@ -55,6 +55,67 @@ function getClientDateString(customDate?: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+// Add to lib/supabase.ts
+
+export async function getAllCategoriesWithSubcategories(): Promise<{category: string, subcategories: string[]}[]> {
+  try {
+    const { data, error } = await supabase
+      .from('trivia_questions')
+      .select('category, subcategory')
+      .not('subcategory', 'is', null)
+      .not('subcategory', 'eq', '');
+
+    if (error) throw error;
+
+    // Group subcategories by category
+    const categoryMap: Record<string, Set<string>> = {};
+    
+    data?.forEach(item => {
+      if (!categoryMap[item.category]) {
+        categoryMap[item.category] = new Set();
+      }
+      categoryMap[item.category].add(item.subcategory);
+    });
+
+    // Convert to array format and filter categories with subcategories
+    const result = Object.entries(categoryMap)
+      .map(([category, subcategorySet]) => ({
+        category,
+        subcategories: Array.from(subcategorySet)
+      }))
+      .filter(item => item.subcategories.length > 0);
+
+    return result;
+  } catch (error) {
+    console.error('Error in getAllCategoriesWithSubcategories:', error);
+    return [];
+  }
+}
+
+export async function getCategoriesWithMinQuestions(minQuestions: number = 10): Promise<string[]> {
+  try {
+    const { data, error } = await supabase
+      .from('trivia_questions')
+      .select('category');
+
+    if (error) throw error;
+
+    // Count questions per category
+    const categoryCounts: Record<string, number> = {};
+    data?.forEach(item => {
+      categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
+    });
+
+    // Filter categories with minimum questions
+    return Object.entries(categoryCounts)
+      .filter(([_, count]) => count >= minQuestions)
+      .map(([category]) => category);
+  } catch (error) {
+    console.error('Error in getCategoriesWithMinQuestions:', error);
+    return [];
+  }
+}
+
 export async function getCategoryQuestions(category: string, count: number): Promise<Question[]> {
   try {
     // First, get all questions for the category
@@ -163,6 +224,129 @@ export async function getMoreQuestions(
   } catch (error) {
     console.error('Error in getMoreQuestions:', error);
     return { questions: [], nextOffset: offset };
+  }
+}
+
+// Add to lib/supabase.ts
+
+export interface Subcategory {
+  subcategory: string;
+  question_count: number;
+}
+
+export async function getSubcategoriesWithMinQuestions(
+  category: string, 
+  minQuestions: number = 30
+): Promise<Subcategory[]> {
+  try {
+    const { data, error } = await supabase
+      .from('trivia_questions')
+      .select('subcategory')
+      .eq('category', category)
+      .not('subcategory', 'is', null)
+      .not('subcategory', 'eq', '');
+
+    if (error) throw error;
+
+    // Count occurrences of each subcategory
+    const subcategoryCounts: Record<string, number> = {};
+    data?.forEach(item => {
+      if (item.subcategory) {
+        subcategoryCounts[item.subcategory] = (subcategoryCounts[item.subcategory] || 0) + 1;
+      }
+    });
+
+    // Filter subcategories with minimum questions and transform to array
+    const result = Object.entries(subcategoryCounts)
+      .filter(([_, count]) => count >= minQuestions)
+      .map(([subcategory, question_count]) => ({
+        subcategory,
+        question_count
+      }))
+      .sort((a, b) => b.question_count - a.question_count); // Sort by count descending
+
+    return result;
+  } catch (error) {
+    console.error('Error in getSubcategoriesWithMinQuestions:', error);
+    return [];
+  }
+}
+
+export async function getSubcategoryQuestions(
+  category: string,
+  subcategory: string,
+  count: number
+): Promise<Question[]> {
+  try {
+    const { data: questions, error } = await supabase
+      .from('trivia_questions')
+      .select('*')
+      .eq('category', category)
+      .eq('subcategory', subcategory);
+
+    if (error) throw error;
+    if (!questions || questions.length === 0) return [];
+
+    // Apply the same difficulty distribution logic as getCategoryQuestions
+    const questionsByDifficulty = {
+      easy: [] as DbQuestion[],
+      medium: [] as DbQuestion[],
+      hard: [] as DbQuestion[]
+    };
+
+    questions.forEach((question: DbQuestion) => {
+      const difficulty = question.difficulty?.toLowerCase() || 'medium';
+      if (difficulty === 'easy') {
+        questionsByDifficulty.easy.push(question);
+      } else if (difficulty === 'hard') {
+        questionsByDifficulty.hard.push(question);
+      } else {
+        questionsByDifficulty.medium.push(question);
+      }
+    });
+
+    // Calculate distribution
+    const easyCount = Math.min(
+      Math.ceil(count * 0.4),
+      questionsByDifficulty.easy.length
+    );
+    const hardCount = Math.min(
+      Math.ceil(count * 0.3),
+      questionsByDifficulty.hard.length
+    );
+    const mediumCount = Math.min(
+      count - easyCount - hardCount,
+      questionsByDifficulty.medium.length
+    );
+
+    // Select random questions from each difficulty
+    const getRandomQuestions = (pool: DbQuestion[], num: number) => {
+      const shuffled = [...pool].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, num);
+    };
+
+    const selectedQuestions = [
+      ...getRandomQuestions(questionsByDifficulty.easy, easyCount),
+      ...getRandomQuestions(questionsByDifficulty.medium, mediumCount),
+      ...getRandomQuestions(questionsByDifficulty.hard, hardCount)
+    ];
+
+    // Transform and shuffle
+    return shuffleArray(selectedQuestions.map(q => ({
+      id: q.id,
+      question: q.question,
+      correct: q.correct_answer,
+      options: shuffleArray([...q.incorrect_answers, q.correct_answer]),
+      difficulty: q.difficulty,
+      category: q.category,
+      subcategory: q.subcategory,
+      ...(q.titbits && { titbits: q.titbits }),
+      ...(q.image_url && { image_url: q.image_url })
+    })));
+
+  } catch (error) {
+    console.error('Error in getSubcategoryQuestions:', error);
+    return [];
   }
 }
 

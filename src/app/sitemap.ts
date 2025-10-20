@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { getAllCategoriesWithSubcategories, getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
 
 // Contentful response types
 interface ContentfulSys {
@@ -74,7 +75,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,
-
     },
     {
       url: `${baseUrl}/today-in-history`,
@@ -86,8 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   DailytriviaCategoryPages.push(...otherDailyTriviaPages)
 
-
-   const brainwaveCatalog: MetadataRoute.Sitemap = [{
+  const brainwaveCatalog: MetadataRoute.Sitemap = [{
     url: `${baseUrl}/brainwave`,
     lastModified: new Date(),
     changeFrequency: 'daily',
@@ -106,17 +105,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-
-
-  // Trivia categories (static - rarely change)
-  const triviaCategories = [
-    'literature', 'arts', 'animal', 'science', 'history',
-    'geography', 'movies', 'tv', 'music', 'celebrities',
-    'philosophy','food', 'sports', 'fashion', 'festivals',
-    'business', 'board-games', 'video-games', 'mythology',
-    'famous-quotes'
-  ]
-
+  // DYNAMIC: Fetch trivia categories from Supabase (with minimum questions)
+  const triviaCategories = await getCategoriesWithMinQuestions(10)
+  
   const triviaCategoryPages: MetadataRoute.Sitemap = triviaCategories.map(category => ({
     url: `${baseUrl}/trivias/${category}`,
     lastModified: new Date(),
@@ -132,6 +123,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }))
 
+  // DYNAMIC: Fetch subcategory pages (only those with >= 30 questions)
+  const subcategoryPages = await fetchSubcategoryPages(baseUrl)
 
   // Word games (static)
   const wordGames = [ 'boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder']
@@ -184,6 +177,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...brainwaveCategoryPages,
     ...triviaCategoryPages,
     ...triviaQuizPages,
+    ...subcategoryPages,
     ...wordGamesCatalog,
     ...wordGamePages,
     ...numberPuzzleCatalog,
@@ -191,6 +185,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...triviaBankPages,
     ...blogPages
   ]
+}
+
+// Updated function to fetch subcategory pages with minimum 30 questions
+async function fetchSubcategoryPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+  const pages: MetadataRoute.Sitemap = []
+
+  try {
+    // Get all categories first
+    const categories = await getCategoriesWithMinQuestions(10)
+    
+    // For each category, get subcategories with at least 30 questions
+    for (const category of categories) {
+      const subcategories = await getSubcategoriesWithMinQuestions(category, 30)
+      
+      for (const subcat of subcategories) {
+        // Add subcategory quiz page
+        pages.push({
+          url: `${baseUrl}/trivias/${category}/quiz?subcategory=${encodeURIComponent(subcat.subcategory)}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly',
+          priority: 0.7,
+        })
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching subcategory pages:', error)
+  }
+
+  return pages
 }
 
 // Dynamic function to fetch trivia bank pages from Contentful
@@ -234,7 +257,6 @@ async function fetchTriviaBankPages(baseUrl: string): Promise<MetadataRoute.Site
 
   return pages
 }
-
 
 // Dynamic function to fetch blog posts from Contentful
 async function fetchBlogPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {

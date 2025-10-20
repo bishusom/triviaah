@@ -17,6 +17,7 @@ import QuizSummary from '@/components/trivias/QuizSummary';
 interface QuizGameProps {
   initialQuestions: Question[];
   category: string;
+  subcategory?: string;
   quizConfig?: QuizConfig;
 }
 
@@ -33,12 +34,14 @@ interface QuizResult {
   totalQuestions: number;
   timeUsed: number;
   category: string;
+  subcategory?: string;
   isTimedMode: boolean;
 }
 
 export default function QuizGame({
   initialQuestions,
   category,
+  subcategory,
   quizConfig,
 }: QuizGameProps){
   /* ---------- Config ---------- */
@@ -244,6 +247,7 @@ export default function QuizGame({
           totalQuestions,
           timeUsed,
           category,
+          subcategory,
           isTimedMode: true
         };
         
@@ -322,6 +326,7 @@ export default function QuizGame({
             totalQuestions,
             timeUsed,
             category,
+            subcategory,
             isTimedMode: true
           };
           
@@ -404,6 +409,13 @@ export default function QuizGame({
                   {currentQuestion.difficulty || 'easy'}
                 </span>
               </div>
+              {subcategory && (
+                <div className="bg-white px-3 py-1 rounded-full shadow-sm border">
+                  <span className="text-sm font-semibold text-purple-700 capitalize">
+                    {subcategory}
+                  </span>
+                </div>
+              )}
             </div>
             
             <div className="flex items-center gap-4">
@@ -517,9 +529,11 @@ export default function QuizGame({
                       </div>
                     </div>
                   </div>
-                  <span className="text-xs text-gray-500 text-center cursor-pointer" onClick={() => setShowImageModal(true)}>
-                    Click to magnify
-                  </span>
+                      {currentQuestion.image_url && questionImage && (
+                        <span className="text-xs text-gray-500 text-center cursor-pointer" onClick={() => setShowImageModal(true)}>
+                          Click to magnify
+                        </span>
+                      )}
                 </div>
               )}         
               <h2 className="text-xl md:text-2xl font-semibold text-gray-800 flex-1">
