@@ -4,7 +4,7 @@ import Script from 'next/script';
 import { MdInfo } from 'react-icons/md';
 import DailyQuizzesGrid from '@/components/daily/DailyQuizzesGrid';
 import Timer from '@/components/daily/dailyQuizTimer';
-import Ads from '@/components/Ads';
+import Ads from '@/components/common/Ads';
 
 export const metadata: Metadata = {
   title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Triviaah',

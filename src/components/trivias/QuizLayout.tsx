@@ -1,5 +1,5 @@
 // components/QuizLayout.tsx
-import Ads from '@/components/Ads';
+import Ads from '@/components/common/Ads';
 
 export default function QuizLayout({ children }: { children: React.ReactNode }) {
   return (

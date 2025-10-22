@@ -6,7 +6,7 @@ import { getDailySongle } from '@/lib/brainwave/songle/songle-sb';
 import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { SongleData } from '@/lib/brainwave/songle/songle-logic';
-import Ads from '@/components/Ads';
+import Ads from '@/components/common/Ads';
 
 export default function SonglePage() {
   const [songleData, setSongleData] = useState<SongleData | null>(null);

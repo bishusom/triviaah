@@ -6,7 +6,7 @@ import { getDailyTrordle } from '@/lib/brainwave/trordle/trordle-sb';
 import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { TrordleData } from '@/lib/brainwave/trordle/trordle-logic';
-import Ads from '@/components/Ads';
+import Ads from '@/components/common/Ads';
 
 export default function TrordlePage() {
   const [trordleData, setTrordleData] = useState<TrordleData | null>(null);

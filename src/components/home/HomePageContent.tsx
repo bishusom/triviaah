@@ -1,7 +1,7 @@
 // components/home/HomePageContent.tsx (with floating CTA addition)
 'use client';
 import { useEffect } from 'react';
-import Ads from '@/components/Ads';
+import Ads from '@/components/common/Ads';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
 import Footer from '@/components/home/Footer';

@@ -6,7 +6,7 @@ import { getDailyHistoridle } from '@/lib/brainwave/historidle/historidle-sb';
 import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { HistoridleData } from '@/lib/brainwave/historidle/historidle-logic';
-import Ads from '@/components/Ads';
+import Ads from '@/components/common/Ads';
 
 export default function HistoridlePage() {
   const [historidleData, setHistoridleData] = useState<HistoridleData | null>(null);

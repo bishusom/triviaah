@@ -6,7 +6,7 @@ import { getDailyLiterale } from '@/lib/brainwave/literale/literale-sb';
 import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { LiteraleData } from '@/lib/brainwave/literale/literale-logic';
-import Ads from '@/components/Ads';
+import Ads from '@/components/common/Ads';
 
 export default function LiteralePage() {
   const [literaleData, setLiteraleData] = useState<LiteraleData | null>(null);

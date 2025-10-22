@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import MuteButton from '@/components/common/MuteButton';
 import CapitaleComponent from '@/components/brainwave/CapitaleComponent';
 import { getDailyCapitale, CapitalePuzzle, CapitalInfo} from '@/lib/brainwave/capitale/capitale-sb';
-import Ads from '@/components/Ads';
+import Ads from '@/components/common/Ads';
 
 export default function CapitalePage() {
   const [dailyData, setDailyData] = useState<{ puzzle: CapitalePuzzle | null, allCapitals: CapitalInfo[] } | null>(null);

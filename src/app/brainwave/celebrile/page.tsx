@@ -6,7 +6,7 @@ import { getDailyCelebrile } from '@/lib/brainwave/celebrile/celebrile-sb';
 import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { CelebrileData } from '@/lib/brainwave/celebrile/celebrile-logic';
-import Ads from '@/components/Ads';
+import Ads from '@/components/common/Ads';
 
 export default function CelebrilePage() {
   const [celebrileData, setCelebrileData] = useState<CelebrileData | null>(null);

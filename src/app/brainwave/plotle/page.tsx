@@ -6,7 +6,7 @@ import { getDailyPlotle } from '@/lib/brainwave/plotle/plotle-sb';
 import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { PlotleData } from '@/lib/brainwave/plotle/plotle-logic';
-import Ads from '@/components/Ads';
+import Ads from '@/components/common/Ads';
 
 export default function PlotlePage() {
   const [plotleData, setPlotleData] = useState<PlotleData | null>(null);
