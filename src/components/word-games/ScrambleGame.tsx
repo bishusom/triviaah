@@ -383,7 +383,7 @@ export default function ScrambleGame() {
     <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Word Scramble Game</h1>
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Word Scramble Game</h2>
           <div className="text-lg font-semibold text-gray-600">
             Level: {currentLevel} ({getCurrentDifficulty(currentLevel).difficulty})
           </div>

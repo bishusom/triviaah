@@ -615,7 +615,7 @@ export default function WordLadderGame() {
     <div className={`${commonStyles.container}`}>
       <div className={`${commonStyles.header}`}>
         <div>
-          <h1 className={commonStyles.title}>Word Ladder Game</h1>
+          <h2 className={commonStyles.title}>Word Ladder Game</h2>
           <div className={commonStyles.levelText}>
             Level: {gameState.currentLevel} ({gameState.difficulty})
           </div>

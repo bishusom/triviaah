@@ -633,7 +633,7 @@ export default function WordSearchGame() {
     <div className={commonStyles.container}>
       <div className={commonStyles.header}>
         <div>
-          <h1 className={commonStyles.title}>Word Search</h1>
+          <h2 className={commonStyles.title}>Word Search</h2>
           <div className={commonStyles.levelText}>
             Level: {currentLevel} ({difficulty})
             {difficulty !== 'hard' ? (

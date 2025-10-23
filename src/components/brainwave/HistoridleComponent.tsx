@@ -441,6 +441,80 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
   const triesLeft = 6 - attempts.length;
   const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
 
+  // Determine header text based on date uniqueness
+  const uniqueDates = Array.from(new Set(puzzleData.dates));
+  const headerText = uniqueDates.length === 1 
+    ? `Guess the historical ${puzzleData.type} associated with this date!`
+    : `Connect the dates to guess the historical ${puzzleData.type}!`;
+
+
+  
+  const DateDisplay = ({ dates }: { dates: [string, string, string] }) => {
+  // Count unique dates
+  const uniqueDates = Array.from(new Set(dates));
+  const allSame = uniqueDates.length === 1;
+  const twoSame = uniqueDates.length === 2;
+  
+  if (allSame) {
+    // Show only one date when all are same
+    return (
+      <div className="text-center mb-8">
+        <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-6 shadow-lg inline-block">
+          <div className="text-4xl md:text-5xl font-bold text-blue-800 mb-2">
+            {dates[0].replace(/-/g, ' ')}
+          </div>
+          <div className="text-sm text-blue-600 mt-2">
+            Three significant events occurred in this date
+          </div>
+        </div>
+      </div>
+    );
+  } else if (twoSame) {
+    // Show two dates when two are same
+    // Find which date appears twice
+    const dateCounts = dates.reduce((acc, date) => {
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const displayDates = Object.keys(dateCounts);
+    return (
+          <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-12 mb-8">
+            {displayDates.map((date, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-6 shadow-lg">
+                  <div className="text-4xl md:text-5xl font-bold text-blue-800 mb-2">
+                    {date.replace(/-/g, ' ')}
+                  </div>
+                  {dateCounts[date] > 1 && (
+                    <div className="text-sm text-blue-600">
+                      {dateCounts[date]} significant events
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      } else {
+        // Show all three dates when all are different
+        return (
+          <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-12 mb-8">
+            {dates.map((date, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-6 shadow-lg">
+                  <div className="text-4xl md:text-5xl font-bold text-blue-800 mb-2">
+                    {date.replace(/-/g, ' ')}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      }
+    };    
+
+
   return (
     <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
       <canvas 
@@ -452,7 +526,7 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg md:text-xl font-semibold text-gray-800">
-            Connect the dates to guess the historical {puzzleData.type}!
+            {headerText}
           </h2>
           <div className={`text-base font-bold ${triesLeftColor}`}>
             {triesLeft} {triesLeft === 1 ? 'try' : 'tries'} left

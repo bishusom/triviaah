@@ -388,7 +388,7 @@ const validateWord = useCallback(async (word: string) => {
 
   return (
     <div className={commonStyles.container}>
-      <h1 className={commonStyles.title}>Spelling Bee</h1>
+      <h2 className={commonStyles.title}>Spelling Bee</h2>
       
       {/* Center letter display */}
       <div className={gameStyles.scoreContainer}>

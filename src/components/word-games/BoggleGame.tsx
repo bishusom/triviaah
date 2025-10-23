@@ -782,7 +782,7 @@ export default function BoggleGame() {
     <div className={commonStyles.container} style={{ touchAction: 'none', overflow: 'hidden' }}>
       <div className={commonStyles.header}>
         <div>
-          <h1 className={commonStyles.title}>Boggle Game</h1>
+          <h2 className={commonStyles.title}>Boggle Game</h2>
           <div className={commonStyles.levelText}>
             {currentLevel >= 4 
               ? `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`
