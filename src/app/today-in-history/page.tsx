@@ -113,6 +113,8 @@ async function TodayInHistoryContent({ locationInfo }: { locationInfo: UserLocat
             <QuizGame 
               initialQuestions={questions} 
               category="today-in-history"
+              quizConfig={{}}
+              quizType="daily-trivias"
             />
           </div>
 
