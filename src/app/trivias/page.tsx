@@ -4,6 +4,19 @@ import triviaCategories from '@/config/triviaCategories.json';
 import Image from 'next/image';
 import ScrollButtons from '@/components/common/ScrollButtons';
 
+// Define proper TypeScript interface for category
+interface TriviaCategory {
+  title: string;
+  description: string;
+  ogImage?: string;
+}
+
+interface CategoryCardProps {
+  categoryKey: string;
+  category: TriviaCategory;
+  index: number;
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Free Online Trivia Categories | Quiz Games Online Free',
@@ -16,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // Component for optimized category cards
-function CategoryCard({ categoryKey, category, index }: { categoryKey: string; category: any; index: number }) {
+function CategoryCard({ categoryKey, category, index }: CategoryCardProps) {
   return (
     <Link
       key={categoryKey}
@@ -78,7 +91,7 @@ export default function TriviasPage() {
           <CategoryCard 
             key={key} 
             categoryKey={key}
-            category={category} 
+            category={category as TriviaCategory} 
             index={index}
           />
         ))}
@@ -89,14 +102,14 @@ export default function TriviasPage() {
         <h2 className="text-2xl font-bold mb-4">Free Online Quiz Games & Trivia Categories</h2>
         <p className="text-gray-600 mb-4">
           Explore our extensive collection of free online trivia games and quiz categories. 
-          Whether you're looking for free quiz games for personal enjoyment or free virtual trivia games for work, 
+          Whether you&apos;re looking for free quiz games for personal enjoyment or free virtual trivia games for work, 
           we have categories to suit all interests. Our platform offers some of the best online trivia games 
           available completely free of charge.
         </p>
         <p className="text-gray-600">
           From history and science to entertainment and sports, our free online quizzes for fun 
           provide endless entertainment and learning opportunities. Enjoy quiz games online free 
-          with no registration required, and discover why we're considered one of the top free quiz sites 
+          with no registration required, and discover why we&apos;re considered one of the top free quiz sites 
           for trivia enthusiasts.
         </p>
       </section>

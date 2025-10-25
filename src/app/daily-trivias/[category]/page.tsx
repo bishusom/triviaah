@@ -88,6 +88,7 @@ async function DailyQuizContent({
             initialQuestions={questions} 
             category={category} 
             quizConfig={quizConfig}
+            quizType="daily-trivias"
           />
         </div>
 

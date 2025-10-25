@@ -107,6 +107,8 @@ export default async function QuizPage({
           initialQuestions={questions} 
           category={category}
           subcategory={subcategory}
+          quizConfig={{}}
+          quizType="trivias"
         />
       </div>
     );

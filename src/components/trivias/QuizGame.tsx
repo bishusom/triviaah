@@ -19,6 +19,7 @@ interface QuizGameProps {
   category: string;
   subcategory?: string;
   quizConfig?: QuizConfig;
+  quizType?: 'trivias' | 'daily-trivias' | 'quick-fire';
 }
 
 interface QuizConfig {
@@ -43,6 +44,7 @@ export default function QuizGame({
   category,
   subcategory,
   quizConfig,
+  quizType
 }: QuizGameProps){
   /* ---------- Config ---------- */
   const isQuickfire = quizConfig?.isQuickfire || category === 'quick-fire';
@@ -367,6 +369,7 @@ export default function QuizGame({
           setTimeUsed(0);
           setGameStarted(false);
         }}
+        context={quizType || 'trivias'}
       />
     );
   }

@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getAllCategoriesWithSubcategories, getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
+import { getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
 
 // Contentful response types
 interface ContentfulSys {

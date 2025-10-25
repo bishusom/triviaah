@@ -91,6 +91,7 @@ async function QuickFireContent({ locationInfo }: { locationInfo: UserLocationIn
               timePerQuestion: 10, // 10 seconds for quick-fire
               hasBonusQuestion: true,
             }}
+            quizType="quick-fire"
           />
         </div>
 

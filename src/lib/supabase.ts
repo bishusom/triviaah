@@ -234,7 +234,7 @@ export interface Subcategory {
   question_count: number;
 }
 
-export async function getSubcategoriesWithMinQuestions(
+/*export async function getSubcategoriesWithMinQuestions(
   category: string, 
   minQuestions: number = 30
 ): Promise<Subcategory[]> {
@@ -271,6 +271,29 @@ export async function getSubcategoriesWithMinQuestions(
     return [];
   }
 }
+*/
+
+export async function getSubcategoriesWithMinQuestions(
+  category: string, 
+  minQuestions: number = 30
+): Promise<Subcategory[]> {
+  try {
+    const { data, error } = await supabase
+      .from('trivia_subcategories_view')
+      .select('subcategory, question_count')
+      .eq('category', category)
+      .gte('question_count', minQuestions)
+      .order('question_count', { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getSubcategoriesWithMinQuestions:', error);
+    return [];
+  }
+}
+
 
 export async function getSubcategoryQuestions(
   category: string,
