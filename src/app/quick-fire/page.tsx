@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation';
 import { WithTimezone } from '@/components/common/WithTimezone';
 import { TimezoneInfo } from '@/components/common/TimezoneInfo';
 import type { UserLocationInfo } from '@/types/location';
-import { i } from 'mathjs';
 export const dynamic = 'force-dynamic';
 
 export default async function QuickFirePage() {

@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 
 export function generateSynonymleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/brainwave/historidle';
+  const canonicalUrl = 'https://triviaah.com/brainwave/synonymle';
 
   return {
     title: 'Synonymle - Daily Word Guessing Puzzle | Triviaah',

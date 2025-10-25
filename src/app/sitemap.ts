@@ -95,7 +95,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const brainwaveCategories = [
     'capitale', 'plotle', 'celebrile', 'literale', 
-    'songle', 'historidle', 'synonymle', 'troridle'
+    'songle', 'historidle', 'synonymle', 'trordle'
   ]
 
   const brainwaveCategoryPages: MetadataRoute.Sitemap = brainwaveCategories.map(category => ({
@@ -145,7 +145,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }]
 
   // Number puzzles (static)
-  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sodoku']
+  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku']
   const numberPuzzlePages: MetadataRoute.Sitemap = numberPuzzles.flatMap(puzzle => [
     {
       url: `${baseUrl}/number-puzzles/${puzzle}`,
