@@ -44,7 +44,9 @@ function TriviaContentInner({ trivia, styles }: TriviaContentProps) {
   return (
     <div className={styles.postContainer}>
       <header className={styles.postHeader}>
-       <h1 className={styles.postTitle}>{trivia.header}</h1>
+       <h1 className={styles.postTitle}>
+          {trivia.header || trivia.title}
+        </h1>
         <p className={styles.postExcerpt}>{trivia.excerpt}</p>
         <div className={styles.tags}>
           {getTagsArray(trivia.tags).map((tag, index) => (
