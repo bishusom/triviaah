@@ -92,24 +92,17 @@ export async function getAllCategoriesWithSubcategories(): Promise<{category: st
   }
 }
 
-export async function getCategoriesWithMinQuestions(minQuestions: number = 10): Promise<string[]> {
+export async function getCategoriesWithMinQuestions(minQuestions: number = 50): Promise<string[]> {
   try {
     const { data, error } = await supabase
-      .from('trivia_questions')
-      .select('category');
+      .from('trivia_categories_view')
+      .select('category, question_count')
+      .gte('question_count', minQuestions)
+      .order('question_count', { ascending: false });
 
     if (error) throw error;
 
-    // Count questions per category
-    const categoryCounts: Record<string, number> = {};
-    data?.forEach(item => {
-      categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
-    });
-
-    // Filter categories with minimum questions
-    return Object.entries(categoryCounts)
-      .filter(([_, count]) => count >= minQuestions)
-      .map(([category]) => category);
+    return (data || []).map(item => item.category);
   } catch (error) {
     console.error('Error in getCategoriesWithMinQuestions:', error);
     return [];

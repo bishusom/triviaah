@@ -127,6 +127,38 @@
     "ogImage": "/imgs/business.webp",
     "displayName": "Business"
   },
+  "acronyms": {
+    "title": "Acronyms",
+    "description": "Test your knowledge of common and specialized acronyms used in various fields, from technology and business to everyday language.",
+    "related": [],
+    "keywords": ["acronyms", "abbreviations", "initialisms"],
+    "ogImage": "/imgs/acronyms-rect.webp",
+    "displayName": "Acronyms"
+  },
+  "languages": {
+    "title": "Languages",
+    "description": "Explore questions about world languages, linguistic features, language families, and common phrases, from widely spoken tongues to endangered dialects.",
+    "related": ["geography"],
+    "keywords": ["languages", "linguistics", "phrases"],
+    "ogImage": "/imgs/language-rect.webp",
+    "displayName": "Languages"
+  },
+  "transportation": {
+    "title": "Transportation",
+    "description": "Answer questions about various modes of transportation, including cars, trains, airplanes, and ships, exploring their history, technology, and impact on society.",
+    "related": ["geography", "science"],
+    "keywords": ["transportation", "vehicles", "travel"],
+    "ogImage": "/imgs/transports.webp",
+    "displayName": "Transportation"
+  },
+  "famous-firsts": {
+    "title": "Famous Firsts",
+    "description": "Challenge yourself with questions about groundbreaking achievements and historic 'firsts' in various fields, from exploration to technology and culture.",
+    "related": ["history", "science"],
+    "keywords": ["famous firsts", "historic achievements", "milestones"],
+    "ogImage": "/imgs/famous-firsts.webp",
+    "displayName": "Famous Firsts"
+  },
   "board-games": {
     "title": "Board Games",
     "description": "Test your knowledge of classic and modern board games, from strategy-based tabletop titles to family-friendly games enjoyed worldwide.",

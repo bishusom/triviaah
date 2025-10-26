@@ -71,7 +71,7 @@ async function TodayInHistoryContent({ locationInfo }: { locationInfo: UserLocat
           {/* Server-rendered SEO content */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-2" itemProp="name">
-              On This Day in History
+              On This Day in History - {displayDate}
             </h1>
             <p className="text-gray-600 mb-3 text-lg">
               {displayDate} • Daily Historical Events Quiz

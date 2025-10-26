@@ -31,8 +31,8 @@ export async function generateMetadata({
     : `${formattedCategory} Quiz | Triviaah`;
 
   const description = formattedSubcategory
-    ? `Test your ${formattedSubcategory.toLowerCase()} knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 questions!`
-    : `Test your knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 questions!`;
+    ? `Test your ${formattedSubcategory.toLowerCase()} knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 multi-choice questions to beat the highscore. Invite your friends on social media if they can beat your scores!`
+    : `Test your knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 multi-choice questions to beat the highscore. Invite your friends on social media if they can beat your scores!`;
 
   return {
     title,
