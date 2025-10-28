@@ -27,8 +27,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-6 text-center text-gray-400 text-sm">
-          © {new Date().getFullYear()} <strong>Triviaah</strong>. Play free daily trivia challenges with answers and online quiz games. 
-          Search &ldquo;<strong>triviaah</strong>&rdquo; for daily updates.
+          © {new Date().getFullYear()} <strong>Triviaah.com</strong>. All rights reserved.
         </div>
       </div>
     </footer>
