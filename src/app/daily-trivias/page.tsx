@@ -108,10 +108,22 @@ export default async function DailyQuizzesPage() {
               "@type": "Question",
               "name": "Daily Trivia Game Questions",
               "text": "What topics are covered in today's daily trivia game?",
+              "author": {
+                "@type": "Organization",
+                "name": "Triviaah"
+              },
+              "datePublished": "2024-01-01T00:00:00+00:00",
               "answerCount": 6,
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Today's trivia covers history, entertainment, sports, science, geography, and general knowledge. New questions refresh every 24 hours."
+                "text": "Today's trivia covers history, entertainment, sports, science, geography, and general knowledge. New questions refresh every 24 hours.",
+                "author": {
+                  "@type": "Organization",
+                  "name": "Triviaah"
+                },
+                "datePublished": "2024-01-01T00:00:00+00:00",
+                "upvoteCount": 1,
+                "url": "https://triviaah.com/daily-trivias"
               }
             }
           })

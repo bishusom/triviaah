@@ -55,43 +55,6 @@ function getClientDateString(customDate?: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-// Add to lib/supabase.ts
-
-export async function getAllCategoriesWithSubcategories(): Promise<{category: string, subcategories: string[]}[]> {
-  try {
-    const { data, error } = await supabase
-      .from('trivia_questions')
-      .select('category, subcategory')
-      .not('subcategory', 'is', null)
-      .not('subcategory', 'eq', '');
-
-    if (error) throw error;
-
-    // Group subcategories by category
-    const categoryMap: Record<string, Set<string>> = {};
-    
-    data?.forEach(item => {
-      if (!categoryMap[item.category]) {
-        categoryMap[item.category] = new Set();
-      }
-      categoryMap[item.category].add(item.subcategory);
-    });
-
-    // Convert to array format and filter categories with subcategories
-    const result = Object.entries(categoryMap)
-      .map(([category, subcategorySet]) => ({
-        category,
-        subcategories: Array.from(subcategorySet)
-      }))
-      .filter(item => item.subcategories.length > 0);
-
-    return result;
-  } catch (error) {
-    console.error('Error in getAllCategoriesWithSubcategories:', error);
-    return [];
-  }
-}
-
 export async function getCategoriesWithMinQuestions(minQuestions: number = 50): Promise<string[]> {
   try {
     const { data, error } = await supabase
@@ -113,9 +76,10 @@ export async function getCategoryQuestions(category: string, count: number): Pro
   try {
     // First, get all questions for the category
     const { data: questions, error } = await supabase
-      .from('trivia_questions')
+      .from('random_trivia_questions')
       .select('*')
-      .eq('category', category);
+      .eq('category', category)
+      .limit(count*10); // Fetch a larger pool to select from
 
     if (error) throw error;
     if (!questions || questions.length === 0) return [];
@@ -295,10 +259,11 @@ export async function getSubcategoryQuestions(
 ): Promise<Question[]> {
   try {
     const { data: questions, error } = await supabase
-      .from('trivia_questions')
+      .from('random_trivia_questions')
       .select('*')
       .eq('category', category)
-      .eq('subcategory', subcategory);
+      .eq('subcategory', subcategory)
+      .limit(count*10); // Fetch a larger pool to select from
 
     if (error) throw error;
     if (!questions || questions.length === 0) return [];
