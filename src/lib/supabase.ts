@@ -191,45 +191,6 @@ export interface Subcategory {
   question_count: number;
 }
 
-/*export async function getSubcategoriesWithMinQuestions(
-  category: string, 
-  minQuestions: number = 30
-): Promise<Subcategory[]> {
-  try {
-    const { data, error } = await supabase
-      .from('trivia_questions')
-      .select('subcategory')
-      .eq('category', category)
-      .not('subcategory', 'is', null)
-      .not('subcategory', 'eq', '');
-
-    if (error) throw error;
-
-    // Count occurrences of each subcategory
-    const subcategoryCounts: Record<string, number> = {};
-    data?.forEach(item => {
-      if (item.subcategory) {
-        subcategoryCounts[item.subcategory] = (subcategoryCounts[item.subcategory] || 0) + 1;
-      }
-    });
-
-    // Filter subcategories with minimum questions and transform to array
-    const result = Object.entries(subcategoryCounts)
-      .filter(([_, count]) => count >= minQuestions)
-      .map(([subcategory, question_count]) => ({
-        subcategory,
-        question_count
-      }))
-      .sort((a, b) => b.question_count - a.question_count); // Sort by count descending
-
-    return result;
-  } catch (error) {
-    console.error('Error in getSubcategoriesWithMinQuestions:', error);
-    return [];
-  }
-}
-*/
-
 export async function getSubcategoriesWithMinQuestions(
   category: string, 
   minQuestions: number = 30
@@ -250,7 +211,6 @@ export async function getSubcategoriesWithMinQuestions(
     return [];
   }
 }
-
 
 export async function getSubcategoryQuestions(
   category: string,
