@@ -75,24 +75,15 @@ export async function getCategoriesWithMinQuestions(minQuestions: number = 50): 
 export async function getCategoryQuestions(category: string, count: number): Promise<Question[]> {
   try {
     const randomSeed = Math.random();
-    
+    // Use the random_index to get a random set
     const { data: questions, error } = await supabase
       .from('trivia_questions')
       .select('*')
       .eq('category', category)
-      // Use modulo or other math to create variation while maintaining performance
       .gt('random_index', randomSeed)
       .order('random_index', { ascending: true })
       .limit(count * 3); // Get more for distribution
-
-    // First, get all questions for the category
-    /*const { data: questions, error } = await supabase
-      .from('trivia_questions_randomized')
-      .select('*')
-      .eq('category', category)
-      .order('session_random', { ascending: true })
-      .limit(count*10); // Fetch a larger pool to select from
-    */
+      
     if (error) throw error;
     if (!questions || questions.length === 0) return [];
 
