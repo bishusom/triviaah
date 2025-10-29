@@ -19,7 +19,7 @@ const geist = Geist({
 export const metadata: Metadata = {
   metadataBase: new URL('https://triviaah.com'),
   title: 'Triviaah: Free Daily Trivia & Quiz Games',
-  description: 'Discover fun, free daily trivia challenges across 20+ exciting categories like movies, history, and science. Test your knowledge with fresh questions every 24 hours!',
+  description: 'Discover fun, free daily trivia challenges across 20+ exciting categories like movies, history, and science at triviaah.com. Test your knowledge with fresh questions every 24 hours!',
   keywords: 'daily trivia, daily quiz, free trivia, trivia questions, quiz games, daily challenge, trivia app, quiz app, trivia online, trivia categories, fun quizzes, trivia competition, trivia game, quiz challenge, trivia fun, plotle, songle, capitale',
   openGraph: {
     title: 'Triviaah: Free Daily Trivia & Quiz Games',

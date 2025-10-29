@@ -424,12 +424,6 @@ export default function QuizSummary({
           {/* Conditional buttons based on context */}
           {context === 'trivias' ? (
             <>
-              <button
-                onClick={onRestart}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-center"
-              >
-                Play Again
-              </button>
               <Link
                 href={`/trivias/${result.category}`}
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg transition-colors text-center"
