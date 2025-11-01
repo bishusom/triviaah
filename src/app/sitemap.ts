@@ -19,7 +19,7 @@ interface ContentfulResponse {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://triviaah.com'
+  const baseUrl = 'https://elitetrivias.com'
 
   // Static main pages
   const mainPages: MetadataRoute.Sitemap = [

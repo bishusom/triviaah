@@ -3,14 +3,14 @@ import { Metadata } from 'next';
 
 export function generateTrordleMetadata(): Metadata {
   return {
-    title: 'Trordle - Daily Trivia Puzzle | Triviaah',
+    title: 'Trordle - Daily Trivia Puzzle | Elite Trivias',
     description: 'Guess the answer to today\'s trivia puzzle with limited attempts, similar to Wordle but with trivia questions.',
     keywords: 'trordle, trivia puzzle, daily trivia, wordle trivia, trivia game, word guessing game, educational games, free trivia, online trivia games, daily puzzle',
     openGraph: {
-      title: 'Trordle - Daily Trivia Puzzle | Triviaah',
+      title: 'Trordle - Daily Trivia Puzzle | Elite Trivias',
       description: 'Guess the answer to today\'s trivia puzzle with limited attempts, similar to Wordle but with trivia questions.',
-      url: 'https://triviaah.com/brainwave/trordle',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/brainwave/trordle',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs/trordle-og.webp',
@@ -23,7 +23,7 @@ export function generateTrordleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Trordle - Daily Trivia Puzzle | Triviaah',
+      title: 'Trordle - Daily Trivia Puzzle | Elite Trivias',
       description: 'Guess the answer to today\'s trivia puzzle with limited attempts, similar to Wordle but with trivia questions.',
       images: ['/imgs/trordle-og.webp'],
     },

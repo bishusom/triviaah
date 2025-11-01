@@ -3,18 +3,18 @@ import MuteButton from '@/components/common/MuteButton';
 import ScrambleGame from '@/components/word-games/ScrambleGame';
 
 export const metadata: Metadata = {
-  title: 'Word Scramble Game | Triviaah',
+  title: 'Word Scramble Game | Elite Trivias',
   description: 'Unscramble letters to form words in this challenging vocabulary game. Test your word skills with our Scramble game!',
   keywords: 'word scramble, anagram game, vocabulary game, word puzzle, letter scramble',
   openGraph: {
-    title: 'Word Scramble Game | Triviaah',
+    title: 'Word Scramble Game | Elite Trivias',
     description: 'Challenge your vocabulary with our exciting word scramble game',
     images: [
       {
         url: '/word-scramble-og.jpg',
         width: 1200,
         height: 630,
-        alt: 'Triviaah Word Scramble Game',
+        alt: 'Elite Trivias Word Scramble Game',
       },
     ],
   },

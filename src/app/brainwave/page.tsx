@@ -6,16 +6,16 @@ import DailyPuzzlesGrid from '@/components/daily/DailyPuzzlesGrid';
 import Ads from '@/components/common/Ads';
 
 export const metadata: Metadata = {
-  title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',
+  title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Elite Trivias',
   description: 'Enjoy our collection of creative brainwave trivia games including word puzzles, movie guessing, music challenges and geography quizzes.', 
   keywords: 'brainwave games, trivia puzzles, word games, movie trivia, music trivia, geography quizzes', 
   alternates: {
-    canonical: 'https://triviaah.com/brainwave',
+    canonical: 'https://elitetrivias.com/brainwave',
   },
   openGraph: {
-    title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',
+    title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Elite Trivias',
     description: 'Challenge your mind with our creative brainwave trivia games including Capitale, Plotle, Songle and more!',
-    url: 'https://triviaah.com/brainwave',
+    url: 'https://elitetrivias.com/brainwave',
     images: [
       {
         url: '/imgs/brainwave-trivia-og.webp',

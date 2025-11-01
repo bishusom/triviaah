@@ -425,7 +425,7 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
       shareText += `\nAnswer: ${puzzleData.targetTitle}`;
     }
     
-    shareText += '\nPlay daily at https://triviaah.com/brainwave/historidle';
+    shareText += '\nPlay daily at https://elitetrivias.com/brainwave/historidle';
     return shareText;
   };
 

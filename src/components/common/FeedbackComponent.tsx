@@ -5,7 +5,9 @@ import { useState } from 'react';
 import { FaGrinStars, FaSmile, FaMeh, FaFrown, FaAngry } from 'react-icons/fa';
 
 interface FeedbackProps {
-  gameType: 'trivia' | 'capitale' | 'celebrile'| 'plotle' | 'songle' | 'literale' | 'historidle' | 'synonymle' | 'trordle';
+  gameType: 'trivia' | 'capitale' | 'celebrile'| 'plotle' | 'songle' | 
+            'creaturdle' | 'landmarkdle'|
+            'literale' | 'historidle' | 'synonymle' | 'trordle';
   category?: string;
   metadata?: Record<string, unknown>;
   onSubmitted?: () => void;

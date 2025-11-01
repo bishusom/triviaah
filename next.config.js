@@ -1,21 +1,43 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // REMOVED: trailingSlash: true (not needed for Vercel)
-  
-  // Compress responses
   compress: true,
-  // Redirect www to non-www
+  
+  // Redirect configuration - FIXED
   async redirects() {
     return [
+      // Redirect from old domain (triviaah.com) to new domain
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'triviaah.com' }],
+        destination: 'https://elitetrivias.com/:path*',
+        permanent: true,
+      },
+      // Redirect from www.old-domain to new domain
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'www.triviaah.com' }],
-        destination: 'https://triviaah.com/:path*',
+        destination: 'https://elitetrivias.com/:path*',
+        permanent: true,
+      },
+      // Redirect www to non-www for NEW domain - FIXED
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.elitetrivias.com' }],
+        destination: 'https://elitetrivias.com/:path*', // FIXED: was missing .com
         permanent: true,
       },
     ];
   },
-  // Image optimization
+
+  // Add this for proper domain handling
+  trailingSlash: false,
+  
+  // Add this to ensure proper canonical URLs
+  env: {
+    NEXT_PUBLIC_SITE_URL: 'https://elitetrivias.com',
+  },
+
+  // Image optimization (your existing config is fine)
   images: {
     remotePatterns: [
       {
@@ -76,33 +98,26 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 3600, // Cache optimized images for 1 hour
+    minimumCacheTTL: 3600,
   },
 
-  // Enable experimental features for optimization
   experimental: {
-    optimizeCss: true, // This will help with CSS optimization
-    // Note: isrFlushToDisk removed as it's not needed for Vercel deployment
+    optimizeCss: true,
   },
 
-  // Webpack configuration for better bundling
   webpack: (config, { dev, isServer }) => {
-    // Optimize chunking strategy
     if (!dev && !isServer) {
-      // Split chunks for better caching
       config.optimization.splitChunks = {
         chunks: 'all',
         cacheGroups: {
           default: false,
           vendors: false,
-          // Vendor chunk
           vendor: {
             name: 'vendor',
             chunks: 'all',
             test: /[\\/]node_modules[\\/]/,
             priority: 20,
           },
-          // Common chunks
           common: {
             name: 'common',
             minChunks: 2,
@@ -114,11 +129,9 @@ const nextConfig = {
         },
       };
     }
-
     return config;
   },
 
-  // Cache-Control headers for static assets
   async headers() {
     return [
       {
@@ -139,7 +152,6 @@ const nextConfig = {
           },
         ],
       },
-      // Add headers for font files
       {
         source: '/:path*\\.(woff|woff2|ttf|otf)',
         headers: [
@@ -151,12 +163,8 @@ const nextConfig = {
       },
     ];
   },
-
-  // For Vercel, you don't need output: 'standalone' unless you're self-hosting
-  // REMOVED: output: 'standalone',
 };
 
-// Bundle analyzer for optimization insights (optional)
 if (process.env.ANALYZE === 'true') {
   const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: true,

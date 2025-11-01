@@ -43,22 +43,22 @@ const numberPuzzles = [
 ];
 
 export const metadata: Metadata = {
-  title: 'Number Puzzles Collection | Triviaah',
+  title: 'Number Puzzles Collection | Elite Trivias',
   description: 'Challenge your math skills with our collection of number puzzles including Number Scramble, Number Tower, Prime Hunter, Number Sequence, and Sudoku',
   keywords: 'number puzzles, math games, number scramble, number tower, prime hunter, number sequence, sudoku',
   
   alternates: {
-    canonical: 'https://triviaah.com/number-puzzles',
+    canonical: 'https://elitetrivias.com/number-puzzles',
   },
   openGraph: {
-    title: 'Number Puzzles Collection | Triviaah',
+    title: 'Number Puzzles Collection | Elite Trivias',
     description: 'Play fun number puzzles to improve your math and problem-solving skills',
     images: [
       {
         url: '/imgs/number-puzzles.webp',
         width: 1200,
         height: 630,
-        alt: 'Triviaah Number Puzzles',
+        alt: 'Elite Trivias Number Puzzles',
       },
     ],
   },

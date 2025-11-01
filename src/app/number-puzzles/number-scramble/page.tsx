@@ -3,17 +3,17 @@ import MuteButton from '@/components/common/MuteButton';
 import ScramblePuzzle from '@/components/number-puzzles/ScramblePuzzle';
 
 export const metadata: Metadata = {
-  title: 'Number Sequence - Free Number Puzzle Game | Triviaah',
+  title: 'Number Sequence - Free Number Puzzle Game | Elite Trivias',
   description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
   keywords: 'number sequence, number puzzle game, free number game, online math games, brain games, number pattern identification, educational games, free brain teasers, daily math challenges',
   alternates: {
-    canonical: 'https://triviaah.com/number-puzzles/number-scramble',
+    canonical: 'https://elitetrivias.com/number-puzzles/number-scramble',
   },
   openGraph: {
-    title: 'Number Sequence - Free Number Puzzle Game | Triviaah',
+    title: 'Number Sequence - Free Number Puzzle Game | Elite Trivias',
     description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
-    url: 'https://triviaah.com/number-puzzles/number-scramble',
-    siteName: 'Triviaah',
+    url: 'https://elitetrivias.com/number-puzzles/number-scramble',
+    siteName: 'Elite Trivias',
     images: [
       {
         url: '/imgs/number-scramble.webp',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Number Sequence - Free Number Puzzle Game | Triviaah',
+    title: 'Number Sequence - Free Number Puzzle Game | Elite Trivias',
     description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
     images: ['/imgs/number-scramble.webp'],
   },

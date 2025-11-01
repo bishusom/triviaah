@@ -10,36 +10,6 @@ import { DAILY_QUIZZES, ADDITIONAL_SECTIONS, BRAIN_WAVES } from '@/../data/homeC
 import CollapsibleSection from '@/components/home/CollapsibleSection';
 
 export default function HomePageContent() {
-  // Remove unused state variables
-  // const [isAboveTheFoldLoaded, setIsAboveTheFoldLoaded] = useState(false);
-  // const [showFloatingCTA, setShowFloatingCTA] = useState(false);
-
-  // Remove unused effects
-  /*
-  useEffect(() => {
-    // Mark above-the-fold content as loaded after a short delay
-    const timer = setTimeout(() => {
-      setIsAboveTheFoldLoaded(true);
-    }, 1000);
-  
-    return () => clearTimeout(timer);
-  }, []); 
-
-  useEffect(() => {
-    // Show floating CTA after user scrolls past first screen
-    const handleScroll = () => {
-      if (window.scrollY > window.innerHeight * 0.8) {
-        setShowFloatingCTA(true);
-      } else {
-        setShowFloatingCTA(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-  */
-
   // Add this effect to prevent auto ad injection in specific sections
   useEffect(() => {
     // This prevents auto ads from being injected into these sections
@@ -55,8 +25,8 @@ export default function HomePageContent() {
       <header className="bg-blue-700 text-white py-4 px-4">
         <div className="container mx-auto flex items-center justify-center gap-4">
             <Image
-                src="/logo-new.webp"
-                alt="Triviaah - Free Daily Trivia Games"
+                src="/logo.webp"
+                alt="Elite Trivias - Free Daily Trivia Games"
                 width={200}
                 height={36}
                 priority
@@ -138,7 +108,7 @@ export default function HomePageContent() {
         <CollapsibleSection title="Free Daily Quiz with Answers & Explanations">
           <div className="prose text-gray-600">
             <p className="mb-4">
-              Triviaah offers the best collection of <strong>free daily quiz with answers</strong> and detailed explanations 
+              Elite Trivias offers the best collection of <strong>free daily quiz with answers</strong> and detailed explanations 
               across multiple categories. Our <strong>daily quiz with answers</strong> format helps you learn while you play, 
               with instant feedback on every question. Enjoy our <strong>free trivia games online</strong> 
               including <strong>trivia games to play with friends online</strong> and <strong>virtual trivia games for work</strong>. 

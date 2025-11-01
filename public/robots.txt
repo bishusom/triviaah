@@ -2,4 +2,4 @@ User-agent: *
 Disallow:
 Allow: /
 
-Sitemap: https://triviaah.com/sitemap.xml
+Sitemap: https://elitetrivias.com/sitemap.xml

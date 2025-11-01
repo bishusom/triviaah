@@ -1,7 +1,7 @@
 // components/trivias/QuizSummary.tsx
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { MdShare } from "react-icons/md";
 import { FaMedal, FaTrophy, FaCheck } from 'react-icons/fa';
@@ -124,7 +124,7 @@ export default function QuizSummary({
 
   useEffect(() => {
     fetchHighScores();
-  }, [fetchHighScores]);
+  }, [result.category]);
 
   /* ---------- Improved save score with duplicate prevention ---------- */
   const saveScoreCore = useCallback(async (name: string) => {
@@ -199,7 +199,8 @@ export default function QuizSummary({
         clearTimeout(timeoutId);
       }
     };
-  }, [displayName, saveScoreCore, saving, scoreSaved]);
+  //}, [displayName, saveScoreCore, saving, scoreSaved]);
+  }, [displayName, scoreSaved]); 
 
   /* ---------- tiny reroll icon ---------- */
   const handleReroll = () => {
@@ -218,7 +219,11 @@ export default function QuizSummary({
   /* ---------- performance message ---------- */
   const ratio = result.correctCount / result.totalQuestions;
   const perf = ratio === 0 ? 'zero' : ratio >= 0.9 ? 'gold' : ratio >= 0.7 ? 'silver' : ratio >= 0.5 ? 'bronze' : 'default';
-  const randomMessage = MESSAGES[perf][Math.floor(Math.random() * MESSAGES[perf].length)];
+  const randomMessage = useMemo(() => {
+      const ratio = result.correctCount / result.totalQuestions;
+      const perf = ratio === 0 ? 'zero' : ratio >= 0.9 ? 'gold' : ratio >= 0.7 ? 'silver' : ratio >= 0.5 ? 'bronze' : 'default';
+      return MESSAGES[perf][Math.floor(Math.random() * MESSAGES[perf].length)];
+    }, [result.correctCount, result.totalQuestions]);
 
   /* ---------- share to clipboard ---------- */
   const shareScore = async () => {

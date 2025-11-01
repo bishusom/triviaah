@@ -145,26 +145,26 @@ async function QuickFireContent({ locationInfo }: { locationInfo: UserLocationIn
 
 // Generate meta tags for SEO
 export async function generateMetadata() {
-  const title = "Quick-Fire Trivia Challenge | Triviaah";
+  const title = "Quick-Fire Trivia Challenge | Elite Trivias";
   const description = "Test your reflexes with 10-second quick-fire trivia questions! 7 random questions with bonus round. Free, no signup required.";
 
   return {
     title,
     description,
     alertnates: {
-      canonical: `https://triviaah.com/quick-fire`
+      canonical: `https://elitetrivias.com/quick-fire`
     },
     openGraph: {
       title,
       description,
       type: 'website',
-      url: `https://triviaah.com/quick-fire`,
+      url: `https://elitetrivias.com/quick-fire`,
       images: [
         {
           url: '/imgs/quick-fire.webp',
           width: 1200,
           height: 630,
-          alt: 'Quick-Fire Trivia Challenge - Triviaah'
+          alt: 'Quick-Fire Trivia Challenge - Elite Trivias'
         }
       ],
     },
@@ -174,7 +174,7 @@ export async function generateMetadata() {
       description,
     },
     alternates: {
-      canonical: `https://triviaah.com/quick-fire`
+      canonical: `https://elitetrivias.com/quick-fire`
     },
     keywords: ["quick fire trivia", "fast trivia", "timed quiz", "quick thinking game", "rapid fire questions"]
   };

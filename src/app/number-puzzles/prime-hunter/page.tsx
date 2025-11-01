@@ -3,17 +3,17 @@ import PrimeHunterPuzzle from '@/components/number-puzzles/PrimeHunterPuzzle';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Prime Hunter - Free Prime Number Puzzle Game | Triviaah',
+  title: 'Prime Hunter - Free Prime Number Puzzle Game | Elite Trivias',
   description: 'Play Prime Hunter, a free online prime number puzzle game. Identify prime numbers in a grid with limited attempts. Improve your math skills with this fun and challenging brain game.',
   keywords: 'prime hunter, prime number puzzle, free prime game, online math games, brain games, number puzzles, prime number identification, educational games, free brain teasers, daily math challenges',
   alternates: {
-    canonical: 'https://triviaah.com/number-puzzles/prime-hunter',
+    canonical: 'https://elitetrivias.com/number-puzzles/prime-hunter',
   },
   openGraph: {
-    title: 'Prime Hunter - Free Prime Number Puzzle Game | Triviaah',
+    title: 'Prime Hunter - Free Prime Number Puzzle Game | Elite Trivias',
     description: 'Play Prime Hunter, a free online prime number puzzle game. Identify prime numbers in a grid with limited attempts. Improve your math skills with this fun and challenging brain game.',
-    url: 'https://triviaah.com/number-puzzles/prime-hunter',
-    siteName: 'Triviaah',
+    url: 'https://elitetrivias.com/number-puzzles/prime-hunter',
+    siteName: 'Elite Trivias',
     images: [
       {
         url: '/imgs/prime-hunter.webp',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Prime Hunter - Free Prime Number Puzzle Game | Triviaah',
+    title: 'Prime Hunter - Free Prime Number Puzzle Game | Elite Trivias',
     description: 'Play Prime Hunter, a free online prime number puzzle game. Identify prime numbers in a grid with limited attempts. Improve your math skills with this fun and challenging brain game.',
     images: ['/imgs/prime-hunter.webp'],
   },

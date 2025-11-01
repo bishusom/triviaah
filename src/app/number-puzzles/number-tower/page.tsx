@@ -3,17 +3,17 @@ import NumberTowerGame from "@/components/number-puzzles/NumberTowerGame";
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Number Tower - Free Number Puzzle Game | Triviaah',
+  title: 'Number Tower - Free Number Puzzle Game | Elite Trivias',
   description: 'Play Number Tower, a free online number puzzle game. Arrange numbers in a tower structure with limited moves. Improve your math skills with this fun and challenging brain game.',
   keywords: 'number tower, number puzzle game, free number game, online math games, brain games, number arrangement, educational games, free brain teasers, daily math challenges',
   alternates: {
-    canonical: 'https://triviaah.com/number-puzzles/number-tower',
+    canonical: 'https://elitetrivias.com/number-puzzles/number-tower',
   },
   openGraph: {
-    title: 'Number Tower - Free Number Puzzle Game | Triviaah',
+    title: 'Number Tower - Free Number Puzzle Game | Elite Trivias',
   description: 'Play Number Tower, a free online number puzzle game. Arrange numbers in a tower structure with limited moves. Improve your math skills with this fun and challenging brain game.',
-    url: 'https://triviaah.com/number-puzzles/number-tower',
-    siteName: 'Triviaah',
+    url: 'https://elitetrivias.com/number-puzzles/number-tower',
+    siteName: 'Elite Trivias',
     images: [
       {
         url: '/imgs/number-tower.webp',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Number Tower - Free Number Puzzle Game | Triviaah',
+    title: 'Number Tower - Free Number Puzzle Game | Elite Trivias',
     description: 'Play Number Tower, a free online number puzzle game. Arrange numbers in a tower structure with limited moves. Improve your math skills with this fun and challenging brain game.',
     images: ['/imgs/number-tower.webp'],
   },

@@ -3,30 +3,30 @@ import SudokuPuzzle from '@/components/number-puzzles/SudokuPuzzle';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Free Sudoku Puzzles Online - Play Daily Sudoku Games | Triviaah',
+  title: 'Free Sudoku Puzzles Online - Play Daily Sudoku Games | Elite Trivias',
   description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
   keywords: 'sudoku, free sudoku puzzles, online sudoku, daily sudoku, sudoku game, number puzzle, logic game, brain game, free puzzle games',
   alternates: {
-    canonical: 'https://triviaah.com/number-puzzles/sudoku',
+    canonical: 'https://elitetrivias.com/number-puzzles/sudoku',
   },
   openGraph: {
-    title: 'Free Sudoku Puzzles Online - Play Daily Sudoku Games | Triviaah',
+    title: 'Free Sudoku Puzzles Online - Play Daily Sudoku Games | Elite Trivias',
     description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
-    url: 'https://triviaah.com/number-puzzles/sudoku',
-    siteName: 'Triviaah',
+    url: 'https://elitetrivias.com/number-puzzles/sudoku',
+    siteName: 'Elite Trivias',
     images: [
       {
         url: '/imgs/sudoku.webp',
         width: 1200,
         height: 630,
-        alt: 'Free Sudoku Puzzles Online - Triviaah'
+        alt: 'Free Sudoku Puzzles Online - Elite Trivias'
       }
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free Sudoku Puzzles Online - Play Daily Sudoku Games | Triviaah',
+    title: 'Free Sudoku Puzzles Online - Play Daily Sudoku Games | Elite Trivias',
     description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
     images: ['/imgs/sudoku.webp'],
   },
@@ -52,7 +52,7 @@ export default function SudokuPage() {
       
       {/* SEO Content Section */}
       <section className="mt-12 bg-gray-50 rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">Why Play Sudoku on Triviaah?</h2>
+        <h2 className="text-2xl font-bold mb-4">Why Play Sudoku on Elite Trivias?</h2>
         <div className="prose text-gray-600">
           <p className="mb-4">
             Sudoku is one of the world&apos;s most popular puzzle games, with over 1.5 million people 

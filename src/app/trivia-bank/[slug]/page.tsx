@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: TriviaPageProps): Promise<Met
   
   if (!trivia) {
     return {
-      title: 'Trivia Not Found | Triviaah',
+      title: 'Trivia Not Found | Elite Trivias',
       description: 'The requested trivia category could not be found.',
     };
   }
@@ -48,14 +48,14 @@ export async function generateMetadata({ params }: TriviaPageProps): Promise<Met
     : trivia.tags;
 
   return {
-    title: `${trivia.title} Questions with Answers | Triviaah`,
+    title: `${trivia.title} Questions with Answers | Elite Trivias`,
     description: `${trivia.excerpt} Browse our ${trivia.title.toLowerCase()} trivia questions with answers for all difficulty levels.`,
     keywords: `${trivia.title.toLowerCase()} trivia, ${trivia.title.toLowerCase()} quiz, ${trivia.title.toLowerCase()} questions and answers, ${tagsArray.join(', ')}`,
     alternates: {
-      canonical: `https://triviaah.com/trivia-bank/${trivia.slug}`,
+      canonical: `https://elitetrivias.com/trivia-bank/${trivia.slug}`,
     },
     openGraph: {
-      title: `${trivia.title} Questions | Triviaah`,
+      title: `${trivia.title} Questions | Elite Trivias`,
       description: trivia.excerpt,
       type: 'article',
       tags: tagsArray,

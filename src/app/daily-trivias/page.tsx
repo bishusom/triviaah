@@ -7,13 +7,13 @@ import Timer from '@/components/daily/dailyQuizTimer';
 import Ads from '@/components/common/Ads';
 
 export const metadata: Metadata = {
-  title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Triviaah',
+  title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Elite Trivias',
   description: 'Play our free daily trivia game with new questions about history, pop culture, sports, and more! Test your knowledge daily with 10 fresh questions.', // More specific
   keywords: 'daily trivia game, daily quiz, trivia challenges, fun quiz, knowledge test', // Added exact match
   openGraph: {
-    title: 'Daily Trivia Game - New Questions Every Day | Triviaah', // Updated
+    title: 'Daily Trivia Game - New Questions Every Day | Elite Trivias', // Updated
     description: 'Challenge yourself with our daily trivia game. 10 fresh questions every 24 hours!', // More action-oriented
-    url: 'https://triviaah.com/daily',
+    url: 'https://elitetrivias.com/daily',
     images: [
       {
         url: '/imgs/daily-trivia-og.webp',
@@ -110,7 +110,7 @@ export default async function DailyQuizzesPage() {
               "text": "What topics are covered in today's daily trivia game?",
               "author": {
                 "@type": "Organization",
-                "name": "Triviaah"
+                "name": "Elite Trivias"
               },
               "datePublished": "2024-01-01T00:00:00+00:00",
               "answerCount": 6,
@@ -119,11 +119,11 @@ export default async function DailyQuizzesPage() {
                 "text": "Today's trivia covers history, entertainment, sports, science, geography, and general knowledge. New questions refresh every 24 hours.",
                 "author": {
                   "@type": "Organization",
-                  "name": "Triviaah"
+                  "name": "Elite Trivias"
                 },
                 "datePublished": "2024-01-01T00:00:00+00:00",
                 "upvoteCount": 1,
-                "url": "https://triviaah.com/daily-trivias"
+                "url": "https://elitetrivias.com/daily-trivias"
               }
             }
           })

@@ -82,7 +82,7 @@ async function generateImage(score: string, correct: string, total: string, cate
         <text x="850" y="540" font-family="Arial, sans-serif" font-size="32" font-weight="600" fill="white" text-anchor="middle">Time: ${formatTime(Number(time))}</text>
         
         <!-- Call-to-action footer -->
-        <text x="600" y="590" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="#e5e7eb" text-anchor="middle">🎯 Can you beat this score? Play at triviaah.com</text>
+        <text x="600" y="590" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="#e5e7eb" text-anchor="middle">🎯 Can you beat this score? Play at elitetrivias</text>
       </svg>
     `;
     return Buffer.from(svg);
@@ -227,7 +227,7 @@ async function generateImage(score: string, correct: string, total: string, cate
   ctx.fillStyle = '#e5e7eb';
   ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
   ctx.shadowBlur = 3;
-  ctx.fillText('🎯 Can you beat this score? Play at triviaah.com', width / 2, textStartY + 450);
+  ctx.fillText('🎯 Can you beat this score? Play at elitetrivias', width / 2, textStartY + 450);
   ctx.shadowBlur = 0;
 
   return canvas.toBuffer('image/png');

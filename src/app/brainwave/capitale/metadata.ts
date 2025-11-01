@@ -2,10 +2,10 @@
 import { Metadata } from 'next';
 
 export function generateCapitaleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/brainwave/capitale';
+  const canonicalUrl = 'https://elitetrivias.com/brainwave/capitale';
 
   return {
-    title: 'Capitale - Daily Trivia Puzzle | Triviaah',
+    title: 'Capitale - Daily Trivia Puzzle | Elite Trivias',
     description: 'Guess the answer to today\'s capital city puzzle with limited attempts, similar to Wordle but with trivia questions.',
     keywords: 'Capitale, trivia puzzle, daily trivia, wordle trivia, trivia game, city guessing game, educational games, free trivia, online trivia games, daily puzzle',
    
@@ -14,10 +14,10 @@ export function generateCapitaleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Capitale - Daily Trivia Puzzle | Triviaah',
+      title: 'Capitale - Daily Trivia Puzzle | Elite Trivias',
       description: 'Guess the answer to today\'s capital city puzzle with limited attempts, similar to Wordle but with trivia questions.',
-      url: 'https://triviaah.com/brainwave/capitale',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/brainwave/capitale',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs/capitale-og.webp',
@@ -30,7 +30,7 @@ export function generateCapitaleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Capitale - Daily Trivia Puzzle | Triviaah',
+      title: 'Capitale - Daily Trivia Puzzle | Elite Trivias',
       description: 'Guess the answer to today\'s capital city with limited attempts, similar to Wordle but with trivia questions.',
       images: ['/imgs/Capitale-og.webp'],
     },

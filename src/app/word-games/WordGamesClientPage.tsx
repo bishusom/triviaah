@@ -42,22 +42,22 @@ const wordGames = [
 ];
 
 export const metadata: Metadata = {
-  title: 'Word Games Collection | Triviaah',
+  title: 'Word Games Collection | Elite Trivias',
   description: 'Challenge your vocabulary and language skills with our collection of word games including Boggle, Scramble, Spelling Bee, Word Search and Word Ladder',
   keywords: 'word games, vocabulary games, boggle, scramble, spelling bee, word search, word ladder',
   
   alternates: {
-    canonical: 'https://triviaah.com/word-games',
+    canonical: 'https://elitetrivias.com/word-games',
   },
   openGraph: {
-    title: 'Number Puzzles Collection | Triviaah',
+    title: 'Number Puzzles Collection | Elite Trivias',
     description: 'Play fun number puzzles to improve your math and problem-solving skills',
     images: [
       {
         url: '/imgs/word-games.webp',
         width: 1200,
         height: 630,
-        alt: 'Triviaah Word Games',
+        alt: 'Elite Trivias Word Games',
       },
     ],
   },

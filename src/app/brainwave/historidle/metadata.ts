@@ -2,10 +2,10 @@
 import { Metadata } from 'next';
 
 export function generateHistoridleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/brainwave/historidle';
+  const canonicalUrl = 'https://elitetrivias.com/brainwave/historidle';
 
   return {
-    title: 'Historidle - Daily Historical Puzzle | Triviaah',
+    title: 'Historidle - Daily Historical Puzzle | Elite Trivias',
     description: 'Guess the historical figure or event from emojis and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
     keywords: 'historidle, historical puzzle, daily history, wordle history, historical figures game, history guessing game, trivia games, free history trivia, online puzzle games, daily brain teaser, emoji history game, historical events',
     // ✅ ADD CANONICAL URL
@@ -13,10 +13,10 @@ export function generateHistoridleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Historidle - Daily Historical Puzzle | Triviaah',
+      title: 'Historidle - Daily Historical Puzzle | Elite Trivias',
       description: 'Guess the historical figure or event from emojis and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
-      url: 'https://triviaah.com/brainwave/historidle',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/brainwave/historidle',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs/historidle-og.webp',
@@ -29,7 +29,7 @@ export function generateHistoridleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Historidle - Daily Historical Puzzle | Triviaah',
+      title: 'Historidle - Daily Historical Puzzle | Elite Trivias',
       description: 'Guess the historical figure or event from emojis and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
       images: ['/imgs/historidle-og.webp'],
     },

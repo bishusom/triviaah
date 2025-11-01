@@ -70,14 +70,14 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   };
 
   return {
-    title: `${metadata.name} Daily Quiz | Triviaah`,
+    title: `${metadata.name} Daily Quiz | Elite Trivias`,
     description: metadata.tagline,
     keywords: metadata.keywords,
     openGraph: {
-      title: `${metadata.name} Daily Quiz | Triviaah`,
+      title: `${metadata.name} Daily Quiz | Elite Trivias`,
       description: metadata.tagline,
       type: 'website',
-      url: `https://triviaah.com/daily/${category}`,
+      url: `https://elitetrivias.com/daily/${category}`,
       images: [{
         url: `/imgs/${category}-160x160.webp`,
         width: 1200,
@@ -87,7 +87,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${metadata.name} Daily Quiz | Triviaah`,
+      title: `${metadata.name} Daily Quiz | Elite Trivias`,
       description: metadata.tagline,
       images: [`/imgs/${category}-og.webp`],
     },
