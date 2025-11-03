@@ -140,6 +140,9 @@ export default function TrordlePage() {
         <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} />
       )}
       
+      {/* Structured Data for SEO */}
+      <StructuredData />
+      
       {/* Ad Controls */}
       <div className="fixed top-4 right-4 z-60 flex gap-2">
         <button
@@ -158,13 +161,260 @@ export default function TrordlePage() {
 
       <div className="max-w-2xl mx-auto p-4">
         <h1 className="text-3xl font-bold text-center mb-2">﹖ Trordle - The Daily Trivia Game</h1>
-        <div className="fixed right-8  z-50" style={{ top: '6rem' }}>
+        <div className="fixed right-8 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
         <p className="text-gray-600 text-center mb-6">The trivia version of Wordle. Guess the answer in 6 tries!</p>
         
+        {/* Last Updated Date */}
+        <div className="text-center mb-6">
+          <p className="text-sm text-gray-500">
+            Last updated: {currentDate.toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </p>
+        </div>
+        
         <TrordleComponent initialData={trordleData} />
+        
+        {/* FAQ Section */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">What is Trordle?</h3>
+              <p className="text-gray-700">
+                Trordle is a daily trivia puzzle game that combines the challenge of trivia questions with the word-guessing 
+                mechanics of Wordle. Each day features a new trivia question where you need to guess the answer in 6 attempts.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">How do I play Trordle?</h3>
+              <p className="text-gray-700">
+                Read the daily trivia question and try to guess the answer. You have 6 attempts to get it right. 
+                After each guess, you&apos;ll get feedback on which letters are correct and in the right position (green), 
+                correct but in the wrong position (yellow), or not in the word at all (gray).
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">What types of trivia questions are included?</h3>
+              <p className="text-gray-700">
+                Trordle features a wide variety of trivia categories including history, science, pop culture, geography, 
+                sports, and more. The questions are designed to be challenging but accessible to general knowledge enthusiasts.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">Is there a new puzzle every day?</h3>
+              <p className="text-gray-700">
+                Yes! Trordle features a new trivia question and answer every day. Come back daily to test your knowledge 
+                and keep your trivia skills sharp.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">What if I can&apos;t guess the answer in 6 tries?</h3>
+              <p className="text-gray-700">
+                If you use all 6 attempts without guessing the correct answer, the game will reveal the solution. 
+                You can then learn from it and come back tomorrow for a new challenge!
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">Is Trordle free to play?</h3>
+              <p className="text-gray-700">
+                Absolutely! Trordle is completely free to play. No subscriptions, no payments - just daily trivia fun 
+                to challenge your knowledge.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+  );
+}
+
+// Structured Data Component for SEO
+function StructuredData() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://elitetrivias.com/#organization",
+        "name": "Elite Trivias",
+        "url": "https://elitetrivias.com/",
+        "description": "Elite Trivias offers engaging and educational trivia games and puzzles for everyone.",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://elitetrivias.com/logo.png",
+          "width": 200,
+          "height": 60
+        },
+        "sameAs": [
+          "https://twitter.com/elitetrivias",
+          "https://www.facebook.com/elitetrivias",
+          "https://www.instagram.com/elitetrivias"
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://elitetrivias.com/brainwave/trordle/#webpage",
+        "url": "https://elitetrivias.com/brainwave/trordle",
+        "name": "Trordle - Daily Trivia Puzzle | Elite Trivias",
+        "description": "Guess the answer to today's trivia puzzle with limited attempts, similar to Wordle but with trivia questions.",
+        "isPartOf": {
+          "@id": "https://elitetrivias.com/#website"
+        },
+        "about": {
+          "@id": "https://elitetrivias.com/brainwave/trordle/#game"
+        },
+        "datePublished": "2024-01-01T00:00:00+00:00",
+        "dateModified": new Date().toISOString(),
+        "breadcrumb": {
+          "@id": "https://elitetrivias.com/brainwave/trordle/#breadcrumb"
+        },
+        "potentialAction": [
+          {
+            "@type": "PlayAction",
+            "target": "https://elitetrivias.com/brainwave/trordle"
+          }
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://elitetrivias.com/#website",
+        "url": "https://elitetrivias.com/",
+        "name": "Elite Trivias",
+        "description": "Engaging trivia games and puzzles for everyone",
+        "publisher": {
+          "@id": "https://elitetrivias.com/#organization"
+        },
+        "potentialAction": [
+          {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://elitetrivias.com/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        ]
+      },
+      {
+        "@type": "Game",
+        "@id": "https://elitetrivias.com/brainwave/trordle/#game",
+        "name": "Trordle",
+        "description": "Daily trivia puzzle combining Wordle mechanics with trivia questions",
+        "url": "https://elitetrivias.com/brainwave/trordle",
+        "applicationCategory": "Game",
+        "gameType": "PuzzleGame,TriviaGame",
+        "genre": ["puzzle", "trivia", "educational", "word game"],
+        "numberOfPlayers": {
+          "@type": "QuantitativeValue",
+          "minValue": 1
+        },
+        "publisher": {
+          "@id": "https://elitetrivias.com/#organization"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "operatingSystem": "Any",
+        "author": {
+          "@id": "https://elitetrivias.com/#organization"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://elitetrivias.com/brainwave/trordle/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://elitetrivias.com"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Brainwave",
+            "item": "https://elitetrivias.com/brainwave"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Trordle",
+            "item": "https://elitetrivias.com/brainwave/trordle"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Trordle?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Trordle is a daily trivia puzzle game that combines the challenge of trivia questions with the word-guessing mechanics of Wordle. Each day features a new trivia question where you need to guess the answer in 6 attempts."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I play Trordle?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Read the daily trivia question and try to guess the answer. You have 6 attempts to get it right. After each guess, you'll get feedback on which letters are correct and in the right position (green), correct but in the wrong position (yellow), or not in the word at all (gray)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What types of trivia questions are included?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Trordle features a wide variety of trivia categories including history, science, pop culture, geography, sports, and more. The questions are designed to be challenging but accessible to general knowledge enthusiasts."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is there a new puzzle every day?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! Trordle features a new trivia question and answer every day. Come back daily to test your knowledge and keep your trivia skills sharp."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What if I can't guess the answer in 6 tries?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "If you use all 6 attempts without guessing the correct answer, the game will reveal the solution. You can then learn from it and come back tomorrow for a new challenge!"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Trordle free to play?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Absolutely! Trordle is completely free to play. No subscriptions, no payments - just daily trivia fun to challenge your knowledge."
+            }
+          }
+        ]
+      }
+    ]
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
   );
 }

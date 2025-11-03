@@ -1,61 +1,59 @@
 // app/daily-trivias/[category]/structured-data.tsx
-import { getDailyQuizQuestions } from '@/lib/supabase';
-import { WithTimezone } from '@/components/common/WithTimezone';
 import type { UserLocationInfo } from '@/types/location';
+import type { Question } from '@/lib/supabase'; // Import from your existing file
 
 interface StructuredDataProps {
-  params: Promise<{
-    category: string;
-  }>;
-}
-
-interface StructuredDataContentProps {
   params: Promise<{ category: string }>;
   locationInfo: UserLocationInfo;
+  lastUpdated: string;
+  questions: Question[]; // Use the existing Question type
+  formattedCategory: string;
 }
 
-export async function StructuredData({ params }: StructuredDataProps) {
-  return (
-    <WithTimezone>
-      {(locationInfo) => (
-        <StructuredDataContent 
-          params={params} 
-          locationInfo={locationInfo} 
-        />
-      )}
-    </WithTimezone>
-  );
-}
-
-async function StructuredDataContent({ 
+export async function StructuredData({ 
   params, 
-  locationInfo 
-}: StructuredDataContentProps) {
-  const resolvedParams = await params;
-  const category = resolvedParams.category;
-  const questions = await getDailyQuizQuestions(category, locationInfo.userLocalDate);
+  locationInfo, 
+  lastUpdated, 
+  questions,
+  formattedCategory 
+}: StructuredDataProps) {
   
-  if (!questions) return null;
+  if (!questions || questions.length === 0) return null;
 
-  const formattedCategory = category
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-
-  const isQuickfire = category === 'quick-fire';
+  const resolvedParams = await params;
+  const isQuickfire = resolvedParams.category === 'quick-fire';
   const timePerQuestion = isQuickfire ? 10 : 15;
 
-  const structuredData = {
+  // Organization Schema
+  const organizationStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Elite Trivias',
+    url: 'https://elitetrivias.com',
+    description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
+    logo: 'https://elitetrivias.com/logo.png',
+    sameAs: [],
+    foundingDate: '2024',
+    knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment']
+  };
+
+  // Quiz Schema - FIXED: TypeScript now knows 'option' is string
+  const quizStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'Quiz',
     name: `${formattedCategory} Daily Quiz`,
     description: `Daily ${formattedCategory.toLowerCase()} trivia challenge with ${questions.length} multiple-choice questions. ${timePerQuestion} seconds per question.`,
     dateCreated: locationInfo.userLocalDate.toISOString().split('T')[0],
+    dateModified: lastUpdated,
     numberOfQuestions: questions.length,
     timeRequired: `PT${timePerQuestion * questions.length}S`,
     educationalLevel: 'Beginner',
     assesses: formattedCategory,
-    hasPart: questions.map((question, index) => ({
+    publisher: {
+      '@type': 'Organization',
+      name: 'Elite Trivias'
+    },
+    hasPart: questions.map((question: Question, index: number) => ({
       '@type': 'Question',
       position: index + 1,
       name: question.question,
@@ -63,7 +61,41 @@ async function StructuredDataContent({
         '@type': 'Answer',
         text: question.correct
       },
-      suggestedAnswer: question.options.map(option => ({
+      suggestedAnswer: question.options.map((option: string) => ({ // TypeScript knows this is string[]
+        '@type': 'Answer',
+        text: option
+      }))
+    }))
+  };
+
+  // Article Schema
+  const articleStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `Today's ${formattedCategory} Quiz Questions & Answers`,
+    description: `Complete list of today's ${formattedCategory.toLowerCase()} trivia questions and answers. Test your knowledge with ${questions.length} challenging questions.`,
+    datePublished: locationInfo.userLocalDate.toISOString().split('T')[0],
+    dateModified: lastUpdated,
+    author: {
+      '@type': 'Organization',
+      name: 'Elite Trivias'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Elite Trivias',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://elitetrivias.com/logo.png'
+      }
+    },
+    mainEntity: questions.map((question: Question) => ({
+      '@type': 'Question',
+      name: question.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: question.correct
+      },
+      suggestedAnswer: question.options.map((option: string) => ({ // TypeScript knows this is string[]
         '@type': 'Answer',
         text: option
       }))
@@ -71,9 +103,19 @@ async function StructuredDataContent({
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(quizStructuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
+      />
+    </>
   );
 }

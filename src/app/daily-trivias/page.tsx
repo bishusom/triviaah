@@ -8,16 +8,16 @@ import Ads from '@/components/common/Ads';
 
 export const metadata: Metadata = {
   title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Elite Trivias',
-  description: 'Play our free daily trivia game with new questions about history, pop culture, sports, and more! Test your knowledge daily with 10 fresh questions.', // More specific
-  keywords: 'daily trivia game, daily quiz, trivia challenges, fun quiz, knowledge test', // Added exact match
+  description: 'Play our free daily trivia game with new questions about history, pop culture, sports, and more! Test your knowledge daily with 10 fresh questions.',
+  keywords: 'daily trivia game, daily quiz, trivia challenges, fun quiz, knowledge test',
   openGraph: {
-    title: 'Daily Trivia Game - New Questions Every Day | Elite Trivias', // Updated
-    description: 'Challenge yourself with our daily trivia game. 10 fresh questions every 24 hours!', // More action-oriented
+    title: 'Daily Trivia Game - New Questions Every Day | Elite Trivias',
+    description: 'Challenge yourself with our daily trivia game. 10 fresh questions every 24 hours!',
     url: 'https://elitetrivias.com/daily',
     images: [
       {
         url: '/imgs/daily-trivia-og.webp',
-        alt: 'Daily Trivia Game - Play Now', // Updated alt text
+        alt: 'Daily Trivia Game - Play Now',
       },
     ],
   },
@@ -26,12 +26,12 @@ export const metadata: Metadata = {
 async function getDailyQuizzes() {
   return [
     {
-    category: 'quick-fire',
-    name: 'Quick Fire',
-    path: '/quick-fire',
-    image: '/imgs/quick-fire-160x160.webp',
-    tagline: 'Test your reaction time and knowledge with our 60-second challenge!',
-    keywords: 'rapid fire trivia, quick fire triva, general knowledge quiz, daily trivia, daily quiz with answers',
+      category: 'quick-fire',
+      name: 'Quick Fire',
+      path: '/quick-fire',
+      image: '/imgs/quick-fire-160x160.webp',
+      tagline: 'Test your reaction time and knowledge with our 60-second challenge!',
+      keywords: 'rapid fire trivia, quick fire triva, general knowledge quiz, daily trivia, daily quiz with answers',
     },
     {
       category: 'general-knowledge',
@@ -74,68 +74,156 @@ async function getDailyQuizzes() {
       keywords: 'biology, physics, chemistry, space',
     },
     {
-    category: "arts-literature",
-    name: "Arts & Literature",
-    path: "/daily-trivias/arts-literature",
-    image: "/imgs/arts-n-literature-160x160.webp",
-    tagline: "Explore the world of great authors, artists, and literary masterpieces",
-    keywords: "literature trivia quiz, famous authors quiz, art history questions, classic books quiz, painting trivia, poetry quiz questions"
+      category: "arts-literature",
+      name: "Arts & Literature",
+      path: "/daily-trivias/arts-literature",
+      image: "/imgs/arts-n-literature-160x160.webp",
+      tagline: "Explore the world of great authors, artists, and literary masterpieces",
+      keywords: "literature trivia quiz, famous authors quiz, art history questions, classic books quiz, painting trivia, poetry quiz questions"
     },
     {
-    category: 'sports',
-    name: 'Sports',
-    path: '/daily-trivias/sports',
-    image: '/imgs/sports-160x160.webp',
-    tagline: 'Test your knowledge of sports history, athletes, and events',
-    keywords: 'sports trivia quiz, athlete trivia, sports history game, sports quiz with answers',
+      category: 'sports',
+      name: 'Sports',
+      path: '/daily-trivias/sports',
+      image: '/imgs/sports-160x160.webp',
+      tagline: 'Test your knowledge of sports history, athletes, and events',
+      keywords: 'sports trivia quiz, athlete trivia, sports history game, sports quiz with answers',
     },
   ];
 }
 
 export default async function DailyQuizzesPage() {
   const dailyQuizzes = await getDailyQuizzes();
+  const lastUpdated = new Date().toISOString();
+
+  // Organization Schema for the main page
+  const organizationStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Elite Trivias',
+    url: 'https://elitetrivias.com',
+    description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
+    logo: 'https://elitetrivias.com/logo.png',
+    sameAs: [],
+    foundingDate: '2024',
+    knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment']
+  };
+
+  // WebPage Schema for this specific page
+  const webpageStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours',
+    description: 'Play our free daily trivia game with new questions about history, pop culture, sports, and more! Test your knowledge daily with 10 fresh questions.',
+    url: 'https://elitetrivias.com/daily-trivias',
+    dateModified: lastUpdated,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: dailyQuizzes.length,
+      itemListElement: dailyQuizzes.map((quiz, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'Quiz',
+          name: `${quiz.name} Daily Quiz`,
+          description: quiz.tagline,
+          url: `https://elitetrivias.com${quiz.path}`,
+          category: quiz.category
+        }
+      }))
+    }
+  };
+
+  // FAQ Schema for common questions
+  const faqStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How often are new daily trivia quizzes available?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'All daily trivia quizzes are updated every 24 hours at midnight in your local timezone. Each quiz category gets fresh questions daily.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'Are the daily trivia quizzes completely free?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes! All our daily trivia quizzes are 100% free to play with no registration required. No hidden fees or subscriptions.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'What categories of daily trivia are available?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `We offer ${dailyQuizzes.length} different trivia categories including ${dailyQuizzes.map(q => q.name).join(', ')}. Each category has unique questions updated daily.`
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'Do I need to create an account to play daily trivia?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'No account or registration is required. You can start playing any daily trivia quiz immediately without signing up.'
+        }
+      }
+    ]
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Organization Schema */}
       <Script
-        id="qa-schema"
+        id="organization-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "QAPage",
-            "mainEntity": {
-              "@type": "Question",
-              "name": "Daily Trivia Game Questions",
-              "text": "What topics are covered in today's daily trivia game?",
-              "author": {
-                "@type": "Organization",
-                "name": "Elite Trivias"
-              },
-              "datePublished": "2024-01-01T00:00:00+00:00",
-              "answerCount": 6,
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Today's trivia covers history, entertainment, sports, science, geography, and general knowledge. New questions refresh every 24 hours.",
-                "author": {
-                  "@type": "Organization",
-                  "name": "Elite Trivias"
-                },
-                "datePublished": "2024-01-01T00:00:00+00:00",
-                "upvoteCount": 1,
-                "url": "https://elitetrivias.com/daily-trivias"
-              }
-            }
-          })
+          __html: JSON.stringify(organizationStructuredData)
+        }}
+      />
+
+      {/* WebPage Schema */}
+      <Script
+        id="webpage-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webpageStructuredData)
+        }}
+      />
+
+      {/* FAQ Schema */}
+      <Script
+        id="faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqStructuredData)
         }}
       />
 
       <main className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
+        {/* Hero Section with Last Updated */}
         <div className="text-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-            Daily Trivia Game <span className="text-blue-600">(New Questions Every 24h)</span>
-          </h1>
+          <div className="flex justify-center items-center gap-4 mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+              Daily Trivia Game <span className="text-blue-600">(New Questions Every 24h)</span>
+            </h1>
+            {/* Last Updated Timestamp */}
+            <time 
+              dateTime={lastUpdated} 
+              className="bg-green-50 px-3 py-1 rounded-full text-xs font-medium border border-green-200"
+              title="Last updated"
+            >
+              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </time>
+          </div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Play our free daily trivia challenge with 10 fresh questions about <strong>history, sports, science, and pop culture</strong>. 
           </p>
@@ -178,29 +266,84 @@ export default async function DailyQuizzesPage() {
           </div>
         </div>
 
+        {/* FAQ Section with Schema Markup */}
+        <div className="bg-gray-50 rounded-xl shadow-sm p-6 mb-12">
+          <details className="group">
+            <summary className="flex justify-between items-center cursor-pointer list-none">
+              <h2 className="text-2xl font-bold text-gray-800">Frequently Asked Questions</h2>
+              <span className="text-gray-500 group-open:rotate-180 transition-transform text-2xl">
+                ▼
+              </span>
+            </summary>
+            <div className="mt-6 space-y-6 pt-6 border-t border-gray-200">
+              <div itemScope itemType="https://schema.org/Question">
+                <h3 className="font-semibold text-lg mb-2" itemProp="name">How often are new daily trivia quizzes available?</h3>
+                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                  All daily trivia quizzes are updated every 24 hours at midnight in your local timezone. Each quiz category gets fresh questions daily.
+                </p>
+              </div>
+              
+              <div itemScope itemType="https://schema.org/Question">
+                <h3 className="font-semibold text-lg mb-2" itemProp="name">Are the daily trivia quizzes completely free?</h3>
+                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                  Yes! All our daily trivia quizzes are 100% free to play with no registration required. No hidden fees or subscriptions.
+                </p>
+              </div>
+              
+              <div itemScope itemType="https://schema.org/Question">
+                <h3 className="font-semibold text-lg mb-2" itemProp="name">What categories of daily trivia are available?</h3>
+                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                  We offer {dailyQuizzes.length} different trivia categories including {dailyQuizzes.map(q => q.name).join(', ')}. Each category has unique questions updated daily.
+                </p>
+              </div>
+              
+              <div itemScope itemType="https://schema.org/Question">
+                <h3 className="font-semibold text-lg mb-2" itemProp="name">Do I need to create an account to play daily trivia?</h3>
+                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                  No account or registration is required. You can start playing any daily trivia quiz immediately without signing up.
+                </p>
+              </div>
+            </div>
+          </details>
+        </div>
+
         {/* SEO-Friendly Content */}
         <section className="prose max-w-none mb-12">
-          <h2 className="text-2xl font-bold text-gray-800">Daily Trivia Game Questions</h2> {/* Exact match */}
-          <p>
-            Our <strong>daily trivia game</strong> is the perfect way to test your knowledge in just a few minutes. 
-            Each quiz features 10 hand-picked questions that reset at midnight, covering topics like:
-          </p>
-          <ul>
-            <li><strong>History</strong>: Famous events, leaders, and discoveries</li>
-            <li><strong>Entertainment</strong>: Movies, music, and celebrity trivia</li>
-            <li><strong>Sports</strong>: Athletes, records, and iconic moments</li>
-            <li><strong>Science & Geography</strong>: Space, inventions, and world landmarks</li>
-          </ul>
-          
-          <h3>Why Players Love Our Daily Trivia Game:</h3>
-          <ul>
-            <li>Perfect for <strong>quick brain exercises</strong> during breaks</li>
-            <li>Great for <strong>family game nights</strong> or friendly competitions</li>
-            <li>Learn <strong>surprising facts</strong> daily</li>
-          </ul>
+          <div itemScope itemType="https://schema.org/WebPage">
+            <meta itemProp="dateModified" content={lastUpdated} />
+            <h2 className="text-2xl font-bold text-gray-800" itemProp="name">Daily Trivia Game Questions</h2>
+            <p itemProp="description">
+              Our <strong>daily trivia game</strong> is the perfect way to test your knowledge in just a few minutes. 
+              Each quiz features 10 hand-picked questions that reset at midnight, covering topics like:
+            </p>
+            <ul>
+              <li><strong>History</strong>: Famous events, leaders, and discoveries</li>
+              <li><strong>Entertainment</strong>: Movies, music, and celebrity trivia</li>
+              <li><strong>Sports</strong>: Athletes, records, and iconic moments</li>
+              <li><strong>Science & Geography</strong>: Space, inventions, and world landmarks</li>
+            </ul>
+            
+            <h3>Why Players Love Our Daily Trivia Game:</h3>
+            <ul>
+              <li>Perfect for <strong>quick brain exercises</strong> during breaks</li>
+              <li>Great for <strong>family game nights</strong> or friendly competitions</li>
+              <li>Learn <strong>surprising facts</strong> daily</li>
+              <li><strong>Completely free</strong> with no registration required</li>
+              <li>Updated daily at <strong>midnight in your local timezone</strong></li>
+            </ul>
+
+            <h3>Available Daily Trivia Categories:</h3>
+            <div className="grid md:grid-cols-2 gap-4 mt-4">
+              {dailyQuizzes.map((quiz) => (
+                <div key={quiz.category} className="bg-white p-4 rounded-lg border border-gray-200">
+                  <h4 className="font-semibold text-gray-800">{quiz.name}</h4>
+                  <p className="text-sm text-gray-600 mt-1">{quiz.tagline}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
       </main>
-      
     </div>
   );
 }

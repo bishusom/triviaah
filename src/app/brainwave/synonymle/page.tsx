@@ -140,6 +140,9 @@ export default function SynonymlePage() {
         <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
       )}
       
+      {/* Structured Data for SEO */}
+      <StructuredData />
+      
       {/* Ad Controls */}
       <div className="fixed top-4 right-4 z-50 flex gap-2">
         <button
@@ -163,8 +166,236 @@ export default function SynonymlePage() {
         </div>
         <p className="text-gray-600 text-center mb-6">Guess the word based on semantic similarity and synonyms!</p>
         
+        {/* Last Updated Date */}
+        <div className="text-center mb-6">
+          <p className="text-sm text-gray-500">
+            Last updated: {currentDate.toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </p>
+        </div>
+        
         <SynonymleComponent initialData={synonymleData} />
+        
+        {/* FAQ Section */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">What is Synonymle?</h3>
+              <p className="text-gray-700">
+                Synonymle is a daily word puzzle game where you guess words based on semantic similarity and shared synonyms. 
+                Unlike traditional word games, Synonymle focuses on meaning and vocabulary relationships rather than letter positions.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">How do I play Synonymle?</h3>
+              <p className="text-gray-700">
+                Enter words and see how semantically similar they are to the target word. The similarity percentage shows how close 
+                your guess is in meaning. Use the shared synonyms list to help identify the target word. You have unlimited guesses!
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">What does the similarity percentage mean?</h3>
+              <p className="text-gray-700">
+                The similarity percentage represents how closely related your guessed word is to the target word in terms of meaning, 
+                based on semantic analysis and shared synonyms. Higher percentages mean the words are more closely related.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">Is there a new puzzle every day?</h3>
+              <p className="text-gray-700">
+                Yes! Synonymle features a new target word every day. Come back daily to test your vocabulary and word association skills.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-lg mb-2">Is Synonymle free to play?</h3>
+              <p className="text-gray-700">
+                Absolutely! Synonymle is completely free to play. No subscriptions, no payments, just daily word puzzle fun.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+  );
+}
+
+// Structured Data Component for SEO
+function StructuredData() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://elitetrivias.com/#organization",
+        "name": "Elite Trivias",
+        "url": "https://elitetrivias.com/",
+        "description": "Elite Trivias offers engaging and educational trivia games and puzzles for everyone.",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://elitetrivias.com/logo.png",
+          "width": 200,
+          "height": 60
+        },
+        "sameAs": [
+          "https://twitter.com/elitetrivias",
+          "https://www.facebook.com/elitetrivias",
+          "https://www.instagram.com/elitetrivias"
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://elitetrivias.com/brainwave/synonymle/#webpage",
+        "url": "https://elitetrivias.com/brainwave/synonymle",
+        "name": "Synonymle - Daily Word Guessing Puzzle | Elite Trivias",
+        "description": "Guess the word based on semantic similarity and synonyms. Wordle-style vocabulary puzzle game that tests your understanding of word meanings.",
+        "isPartOf": {
+          "@id": "https://elitetrivias.com/#website"
+        },
+        "about": {
+          "@id": "https://elitetrivias.com/brainwave/synonymle/#game"
+        },
+        "datePublished": "2024-01-01T00:00:00+00:00",
+        "dateModified": new Date().toISOString(),
+        "breadcrumb": {
+          "@id": "https://elitetrivias.com/brainwave/synonymle/#breadcrumb"
+        },
+        "potentialAction": [
+          {
+            "@type": "PlayAction",
+            "target": "https://elitetrivias.com/brainwave/synonymle"
+          }
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://elitetrivias.com/#website",
+        "url": "https://elitetrivias.com/",
+        "name": "Elite Trivias",
+        "description": "Engaging trivia games and puzzles for everyone",
+        "publisher": {
+          "@id": "https://elitetrivias.com/#organization"
+        },
+        "potentialAction": [
+          {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://elitetrivias.com/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        ]
+      },
+      {
+        "@type": "Game",
+        "@id": "https://elitetrivias.com/brainwave/synonymle/#game",
+        "name": "Synonymle",
+        "description": "Daily word guessing puzzle based on semantic similarity and synonyms",
+        "url": "https://elitetrivias.com/brainwave/synonymle",
+        "applicationCategory": "Game",
+        "gameType": "PuzzleGame,WordGame",
+        "genre": ["puzzle", "word game", "educational"],
+        "numberOfPlayers": {
+          "@type": "QuantitativeValue",
+          "minValue": 1
+        },
+        "publisher": {
+          "@id": "https://elitetrivias.com/#organization"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "operatingSystem": "Any",
+        "author": {
+          "@id": "https://elitetrivias.com/#organization"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://elitetrivias.com/brainwave/synonymle/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://elitetrivias.com"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Brainwave",
+            "item": "https://elitetrivias.com/brainwave"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Synonymle",
+            "item": "https://elitetrivias.com/brainwave/synonymle"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Synonymle?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Synonymle is a daily word puzzle game where you guess words based on semantic similarity and shared synonyms. Unlike traditional word games, Synonymle focuses on meaning and vocabulary relationships rather than letter positions."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I play Synonymle?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Enter words and see how semantically similar they are to the target word. The similarity percentage shows how close your guess is in meaning. Use the shared synonyms list to help identify the target word. You have unlimited guesses!"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What does the similarity percentage mean?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The similarity percentage represents how closely related your guessed word is to the target word in terms of meaning, based on semantic analysis and shared synonyms. Higher percentages mean the words are more closely related."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is there a new puzzle every day?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! Synonymle features a new target word every day. Come back daily to test your vocabulary and word association skills."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Synonymle free to play?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Absolutely! Synonymle is completely free to play. No subscriptions, no payments, just daily word puzzle fun."
+            }
+          }
+        ]
+      }
+    ]
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
   );
 }

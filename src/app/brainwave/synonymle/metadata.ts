@@ -31,6 +31,18 @@ export function generateSynonymleMetadata(): Metadata {
       title: 'Synonymle - Daily Word Guessing Puzzle | Elite Trivias',
       description: 'Guess the word based on semantic similarity and synonyms. Wordle-style vocabulary puzzle game that tests your understanding of word meanings.',
       images: ['/imgs/synonymle-og.webp'],
-    }
+    },
+    // Add robots for better indexing
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   };
 }

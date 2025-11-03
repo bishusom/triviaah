@@ -1,5 +1,5 @@
 // app/daily-trivias/[category]/page.tsx
-import { getDailyQuizQuestions } from '@/lib/supabase';
+import { getDailyQuizQuestions, type Question } from '@/lib/supabase'; // Import type from existing file
 import QuizGame from '@/components/trivias/QuizGame';
 import { notFound } from 'next/navigation';
 import { StructuredData } from './structured-data';
@@ -20,6 +20,13 @@ interface DailyQuizContentProps {
   params: Promise<{ category: string }>;
 }
 
+// Simple interface for quiz config (if you don't have it elsewhere)
+interface QuizConfig {
+  isQuickfire: boolean;
+  timePerQuestion: number;
+  hasBonusQuestion: boolean;
+}
+
 export default async function DailyQuizPage({ params }: PageProps) {
   const resolvedParams = await params;
   const category = resolvedParams.category;
@@ -37,14 +44,14 @@ export default async function DailyQuizPage({ params }: PageProps) {
   );
 }
 
-// Separate component that uses the locationInfo
 async function DailyQuizContent({ 
   category, 
   locationInfo,
   params 
 }: DailyQuizContentProps) {
   try {
-    const questions = await getDailyQuizQuestions(category, locationInfo.userLocalDate);
+    // Use the existing Question type from supabase
+    const questions: Question[] = await getDailyQuizQuestions(category, locationInfo.userLocalDate);
     
     if (!questions || questions.length === 0) {
       notFound();
@@ -55,34 +62,53 @@ async function DailyQuizContent({
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
 
-    // Configure quiz settings based on category
     const isQuickfire = category === 'quick-fire';
     const timePerQuestion = isQuickfire ? 10 : 15;
     const hasBonusQuestion = isQuickfire;
 
-    const quizConfig = {
+    const quizConfig: QuizConfig = {
       isQuickfire,
       timePerQuestion,
       hasBonusQuestion
     };
 
+    const lastUpdated = new Date().toISOString();
+
     return (
       <div className="max-w-4xl mx-auto px-4 py-4">
-        <StructuredData params={params} />
+        <StructuredData 
+          params={params} 
+          locationInfo={locationInfo}
+          lastUpdated={lastUpdated}
+          questions={questions}
+          formattedCategory={formattedCategory}
+        />
         
-        {/* Server-rendered SEO content */}
+        {/* Rest of your component remains exactly the same */}
         <div className="text-center mb-6" itemScope itemType="https://schema.org/Quiz">
+          <meta itemProp="dateModified" content={lastUpdated} />
           <h1 className="text-2xl font-bold mb-2" itemProp="name">
             {formattedCategory} Daily Quiz
           </h1>
-          <p className="text-gray-600 mb-3" itemProp="description">
-            {questions.length} questions • {timePerQuestion}s each
-            {hasBonusQuestion && ' • Bonus round!'}
-          </p>
+          <div className="flex justify-center items-center gap-4 text-sm text-gray-600 mb-3">
+            <span>{questions.length} questions • {timePerQuestion}s each</span>
+            {hasBonusQuestion && <span>• Bonus round!</span>}
+            <time 
+              dateTime={lastUpdated} 
+              className="bg-blue-50 px-2 py-1 rounded text-xs font-medium"
+              itemProp="dateModified"
+            >
+              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </time>
+          </div>
           <TimezoneInfo locationInfo={locationInfo} />
         </div>
 
-        {/* Client-side interactive quiz */}
         <div className="mb-8">
           <QuizGame 
             initialQuestions={questions} 
@@ -92,38 +118,43 @@ async function DailyQuizContent({
           />
         </div>
 
-        {/* Hidden but indexable quiz content for SEO */}
         <div className="sr-only" aria-hidden="false">
-          <h2>Today&apos;s {formattedCategory} Quiz Questions</h2>
-          <p>Test your knowledge with these {formattedCategory.toLowerCase()} trivia questions. 
-             Try to answer all {questions.length} questions correctly!</p>
-          <div className="space-y-6">
-            {questions.map((question, index) => (
-              <div key={question.id} className="question-preview" itemScope itemProp="hasPart" itemType="https://schema.org/Question">
-                <h3 itemProp="name">Question {index + 1}: {question.question}</h3>
-                <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
-                  <strong>Correct Answer:</strong> {question.correct}
+          <div itemScope itemType="https://schema.org/Article">
+            <meta itemProp="datePublished" content={locationInfo.userLocalDate.toISOString().split('T')[0]} />
+            <meta itemProp="dateModified" content={lastUpdated} />
+            <h2 itemProp="headline">Today&apos;s {formattedCategory} Quiz Questions & Answers</h2>
+            <p itemProp="description">
+              Test your knowledge with these {formattedCategory.toLowerCase()} trivia questions. 
+              Try to answer all {questions.length} questions correctly! Updated daily.
+            </p>
+            <div className="space-y-6">
+              {questions.map((question, index) => (
+                <div key={question.id} className="question-preview" itemScope itemProp="hasPart" itemType="https://schema.org/Question">
+                  <h3 itemProp="name">Question {index + 1}: {question.question}</h3>
+                  <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+                    <strong>Correct Answer:</strong> <span itemProp="text">{question.correct}</span>
+                  </div>
+                  <ul className="mt-2 space-y-1">
+                    {question.options.map((option, optIndex) => (
+                      <li key={optIndex} className="text-gray-700">
+                        {option} {option === question.correct ? '(Correct Answer)' : ''}
+                      </li>
+                    ))}
+                  </ul>
+                  {question.titbits && (
+                    <p className="mt-2 text-sm text-gray-600">💡 {question.titbits}</p>
+                  )}
                 </div>
-                <ul className="mt-2 space-y-1">
-                  {question.options.map((option, optIndex) => (
-                    <li key={optIndex} className="text-gray-700">
-                      {option} {option === question.correct ? '(Correct Answer)' : ''}
-                    </li>
-                  ))}
-                </ul>
-                {question.titbits && (
-                  <p className="mt-2 text-sm text-gray-600">💡 {question.titbits}</p>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Collapsible FAQ Section */}
         <FAQSection 
           formattedCategory={formattedCategory}
           hasBonusQuestion={hasBonusQuestion}
           userTimezone={locationInfo.timezone}
+          lastUpdated={lastUpdated}
         />
       </div>
     );

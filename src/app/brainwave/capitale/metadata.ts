@@ -1,38 +1,68 @@
-// src/app/Capitale/metadata.ts
+// app/capitale/metadata.ts
 import { Metadata } from 'next';
 
 export function generateCapitaleMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/brainwave/capitale';
+  const canonicalUrl = 'https://elitetrivias.com/capitale';
+  const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Capitale - Daily Trivia Puzzle | Elite Trivias',
-    description: 'Guess the answer to today\'s capital city puzzle with limited attempts, similar to Wordle but with trivia questions.',
-    keywords: 'Capitale, trivia puzzle, daily trivia, wordle trivia, trivia game, city guessing game, educational games, free trivia, online trivia games, daily puzzle',
+    title: 'Capitale - Daily Capital City Guessing Game | Elite Trivias',
+    description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle but with capital cities. Free, educational, and fun!',
+    keywords: [
+      'Capitale',
+      'capital city game',
+      'geography puzzle',
+      'daily geography game',
+      'world capitals quiz',
+      'Wordle geography',
+      'capital guessing game',
+      'educational games',
+      'free trivia',
+      'online geography games',
+      'daily puzzle',
+      'world capitals',
+      'geography trivia'
+    ],
    
-    // ✅ ADD CANONICAL URL
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Capitale - Daily Trivia Puzzle | Elite Trivias',
-      description: 'Guess the answer to today\'s capital city puzzle with limited attempts, similar to Wordle but with trivia questions.',
-      url: 'https://elitetrivias.com/brainwave/capitale',
+      title: 'Capitale - Daily Capital City Guessing Game | Elite Trivias',
+      description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle but with capital cities.',
+      url: 'https://elitetrivias.com/capitale',
       siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs/capitale-og.webp',
           width: 1200,
           height: 630,
-          alt: 'Capitale - Daily Trivia Puzzle Game'
+          alt: 'Capitale - Daily Capital City Guessing Game'
         }
       ],
       type: 'website',
+      locale: 'en_US'
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Capitale - Daily Trivia Puzzle | Elite Trivias',
-      description: 'Guess the answer to today\'s capital city with limited attempts, similar to Wordle but with trivia questions.',
-      images: ['/imgs/Capitale-og.webp'],
+      title: 'Capitale - Daily Capital City Guessing Game | Elite Trivias',
+      description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle.',
+      images: ['/imgs/capitale-og.webp'],
+      site: '@elitetrivias', // Replace with your actual Twitter handle
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1
+      }
+    },
+    other: {
+      'updated_time': lastUpdated
+    }
   };
 }

@@ -3,12 +3,33 @@ import { Metadata } from 'next';
 
 export function generateLiteraleMetadata(): Metadata {
   const canonicalUrl = 'https://elitetrivias.com/brainwave/literale';
+  const lastUpdated = new Date().toISOString();
 
   return {
     title: 'Literale - Daily Literature Puzzle | Elite Trivias',
     description: 'Guess the book title from opening lines and progressive clues with limited attempts, Wordle-style feedback on title letters. Unlock more hints with each wrong guess!',
-    keywords: 'literale, book puzzle, daily book, wordle book, book guessing game, literature game, book trivia, reading game, novel puzzle, book cover game, daily brain teaser, book quotes',
-    // ✅ ADD CANONICAL URL
+    keywords: [
+      'literale',
+      'book puzzle',
+      'daily book',
+      'wordle book',
+      'book guessing game',
+      'literature game',
+      'book trivia',
+      'reading game',
+      'novel puzzle',
+      'book cover game',
+      'daily brain teaser',
+      'book quotes',
+      'literature puzzle',
+      'book title game',
+      'reading challenge',
+      'literary game',
+      'author game',
+      'classic literature',
+      'book opening lines',
+      'literary quotes'
+    ],
     alternates: {
       canonical: canonicalUrl,
     },
@@ -26,12 +47,28 @@ export function generateLiteraleMetadata(): Metadata {
         }
       ],
       type: 'website',
+      locale: 'en_US'
     },
     twitter: {
       card: 'summary_large_image',
       title: 'Literale - Daily Literature Puzzle | Elite Trivias',
       description: 'Guess the book title from opening lines and progressive clues with limited attempts, Wordle-style feedback on title letters. Unlock more hints with each wrong guess!',
       images: ['/imgs/literale-og.webp'],
+      site: '@elitetrivias',
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    other: {
+      'updated_time': lastUpdated
+    }
   };
 }

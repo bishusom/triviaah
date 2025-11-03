@@ -3,11 +3,33 @@ import { Metadata } from 'next';
 
 export function generateLandmarkdleMetadata(): Metadata {
   const canonicalUrl = 'https://elitetrivias.com/brainwave/landmarkdle';
+  const lastUpdated = new Date().toISOString();
 
   return {
     title: 'Landmarkdle - Daily Landmark Puzzle | Elite Trivias',
     description: 'Guess the landmark from its 6 attributes: type, location, architect, built year, height, and material. Wordle-style landmark guessing game.',
-    keywords: 'landmarkdle, landmark puzzle, daily landmark, wordle landmark, architecture game, landmark guessing game, world landmarks, free landmark trivia, online landmark games, daily puzzle, geography game, travel game, famous buildings, world monuments',
+    keywords: [
+      'landmarkdle',
+      'landmark puzzle',
+      'daily landmark',
+      'wordle landmark',
+      'architecture game',
+      'landmark guessing game',
+      'world landmarks',
+      'free landmark trivia',
+      'online landmark games',
+      'daily puzzle',
+      'geography game',
+      'travel game',
+      'famous buildings',
+      'world monuments',
+      'architecture puzzle',
+      'travel education',
+      'geography education',
+      'world heritage',
+      'famous structures',
+      'historical buildings'
+    ],
     alternates: {
       canonical: canonicalUrl,
     },
@@ -25,12 +47,28 @@ export function generateLandmarkdleMetadata(): Metadata {
         }
       ],
       type: 'website',
+      locale: 'en_US'
     },
     twitter: {
       card: 'summary_large_image',
       title: 'Landmarkdle - Daily Landmark Puzzle | Elite Trivias',
       description: 'Guess the landmark from its 6 attributes: type, location, architect, built year, height, and material. Wordle-style landmark guessing game.',
       images: ['/imgs/landmarkdle-og.webp'],
+      site: '@elitetrivias',
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1
+      }
+    },
+    other: {
+      'updated_time': lastUpdated
+    }
   };
 }

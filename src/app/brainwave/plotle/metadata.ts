@@ -3,17 +3,40 @@ import { Metadata } from 'next';
 
 export function generatePlotleMetadata(): Metadata {
   const canonicalUrl = 'https://elitetrivias.com/brainwave/plotle';
+  const lastUpdated = new Date().toISOString();
 
   return {
     title: 'Plotle - Daily Movie Plot Puzzle | Elite Trivias',
-    description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words.',
-    keywords: 'plotle, movie puzzle, daily movie, wordle movie, plot game, movie guessing game, film games, free movie trivia, online movie games, daily puzzle',
+    description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words. Daily movie guessing game for film lovers.',
+    keywords: [
+      'plotle',
+      'movie puzzle',
+      'daily movie',
+      'wordle movie',
+      'plot game',
+      'movie guessing game',
+      'film games',
+      'free movie trivia',
+      'online movie games',
+      'daily puzzle',
+      'movie plot game',
+      'film trivia',
+      'cinema game',
+      'movie buff game',
+      'six word plot',
+      'movie summary game',
+      'film guessing',
+      'hollywood game',
+      'movie challenge',
+      'film puzzle',
+      'entertainment game'
+    ],
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
       title: 'Plotle - Daily Movie Plot Puzzle | Elite Trivias',
-      description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words.',
+      description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words. Daily movie guessing game for film lovers.',
       url: 'https://elitetrivias.com/brainwave/plotle',
       siteName: 'Elite Trivias',
       images: [
@@ -25,12 +48,28 @@ export function generatePlotleMetadata(): Metadata {
         }
       ],
       type: 'website',
+      locale: 'en_US'
     },
     twitter: {
       card: 'summary_large_image',
       title: 'Plotle - Daily Movie Plot Puzzle | Elite Trivias',
-      description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words.',
+      description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words. Daily movie guessing game for film lovers.',
       images: ['/imgs/plotle-og.webp'],
+      site: '@elitetrivias',
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1
+      }
+    },
+    other: {
+      'updated_time': lastUpdated
+    }
   };
 }

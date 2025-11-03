@@ -3,18 +3,36 @@ import { Metadata } from 'next';
 
 export function generateHistoridleMetadata(): Metadata {
   const canonicalUrl = 'https://elitetrivias.com/brainwave/historidle';
+  const lastUpdated = new Date().toISOString();
 
   return {
     title: 'Historidle - Daily Historical Puzzle | Elite Trivias',
     description: 'Guess the historical figure or event from emojis and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
-    keywords: 'historidle, historical puzzle, daily history, wordle history, historical figures game, history guessing game, trivia games, free history trivia, online puzzle games, daily brain teaser, emoji history game, historical events',
-    // ✅ ADD CANONICAL URL
+    keywords: [
+      'historidle',
+      'historical puzzle',
+      'daily history',
+      'wordle history',
+      'historical figures game',
+      'history guessing game',
+      'trivia games',
+      'free history trivia',
+      'online puzzle games',
+      'daily brain teaser',
+      'emoji history game',
+      'historical events',
+      'history education',
+      'educational games',
+      'world history',
+      'history quiz',
+      'historical timeline'
+    ],
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
       title: 'Historidle - Daily Historical Puzzle | Elite Trivias',
-      description: 'Guess the historical figure or event from emojis and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
+      description: 'Guess the historical figure or event from 3 dates and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
       url: 'https://elitetrivias.com/brainwave/historidle',
       siteName: 'Elite Trivias',
       images: [
@@ -26,12 +44,14 @@ export function generateHistoridleMetadata(): Metadata {
         }
       ],
       type: 'website',
+      locale: 'en_US'
     },
     twitter: {
       card: 'summary_large_image',
       title: 'Historidle - Daily Historical Puzzle | Elite Trivias',
-      description: 'Guess the historical figure or event from emojis and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
+      description: 'Guess the historical figure or event from  3 dates and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
       images: ['/imgs/historidle-og.webp'],
+      site: '@elitetrivias',
     },
     robots: {
       index: true,
@@ -44,5 +64,8 @@ export function generateHistoridleMetadata(): Metadata {
         'max-snippet': -1,
       },
     },
+    other: {
+      'updated_time': lastUpdated
+    }
   };
 }
