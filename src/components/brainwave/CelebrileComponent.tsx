@@ -312,8 +312,6 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
       try {
         setImageLoading(true);
         setImageError(false);
-        console.log('Fetching image for:', puzzleData.targetName);
-        
         const imageUrl = await fetchArtistImageFromWikipedia(puzzleData.targetName);
         
         if (imageUrl) {
@@ -332,7 +330,7 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
             setImageLoading(false);
           };
         } else {
-          console.log('No image found for:', puzzleData.targetName);
+          console.log('No image found found');
           setImageError(true);
           setImageLoading(false);
         }

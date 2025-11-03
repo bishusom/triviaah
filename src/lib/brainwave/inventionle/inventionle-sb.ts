@@ -65,7 +65,7 @@ export async function getDailyInvention(customDate?: Date): Promise<{puzzle: Inv
       .from('daily_puzzles')
       .select('*')
       .eq('date', dateString)
-      .eq('category', 'invention')
+      .eq('category', 'inventionle')
       .limit(1);
 
     let puzzleData = null;
@@ -85,7 +85,7 @@ export async function getDailyInvention(customDate?: Date): Promise<{puzzle: Inv
     if (!puzzleData) {
       console.log('Getting random invention puzzle instead of daily');
       const { data: randomPuzzles, error: randomError } = await supabase
-        .from('random_invention_puzzles')
+        .from('random_inventionle_puzzles')
         .select('*')
         .limit(1);
         
@@ -129,7 +129,7 @@ export async function addInventionResult(
     const { error } = await supabase
       .from('puzzle_results')
       .insert([{
-        category: 'invention',
+        category: 'inventionle',
         success,
         attempts,
         user_id: userId,
@@ -151,7 +151,7 @@ export async function getInventionStats(): Promise<{
     const { data: results, error } = await supabase
       .from('puzzle_results')
       .select('*')
-      .eq('category', 'invention');
+      .eq('category', 'inventionle');
 
     if (error) throw error;
     
@@ -170,7 +170,7 @@ export async function getInventionStats(): Promise<{
       averageAttempts: Math.round(averageAttempts * 10) / 10
     };
   } catch (error) {
-    console.error('Error getting invention stats from Supabase:', error);
+    console.error('Error getting inventionle stats from Supabase:', error);
     return {
       totalPlayers: 0,
       successRate: 0,

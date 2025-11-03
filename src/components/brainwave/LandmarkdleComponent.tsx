@@ -252,7 +252,6 @@ const PosterBlock = ({
 /* -------------------------------------------------------------------------- */
 async function fetchLandmarkImage(landmarkName: string): Promise<string | null> {
   try {
-    console.log('Fetching image for landmark:', landmarkName);
     const imageUrl = await fetchWikimediaImage(landmarkName);
     if (!imageUrl) throw new Error('Failed to fetch landmark image');
     return imageUrl;

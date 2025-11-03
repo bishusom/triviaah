@@ -67,9 +67,9 @@ export async function getDailyCreature(customDate?: Date): Promise<{puzzle: Crea
       .from('daily_puzzles')
       .select('*')
       .eq('date', dateString)
-      .eq('category', 'creature')
+      .eq('category', 'creaturedle')
       .limit(1);
-
+    
     let puzzleData = null;
     
     if (!dailyError && dailyPuzzles && dailyPuzzles.length > 0) {
@@ -87,7 +87,7 @@ export async function getDailyCreature(customDate?: Date): Promise<{puzzle: Crea
     if (!puzzleData) {
       console.log('Getting random creature puzzle instead of daily');
       const { data: randomPuzzles, error: randomError } = await supabase
-        .from('random_creature_puzzles')
+        .from('random_creaturedle_puzzles')
         .select('*')
         .limit(1);
         

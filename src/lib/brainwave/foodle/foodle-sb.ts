@@ -65,7 +65,7 @@ export async function getDailyFood(customDate?: Date): Promise<{puzzle: FoodPuzz
       .from('daily_puzzles')
       .select('*')
       .eq('date', dateString)
-      .eq('category', 'food')
+      .eq('category', 'foodle')
       .limit(1);
 
     let puzzleData = null;
@@ -129,7 +129,7 @@ export async function addFoodResult(
     const { error } = await supabase
       .from('puzzle_results')
       .insert([{
-        category: 'food',
+        category: 'foodle',
         success,
         attempts,
         user_id: userId,
@@ -138,7 +138,7 @@ export async function addFoodResult(
 
     if (error) throw error;
   } catch (error) {
-    console.error('Error saving food result to Supabase:', error);
+    console.error('Error saving foodle result to Supabase:', error);
   }
 }
 
@@ -151,7 +151,7 @@ export async function getFoodStats(): Promise<{
     const { data: results, error } = await supabase
       .from('puzzle_results')
       .select('*')
-      .eq('category', 'food');
+      .eq('category', 'foodle');
 
     if (error) throw error;
     
@@ -170,7 +170,7 @@ export async function getFoodStats(): Promise<{
       averageAttempts: Math.round(averageAttempts * 10) / 10
     };
   } catch (error) {
-    console.error('Error getting food stats from Supabase:', error);
+    console.error('Error getting foodle stats from Supabase:', error);
     return {
       totalPlayers: 0,
       successRate: 0,

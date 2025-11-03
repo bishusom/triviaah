@@ -57,7 +57,7 @@ export async function getDailyLandmark(customDate?: Date): Promise<{puzzle: Land
       .from('daily_puzzles')
       .select('*')
       .eq('date', dateString)
-      .eq('category', 'landmark')
+      .eq('category', 'landmarkdle')
       .limit(1);
 
     let puzzleData = null;
@@ -120,7 +120,7 @@ export async function addLandmarkResult(
     const { error } = await supabase
       .from('puzzle_results')
       .insert([{
-        category: 'landmark',
+        category: 'landmarkdle',
         success,
         attempts,
         user_id: userId,
@@ -129,7 +129,7 @@ export async function addLandmarkResult(
 
     if (error) throw error;
   } catch (error) {
-    console.error('Error saving landmark result to Supabase:', error);
+    console.error('Error saving landmarkdle result to Supabase:', error);
   }
 }
 
@@ -142,7 +142,7 @@ export async function getLandmarkStats(): Promise<{
     const { data: results, error } = await supabase
       .from('puzzle_results')
       .select('*')
-      .eq('category', 'landmark');
+      .eq('category', 'landmarkdle');
 
     if (error) throw error;
     
@@ -161,7 +161,7 @@ export async function getLandmarkStats(): Promise<{
       averageAttempts: Math.round(averageAttempts * 10) / 10
     };
   } catch (error) {
-    console.error('Error getting landmark stats from Supabase:', error);
+    console.error('Error getting landmarkdle stats from Supabase:', error);
     return {
       totalPlayers: 0,
       successRate: 0,
