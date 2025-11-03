@@ -631,7 +631,7 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h4 className="font-semibold text-blue-800 mb-2">Today&apos;s Landmark</h4>
               <p className="text-blue-700">
-                Today&apos;s landmark is a <strong>{puzzleData.type}</strong>.
+                Today&apos;s landmark is a <strong>{puzzleData.type}</strong> landmark.
               </p>
               <p className="text-xs text-blue-600 mt-2">
                 More clues will be revealed as you make guesses...
@@ -661,7 +661,7 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
             <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
             <p className="mt-2">The landmark was: <strong>{puzzleData.answer}</strong></p>
             {attempts[attempts.length - 1]?.funFact && (
-              <p className="mt-2 italic">&ldquo{attempts[attempts.length - 1].funFact}&rdquo</p>
+              <p className="mt-2 italic">{attempts[attempts.length - 1].funFact}</p>
             )}
           </div>
         )}
@@ -670,7 +670,7 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             <h3 className="font-bold text-lg mb-2">Game Over</h3>
             <p>The landmark was: <strong>{puzzleData.answer}</strong></p>
-            <p className="mt-2 italic">&ldquo{puzzleData.funFact}&rdquo</p>
+            <p className="mt-2 italic">{puzzleData.funFact}</p>
           </div>
         )}
 

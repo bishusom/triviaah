@@ -666,7 +666,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
             <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
             <p className="mt-2">The animal was: <strong>{puzzleData.answer}</strong></p>
             {attempts[attempts.length - 1]?.funFact && (
-              <p className="mt-2 italic">&ldquo{attempts[attempts.length - 1].funFact}&rdquo</p>
+              <p className="mt-2 italic">{attempts[attempts.length - 1].funFact}</p>
             )}
           </div>
         )}
@@ -675,7 +675,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             <h3 className="font-bold text-lg mb-2">Game Over</h3>
             <p>The animal was: <strong>{puzzleData.answer}</strong></p>
-            <p className="mt-2 italic">&ldquo{puzzleData.funFact}&rdquo</p>
+            <p className="mt-2 italic">{puzzleData.funFact}</p>
           </div>
         )}
 
