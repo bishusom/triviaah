@@ -1,5 +1,5 @@
 import QuizGame from '@/components/trivias/QuizGame';
-import { getCategoryQuestions, getSubcategoryQuestions } from '@/lib/supabase';
+import { getCategoryQuestions, getSubcategoryQuestions, Question } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
@@ -69,7 +69,7 @@ export async function generateMetadata({
 }
 
 // Helper function to generate structured data without extra DB calls
-function generateStructuredData(questions: any[], category: string) {
+function generateStructuredData(questions: Question[], category: string) {
   const formattedCategory = category
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
