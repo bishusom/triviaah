@@ -1,4 +1,4 @@
-// src/components/brainwave/creaturdle/CreaturdleComponent.tsx
+// src/components/brainwave/creaturedle/CreaturedleComponent.tsx
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import confetti from 'canvas-confetti';
@@ -7,10 +7,10 @@ import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
 import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { fetchWikimediaImage } from '@/lib/wikimedia';
-import { addCreatureResult, type CreaturePuzzle } from '@/lib/brainwave/creaturdle/creaturdle-sb';
-import { checkCreatureGuess, type CreatureGuessResult } from '@/lib/brainwave/creaturdle/creaturdle-logic';
+import { addCreatureResult, type CreaturePuzzle } from '@/lib/brainwave/creaturedle/creaturdle-sb';
+import { checkCreatureGuess, type CreatureGuessResult } from '@/lib/brainwave/creaturedle/creaturdle-logic';
 
-interface CreaturdleComponentProps {
+interface CreaturedleComponentProps {
   initialData: { puzzle: CreaturePuzzle };
 }
 
@@ -266,7 +266,7 @@ async function fetchAnimalImage(animalName: string): Promise<string | null> {
 /* -------------------------------------------------------------------------- */
 /*  Main component                                                            */
 /* -------------------------------------------------------------------------- */
-export default function CreaturdleComponent({ initialData }: CreaturdleComponentProps) {
+export default function CreaturedleComponent({ initialData }: CreaturedleComponentProps) {
   const [puzzleData] = useState(initialData.puzzle);
   const [showImageModal, setShowImageModal] = useState(false);
   const [guess, setGuess] = useState('');
@@ -345,7 +345,7 @@ export default function CreaturdleComponent({ initialData }: CreaturdleComponent
     if (!gameStarted) return;
     const checkGtag = setInterval(() => {
       if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        event({ action: 'creaturdle_started', category: 'creaturdle', label: 'creaturdle' });
+        event({ action: 'creaturedle_started', category: 'creaturedle', label: 'creaturedle' });
         clearInterval(checkGtag);
       }
     }, 100);
@@ -354,7 +354,7 @@ export default function CreaturdleComponent({ initialData }: CreaturdleComponent
 
   /* --------------------------- persistence -------------------------- */
   useEffect(() => {
-    const saved = localStorage.getItem(`creaturdle-${puzzleData.id}`);
+    const saved = localStorage.getItem(`creaturedle-${puzzleData.id}`);
     if (saved) {
       try {
         const progress = JSON.parse(saved);
@@ -366,7 +366,7 @@ export default function CreaturdleComponent({ initialData }: CreaturdleComponent
 
   useEffect(() => {
     if (attempts.length > 0 || gameState !== 'playing') {
-      localStorage.setItem(`creaturdle-${puzzleData.id}`, JSON.stringify({ attempts, gameState }));
+      localStorage.setItem(`creaturedle-${puzzleData.id}`, JSON.stringify({ attempts, gameState }));
     }
   }, [attempts, gameState, puzzleData.id]);
 
@@ -430,12 +430,12 @@ export default function CreaturdleComponent({ initialData }: CreaturdleComponent
         triggerConfetti();
         playSound('win');
         await addCreatureResult(true, newAttempts.length);
-        event({ action: 'creaturdle_win', category: 'creaturdle', label: `attempts_${newAttempts.length}` });
+        event({ action: 'creaturedle_win', category: 'creaturedle', label: `attempts_${newAttempts.length}` });
       } else if (newAttempts.length >= 6) {
         setGameState('lost');
         playSound('lose');
         await addCreatureResult(false, newAttempts.length);
-        event({ action: 'creaturdle_loss', category: 'creaturdle', label: 'max_attempts' });
+        event({ action: 'creaturedle_loss', category: 'creaturedle', label: 'max_attempts' });
       } else {
         const hasCorrectOrPresent = result.letterStatuses?.some(s => s === 'correct' || s === 'present');
         playSound(hasCorrectOrPresent ? 'correct' : 'incorrect');
@@ -455,7 +455,7 @@ export default function CreaturdleComponent({ initialData }: CreaturdleComponent
     const clientDate = new Date();
     const startDate = new Date(2024, 0, 1);
     const puzzleNumber = Math.floor((clientDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    let shareText = `Creaturdle #${puzzleNumber} ${gameState === 'won' ? attempts.length : 'X'}/6\n\n`;
+    let shareText = `Creaturedle #${puzzleNumber} ${gameState === 'won' ? attempts.length : 'X'}/6\n\n`;
     
     attempts.forEach((attempt, index) => {
       attempt.letterStatuses?.forEach(status => {
@@ -472,7 +472,7 @@ export default function CreaturdleComponent({ initialData }: CreaturdleComponent
       }
     });
     
-    shareText += '\n\nPlay daily at https://elitetrivias.com/brainwave/creaturdle';
+    shareText += '\n\nPlay daily at https://elitetrivias.com/brainwave/creaturedle';
     return shareText;
   };
 
@@ -743,7 +743,7 @@ export default function CreaturdleComponent({ initialData }: CreaturdleComponent
             {shareMessage && <div className="mt-2 text-green-600">{shareMessage}</div>}
 
             <FeedbackComponent
-              gameType="creaturdle"
+              gameType="creaturedle"
               category="brainwave"
               metadata={{ attempts: attempts.length, won: gameState === 'won', correctAnswer: puzzleData.answer }}
             />
@@ -753,7 +753,7 @@ export default function CreaturdleComponent({ initialData }: CreaturdleComponent
 
       {/* How to Play */}
       <div className="bg-gray-100 rounded-lg p-4 mt-6">
-        <h3 className="font-bold mb-2">How to Play Creaturdle:</h3>
+        <h3 className="font-bold mb-2">How to Play Creaturedle:</h3>
         <ul className="list-disc list-inside space-y-1 text-sm">
           <li>Guess the animal by entering its name</li>
           <li>Get letter-by-letter feedback compared to the answer</li>

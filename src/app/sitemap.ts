@@ -94,7 +94,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }]
 
   const brainwaveCategories = [
-    'capitale', 'plotle', 'celebrile', 'literale', 
+    'capitale', 'plotle', 'celebrile', 'literale',
+    'creaturedle', 'foodle', 'inventionle', 'landmarkdle',
     'songle', 'historidle', 'synonymle', 'trordle'
   ]
 

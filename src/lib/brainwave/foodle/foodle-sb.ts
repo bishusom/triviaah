@@ -1,38 +1,36 @@
-// lib/creaturdle-sb.ts
+// lib/brainwave/foodle/foodle-sb.ts
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export interface CreatureInfo {
+export interface FoodInfo {
   name: string;
-  class: string;
-  habitat: string;
-  diet: string;
-  size: string;
-  activity: string;
-  bodyCovering: string;
-  continent: string;
+  cuisine: string;
+  course: string;
+  mainIngredients: string;
+  cookingMethod: string;
+  flavorProfile: string;
+  temperature: string;
   funFact: string;
 }
 
-export interface CreaturePuzzle {
+export interface FoodPuzzle {
   id: string;
   answer: string;
-  class: string;
-  habitat: string;
-  diet: string;
-  size: string;
-  activity: string;
-  bodyCovering: string;
-  continent: string;
+  cuisine: string;
+  course: string;
+  mainIngredients: string;
+  cookingMethod: string;
+  flavorProfile: string;
+  temperature: string;
   funFact: string;
   date: string;
-  validAnimals: string[];
+  validFoods: string[];
 }
 
-export interface CreatureResult {
+export interface FoodResult {
   userId?: string;
   puzzleId: string;
   success: boolean;
@@ -56,18 +54,18 @@ function getClientDateString(customDate?: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export async function getDailyCreature(customDate?: Date): Promise<{puzzle: CreaturePuzzle | null}> {
+export async function getDailyFood(customDate?: Date): Promise<{puzzle: FoodPuzzle | null}> {
   try {
     const dateString = getClientDateString(customDate);
     
-    console.log('Fetching daily creature puzzle for date:', dateString);
+    console.log('Fetching daily food puzzle for date:', dateString);
     
     // Try to get daily puzzle first
     const { data: dailyPuzzles, error: dailyError } = await supabase
       .from('daily_puzzles')
       .select('*')
       .eq('date', dateString)
-      .eq('category', 'creature')
+      .eq('category', 'food')
       .limit(1);
 
     let puzzleData = null;
@@ -75,7 +73,7 @@ export async function getDailyCreature(customDate?: Date): Promise<{puzzle: Crea
     if (!dailyError && dailyPuzzles && dailyPuzzles.length > 0) {
       // Fetch the specific daily puzzle
       const { data: dailyPuzzle, error: puzzleError } = await supabase
-        .from('creaturdle_puzzles')
+        .from('foodle_puzzles')
         .select('*')
         .eq('id', dailyPuzzles[0].puzzle_id)
         .single();
@@ -85,9 +83,9 @@ export async function getDailyCreature(customDate?: Date): Promise<{puzzle: Crea
     
     // If no daily puzzle found, get a random one
     if (!puzzleData) {
-      console.log('Getting random creature puzzle instead of daily');
+      console.log('Getting random food puzzle instead of daily');
       const { data: randomPuzzles, error: randomError } = await supabase
-        .from('random_creature_puzzles')
+        .from('random_foodle_puzzles')
         .select('*')
         .limit(1);
         
@@ -104,26 +102,25 @@ export async function getDailyCreature(customDate?: Date): Promise<{puzzle: Crea
       puzzle: {
         id: puzzleData.id,
         answer: puzzleData.answer,
-        class: puzzleData.class,
-        habitat: puzzleData.habitat,
-        diet: puzzleData.diet,
-        size: puzzleData.size,
-        activity: puzzleData.activity,
-        bodyCovering: puzzleData.body_covering,
-        continent: puzzleData.continent,
+        cuisine: puzzleData.cuisine,
+        course: puzzleData.course,
+        mainIngredients: puzzleData.main_ingredients,
+        cookingMethod: puzzleData.cooking_method,
+        flavorProfile: puzzleData.flavor_profile,
+        temperature: puzzleData.temperature,
         funFact: puzzleData.fun_fact,
         date: dateString,
-        validAnimals: [] // We don't need this anymore
-      } as CreaturePuzzle
+        validFoods: []
+      } as FoodPuzzle
     };
     
   } catch (error) {
-    console.error('Error getting creature puzzle:', error);
+    console.error('Error getting food puzzle:', error);
     return { puzzle: null };
   }
 }
 
-export async function addCreatureResult(
+export async function addFoodResult(
   success: boolean, 
   attempts: number,
   userId?: string
@@ -132,7 +129,7 @@ export async function addCreatureResult(
     const { error } = await supabase
       .from('puzzle_results')
       .insert([{
-        category: 'creature',
+        category: 'food',
         success,
         attempts,
         user_id: userId,
@@ -141,11 +138,11 @@ export async function addCreatureResult(
 
     if (error) throw error;
   } catch (error) {
-    console.error('Error saving creature result to Supabase:', error);
+    console.error('Error saving food result to Supabase:', error);
   }
 }
 
-export async function getCreatureStats(): Promise<{
+export async function getFoodStats(): Promise<{
   totalPlayers: number;
   successRate: number;
   averageAttempts: number;
@@ -154,7 +151,7 @@ export async function getCreatureStats(): Promise<{
     const { data: results, error } = await supabase
       .from('puzzle_results')
       .select('*')
-      .eq('category', 'creature');
+      .eq('category', 'food');
 
     if (error) throw error;
     
@@ -173,7 +170,7 @@ export async function getCreatureStats(): Promise<{
       averageAttempts: Math.round(averageAttempts * 10) / 10
     };
   } catch (error) {
-    console.error('Error getting creature stats from Supabase:', error);
+    console.error('Error getting food stats from Supabase:', error);
     return {
       totalPlayers: 0,
       successRate: 0,

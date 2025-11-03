@@ -1,6 +1,5 @@
-// lib/creaturdle-logic.ts
-import { CreaturePuzzle } from '@/lib/brainwave/creaturdle/creaturdle-sb';
-
+// lib/creaturedle-logic.ts
+import { CreaturePuzzle } from '@/lib/brainwave/creaturedle/creaturdle-sb';
 export interface CreatureGuessResult {
   guess: string;
   isCorrect: boolean;

@@ -52,14 +52,6 @@ async function getDailyPuzzles() {
       keywords: 'celebrity trivia game, famous people quiz, celebrity guessing game'    
       },
       {
-      category: 'literale',
-      name: 'Literale',
-      path: '/brainwave/literale',
-      image: '/imgs/literale-160x160.webp',
-      tagline: 'Guess the book from its opening line in this literary puzzle',
-      keywords: 'book opening game, literature trivia, book guessing puzzle'
-      },
-      {
       category: 'songle',
       name: 'Songle',
       path: '/brainwave/songle',
@@ -74,6 +66,46 @@ async function getDailyPuzzles() {
       image: '/imgs/historidle-160x160.webp',
       tagline: 'Guess the historical event from dates and other intriguing clues',
       keywords: 'history trivia game, historical events quiz, history guessing game'
+      },
+      {
+      category: 'creaturedle',
+      name: 'Creaturedle',
+      path: '/brainwave/creaturedle',
+      image: '/imgs/creaturedle-160x160.webp',
+      tagline: 'Identify animals and mystery creatures from interesting clues',
+      keywords: 'animal trivia game, mystery creatures quiz, creature guessing challenge'
+      },
+      {
+      category: 'foodle',
+      name: 'Foodle',
+      path: '/brainwave/foodle',
+      image: '/imgs/foodle-160x160.webp',
+      tagline: 'Guess the food from its 6 attributes in this tasty puzzle',
+      keywords: 'food trivia game, dish guessing quiz, cuisine puzzle challenge'
+      },
+      {
+      category: 'literale',
+      name: 'Literale',
+      path: '/brainwave/literale',
+      image: '/imgs/literale-160x160.webp',
+      tagline: 'Guess the book from its opening line in this literary puzzle',
+      keywords: 'book opening game, literature trivia, book guessing puzzle'
+      },
+      {
+      category: 'landmarkdle',
+      name: 'Landmarkdle',
+      path: '/brainwave/landmarkdle',
+      image: '/imgs/landmarkdle-160x160.webp',
+      tagline: 'Identify famous landmarks from clues in this geography challenge',
+      keywords: 'landmark trivia game, famous places quiz, landmark guessing challenge'
+      },
+      {
+      category: 'inventionle',
+      name: 'Inventionle',
+      path: '/brainwave/inventionle',
+      image: '/imgs/inventionle-160x160.webp',
+      tagline: 'Guess the invention from historical clues and fun facts',
+      keywords: 'invention trivia game, invention guessing quiz, historical inventions challenge'
       },
       {
       category: 'synonymle',

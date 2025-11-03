@@ -94,14 +94,6 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     keywords: 'celebrity trivia game, famous people quiz, celebrity guessing game'    
   },
   {
-    category: 'literale',
-    name: 'Literale',
-    path: '/brainwave/literale',
-    image: '/imgs/literale-160x160.webp',
-    tagline: 'Guess the book from its opening line in this literary puzzle',
-    keywords: 'book opening game, literature trivia, book guessing puzzle'
-  },
-  {
     category: 'songle',
     name: 'Songle',
     path: '/brainwave/songle',
@@ -116,6 +108,46 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     image: '/imgs/historidle-160x160.webp',
     tagline: 'Guess the historical event from dates and other intriguing clues',
     keywords: 'history trivia game, historical events quiz, history guessing game'
+  },
+  {
+    category: 'creaturedle',
+    name: 'Creaturedle',
+    path: '/brainwave/creaturedle',
+    image: '/imgs/creaturedle-160x160.webp',
+    tagline: 'Guess the animal from its unique characteristics in this wildlife puzzle',
+    keywords: 'animal trivia game, wildlife quiz, animal guessing puzzle'
+  },
+  {
+    category: 'foodle',
+    name: 'Foodle',
+    path: '/brainwave/foodle',
+    image: '/imgs/foodle-160x160.webp',
+    tagline: 'Guess the dish from its ingredients in this culinary puzzle',
+    keywords: 'food trivia game, dish guessing quiz, culinary puzzle'
+  },
+  {
+    category: 'literale',
+    name: 'Literale',
+    path: '/brainwave/literale',
+    image: '/imgs/literale-160x160.webp',
+    tagline: 'Guess the book from its opening line in this literary puzzle',
+    keywords: 'book opening game, literature trivia, book guessing puzzle'
+  },
+  {
+    category: 'landmarkdle',
+    name: 'Landmarkdle',
+    path: '/brainwave/landmarkdle',
+    image: '/imgs/landmarkdle-160x160.webp',
+    tagline: 'Guess the famous landmark from intriguing clues in this geography puzzle',
+    keywords: 'landmark trivia game, famous places quiz, landmark guessing puzzle'
+  },
+  {
+    category: 'inventionle',
+    name: 'Inventionle',
+    path: '/brainwave/inventionle',
+    image: '/imgs/inventionle-160x160.webp',
+    tagline: 'Guess the invention from its 6 attributes in this technology puzzle',
+    keywords: 'invention trivia game, technology quiz, invention guessing puzzle'
   },
   {
     category: 'synonymle',

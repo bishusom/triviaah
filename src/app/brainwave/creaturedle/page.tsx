@@ -1,8 +1,8 @@
 // src/app/creaturdle/page.tsx
 'use client';
 
-import CreaturdleComponent from '@/components/brainwave/CreaturdleComponent';
-import { getDailyCreature,CreaturePuzzle} from '@/lib/brainwave/creaturdle/creaturdle-sb';
+import CreaturedleComponent from '@/components/brainwave/CreaturedleComponent';
+import { getDailyCreature,CreaturePuzzle} from '@/lib/brainwave/creaturedle/creaturdle-sb';
 import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import Ads from '@/components/common/Ads';
@@ -70,7 +70,7 @@ export default function CreaturdlePage() {
         )}
         
         <div className="max-w-2xl mx-auto p-6 text-center">
-          <h1 className="text-3xl font-bold mb-2">Creaturdle</h1>
+          <h1 className="text-3xl font-bold mb-2">Creaturedle</h1>
           <p className="text-gray-600 mb-6">Animal guessing puzzle. Guess the animal in 6 tries using 6 attributes!</p>
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
@@ -102,7 +102,7 @@ export default function CreaturdlePage() {
         )}
         
         <div className="max-w-2xl mx-auto p-6 text-center">
-          <h1 className="text-3xl font-bold mb-2">Creaturdle</h1>
+          <h1 className="text-3xl font-bold mb-2">Creaturedle</h1>
           <p className="text-gray-600 mb-4">Animal guessing puzzle. Guess the animal in 6 tries using 6 attributes!</p>
           <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
             <p className="mb-2">No puzzle available for today.</p>
@@ -156,13 +156,13 @@ export default function CreaturdlePage() {
       </div>
 
       <div className="max-w-2xl mx-auto p-4">
-        <h1 className="text-3xl font-bold text-center mb-2">🐾 Creaturdle</h1>
+        <h1 className="text-3xl font-bold text-center mb-2">🐾 Creaturedle</h1>
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
         <p className="text-gray-600 text-center mb-6">Animal guessing puzzle. Guess the animal in 6 tries using 6 attributes!</p>
         
-        {creatureData.puzzle && <CreaturdleComponent initialData={creatureData as { puzzle: CreaturePuzzle }} />}
+        {creatureData.puzzle && <CreaturedleComponent initialData={creatureData as { puzzle: CreaturePuzzle }} />}
       </div>
     </div>
   );
