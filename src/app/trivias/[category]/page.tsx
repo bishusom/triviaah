@@ -140,9 +140,11 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                   <h3 className="font-semibold text-lg text-gray-800 group-hover:text-blue-700">
                     {subcat.subcategory}
                   </h3>
+                  {/* No need to show question count for now
                   <p className="text-sm text-gray-600 mt-1">
                     {subcat.question_count} questions
                   </p>
+                  */}
                 </Link>
               ))}
             </div>

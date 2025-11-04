@@ -5,6 +5,15 @@ import { MdInfo } from 'react-icons/md';
 import DailyPuzzlesGrid from '@/components/daily/DailyPuzzlesGrid';
 import Ads from '@/components/common/Ads';
 
+interface Puzzle {
+  category: string;
+  name: string;
+  path: string;
+  image: string;
+  tagline: string;
+  keywords: string;
+}
+
 export const metadata: Metadata = {
   title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Elite Trivias',
   description: 'Enjoy our collection of creative brainwave trivia games including word puzzles, movie guessing, music challenges and geography quizzes.', 
@@ -16,12 +25,33 @@ export const metadata: Metadata = {
     title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Elite Trivias',
     description: 'Challenge your mind with our creative brainwave trivia games including Capitale, Plotle, Songle and more!',
     url: 'https://elitetrivias.com/brainwave',
+    siteName: 'Elite Trivias',
     images: [
       {
         url: '/imgs/brainwave-trivia-og.webp',
+        width: 1200,
+        height: 630,
         alt: 'Brainwave Trivia Games - Play Now',
       },
     ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Elite Trivias',
+    description: 'Challenge your mind with our creative brainwave trivia games including Capitale, Plotle, Songle and more!',
+    images: ['/imgs/brainwave-trivia-og.webp'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -128,28 +158,12 @@ async function getDailyPuzzles() {
 
 export default async function DailyQuizzesPage() {
   const dailyPuzzles = await getDailyPuzzles();
+  const currentDate = new Date();
+  
   return (
     <div className="min-h-screen bg-gray-50">
-      <Script
-        id="qa-schema-brainwave"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "QAPage",
-            "mainEntity": {
-              "@type": "Question",
-              "name": "Brainwave Trivia Games",
-              "text": "What types of brainwave trivia games are available?",
-              "answerCount": 4,
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Our brainwave section includes geography puzzles with Capitale, movie guessing with Plotle, music challenges with Songle, and Wordle-inspired trivia with Trordle."
-              }
-            }
-          })
-        }}
-      />
+      {/* Structured Data for SEO */}
+      <StructuredData puzzles={dailyPuzzles} currentDate={currentDate} />
 
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
@@ -160,6 +174,17 @@ export default async function DailyQuizzesPage() {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Exercise your mind with our creative trivia puzzles including <strong>word games, movie plots, song lyrics, and geography challenges</strong>. 
           </p>
+          
+          {/* Last Updated Date */}
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gray-500">
+              Last updated: {currentDate.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
+            </p>
+          </div>
         </div>
 
         {/* Brainwave Grid - Client-side component */}
@@ -204,6 +229,63 @@ export default async function DailyQuizzesPage() {
           </div>
         </div>
 
+        {/* FAQ Section */}
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-6">
+            <div className="border-b border-gray-200 pb-6">
+              <h3 className="font-semibold text-lg mb-2">What are Brainwave games?</h3>
+              <p className="text-gray-700">
+                Brainwave games are creative daily puzzle challenges that combine trivia with unique gameplay mechanics. 
+                Each game focuses on a specific theme like geography, movies, music, or literature, offering a fresh 
+                challenge every day to test your knowledge and problem-solving skills.
+              </p>
+            </div>
+            
+            <div className="border-b border-gray-200 pb-6">
+              <h3 className="font-semibold text-lg mb-2">Are these games free to play?</h3>
+              <p className="text-gray-700">
+                Yes! All Brainwave games are completely free to play. No registration, no subscriptions, 
+                and no hidden fees. You can enjoy all our daily puzzle challenges without any cost.
+              </p>
+            </div>
+            
+            <div className="border-b border-gray-200 pb-6">
+              <h3 className="font-semibold text-lg mb-2">How often are new puzzles available?</h3>
+              <p className="text-gray-700">
+                Each Brainwave game features a new challenge every day. The puzzles reset at midnight local time, 
+                giving you fresh content to enjoy daily. You can play previous days&apos; puzzles if you miss them.
+              </p>
+            </div>
+            
+            <div className="border-b border-gray-200 pb-6">
+              <h3 className="font-semibold text-lg mb-2">Can I play on mobile devices?</h3>
+              <p className="text-gray-700">
+                Absolutely! All Brainwave games are fully responsive and work perfectly on smartphones, tablets, 
+                and desktop computers. The interface adapts to your screen size for the best playing experience.
+              </p>
+            </div>
+            
+            <div className="border-b border-gray-200 pb-6">
+              <h3 className="font-semibold text-lg mb-2">What if I can&apos;t solve a puzzle?</h3>
+              <p className="text-gray-700">
+                Don&apos;t worry! Each game provides hints and progressive clues to help you solve challenging puzzles. 
+                You can also share the puzzle with friends to collaborate, or check back the next day for the solution.
+              </p>
+            </div>
+            
+            <div className="pb-2">
+              <h3 className="font-semibold text-lg mb-2">Can I share my results?</h3>
+              <p className="text-gray-700">
+                Yes! After completing each Brainwave game, you&apos;ll have the option to share your results on social media 
+                and challenge your friends to beat your score. It&apos;s a great way to compete and learn together.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* SEO-Friendly Content */}
         <section className="prose max-w-none mb-12">
           <h2 className="text-2xl font-bold text-gray-800">Brainwave Trivia Challenges</h2>
@@ -226,7 +308,202 @@ export default async function DailyQuizzesPage() {
           </ul>
         </section>
       </main>
-      
     </div>
+  );
+}
+
+// Structured Data Component for SEO
+function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDate: Date }) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://elitetrivias.com/#organization",
+        "name": "Elite Trivias",
+        "url": "https://elitetrivias.com/",
+        "description": "Elite Trivias offers engaging and educational trivia games and puzzles for everyone.",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://elitetrivias.com/logo.png",
+          "width": 200,
+          "height": 60
+        },
+        "sameAs": [
+          "https://twitter.com/elitetrivias",
+          "https://www.facebook.com/elitetrivias",
+          "https://www.instagram.com/elitetrivias"
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://elitetrivias.com/brainwave/#webpage",
+        "url": "https://elitetrivias.com/brainwave",
+        "name": "Brainwave Trivia Games - Creative Puzzle Challenges | Elite Trivias",
+        "description": "Enjoy our collection of creative brainwave trivia games including word puzzles, movie guessing, music challenges and geography quizzes.",
+        "isPartOf": {
+          "@id": "https://elitetrivias.com/#website"
+        },
+        "about": {
+          "@id": "https://elitetrivias.com/brainwave/#itemlist"
+        },
+        "datePublished": "2024-01-01T00:00:00+00:00",
+        "dateModified": currentDate.toISOString(),
+        "breadcrumb": {
+          "@id": "https://elitetrivias.com/brainwave/#breadcrumb"
+        },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": "https://elitetrivias.com/imgs/brainwave-trivia-og.webp",
+          "width": 1200,
+          "height": 630
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://elitetrivias.com/#website",
+        "url": "https://elitetrivias.com/",
+        "name": "Elite Trivias",
+        "description": "Engaging trivia games and puzzles for everyone",
+        "publisher": {
+          "@id": "https://elitetrivias.com/#organization"
+        },
+        "potentialAction": [
+          {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://elitetrivias.com/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://elitetrivias.com/brainwave/#itemlist",
+        "name": "Brainwave Daily Puzzle Games",
+        "description": "Collection of creative daily puzzle challenges and trivia games",
+        "numberOfItems": puzzles.length,
+        "itemListElement": puzzles.map((puzzle, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "Game",
+            "name": puzzle.name,
+            "description": puzzle.tagline,
+            "url": `https://elitetrivias.com${puzzle.path}`,
+            "gameType": "PuzzleGame",
+            "genre": ["puzzle", "trivia", "educational"],
+            "applicationCategory": "Game",
+            "numberOfPlayers": {
+              "@type": "QuantitativeValue",
+              "minValue": 1
+            },
+            "publisher": {
+              "@id": "https://elitetrivias.com/#organization"
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          }
+        }))
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://elitetrivias.com/brainwave/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://elitetrivias.com"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Brainwave Games",
+            "item": "https://elitetrivias.com/brainwave"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What are Brainwave games?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Brainwave games are creative daily puzzle challenges that combine trivia with unique gameplay mechanics. Each game focuses on a specific theme like geography, movies, music, or literature, offering a fresh challenge every day to test your knowledge and problem-solving skills."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are these games free to play?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! All Brainwave games are completely free to play. No registration, no subscriptions, and no hidden fees. You can enjoy all our daily puzzle challenges without any cost."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How often are new puzzles available?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Each Brainwave game features a new challenge every day. The puzzles reset at midnight local time, giving you fresh content to enjoy daily. You can play previous days' puzzles if you miss them."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I play on mobile devices?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Absolutely! All Brainwave games are fully responsive and work perfectly on smartphones, tablets, and desktop computers. The interface adapts to your screen size for the best playing experience."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What if I can't solve a puzzle?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Don't worry! Each game provides hints and progressive clues to help you solve challenging puzzles. You can also share the puzzle with friends to collaborate, or check back the next day for the solution."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I share my results?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! After completing each Brainwave game, you'll have the option to share your results on social media and challenge your friends to beat your score. It's a great way to compete and learn together."
+            }
+          }
+        ]
+      },
+      {
+        "@type": "QAPage",
+        "mainEntity": {
+          "@type": "Question",
+          "name": "Brainwave Trivia Games",
+          "text": "What types of brainwave trivia games are available?",
+          "answerCount": 4,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our brainwave section includes geography puzzles with Capitale, movie guessing with Plotle, music challenges with Songle, celebrity trivia with Celebrile, historical puzzles with Historidle, animal trivia with Creaturedle, food puzzles with Foodle, literature challenges with Literale, landmark identification with Landmarkdle, invention guessing with Inventionle, word similarity games with Synonymle, and Wordle-inspired trivia with Trordle."
+          },
+          "dateCreated": currentDate.toISOString()
+        }
+      }
+    ]
+  };
+
+  return (
+    <Script
+      id="structured-data-brainwave"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
   );
 }

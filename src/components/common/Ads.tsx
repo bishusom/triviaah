@@ -27,8 +27,11 @@ export default function Ads({
   const adRef = useRef<HTMLDivElement>(null);
   const insRef = useRef<HTMLModElement>(null);
 
+  // Move the conditional check after hooks
+  const shouldShowAds = process.env.NEXT_PUBLIC_SHOW_ADS !== 'false';
+
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || !shouldShowAds) return;
 
     const loadAd = () => {
       if (typeof window !== 'undefined' && window.adsbygoogle && insRef.current) {
@@ -54,13 +57,14 @@ export default function Ads({
       setTimeout(() => clearInterval(checkAdSense), 10000);
       return () => clearInterval(checkAdSense);
     }
-  }, [isVisible]);
+  }, [isVisible, shouldShowAds]);
 
   const handleClose = () => {
     setIsVisible(false);
   };
 
-  if (!isVisible) {
+  // Return null early if ads should not be shown
+  if (!shouldShowAds || !isVisible) {
     return null;
   }
 

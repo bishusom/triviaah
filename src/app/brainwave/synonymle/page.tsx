@@ -15,6 +15,7 @@ export default function SynonymlePage() {
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
+  const showAds = process.env.NEXT_PUBLIC_SHOW_ADS === 'true';
 
   useEffect(() => {
     // Set the current date on the client side to ensure it's using client timezone
@@ -144,20 +145,22 @@ export default function SynonymlePage() {
       <StructuredData />
       
       {/* Ad Controls */}
-      <div className="fixed top-4 right-4 z-50 flex gap-2">
-        <button
-          onClick={() => setShowDesktopAds(!showDesktopAds)}
-          className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded hidden lg:block"
-        >
-          {showDesktopAds ? 'Hide Side Ads' : 'Show Side Ads'}
-        </button>
-        <button
-          onClick={() => setShowMobileAd(!showMobileAd)}
-          className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded lg:hidden"
-        >
-          {showMobileAd ? 'Hide Bottom Ad' : 'Show Bottom Ad'}
-        </button>
-      </div>
+      {showAds && (
+        <div className="fixed top-4 right-4 z-50 flex gap-2">
+          <button
+            onClick={() => setShowDesktopAds(!showDesktopAds)}
+            className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded hidden lg:block"
+          >
+            {showDesktopAds ? 'Hide Side Ads' : 'Show Side Ads'}
+          </button>
+          <button
+            onClick={() => setShowMobileAd(!showMobileAd)}
+            className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded lg:hidden"
+          >
+            {showMobileAd ? 'Hide Bottom Ad' : 'Show Bottom Ad'}
+          </button>
+        </div>
+      )}  
 
       <div className="max-w-2xl mx-auto p-4">
         <h1 className="text-3xl font-bold text-center mb-2">🔠 Synonymle - The word guessing game</h1>

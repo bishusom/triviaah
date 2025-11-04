@@ -2,6 +2,7 @@
 'use client';
 import { useEffect } from 'react';
 import Ads from '@/components/common/Ads';
+import NavBar from '@/components/home/NavBar';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import HorizontalScrollSection from '@/components/home/HorizontalScrollSection';
 import Footer from '@/components/home/Footer';
@@ -36,6 +37,9 @@ export default function HomePageContent() {
             />
         </div>
       </header>
+
+      {/* Navigation Bar - Add this section */}
+      <NavBar />
      
       {/* Top banner Ads Section */}
       <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
