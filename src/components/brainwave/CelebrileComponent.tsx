@@ -90,13 +90,13 @@ const ProgressiveHint = ({ attempts }: {
   );
 };
 
-// Updated ValidationHints component for Celebrile (Plotle-style)
+// Updated ValidationHints component for Celebrile (Plotle-style with proper reveal timing)
 const ValidationHints = ({ puzzleData, attempts }: { 
   puzzleData: CelebrileData; 
   attempts: CelebrileGuessResult[]; 
 }) => {
   const hints = puzzleData.validationHints || {};
-  const hintsRevealed = Math.min(attempts.length, 5); // More hints based on attempts
+  const hintsRevealed = Math.min(attempts.length, 5);
   const [activeHintIndex, setActiveHintIndex] = useState(0);
   const hintsScrollRef = useRef<HTMLDivElement>(null);
 
@@ -104,23 +104,20 @@ const ValidationHints = ({ puzzleData, attempts }: {
   useEffect(() => {
     if (attempts.length === 0) return;
     
-    // Calculate how many hints are visible based on attempts
+    // Updated: Show one hint per attempt (1st attempt = 1st hint, 2nd attempt = 2nd hint, etc.)
     const visibleHints = [
-      hints.birthYear && attempts.length >= 1,
-      puzzleData.category && attempts.length >= 2,
-      hints.profession && attempts.length >= 2,
-      hints.nationality && attempts.length >= 3,
-      hints.notableWorks && attempts.length >= 3,
-      hints.yearsActive && attempts.length >= 4,
-      attempts.length >= 4, // first letter
-      attempts.length >= 5, // word count
+      attempts.length >= 1, // Birth Year
+      attempts.length >= 2, // Category + Profession
+      attempts.length >= 3, // Nationality + Notable Works
+      attempts.length >= 4, // Years Active + First Letter
+      attempts.length >= 5, // Word Count
     ].filter(Boolean);
     
     const latestHintIndex = visibleHints.length - 1;
     if (latestHintIndex >= 0) {
       setActiveHintIndex(latestHintIndex);
     }
-  }, [attempts.length, hints.birthYear, puzzleData.category, hints.profession, hints.nationality, hints.notableWorks, hints.yearsActive]);
+  }, [attempts.length]);
 
   // Scroll effect - triggers on activeHintIndex change
   useEffect(() => {
@@ -137,39 +134,49 @@ const ValidationHints = ({ puzzleData, attempts }: {
   if (attempts.length === 0) return null;
 
   const hintItems = [
-    hints.birthYear && attempts.length >= 1 && (
+    attempts.length >= 1 && hints.birthYear && (
       <div key="birthYear" className="flex-none w-full text-sm">
         🎂 Born in: <strong>{hints.birthYear}</strong>
       </div>
     ),
-    puzzleData.category && attempts.length >= 2 && (
-      <div key="category" className="flex-none w-full text-sm">
-        🎭 Category: <strong>{puzzleData.category}</strong>
+    attempts.length >= 2 && (
+      <div key="categoryProfession" className="flex-none w-full">
+        {puzzleData.category && (
+          <div className="text-sm mb-2">
+            🎭 Category: <strong>{puzzleData.category}</strong>
+          </div>
+        )}
+        {hints.profession && (
+          <div className="text-sm">
+            💼 Profession: <strong>{hints.profession?.join(', ')}</strong>
+          </div>
+        )}
       </div>
     ),
-    hints.profession && attempts.length >= 2 && (
-      <div key="profession" className="flex-none w-full text-sm">
-        💼 Profession: <strong>{hints.profession?.join(', ')}</strong>
-      </div>
-    ),
-    hints.nationality && attempts.length >= 3 && (
-      <div key="nationality" className="flex-none w-full text-sm">
-        🌍 Nationality: <strong>{hints.nationality}</strong>
-      </div>
-    ),
-    hints.notableWorks && attempts.length >= 3 && (
-      <div key="notableWorks" className="flex-none w-full text-sm">
-        🏆 Known for: <strong>{hints.notableWorks?.slice(0, 2).join(', ')}</strong>
-      </div>
-    ),
-    hints.yearsActive && attempts.length >= 4 && (
-      <div key="yearsActive" className="flex-none w-full text-sm">
-        ⏳ Active: <strong>{hints.yearsActive}</strong>
+    attempts.length >= 3 && (
+      <div key="nationalityWorks" className="flex-none w-full">
+        {hints.nationality && (
+          <div className="text-sm mb-2">
+            🌍 Nationality: <strong>{hints.nationality}</strong>
+          </div>
+        )}
+        {hints.notableWorks && (
+          <div className="text-sm">
+            🏆 Known for: <strong>{hints.notableWorks?.slice(0, 2).join(', ')}</strong>
+          </div>
+        )}
       </div>
     ),
     attempts.length >= 4 && (
-      <div key="firstLetter" className="flex-none w-full text-sm">
-        🔤 Starts with: <strong>{puzzleData.targetName.charAt(0).toUpperCase()}</strong>
+      <div key="yearsLetter" className="flex-none w-full">
+        {hints.yearsActive && (
+          <div className="text-sm mb-2">
+            ⏳ Active: <strong>{hints.yearsActive}</strong>
+          </div>
+        )}
+        <div className="text-sm">
+          🔤 Starts with: <strong>{puzzleData.targetName.charAt(0).toUpperCase()}</strong>
+        </div>
       </div>
     ),
     attempts.length >= 5 && (
@@ -177,7 +184,7 @@ const ValidationHints = ({ puzzleData, attempts }: {
         📝 Name has: <strong>{puzzleData.targetName.split(' ').length} words</strong>
       </div>
     ),
-  ].filter(Boolean); // Remove null/undefined entries
+  ].filter(Boolean);
 
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
@@ -534,16 +541,6 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
     });
   };
 
-  // Remove unused resetGame function
-  // const resetGame = () => {
-  //   setAttempts([]);
-  //   setGameState('playing');
-  //   setGuess('');
-  //   setRevealedBlocks([]);
-  //   localStorage.removeItem(`celebrile-${puzzleData.id}`);
-  //   playSound('click');
-  // };
-
   const triesLeft = 6 - attempts.length;
   const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
 
@@ -700,7 +697,7 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
           </div>
         )}
         
-        {/* Previous attempts grid */}
+        {/* Previous attempts grid - UPDATED TO MATCH PLOTLECOMPONENT */}
         {attempts.length > 0 && (
           <div className="mb-6">
             <h3 className="font-semibold mb-3">Your Guesses:</h3>
@@ -723,9 +720,6 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
                         </div>
                       );
                     })}
-                  </div>
-                  <div className="text-center text-sm text-gray-600">
-                    {attempt.guess}
                   </div>
                 </div>
               ))}

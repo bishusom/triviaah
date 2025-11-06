@@ -1,4 +1,4 @@
-// src/app/creaturdle/page.tsx
+// src/app/Creaturedle/page.tsx
 'use client';
 
 import CreaturedleComponent from '@/components/brainwave/CreaturedleComponent';
@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
 
-export default function CreaturdlePage() {
+export default function CreaturedlePage() {
   const [creatureData, setCreatureData] = useState<{puzzle: CreaturePuzzle | null} | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +18,7 @@ export default function CreaturdlePage() {
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
   const showAds = process.env.NEXT_PUBLIC_SHOW_ADS === 'true';
 
-  // Structured data for Creaturdle
+  // Structured data for Creaturedle
   const [structuredData, setStructuredData] = useState({
     organization: {
       '@context': 'https://schema.org',
@@ -34,15 +34,15 @@ export default function CreaturdlePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Creaturdle - Daily Animal Guessing Game | Elite Trivias',
+      name: 'Creaturedle - Daily Animal Guessing Game | Elite Trivias',
       description: 'Guess the animal from its 6 attributes: class, habitat, diet, size, activity, and body covering. Wordle-style animal guessing game for nature lovers.',
-      url: 'https://elitetrivias.com/creaturdle',
+      url: 'https://elitetrivias.com/creaturedle',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
-        name: 'Creaturdle',
+        name: 'Creaturedle',
         description: 'Daily animal guessing game where players identify animals based on 6 key attributes: class, habitat, diet, size, activity, and body covering.',
-        gameLocation: 'https://elitetrivias.com/creaturdle',
+        gameLocation: 'https://elitetrivias.com/creaturedle',
         characterAttribute: 'Animals, Wildlife, Biology, Nature, Science Education'
       }
     },
@@ -52,15 +52,15 @@ export default function CreaturdlePage() {
       mainEntity: [
         {
           '@type': 'Question',
-          name: 'What is Creaturdle?',
+          name: 'What is Creaturedle?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Creaturdle is a daily animal puzzle game where you guess the target animal using 6 key attributes: class, habitat, diet, size, activity, and body covering. It\'s an educational game that teaches about wildlife and biology.'
+            text: 'Creaturedle is a daily animal puzzle game where you guess the target animal using 6 key attributes: class, habitat, diet, size, activity, and body covering. It\'s an educational game that teaches about wildlife and biology.'
           }
         },
         {
           '@type': 'Question',
-          name: 'How do I play Creaturdle?',
+          name: 'How do I play Creaturedle?',
           acceptedAnswer: {
             '@type': 'Answer',
             text: 'You have 6 attempts to guess the daily animal. Use the 6 attribute categories to narrow down possibilities. Each guess provides feedback on which attributes match the target animal.'
@@ -68,7 +68,7 @@ export default function CreaturdlePage() {
         },
         {
           '@type': 'Question',
-          name: 'What are the 6 attributes in Creaturdle?',
+          name: 'What are the 6 attributes in Creaturedle?',
           acceptedAnswer: {
             '@type': 'Answer',
             text: 'The 6 attributes are: Animal Class (mammal, bird, reptile, etc.), Habitat, Diet, Size, Activity Pattern (nocturnal/diurnal), and Body Covering (fur, feathers, scales, etc.).'
@@ -76,10 +76,10 @@ export default function CreaturdlePage() {
         },
         {
           '@type': 'Question',
-          name: 'Is Creaturdle educational?',
+          name: 'Is Creaturedle educational?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes! Creaturdle is designed to be both fun and educational. Players learn about animal classification, habitats, diets, and other biological characteristics while playing.'
+            text: 'Yes! Creaturedle is designed to be both fun and educational. Players learn about animal classification, habitats, diets, and other biological characteristics while playing.'
           }
         }
       ]
@@ -386,22 +386,22 @@ export default function CreaturdlePage() {
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Creaturdle?</h3>
+                <h3 className="font-semibold" itemProp="name">What is Creaturedle?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Creaturdle is a daily animal puzzle game where you guess the target animal using 6 key attributes: 
+                  Creaturedle is a daily animal puzzle game where you guess the target animal using 6 key attributes: 
                   class, habitat, diet, size, activity, and body covering. It&apos;s an educational game that teaches 
                   about wildlife and biology in a fun, interactive way.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do I play Creaturdle?</h3>
+                <h3 className="font-semibold" itemProp="name">How do I play Creaturedle?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   You have 6 attempts to guess the daily animal. Use the 6 attribute categories to narrow down possibilities. 
                   Each guess provides feedback on which attributes match the target animal, helping you eliminate options and make educated guesses.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What are the 6 attributes in Creaturdle?</h3>
+                <h3 className="font-semibold" itemProp="name">What are the 6 attributes in Creaturedle?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   The 6 attributes are: Animal Class (mammal, bird, reptile, fish, amphibian, insect, etc.), 
                   Habitat (forest, ocean, desert, etc.), Diet (carnivore, herbivore, omnivore), Size (small, medium, large), 
@@ -409,9 +409,9 @@ export default function CreaturdlePage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Creaturdle educational?</h3>
+                <h3 className="font-semibold" itemProp="name">Is Creaturedle educational?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! Creaturdle is designed to be both fun and educational. Players learn about animal classification, 
+                  Yes! Creaturedle is designed to be both fun and educational. Players learn about animal classification, 
                   habitats, diets, and other biological characteristics while playing. It&apos;s great for students, nature 
                   enthusiasts, and anyone interested in wildlife.
                 </p>
@@ -419,15 +419,15 @@ export default function CreaturdlePage() {
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What types of animals are included?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Creaturdle features a wide variety of animals from around the world, including mammals, birds, reptiles, 
+                  Creaturedle features a wide variety of animals from around the world, including mammals, birds, reptiles, 
                   amphibians, fish, and insects. The database includes both common and exotic species to provide diverse 
                   and interesting challenges.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Creaturdle free to play?</h3>
+                <h3 className="font-semibold" itemProp="name">Is Creaturedle free to play?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! Creaturdle is completely free to play with no registration required. New animal puzzles 
+                  Yes! Creaturedle is completely free to play with no registration required. New animal puzzles 
                   are available every day at midnight local time.
                 </p>
               </div>

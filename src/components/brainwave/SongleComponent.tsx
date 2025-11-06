@@ -639,30 +639,35 @@ export default function SongleComponent({ initialData }: SongleComponentProps) {
           </div>
         )}
         
-        {/* Letter grid for previous attempts */}
-        <div className="mb-6">
-          {attempts.length > 0 && (
+        {/* Previous attempts grid - UPDATED TO MATCH PLOTLECOMPONENT */}
+        {attempts.length > 0 && (
+          <div className="mb-6">
             <h3 className="font-semibold mb-3">Your Guesses:</h3>
-          )}
-          {attempts.map((attempt, index) => (
-            <div key={index} className="flex justify-center mb-2">
-              {attempt.guess.replace(/\s+/g, '').split('').map((letter, letterIndex) => (
-                <div
-                  key={letterIndex}
-                  className={`w-8 h-8 flex items-center justify-center mx-1 text-xl font-bold rounded ${
-                    attempt.statuses[letterIndex] === 'correct' 
-                      ? 'bg-green-500 text-white border-green-500' 
-                      : attempt.statuses[letterIndex] === 'present' 
-                      ? 'bg-yellow-500 text-white border-yellow-500'
-                      : 'bg-gray-300 text-gray-700 border-gray-300'
-                  }`}
-                >
-                  {letter.toUpperCase()}
+            <div className="space-y-4">
+              {attempts.map((attempt, index) => (
+                <div key={index} className="bg-gray-50 rounded-lg p-3">
+                  <div className="flex flex-wrap justify-center gap-1 mb-2">
+                    {attempt.guess.replace(/\s+/g, '').split('').map((letter, letterIndex) => {
+                      const status = attempt.statuses[letterIndex];
+                      const bgColor = status === 'correct' ? 'bg-green-500' : 
+                                    status === 'present' ? 'bg-yellow-500' : 'bg-gray-300';
+                      const textColor = status === 'absent' ? 'text-gray-700' : 'text-white';
+                      
+                      return (
+                        <div 
+                          key={letterIndex} 
+                          className={`w-8 h-8 flex items-center justify-center rounded text-sm font-bold ${bgColor} ${textColor}`}
+                        >
+                          {letter.toUpperCase()}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               ))}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
         
         {/* Input for guesses */}
         {gameState === 'playing' && (

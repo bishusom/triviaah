@@ -412,13 +412,6 @@ export default function QuizGame({
                   {currentQuestion.difficulty || 'easy'}
                 </span>
               </div>
-              {subcategory && (
-                <div className="bg-white px-3 py-1 rounded-full shadow-sm border">
-                  <span className="text-sm font-semibold text-purple-700 capitalize">
-                    {subcategory}
-                  </span>
-                </div>
-              )}
             </div>
             
             <div className="flex items-center gap-4">
@@ -490,6 +483,26 @@ export default function QuizGame({
                 <CountUp end={score} duration={0.3} />
               </span>
             </div>
+            
+            {/* Desktop Category Pills - Hidden on mobile */}
+            <div className="hidden md:flex justify-center gap-3">
+              {/* Category Pill */}
+              <div className="bg-white px-3 py-1 rounded-full shadow-sm border border-blue-200">
+                <span className="text-sm font-semibold text-blue-700 capitalize">
+                  {category.replace(/-/g, ' ')}
+                </span>
+              </div>
+              
+              {/* Subcategory Pill - Conditionally rendered */}
+              {currentQuestion.subcategory && (
+                <div className="bg-white px-3 py-1 rounded-full shadow-sm border border-purple-200">
+                  <span className="text-sm font-semibold text-purple-700 capitalize">
+                    {currentQuestion.subcategory}
+                  </span>
+                </div>
+              )}
+            </div>
+
             <div className="flex items-center gap-2">
               <motion.div
                 className={`font-mono text-lg font-bold ${
@@ -541,9 +554,11 @@ export default function QuizGame({
               )}         
               <h2 className="text-xl md:text-2xl font-semibold text-gray-800 flex-1">
                 {currentQuestion.question}
-              </h2>
+              </h2>  
             </div>
           </motion.div>
+
+          
 
           {/* Image Modal */}
           {showImageModal && questionImage && (
@@ -628,6 +643,25 @@ export default function QuizGame({
                 );
               })}
             </AnimatePresence>
+          </div>
+
+          {/* Mobile Category Pills - Only show on mobile */}
+          <div className="md:hidden flex justify-center gap-3 mt-6 mb-4">
+            {/* Category Pill */}
+            <div className="bg-white px-3 py-1 rounded-full shadow-sm border border-blue-200">
+              <span className="text-sm font-semibold text-blue-700 capitalize">
+                {category.replace(/-/g, ' ')}
+              </span>
+            </div>
+            
+            {/* Subcategory Pill - Conditionally rendered */}
+            {currentQuestion.subcategory && (
+              <div className="bg-white px-3 py-1 rounded-full shadow-sm border border-purple-200">
+                <span className="text-sm font-semibold text-purple-700 capitalize">
+                  {currentQuestion.subcategory}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Time up message */}

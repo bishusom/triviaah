@@ -511,7 +511,7 @@ export default function InventionleComponent({ initialData }: InventionleCompone
           className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
           onClick={() => setShowImageModal(false)}
         >
-          <div className="relative max-w-4xl max-h-[90vh] w-full">
+          <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
             <button
               onClick={() => setShowImageModal(false)}
               className="absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 z-10"
@@ -520,20 +520,26 @@ export default function InventionleComponent({ initialData }: InventionleCompone
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className="relative rounded-lg overflow-hidden bg-gray-100 w-full h-full">
+            <div className="relative rounded-lg overflow-hidden bg-gray-100 w-full h-full flex items-center justify-center">
               <Image
                 src={inventionImage}
                 alt={`${puzzleData.answer} - full size`}
-                fill
-                className="object-contain"
+                width={800}
+                height={600}
+                className="object-contain max-w-full max-h-full"
                 onClick={(e) => e.stopPropagation()}
               />
-              {/* Show blocks in modal too if image is not fully revealed */}
+              {/* FIX: Update the blocks overlay to use proper positioning */}
               {revealPercentage < 100 && (
-                <div className="absolute inset-0 z-20">
+                <div className="absolute inset-0 z-20 pointer-events-none">
                   {blockGrid.map((pos, index) => (
-                    <PosterBlock key={index} {...pos} gridCols={GRID_COLS} gridRows={GRID_ROWS}
-                                 isRevealed={isBlockRevealed(index)} />
+                    <PosterBlock 
+                      key={index} 
+                      {...pos} 
+                      gridCols={GRID_COLS} 
+                      gridRows={GRID_ROWS}
+                      isRevealed={isBlockRevealed(index)} 
+                    />
                   ))}
                 </div>
               )}
@@ -683,24 +689,26 @@ export default function InventionleComponent({ initialData }: InventionleCompone
         {attempts.length > 0 && (
           <div className="mb-6">
             <h3 className="font-semibold mb-3">Your Guesses:</h3>
-            <div className="flex flex-col items-center space-y-2">
+            <div className="space-y-4">
               {attempts.map((attempt, index) => (
-                <div key={index} className="flex justify-center gap-1">
-                  {attempt.guess.split('').map((letter, letterIndex) => {
-                    const status = attempt.letterStatuses?.[letterIndex] || 'absent';
-                    const bgColor = status === 'correct' ? 'bg-green-500' :
+                <div key={index} className="bg-gray-50 rounded-lg p-3">
+                  <div className="flex flex-wrap justify-center gap-1 mb-2">
+                    {attempt.guess.split('').map((letter, letterIndex) => {
+                      const status = attempt.letterStatuses?.[letterIndex] || 'absent';
+                      const bgColor = status === 'correct' ? 'bg-green-500' : 
                                     status === 'present' ? 'bg-yellow-500' : 'bg-gray-300';
-                    const textColor = status === 'absent' ? 'text-gray-700' : 'text-white';
-
-                    return (
-                      <div
-                        key={letterIndex}
-                        className={`w-10 h-10 flex items-center justify-center rounded text-sm font-bold ${bgColor} ${textColor}`}
-                      >
-                        {letter.toUpperCase()}
-                      </div>
-                    );
-                  })}
+                      const textColor = status === 'absent' ? 'text-gray-700' : 'text-white';
+                      
+                      return (
+                        <div 
+                          key={letterIndex} 
+                          className={`w-8 h-8 flex items-center justify-center rounded text-sm font-bold ${bgColor} ${textColor}`}
+                        >
+                          {letter.toUpperCase()}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               ))}
             </div>
