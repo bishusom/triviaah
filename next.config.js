@@ -5,13 +5,6 @@ const nextConfig = {
   // Redirect configuration - FIXED
   async redirects() {
     return [
-      // Redirect ALL HTTP to HTTPS
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'elitetrivias.com' }],
-        destination: 'https://elitetrivias.com/:path*',
-        permanent: true,
-      },
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'www.elitetrivias.com' }],
