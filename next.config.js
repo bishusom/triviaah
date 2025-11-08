@@ -5,25 +5,42 @@ const nextConfig = {
   // Redirect configuration - FIXED
   async redirects() {
     return [
-      // Redirect from old domain (triviaah.com) to new domain
+      // Redirect ALL HTTP to HTTPS
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'elitetrivias.com' }],
+        destination: 'https://elitetrivias.com/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.elitetrivias.com' }],
+        destination: 'https://elitetrivias.com/:path*',
+        permanent: true,
+      },
+      // Redirect old domain (all variations) to new domain
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'triviaah.com' }],
         destination: 'https://elitetrivias.com/:path*',
         permanent: true,
       },
-      // Redirect from www.old-domain to new domain
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'www.triviaah.com' }],
         destination: 'https://elitetrivias.com/:path*',
         permanent: true,
       },
-      // Redirect www to non-www for NEW domain - FIXED
       {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.elitetrivias.com' }],
-        destination: 'https://elitetrivias.com/:path*', // FIXED: was missing .com
+        source: '/trivia-bank/:slug',
+        has: [
+          {
+            type: 'query',
+            key: 'show',
+            value: 'true',
+          }
+        ],
+        destination: '/trivia-bank/:slug',
         permanent: true,
       },
     ];
@@ -35,6 +52,7 @@ const nextConfig = {
   // Add this to ensure proper canonical URLs
   env: {
     NEXT_PUBLIC_SITE_URL: 'https://elitetrivias.com',
+    NEXT_PUBLIC_CANONICAL_URL: 'https://elitetrivias.com',
   },
 
   // Image optimization (your existing config is fine)

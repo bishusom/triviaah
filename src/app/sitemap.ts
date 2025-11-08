@@ -18,10 +18,18 @@ interface ContentfulResponse {
   items: ContentfulItem[]
 }
 
+// Priority tiers based on content value and user engagement
+const PRIORITY_TIERS = {
+  HIGH: 0.8,      // Main interactive features (quizzes, games)
+  MEDIUM: 0.6,    // Category pages, blog index
+  LOW: 0.4,       // Static pages, individual blog posts
+  MINIMAL: 0.3    // Archive pages, older content
+} as const;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://elitetrivias.com'
 
-  // Static main pages
+  // Static main pages - REALISTIC priorities
   const mainPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -31,66 +39,66 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date(),
+      lastModified: new Date('2024-01-01'), // Use actual last update
       changeFrequency: 'yearly',
-      priority: 0.8,
+      priority: PRIORITY_TIERS.LOW,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      lastModified: new Date('2024-01-01'),
+      changeFrequency: 'yearly',
+      priority: PRIORITY_TIERS.LOW,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
+      lastModified: new Date('2024-01-01'),
       changeFrequency: 'yearly',
-      priority: 0.8,
+      priority: PRIORITY_TIERS.MINIMAL,
     },
   ]
 
-  const DailytriviasCatalog: MetadataRoute.Sitemap = [{
+  // Daily trivias - HIGH priority (core feature)
+  const dailyTriviasCatalog: MetadataRoute.Sitemap = [{
     url: `${baseUrl}/daily-trivias`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: 0.8,
+    priority: PRIORITY_TIERS.HIGH,
   }]
 
-  const DailytriviaCategories = [
+  const dailyTriviaCategories = [
     'general-knowledge', 'entertainment', 'geography', 
     'science', 'arts-literature', 'sports'
   ]
 
-  const DailytriviaCategoryPages: MetadataRoute.Sitemap = DailytriviaCategories.map(category => ({
+  const dailyTriviaCategoryPages: MetadataRoute.Sitemap = dailyTriviaCategories.map(category => ({
     url: `${baseUrl}/daily-trivias/${category}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: 0.8,
+    priority: PRIORITY_TIERS.HIGH,
   }))
 
-  // Two other daily trivia pages
-  const otherDailyTriviaPages: MetadataRoute.Sitemap = [
+  // Other daily features - HIGH priority
+  const otherDailyPages: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/quick-fire`,
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 0.9,
+      priority: PRIORITY_TIERS.HIGH,
     },
     {
       url: `${baseUrl}/today-in-history`,
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 0.9,
+      priority: PRIORITY_TIERS.HIGH,
     },
   ]
 
-  DailytriviaCategoryPages.push(...otherDailyTriviaPages)
-
+  // Brainwave games - MEDIUM priority
   const brainwaveCatalog: MetadataRoute.Sitemap = [{
     url: `${baseUrl}/brainwave`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: 0.8,
+    priority: PRIORITY_TIERS.MEDIUM,
   }]
 
   const brainwaveCategories = [
@@ -103,77 +111,74 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/brainwave/${category}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: 0.8,
+    priority: PRIORITY_TIERS.MEDIUM,
   }))
 
-  // DYNAMIC: Fetch trivia categories from Supabase (with minimum questions)
+  // DYNAMIC: Fetch trivia categories - MEDIUM priority for category pages
   const triviaCategories = await getCategoriesWithMinQuestions(10)
   
   const triviaCategoryPages: MetadataRoute.Sitemap = triviaCategories.map(category => ({
     url: `${baseUrl}/trivias/${category}`,
     lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8,
+    changeFrequency: 'weekly', // More realistic than daily
+    priority: PRIORITY_TIERS.MEDIUM,
   }))
 
-  // Add quiz pages for each category
+  // Quiz pages - HIGH priority (main interactive content)
   const triviaQuizPages: MetadataRoute.Sitemap = triviaCategories.map(category => ({
     url: `${baseUrl}/trivias/${category}/quiz`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: 0.85,
+    priority: PRIORITY_TIERS.HIGH,
   }))
 
-  // DYNAMIC: Fetch subcategory pages (only those with >= 30 questions)
+  // DYNAMIC: Subcategory pages - MEDIUM priority
   const subcategoryPages = await fetchSubcategoryPages(baseUrl)
 
-  // Word games (static)
-  const wordGames = [ 'boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder']
-  const wordGamePages: MetadataRoute.Sitemap = wordGames.flatMap(game => [
-    {
-      url: `${baseUrl}/word-games/${game}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-  ])
-
+  // Word games - MEDIUM priority
   const wordGamesCatalog: MetadataRoute.Sitemap = [{
     url: `${baseUrl}/word-games`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
-    priority: 0.8,
+    priority: PRIORITY_TIERS.MEDIUM,
   }]
 
-  // Number puzzles (static)
-  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku']
-  const numberPuzzlePages: MetadataRoute.Sitemap = numberPuzzles.flatMap(puzzle => [
-    {
-      url: `${baseUrl}/number-puzzles/${puzzle}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-  ])
+  const wordGames = ['boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder']
+  const wordGamePages: MetadataRoute.Sitemap = wordGames.map(game => ({
+    url: `${baseUrl}/word-games/${game}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: PRIORITY_TIERS.MEDIUM,
+  }))
 
+  // Number puzzles - MEDIUM priority
   const numberPuzzleCatalog: MetadataRoute.Sitemap = [{
     url: `${baseUrl}/number-puzzles`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
-    priority: 0.8,
+    priority: PRIORITY_TIERS.MEDIUM,
   }]
 
-  // DYNAMIC: Fetch trivia bank entries
+  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku']
+  const numberPuzzlePages: MetadataRoute.Sitemap = numberPuzzles.map(puzzle => ({
+    url: `${baseUrl}/number-puzzles/${puzzle}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: PRIORITY_TIERS.MEDIUM,
+  }))
+
+  // DYNAMIC: Trivia bank - LOW priority (archive content)
   const triviaBankPages = await fetchTriviaBankPages(baseUrl)
 
-  // DYNAMIC: Fetch blog posts
+  // DYNAMIC: Blog posts - MEDIUM for index, LOW for individual
   const blogPages = await fetchBlogPages(baseUrl)
 
-  // Combine all routes
+  // Combine all routes with realistic priorities
   return [
     ...mainPages,
-    ...DailytriviasCatalog,
-    ...DailytriviaCategoryPages,
+    ...dailyTriviasCatalog,
+    ...dailyTriviaCategoryPages,
+    ...otherDailyPages,
     ...brainwaveCatalog,
     ...brainwaveCategoryPages,
     ...triviaCategoryPages,
@@ -188,25 +193,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 }
 
-// Updated function to fetch subcategory pages with minimum 30 questions
+// Updated subcategory pages with realistic priorities
 async function fetchSubcategoryPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   const pages: MetadataRoute.Sitemap = []
 
   try {
-    // Get all categories first
     const categories = await getCategoriesWithMinQuestions(10)
     
-    // For each category, get subcategories with at least 30 questions
     for (const category of categories) {
       const subcategories = await getSubcategoriesWithMinQuestions(category, 30)
       
       for (const subcat of subcategories) {
-        // Add subcategory quiz page
         pages.push({
           url: `${baseUrl}/trivias/${category}/quiz?subcategory=${encodeURIComponent(subcat.subcategory)}`,
           lastModified: new Date(),
-          changeFrequency: 'weekly',
-          priority: 0.7,
+          changeFrequency: 'weekly', // More realistic
+          priority: 0.5, // Lower than main quiz pages
         })
       }
     }
@@ -217,27 +219,24 @@ async function fetchSubcategoryPages(baseUrl: string): Promise<MetadataRoute.Sit
   return pages
 }
 
-// Dynamic function to fetch trivia bank pages from Contentful
+// Updated trivia bank with lower priorities
 async function fetchTriviaBankPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   const pages: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/trivia-bank`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
+      changeFrequency: 'monthly', // Archive content changes rarely
+      priority: PRIORITY_TIERS.LOW,
     },
   ]
 
   try {
-    // Fetch from Contentful
     const response = await fetch(
       `https://cdn.contentful.com/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/master/entries?access_token=${process.env.CONTENTFUL_ACCESS_TOKEN}&content_type=triviaBank`,
-      { next: { revalidate: 3600 } } // Cache for 1 hour
+      { next: { revalidate: 3600 } }
     )
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch trivia banks from Contentful')
-    }
+    if (!response.ok) throw new Error('Failed to fetch trivia banks')
 
     const data = await response.json() as ContentfulResponse
 
@@ -248,38 +247,35 @@ async function fetchTriviaBankPages(baseUrl: string): Promise<MetadataRoute.Site
       pages.push({
         url: `${baseUrl}/trivia-bank/${slug}`,
         lastModified: new Date(updatedAt),
-        changeFrequency: 'monthly',
-        priority: 0.64,
+        changeFrequency: 'monthly', // Static content
+        priority: PRIORITY_TIERS.MINIMAL, // Lowest priority - archive content
       })
     })
   } catch (error) {
-    console.error('Error fetching trivia bank pages from Contentful:', error)
+    console.error('Error fetching trivia bank pages:', error)
   }
 
   return pages
 }
 
-// Dynamic function to fetch blog posts from Contentful
+// Updated blog with realistic priorities
 async function fetchBlogPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   const pages: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/blog`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.8,
+      priority: PRIORITY_TIERS.MEDIUM,
     },
   ]
 
   try {
-    // Fetch from Contentful
     const response = await fetch(
       `https://cdn.contentful.com/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/master/entries?access_token=${process.env.CONTENTFUL_ACCESS_TOKEN}&content_type=blogPost`,
-      { next: { revalidate: 3600 } } // Cache for 1 hour
+      { next: { revalidate: 3600 } }
     )
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch blog posts from Contentful')
-    }
+    if (!response.ok) throw new Error('Failed to fetch blog posts')
 
     const data = await response.json() as ContentfulResponse
 
@@ -290,12 +286,12 @@ async function fetchBlogPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
       pages.push({
         url: `${baseUrl}/blog/${slug}`,
         lastModified: new Date(updatedAt),
-        changeFrequency: 'monthly',
-        priority: 0.64,
+        changeFrequency: 'yearly', // Blog posts rarely updated
+        priority: PRIORITY_TIERS.LOW, // Individual posts lower priority
       })
     })
   } catch (error) {
-    console.error('Error fetching blog pages from Contentful:', error)
+    console.error('Error fetching blog pages:', error)
   }
 
   return pages

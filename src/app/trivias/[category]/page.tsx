@@ -46,9 +46,13 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     keywords: [
       `${categoryTitle.toLowerCase()} trivia`,
       `${categoryTitle.toLowerCase()} quiz`,
-      'free trivia questions',
-      'online quiz game',
-      'trivia quiz online',
+      `${categoryTitle.toLowerCase()} questions and answers`,
+      `${categoryTitle.toLowerCase()} knowledge test`,
+      'free online trivia',
+      'educational quiz games',
+      `${categoryTitle.toLowerCase()} learning games`,
+      'interactive trivia',
+      `${categoryTitle.toLowerCase()} exam preparation`,
       ...(categoryData.keywords || [])
     ],
     openGraph: {
@@ -107,21 +111,37 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         subcategories={subcategories}
       />
       
-      <div className="max-w-3xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-6">
+        {/* Enhanced Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4">{categoryData.title} Trivia</h1>
-          <p className="text-lg text-gray-600">{categoryData.description}</p>
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">{categoryData.title} Trivia</h1>
+          <p className="text-lg text-gray-600 mb-4">{categoryData.description}</p>
+          
+          {/* Enhanced category introduction */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+            <h2 className="text-xl font-semibold mb-3 text-blue-800">About {categoryData.title}</h2>
+            <p className="text-gray-700 mb-3">
+              Dive into the fascinating world of {categoryData.title.toLowerCase()} with our comprehensive trivia collection. 
+              Whether you&apos;re a curious beginner or a seasoned expert, our carefully crafted questions 
+              will challenge your understanding and expand your knowledge.
+            </p>
+            <p className="text-gray-700">
+              From fundamental concepts to advanced topics, our {categoryData.title.toLowerCase()} trivia covers 
+              the breadth and depth of this subject, ensuring an engaging learning experience for all 
+              knowledge levels.
+            </p>
+          </div>
         </div>
 
         {/* Main Category Play Button */}
         <div className="mb-12 text-center">
           <Link
             href={`/trivias/${category}/quiz`}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg inline-block transition-colors text-lg"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-lg inline-block transition-colors text-lg shadow-lg hover:shadow-xl"
           >
             Play Full Category Quiz
           </Link>
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-sm text-gray-500 mt-3">
             Complete quiz with questions from all {categoryData.title.toLowerCase()} topics
           </p>
         </div>
@@ -140,16 +160,73 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                   <h3 className="font-semibold text-lg text-gray-800 group-hover:text-blue-700">
                     {subcat.subcategory}
                   </h3>
-                  {/* No need to show question count for now
-                  <p className="text-sm text-gray-600 mt-1">
-                    {subcat.question_count} questions
-                  </p>
-                  */}
                 </Link>
               ))}
             </div>
           </div>
         )}
+
+        {/* Learning Objectives & Benefits Section */}
+        <div className="mb-12 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-8 border border-purple-200">
+          <h2 className="text-2xl font-bold mb-6 text-center text-purple-800">
+            What You&apos;ll Learn
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="bg-white rounded-lg p-4 shadow-sm border border-purple-100">
+              <div className="text-purple-600 font-bold text-lg mb-2">✓ Core Concepts</div>
+              <p className="text-gray-700 text-sm">
+                Master fundamental {categoryData.title.toLowerCase()} principles and terminology
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-4 shadow-sm border border-purple-100">
+              <div className="text-purple-600 font-bold text-lg mb-2">✓ Historical Context</div>
+              <p className="text-gray-700 text-sm">
+                Understand key developments and milestones in {categoryData.title.toLowerCase()}
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-4 shadow-sm border border-purple-100">
+              <div className="text-purple-600 font-bold text-lg mb-2">✓ Practical Applications</div>
+              <p className="text-gray-700 text-sm">
+                Discover real-world uses and implications of {categoryData.title.toLowerCase()} knowledge
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Sample Questions Preview */}
+        <div className="mb-12 bg-white rounded-xl p-8 border border-gray-200 shadow-sm">
+          <h2 className="text-2xl font-bold mb-6 text-center">Sample {categoryData.title} Trivia Questions</h2>
+          <div className="space-y-6">
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h3 className="font-semibold text-lg mb-3 text-blue-800">Question 1</h3>
+              <p className="text-gray-800 mb-3">What is one of the most fundamental concepts in {categoryData.title.toLowerCase()} that every beginner should know?</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4">
+                <div className="bg-white border border-gray-300 rounded p-3 text-sm">Multiple choice option A</div>
+                <div className="bg-white border border-gray-300 rounded p-3 text-sm">Multiple choice option B</div>
+                <div className="bg-white border border-gray-300 rounded p-3 text-sm">Multiple choice option C</div>
+                <div className="bg-white border border-gray-300 rounded p-3 text-sm">Multiple choice option D</div>
+              </div>
+            </div>
+            
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h3 className="font-semibold text-lg mb-3 text-blue-800">Question 2</h3>
+              <p className="text-gray-800 mb-3">Which historical figure made significant contributions to the field of {categoryData.title.toLowerCase()}?</p>
+              <div className="bg-yellow-50 border border-yellow-200 rounded p-4 mt-3">
+                <strong className="text-yellow-800">💡 Pro Tip:</strong>
+                <span className="text-yellow-700 text-sm ml-2">Our trivia questions include detailed explanations to help you learn while you play!</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center mt-6">
+            <Link
+              href={`/trivias/${category}/quiz`}
+              className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg inline-block transition-colors"
+            >
+              Start Full Quiz to See All Questions
+            </Link>
+          </div>
+        </div>
 
         {/* FAQ Section */}
         <div className="mt-12">
@@ -211,21 +288,95 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           </div>
         </div>
 
-        {/* SEO Content Section */}
-        <section className="mt-12 bg-gray-50 rounded-lg p-6">
-          <h2 className="text-2xl font-bold mb-4">{categoryData.title} Trivia Questions & Quizzes</h2>
-          <p className="text-gray-600 mb-4">
-            Test your knowledge with our comprehensive collection of {categoryData.title.toLowerCase()} trivia questions. 
-            Whether you&apos;re a beginner looking to learn more or an expert wanting to challenge yourself, 
-            our free online {categoryData.title.toLowerCase()} quiz offers something for everyone.
-          </p>
-          <p className="text-gray-600">
-            Our {categoryData.title.toLowerCase()} trivia covers various aspects and subtopics, providing a well-rounded 
-            testing experience. Play alone or with friends, and see how much you really know about {categoryData.title.toLowerCase()}. 
-            With instant feedback and detailed explanations, you&apos;ll not only test your knowledge but also learn 
-            new facts along the way.
-          </p>
+        {/* Comprehensive SEO Content Section */}
+        <section className="mt-12 bg-white rounded-lg p-8 border border-gray-200 shadow-sm">
+          <h2 className="text-3xl font-bold mb-6 text-gray-900">{categoryData.title} Trivia: Master Your Knowledge</h2>
+          
+          <div className="prose prose-lg max-w-none text-gray-700">
+            <p className="text-xl mb-6">
+              Welcome to the ultimate destination for {categoryData.title.toLowerCase()} enthusiasts and learners! 
+              Our comprehensive {categoryData.title.toLowerCase()} trivia platform offers an engaging way to test 
+              and expand your knowledge across various aspects of this fascinating subject.
+            </p>
+
+            <h3 className="text-2xl font-semibold mt-8 mb-4 text-gray-800">Why Choose Our {categoryData.title} Trivia?</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-bold text-blue-800 mb-2">Comprehensive Coverage</h4>
+                <p>Our question database spans beginner to expert levels, covering historical context, key figures, fundamental principles, and modern applications of {categoryData.title.toLowerCase()}.</p>
+              </div>
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-bold text-green-800 mb-2">Educational Value</h4>
+                <p>Each question comes with detailed explanations, turning every quiz session into a valuable learning opportunity that reinforces your understanding.</p>
+              </div>
+            </div>
+
+            <h3 className="text-2xl font-semibold mt-8 mb-4 text-gray-800">Perfect for All Knowledge Levels</h3>
+            
+            <p className="mb-4">
+              Whether you&apos;re just starting to explore {categoryData.title.toLowerCase()} or you&apos;re a seasoned expert 
+              looking to challenge yourself, our trivia platform adapts to your level. The questions are 
+              carefully categorized by difficulty and topic, allowing you to focus on areas that match 
+              your current understanding or push you to learn new concepts.
+            </p>
+
+            <h3 className="text-2xl font-semibold mt-8 mb-4 text-gray-800">How to Get the Most from Our {categoryData.title} Trivia</h3>
+            
+            <ul className="list-disc pl-6 mb-6 space-y-2">
+              <li><strong>Start with the full category quiz</strong> to assess your overall knowledge level</li>
+              <li><strong>Focus on specific subcategories</strong> to deepen your understanding of particular topics</li>
+              <li><strong>Review explanations carefully</strong> to learn from both correct and incorrect answers</li>
+              <li><strong>Retake quizzes periodically</strong> to reinforce learning and track your progress</li>
+            </ul>
+
+            <div className="bg-gradient-to-r from-blue-100 to-purple-100 p-6 rounded-lg border border-blue-200">
+              <h4 className="text-xl font-bold mb-3 text-blue-800">Ready to Test Your Knowledge?</h4>
+              <p className="mb-4">
+                Join thousands of learners who use our {categoryData.title.toLowerCase()} trivia to enhance their 
+                understanding, prepare for exams, or simply enjoy the challenge of testing their knowledge. 
+                With new questions added regularly, there&apos;s always something new to discover!
+              </p>
+              <div className="text-center">
+                <Link
+                  href={`/trivias/${category}/quiz`}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg inline-block transition-colors text-lg"
+                >
+                  Start Your {categoryData.title} Trivia Journey Now
+                </Link>
+              </div>
+            </div>
+          </div>
         </section>
+
+        {/* Related Categories */}
+        {categoryData.related && categoryData.related.length > 0 && (
+          <div className="mt-12 bg-gray-50 rounded-lg p-8 border border-gray-200">
+            <h2 className="text-2xl font-bold mb-6 text-center">Explore Related Trivia Categories</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {categoryData.related.map((relatedCategory) => {
+                const relatedKey = relatedCategory as CategoryKey;
+                const relatedData = triviaCategories[relatedKey];
+                if (!relatedData) return null;
+                
+                return (
+                  <Link
+                    key={relatedCategory}
+                    href={`/trivias/${relatedCategory}`}
+                    className="bg-white hover:bg-blue-50 rounded-lg p-4 border border-gray-300 hover:border-blue-300 transition-all duration-300 text-center group"
+                  >
+                    <h3 className="font-semibold text-gray-800 group-hover:text-blue-700">
+                      {relatedData.title} Trivia
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                      {relatedData.description}
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </AdLayoutClient>
   );

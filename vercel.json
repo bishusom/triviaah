@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "http://elitetrivias.com/:path*",
+      "destination": "https://elitetrivias.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "http://www.elitetrivias.com/:path*",
+      "destination": "https://elitetrivias.com/:path*",
+      "permanent": true
+    }
+  ]
+}

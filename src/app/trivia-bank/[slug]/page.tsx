@@ -28,13 +28,14 @@ interface TriviaData {
 // Define props for the component
 interface TriviaPageProps {
   params: Promise<Params>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 // Generate metadata for each trivia page
 export async function generateMetadata({ params }: TriviaPageProps): Promise<Metadata> {
   const { slug } = await params;
   const trivia: TriviaData | null = await getTriviaData(slug);
-  
+
   if (!trivia) {
     return {
       title: 'Trivia Not Found | Elite Trivias',
@@ -60,6 +61,10 @@ export async function generateMetadata({ params }: TriviaPageProps): Promise<Met
       type: 'article',
       tags: tagsArray,
     },
+    // Add this to handle parameter variations
+    other: {
+      'google-news-standby': 'URL',
+    },
   };
 }
 
@@ -81,8 +86,11 @@ function LoadingFallback() {
   );
 }
 
-export default async function TriviaPage({ params }: TriviaPageProps) {
+export default async function TriviaPage({ params, searchParams }: TriviaPageProps) {
   const { slug } = await params;
+  const queryParams = await searchParams;
+  const showParam = queryParams?.show;
+  
   const trivia: TriviaData | null = await getTriviaData(slug);
 
   if (!trivia) {
@@ -100,7 +108,7 @@ export default async function TriviaPage({ params }: TriviaPageProps) {
   // Pass trivia data to client component wrapped in Suspense
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <TriviaContent trivia={trivia} styles={styles} />
+      <TriviaContent trivia={trivia} styles={styles} showParam={showParam} />
     </Suspense>
   );
 }
