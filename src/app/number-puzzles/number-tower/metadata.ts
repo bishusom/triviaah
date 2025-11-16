@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateNumberTowerMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/number-puzzles/number-tower';
+  const canonicalUrl = 'https://triviaah.com/number-puzzles/number-tower';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Number Tower Puzzle Game | Free Math Arrangement Challenge | Elite Trivias',
+    title: 'Number Tower Puzzle Game | Free Math Arrangement Challenge | Triviaah',
     description: 'Play Number Tower, a free online number puzzle game. Arrange numbers in a tower structure with limited moves. Improve your math skills with this fun and challenging brain game.',
     keywords: [
       'number tower',
@@ -37,10 +37,10 @@ export function generateNumberTowerMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Number Tower Puzzle Game | Free Math Arrangement Challenge | Elite Trivias',
+      title: 'Number Tower Puzzle Game | Free Math Arrangement Challenge | Triviaah',
       description: 'Play Number Tower, a free online number puzzle game. Arrange numbers in a tower structure with limited moves. Improve your math skills with this fun and challenging brain game.',
-      url: 'https://elitetrivias.com/number-puzzles/number-tower',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/number-puzzles/number-tower',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/number-tower.webp',
@@ -54,7 +54,7 @@ export function generateNumberTowerMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Number Tower Puzzle Game | Free Math Arrangement Challenge | Elite Trivias',
+      title: 'Number Tower Puzzle Game | Free Math Arrangement Challenge | Triviaah',
       description: 'Play Number Tower, a free online number puzzle game. Arrange numbers in a tower structure with limited moves. Improve your math skills with this fun and challenging brain game.',
       images: ['/imgs/number-tower.webp'],
       site: '@elitetrivias',

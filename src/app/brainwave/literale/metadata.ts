@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateLiteraleMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/brainwave/literale';
+  const canonicalUrl = 'https://triviaah.com/brainwave/literale';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Literale - Daily Literature Puzzle | Elite Trivias',
+    title: 'Literale - Daily Literature Puzzle | Triviaah',
     description: 'Guess the book title from opening lines and progressive clues with limited attempts, Wordle-style feedback on title letters. Unlock more hints with each wrong guess!',
     keywords: [
       'literale',
@@ -34,10 +34,10 @@ export function generateLiteraleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Literale - Daily Literature Puzzle | Elite Trivias',
+      title: 'Literale - Daily Literature Puzzle | Triviaah',
       description: 'Guess the book title from opening lines and progressive clues with limited attempts, Wordle-style feedback on title letters. Unlock more hints with each wrong guess!',
-      url: 'https://elitetrivias.com/brainwave/literale',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/brainwave/literale',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/literale-og.webp',
@@ -51,7 +51,7 @@ export function generateLiteraleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Literale - Daily Literature Puzzle | Elite Trivias',
+      title: 'Literale - Daily Literature Puzzle | Triviaah',
       description: 'Guess the book title from opening lines and progressive clues with limited attempts, Wordle-style feedback on title letters. Unlock more hints with each wrong guess!',
       images: ['/imgs/literale-og.webp'],
       site: '@elitetrivias',

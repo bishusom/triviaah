@@ -27,8 +27,8 @@ export async function generateMetadata({
     : null;
 
   const title = formattedSubcategory 
-    ? `${formattedSubcategory} ${formattedCategory} Quiz | Elite Trivias`
-    : `${formattedCategory} Quiz | Elite Trivias`;
+    ? `${formattedSubcategory} ${formattedCategory} Quiz | Triviaah`
+    : `${formattedCategory} Quiz | Triviaah`;
 
   const description = formattedSubcategory
     ? `Test your ${formattedSubcategory.toLowerCase()} knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 multi-choice questions to beat the highscore. Invite your friends on social media if they can beat your scores!`
@@ -50,7 +50,7 @@ export async function generateMetadata({
       description: formattedSubcategory
         ? `Can you answer these ${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()} questions? Take the challenge!`
         : `Can you answer these ${formattedCategory.toLowerCase()} questions? Take the challenge!`,
-      url: `https://elitetrivias.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
+      url: `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
       type: 'website',
     },
     twitter: {
@@ -63,7 +63,7 @@ export async function generateMetadata({
         : `How well do you know ${formattedCategory.toLowerCase()}? Test yourself!`,
     },
     alternates: {
-      canonical: `https://elitetrivias.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
+      canonical: `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
     }
   };
 }
@@ -98,8 +98,8 @@ export default async function QuizPage({
       <div className="quiz-container max-w-4xl mx-auto px-4 py-8">
         <h1 className="sr-only">
           {subcategory 
-            ? `${subcategory.replace(/-/g, ' ')} ${category.replace(/-/g, ' ')} Questions - Elite Trivias`
-            : `${category.replace(/-/g, ' ')} Questions - Elite Trivias`
+            ? `${subcategory.replace(/-/g, ' ')} ${category.replace(/-/g, ' ')} Questions - Triviaah`
+            : `${category.replace(/-/g, ' ')} Questions - Triviaah`
           }
         </h1>
         <StructuredData params={params} />

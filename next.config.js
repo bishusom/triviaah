@@ -5,25 +5,35 @@ const nextConfig = {
   // Redirect configuration - FIXED
   async redirects() {
     return [
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.elitetrivias.com' }],
-        destination: 'https://elitetrivias.com/:path*',
-        permanent: true,
-      },
-      // Redirect old domain (all variations) to new domain
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'triviaah.com' }],
-        destination: 'https://elitetrivias.com/:path*',
-        permanent: true,
-      },
+      // Redirect www to non-www
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'www.triviaah.com' }],
-        destination: 'https://elitetrivias.com/:path*',
+        destination: 'https://triviaah.com/:path*',
         permanent: true,
       },
+      // Redirect from elitetrivias.com to triviaah.com
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'elitetrivias.com' }],
+        destination: 'https://triviaah.com/:path*',
+        permanent: false, // Use temporary redirect for now
+      },
+      // Redirect from www.elitetrivias.com to triviaah.com
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.elitetrivias.com' }],
+        destination: 'https://triviaah.com/:path*',
+        permanent: false,
+      },
+      // Remove this redundant rule - it redirects triviaah.com to itself
+      // {
+      //   source: '/:path*',
+      //   has: [{ type: 'host', value: 'triviaah.com' }],
+      //   destination: 'https://triviaah.com/:path*',
+      //   permanent: true,
+      // },
+      // Keep your existing query parameter redirect
       {
         source: '/trivia-bank/:slug',
         has: [
@@ -39,13 +49,12 @@ const nextConfig = {
     ];
   },
 
-  // Add this for proper domain handling
   trailingSlash: false,
   
-  // Add this to ensure proper canonical URLs
+  // Environment variables - simplified
   env: {
-    NEXT_PUBLIC_SITE_URL: 'https://elitetrivias.com',
-    NEXT_PUBLIC_CANONICAL_URL: 'https://elitetrivias.com',
+    NEXT_PUBLIC_SITE_URL: 'https://triviaah.com',
+    // REMOVED duplicate: NEXT_PUBLIC_CANONICAL_URL
   },
 
   // Image optimization (your existing config is fine)

@@ -27,7 +27,7 @@ const PRIORITY_TIERS = {
 } as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://elitetrivias.com'
+  const baseUrl = 'https://triviaah.com'
 
   // Static main pages - REALISTIC priorities
   const mainPages: MetadataRoute.Sitemap = [

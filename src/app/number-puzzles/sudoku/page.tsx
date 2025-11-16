@@ -18,10 +18,10 @@ export default function SudokuPage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Number Games', 'Educational Entertainment', 'Math Puzzles', 'Brain Games', 'Cognitive Games']
@@ -29,15 +29,15 @@ export default function SudokuPage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free Sudoku Puzzles Online | Daily Sudoku Games & Challenges | Elite Trivias',
+      name: 'Free Sudoku Puzzles Online | Daily Sudoku Games & Challenges | Triviaah',
       description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
-      url: 'https://elitetrivias.com/number-puzzles/sudoku',
+      url: 'https://triviaah.com/number-puzzles/sudoku',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Sudoku',
         description: 'Classic logic-based number puzzle game where players fill a 9x9 grid so that each column, each row, and each of the nine 3x3 subgrids contain all digits from 1 to 9.',
-        gameLocation: 'https://elitetrivias.com/number-puzzles/sudoku',
+        gameLocation: 'https://triviaah.com/number-puzzles/sudoku',
         characterAttribute: 'Logical Thinking, Problem Solving, Concentration, Pattern Recognition, Cognitive Skills, Mental Math, Analytical Reasoning, Strategic Planning'
       }
     },
@@ -49,19 +49,19 @@ export default function SudokuPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://elitetrivias.com'
+          item: 'https://triviaah.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Number Puzzles',
-          item: 'https://elitetrivias.com/number-puzzles'
+          item: 'https://triviaah.com/number-puzzles'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Sudoku',
-          item: 'https://elitetrivias.com/number-puzzles/sudoku'
+          item: 'https://triviaah.com/number-puzzles/sudoku'
         }
       ]
     },
@@ -360,7 +360,7 @@ export default function SudokuPage() {
 
           {/* Why Play Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Why Play Sudoku on Elite Trivias?</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Why Play Sudoku on Triviaah?</h3>
             <div className="prose text-gray-700">
               <p className="mb-4">
                 Sudoku is one of the world&apos;s most popular puzzle games, with millions of daily players 

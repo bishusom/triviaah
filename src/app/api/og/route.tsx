@@ -7,7 +7,7 @@ export const revalidate = false;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const title = searchParams.get('title') || 'Elite Trivias Quiz';
+  const title = searchParams.get('title') || 'Triviaah Quiz';
 
   return new ImageResponse(
     React.createElement(
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
             key: 'subtitle',
             style: { fontSize: 28 }
           },
-          'Play now on Elite Trivias.com'
+          'Play now on Triviaah.com'
         )
       ]
     ),

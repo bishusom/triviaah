@@ -24,10 +24,10 @@ export default function SonglePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'Music Games', 'Song Puzzles', 'Music Education']
@@ -35,15 +35,15 @@ export default function SonglePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Songle - Daily Song Guessing Puzzle | Elite Trivias',
+      name: 'Songle - Daily Song Guessing Puzzle | Triviaah',
       description: 'Guess the song from clues like lyrics, artist, and genre. A daily Wordle-style music puzzle game that tests your knowledge of music across decades and genres.',
-      url: 'https://elitetrivias.com/brainwave/songle',
+      url: 'https://triviaah.com/brainwave/songle',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Songle',
         description: 'Daily song guessing game where players identify songs based on lyrics, artist clues, genre information, and other musical attributes with limited attempts.',
-        gameLocation: 'https://elitetrivias.com/brainwave/songle',
+        gameLocation: 'https://triviaah.com/brainwave/songle',
         characterAttribute: 'Music, Songs, Lyrics, Artists, Genres, Music Trivia, Music Education, Hit Songs, Music History'
       }
     },

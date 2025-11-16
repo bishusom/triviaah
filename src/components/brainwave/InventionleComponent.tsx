@@ -472,7 +472,7 @@ export default function InventionleComponent({ initialData }: InventionleCompone
       }
     });
     
-    shareText += '\n\nPlay daily at https://elitetrivias.com/brainwave/inventionle';
+    shareText += '\n\nPlay daily at https://triviaah.com/brainwave/inventionle';
     return shareText;
   };
 

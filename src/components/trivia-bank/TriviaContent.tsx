@@ -49,7 +49,7 @@ function TriviaContentInner({ trivia, styles, showParam }: TriviaContentProps)  
       <Head>
           <link
             rel="canonical"
-            href={`https://elitetrivias.com/trivia-bank/${trivia.slug}`}
+            href={`https://triviaah.com/trivia-bank/${trivia.slug}`}
             key="canonical"
           />
         </Head>

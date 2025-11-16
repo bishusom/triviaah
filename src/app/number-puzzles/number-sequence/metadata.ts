@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateNumberSequenceMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/number-puzzles/number-sequence';
+  const canonicalUrl = 'https://triviaah.com/number-puzzles/number-sequence';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Number Sequence Puzzle Game | Free Math Pattern Challenge | Elite Trivias',
+    title: 'Number Sequence Puzzle Game | Free Math Pattern Challenge | Triviaah',
     description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
     keywords: [
       'number sequence',
@@ -37,10 +37,10 @@ export function generateNumberSequenceMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Number Sequence Puzzle Game | Free Math Pattern Challenge | Elite Trivias',
+      title: 'Number Sequence Puzzle Game | Free Math Pattern Challenge | Triviaah',
       description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
-      url: 'https://elitetrivias.com/number-puzzles/number-sequence',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/number-puzzles/number-sequence',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/number-sequence.webp',
@@ -54,7 +54,7 @@ export function generateNumberSequenceMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Number Sequence Puzzle Game | Free Math Pattern Challenge | Elite Trivias',
+      title: 'Number Sequence Puzzle Game | Free Math Pattern Challenge | Triviaah',
       description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
       images: ['/imgs/number-sequence.webp'],
       site: '@elitetrivias',

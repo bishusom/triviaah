@@ -248,13 +248,13 @@ function StructuredData() {
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://elitetrivias.com/#organization",
-        "name": "Elite Trivias",
-        "url": "https://elitetrivias.com/",
-        "description": "Elite Trivias offers engaging and educational trivia games and puzzles for everyone.",
+        "@id": "https://triviaah.com/#organization",
+        "name": "Triviaah",
+        "url": "https://triviaah.com/",
+        "description": "Triviaah offers engaging and educational trivia games and puzzles for everyone.",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://elitetrivias.com/logo.png",
+          "url": "https://triviaah.com/logo.png",
           "width": 200,
           "height": 60
         },
@@ -266,43 +266,43 @@ function StructuredData() {
       },
       {
         "@type": "WebPage",
-        "@id": "https://elitetrivias.com/brainwave/trordle/#webpage",
-        "url": "https://elitetrivias.com/brainwave/trordle",
-        "name": "Trordle - Daily Trivia Puzzle | Elite Trivias",
+        "@id": "https://triviaah.com/brainwave/trordle/#webpage",
+        "url": "https://triviaah.com/brainwave/trordle",
+        "name": "Trordle - Daily Trivia Puzzle | Triviaah",
         "description": "Guess the answer to today's trivia puzzle with limited attempts, similar to Wordle but with trivia questions.",
         "isPartOf": {
-          "@id": "https://elitetrivias.com/#website"
+          "@id": "https://triviaah.com/#website"
         },
         "about": {
-          "@id": "https://elitetrivias.com/brainwave/trordle/#game"
+          "@id": "https://triviaah.com/brainwave/trordle/#game"
         },
         "datePublished": "2024-01-01T00:00:00+00:00",
         "dateModified": new Date().toISOString(),
         "breadcrumb": {
-          "@id": "https://elitetrivias.com/brainwave/trordle/#breadcrumb"
+          "@id": "https://triviaah.com/brainwave/trordle/#breadcrumb"
         },
         "potentialAction": [
           {
             "@type": "PlayAction",
-            "target": "https://elitetrivias.com/brainwave/trordle"
+            "target": "https://triviaah.com/brainwave/trordle"
           }
         ]
       },
       {
         "@type": "WebSite",
-        "@id": "https://elitetrivias.com/#website",
-        "url": "https://elitetrivias.com/",
-        "name": "Elite Trivias",
+        "@id": "https://triviaah.com/#website",
+        "url": "https://triviaah.com/",
+        "name": "Triviaah",
         "description": "Engaging trivia games and puzzles for everyone",
         "publisher": {
-          "@id": "https://elitetrivias.com/#organization"
+          "@id": "https://triviaah.com/#organization"
         },
         "potentialAction": [
           {
             "@type": "SearchAction",
             "target": {
               "@type": "EntryPoint",
-              "urlTemplate": "https://elitetrivias.com/search?q={search_term_string}"
+              "urlTemplate": "https://triviaah.com/search?q={search_term_string}"
             },
             "query-input": "required name=search_term_string"
           }
@@ -310,10 +310,10 @@ function StructuredData() {
       },
       {
         "@type": "Game",
-        "@id": "https://elitetrivias.com/brainwave/trordle/#game",
+        "@id": "https://triviaah.com/brainwave/trordle/#game",
         "name": "Trordle",
         "description": "Daily trivia puzzle combining Wordle mechanics with trivia questions",
-        "url": "https://elitetrivias.com/brainwave/trordle",
+        "url": "https://triviaah.com/brainwave/trordle",
         "applicationCategory": "Game",
         "gameType": "PuzzleGame,TriviaGame",
         "genre": ["puzzle", "trivia", "educational", "word game"],
@@ -322,7 +322,7 @@ function StructuredData() {
           "minValue": 1
         },
         "publisher": {
-          "@id": "https://elitetrivias.com/#organization"
+          "@id": "https://triviaah.com/#organization"
         },
         "offers": {
           "@type": "Offer",
@@ -331,30 +331,30 @@ function StructuredData() {
         },
         "operatingSystem": "Any",
         "author": {
-          "@id": "https://elitetrivias.com/#organization"
+          "@id": "https://triviaah.com/#organization"
         }
       },
       {
         "@type": "BreadcrumbList",
-        "@id": "https://elitetrivias.com/brainwave/trordle/#breadcrumb",
+        "@id": "https://triviaah.com/brainwave/trordle/#breadcrumb",
         "itemListElement": [
           {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://elitetrivias.com"
+            "item": "https://triviaah.com"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Brainwave",
-            "item": "https://elitetrivias.com/brainwave"
+            "item": "https://triviaah.com/brainwave"
           },
           {
             "@type": "ListItem",
             "position": 3,
             "name": "Trordle",
-            "item": "https://elitetrivias.com/brainwave/trordle"
+            "item": "https://triviaah.com/brainwave/trordle"
           }
         ]
       },

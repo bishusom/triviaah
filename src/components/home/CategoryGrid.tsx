@@ -47,7 +47,7 @@ export default function CategoryGrid() {
     <div className="mb-12">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <h3 className="text-xl font-bold text-gray-800 text-center sm:text-left">
-          Elite Trivias Popular Daily Quiz Categories with Answers
+          Triviaah Popular Daily Quiz Categories with Answers
         </h3>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -79,7 +79,7 @@ export default function CategoryGrid() {
         </Link>
         </div>
         <div className="mt-4 text-center text-gray-400 text-sm">
-          Explore all <strong>Elite Trivias quiz categories</strong> for comprehensive daily trivia challenges.
+          Explore all <strong>Triviaah quiz categories</strong> for comprehensive daily trivia challenges.
         </div>
     </div>
   );

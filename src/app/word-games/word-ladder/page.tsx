@@ -18,10 +18,10 @@ export default function WordLadderPage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2025-04-01',
       knowsAbout: ['Trivia', 'Quiz Games', 'Word Games', 'Educational Entertainment', 'Vocabulary Games', 'Logic Puzzles', 'Brain Games']
@@ -29,15 +29,15 @@ export default function WordLadderPage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Elite Trivias',
+      name: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Triviaah',
       description: 'Play free word ladder puzzles online. Transform one word into another by changing one letter at a time. Fun vocabulary game that improves spelling and logic skills.',
-      url: 'https://elitetrivias.com/word-games/word-ladder',
+      url: 'https://triviaah.com/word-games/word-ladder',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Word Ladder',
         description: 'Classic word transformation puzzle where players change one word into another by altering one letter at a time, with each step forming a valid word. Features multiple difficulty levels and daily challenges.',
-        gameLocation: 'https://elitetrivias.com/word-games/word-ladder',
+        gameLocation: 'https://triviaah.com/word-games/word-ladder',
         characterAttribute: 'Vocabulary, Spelling, Logic, Problem Solving, Pattern Recognition, Cognitive Skills'
       }
     },
@@ -49,19 +49,19 @@ export default function WordLadderPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://elitetrivias.com'
+          item: 'https://triviaah.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Word Games',
-          item: 'https://elitetrivias.com/word-games'
+          item: 'https://triviaah.com/word-games'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Word Ladder',
-          item: 'https://elitetrivias.com/word-games/word-ladder'
+          item: 'https://triviaah.com/word-games/word-ladder'
         }
       ]
     },

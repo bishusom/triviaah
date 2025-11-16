@@ -7,13 +7,13 @@ import Timer from '@/components/daily/dailyQuizTimer';
 import Ads from '@/components/common/Ads';
 
 export const metadata: Metadata = {
-  title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Elite Trivias',
+  title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Triviaah',
   description: 'Play our free daily trivia game with new questions about history, pop culture, sports, and more! Test your knowledge daily with 10 fresh questions.',
   keywords: 'daily trivia game, daily quiz, trivia challenges, fun quiz, knowledge test',
   openGraph: {
-    title: 'Daily Trivia Game - New Questions Every Day | Elite Trivias',
+    title: 'Daily Trivia Game - New Questions Every Day | Triviaah',
     description: 'Challenge yourself with our daily trivia game. 10 fresh questions every 24 hours!',
-    url: 'https://elitetrivias.com/daily',
+    url: 'https://triviaah.com/daily',
     images: [
       {
         url: '/imgs/daily-trivia-og.webp',
@@ -100,10 +100,10 @@ export default async function DailyQuizzesPage() {
   const organizationStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Elite Trivias',
-    url: 'https://elitetrivias.com',
+    name: 'Triviaah',
+    url: 'https://triviaah.com',
     description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-    logo: 'https://elitetrivias.com/logo.png',
+    logo: 'https://triviaah.com/logo.png',
     sameAs: [],
     foundingDate: '2024',
     knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment']
@@ -115,7 +115,7 @@ export default async function DailyQuizzesPage() {
     '@type': 'WebPage',
     name: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours',
     description: 'Play our free daily trivia game with new questions about history, pop culture, sports, and more! Test your knowledge daily with 10 fresh questions.',
-    url: 'https://elitetrivias.com/daily-trivias',
+    url: 'https://triviaah.com/daily-trivias',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'ItemList',
@@ -127,7 +127,7 @@ export default async function DailyQuizzesPage() {
           '@type': 'Quiz',
           name: `${quiz.name} Daily Quiz`,
           description: quiz.tagline,
-          url: `https://elitetrivias.com${quiz.path}`,
+          url: `https://triviaah.com${quiz.path}`,
           category: quiz.category
         }
       }))

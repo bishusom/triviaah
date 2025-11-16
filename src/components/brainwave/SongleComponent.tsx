@@ -333,7 +333,7 @@ export default function SongleComponent({ initialData }: SongleComponentProps) {
       shareText += '\n';
     });
     
-    shareText += '\nPlay daily at https://elitetrivias.com/brainwave/songle';
+    shareText += '\nPlay daily at https://triviaah.com/brainwave/songle';
     return shareText;
   };
 

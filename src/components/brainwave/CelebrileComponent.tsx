@@ -528,7 +528,7 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
       }
     });
     
-    shareText += '\n\nPlay daily at https://elitetrivias.com/brainwave/celebrile';
+    shareText += '\n\nPlay daily at https://triviaah.com/brainwave/celebrile';
     return shareText;
   };
 

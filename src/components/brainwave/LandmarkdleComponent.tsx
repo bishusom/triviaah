@@ -470,7 +470,7 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
       }
     });
     
-    shareText += '\n\nPlay daily at https://elitetrivias.com/brainwave/landmarkdle';
+    shareText += '\n\nPlay daily at https://triviaah.com/brainwave/landmarkdle';
     return shareText;
   };
 

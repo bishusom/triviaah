@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateSudokuMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/number-puzzles/sudoku';
+  const canonicalUrl = 'https://triviaah.com/number-puzzles/sudoku';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Free Sudoku Puzzles Online | Daily Sudoku Games & Challenges | Elite Trivias',
+    title: 'Free Sudoku Puzzles Online | Daily Sudoku Games & Challenges | Triviaah',
     description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
     keywords: [
       'sudoku',
@@ -35,10 +35,10 @@ export function generateSudokuMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Free Sudoku Puzzles Online | Daily Sudoku Games & Challenges | Elite Trivias',
+      title: 'Free Sudoku Puzzles Online | Daily Sudoku Games & Challenges | Triviaah',
       description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
-      url: 'https://elitetrivias.com/number-puzzles/sudoku',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/number-puzzles/sudoku',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/sudoku.webp',
@@ -52,7 +52,7 @@ export function generateSudokuMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Free Sudoku Puzzles Online | Daily Sudoku Games & Challenges | Elite Trivias',
+      title: 'Free Sudoku Puzzles Online | Daily Sudoku Games & Challenges | Triviaah',
       description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
       images: ['/imgs/sudoku.webp'],
       site: '@elitetrivias',

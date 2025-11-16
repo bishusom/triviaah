@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateCelebrileMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/celebrile';
+  const canonicalUrl = 'https://triviaah.com/celebrile';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Celebrile - Daily Celebrity Guessing Game | Elite Trivias',
+    title: 'Celebrile - Daily Celebrity Guessing Game | Triviaah',
     description: 'Guess the celebrity from progressive clues in 6 tries! Wordle-style letter feedback. Unlock more hints with each wrong guess. Free daily entertainment puzzle.',
     keywords: [
       'celebrile',
@@ -29,10 +29,10 @@ export function generateCelebrileMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Celebrile - Daily Celebrity Guessing Game | Elite Trivias',
+      title: 'Celebrile - Daily Celebrity Guessing Game | Triviaah',
       description: 'Guess the celebrity from progressive clues in 6 tries! Wordle-style letter feedback. Unlock more hints with each wrong guess.',
-      url: 'https://elitetrivias.com/celebrile',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/celebrile',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/celebrile-og.webp',
@@ -46,7 +46,7 @@ export function generateCelebrileMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Celebrile - Daily Celebrity Guessing Game | Elite Trivias',
+      title: 'Celebrile - Daily Celebrity Guessing Game | Triviaah',
       description: 'Guess the celebrity from progressive clues in 6 tries! Wordle-style letter feedback. Unlock more hints with each wrong guess.',
       images: ['/imgs/celebrile-og.webp'],
       site: '@elitetrivias', // Replace with your actual Twitter handle

@@ -2,20 +2,20 @@
 import { Metadata } from 'next';
 
 export function generateSynonymleMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/brainwave/synonymle';
+  const canonicalUrl = 'https://triviaah.com/brainwave/synonymle';
 
   return {
-    title: 'Synonymle - Daily Word Guessing Puzzle | Elite Trivias',
+    title: 'Synonymle - Daily Word Guessing Puzzle | Triviaah',
     description: 'Guess the word based on semantic similarity and synonyms. Wordle-style vocabulary puzzle game that tests your understanding of word meanings.',
     keywords: 'synonymle, word puzzle, daily word, wordle vocabulary, synonym game, semantic game, word guessing, vocabulary builder, english words, free word games, online word puzzles, daily puzzle, brain game',
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Synonymle - Daily Word Guessing Puzzle | Elite Trivias',
+      title: 'Synonymle - Daily Word Guessing Puzzle | Triviaah',
       description: 'Guess the word based on semantic similarity and synonyms. Wordle-style vocabulary puzzle game that tests your understanding of word meanings.',
-      url: 'https://elitetrivias.com/brainwave/synonymle',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/brainwave/synonymle',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/synonymle-og.webp',
@@ -28,7 +28,7 @@ export function generateSynonymleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Synonymle - Daily Word Guessing Puzzle | Elite Trivias',
+      title: 'Synonymle - Daily Word Guessing Puzzle | Triviaah',
       description: 'Guess the word based on semantic similarity and synonyms. Wordle-style vocabulary puzzle game that tests your understanding of word meanings.',
       images: ['/imgs/synonymle-og.webp'],
     },

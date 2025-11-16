@@ -31,13 +31,13 @@ export async function generateMetadata(): Promise<Metadata> {
     description: 'Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.',
     keywords: 'free online trivia, trivia categories, quiz games online free, free trivia quizzes, online quiz games, free trivia games, trivia quizzes by category',
     alternates: {
-      canonical: 'https://elitetrivias.com/trivias',
+      canonical: 'https://triviaah.com/trivias',
     },
     openGraph: {
       title: 'Free Online Trivia Categories | Quiz Games Online Free',
       description: 'Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.',
-      url: 'https://elitetrivias.com/trivias',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/trivias',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/trivia-categories-og.webp',
@@ -226,13 +226,13 @@ function StructuredData({ categories }: StructuredDataProps) {
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://elitetrivias.com/#organization",
-        "name": "Elite Trivias",
-        "url": "https://elitetrivias.com/",
-        "description": "Elite Trivias offers engaging and educational trivia games and puzzles for everyone.",
+        "@id": "https://triviaah.com/#organization",
+        "name": "Triviaah",
+        "url": "https://triviaah.com/",
+        "description": "Triviaah offers engaging and educational trivia games and puzzles for everyone.",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://elitetrivias.com/logo.png",
+          "url": "https://triviaah.com/logo.png",
           "width": 200,
           "height": 60
         },
@@ -244,43 +244,43 @@ function StructuredData({ categories }: StructuredDataProps) {
       },
       {
         "@type": "WebPage",
-        "@id": "https://elitetrivias.com/trivias/#webpage",
-        "url": "https://elitetrivias.com/trivias",
+        "@id": "https://triviaah.com/trivias/#webpage",
+        "url": "https://triviaah.com/trivias",
         "name": "Free Online Trivia Categories | Quiz Games Online Free",
         "description": "Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.",
         "isPartOf": {
-          "@id": "https://elitetrivias.com/#website"
+          "@id": "https://triviaah.com/#website"
         },
         "about": {
-          "@id": "https://elitetrivias.com/#organization"
+          "@id": "https://triviaah.com/#organization"
         },
         "datePublished": "2025-09-30T00:00:00+00:00",
         "dateModified": new Date().toISOString(),
         "breadcrumb": {
-          "@id": "https://elitetrivias.com/trivias/#breadcrumb"
+          "@id": "https://triviaah.com/trivias/#breadcrumb"
         },
         "primaryImageOfPage": {
           "@type": "ImageObject",
-          "url": "https://elitetrivias.com/imgs/trivia-categories-og.webp",
+          "url": "https://triviaah.com/imgs/trivia-categories-og.webp",
           "width": 1200,
           "height": 630
         }
       },
       {
         "@type": "WebSite",
-        "@id": "https://elitetrivias.com/#website",
-        "url": "https://elitetrivias.com/",
-        "name": "Elite Trivias",
+        "@id": "https://triviaah.com/#website",
+        "url": "https://triviaah.com/",
+        "name": "Triviaah",
         "description": "Engaging trivia games and puzzles for everyone",
         "publisher": {
-          "@id": "https://elitetrivias.com/#organization"
+          "@id": "https://triviaah.com/#organization"
         },
         "potentialAction": [
           {
             "@type": "SearchAction",
             "target": {
               "@type": "EntryPoint",
-              "urlTemplate": "https://elitetrivias.com/search?q={search_term_string}"
+              "urlTemplate": "https://triviaah.com/search?q={search_term_string}"
             },
             "query-input": "required name=search_term_string"
           }
@@ -289,7 +289,7 @@ function StructuredData({ categories }: StructuredDataProps) {
       {
         "@type": "ItemList",
         "name": "Trivia Categories",
-        "description": "List of all available trivia categories on Elite Trivias",
+        "description": "List of all available trivia categories on Triviaah",
         "numberOfItems": categories.length,
         "itemListElement": categories.map(([key, category], index) => ({
           "@type": "ListItem",
@@ -298,7 +298,7 @@ function StructuredData({ categories }: StructuredDataProps) {
             "@type": "Game",
             "name": category.title,
             "description": category.description,
-            "url": `https://elitetrivias.com/trivias/${key}`,
+            "url": `https://triviaah.com/trivias/${key}`,
             "gameType": "TriviaGame",
             "genre": "trivia",
             "numberOfPlayers": {
@@ -315,19 +315,19 @@ function StructuredData({ categories }: StructuredDataProps) {
       },
       {
         "@type": "BreadcrumbList",
-        "@id": "https://elitetrivias.com/trivias/#breadcrumb",
+        "@id": "https://triviaah.com/trivias/#breadcrumb",
         "itemListElement": [
           {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://elitetrivias.com"
+            "item": "https://triviaah.com"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Trivia Categories",
-            "item": "https://elitetrivias.com/trivias"
+            "item": "https://triviaah.com/trivias"
           }
         ]
       },

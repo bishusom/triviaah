@@ -323,7 +323,7 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
     // Default fallback
     return { 
       name: 'elitetrivias', 
-      url: 'https://elitetrivias.com.com' 
+      url: 'https://triviaah.com.com' 
     };
   };
 
@@ -396,7 +396,7 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
       shareText += '\n';
     });
     
-    shareText += '\nPlay daily at https://elitetrivias.com/brainwave/capitale';
+    shareText += '\nPlay daily at https://triviaah.com/brainwave/capitale';
     return shareText;
   };
 

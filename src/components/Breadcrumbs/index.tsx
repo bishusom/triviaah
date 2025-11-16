@@ -69,7 +69,7 @@ export function SeoBreadcrumbs() {
       "@type": "ListItem",
       "position": i + 1,
       "name": path.replace(/-/g, ' '),
-      "item": `https://elitetrivias.com/${paths.slice(0, i + 1).join('/')}`
+      "item": `https://triviaah.com/${paths.slice(0, i + 1).join('/')}`
     }))
   };
 

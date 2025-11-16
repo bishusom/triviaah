@@ -5,22 +5,22 @@ import MuteButton from '@/components/common/MuteButton';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Quick Fire Quiz | Test Your Knowledge | Elite Trivias',
+  title: 'Quick Fire Quiz | Test Your Knowledge | Triviaah',
   description: 'Challenge yourself with our daily quick fire trivia quiz! Test your knowledge across various topics including history, science, pop culture, and more. Fun, fast, and free trivia questions updated daily.',
   keywords: 'trivia quiz, quick fire quiz, daily trivia, knowledge test, fun quiz, brain teaser, trivia questions, quiz game, mental exercise',
   
   openGraph: {
-    title: 'Quick Fire Quiz | Test Your Knowledge | Elite Trivias',
+    title: 'Quick Fire Quiz | Test Your Knowledge | Triviaah',
     description: 'Daily quick fire trivia quiz to challenge your knowledge across various topics. Fun, fast, and free!',
     type: 'website',
-    url: 'https://elitetrivias.com/quick-fire',
-    siteName: 'Elite Trivias',
+    url: 'https://triviaah.com/quick-fire',
+    siteName: 'Triviaah',
     images: [
       {
         url: '/imgs/quick-fire-og.webp', // Replace with your actual OG image
         width: 1200,
         height: 630,
-        alt: 'Elite Trivias Quick Fire Quiz Challenge',
+        alt: 'Triviaah Quick Fire Quiz Challenge',
       },
     ],
     locale: 'en_US',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   
   twitter: {
     card: 'summary_large_image',
-    title: 'Quick Fire Quiz | Elite Trivias',
+    title: 'Quick Fire Quiz | Triviaah',
     description: 'Test your knowledge with our daily quick fire trivia quiz!',
     images: ['/twitter-quiz-image.jpg'], // Replace with your actual Twitter image
     site: '@triviaah', // Replace with your actual Twitter handle
@@ -47,18 +47,18 @@ export const metadata: Metadata = {
   },
   
   alternates: {
-    canonical: 'https://elitetrivias.com/quick-fire',
+    canonical: 'https://triviaah.com/quick-fire',
   },
   
   authors: [
     {
-      name: 'Elite Trivias Team',
-      url: 'https://elitetrivias.com.com',
+      name: 'Triviaah Team',
+      url: 'https://triviaah.com.com',
     },
   ],
   
-  creator: 'Elite Trivias',
-  publisher: 'Elite Trivias',
+  creator: 'Triviaah',
+  publisher: 'Triviaah',
   
   category: 'education',
   

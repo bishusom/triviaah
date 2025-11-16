@@ -472,7 +472,7 @@ export default function FoodleComponent({ initialData }: FoodleComponentProps) {
       }
     });
     
-    shareText += '\n\nPlay daily at https://elitetrivias.com/brainwave/foodle';
+    shareText += '\n\nPlay daily at https://triviaah.com/brainwave/foodle';
     return shareText;
   };
 

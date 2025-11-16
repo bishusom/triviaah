@@ -504,7 +504,7 @@ export default function LiteraleComponent({ initialData }: LiteraleComponentProp
       }
     });
     
-    shareText += '\n\nRead between the lines at https://elitetrivias.com/brainwave/literale';
+    shareText += '\n\nRead between the lines at https://triviaah.com/brainwave/literale';
     return shareText;
   };
 

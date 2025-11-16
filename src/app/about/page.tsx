@@ -10,13 +10,13 @@ export default function AboutPage() {
         </Link>
       </div>
 
-      <h1 className="text-3xl font-bold mb-6">About Elite Trivias</h1>
+      <h1 className="text-3xl font-bold mb-6">About Triviaah</h1>
 
       <div className="prose prose-lg">
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
           <p>
-            Elite Trivias was created to bring fun, engaging daily trivia challenges to knowledge 
+            Triviaah was created to bring fun, engaging daily trivia challenges to knowledge 
             enthusiasts worldwide. We believe learning should be enjoyable and accessible to everyone.
           </p>
         </section>
@@ -34,7 +34,7 @@ export default function AboutPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">The Team</h2>
           <p>
-            Elite Trivias is developed by a small team of trivia enthusiasts and developers who are 
+            Triviaah is developed by a small team of trivia enthusiasts and developers who are 
             passionate about creating engaging educational experiences.
           </p>
         </section>

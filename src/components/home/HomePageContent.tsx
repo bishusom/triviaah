@@ -27,7 +27,7 @@ export default function HomePageContent() {
         <div className="container mx-auto flex items-center justify-center gap-4">
             <Image
                 src="/logo.webp"
-                alt="Elite Trivias - Free Daily Trivia Games"
+                alt="Triviaah - Free Daily Trivia Games"
                 width={200}
                 height={36}
                 priority
@@ -58,7 +58,7 @@ export default function HomePageContent() {
               marginBottom: '0.5rem'
             }}
           >
-            Elite Trivias : Free Daily Trivia Quiz with Answers & Explanations
+            Triviaah : Free Daily Trivia Quiz with Answers & Explanations
           </h1>
           <p className="text-gray-600 mb-4">
             New free online trivia games with answers every 24 hours. Test your knowledge and learn instantly!
@@ -112,7 +112,7 @@ export default function HomePageContent() {
         <CollapsibleSection title="Free Daily Quiz with Answers & Explanations">
           <div className="prose text-gray-600">
             <p className="mb-4">
-              Elite Trivias offers the best collection of <strong>free daily quiz with answers</strong> and detailed explanations 
+              Triviaah offers the best collection of <strong>free daily quiz with answers</strong> and detailed explanations 
               across multiple categories. Our <strong>daily quiz with answers</strong> format helps you learn while you play, 
               with instant feedback on every question. Enjoy our <strong>free trivia games online</strong> 
               including <strong>trivia games to play with friends online</strong> and <strong>virtual trivia games for work</strong>. 
