@@ -13,6 +13,9 @@ interface AdsProps {
   isMobileFooter?: boolean;
 }
 
+// Global flag to track if AdSense script is loaded
+let adSenseLoaded = false;
+
 export default function Ads({
   className = '',
   slot = '2207590813',
@@ -26,37 +29,53 @@ export default function Ads({
   const [isLoaded, setIsLoaded] = useState(false);
   const adRef = useRef<HTMLDivElement>(null);
   const insRef = useRef<HTMLModElement>(null);
+  const hasPushedAd = useRef(false);
 
   // Move the conditional check after hooks
   const shouldShowAds = process.env.NEXT_PUBLIC_SHOW_ADS !== 'false';
 
   useEffect(() => {
-    if (!isVisible || !shouldShowAds) return;
+    if (!isVisible || !shouldShowAds || hasPushedAd.current) return;
 
     const loadAd = () => {
-      if (typeof window !== 'undefined' && window.adsbygoogle && insRef.current) {
+      if (typeof window !== 'undefined' && window.adsbygoogle && insRef.current && !hasPushedAd.current) {
         try {
-          (window.adsbygoogle as Record<string, unknown>[]).push({});
-          setIsLoaded(true);
+          // Only push if we haven't already
+          if (!hasPushedAd.current) {
+            (window.adsbygoogle as Record<string, unknown>[]).push({});
+            hasPushedAd.current = true;
+            setIsLoaded(true);
+          }
         } catch (error) {
           console.error('AdSense error:', error);
         }
       }
     };
 
+    // If AdSense is already loaded, load ad immediately
     if (typeof window !== 'undefined' && window.adsbygoogle) {
       loadAd();
-    } else {
-      const checkAdSense = setInterval(() => {
-        if (typeof window !== 'undefined' && window.adsbygoogle) {
-          clearInterval(checkAdSense);
-          loadAd();
+    } else if (!adSenseLoaded) {
+      // Load AdSense script only if not already loaded
+      adSenseLoaded = true;
+      const script = document.createElement('script');
+      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164';
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.onload = () => {
+        // Initialize adsbygoogle array if it doesn't exist
+        if (!window.adsbygoogle) {
+          window.adsbygoogle = [];
         }
-      }, 100);
-
-      setTimeout(() => clearInterval(checkAdSense), 10000);
-      return () => clearInterval(checkAdSense);
+        loadAd();
+      };
+      document.head.appendChild(script);
     }
+
+    // Cleanup function
+    return () => {
+      // Don't reset adSenseLoaded as the script is still needed for other components
+    };
   }, [isVisible, shouldShowAds]);
 
   const handleClose = () => {
@@ -67,6 +86,43 @@ export default function Ads({
   if (!shouldShowAds || !isVisible) {
     return null;
   }
+
+  // Set appropriate dimensions based on format
+  const getAdDimensions = () => {
+    if (isMobileFooter) {
+      return {
+        width: '100%',
+        height: '50px',
+        maxWidth: '728px'
+      };
+    }
+
+    switch (format) {
+      case 'horizontal':
+        return {
+          width: '100%',
+          height: '90px',
+          minHeight: '90px'
+        };
+      case 'rectangle':
+        return {
+          width: '300px',
+          height: '250px'
+        };
+      case 'vertical':
+        return {
+          width: '120px',
+          height: '600px'
+        };
+      default: // auto
+        return {
+          width: '100%',
+          minHeight: '90px'
+        };
+    }
+  };
+
+  const dimensions = getAdDimensions();
 
   // Compact mobile footer style - like Independent.co.uk
   if (isMobileFooter) {
@@ -99,10 +155,9 @@ export default function Ads({
             className="adsbygoogle"
             style={{
               display: 'block',
-              width: '100%',
-              height: '50px',
-              maxHeight: '50px',
-              maxWidth: '728px',
+              width: dimensions.width,
+              height: dimensions.height,
+              maxWidth: dimensions.maxWidth,
               margin: '0 auto',
               overflow: 'hidden'
             }}
@@ -133,7 +188,7 @@ export default function Ads({
       ref={adRef}
       className={`relative ad-container ${className}`}
       style={{
-        minHeight: '90px',
+        minHeight: dimensions.minHeight || dimensions.height,
         backgroundColor: '#f5f5f5',
         display: 'flex',
         alignItems: 'center',
@@ -162,6 +217,9 @@ export default function Ads({
             display: 'block',
             textAlign: 'center',
             margin: '0 auto',
+            width: dimensions.width,
+            height: dimensions.height,
+            minHeight: dimensions.minHeight,
             maxWidth: '100%',
             overflow: 'hidden',
             ...style
