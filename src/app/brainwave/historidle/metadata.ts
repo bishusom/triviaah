@@ -1,0 +1,71 @@
+// src/app/brainwave/historidle/metadata.ts
+import { Metadata } from 'next';
+
+export function generateHistoridleMetadata(): Metadata {
+  const canonicalUrl = 'https://triviaah.com/brainwave/historidle';
+  const lastUpdated = new Date().toISOString();
+
+  return {
+    title: 'Historidle - Daily Historical Puzzle | Triviaah',
+    description: 'Guess the historical figure or event from emojis and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
+    keywords: [
+      'historidle',
+      'historical puzzle',
+      'daily history',
+      'wordle history',
+      'historical figures game',
+      'history guessing game',
+      'trivia games',
+      'free history trivia',
+      'online puzzle games',
+      'daily brain teaser',
+      'emoji history game',
+      'historical events',
+      'history education',
+      'educational games',
+      'world history',
+      'history quiz',
+      'historical timeline'
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: 'Historidle - Daily Historical Puzzle | Triviaah',
+      description: 'Guess the historical figure or event from 3 dates and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
+      url: 'https://triviaah.com/brainwave/historidle',
+      siteName: 'Triviaah',
+      images: [
+        {
+          url: '/imgs/brainwave/historidle.webp',
+          width: 1200,
+          height: 630,
+          alt: 'Historidle - Daily Historical Puzzle Game'
+        }
+      ],
+      type: 'website',
+      locale: 'en_US'
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Historidle - Daily Historical Puzzle | Triviaah',
+      description: 'Guess the historical figure or event from  3 dates and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
+      images: ['/imgsbrainwave//historidle.webp'],
+      site: '@elitetrivias',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    other: {
+      'updated_time': lastUpdated
+    }
+  };
+}

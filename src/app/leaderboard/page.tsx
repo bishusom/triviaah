@@ -1,0 +1,345 @@
+// app/leaderboard/page.tsx
+'use client';
+import { useAuth } from '@/context/AuthContext';
+import { Crown, Trophy, Star, Medal, Clock, Target, Award, BarChart3, UserCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { getLeaderboard, getUserRank, getUserStats, type LeaderboardEntry } from '@/lib/leaderboard';
+
+type Timeframe = 'weekly' | 'monthly' | 'all-time';
+
+interface UserStats {
+  totalGames: number;
+  totalScore: number;
+  averageScore: number;
+  accuracy: number;
+  averageTimePerGame: number;
+  bestScore: number;
+  favoriteCategory: string;
+  lastPlayed: string;
+}
+
+export default function LeaderboardPage() {
+  const { user, profile } = useAuth();
+  const [timeframe, setTimeframe] = useState<Timeframe>('weekly');
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [userRank, setUserRank] = useState<number>(0);
+  const [userStats, setUserStats] = useState<UserStats | null>(null);
+  const [activeTab, setActiveTab] = useState<'leaderboard' | 'stats'>('leaderboard');
+
+  useEffect(() => {
+    loadLeaderboardData();
+  }, [timeframe, profile?.id]);
+
+  const loadLeaderboardData = async () => {
+    try {
+      setLoading(true);
+      
+      console.log('Loading leaderboard data...');
+      console.log('Profile:', profile);
+      console.log('Timeframe:', timeframe);
+      
+      const leaderboard = await getLeaderboard(timeframe);
+      console.log('Leaderboard loaded:', leaderboard);
+      
+      const rank = profile?.id ? await getUserRank(profile.id, timeframe) : 0;
+      console.log('User rank:', rank);
+      
+      const stats = profile?.id ? await getUserStats(profile.id, timeframe) : null;
+      console.log('User stats:', stats);
+      
+      setLeaderboardData(leaderboard);
+      setUserRank(rank);
+      setUserStats(stats);
+    } catch (error) {
+      console.error('Error loading leaderboard data:', error);
+      // Set empty data on error so UI still renders
+      setLeaderboardData([]);
+      setUserRank(0);
+      setUserStats(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getRankIcon = (rank: number) => {
+    switch (rank) {
+      case 1: return <Trophy className="w-5 h-5 text-yellow-400" />;
+      case 2: return <Medal className="w-5 h-5 text-gray-300" />;
+      case 3: return <Medal className="w-5 h-5 text-amber-600" />;
+      default: return <div className="w-5 h-5 text-center text-gray-400 font-bold">{rank}</div>;
+    }
+  };
+
+  const getTimeframeText = (timeframe: Timeframe) => {
+    switch (timeframe) {
+      case 'weekly': return 'This Week';
+      case 'monthly': return 'This Month';
+      case 'all-time': return 'All Time';
+    }
+  };
+
+  // Helper function to determine if avatar is a URL or initials
+  const isAvatarUrl = (avatar: string): boolean => {
+    return avatar.startsWith('http://') || avatar.startsWith('https://') || avatar.startsWith('/');
+  };
+
+  // Render avatar - either image or initials
+  const renderAvatar = (player: LeaderboardEntry) => {
+    if (isAvatarUrl(player.avatar)) {
+      return (
+        <img 
+          src={player.avatar} 
+          alt={player.displayName}
+          className="w-10 h-10 rounded-full object-cover"
+          onError={(e) => {
+            // Fallback to initials if image fails to load
+            const target = e.target as HTMLImageElement;
+            target.style.display = 'none';
+            if (target.nextElementSibling) {
+              (target.nextElementSibling as HTMLElement).style.display = 'flex';
+            }
+          }}
+        />
+      );
+    } else {
+      return (
+        <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+          {player.avatar}
+        </div>
+      );
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-8">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">Leaderboard</h1>
+            <p className="text-gray-400">Loading leaderboard data...</p>
+          </div>
+          <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
+            <div className="animate-pulse space-y-3">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex items-center gap-4 p-4 rounded-lg bg-gray-700 h-16"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-8">
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Leaderboard</h1>
+          <p className="text-gray-400">Compete with quiz enthusiasts worldwide</p>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-gray-800 rounded-lg p-1 border border-gray-700">
+            <button
+              onClick={() => setActiveTab('leaderboard')}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+                activeTab === 'leaderboard'
+                  ? 'bg-cyan-500 text-white'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              Leaderboard
+            </button>
+            <button
+              onClick={() => setActiveTab('stats')}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+                activeTab === 'stats'
+                  ? 'bg-cyan-500 text-white'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              Your Stats
+            </button>
+          </div>
+        </div>
+
+        {/* Timeframe Selector */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-gray-800 rounded-lg p-1 border border-gray-700">
+            {(['weekly', 'monthly', 'all-time'] as const).map((time) => (
+              <button
+                key={time}
+                onClick={() => setTimeframe(time)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  timeframe === time
+                    ? 'bg-cyan-500 text-white'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                {time.charAt(0).toUpperCase() + time.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {activeTab === 'leaderboard' ? (
+          <>
+            {/* Leaderboard */}
+            <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-white">{getTimeframeText(timeframe)}</h2>
+                <div className="text-gray-400 text-sm">
+                  {leaderboardData.length} players
+                </div>
+              </div>
+
+              {leaderboardData.length === 0 ? (
+                <div className="text-center text-gray-400 py-12">
+                  <Trophy className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+                  <p className="text-lg mb-2">No scores yet</p>
+                  <p className="text-sm">Be the first to play and appear on the leaderboard!</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {leaderboardData.map((player) => (
+                    <div
+                      key={`${player.userId || player.username}-${player.rank}`}
+                      className={`flex items-center gap-4 p-4 rounded-lg border transition-all ${
+                        player.userId === profile?.id
+                          ? 'bg-cyan-500/10 border-cyan-500/50 shadow-lg shadow-cyan-500/10'
+                          : 'bg-gray-750 border-gray-600 hover:bg-gray-700'
+                      }`}
+                    >
+                      {/* Rank */}
+                      <div className="flex items-center justify-center w-8">
+                        {getRankIcon(player.rank)}
+                      </div>
+
+                      {/* Avatar */}
+                      <div className="relative">
+                        {renderAvatar(player)}
+                        {/* Fallback initials div (hidden by default, shown if image fails) */}
+                        {isAvatarUrl(player.avatar) && (
+                          <div 
+                            className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm absolute top-0 left-0"
+                            style={{ display: 'none' }}
+                          >
+                            {player.displayName.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* User Info */}
+                      <div className="flex-1">
+                        <div className="text-white font-medium flex items-center gap-2">
+                          {player.displayName}
+                          {player.rank === 1 && <Crown size={16} className="text-yellow-400" />}
+                          {player.userId === profile?.id && (
+                            <span className="text-cyan-400 text-sm">(You)</span>
+                          )}
+                          {player.isGuest && (
+                            <span className="text-xs bg-gray-700 px-2 py-0.5 rounded text-gray-400">
+                              Guest
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-gray-400 text-sm">@{player.username}</div>
+                      </div>
+
+                      {/* Score */}
+                      <div className="text-right">
+                        <div className="text-white font-bold text-lg">{player.score.toLocaleString()}</div>
+                        <div className="text-gray-400 text-sm">points</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Your Position */}
+            {profile && userRank > 0 && (
+              <div className="mt-6 text-center">
+                <div className="text-gray-400 text-sm">
+                  Your current rank: <span className="text-cyan-400 font-medium">#{userRank}</span>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          /* Stats Tab */
+          <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
+            <h2 className="text-xl font-bold text-white mb-6">Your Statistics - {getTimeframeText(timeframe)}</h2>
+            
+            {!profile ? (
+              <div className="text-center text-gray-400 py-12">
+                <UserCircle className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+                <p className="text-lg mb-2">Sign in to view your stats</p>
+                <p className="text-sm">Create an account to track your progress!</p>
+              </div>
+            ) : !userStats ? (
+              <div className="text-center text-gray-400 py-12">
+                <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+                <p className="text-lg mb-2">No games played yet</p>
+                <p className="text-sm">Play some trivia games to see your statistics!</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="bg-gray-750 rounded-lg p-4 border border-gray-600">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Award className="w-5 h-5 text-cyan-400" />
+                    <h3 className="text-white font-semibold">Total Score</h3>
+                  </div>
+                  <p className="text-2xl font-bold text-cyan-400">{userStats.totalScore.toLocaleString()}</p>
+                </div>
+
+                <div className="bg-gray-750 rounded-lg p-4 border border-gray-600">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Target className="w-5 h-5 text-green-400" />
+                    <h3 className="text-white font-semibold">Accuracy</h3>
+                  </div>
+                  <p className="text-2xl font-bold text-green-400">{userStats.accuracy}%</p>
+                </div>
+
+                <div className="bg-gray-750 rounded-lg p-4 border border-gray-600">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Trophy className="w-5 h-5 text-yellow-400" />
+                    <h3 className="text-white font-semibold">Best Score</h3>
+                  </div>
+                  <p className="text-2xl font-bold text-yellow-400">{userStats.bestScore.toLocaleString()}</p>
+                </div>
+
+                <div className="bg-gray-750 rounded-lg p-4 border border-gray-600">
+                  <div className="flex items-center gap-3 mb-2">
+                    <BarChart3 className="w-5 h-5 text-purple-400" />
+                    <h3 className="text-white font-semibold">Games Played</h3>
+                  </div>
+                  <p className="text-2xl font-bold text-purple-400">{userStats.totalGames}</p>
+                </div>
+
+                <div className="bg-gray-750 rounded-lg p-4 border border-gray-600">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Star className="w-5 h-5 text-orange-400" />
+                    <h3 className="text-white font-semibold">Average Score</h3>
+                  </div>
+                  <p className="text-2xl font-bold text-orange-400">{userStats.averageScore}</p>
+                </div>
+
+                <div className="bg-gray-750 rounded-lg p-4 border border-gray-600">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Clock className="w-5 h-5 text-red-400" />
+                    <h3 className="text-white font-semibold">Avg. Time/Game</h3>
+                  </div>
+                  <p className="text-2xl font-bold text-red-400">{userStats.averageTimePerGame}s</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

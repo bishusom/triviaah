@@ -1,0 +1,139 @@
+// Enhanced FeedbackComponent.tsx - Gaming Theme (Minimalist with Colors)
+'use client';
+
+import { useState } from 'react';
+import { SmilePlus, Smile, Annoyed, Frown, Angry } from 'lucide-react';
+
+interface FeedbackProps {
+  gameType: 'trivia' | 'capitale' | 'celebrile'| 'plotle' | 'songle' | 
+            'creaturedle' | 'landmarkdle'| "foodle" | 'inventionle' |
+            'literale' | 'historidle' | 'synonymle' | 'trordle';
+  category?: string;
+  metadata?: Record<string, unknown>;
+  onSubmitted?: () => void;
+}
+
+const FEEDBACK_OPTIONS = [
+  { 
+    icon: SmilePlus, 
+    label: 'Excellent', 
+    value: 5, 
+    color: 'text-emerald-400',
+    hoverColor: 'text-emerald-300',
+    bgColor: 'bg-emerald-500'
+  },
+  { 
+    icon: Smile, 
+    label: 'Good', 
+    value: 4, 
+    color: 'text-cyan-400',
+    hoverColor: 'text-cyan-300',
+    bgColor: 'bg-cyan-500'
+  },
+  { 
+    icon: Annoyed, 
+    label: 'Average', 
+    value: 3, 
+    color: 'text-amber-400',
+    hoverColor: 'text-amber-300',
+    bgColor: 'bg-amber-500'
+  },
+  { 
+    icon: Frown, 
+    label: 'Poor', 
+    value: 2, 
+    color: 'text-pink-400',
+    hoverColor: 'text-pink-300',
+    bgColor: 'bg-pink-500'
+  },
+  { 
+    icon: Angry, 
+    label: 'Bad', 
+    value: 1, 
+    color: 'text-red-400',
+    hoverColor: 'text-red-300',
+    bgColor: 'bg-red-500'
+  }
+];
+
+// Elegant minimalist version with colored icons
+export default function FeedbackComponent({ 
+  gameType, 
+  category = '', 
+  metadata = {}, 
+  onSubmitted 
+}: FeedbackProps) {
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [hoveredRating, setHoveredRating] = useState(0);
+
+  const handleFeedback = async (rating: number) => {
+    try {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rating,
+          category,
+          gameType,
+          metadata,
+        }),
+      });
+      setFeedbackSubmitted(true);
+      onSubmitted?.();
+    } catch (error) {
+      console.error('Failed to submit feedback:', error);
+    }
+  };
+
+  if (feedbackSubmitted) {
+    return (
+      <div className="text-center p-4">
+        <div className="w-12 h-12 bg-cyan-500 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <p className="text-cyan-400 font-semibold">Thank you! 🎮</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="text-center">
+      <h4 className="text-lg font-bold text-white mb-3">Enjoyed the game?</h4>
+      <div className="flex justify-center gap-1 mb-2">
+        {FEEDBACK_OPTIONS.map((option, index) => {
+          const rating = index + 1;
+          const isActive = hoveredRating >= rating;
+          const isHovered = hoveredRating === rating;
+          
+          return (
+            <button
+              key={rating}
+              onClick={() => handleFeedback(rating)}
+              onMouseEnter={() => setHoveredRating(rating)}
+              onMouseLeave={() => setHoveredRating(0)}
+              className="p-3 transition-all duration-200 transform hover:scale-125"
+              aria-label={`Rate ${rating} stars - ${option.label}`}
+            >
+              <option.icon 
+                size={28} 
+                className={`
+                  ${isActive || isHovered ? option.hoverColor : option.color} 
+                  transition-all duration-200
+                  ${isHovered ? 'scale-110' : 'scale-100'}
+                `} 
+              />
+            </button>
+          );
+        })}
+      </div>
+      <p className="text-gray-400 text-sm">
+        {hoveredRating ? 
+          `Rate ${hoveredRating} stars - ${FEEDBACK_OPTIONS[hoveredRating - 1]?.label}` : 
+          'Tap to rate your experience'
+        }
+      </p>
+    </div>
+  );
+}

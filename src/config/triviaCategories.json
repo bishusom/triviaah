@@ -1,0 +1,194 @@
+{
+  "literature": {
+    "title": "Literature",
+    "description": "Explore questions about famous books, renowned authors, classic novels, and literary works spanning centuries, from Shakespeare to modern bestsellers.",
+    "related": ["famous-quotes"],
+    "keywords": ["books", "authors", "novels"],
+    "ogImage": "/imgs/trivia-categories/literature.webp",
+    "displayName": "Literature"
+  },
+  "arts": {
+    "title": "Arts",
+    "description": "Test your knowledge of visual arts, including painting, sculpture, and architecture, from Renaissance masterpieces to contemporary art movements.",
+    "related": ["literature", "fashion", "arts"],
+    "keywords": ["art", "painting", "sculpture"],
+    "ogImage": "/imgs/trivia-categories/arts.webp",
+    "displayName": "Arts"
+  },
+  "animals": {
+    "title": "Animals",
+    "description": "Challenge yourself with questions about wildlife, including mammals, birds, reptiles, and marine life, covering habitats, behaviors, and biology.",
+    "related": ["science", "geography"],
+    "keywords": ["animals", "wildlife", "biology"],
+    "ogImage": "/imgs/trivia-categories/animals.webp",
+    "displayName": "Animals"
+  },
+  "science": {
+    "title": "Science",
+    "description": "Dive into questions on physics, chemistry, biology, and astronomy, exploring scientific discoveries, theories, and breakthroughs that shape our world.",
+    "related": ["animals", "technology", "geography"],
+    "keywords": ["science", "physics", "chemistry"],
+    "ogImage": "/imgs/trivia-categories/science.webp",
+    "displayName": "Science"
+  },
+  "history": {
+    "title": "History",
+    "description": "Answer questions about historical events, influential figures, ancient civilizations, and pivotal moments that have shaped human history across eras.",
+    "related": ["famous-quotes", "literature", "arts"],
+    "keywords": ["history", "historical events", "ancient"],
+    "ogImage": "/imgs/trivia-categories/history.webp",
+    "displayName": "History"
+  },
+  "geography": {
+    "title": "Geography",
+    "description": "Test your knowledge of countries, capitals, landmarks, and physical geography, from towering mountains to vast oceans and cultural heritage sites.",
+    "related": ["science", "animals"],
+    "keywords": ["geography", "countries", "maps"],
+    "ogImage": "/imgs/trivia-categories/geography.webp",
+    "displayName": "Geography"
+  },
+  "movies": {
+    "title": "Movies",
+    "description": "Challenge yourself with questions about iconic films, famous actors, directors, and cinema history, from Hollywood blockbusters to indie gems.",
+    "related": ["tv", "celebrities"],
+    "keywords": ["movies", "films", "hollywood"],
+    "ogImage": "/imgs/trivia-categories/movies.webp",
+    "displayName": "Movies"
+  },
+  "tv": {
+    "title": "TV/Web Series",
+    "description": "Explore questions about popular television shows, web series, streaming hits, and TV culture, from classic sitcoms to modern binge-worthy dramas.",
+    "related": ["movies", "celebrities"],
+    "keywords": ["tv", "television", "series"],
+    "ogImage": "/imgs/trivia-categories/tv.webp",
+    "displayName": "TV/Web Series"
+  },
+  "music": {
+    "title": "Music",
+    "description": "Test your knowledge of songs, artists, genres, and music history, from classical compositions to modern pop, rock, and hip-hop chart-toppers.",
+    "related": ["celebrities"],
+    "keywords": ["music", "songs", "artists"],
+    "ogImage": "/imgs/trivia-categories/music.webp",
+    "displayName": "Music"
+  },
+  "celebrities": {
+    "title": "Celebrities",
+    "description": "Answer questions about famous personalities, including actors, musicians, and influencers, exploring their careers, lives, and cultural impact.",
+    "related": ["movies", "music", "tv"],
+    "keywords": ["celebrities", "movies", "tv"],
+    "ogImage": "/imgs/trivia-categories/celebrities.webp",
+    "displayName": "Celebrities"
+  },
+  "philosophy": {
+    "title": "Philosophy",
+    "description": "Challenge yourself with questions about philosophers, schools of thought, ethical dilemmas, and rational ideas that shape human understanding.",
+    "related": ["history"],
+    "keywords": ["philosophy", "thought", "history"],
+    "ogImage": "/imgs/trivia-categories/philosophy.webp",
+    "displayName": "Philosophy"
+  },
+  "food": {
+    "title": "Food",
+    "description": "Explore questions about global cuisines, traditional dishes, culinary techniques, and food culture, from street food to fine dining experiences.",
+    "related": [],
+    "keywords": ["food", "cuisine", "cooking"],
+    "ogImage": "/imgs/trivia-categories/food.webp",
+    "displayName": "Food"
+  },
+  "sports": {
+    "title": "Sports",
+    "description": "Test your knowledge of athletes, teams, major sporting events, and sports history, from Olympic records to iconic moments in global competitions.",
+    "related": ["celebrities", "board-games", "video-games"],
+    "keywords": ["sports", "athletes", "games"],
+    "ogImage": "/imgs/trivia-categories/sports.webp",
+    "displayName": "Sports"
+  },
+  "fashion": {
+    "title": "Fashion",
+    "description": "Answer questions about fashion trends, iconic designers, clothing styles, and the history of fashion, from haute couture to streetwear culture.",
+    "related": ["celebrities"],
+    "keywords": ["fashion", "designers", "style"],
+    "ogImage": "/imgs/trivia-categories/fashion.webp",
+    "displayName": "Fashion"
+  },
+  "festivals": {
+    "title": "Festivals",
+    "description": "Explore questions about cultural, religious, and seasonal festivals worldwide, celebrating traditions, holidays, and vibrant global festivities.",
+    "related": ["geography"],
+    "keywords": ["festivals", "celebrations", "holidays"],
+    "ogImage": "/imgs/trivia-categories/festivals.webp",
+    "displayName": "Festivals"
+  },
+  "business": {
+    "title": "Business",
+    "description": "Challenge yourself with questions about major companies, global brands, economic principles, and business leaders shaping the corporate world.",
+    "related": [],
+    "keywords": ["business", "companies", "economics"],
+    "ogImage": "/imgs/trivia-categories/business.webp",
+    "displayName": "Business"
+  },
+  "acronyms": {
+    "title": "Acronyms",
+    "description": "Test your knowledge of common and specialized acronyms used in various fields, from technology and business to everyday language.",
+    "related": [],
+    "keywords": ["acronyms", "abbreviations", "initialisms"],
+    "ogImage": "/imgs/trivia-categories/acronyms.webp",
+    "displayName": "Acronyms"
+  },
+  "languages": {
+    "title": "Languages",
+    "description": "Explore questions about world languages, linguistic features, language families, and common phrases, from widely spoken tongues to endangered dialects.",
+    "related": ["geography"],
+    "keywords": ["languages", "linguistics", "phrases"],
+    "ogImage": "/imgs/trivia-categories/language.webp",
+    "displayName": "Languages"
+  },
+  "transportation": {
+    "title": "Transportation",
+    "description": "Answer questions about various modes of transportation, including cars, trains, airplanes, and ships, exploring their history, technology, and impact on society.",
+    "related": ["geography", "science"],
+    "keywords": ["transportation", "vehicles", "travel"],
+    "ogImage": "/imgs/trivia-categories/transports.webp",
+    "displayName": "Transportation"
+  },
+  "famous-firsts": {
+    "title": "Famous Firsts",
+    "description": "Challenge yourself with questions about groundbreaking achievements and historic 'firsts' in various fields, from exploration to technology and culture.",
+    "related": ["history", "science"],
+    "keywords": ["famous firsts", "historic achievements", "milestones"],
+    "ogImage": "/imgs/trivia-categories/famous-firsts.webp",
+    "displayName": "Famous Firsts"
+  },
+  "board-games": {
+    "title": "Board Games",
+    "description": "Test your knowledge of classic and modern board games, from strategy-based tabletop titles to family-friendly games enjoyed worldwide.",
+    "related": ["video-games", "sports"],
+    "keywords": ["board games", "tabletop games"],
+    "ogImage": "/imgs/trivia-categories/board-games.webp",
+    "displayName": "Board Games"
+  },
+  "video-games": {
+    "title": "Video Games",
+    "description": "Answer questions about video games, gaming culture, iconic titles, and esports, from retro classics to cutting-edge modern gaming experiences.",
+    "related": ["board-games", "sports"],
+    "keywords": ["video games", "gaming", "esports"],
+    "ogImage": "/imgs/trivia-categories/video-games.webp",
+    "displayName": "Video Games"
+  },
+  "mythology": {
+    "title": "Mythology",
+    "description": "Explore questions about myths, legends, and folklore from ancient cultures, diving into gods, heroes, and epic tales from global traditions.",
+    "related": ["history"],
+    "keywords": ["mythology", "legends", "folklore"],
+    "ogImage": "/imgs/trivia-categories/mythology.webp",
+    "displayName": "Mythology"
+  },
+  "famous-quotes": {
+    "title": "Famous Quotes",
+    "description": "Challenge yourself with questions about iconic quotes from history, movies, and literature, testing your recall of famous lines and their origins.",
+    "related": ["movies", "literature", "history", "celebrities"],
+    "keywords": ["famous quotes", "movie lines", "literary quotes"],
+    "ogImage": "/imgs/trivia-categories/famous-quotes.webp",
+    "displayName": "Famous Quotes"
+  }
+}
