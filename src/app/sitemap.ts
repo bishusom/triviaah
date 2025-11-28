@@ -38,20 +38,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
+      url: `${baseUrl}/leaderborad`,
+      lastModified: new Date('2025-11-28'),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/about`,
-      lastModified: new Date('2024-01-01'), // Use actual last update
+      lastModified: new Date('2025-11-28'), // Use actual last update
       changeFrequency: 'yearly',
       priority: PRIORITY_TIERS.LOW,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: new Date('2024-01-01'),
+      lastModified: new Date('2025-11-28'),
       changeFrequency: 'yearly',
       priority: PRIORITY_TIERS.LOW,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: new Date('2024-01-01'),
+      lastModified: new Date('2025-11-28'),
       changeFrequency: 'yearly',
       priority: PRIORITY_TIERS.MINIMAL,
     },
