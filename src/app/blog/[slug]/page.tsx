@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getPostData } from '@/lib/markdown';
-import { Twitter, Linkedin, Facebook, Link2, Share2 } from 'lucide-react';
+import { Twitter, Linkedin, Facebook, Share2 } from 'lucide-react';
+import CopyLinkButton from '@/components/blog/CopyLinkButton';
 
 interface Params {
   slug: string;
@@ -157,22 +158,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 </a>
 
                 {/* Copy Link */}
-                <button
-                  onClick={async () => {
-                    try {
-                      await navigator.clipboard.writeText(`https://yourdomain.com/blog/${post.slug}`);
-                      // You could add a toast notification here
-                      alert('Link copied to clipboard!');
-                    } catch (err) {
-                      console.error('Failed to copy link: ', err);
-                    }
-                  }}
-                  className="flex items-center gap-2 bg-gray-800 hover:bg-purple-600 text-white px-4 py-2 rounded-lg border border-gray-700 hover:border-purple-500 transition-all duration-300 group"
-                  title="Copy link to clipboard"
-                >
-                  <Link2 size={18} className="group-hover:scale-110 transition-transform" />
-                  <span className="hidden sm:inline">Copy Link</span>
-                </button>
+                <CopyLinkButton slug={post.slug} />
               </div>
             </div>
           </div>

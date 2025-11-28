@@ -66,8 +66,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }]
 
   const dailyTriviaCategories = [
-    'general-knowledge', 'entertainment', 'geography', 
-    'science', 'arts-literature', 'sports'
+    'general-knowledge', 'quick-fire', 'entertainment', 'geography', 
+    'science', 'arts-literature', 'sports', 'today-in-history'
   ]
 
   const dailyTriviaCategoryPages: MetadataRoute.Sitemap = dailyTriviaCategories.map(category => ({
@@ -76,22 +76,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'daily',
     priority: PRIORITY_TIERS.HIGH,
   }))
-
-  // Other daily features - HIGH priority
-  const otherDailyPages: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/quick-fire`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: PRIORITY_TIERS.HIGH,
-    },
-    {
-      url: `${baseUrl}/today-in-history`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: PRIORITY_TIERS.HIGH,
-    },
-  ]
 
   // Brainwave games - MEDIUM priority
   const brainwaveCatalog: MetadataRoute.Sitemap = [{
@@ -178,7 +162,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...mainPages,
     ...dailyTriviasCatalog,
     ...dailyTriviaCategoryPages,
-    ...otherDailyPages,
     ...brainwaveCatalog,
     ...brainwaveCategoryPages,
     ...triviaCategoryPages,
