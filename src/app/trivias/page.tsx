@@ -42,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/trivia-categories-og.webp',
+          url: '/imgs/triviaah-og.webp',
           width: 1200,
           height: 630,
           alt: 'Trivia Categories - Free Online Quiz Games'
@@ -54,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: 'Free Online Trivia Categories | Quiz Games Online Free',
       description: 'Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.',
-      images: ['/imgs/trivia-categories-og.webp'],
+      images: ['/imgs/triviaah-og.webp'],
     },
     robots: {
       index: true,

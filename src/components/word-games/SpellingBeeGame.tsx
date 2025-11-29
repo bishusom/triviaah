@@ -329,29 +329,26 @@ export default function SpellingBeeGame() {
   }, [initGame]);
 
   // Hexagon Button Component
-const HexagonButton = ({ letter, onClick, position }: HexagonButtonProps) => {
-  const isCenter = position === 'center';
+  const HexagonButton = ({ letter, onClick, position }: HexagonButtonProps) => {
+    const getColor = () => {
+      switch (position) {
+        case 'center': return 'bg-yellow-400 hover:bg-yellow-500 text-gray-900 shadow-lg';
+        default: return 'bg-blue-200 hover:bg-blue-300 text-gray-800 shadow-md';
+      }
+    };
 
   return (
-    <button
-      onClick={onClick}
-      className={`
-        w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28
-        flex items-center justify-center 
-        font-bold text-2xl md:text-3xl
-        transition-all duration-200 
-        active:scale-95
-        ${isCenter 
-          ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900 shadow-xl' 
-          : 'bg-blue-200 hover:bg-blue-300 text-gray-800 shadow-lg'
-        }
-      `}
-      style={{
-        clipPath: 'polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%)',
-      }}
-    >
-      {letter}
-    </button>
+    <div className="relative w-16 h-16"> {/* Slightly smaller to accommodate increased spacing */}
+      <button
+        onClick={onClick}
+        className={`w-full h-full flex items-center justify-center font-bold text-xl transition-all duration-200 transform hover:scale-110 ${getColor()}`}
+        style={{
+          clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+        }}
+      >
+        {letter}
+      </button>
+    </div>
   );
 };
 
@@ -382,35 +379,60 @@ const HexagonButton = ({ letter, onClick, position }: HexagonButtonProps) => {
       </div>
       
       {/* Hexagonal letter grid */}
-<div className="relative w-80 h-80 md:w-96 md:h-96 lg:w-[28rem] lg:h-[28rem] flex items-center justify-center">
-  {/* Top row – 2 letters */}
-  <div className="absolute top-4 left-1/2 -translate-x-1/2 flex gap-12 md:gap-16">
-    {letters.slice(1, 3).map((letter) => (
-      <HexagonButton key={letter} letter={letter} onClick={() => selectLetter(letter)} position="top" />
-    ))}
-  </div>
-
-  {/* Middle-left & Center & Middle-right */}
-  <div className="absolute top-1/2 -translate-y-1/2 flex items-center gap-8 md:gap-12">
-    {/* Left */}
-    <HexagonButton letter={letters[3]} onClick={() => selectLetter(letters[3])} position="left" />
-    
-    {/* Center (yellow) */}
-    <div className="scale-110 md:scale-125">
-      <HexagonButton letter={centerLetter} onClick={() => selectLetter(centerLetter)} position="center" />
-    </div>
-    
-    {/* Right */}
-    <HexagonButton letter={letters[4]} onClick={() => selectLetter(letters[4])} position="right" />
-  </div>
-
-  {/* Bottom row – 2 letters */}
-  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-12 md:gap-16">
-    {letters.slice(5, 7).map((letter) => (
-      <HexagonButton key={letter} letter={letter} onClick={() => selectLetter(letter)} position="bottom" />
-    ))}
-  </div>
-</div>
+      <div className="flex flex-col items-center justify-center mb-6">
+        {/* Top row (2 letters) - increased horizontal gap */}
+        <div className="flex justify-center -mb-4"> {/* Increased negative margin for tighter vertical spacing */}
+          {letters.slice(1, 3).map((letter, index) => (
+            <div key={index} className="mx-2"> {/* Increased horizontal gap from mx-1 to mx-2 */}
+              <HexagonButton
+                letter={letter}
+                onClick={() => selectLetter(letter)}
+                position="top"
+              />
+            </div>
+          ))}
+        </div>
+        
+        {/* Middle row (3 letters) - keep existing spacing */}
+        <div className="flex justify-center items-center -mb-4"> {/* Increased negative margin */}
+          {letters.slice(3, 4).map((letter, index) => (
+            <HexagonButton
+              key={index}
+              letter={letter}
+              onClick={() => selectLetter(letter)}
+              position="left"
+            />
+          ))}
+          <div className="mx-3"> {/* Keep good middle row spacing */}
+            <HexagonButton
+              letter={centerLetter}
+              onClick={() => selectLetter(centerLetter)}
+              position="center"
+            />
+          </div>
+          {letters.slice(4, 5).map((letter, index) => (
+            <HexagonButton
+              key={index}
+              letter={letter}
+              onClick={() => selectLetter(letter)}
+              position="right"
+            />
+          ))}
+        </div>
+        
+        {/* Bottom row (2 letters) - increased horizontal gap */}
+        <div className="flex justify-center">
+          {letters.slice(5, 7).map((letter, index) => (
+            <div key={index} className="mx-2"> {/* Increased horizontal gap from mx-1 to mx-2 */}
+              <HexagonButton
+                letter={letter}
+                onClick={() => selectLetter(letter)}
+                position="bottom"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
       
       {/* Feedback message */}
       {feedback.message && (

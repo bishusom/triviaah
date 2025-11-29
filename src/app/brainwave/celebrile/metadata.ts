@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 
 export function generateCelebrileMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/celebrile';
+  const canonicalUrl = 'https://triviaah.com/brainwave/celebrile';
   const lastUpdated = new Date().toISOString();
 
   return {

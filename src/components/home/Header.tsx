@@ -15,8 +15,12 @@ import {
   FolderOpen, 
   Building, 
   FileText,
-  Gamepad2,
-  ChevronDown
+  ChevronDown,
+  HelpCircle,
+  Users,
+  Mail,
+  Shield,
+  FileText as TermsIcon
 } from 'lucide-react';
 
 export default function Header() {
@@ -24,7 +28,9 @@ export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isGamesOpen, setIsGamesOpen] = useState(false);
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
   const gamesDropdownRef = useRef<HTMLDivElement>(null);
+  const supportDropdownRef = useRef<HTMLDivElement>(null);
 
   const gameCategories = [
     {
@@ -58,11 +64,21 @@ export default function Header() {
     }
   ];
 
-  // Close dropdown when clicking outside
+  const supportLinks = [
+    { href: "/about", label: "About Triviaah", icon: Users },
+    { href: "/contact", label: "Contact Us", icon: Mail },
+    { href: "/privacy", label: "Privacy Policy", icon: Shield },
+    { href: "/terms", label: "Terms of Service", icon: TermsIcon }
+  ];
+
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (gamesDropdownRef.current && !gamesDropdownRef.current.contains(event.target as Node)) {
         setIsGamesOpen(false);
+      }
+      if (supportDropdownRef.current && !supportDropdownRef.current.contains(event.target as Node)) {
+        setIsSupportOpen(false);
       }
     };
 
@@ -153,8 +169,39 @@ export default function Header() {
                 Leaderboard
               </Link>
               <Link href="/blog" className="text-gray-300 hover:text-cyan-400 text-sm font-medium transition-colors">
-                Blog
+                Blogs
               </Link>
+
+              {/* Support Dropdown */}
+              <div className="relative" ref={supportDropdownRef}>
+                <button 
+                  className="text-gray-300 hover:text-cyan-400 text-sm font-medium flex items-center gap-1 transition-colors"
+                  onClick={() => setIsSupportOpen(!isSupportOpen)}
+                >
+                  Support <ChevronDown className="w-4 h-4" />
+                </button>
+                
+                {isSupportOpen && (
+                  <div className="absolute top-full left-0 mt-2 bg-gray-800 border border-gray-700 rounded-xl p-3 w-48 shadow-xl z-50">
+                    <div className="space-y-1">
+                      {supportLinks.map((item, index) => {
+                        const IconComponent = item.icon;
+                        return (
+                          <Link
+                            key={index}
+                            href={item.href}
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-700 text-gray-300 text-sm transition-colors"
+                            onClick={() => setIsSupportOpen(false)}
+                          >
+                            <IconComponent className="w-4 h-4" />
+                            <span>{item.label}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
             </nav>
           </div>
           
@@ -200,12 +247,28 @@ export default function Header() {
                 
                 <div className="border-t border-gray-700 my-2"></div>
 
-                <Link href="/about" className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 text-gray-300 text-base" onClick={() => setIsMenuOpen(false)}>
-                  <span>About Us</span>
-                </Link>
-                <Link href="/contact" className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 text-gray-300 text-base" onClick={() => setIsMenuOpen(false)}>
-                  <span>Contact</span>
-                </Link>
+                {/* Support Links in Mobile Menu */}
+                <div className="px-3 py-2">
+                  <h3 className="text-cyan-400 text-xs font-semibold uppercase tracking-wide mb-2">
+                    Support
+                  </h3>
+                  <div className="space-y-1">
+                    {supportLinks.map((item, index) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <Link 
+                          key={index}
+                          href={item.href} 
+                          className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm" 
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <IconComponent className="w-4 h-4" />
+                          <span>{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
               </nav>
             </div>
           </div>

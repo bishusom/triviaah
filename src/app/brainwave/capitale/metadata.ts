@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 
 export function generateCapitaleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/capitale';
+  const canonicalUrl = 'https://triviaah.com/brainwave/capitale';
   const lastUpdated = new Date().toISOString();
 
   return {

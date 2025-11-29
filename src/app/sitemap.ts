@@ -88,7 +88,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/brainwave`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: PRIORITY_TIERS.MEDIUM,
+    priority: PRIORITY_TIERS.HIGH,
   }]
 
   const brainwaveCategories = [
@@ -101,7 +101,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/brainwave/${category}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: PRIORITY_TIERS.MEDIUM,
+    priority: PRIORITY_TIERS.HIGH,
   }))
 
   // DYNAMIC: Fetch trivia categories - MEDIUM priority for category pages
@@ -119,7 +119,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/trivias/${category}/quiz`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: PRIORITY_TIERS.HIGH,
+    priority: PRIORITY_TIERS.MEDIUM,
   }))
 
   // DYNAMIC: Subcategory pages - MEDIUM priority

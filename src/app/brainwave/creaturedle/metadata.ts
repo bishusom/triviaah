@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 
 export function generateCreaturdleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/creaturdle';
+  const canonicalUrl = 'https://triviaah.com/brainwave/creaturdle';
   const lastUpdated = new Date().toISOString();
 
   return {

@@ -69,7 +69,7 @@ export async function generateMetadata({
       type: 'website',
       images: [
         {
-          url: '/imgs/quiz-og.webp',
+          url: '/imgs/triviaah-og.webp',
           width: 1200,
           height: 630,
           alt: `${formattedCategory} Quiz Challenge`
@@ -84,7 +84,7 @@ export async function generateMetadata({
       description: formattedSubcategory
         ? `How well do you know ${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()}? Test yourself!`
         : `How well do you know ${formattedCategory.toLowerCase()}? Test yourself!`,
-      images: ['/imgs/quiz-og.webp'],
+      images: ['/imgs/triviaah-og.webp'],
     },
     alternates: {
       canonical: `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,

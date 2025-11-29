@@ -83,9 +83,45 @@ function BrainTeaserRow() {
       name: 'Landmardle',
       path: '/brainwave/landmarkdle',
       image: '/imgs/brainwave/landmarkdle-160x160.webp',
-      tagline: 'Identify landmark from the clues',
+      tagline: 'Identify the landmark from the clues',
       players: '2.1K',
       color: 'from-cyan-500 to-blue-600'
+    },
+    {
+      category: 'inventionle',
+      name: 'Inventionle',
+      path: '/brainwave/inventionle',
+      image: '/imgs/brainwave/inventionle-160x160.webp',
+      tagline: 'Identify the invention from the clues',
+      players: '3.4K',
+      color: 'from-red-500 to-brown-600'
+    },
+    {
+      category: 'literale',
+      name: 'Literale',
+      path: '/brainwave/literale',
+      image: '/imgs/brainwave/literale-160x160.webp',
+      tagline: 'Identify the book from the opening line',
+      players: '1.5K',
+      color: 'from-pink-500 to-purple-800'
+    },
+    {
+      category: 'synonymle',
+      name: 'Synonymle',
+      path: '/brainwave/synonymle',
+      image: '/imgs/brainwave/synonymle-160x160.webp',
+      tagline: 'Guess the synonym in 6 tries',
+      players: '5.5K',
+      color: 'from-purple-500 to-cyan-600'
+    },
+    {
+      category: 'trordle',
+      name: 'Trordle',
+      path: '/brainwave/trordle',
+      image: '/imgs/brainwave/trordle-160x160.webp',
+      tagline: 'Wordle Style Trivia Quiz - 6 attempts',
+      players: '2.4K',
+      color: 'from-brown-500 to-red-600'
     }
   ];
 
