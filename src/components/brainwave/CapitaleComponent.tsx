@@ -435,7 +435,7 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
     'text-red-400';
 
   return (
-    <div className="relative">
+    <div className="relative min-h-[600px]"> {/* Added min-height to ensure enough space */}
       <canvas 
         ref={confettiCanvasRef} 
         className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
@@ -633,7 +633,7 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
 
         {/* Input Section */}
         {gameState === 'playing' && (
-          <div className="sticky bottom-0 bg-gray-800/80 backdrop-blur-lg rounded-xl border border-gray-700 p-4 z-[100] -mx-2 md:-mx-4 -mb-2 md:-mb-6">
+          <div className="sticky bottom-0 bg-gray-800/80 backdrop-blur-lg rounded-xl border border-gray-700 p-4 z-[1000] -mx-2 md:-mx-4 -mb-2 md:-mb-6">
             <div className="relative">
               <div className="flex gap-3">
                 <div className="relative flex-1">
@@ -659,12 +659,11 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
                 </button>
               </div>
               
-              {/* Autocomplete Suggestions - Fixed positioning */}
+              {/* Autocomplete Suggestions - Updated with higher z-index and better positioning */}
               {showSuggestions && suggestions.length > 0 && (
                 <div 
                   ref={suggestionsRef}
-                  className="absolute top-full left-0 right-0 bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl z-[101] mt-2 max-h-60 overflow-y-auto"
-                  style={{ position: 'absolute' }}
+                  className="absolute top-full left-0 right-0 bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl z-[1001] mt-2 max-h-60 overflow-y-auto"
                 >
                   {suggestions.map((capital, index) => (
                     <button
@@ -686,7 +685,7 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
               Start typing to see suggestions • Minimum 2 characters
             </div>
           </div>
-        )}
+        )}  
         
         {/* Share & Feedback Section */}
         {(gameState === 'won' || gameState === 'lost') && (

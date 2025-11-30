@@ -404,8 +404,8 @@ export default function CapitalePage() {
           allCapitals={dailyData.allCapitals}
         />
 
-        {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-800/30 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 relative z-10">
+        {/* Enhanced FAQ Section - Updated with lower z-index */}
+        <div className="mt-8 bg-gray-800/30 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 relative z-0"> {/* Changed z-10 to z-0 */}
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none p-4 hover:bg-gray-700/30 rounded-2xl transition-all duration-300">
               <h2 className="text-xl font-bold text-white">Game Guide & FAQ</h2>
@@ -414,7 +414,7 @@ export default function CapitalePage() {
               </span>
             </summary>
             <div className="mt-4 space-y-6 pt-6 border-t border-gray-700">
-              {/* FAQ content remains the same but with updated styling */}
+              {/* ... FAQ content ... */}
               <div className="grid gap-4">
                 {[
                   {
