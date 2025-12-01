@@ -7,8 +7,9 @@ const NavBar = () => {
 
   const navItems = [
     { name: 'Daily Trivias', href: '/daily-trivias' },
-    { name: 'BrainWave', href: '/brainwave' },
+    { name: 'Brain Waves', href: '/brainwave' },
     { name: 'All Trivias', href: '/trivias' },
+    { name: 'Leaderboard', href: '/leaderboard' },
     { name: 'Word Games', href: '/word-games' },
     { name: 'Number Puzzles', href: '/number-puzzles' },
     { name: 'Blog', href: '/blog' },

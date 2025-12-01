@@ -159,6 +159,54 @@
     "ogImage": "/imgs/famous-firsts.webp",
     "displayName": "Famous Firsts"
   },
+  "religion-spirituality": {
+    "title": "Religion & Spirituality",
+    "description": "Test your knowledge of world religions, spiritual practices, sacred texts, and religious history, exploring diverse faith traditions from ancient to modern times.",
+    "related": ["history", "philosophy", "festivals"],
+    "keywords": ["religion", "spirituality", "faith", "beliefs"],
+    "ogImage": "/imgs/religion.webp",
+    "displayName": "Religion & Spirituality"
+  },
+  "mythology": {
+    "title": "Mythology",
+    "description": "Explore questions about myths, legends, and folklore from ancient cultures, diving into gods, heroes, and epic tales from global traditions.",
+    "related": ["history"],
+    "keywords": ["mythology", "legends", "folklore"],
+    "ogImage": "/imgs/mythology.webp",
+    "displayName": "Mythology"
+  },
+   "law-politics-government": {
+    "title": "Law, Politics & Government",
+    "description": "Explore questions about legal systems, political ideologies, government structures, and historical political events that shape nations and societies worldwide.",
+    "related": ["history", "business", "famous-quotes"],
+    "keywords": ["law", "politics", "government", "constitution"],
+    "ogImage": "/imgs/law.webp",
+    "displayName": "Law, Politics & Government"
+  },
+  "famous-quotes": {
+    "title": "Famous Quotes",
+    "description": "Challenge yourself with questions about iconic quotes from history, movies, and literature, testing your recall of famous lines and their origins.",
+    "related": ["movies", "literature", "history", "celebrities"],
+    "keywords": ["famous quotes", "movie lines", "literary quotes"],
+    "ogImage": "/imgs/famous-quotes.webp",
+    "displayName": "Famous Quotes"
+  },
+   "inventions-everyday-objects": {
+    "title": "Inventions & Everyday Objects",
+    "description": "Test your knowledge of groundbreaking inventions, everyday items, and the stories behind common objects that shape our daily lives and modern society.",
+    "related": ["science", "history", "famous-firsts"],
+    "keywords": ["inventions", "everyday objects", "technology", "innovation"],
+    "ogImage": "/imgs/inventions.webp",
+    "displayName": "Inventions & Everyday Objects"
+  },
+  "cartoons-anime": {
+    "title": "Cartoons & Anime",
+    "description": "Challenge yourself with questions about animated shows, anime series, iconic characters, and animation history, from classic cartoons to modern anime masterpieces.",
+    "related": ["movies", "tv", "video-games"],
+    "keywords": ["cartoons", "anime", "animation", "animated shows"],
+    "ogImage": "/imgs/cartoons.webp",
+    "displayName": "Cartoons & Anime"
+  },
   "board-games": {
     "title": "Board Games",
     "description": "Test your knowledge of classic and modern board games, from strategy-based tabletop titles to family-friendly games enjoyed worldwide.",
@@ -174,21 +222,5 @@
     "keywords": ["video games", "gaming", "esports"],
     "ogImage": "/imgs/video-games.webp",
     "displayName": "Video Games"
-  },
-  "mythology": {
-    "title": "Mythology",
-    "description": "Explore questions about myths, legends, and folklore from ancient cultures, diving into gods, heroes, and epic tales from global traditions.",
-    "related": ["history"],
-    "keywords": ["mythology", "legends", "folklore"],
-    "ogImage": "/imgs/mythology.webp",
-    "displayName": "Mythology"
-  },
-  "famous-quotes": {
-    "title": "Famous Quotes",
-    "description": "Challenge yourself with questions about iconic quotes from history, movies, and literature, testing your recall of famous lines and their origins.",
-    "related": ["movies", "literature", "history", "celebrities"],
-    "keywords": ["famous quotes", "movie lines", "literary quotes"],
-    "ogImage": "/imgs/famous-quotes.webp",
-    "displayName": "Famous Quotes"
   }
 }

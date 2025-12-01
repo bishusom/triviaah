@@ -1,44 +1,44 @@
-// components/home/CategoryGrid.tsx (optimized)
+// components/home/CategoryGrid.tsx (optimized with lucide-react)
 import Link from 'next/link';
 import { 
-  MdMovieFilter, 
-  MdOutlineScience, 
-  MdHistory, 
-  MdOutlineSportsVolleyball,
-  MdMusicNote 
-} from "react-icons/md";
-import { BiWorld } from "react-icons/bi";
+  Clapperboard, 
+  Beaker, 
+  History, 
+  Volleyball,
+  Music,
+  Globe
+} from 'lucide-react';
 
 const categories = [
   { 
     name: 'Movies', 
     desc: 'Film trivia & cinema quiz with answers',
-    icon: <MdMovieFilter className="text-2xl text-blue-600 mb-2" />
+    icon: <Clapperboard className="text-2xl text-blue-600 mb-2" />
   },
   { 
     name: 'Science', 
     desc: 'Biology, physics & chemistry explanations',
-    icon: <MdOutlineScience className="text-2xl text-green-600 mb-2" />
+    icon: <Beaker className="text-2xl text-green-600 mb-2" />
   },
   { 
     name: 'History', 
     desc: 'Historical events & facts with context',
-    icon: <MdHistory className="text-2xl text-amber-600 mb-2" />
+    icon: <History className="text-2xl text-amber-600 mb-2" />
   },
   { 
     name: 'Geography', 
     desc: 'World capitals & countries explained',
-    icon: <BiWorld className="text-2xl text-green-600 mb-2" />
+    icon: <Globe className="text-2xl text-green-600 mb-2" />
   },
   { 
     name: 'Sports', 
     desc: 'Athletics & sports trivia answers',
-    icon: <MdOutlineSportsVolleyball className="text-2xl text-red-600 mb-2" />
+    icon: <Volleyball className="text-2xl text-red-600 mb-2" />
   },
   { 
     name: 'Music', 
     desc: 'Music trivia & song quiz explanations',
-    icon: <MdMusicNote className="text-2xl text-blue-600 mb-2" />
+    icon: <Music className="text-2xl text-blue-600 mb-2" />
   }
 ];
 
