@@ -3,7 +3,6 @@ import TriviaContent from '@/components/trivia-bank/TriviaContent';
 import Link from 'next/link';
 import styles from '@/../styles/Blog.module.css';
 import { Metadata } from 'next';
-import { Suspense } from 'react';
 
 // Define the type for params
 interface Params {
@@ -61,10 +60,6 @@ export async function generateMetadata({ params }: TriviaPageProps): Promise<Met
       type: 'article',
       tags: tagsArray,
     },
-    // Add this to handle parameter variations
-    other: {
-      'google-news-standby': 'URL',
-    },
   };
 }
 
@@ -105,10 +100,8 @@ export default async function TriviaPage({ params, searchParams }: TriviaPagePro
     );
   }
 
-  // Pass trivia data to client component wrapped in Suspense
+  // Pass trivia data to client component
   return (
-    <Suspense fallback={<LoadingFallback />}>
-      <TriviaContent trivia={trivia} styles={styles} showParam={showParam} />
-    </Suspense>
+    <TriviaContent trivia={trivia} styles={styles} showParam={showParam} />
   );
 }

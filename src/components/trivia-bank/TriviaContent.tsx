@@ -1,9 +1,9 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
-import { FC, Suspense } from 'react';
+import { FC } from 'react';
 
 // Define the type for trivia data (based on new front matter structure)
 interface TriviaData {
@@ -38,10 +38,19 @@ function getTagsArray(tags: string[] | string): string[] {
   return [];
 }
 
-// Create a component that uses useSearchParams
-function TriviaContentInner({ trivia, styles, showParam }: TriviaContentProps)  {
-  const searchParams = useSearchParams();
-  const showAnswers = searchParams.get('show') === 'true';
+const TriviaContent: FC<TriviaContentProps> = ({ trivia, styles, showParam }) => {
+  const [showAnswers, setShowAnswers] = useState(false);
+
+  // Initialize from URL param if provided (for backward compatibility)
+  useEffect(() => {
+    if (showParam === 'true') {
+      setShowAnswers(true);
+    }
+  }, [showParam]);
+
+  const toggleAnswers = () => {
+    setShowAnswers(!showAnswers);
+  };
 
   return (
     <>
@@ -70,9 +79,11 @@ function TriviaContentInner({ trivia, styles, showParam }: TriviaContentProps)  
         
         <article className={styles.postContent}>
           <div className={styles.controls}>
-            <Link 
-              href={`?show=${!showAnswers}`}
+            <button
+              onClick={toggleAnswers}
               className={`${styles.answerToggleBtn} ${showAnswers ? styles.active : ''}`}
+              type="button"
+              aria-pressed={showAnswers}
             >
               {/* Eye icons instead of text icons */}
               <svg 
@@ -99,7 +110,7 @@ function TriviaContentInner({ trivia, styles, showParam }: TriviaContentProps)  
                 )}
               </svg>
               {showAnswers ? 'Hide Answers' : 'Show Answers'}
-            </Link>
+            </button>
           </div>
           
           <div className={styles.levelInfo}>
@@ -153,24 +164,6 @@ function TriviaContentInner({ trivia, styles, showParam }: TriviaContentProps)  
         </article>
       </div>
     </>
-  );
-}
-
-// Loading component for the Suspense fallback
-function TriviaContentLoading({ styles }: { styles: { [key: string]: string } }) {
-  return (
-    <div className={styles.postContainer}>
-      <div className={styles.loading}>Loading trivia content...</div>
-    </div>
-  );
-}
-
-// Main component that wraps the inner component with Suspense
-const TriviaContent: FC<TriviaContentProps> = ({ trivia, styles }) => {
-  return (
-    <Suspense fallback={<TriviaContentLoading styles={styles} />}>
-      <TriviaContentInner trivia={trivia} styles={styles} />
-    </Suspense>
   );
 };
 
