@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 
 export function generateCelebrileMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/celebrile';
+  const canonicalUrl = 'https://triviaah.com/brainwave/celebrile';
   const lastUpdated = new Date().toISOString();
 
   return {
@@ -31,7 +31,7 @@ export function generateCelebrileMetadata(): Metadata {
     openGraph: {
       title: 'Celebrile - Daily Celebrity Guessing Game | Triviaah',
       description: 'Guess the celebrity from progressive clues in 6 tries! Wordle-style letter feedback. Unlock more hints with each wrong guess.',
-      url: 'https://triviaah.com/celebrile',
+      url: 'https://triviaah.com/brainwave/celebrile',
       siteName: 'Triviaah',
       images: [
         {

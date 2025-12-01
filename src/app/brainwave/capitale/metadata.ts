@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 
 export function generateCapitaleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/capitale';
+  const canonicalUrl = 'https://triviaah.com/brainwave/capitale';
   const lastUpdated = new Date().toISOString();
 
   return {
@@ -30,7 +30,7 @@ export function generateCapitaleMetadata(): Metadata {
     openGraph: {
       title: 'Capitale - Daily Capital City Guessing Game | Triviaah',
       description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle but with capital cities.',
-      url: 'https://triviaah.com/capitale',
+      url: 'https://triviaah.com/brainwave/capitale',
       siteName: 'Triviaah',
       images: [
         {
