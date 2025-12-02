@@ -14,7 +14,7 @@ type QuizResult = {
   totalQuestions: number;
   timeUsed: number;
   category: string;
-  subcategory?: string;
+  subcategory?: string | null;
   isTimedMode?: boolean;
 };
 
@@ -23,6 +23,11 @@ type HighScore = {
   name: string;
   score: number;
   category: string;
+  subcategory: string;
+  difficulty: string;
+  correct_answers: number;
+  total_questions: number;
+  time_used: number;
 };
 
 const MESSAGES = {
@@ -128,49 +133,44 @@ export default function QuizSummary({
 
   /* ---------- Improved save score with duplicate prevention ---------- */
   const saveScoreCore = useCallback(async (name: string) => {
-    // Multiple layers of duplicate prevention
     if (saving || scoreSaved || saveAttemptedRef.current || !mountedRef.current) {
-      console.log('Save prevented:', { 
-        saving, 
-        scoreSaved, 
-        saveAttempted: saveAttemptedRef.current,
-        mounted: mountedRef.current 
-      });
       return;
     }
-    
-    console.log('Starting save process for:', name);
+
     saveAttemptedRef.current = true;
     setSaving(true);
-    
+
     try {
-      const response = await fetch('/api/highscores', {
+      await fetch('/api/highscores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name,
+          name: name.trim(),
           score: result.score,
           category: result.category,
-          // Note: Not sending subcategory since scores are at category level
+          correct_answers: result.correctCount,
+          total_questions: result.totalQuestions,
+          time_used: result.timeUsed,
           difficulty: 'mixed',
+          subcategory: result.subcategory || null,
         }),
       });
 
-      if (response.ok && mountedRef.current) {
-        console.log('Score saved successfully');
+      if (mountedRef.current) {
         setScoreSaved(true);
         await fetchHighScores(); // Refresh leaderboard
       }
     } catch (error) {
       console.error('Failed to save score:', error);
-      // Reset the attempt flag on error so user can retry
-      saveAttemptedRef.current = false;
+      saveAttemptedRef.current = false; // Allow retry
     } finally {
       if (mountedRef.current) {
         setSaving(false);
       }
     }
-  }, [saving, scoreSaved, result.score, result.category, fetchHighScores]);
+  }, [saving, scoreSaved, result.score, result.category, result.correctCount, 
+      result.totalQuestions, result.timeUsed, result.subcategory, fetchHighScores,]
+  );
 
   // Cleanup effect to track component mounting
   useEffect(() => {

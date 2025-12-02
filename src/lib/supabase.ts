@@ -458,7 +458,11 @@ export type HighScore = {
   name: string;
   score: number;
   category: string;
+  subcategory?: string | null;
   difficulty?: string;
+  correct_answers: number;
+  total_questions: number;
+  time_used: number; 
   timestamp?: Date;
 };
 
@@ -483,6 +487,9 @@ export async function getHighScores(
       score: number;
       category: string;
       difficulty?: string;
+      correct_answers: number;
+      total_questions: number;
+      time_used: number;
       created_at: string;
     }
 
@@ -492,6 +499,9 @@ export async function getHighScores(
       score: score.score,
       category: score.category,
       difficulty: score.difficulty,
+      correct_answers: score.correct_answers,
+      total_questions: score.total_questions,
+      time_used: score.time_used,
       timestamp: new Date(score.created_at)
     }));
 
@@ -523,6 +533,9 @@ export async function getGlobalHighScore(
       score: score.score,
       category: score.category,
       difficulty: score.difficulty,
+      correct_answers: score.correct_answers,
+      total_questions: score.total_questions,
+      time_used: score.time_used,
       timestamp: new Date(score.created_at)
     };
 
@@ -540,7 +553,11 @@ export async function addHighScore(scoreData: Omit<HighScore, 'id'>): Promise<st
         name: scoreData.name,
         score: scoreData.score,
         category: scoreData.category,
+        subcategory: scoreData.category|| null,
         difficulty: scoreData.difficulty,
+        correct_answers: scoreData.correct_answers,
+        total_questions: scoreData.total_questions,
+        time_used: scoreData.time_used,      
         created_at: new Date().toISOString()
       }])
       .select()

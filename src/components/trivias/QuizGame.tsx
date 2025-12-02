@@ -31,11 +31,11 @@ interface QuizConfig {
 // Add the missing QuizResult interface
 interface QuizResult {
   score: number;
+  category: string;
+  subcategory?: string;
   correctCount: number;
   totalQuestions: number;
   timeUsed: number;
-  category: string;
-  subcategory?: string;
   isTimedMode: boolean;
 }
 
