@@ -167,6 +167,57 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
   },
 ] as const;
 
+export const PERSONALITY_TESTS: ReadonlySectionItems = [
+  {
+    category: 'mbti',
+    name: 'MBTI Personality Test',
+    path: '/personality-tests/mbti',
+    image: '/imgs/mbti-160x160.webp',
+    tagline: 'Discover your Myers-Briggs Type (INFP, ESTJ, etc.) with detailed career matches and strengths analysis',
+    keywords: 'MBTI test, Myers-Briggs personality test, personality type assessment, career matching, INFP, ESTJ, personality traits'
+  },
+  {
+    category: 'big-five',
+    name: 'Big Five (OCEAN) Test',
+    path: '/personality-tests/big-five',
+    image: '/imgs/big-five-160x160.webp',
+    tagline: 'Scientifically-validated trait analysis with percentile scores for all 5 major personality dimensions',
+    keywords: 'Big Five personality test, OCEAN model, personality traits assessment, openness, conscientiousness, extraversion, agreeableness, neuroticism'
+  },
+  {
+    category: 'enneagram',
+    name: 'Enneagram Test',
+    path: '/personality-tests/enneagram',
+    image: '/imgs/enneagram-160x160.webp',
+    tagline: 'Discover your Enneagram type with core motivations, fears, and growth paths',
+    keywords: 'Enneagram personality test, Enneagram types, personality assessment, self-discovery, type 1-9 Enneagram, personal growth'
+  },
+  {
+    category: 'disc',
+    name: 'DISC Assessment',
+    path: '/personality-tests/disc',
+    image: '/imgs/disc-160x160.webp',
+    tagline: 'Understand your communication style (Dominance, Influence, Steadiness, Conscientiousness)',
+    keywords: 'DISC assessment, communication style test, personality assessment, workplace communication, DISC profile, behavioral assessment'
+  },
+  {
+    category: 'love-languages',
+    name: 'Love Languages Test',
+    path: '/personality-tests/love-languages',
+    image: '/imgs/love-languages-160x160.webp',
+    tagline: 'Discover how you give and receive love in relationships',
+    keywords: 'love languages test, relationship assessment, 5 love languages, Gary Chapman, relationship advice, emotional connection'
+  },
+  {
+    category: 'holland-code',
+    name: 'Holland Career Test',
+    path: '/personality-tests/holland-code',
+    image: '/imgs/holland-code-160x160.webp',
+    tagline: 'Find your ideal career path based on your personality (RIASEC model)',
+    keywords: 'Holland Code test, RIASEC career assessment, career personality test, vocational test, job matching, career guidance'
+  }
+] as const;
+
 export const ADDITIONAL_SECTIONS: ReadonlySectionItems = [
   {
     category: 'word-games',

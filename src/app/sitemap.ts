@@ -138,6 +138,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: PRIORITY_TIERS.HIGH,
   }))
 
+   
+  // Word games - MEDIUM priority
+  const personalityTestsCatalog: MetadataRoute.Sitemap = [{
+    url: `${baseUrl}/word-games`,
+    lastModified: new Date('2025-12-02'),
+    changeFrequency: 'weekly',
+    priority: PRIORITY_TIERS.MEDIUM,
+  }]
+
+  const personalityTests = ['mbti', 'big-five', 'enneagram', 'disc', 'love-languages', 'holland-code']
+  const personalityTestsPages: MetadataRoute.Sitemap = personalityTests.map(game => ({
+    url: `${baseUrl}/word-games/${game}`,
+    lastModified: new Date(),
+    changeFrequency: 'yearly',
+    priority: PRIORITY_TIERS.MEDIUM,
+  }))
+
+
   // DYNAMIC: Subcategory pages - MEDIUM priority
   const subcategoryPages = await fetchSubcategoryPages(baseUrl)
 
@@ -190,6 +208,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...triviaCategoryPages,
     ...triviaQuizPages,
     ...subcategoryPages,
+    ...personalityTestsCatalog,
+    ...personalityTestsPages,
     ...wordGamesCatalog,
     ...wordGamePages,
     ...numberPuzzleCatalog,

@@ -9,7 +9,7 @@ import HorizontalScrollSection from '@/components/home/sections/HorizontalScroll
 import Footer from '@/components/home/Footer';
 import CollapsibleSection from '@/components/home/CollapsibleSection';
 import DailyTriviaFact from '@/components/home/DailyTriviaFact';
-import { DAILY_QUIZZES, ADDITIONAL_SECTIONS, BRAIN_WAVES } from '@/../data/homeContent';
+import { DAILY_QUIZZES, ADDITIONAL_SECTIONS, BRAIN_WAVES, PERSONALITY_TESTS } from '@/../data/homeContent';
 
 // Import new section components
 import HeaderSection from '@/components/home/sections/HeaderSection';
@@ -54,6 +54,20 @@ export default function HomePageContent() {
             items={BRAIN_WAVES} 
           />
         </SectionContainer>
+        
+        <div className="bg-gray-50 py-6">
+          <div className="container mx-auto px-4">
+            <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
+          </div>
+        </div>
+
+        <SectionContainer className="horizontal-scroll-section">
+          <HorizontalScrollSection 
+            title="Personality Tests" 
+            items={PERSONALITY_TESTS} 
+          />
+        </SectionContainer>
+        
 
         <SectionContainer className="horizontal-scroll-section">
           <HorizontalScrollSection 
