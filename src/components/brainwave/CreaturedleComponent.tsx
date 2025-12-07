@@ -514,7 +514,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
           <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
             <button
               onClick={() => setShowImageModal(false)}
-              className="absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 z-10"
+              className="absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 z-60"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

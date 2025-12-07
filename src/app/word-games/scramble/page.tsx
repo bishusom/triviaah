@@ -111,7 +111,7 @@ export default function ScramblePage() {
   }, []);
 
   return (
-    <div className="page-with-ads">
+    <div className="page-with-ads bg-gray-50">
       {/* Structured Data */}
       <Script
         id="scramble-organization-schema"
@@ -173,7 +173,7 @@ export default function ScramblePage() {
         {/* Header with Last Updated */}
         <div className="text-center mb-8">
           <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Word Scramble Game</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Word Scramble Game</h1>
             <time 
               dateTime={lastUpdated} 
               className="bg-green-50 px-3 py-1 rounded-full text-xs font-medium border border-green-200"
@@ -201,22 +201,22 @@ export default function ScramblePage() {
         <div className="mt-8 bg-gray-50 p-6 rounded-lg">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Word Scramble Game Information & FAQ</h2>
-              <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
+              <h2 className="text-xl text-gray-800 font-bold">Word Scramble Game Information & FAQ</h2>
+              <span className="text-gray-800 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
             </summary>
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-                <h3 className="font-semibold">Game Updates</h3>
+               <h3 className="font-semibold">Game Updates</h3>
                 <p className="text-gray-600 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Word Scramble?</h3>
+               <h3 className="font-semibold" itemProp="name">What is Word Scramble?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Word Scramble is a puzzle game where letters of a word are randomly rearranged, and players must 
                   unscramble them to form the original word. It&apos;s an excellent game for vocabulary building, 
@@ -224,7 +224,7 @@ export default function ScramblePage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do you play Word Scramble?</h3>
+               <h3 className="font-semibold" itemProp="name">How do you play Word Scramble?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Players rearrange scrambled letters by clicking on them in the correct order to form words. 
                   Use hints if you&apos;re stuck, shuffle letters for a new arrangement, and submit your answer 
@@ -233,7 +233,7 @@ export default function ScramblePage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What are the benefits of playing Word Scramble?</h3>
+               <h3 className="font-semibold" itemProp="name">What are the benefits of playing Word Scramble?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Word Scramble improves vocabulary, spelling skills, pattern recognition, and cognitive abilities. 
                   It enhances mental flexibility, word recognition speed, and helps discover new words and their 
@@ -241,7 +241,7 @@ export default function ScramblePage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Word Scramble educational?</h3>
+               <h3 className="font-semibold" itemProp="name">Is Word Scramble educational?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Word Scramble is highly educational for vocabulary building, spelling practice, and cognitive 
                   development. It helps players learn new words, improve spelling, enhance pattern recognition skills, 
@@ -250,7 +250,7 @@ export default function ScramblePage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What strategies help with solving scrambles?</h3>
+               <h3 className="font-semibold" itemProp="name">What strategies help with solving scrambles?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Look for common prefixes and suffixes, identify vowel and consonant patterns, try to spot smaller 
                   words within the scramble, and consider different letter combinations. Starting with the first and 
@@ -258,7 +258,7 @@ export default function ScramblePage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is this Word Scramble game free to play?</h3>
+               <h3 className="font-semibold" itemProp="name">Is this Word Scramble game free to play?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Our online Word Scramble game is completely free to play with no registration required. 
                   You can play as many games as you want and enjoy daily new puzzles to keep challenging and 

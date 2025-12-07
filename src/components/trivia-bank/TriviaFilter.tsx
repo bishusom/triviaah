@@ -2,9 +2,7 @@
 
 import { useState, FC, useEffect } from 'react';
 import Link from 'next/link';
-import styles from '@/../styles/Blog.module.css';
 
-// Define the type for category data (matching tbank.ts)
 interface Category {
   slug: string;
   title: string;
@@ -13,12 +11,10 @@ interface Category {
   tags: string[] | string;
 }
 
-// Define props for the component
 interface TriviaFilterProps {
   categories: Category[];
 }
 
-// Utility function to handle both string and array tags
 function getTagsArray(tags: string[] | string): string[] {
   if (Array.isArray(tags)) {
     return tags;
@@ -34,18 +30,16 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isClient, setIsClient] = useState(false);
   
-  // Set isClient to true after component mounts (client-side only)
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Extract all unique first characters - use a deterministic approach
+  // Extract all unique first characters
   const allFirstChars: string[] = Array.from(
     new Set(
       categories.flatMap(category => {
         const tagsArray = getTagsArray(category.tags);
         
-        // If tags exist, use them
         if (tagsArray.length > 0) {
           return tagsArray
             .filter(tag => tag.length > 0)
@@ -56,7 +50,6 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
             .filter((char): char is string => char !== null);
         }
         
-        // Fallback: use the first character of the category header
         if (category.header && category.header.length > 0) {
           const firstChar = category.header.replace(/[^a-zA-Z0-9]/g, '').charAt(0)?.toUpperCase();
           return firstChar && /[A-Z0-9]/.test(firstChar) ? firstChar : null;
@@ -66,7 +59,6 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
       }).filter((char): char is string => char !== null)
     )
   ).sort((a, b) => {
-    // Sort numbers first, then letters
     if (!isNaN(Number(a)) && !isNaN(Number(b))) {
       return Number(a) - Number(b);
     }
@@ -79,7 +71,6 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
   const filteredCategories: Category[] = categories.filter(category => {
     const tagsArray = getTagsArray(category.tags);
     
-    // Determine the first character to filter by (tags fallback to header)
     let firstCharToCheck = '';
     if (tagsArray.length > 0) {
       firstCharToCheck = tagsArray[0]?.charAt(0).toUpperCase() || '';
@@ -87,10 +78,8 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
       firstCharToCheck = category.header.replace(/[^a-zA-Z0-9]/g, '').charAt(0)?.toUpperCase() || '';
     }
     
-    // Filter by letter
     const letterMatch = activeLetter === 'All' || firstCharToCheck === activeLetter;
     
-    // Filter by search term (search in header, excerpt, and tags)
     const searchMatch = searchTerm === '' || 
       category.header.toLowerCase().includes(searchTerm.toLowerCase()) ||
       category.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -100,60 +89,65 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
     return letterMatch && searchMatch;
   });
 
-  // Don't render filter buttons during SSR to avoid hydration mismatch
+  // SSR/Client rendering handling
   if (!isClient) {
     return (
       <>
         {/* Search input - render during SSR */}
-        <div className={styles['search-filter']}>
+        <div className="mb-6">
           <input
             type="text"
             placeholder="Search trivia categories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={styles.searchInput}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
           />
         </div>
 
         {/* Loading state for filter buttons */}
-        <div className={styles['search-filter']}>
-          <button className={styles['alpha-btn']} disabled>All</button>
-          {/* Placeholder for alphabet buttons */}
-          <div style={{ display: 'none' }}>Loading filters...</div>
+        <div className="flex flex-wrap gap-2 mb-6">
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-full font-medium" disabled>
+            All
+          </button>
+          <div className="hidden">Loading filters...</div>
         </div>
 
         {/* Render categories without filtering during SSR */}
-        <div className={styles['blog-grid']}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map(category => {
             const tagsArray = getTagsArray(category.tags);
             return (
-              <div key={category.slug} className={styles['blog-card']}>
-                <div className={styles['card-content']}>
-                  <h2 className={styles['post-title']}>
-                    <Link href={`/trivia-bank/${category.slug}`}>
+              <div key={category.slug} className="flex flex-col overflow-hidden rounded-xl shadow-lg bg-white border border-gray-200 hover:shadow-xl transition-shadow">
+                <div className="flex flex-col flex-grow p-6">
+                  <h2 className="text-xl font-bold text-gray-800 mb-3">
+                    <Link href={`/trivia-bank/${category.slug}`} className="hover:text-blue-600 transition-colors">
                       {category.header}
                     </Link>
                   </h2>
-                  <p className={styles['post-excerpt']}>{category.excerpt}</p>
-                  <div className={styles['tag-container']}>
+                  <p className="text-gray-600 mb-4 flex-grow">{category.excerpt}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
                     {tagsArray.length > 0 ? (
                       <>
                         {tagsArray.slice(0, 5).map(tag => (
-                          <span key={tag} className={styles.tag}>#{tag}</span>
+                          <span key={tag} className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                            #{tag}
+                          </span>
                         ))}
                         {tagsArray.length > 5 && (
-                          <span className={styles.moreTags}>
+                          <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full">
                             +{tagsArray.length - 5} more
                           </span>
                         )}
                       </>
                     ) : (
-                      <span className={styles.tag}>#trivia</span>
+                      <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                        #trivia
+                      </span>
                     )}
                   </div>
                   <Link 
                     href={`/trivia-bank/${category.slug}`} 
-                    className={styles['read-more']}
+                    className="font-medium text-blue-600 hover:text-blue-800 hover:underline self-start"
                   >
                     Take the Quiz →
                   </Link>
@@ -169,21 +163,21 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
   return (
     <>
       {/* Search input */}
-      <div className={styles['search-filter']}>
+      <div className="mb-6">
         <input
           type="text"
           placeholder="Search trivia categories..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className={styles.searchInput}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
         />
       </div>
 
-      {/* Alphabet and number filters - only render on client */}
-      <div className={styles['search-filter']}>
+      {/* Alphabet and number filters */}
+      <div className="flex flex-wrap gap-2 mb-6">
         <button
           key="all"
-          className={`${styles['alpha-btn']} ${activeLetter === 'All' ? styles.active : ''}`}
+          className={`px-4 py-2 rounded-full font-medium transition-colors ${activeLetter === 'All' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
           onClick={() => setActiveLetter('All')}
         >
           All
@@ -191,7 +185,7 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
         {allFirstChars.map(char => (
           <button 
             key={char} 
-            className={`${styles['alpha-btn']} ${activeLetter === char ? styles.active : ''}`}
+            className={`px-4 py-2 rounded-full font-medium transition-colors ${activeLetter === char ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
             onClick={() => setActiveLetter(char)}
           >
             {char}
@@ -200,55 +194,75 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
       </div>
 
       {/* Show active filter */}
-      {activeLetter !== 'All' && (
-        <div className={styles['filter-criteria']}>
-          Showing results for: <span className={styles['criteria-text']}>{activeLetter}</span>
-        </div>
-      )}
-
-      {/* Show search results info */}
-      {searchTerm && (
-        <div className={styles['filter-criteria']}>
-          Search results for: <span className={styles['criteria-text']}>&quot;{searchTerm}&quot;</span>
-          {filteredCategories.length > 0 && (
-            <span> - {filteredCategories.length} result(s) found</span>
-          )}
+      {(activeLetter !== 'All' || searchTerm) && (
+        <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-medium text-gray-700">Showing results for:</span>
+            {activeLetter !== 'All' && (
+              <span className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm font-medium">
+                Letter: {activeLetter}
+              </span>
+            )}
+            {searchTerm && (
+              <span className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm font-medium">
+                Search: &quot;{searchTerm}&quot;
+              </span>
+            )}
+            <span className="text-gray-600 ml-auto">
+              {filteredCategories.length} result{filteredCategories.length !== 1 ? 's' : ''} found
+            </span>
+            {(activeLetter !== 'All' || searchTerm) && (
+              <button 
+                onClick={() => {
+                  setSearchTerm('');
+                  setActiveLetter('All');
+                }}
+                className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
         </div>
       )}
 
       {/* Trivia cards grid */}
-      <div className={styles['blog-grid']}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCategories.length > 0 ? (
           filteredCategories.map(category => {
             const tagsArray = getTagsArray(category.tags);
             return (
-              <div key={category.slug} className={styles['blog-card']}>
-                <div className={styles['card-content']}>
-                  <h2 className={styles['post-title']}>
-                    <Link href={`/trivia-bank/${category.slug}`}>
+              <div key={category.slug} className="flex flex-col overflow-hidden rounded-xl shadow-lg bg-white border border-gray-200 hover:shadow-xl transition-all hover:scale-[1.02]">
+                <div className="flex flex-col flex-grow p-6">
+                  <h2 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2">
+                    <Link href={`/trivia-bank/${category.slug}`} className="hover:text-blue-600 transition-colors">
                       {category.header}
                     </Link>
                   </h2>
-                  <p className={styles['post-excerpt']}>{category.excerpt}</p>
-                  <div className={styles['tag-container']}>
+                  <p className="text-gray-600 mb-4 flex-grow line-clamp-3">{category.excerpt}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
                     {tagsArray.length > 0 ? (
                       <>
                         {tagsArray.slice(0, 5).map(tag => (
-                          <span key={tag} className={styles.tag}>#{tag}</span>
+                          <span key={tag} className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                            #{tag}
+                          </span>
                         ))}
                         {tagsArray.length > 5 && (
-                          <span className={styles.moreTags}>
+                          <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full">
                             +{tagsArray.length - 5} more
                           </span>
                         )}
                       </>
                     ) : (
-                      <span className={styles.tag}>#trivia</span>
+                      <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                        #trivia
+                      </span>
                     )}
                   </div>
                   <Link 
                     href={`/trivia-bank/${category.slug}`} 
-                    className={styles['read-more']}
+                    className="font-medium text-blue-600 hover:text-blue-800 hover:underline self-start mt-auto"
                   >
                     Take the Quiz →
                   </Link>
@@ -257,16 +271,20 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
             );
           })
         ) : (
-          <div className={styles['no-results']}>
-            <p>No trivia found {searchTerm ? `for &quot;${searchTerm}&quot;` : `starting with &quot;${activeLetter}&quot;`}</p>
+          <div className="col-span-full text-center py-12 bg-gray-50 rounded-xl">
+            <div className="text-4xl mb-4">🔍</div>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">No trivia found</h3>
+            <p className="text-gray-600 mb-6">
+              {searchTerm ? `No results for "${searchTerm}"` : `No categories starting with "${activeLetter}"`}
+            </p>
             <button 
               onClick={() => {
                 setSearchTerm('');
                 setActiveLetter('All');
               }}
-              className={styles.clearButton}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >
-              Clear filters
+              Clear filters & show all
             </button>
           </div>
         )}

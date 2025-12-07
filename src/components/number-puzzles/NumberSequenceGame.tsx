@@ -53,6 +53,8 @@ const OptionButton: React.FC<OptionProps> = ({ children, onClick, disabled, clas
   </button>
 );
 
+const buttonStyle = "px-6 md:px-3 py-2 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center"
+
 export default function NumberSequenceGame() {
   const [gameState, setGameState] = useState<GameState>({
     currentSequence: [],
@@ -465,13 +467,13 @@ export default function NumberSequenceGame() {
       <div className="flex gap-2 mb-6">
         <button
           onClick={showHint}
-          className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all font-semibold"
+          className={`${buttonStyle} bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-amber-400 hover:to-amber-500 text-white`}
         >
           Show Hint
         </button>
         <button
           onClick={initGame}
-          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-semibold"
+          className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
         >
           New Game
         </button>

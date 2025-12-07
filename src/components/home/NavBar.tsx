@@ -10,7 +10,7 @@ const NavBar = () => {
     { name: 'Brain Waves', href: '/brainwave' },
     { name: 'All Trivias', href: '/trivias' },
     { name: 'Leaderboard', href: '/leaderboard' },
-    { name: 'Personality Tests', href: '/personality-tests' },
+    { name: 'IQ/Personality Tests', href: '/iq-and-personality-tests' },
     { name: 'Word Games', href: '/word-games' },
     { name: 'Number Puzzles', href: '/number-puzzles' },
     { name: 'Blog', href: '/blog' },

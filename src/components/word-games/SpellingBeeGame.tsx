@@ -3,8 +3,7 @@ import { event } from '@/lib/gtag';
 import { useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/context/SoundContext';
-import commonStyles from '@styles/WordGames/WordGames.common.module.css';
-import gameStyles from '@styles/WordGames/SpellingBee.module.css';
+
 type FeedbackType = 'error' | 'success' | 'info' | 'hint';
 type HexagonPosition = 'top' | 'bottom' | 'left' | 'right' | 'center';
 
@@ -18,7 +17,6 @@ interface HexagonButtonProps {
   onClick: () => void;
   position: HexagonPosition;
 }
-
 
 export default function SpellingBeeGame() {
   // Game state
@@ -34,6 +32,9 @@ export default function SpellingBeeGame() {
   const { isMuted } = useSound();
   const [showGameOverModal, setShowGameOverModal] = useState(false);
   const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
+
+  // Consistent button style for all buttons
+  const buttonStyle = "px-6 md:px-8 py-2 font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center";
 
   // Sound effects
   const playSound = useCallback((type: string) => {
@@ -66,8 +67,10 @@ export default function SpellingBeeGame() {
   const generateFallbackWords = useCallback((center: string, letters: string[]) => {
     const examples = [
       'ABLE', 'BAKE', 'CAKE', 'DEAL', 'FEAR', 'GEAR', 'HEAL', 'JADE', 'KALE', 'LEAK',
-      // ... (rest of the example words remain the same)
-      'WORK', 'YARD', 'YEAR', 'YELL', 'YET', 'YOUR', 'ZONE'
+      'MEAL', 'NAME', 'PALE', 'RACE', 'SALE', 'TALE', 'WAVE', 'BEAR', 'CARE', 'DARE',
+      'FARE', 'HARE', 'MARE', 'PARE', 'RARE', 'FIRE', 'HIRE', 'MIRE', 'SIRE', 'TIRE',
+      'BORE', 'CORE', 'FORE', 'GORE', 'MORE', 'PORE', 'SORE', 'TORE', 'WORE', 'TRUE',
+      'BLUE', 'CLUE', 'FLUE', 'GLUE', 'WORK', 'YARD', 'YEAR', 'YELL', 'YET', 'YOUR', 'ZONE'
     ];
     
     return examples.filter(word => {
@@ -106,9 +109,11 @@ export default function SpellingBeeGame() {
     }
   }, []);
 
- /*const validateWord = useCallback(async (word: string) => {
+  const validateWord = useCallback(async (word: string) => {
     const wordUpper = word.toUpperCase();
+    const wordLower = word.toLowerCase();
     
+    // Basic validation
     if (!wordUpper.split('').every(l => letters.includes(l)) || !wordUpper.includes(centerLetter)) {
       return false;
     }
@@ -118,99 +123,60 @@ export default function SpellingBeeGame() {
     }
 
     try {
-      console.log(`Validating word: ${wordUpper}`);
-      const response = await fetch(`/api/dictionary?word=${word.toLowerCase()}`);
-      console.log(`Dictionary API response for ${wordUpper}:`, response);
-      if (response.ok) {
-        setAllPossibleWords(prev => [...prev, wordUpper]);
-        return true;
+      const response = await fetch(
+        `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${wordLower}?key=${DICTIONARY_API_KEY}`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`API returned ${response.status}`);
       }
-      showFeedback('info', 'Word validation failed. Try again or start a new game.');
-      return allPossibleWords.includes(wordUpper);
-    } catch (error) {
-      console.error(`Error validating word ${wordUpper}:`, error);
-      showFeedback('info', 'Network error. Using local word list.');
-      return allPossibleWords.includes(wordUpper);
-    }
-  }, [letters, centerLetter, allPossibleWords, showFeedback]); */
 
-  // More specific validation function
-const validateWord = useCallback(async (word: string) => {
-  const wordUpper = word.toUpperCase();
-  const wordLower = word.toLowerCase();
-  
-  // Basic validation
-  if (!wordUpper.split('').every(l => letters.includes(l)) || !wordUpper.includes(centerLetter)) {
-    return false;
-  }
+      const responseText = await response.text();
+      let data;
+      
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError, 'Response:', responseText);
+        throw new Error('Invalid JSON from API');
+      }
 
-  if (allPossibleWords.includes(wordUpper)) {
-    return true;
-  }
+      console.log('MW API response:', data);
 
-  try {
-    const response = await fetch(
-      `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${wordLower}?key=${DICTIONARY_API_KEY}`
-    );
-    
-    if (!response.ok) {
-      throw new Error(`API returned ${response.status}`);
-    }
-
-    const responseText = await response.text();
-    let data;
-    
-    try {
-      data = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError, 'Response:', responseText);
-      throw new Error('Invalid JSON from API');
-    }
-
-    console.log('MW API response:', data);
-
-    // Handle different response types from Merriam-Webster
-    if (Array.isArray(data) && data.length > 0) {
-      // Check each entry in the array
-      for (const entry of data) {
-        // If it's a string, it's a suggestion (not a valid entry)
-        if (typeof entry === 'string') {
-          continue;
-        }
-        
-        // If it's an object with meta data, check if it matches our word
-        if (typeof entry === 'object' && entry !== null) {
-          // Check multiple possible ways the word might be represented
-          const wordMatches = 
-            // Check meta.id (might be "word:1" format)
-            (entry.meta?.id && entry.meta.id.split(':')[0].toUpperCase() === wordUpper) ||
-            // Check hwi.hw (headword)
-            (entry.hwi?.hw && entry.hwi.hw.replace(/\*/g, '').toUpperCase() === wordUpper) ||
-            // Check stems array
-            (entry.meta?.stems && entry.meta.stems.some((stem: string) => stem.toUpperCase() === wordUpper));
+      // Handle different response types from Merriam-Webster
+      if (Array.isArray(data) && data.length > 0) {
+        for (const entry of data) {
+          if (typeof entry === 'string') {
+            continue;
+          }
           
-          if (wordMatches) {
-            console.log(`Word "${wordUpper}" validated via Merriam-Webster API.`);
-            setAllPossibleWords(prev => [...prev, wordUpper]);
-            return true;
+          if (typeof entry === 'object' && entry !== null) {
+            const wordMatches = 
+              (entry.meta?.id && entry.meta.id.split(':')[0].toUpperCase() === wordUpper) ||
+              (entry.hwi?.hw && entry.hwi.hw.replace(/\*/g, '').toUpperCase() === wordUpper) ||
+              (entry.meta?.stems && entry.meta.stems.some((stem: string) => stem.toUpperCase() === wordUpper));
+            
+            if (wordMatches) {
+              console.log(`Word "${wordUpper}" validated via Merriam-Webster API.`);
+              setAllPossibleWords(prev => [...prev, wordUpper]);
+              return true;
+            }
           }
         }
       }
+      
+      showFeedback('info', `"${word}" is not in our dictionary.`);
+      return false;
+    } catch (error) {
+      console.error(`Error validating word "${wordUpper}":`, error);
+      
+      const isInLocalList = allPossibleWords.includes(wordUpper);
+      if (!isInLocalList) {
+        showFeedback('info', 'Dictionary API unavailable. Using local word list.');
+      }
+      return isInLocalList;
     }
-    
-    showFeedback('info', `"${word}" is not in our dictionary.`);
-    return false;
-  } catch (error) {
-    console.error(`Error validating word "${wordUpper}":`, error);
-    
-    // Fallback to local word list
-    const isInLocalList = allPossibleWords.includes(wordUpper);
-    if (!isInLocalList) {
-      showFeedback('info', 'Dictionary API unavailable. Using local word list.');
-    }
-    return isInLocalList;
-  }
-}, [letters, centerLetter, allPossibleWords, showFeedback, DICTIONARY_API_KEY]);
+  }, [letters, centerLetter, allPossibleWords, showFeedback, DICTIONARY_API_KEY]);
 
   const initGame = useCallback(() => {
     const vowels = ['A', 'E', 'I', 'O', 'U'];
@@ -369,186 +335,222 @@ const validateWord = useCallback(async (word: string) => {
   const HexagonButton = ({ letter, onClick, position }: HexagonButtonProps) => {
     const getColor = () => {
       switch (position) {
-        case 'center': return `${gameStyles.hexagon} bg-yellow-200 hover:bg-yellow-300`;
-        default: return `${gameStyles.hexagon} bg-blue-100 hover:bg-blue-200`;
+        case 'center': return 'bg-yellow-200 hover:bg-yellow-300 text-gray-900 shadow-lg';
+        default: return 'bg-blue-100 hover:bg-blue-200 text-gray-800 shadow-md';
       }
     };
 
     return (
-      <div className={gameStyles.hexagonContainer}>
+      <div className="relative w-16 h-16">
         <button
           onClick={onClick}
-          className={getColor()}
+          className={`w-full h-full flex items-center justify-center font-bold text-xl transition-all duration-200 transform hover:scale-110 ${getColor()}`}
+          style={{
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+          }}
         >
-          <span className={gameStyles.hexagonText}>{letter}</span>
+          {letter}
         </button>
       </div>
     );
   };
 
-  return (
-    <div className={commonStyles.container}>
-      <h2 className={commonStyles.title}>Spelling Bee</h2>
-      
-      {/* Center letter display */}
-      <div className={gameStyles.scoreContainer}>
-        <div className={commonStyles.rankText}>Rank: {rank}</div>
-        <div className={commonStyles.scoreText}>Score: {score}</div>
-      </div>
-      
-      {/* Hexagonal letter grid */}
-      <div className={gameStyles.hexGrid}>
-        {/* Top row (2 letters) */}
-        <div className={`${gameStyles.hexRow} ${gameStyles.hexRowTop}`}>
-          {letters.slice(1, 3).map((letter, index) => (
-            <HexagonButton
-              key={index}
-              letter={letter}
-              onClick={() => selectLetter(letter)}
-              position="top"
-            />
-          ))}
-        </div>
-        
-        {/* Middle row (3 letters - left, center, right) */}
-        <div className={gameStyles.hexRow}>
-          {letters.slice(3, 4).map((letter, index) => (
-            <HexagonButton
-              key={index}
-              letter={letter}
-              onClick={() => selectLetter(letter)}
-              position="left"
-            />
-          ))}
-          <HexagonButton
-            letter={centerLetter}
-            onClick={() => selectLetter(centerLetter)}
-            position="center"
-          />
-          {letters.slice(4, 5).map((letter, index) => (
-            <HexagonButton
-              key={index}
-              letter={letter}
-              onClick={() => selectLetter(letter)}
-              position="right"
-            />
-          ))}
-        </div>
-        
-        {/* Bottom row (2 letters) */}
-        <div className={`${gameStyles.hexRow} ${gameStyles.hexRowBottom}`}>
-          {letters.slice(5, 7).map((letter, index) => (
-            <HexagonButton
-              key={index}
-              letter={letter}
-              onClick={() => selectLetter(letter)}
-              position="bottom"
-            />
-          ))}
-        </div>
-      </div>
-      
-      {/* Feedback message */}
-      {feedback.message && (
-        <div className={`${commonStyles.feedback} ${
-          feedback.type === 'error' ? commonStyles.feedbackError :
-          feedback.type === 'success' ? commonStyles.feedbackSuccess :
-          feedback.type === 'hint' ? commonStyles.feedbackHint :
-          commonStyles.feedbackInfo
-        }`}>
-          {feedback.message}
-        </div>
-      )}
+  // Feedback style mapping for light theme
+  const getFeedbackStyle = (type: FeedbackType | '') => {
+    switch (type) {
+      case 'error':
+        return 'bg-red-50 border-red-200 text-red-700';
+      case 'success':
+        return 'bg-green-50 border-green-200 text-green-700';
+      case 'hint':
+        return 'bg-blue-50 border-blue-200 text-blue-700';
+      case 'info':
+        return 'bg-yellow-50 border-yellow-200 text-yellow-700';
+      default:
+        return 'bg-gray-50 border-gray-200 text-gray-700';
+    }
+  };
 
-      {/* Current word */}
-      <div className={gameStyles.currentWordContainer}>
-        <h3 className={gameStyles.currentWordTitle}>Current Word:</h3>
-        <div className={gameStyles.currentWordText}>
-          {currentWord.join('') || <span className={gameStyles.currentWordPlaceholder}>Select letters</span>}
-        </div>
-      </div>
-      
-      {/* Action buttons */}
-      <div className={commonStyles.actionButtons}>
-        <button
-          onClick={submitWord}
-          className={`${commonStyles.actionButton} ${commonStyles.submitButton}`}
-        >
-          Submit
-        </button>
-        <button
-          onClick={clearCurrentWord}
-          className={`${commonStyles.actionButton} ${commonStyles.clearButton}`}
-        >
-          Clear
-        </button>
-        <button
-          onClick={shuffleLetters}
-          className={`${commonStyles.actionButton} ${commonStyles.shuffleButton}`}
-        >
-          Shuffle
-        </button>
-        <button
-          onClick={showHint}
-          className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}
-        >
-          Hint
-        </button>
-        <button
-          onClick={giveUp}
-          className={`${commonStyles.actionButton} ${commonStyles.giveUpButton}`}
-        >
-          Give Up
-        </button>
-      </div>
-      
-      {/* Found words */}
-      {foundWords.length > 0 && (
-        <div className={gameStyles.foundWordsContainer}>
-          <h3 className={gameStyles.foundWordsTitle}>Found Words ({foundWords.length}):</h3>
-          <div className={gameStyles.foundWordsList}>
-            {foundWords
-              .sort((a, b) => b.length - a.length)
-              .map((word, index) => (
-                <span
-                  key={index}
-                  className={`${commonStyles.wordPill} ${
-                    new Set(word.split('')).size === 7 ? 
-                    gameStyles.pangramWord : gameStyles.normalWord
-                  }`}
-                >
-                  {word}
-                </span>
-              ))}
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 p-4 md:p-6 flex flex-col items-center justify-center">
+      {/* Header */}
+      <div className="w-full max-w-4xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 p-4 bg-white/70 rounded-xl backdrop-blur-sm border border-gray-200 shadow-lg">
+          <div className="text-center md:text-left mb-4 md:mb-0">
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Spelling Bee
+            </h1>
+            <div className="text-sm md:text-base text-gray-600 mt-1">
+              Rank: {rank}
+            </div>
           </div>
-        </div>
-      )}
-      
-      {/* Game over modal */}
-      {showGameOverModal && (
-        <div className={gameStyles.modalOverlay}>
-          <div className={gameStyles.modalContent}>
-            <h2 className={gameStyles.modalTitle}>Game Over!</h2>
-            <p className={gameStyles.modalText}>Final Score: <span className="font-bold">{score}</span></p>
-            <p className={gameStyles.modalText}>Rank: <span className="font-bold">{rank}</span></p>
-            <p className={gameStyles.modalText}>Words Found: {foundWords.length}</p>
-            <div className={gameStyles.modalButtons}>
-              <button
-                onClick={initGame}
-                className={`${gameStyles.modalButton} ${gameStyles.playAgainButton}`}
-              >
-                Play Again
-              </button>
-              <button
-                onClick={() => window.location.href = '/'}
-                className={`${gameStyles.modalButton} ${gameStyles.homeButton}`}
-              >
-                Back to Home
-              </button>
+          <div className="flex items-center gap-4 md:gap-6">
+            <div className="bg-white/90 px-4 py-2 rounded-lg border border-gray-300 font-bold text-lg shadow-sm">
+              Score: {score}
             </div>
           </div>
         </div>
-      )}
+
+        {/* Hexagonal letter grid */}
+        <div className="flex flex-col items-center justify-center mb-6">
+          {/* Top row (2 letters) */}
+          <div className="flex justify-center -mb-4">
+            {letters.slice(1, 3).map((letter, index) => (
+              <div key={index} className="mx-2">
+                <HexagonButton
+                  letter={letter}
+                  onClick={() => selectLetter(letter)}
+                  position="top"
+                />
+              </div>
+            ))}
+          </div>
+          
+          {/* Middle row (3 letters) */}
+          <div className="flex justify-center items-center -mb-4">
+            {letters.slice(3, 4).map((letter, index) => (
+              <HexagonButton
+                key={index}
+                letter={letter}
+                onClick={() => selectLetter(letter)}
+                position="left"
+              />
+            ))}
+            <div className="mx-3">
+              <HexagonButton
+                letter={centerLetter}
+                onClick={() => selectLetter(centerLetter)}
+                position="center"
+              />
+            </div>
+            {letters.slice(4, 5).map((letter, index) => (
+              <HexagonButton
+                key={index}
+                letter={letter}
+                onClick={() => selectLetter(letter)}
+                position="right"
+              />
+            ))}
+          </div>
+          
+          {/* Bottom row (2 letters) */}
+          <div className="flex justify-center">
+            {letters.slice(5, 7).map((letter, index) => (
+              <div key={index} className="mx-2">
+                <HexagonButton
+                  letter={letter}
+                  onClick={() => selectLetter(letter)}
+                  position="bottom"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Feedback message */}
+        {feedback.message && (
+          <div className={`mb-4 p-4 rounded-lg text-center font-medium border backdrop-blur-sm ${getFeedbackStyle(feedback.type)}`}>
+            {feedback.message}
+          </div>
+        )}
+
+        {/* Current word */}
+        <div className="bg-white/70 rounded-xl p-4 mb-6 text-center border border-gray-200 shadow-lg">
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">Current Word:</h3>
+          <div className="text-2xl font-bold text-gray-800 min-h-8">
+            {currentWord.join('') || <span className="text-gray-500">Select letters to form a word</span>}
+          </div>
+        </div>
+        
+        {/* Action buttons */}
+        <div className="flex flex-wrap justify-center gap-3 mb-6">
+          <button
+            onClick={submitWord}
+            className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
+          >
+            Submit
+          </button>
+          <button
+            onClick={clearCurrentWord}
+            className={`${buttonStyle} bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-400 hover:to-gray-500 text-white`}
+          >
+            Clear
+          </button>
+          <button
+            onClick={shuffleLetters}
+            className={`${buttonStyle} bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white`}
+          >
+            Shuffle
+          </button>
+          <button
+            onClick={showHint}
+            className={`${buttonStyle} bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-white`}
+          >
+            Hint
+          </button>
+          <button
+            onClick={giveUp}
+            className={`${buttonStyle} bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white`}
+          >
+            Give Up
+          </button>
+        </div>
+        
+        {/* Found words */}
+        {foundWords.length > 0 && (
+          <div className="bg-white/70 rounded-xl p-4 mb-6 border border-gray-200 shadow-lg">
+            <h3 className="text-lg font-semibold text-gray-700 mb-3 text-center">
+              Found Words ({foundWords.length}):
+            </h3>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {foundWords
+                .sort((a, b) => b.length - a.length)
+                .map((word, index) => (
+                  <span
+                    key={index}
+                    className={`px-3 py-1 rounded-full font-medium ${
+                      new Set(word.split('')).size === 7 
+                        ? 'bg-yellow-200 text-gray-900 font-bold border border-yellow-300' 
+                        : 'bg-blue-100 text-gray-800 border border-blue-200'
+                    }`}
+                  >
+                    {word}
+                  </span>
+                ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Game over modal */}
+        {showGameOverModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+            <div className="bg-gradient-to-br from-white to-gray-100 rounded-2xl p-6 md:p-8 max-w-md w-full border border-gray-300 shadow-2xl">
+              <h2 className="text-2xl md:text-3xl font-bold text-center mb-4 bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
+                Game Over!
+              </h2>
+              <div className="space-y-3 text-center">
+                <p className="text-gray-600">Final Score: <span className="font-bold text-green-600">{score}</span></p>
+                <p className="text-gray-600">Rank: <span className="font-bold text-blue-600">{rank}</span></p>
+                <p className="text-gray-600">Words Found: <span className="font-bold text-purple-600">{foundWords.length}</span></p>
+              </div>
+              <div className="flex flex-col gap-3 mt-6">
+                <button
+                  onClick={initGame}
+                  className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
+                >
+                  Play Again
+                </button>
+                <button
+                  onClick={() => window.location.href = '/'}
+                  className={`${buttonStyle} bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-400 hover:to-gray-500 text-white`}
+                >
+                  Back to Home
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

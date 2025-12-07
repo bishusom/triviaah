@@ -40,7 +40,7 @@ export function generateLiteraleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/literale-og.webp',
+          url: '/imgs//brainwave/literale-og.webp',
           width: 1200,
           height: 630,
           alt: 'Literale - Daily Literature Puzzle Game'
@@ -53,7 +53,7 @@ export function generateLiteraleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Literale - Daily Literature Puzzle | Triviaah',
       description: 'Guess the book title from opening lines and progressive clues with limited attempts, Wordle-style feedback on title letters. Unlock more hints with each wrong guess!',
-      images: ['/imgs/literale-og.webp'],
+      images: ['/imgs//brainwave/literale-og.webp'],
       site: '@elitetrivias',
     },
     robots: {

@@ -43,7 +43,7 @@ export function generateNumberTowerMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/number-tower.webp',
+          url: '/imgs/number-puzzles//number-tower.webp',
           width: 1200,
           height: 630,
           alt: 'Number Tower Puzzle Game - Free Math Arrangement Challenge'
@@ -56,7 +56,7 @@ export function generateNumberTowerMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Number Tower Puzzle Game | Free Math Arrangement Challenge | Triviaah',
       description: 'Play Number Tower, a free online number puzzle game. Arrange numbers in a tower structure with limited moves. Improve your math skills with this fun and challenging brain game.',
-      images: ['/imgs/number-tower.webp'],
+      images: ['/imgs/number-puzzles//number-tower.webp'],
       site: '@elitetrivias',
     },
     robots: {

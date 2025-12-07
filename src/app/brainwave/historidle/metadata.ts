@@ -37,7 +37,7 @@ export function generateHistoridleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/historidle-og.webp',
+          url: '/imgs//brainwave/historidle-og.webp',
           width: 1200,
           height: 630,
           alt: 'Historidle - Daily Historical Puzzle Game'
@@ -50,7 +50,7 @@ export function generateHistoridleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Historidle - Daily Historical Puzzle | Triviaah',
       description: 'Guess the historical figure or event from  3 dates and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
-      images: ['/imgs/historidle-og.webp'],
+      images: ['/imgs//brainwave/historidle-og.webp'],
       site: '@elitetrivias',
     },
     robots: {

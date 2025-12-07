@@ -3,8 +3,6 @@ import { event } from '@/lib/gtag';
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/context/SoundContext';
-import commonStyles from '@styles/WordGames/WordGames.common.module.css';
-import gameStyles from '@styles/WordGames/BoggleGame.module.css'; 
 
 interface GridCell {
   letter: string;
@@ -57,6 +55,8 @@ interface ExtendedLevel {
   minWordLength: number;
   scoreMultiplier: number;
 }
+
+const buttonStyle = "px-6 md:px-3 py-2 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center"
 
 export default function BoggleGame() {
   // Refs
@@ -590,10 +590,10 @@ export default function BoggleGame() {
     generateGrid();
   }, [generateGrid]);
 
-  // Add selection line effect
+  // Add selection line effect - COPIED FROM DARK THEME VERSION
   useEffect(() => {
     const updateSelectionLine = () => {
-      const existingLines = document.querySelectorAll(`.${gameStyles.selectionLine}`);
+      const existingLines = document.querySelectorAll('.selection-line');
       existingLines.forEach(line => line.remove());
 
       if (selectedCells.length < 2 || !gridElement.current) return;
@@ -621,11 +621,17 @@ export default function BoggleGame() {
         const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
 
         const line = document.createElement('div');
-        line.className = gameStyles.selectionLine;
+        line.className = 'selection-line';
         line.style.width = `${length}px`;
         line.style.transform = `rotate(${angle}deg)`;
         line.style.left = `${startX}px`;
         line.style.top = `${startY}px`;
+        line.style.position = 'absolute';
+        line.style.height = '3px';
+        line.style.backgroundColor = '#3b82f6'; // blue-500
+        line.style.zIndex = '10';
+        line.style.pointerEvents = 'none';
+        line.style.transformOrigin = '0 0';
         
         gridEl.appendChild(line);
       }
@@ -779,123 +785,145 @@ export default function BoggleGame() {
   };
 
   return (
-    <div className={commonStyles.container} style={{ touchAction: 'none', overflow: 'hidden' }}>
-      <div className={commonStyles.header}>
-        <div>
-          <h2 className={commonStyles.title}>Boggle Game</h2>
-          <div className={commonStyles.levelText}>
-            {currentLevel >= 4 
-              ? `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`
-              : `Level: ${currentLevel} (${difficulty})`}
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-50 to-purple-50" style={{ touchAction: 'none', overflow: 'hidden' }}>
+      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-4 md:p-6 mb-6">
+        {/* Header - KEEPING LIGHT THEME STYLE */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+          <div className="mb-4 md:mb-0">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">Boggle Game</h2>
+            <div className="text-base text-gray-600 font-medium">
+              {currentLevel >= 4 
+                ? `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`
+                : `Level: ${currentLevel} (${difficulty})`}
+            </div>
+          </div>
+          
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
+            <div className="bg-gray-800 text-white px-3 py-2 rounded-lg font-mono text-base shadow-md">
+              ⏱️ {formatTime(timer)}
+            </div>
+            <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-xl font-bold text-lg shadow-lg">
+              Score: {score}
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <div className={commonStyles.timerContainer}>
-            ⏱️ {formatTime(timer)}
-          </div>
-          <div className={commonStyles.scoreText}>
-            Score: {score}
-          </div>
-        </div>
-      </div>
 
-      <div className="mb-6" style={{ overflow: 'hidden' }}>
-        <div ref={gridElement} className={gameStyles.gridContainer} style={{ overflow: 'hidden' }}>
-          <div 
-            className={gameStyles.grid}
-            style={{ 
-              gridTemplateColumns: `repeat(${config.gridSize[difficulty]}, 1fr)`,
-              gridTemplateRows: `repeat(${config.gridSize[difficulty]}, 1fr)`,
-              touchAction: 'none'
-            }}
-          >
-            {grid.map((cell, index) => (
-              <button
-                key={index}
-                className={`${gameStyles.cell} ${
-                  selectedCells.includes(index) ? gameStyles.cellSelected : ''
-                } ${
-                  selectedCells[selectedCells.length - 1] === index ? gameStyles.cellHighlight : ''
-                } ${
-                  cell.found ? gameStyles.cellFound : ''
-                }`}
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  handleCellInteraction(index, 'start');
-                }}
-                onMouseEnter={() => handleCellInteraction(index, 'continue')}
-                onMouseUp={() => handleCellInteraction(index, 'end')}
-                onTouchStart={(e) => {
-                  e.preventDefault();
-                  handleCellInteraction(index, 'start');
-                }}
-                onTouchMove={(e) => {
-                  e.preventDefault();
-                  const touch = e.touches[0];
-                  const element = document.elementFromPoint(touch.clientX, touch.clientY);
-                  
-                  if (element && element.classList.contains(gameStyles.cell)) {
-                    const cells = Array.from(gridElement.current?.querySelectorAll(`.${gameStyles.cell}`) || []);
-                    const idx = cells.indexOf(element);
-                    if (idx >= 0) {
-                      handleCellInteraction(idx, 'continue');
+        {/* Game Grid - USING DARK THEME LAYOUT WITH LIGHT THEME STYLING */}
+        <div className="mb-6 md:mb-8 flex justify-center" style={{ overflow: 'hidden' }}>
+          <div ref={gridElement} className="relative" style={{ overflow: 'hidden' }}>
+            <div 
+              className="grid gap-2 md:gap-3 p-4 bg-white rounded-2xl border border-gray-300 shadow-md"
+              style={{ 
+                gridTemplateColumns: `repeat(${config.gridSize[difficulty]}, 1fr)`,
+                gridTemplateRows: `repeat(${config.gridSize[difficulty]}, 1fr)`,
+                touchAction: 'none'
+              }}
+            >
+              {grid.map((cell, index) => (
+                <button
+                  key={index}
+                  className={`
+                    w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl font-bold text-lg md:text-xl transition-all duration-200
+                    ${selectedCells.includes(index) 
+                      ? 'bg-blue-200 text-blue-800 scale-105 shadow-md' 
+                      : selectedCells[selectedCells.length - 1] === index 
+                        ? 'bg-blue-300 text-blue-900 scale-110 shadow-lg'
+                        : cell.found 
+                          ? 'bg-green-200 text-green-800'
+                          : 'bg-white hover:bg-gray-50 text-gray-800'
                     }
-                  }
-                }}
-                onTouchEnd={(e) => {
-                  e.preventDefault();
-                  const finalSelectedCells = [...selectedCells];
-                  setIsSelecting(false);
-                  
-                  if (finalSelectedCells.length >= 2) {
-                    checkSelectedWord(finalSelectedCells);
-                  }
-                }}
-                onContextMenu={(e) => e.preventDefault()}
-              >
-                {cell.letter}
-              </button>
-            ))}
+                    border-2 ${selectedCells.includes(index) ? 'border-blue-400' : cell.found ? 'border-green-400' : 'border-gray-300'}
+                    active:scale-95
+                  `}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleCellInteraction(index, 'start');
+                  }}
+                  onMouseEnter={() => handleCellInteraction(index, 'continue')}
+                  onMouseUp={() => handleCellInteraction(index, 'end')}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    handleCellInteraction(index, 'start');
+                  }}
+                  onTouchMove={(e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                    
+                    if (element && element instanceof HTMLButtonElement && 
+                        (element.classList.contains('bg-white') || 
+                        element.classList.contains('bg-blue-200') || 
+                        element.classList.contains('bg-blue-300') || 
+                        element.classList.contains('bg-green-200'))) {
+                      const cells = Array.from(gridElement.current?.querySelectorAll('button') || []) as HTMLButtonElement[];
+                      const idx = cells.indexOf(element);
+                      if (idx >= 0) {
+                        handleCellInteraction(idx, 'continue');
+                      }
+                    }
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    const finalSelectedCells = [...selectedCells];
+                    setIsSelecting(false);
+                    
+                    if (finalSelectedCells.length >= 2) {
+                      checkSelectedWord(finalSelectedCells);
+                    }
+                  }}
+                  onContextMenu={(e) => e.preventDefault()}
+                >
+                  {cell.letter}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Feedback message */}
-        <div className={`${commonStyles.feedback} ${
-          feedback.type === 'error' ? commonStyles.feedbackError : 
-          feedback.type === 'success' ? commonStyles.feedbackSuccess : 
-          commonStyles.feedbackInfo
-        }`}>
-          {feedback.message}
-        </div>
-      </div>
-
-      <div className={commonStyles.actionButtons}>
-        <button 
-          onClick={handleNewGame}
-          className={`${commonStyles.actionButton} ${commonStyles.playAgainButton}`}
-        >
-          New Game
-        </button>
-        <button 
-          onClick={handleHint}
-          className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}
-        >
-          Hint
-        </button>
-      </div>
-
-      {foundWords.size > 0 && (
-        <div className={gameStyles.foundWordsContainer}>
-          <h3 className={gameStyles.foundWordsTitle}>Found Words:</h3>
-          <div className={gameStyles.foundWordsList}>
-            {Array.from(foundWords).sort().map((word, i) => (
-              <span key={i} className={gameStyles.wordPill}>
-                {word}
-              </span>
-            ))}
+        {/* Feedback message - KEEPING LIGHT THEME STYLE */}
+        {feedback.message && (
+          <div className={`mb-6 text-center text-base md:text-lg font-medium p-4 rounded-xl border whitespace-pre-line ${
+            feedback.type === 'error' ? 'bg-red-50 text-red-700 border-red-200' : 
+            feedback.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 
+            'bg-blue-50 text-blue-700 border-blue-200'
+          }`}>
+            {feedback.message}
           </div>
+        )}
+
+        {/* Action Buttons - KEEPING LIGHT THEME STYLE */}
+        <div className="flex flex-col sm:flex-row justify-center gap-3 mb-6">
+          <button 
+            onClick={handleNewGame}
+            className={`${buttonStyle} bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white`}
+          >
+            New Game
+          </button>
+          <button 
+            onClick={handleHint}
+            className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
+          >
+            Get Hint
+          </button>
         </div>
-      )}
+
+        {/* Found Words - KEEPING LIGHT THEME STYLE */}
+        {foundWords.size > 0 && (
+          <div className="mt-6 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+            <h3 className="text-lg font-bold text-gray-800 mb-3">Found Words:</h3>
+            <div className="flex flex-wrap gap-1.5">
+              {Array.from(foundWords).sort().map((word, i) => (
+                <span 
+                  key={i} 
+                  className="px-2.5 py-1.5 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 font-medium rounded-full border border-blue-300 shadow-sm text-sm"
+                >
+                  {word}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

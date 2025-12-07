@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { useSound } from '@/context/SoundContext';
 import { useState, useEffect, useCallback, useRef } from 'react';
 
+
 export default function PrimeHunterPuzzle() {
   const [gameState, setGameState] = useState({
     level: 1,
@@ -19,6 +20,7 @@ export default function PrimeHunterPuzzle() {
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const { isMuted } = useSound();
   const levelUpInProgress = useRef(false);
+  const buttonStyle = "px-6 md:px-3 py-2 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center"
 
   type SoundType = 'select' | 'found' | 'win' | 'error';
 
@@ -357,13 +359,13 @@ export default function PrimeHunterPuzzle() {
         <div className="flex flex-wrap gap-2 mt-4">
           <button
             onClick={showHint}
-            className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all font-semibold"
+            className={`${buttonStyle} bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white`}
           >
             Hint
           </button>
           <button
             onClick={initGame}
-            className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-semibold"
+            className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
           >
             New Game
           </button>

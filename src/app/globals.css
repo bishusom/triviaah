@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Define your LIGHT theme variables */
+  --background-color: #ffffff;
+  --text-color: #212121;
+  --primary-color: #0056b3;
+  /* Add all your color variables here */
+
+  /* Force the color scheme */
+  color-scheme: light only;
+}
+
+/* Apply the variables */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Nuclear option: Override inside any dark mode query */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Re-declare the same light variables */
+    --background-color: #ffffff;
+    --text-color: #212121;
+  }
+  body {
+    background-color: white !important;
+    color: #212121 !important;
+  }
+}

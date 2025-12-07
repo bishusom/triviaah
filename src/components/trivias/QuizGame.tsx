@@ -537,8 +537,8 @@ export default function QuizGame({
                       className="w-24 h-24 rounded-lg object-cover border-2 border-blue-200 hover:border-blue-400 transition-colors"
                     />
                     {/* Expand icon overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg flex items-center justify-center transition-all">
-                      <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-5 transition-opacity flex items-center justify-center">
+                      <div className="text-white bg-black bg-opacity-60 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
                         </svg>

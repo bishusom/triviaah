@@ -10,7 +10,7 @@ const wordGames = [
   {
     slug: 'scramble',
     name: 'Word Scramble',
-    image: '/imgs/word-scramble.webp',
+    image: '/imgs/word-games/word-scramble.webp',
     description: 'Unscramble letters to form valid words against the clock',
     features: ['Letter rearrangement', 'Vocabulary building', 'Multiple difficulty levels'],
     color: 'green'
@@ -18,7 +18,7 @@ const wordGames = [
   {
     slug: 'spelling-bee',
     name: 'Spelling Bee',
-    image: '/imgs/spelling-bee.webp',
+    image: '/imgs/word-games/spelling-bee.webp',
     description: 'Spell words correctly using given letters with a center requirement',
     features: ['Honeycomb letter grid', 'Pangram bonuses', 'Genius ranking system'],
     color: 'yellow'
@@ -26,7 +26,7 @@ const wordGames = [
   {
     slug: 'boggle',
     name: 'Boggle',
-    image: '/imgs/boggle.webp',
+    image: '/imgs/word-games/boggle.webp',
     description: 'Find as many words as possible in a 4x4 letter grid',
     features: ['Timed word search', 'Letter connections', 'Word length scoring'],
     color: 'blue'
@@ -34,7 +34,7 @@ const wordGames = [
   {
     slug: 'word-search',
     name: 'Word Search',
-    image: '/imgs/word-search.webp',
+    image: '/imgs/word-games/word-search.webp',
     description: 'Find hidden words in a letter matrix horizontally, vertically or diagonally',
     features: ['Multiple grid sizes', 'Themed puzzles', 'Printable options'],
     color: 'orange'
@@ -42,10 +42,18 @@ const wordGames = [
   {
     slug: 'word-ladder',
     name: 'Word Ladder',
-    image: '/imgs/word-ladder.webp',
+    image: '/imgs/word-games/word-ladder.webp',
     description: 'Change one letter at a time to transform start word into end word',
     features: ['Word transformation', 'Logical thinking', 'Step-by-step puzzles'],
     color: 'purple'
+  },
+  {
+    slug: 'mini-crossword',
+    name: 'Mini Crossword',
+    image: '/imgs/word-games/word-crossgrid.webp',
+    description: 'Solve grid-based crossword puzzles with locked letters',
+    features: ['Grid-based puzzles', 'Crossword clues', 'Locked letter hints'],
+    color: 'red'
   },
 ];
 
@@ -64,20 +72,20 @@ export default function WordGamesClientPage() {
       logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
-      knowsAbout: ['Trivia', 'Quiz Games', 'Word Games', 'Educational Entertainment', 'Vocabulary Games', 'Spelling Games', 'Language Games']
+      knowsAbout: ['Trivia', 'Quiz Games', 'Word Games', 'Educational Entertainment', 'Vocabulary Games', 'Spelling Games', 'Language Games', 'Grid Puzzles']
     },
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: 'Free Word Games Collection | Vocabulary & Spelling Games | Triviaah',
-      description: 'Challenge your vocabulary with our collection of free word games including Boggle, Scramble, Spelling Bee, Word Search, and Word Ladder. Improve spelling, vocabulary, and cognitive skills.',
+      description: 'Challenge your vocabulary with our collection of free word games including Word CrossGrid, Boggle, Scramble, Spelling Bee, Word Search, and Word Ladder. Improve spelling, vocabulary, and cognitive skills.',
       url: 'https://triviaah.com/word-games',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'ItemList',
         name: 'Word Games Collection',
         description: 'A collection of educational word games designed to improve vocabulary, spelling, and cognitive skills through engaging gameplay.',
-        numberOfItems: 5,
+        numberOfItems: 6,
         itemListElement: wordGames.map((game, index) => ({
           '@type': 'ListItem',
           position: index + 1,
@@ -118,7 +126,7 @@ export default function WordGamesClientPage() {
           name: 'What types of word games are available?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'We offer five main word games: Word Scramble (letter unscrambling), Spelling Bee (word formation), Boggle (word search in grid), Word Search (hidden word finding), and Word Ladder (word transformation). Each game focuses on different language skills.'
+            text: 'We offer six main word games: Word Scramble (letter unscrambling), Spelling Bee (word formation), Boggle (word search in grid), Word Search (hidden word finding), Word Ladder (word transformation), and Word CrossGrid (grid-based crossword puzzles). Each game focuses on different language skills.'
           }
         },
         {
@@ -142,7 +150,7 @@ export default function WordGamesClientPage() {
           name: 'Which word game is best for beginners?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Word Search is great for beginners as it\'s relaxing and helps with word recognition. For more challenge, try Word Scramble or Spelling Bee to build vocabulary and spelling skills.'
+            text: 'Word Search is great for beginners as it\'s relaxing and helps with word recognition. For a unique challenge, try Word CrossGrid which combines crossword and grid gameplay in an accessible way.'
           }
         }
       ]
@@ -160,13 +168,14 @@ export default function WordGamesClientPage() {
       yellow: 'bg-yellow-50 border-yellow-200 text-yellow-800',
       blue: 'bg-blue-50 border-blue-200 text-blue-800',
       orange: 'bg-orange-50 border-orange-200 text-orange-800',
-      purple: 'bg-purple-50 border-purple-200 text-purple-800'
+      purple: 'bg-purple-50 border-purple-200 text-purple-800',
+      red: 'bg-red-50 border-red-200 text-red-800'
     };
     return colorMap[color] || 'bg-gray-50 border-gray-200 text-gray-800';
   };
 
   return (
-    <div className="page-with-ads">
+    <div className="page-with-ads min-h-screen">
       {/* Structured Data */}
       <Script
         id="word-games-organization-schema"
@@ -215,8 +224,8 @@ export default function WordGamesClientPage() {
           </p>
         </div>
 
-        {/* Games Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mb-16">
+        {/* Games Grid - Updated to 3x2 on desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {wordGames.map((game) => (
             <div 
               key={game.slug}
@@ -270,7 +279,7 @@ export default function WordGamesClientPage() {
               {/* Content Freshness Info */}
               <div>
                 <h3 className="font-semibold">Collection Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-800 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
@@ -278,9 +287,10 @@ export default function WordGamesClientPage() {
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What types of word games are available?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  We offer five main word games: <strong>Word Scramble</strong> (letter unscrambling), <strong>Spelling Bee</strong> (word formation), 
-                  <strong>Boggle</strong> (word search in grid), <strong>Word Search</strong> (hidden word finding), and <strong>Word Ladder</strong> (word transformation). 
-                  Each game focuses on different language skills and provides unique challenges for vocabulary building and cognitive development.
+                  We offer six main word games: <strong>Word Scramble</strong> (letter unscrambling), <strong>Spelling Bee</strong> (word formation), 
+                  <strong>Boggle</strong> (word search in grid), <strong>Word Search</strong> (hidden word finding), <strong>Word Ladder</strong> (word transformation), 
+                  and <strong>Word CrossGrid</strong> (grid-based crossword puzzles). Each game focuses on different language skills and provides 
+                  unique challenges for vocabulary building and cognitive development.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
@@ -303,6 +313,7 @@ export default function WordGamesClientPage() {
                 <h3 className="font-semibold" itemProp="name">Which word game is best for beginners?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   <strong>Word Search</strong> is great for beginners as it&apos;s relaxing and helps with word recognition. 
+                  For a unique challenge, try <strong>Word CrossGrid</strong> which combines crossword and grid gameplay in an accessible way. 
                   For more challenge, try <strong>Word Scramble</strong> or <strong>Spelling Bee</strong> to build vocabulary 
                   and spelling skills. <strong>Boggle</strong> offers a good balance of challenge and accessibility, while 
                   <strong>Word Ladder</strong> is perfect for developing logical thinking and problem-solving skills.
@@ -324,13 +335,22 @@ export default function WordGamesClientPage() {
                   enthusiasts, our collection provides appropriate challenges for everyone from elementary students to adults.
                 </p>
               </div>
+              <div itemScope itemType="https://schema.org/Question">
+                <h3 className="font-semibold" itemProp="name">What is Word CrossGrid?</h3>
+                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                  Word CrossGrid is our newest addition - a unique grid-based word puzzle that combines elements of crossword 
+                  puzzles and letter grids. Players connect adjacent letters in a grid to form words that match given clues, 
+                  with locked letters providing strategic starting points. It&apos;s perfect for those who enjoy both word 
+                  formation and spatial reasoning challenges.
+                </p>
+              </div>
             </div>
           </details>
         </div>
 
         {/* Enhanced About Section */}
         <div className="mt-8 bg-white rounded-xl shadow-md p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">About Our Word Games Collection</h2>
+          <h2 className="text-2xl font-bold mb-4">About Our Word Games Collection</h2>
           <div className="prose prose-lg text-gray-600">
             <p className="mb-4">
               Our comprehensive word games collection is designed to help improve vocabulary, spelling, and cognitive skills 
@@ -338,16 +358,45 @@ export default function WordGamesClientPage() {
               language learning and mental development.
             </p>
             
-            <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-3">Educational Benefits:</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3">Game Highlights:</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                <h4 className="font-bold text-green-800 mb-2">Word Scramble</h4>
+                <p className="text-sm">Unscramble letters to form words and build vocabulary</p>
+              </div>
+              <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                <h4 className="font-bold text-yellow-800 mb-2">Spelling Bee</h4>
+                <p className="text-sm">Create words from letter honeycombs with center requirements</p>
+              </div>
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 className="font-bold text-blue-800 mb-2">Boggle</h4>
+                <p className="text-sm">Find words by connecting adjacent letters in timed challenges</p>
+              </div>
+              <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                <h4 className="font-bold text-orange-800 mb-2">Word Search</h4>
+                <p className="text-sm">Locate hidden words in letter grids across multiple directions</p>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                <h4 className="font-bold text-purple-800 mb-2">Word Ladder</h4>
+                <p className="text-sm">Transform words step by step through single letter changes</p>
+              </div>
+              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                <h4 className="font-bold text-red-800 mb-2">Word CrossGrid</h4>
+                <p className="text-sm">Connect letters in a grid to solve crossword-style puzzles</p>
+              </div>
+            </div>
+
+            <h3 className="text-xl font-semibold mt-6 mb-3">Educational Benefits:</h3>
             <ul className="list-disc pl-5 space-y-2 mb-4">
               <li><strong>Vocabulary Expansion:</strong> Discover new words and their meanings through contextual gameplay</li>
               <li><strong>Spelling Improvement:</strong> Reinforce correct spelling patterns and word structures</li>
               <li><strong>Cognitive Development:</strong> Enhance pattern recognition, memory, and problem-solving skills</li>
               <li><strong>Language Skills:</strong> Improve reading comprehension and word recognition speed</li>
               <li><strong>Mental Agility:</strong> Develop quick thinking and mental flexibility</li>
+              <li><strong>Spatial Reasoning:</strong> Strengthen grid navigation and pattern finding (especially in Word CrossGrid)</li>
             </ul>
 
-            <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-3">Perfect For:</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3">Perfect For:</h3>
             <ul className="list-disc pl-5 space-y-2">
               <li>Students looking to improve language arts skills</li>
               <li>Educators seeking engaging classroom activities</li>
@@ -355,6 +404,7 @@ export default function WordGamesClientPage() {
               <li>Seniors maintaining cognitive health</li>
               <li>Language learners building vocabulary</li>
               <li>Families enjoying educational entertainment together</li>
+              <li>Puzzle lovers seeking grid-based challenges (Word CrossGrid)</li>
             </ul>
 
             <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
@@ -365,6 +415,7 @@ export default function WordGamesClientPage() {
                 <li>Use the hint systems to learn new words and strategies</li>
                 <li>Challenge yourself with daily puzzles for continuous improvement</li>
                 <li>Mix different game types to develop comprehensive language skills</li>
+                <li>Try Word CrossGrid for a unique blend of word and spatial challenges</li>
               </ul>
             </div>
           </div>
@@ -387,16 +438,18 @@ export default function WordGamesClientPage() {
               <li><strong>Boggle:</strong> Find words by connecting adjacent letters in timed grid challenges</li>
               <li><strong>Word Search:</strong> Locate hidden words in letter grids across multiple directions</li>
               <li><strong>Word Ladder:</strong> Transform words step by step through single letter changes</li>
+              <li><strong>Word CrossGrid:</strong> Connect letters in a grid to solve crossword-style puzzles</li>
             </ul>
             <h3>Collection Features:</h3>
             <ul>
-              <li>Five unique word game types targeting different language skills</li>
+              <li>Six unique word game types targeting different language skills</li>
               <li>Multiple difficulty levels for all ages and skill levels</li>
               <li>Daily new puzzles and challenges</li>
               <li>Comprehensive educational benefits</li>
               <li>Progress tracking and achievement systems</li>
               <li>Completely free with no registration required</li>
               <li>Mobile-friendly designs for gaming anywhere</li>
+              <li>Word CrossGrid - unique grid-based crossword gameplay</li>
             </ul>
             <h3>Educational Benefits:</h3>
             <ul>
@@ -406,10 +459,11 @@ export default function WordGamesClientPage() {
               <li>Language skills enhancement</li>
               <li>Problem-solving and logical thinking</li>
               <li>Visual scanning and pattern finding</li>
+              <li>Spatial reasoning and grid navigation (Word CrossGrid)</li>
             </ul>
             <p><strong>Ideal For:</strong> Students improving language arts, educators enhancing classroom activities, 
                word game enthusiasts seeking challenges, seniors maintaining cognitive health, language learners 
-               building vocabulary, and families enjoying educational entertainment together.</p>
+               building vocabulary, puzzle lovers enjoying grid-based games, and families enjoying educational entertainment together.</p>
           </div>
         </div>
       </div>

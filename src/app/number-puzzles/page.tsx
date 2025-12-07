@@ -11,7 +11,7 @@ const numberPuzzles = [
   {
     slug: 'number-scramble',
     name: 'Number Scramble',
-    image: '/imgs/number-scramble.webp',
+    image: '/imgs/number-puzzles/number-scramble.webp',
     description: 'Combine numbers and operators to reach the target value',
     fullDescription: 'Strategic math puzzle where you combine numbers and arithmetic operators to reach specific target values. Develops mental math and strategic thinking.',
     keywords: 'math scramble, number challenge, arithmetic game, mental math, strategic thinking',
@@ -21,7 +21,7 @@ const numberPuzzles = [
   {
     slug: 'prime-hunter',
     name: 'Prime Hunter',
-    image: '/imgs/prime-hunter.webp',
+    image: '/imgs/number-puzzles/prime-hunter.webp',
     description: 'Identify all prime numbers in the given grid',
     fullDescription: 'Challenge your number theory knowledge by identifying prime numbers in various grid configurations with limited attempts.',
     keywords: 'prime numbers game, math challenge, number theory, prime identification, cognitive skills',
@@ -31,7 +31,7 @@ const numberPuzzles = [
   {
     slug: 'number-sequence',
     name: 'Number Sequence',
-    image: '/imgs/number-sequence.webp',
+    image: '/imgs/number-puzzles/number-sequence.webp',
     description: 'Find the pattern and complete the number sequence',
     fullDescription: 'Identify mathematical patterns in number sequences and predict the next numbers. Develops pattern recognition and logical reasoning.',
     keywords: 'number patterns, sequence puzzle, math logic, pattern recognition, analytical thinking',
@@ -41,7 +41,7 @@ const numberPuzzles = [
   {
     slug: 'number-tower',
     name: 'Number Tower',
-    image: '/imgs/number-tower.webp',
+    image: '/imgs/number-puzzles/number-tower.webp',
     description: 'Stack numbers to reach the target sum in this tower challenge',
     fullDescription: 'Strategic number arrangement game where you build towers to achieve target sums with limited moves and spatial constraints.',
     keywords: 'addition game, math towers, number stacking, spatial reasoning, strategic planning',
@@ -51,12 +51,22 @@ const numberPuzzles = [
   {
     slug: 'sudoku',
     name: 'Sudoku',
-    image: '/imgs/sudoku.webp',
+    image: '/imgs/number-puzzles/sudoku.webp',
     description: 'Classic 9x9 grid puzzle with numbers 1-9',
     fullDescription: 'World-famous logic puzzle where you fill a 9x9 grid following specific rules. Perfect for developing concentration and logical thinking.',
     keywords: 'sudoku puzzle, number grid, logic game, concentration, problem solving',
     difficulty: 'Easy to Expert',
     skills: ['Logical Thinking', 'Concentration', 'Problem Solving']
+  },
+  {
+    slug: 'kakuro',
+    name: 'Kakuro',
+    image: '/imgs/number-puzzles/kakuro.webp',
+    description: 'Cross-sum puzzle combining elements of Sudoku and crossword',
+    features: 'Unique number puzzle where you fill a grid with numbers that sum to given clues, combining logic and arithmetic skills.',
+    keywords: 'kakuro puzzle, cross-sum, number crossword, logic game, arithmetic skills',
+    difficulty: 'Medium to Hard',
+    skills: ['Logical Reasoning', 'Arithmetic Skills', 'Problem Solving']
   },
 ];
 
@@ -166,7 +176,7 @@ export default function NumberPuzzlesPage() {
   }, []);
 
   return (
-    <div className="page-with-ads min-h-screen bg-gray-50">
+    <div className="page-with-ads min-h-screen">
       {/* Structured Data */}
       <Script
         id="number-puzzles-organization-schema"
@@ -200,7 +210,7 @@ export default function NumberPuzzlesPage() {
             </h1>
             <time 
               dateTime={lastUpdated} 
-              className="bg-teal-50 px-3 py-1 rounded-full text-xs font-medium border border-teal-200"
+              className="bg-teal-50 px-3 py-1 rounded-full text-xs text-gray-800 font-medium border border-teal-200"
             >
               Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
                 month: 'short',
@@ -216,7 +226,7 @@ export default function NumberPuzzlesPage() {
         </div>
 
         {/* Puzzle Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {numberPuzzles.map((puzzle) => (
             <div 
               key={puzzle.slug}

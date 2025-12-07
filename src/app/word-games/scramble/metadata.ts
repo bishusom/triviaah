@@ -40,7 +40,7 @@ export function generateScrambleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/scramble-og.webp',
+          url: '/imgs/word-games/word-scramble.webp',
           width: 1200,
           height: 630,
           alt: 'Word Scramble Game - Unscramble Letters to Form Words'
@@ -53,7 +53,7 @@ export function generateScrambleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Word Scramble Game | Unscramble Letters & Build Vocabulary | Triviaah',
       description: 'Challenge your mind with our Word Scramble game! Unscramble letters to form words, build vocabulary, and improve spelling skills with daily puzzle challenges.',
-      images: ['/imgs/scramble-og.webp'],
+      images: ['/imgs/word-games/word-scramble.webp'],
       site: '@elitetrivias',
     },
     robots: {

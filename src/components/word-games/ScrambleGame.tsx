@@ -9,6 +9,7 @@ import { useSound } from '@/context/SoundContext';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
+const buttonStyle = "px-6 md:px-3 py-2 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center"
 
 type DifficultyLevel = {
   difficulty: string;
@@ -410,8 +411,8 @@ export default function ScrambleGame() {
                     flex items-center justify-center
                     text-2xl font-bold rounded-lg
                     ${currentWord.includes(index) 
-                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
-                    : 'bg-blue-500 text-white hover:bg-blue-600 cursor-pointer'}
+                    ? 'bg-gradient-to-r from-gray-200 to-gray-300 cursor-not-allowed' 
+                    : 'bg-gradient-to-r bg-blue-300 to-blue-500 text-white hover:bg-blue-700 cursor-pointer'}
                     transition-all duration-200
                 `}
                 >
@@ -432,7 +433,7 @@ export default function ScrambleGame() {
         </div>
 
         {feedback.message && (
-          <div className={`p-4 rounded-lg mb-4 font-mono text-lg ${
+          <div className={`p-4 rounded-lg mb-4 font-bold text-lg ${
             feedback.type === 'error' ? 'bg-red-100 text-red-700' : 
             feedback.type === 'success' ? 'bg-green-100 text-green-700' : 
             'bg-blue-50 text-blue-700'
@@ -445,37 +446,37 @@ export default function ScrambleGame() {
       <div className="flex flex-wrap gap-2 mb-6">
         <button 
           onClick={submitWord}
-          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-semibold"
+          className={`${buttonStyle} bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white`}
         >
           Submit
         </button>
         <button 
           onClick={clearCurrentAttempt}
-          className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all font-semibold"
+           className={`${buttonStyle} bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-400 hover:to-gray-500 text-white`}
         >
           Clear
         </button>
         <button 
           onClick={shuffleLetters}
-          className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all font-semibold"
+          className={`${buttonStyle} bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white`}
         >
           Shuffle
         </button>
         <button 
           onClick={showHint}
-          className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all font-semibold"
+          className={`${buttonStyle} bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white`}
         >
           Hint
         </button>
         <button 
           onClick={giveUp}
-          className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all font-semibold"
+          className={`${buttonStyle} bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white`}
         >
           Give Up
         </button>
         <button 
           onClick={newWord}
-          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-semibold"
+          className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
         >
           New Word
         </button>

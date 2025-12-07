@@ -26,14 +26,6 @@ const nextConfig = {
         destination: 'https://triviaah.com/:path*',
         permanent: false,
       },
-      // Remove this redundant rule - it redirects triviaah.com to itself
-      // {
-      //   source: '/:path*',
-      //   has: [{ type: 'host', value: 'triviaah.com' }],
-      //   destination: 'https://triviaah.com/:path*',
-      //   permanent: true,
-      // },
-      // Keep your existing query parameter redirect
       {
         source: '/trivia-bank/:slug',
         has: [
@@ -123,33 +115,6 @@ const nextConfig = {
 
   experimental: {
     optimizeCss: true,
-  },
-
-  webpack: (config, { dev, isServer }) => {
-    if (!dev && !isServer) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          vendor: {
-            name: 'vendor',
-            chunks: 'all',
-            test: /[\\/]node_modules[\\/]/,
-            priority: 20,
-          },
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
-            priority: 10,
-            reuseExistingChunk: true,
-            enforce: true,
-          },
-        },
-      };
-    }
-    return config;
   },
 
   async headers() {

@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   const categoryDescription = categoryData.description;
 
   return {
-    title: `${categoryTitle} Trivia Quiz | Free Online Questions`,
+    title: `${categoryTitle} Trivia Quiz | Triviaah`,
     description: `Play free ${categoryTitle.toLowerCase()} trivia quiz. ${categoryDescription} Test your knowledge with our online trivia questions.`,
     keywords: [
       `${categoryTitle.toLowerCase()} trivia`,
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
       ...(categoryData.keywords || [])
     ],
     openGraph: {
-      title: `${categoryTitle} Trivia Quiz | Free Online Questions`,
+      title: `${categoryTitle} Trivia Quiz | Triviaah`,
       description: `Play free ${categoryTitle.toLowerCase()} trivia quiz. ${categoryDescription} Test your knowledge with our online trivia questions.`,
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/trivias/${category}`,
       siteName: 'Triviaah',
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${categoryTitle} Trivia Quiz | Free Online Questions`,
+      title: `${categoryTitle} Trivia Quiz | Triviaah`,
       description: `Play free ${categoryTitle.toLowerCase()} trivia quiz. ${categoryDescription} Test your knowledge with our online trivia questions.`,
       images: categoryData.ogImage ? [categoryData.ogImage] : [],
     },

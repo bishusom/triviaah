@@ -40,7 +40,7 @@ export function generateSongleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/songle-og.webp',
+          url: '/imgs//brainwave/songle-og.webp',
           width: 1200,
           height: 630,
           alt: 'Songle - Daily Song Guessing Puzzle Game'
@@ -53,7 +53,7 @@ export function generateSongleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Songle - Daily Song Guessing Puzzle | Triviaah',
       description: 'Guess the song from clues like lyrics, artist, and genre. A daily Wordle-style music puzzle game that tests your knowledge of music across decades and genres.',
-      images: ['/imgs/songle-og.webp'],
+      images: ['/imgs//brainwave/songle-og.webp'],
       site: '@elitetrivias',
     },
     robots: {

@@ -40,7 +40,7 @@ export function generateNumberScrambleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/number-scramble.webp',
+          url: '/imgs/number-puzzles/number-scramble.webp',
           width: 1200,
           height: 630,
           alt: 'Number Sequence Puzzle Game - Free Math Brain Teaser'
@@ -53,7 +53,7 @@ export function generateNumberScrambleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Triviaah',
       description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
-      images: ['/imgs/number-scramble.webp'],
+      images: ['/imgs/number-puzzles/number-scramble.webp'],
       site: '@elitetrivias',
     },
     robots: {

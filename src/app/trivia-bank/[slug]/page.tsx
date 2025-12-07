@@ -1,21 +1,18 @@
 import { getTriviaData, getAllTriviaPreviews } from '@/lib/tbank';
 import TriviaContent from '@/components/trivia-bank/TriviaContent';
 import Link from 'next/link';
-import styles from '@/../styles/Blog.module.css';
 import { Metadata } from 'next';
 
-// Define the type for params
 interface Params {
   slug: string;
 }
 
-// Define the type for trivia data (based on new front matter structure)
 interface TriviaData {
   slug: string;
   title: string;
   header: string;
   excerpt: string;
-  tags: string[] | string; // Allow both array and string
+  tags: string[] | string;
   levels: {
     [key: string]: Array<{
       question: string;
@@ -24,13 +21,11 @@ interface TriviaData {
   };
 }
 
-// Define props for the component
 interface TriviaPageProps {
   params: Promise<Params>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-// Generate metadata for each trivia page
 export async function generateMetadata({ params }: TriviaPageProps): Promise<Metadata> {
   const { slug } = await params;
   const trivia: TriviaData | null = await getTriviaData(slug);
@@ -42,7 +37,6 @@ export async function generateMetadata({ params }: TriviaPageProps): Promise<Met
     };
   }
 
-  // Convert tags to array if it's a string
   const tagsArray = typeof trivia.tags === 'string' 
     ? trivia.tags.split(',').map(tag => tag.trim())
     : trivia.tags;
@@ -63,7 +57,6 @@ export async function generateMetadata({ params }: TriviaPageProps): Promise<Met
   };
 }
 
-// Generate static params for all trivia pages
 export async function generateStaticParams() {
   const triviaCategories = await getAllTriviaPreviews();
   
@@ -72,11 +65,10 @@ export async function generateStaticParams() {
   }));
 }
 
-// Loading component for Suspense fallback
 function LoadingFallback() {
   return (
-    <div className={styles.container}>
-      <div className={styles.loading}>Loading trivia questions...</div>
+    <div className="flex items-center justify-center min-h-[400px]">
+      <div className="text-lg text-gray-600">Loading trivia questions...</div>
     </div>
   );
 }
@@ -90,18 +82,18 @@ export default async function TriviaPage({ params, searchParams }: TriviaPagePro
 
   if (!trivia) {
     return (
-      <div className={styles.container}>
-        <h1>Trivia Not Found</h1>
-        <p>The requested trivia category could not be found.</p>
-        <Link href="/trivia-bank" className={styles.backLink}>
+      <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">Trivia Not Found</h1>
+        <p className="text-gray-600 mb-6">The requested trivia category could not be found.</p>
+        <Link 
+          href="/trivia-bank" 
+          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
           ← Back to All Trivia Categories
         </Link>
       </div>
     );
   }
 
-  // Pass trivia data to client component
-  return (
-    <TriviaContent trivia={trivia} styles={styles} showParam={showParam} />
-  );
+  return <TriviaContent trivia={trivia} showParam={showParam} />;
 }

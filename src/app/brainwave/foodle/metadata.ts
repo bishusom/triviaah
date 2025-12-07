@@ -36,7 +36,7 @@ export function generateFoodleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/foodle-og.webp',
+          url: '/imgs//brainwave/foodle-og.webp',
           width: 1200,
           height: 630,
           alt: 'Foodle - Daily Food Puzzle Game'
@@ -49,7 +49,7 @@ export function generateFoodleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Foodle - Daily Food Puzzle | Triviaah',
       description: 'Guess the food from its 6 attributes: cuisine, course, main ingredients, cooking method, flavor profile, and temperature. Wordle-style food guessing game.',
-      images: ['/imgs/foodle-og.webp'],
+      images: ['/imgs//brainwave/foodle-og.webp'],
       site: '@elitetrivias',
     },
     robots: {

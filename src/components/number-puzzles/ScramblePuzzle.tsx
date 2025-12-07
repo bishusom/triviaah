@@ -24,6 +24,8 @@ interface GameState {
   };
 }
 
+const buttonStyle = "px-6 md:px-3 py-2 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center"
+
 export default function ScramblePuzzle() {
   const [gameState, setGameState] = useState<GameState>({
     numbers: [1, 2, 3, 4, 5, 6],
@@ -395,25 +397,25 @@ export default function ScramblePuzzle() {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={submitSolution}
-            className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-semibold"
+            className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
           >
             Submit
           </button>
           <button
             onClick={clearInput}
-            className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all font-semibold"
+            className={`${buttonStyle} bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-400 hover:to-gray-500 text-white`}
           >
             Clear
           </button>
           <button
             onClick={generateNewPuzzle}
-            className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all font-semibold"
+            className={`${buttonStyle} bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white`}
           >
             New Puzzle
           </button>
           <button
             onClick={showHint}
-            className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all font-semibold"
+            className={`${buttonStyle} bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white`}
           >
             Hint
           </button>

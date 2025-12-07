@@ -18,7 +18,7 @@ export function generateSynonymleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/synonymle-og.webp',
+          url: '/imgs//brainwave/synonymle-og.webp',
           width: 1200,
           height: 630,
           alt: 'Synonymle - Daily Word Guessing Puzzle Game'
@@ -30,7 +30,7 @@ export function generateSynonymleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Synonymle - Daily Word Guessing Puzzle | Triviaah',
       description: 'Guess the word based on semantic similarity and synonyms. Wordle-style vocabulary puzzle game that tests your understanding of word meanings.',
-      images: ['/imgs/synonymle-og.webp'],
+      images: ['/imgs//brainwave/synonymle-og.webp'],
     },
     // Add robots for better indexing
     robots: {

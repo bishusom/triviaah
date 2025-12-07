@@ -18,7 +18,7 @@ export function generateTrordleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/trordle-og.webp',
+          url: '/imgs//brainwave/trordle-og.webp',
           width: 1200,
           height: 630,
           alt: 'Trordle - Daily Trivia Puzzle Game'
@@ -30,7 +30,7 @@ export function generateTrordleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Trordle - Daily Trivia Puzzle | Triviaah',
       description: 'Guess the answer to today\'s trivia puzzle with limited attempts, similar to Wordle but with trivia questions.',
-      images: ['/imgs/trordle-og.webp'],
+      images: ['/imgs//brainwave/trordle-og.webp'],
     },
     // Add robots for better indexing
     robots: {

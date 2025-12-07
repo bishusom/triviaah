@@ -140,16 +140,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
    
   // Word games - MEDIUM priority
-  const personalityTestsCatalog: MetadataRoute.Sitemap = [{
-    url: `${baseUrl}/word-games`,
+  const iQPersonalityTestsCatalog: MetadataRoute.Sitemap = [{
+    url: `${baseUrl}/iq-and-personality-tests`,
     lastModified: new Date('2025-12-02'),
-    changeFrequency: 'weekly',
+    changeFrequency: 'yearly',
     priority: PRIORITY_TIERS.MEDIUM,
   }]
 
-  const personalityTests = ['mbti', 'big-five', 'enneagram', 'disc', 'love-languages', 'holland-code']
-  const personalityTestsPages: MetadataRoute.Sitemap = personalityTests.map(game => ({
-    url: `${baseUrl}/word-games/${game}`,
+  const iQPersonalityTests = ['capa', 'matrixiq', 'mbti', 'big-five', 'enneagram', 'disc', 'love-languages', 'holland-code']
+  const iQPersonalityTestsPages: MetadataRoute.Sitemap = iQPersonalityTests.map(test => ({
+    url: `${baseUrl}/iq-and-personality-tests/${test}`,
     lastModified: new Date(),
     changeFrequency: 'yearly',
     priority: PRIORITY_TIERS.MEDIUM,
@@ -167,7 +167,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: PRIORITY_TIERS.MEDIUM,
   }]
 
-  const wordGames = ['boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder']
+  const wordGames = ['boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder', 'mini-crossword']
   const wordGamePages: MetadataRoute.Sitemap = wordGames.map(game => ({
     url: `${baseUrl}/word-games/${game}`,
     lastModified: new Date(),
@@ -183,7 +183,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: PRIORITY_TIERS.MEDIUM,
   }]
 
-  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku']
+  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku', 'kakuro']
   const numberPuzzlePages: MetadataRoute.Sitemap = numberPuzzles.map(puzzle => ({
     url: `${baseUrl}/number-puzzles/${puzzle}`,
     lastModified: new Date(),
@@ -208,8 +208,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...triviaCategoryPages,
     ...triviaQuizPages,
     ...subcategoryPages,
-    ...personalityTestsCatalog,
-    ...personalityTestsPages,
+    ...iQPersonalityTestsCatalog,
+    ...iQPersonalityTestsPages,
     ...wordGamesCatalog,
     ...wordGamePages,
     ...numberPuzzleCatalog,

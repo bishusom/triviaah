@@ -44,7 +44,7 @@ export function generatePrimeHunterMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/prime-hunter.webp',
+          url: '/imgs/number-puzzles//prime-hunter.webp',
           width: 1200,
           height: 630,
           alt: 'Prime Hunter Puzzle Game - Free Prime Number Challenge'
@@ -57,7 +57,7 @@ export function generatePrimeHunterMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Prime Hunter Puzzle Game | Free Prime Number Challenge | Triviaah',
       description: 'Play Prime Hunter, a free online prime number puzzle game. Identify prime numbers in a grid with limited attempts. Improve your math skills with this fun and challenging brain game.',
-      images: ['/imgs/prime-hunter.webp'],
+      images: ['/imgs/number-puzzles//prime-hunter.webp'],
       site: '@elitetrivias',
     },
     robots: {

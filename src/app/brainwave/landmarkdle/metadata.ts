@@ -40,7 +40,7 @@ export function generateLandmarkdleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/landmarkdle-og.webp',
+          url: '/imgs//brainwave/landmarkdle-og.webp',
           width: 1200,
           height: 630,
           alt: 'Landmarkdle - Daily Landmark Puzzle Game'
@@ -53,7 +53,7 @@ export function generateLandmarkdleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Landmarkdle - Daily Landmark Puzzle | Triviaah',
       description: 'Guess the landmark from its 6 attributes: type, location, architect, built year, height, and material. Wordle-style landmark guessing game.',
-      images: ['/imgs/landmarkdle-og.webp'],
+      images: ['/imgs//brainwave/landmarkdle-og.webp'],
       site: '@elitetrivias',
     },
     robots: {

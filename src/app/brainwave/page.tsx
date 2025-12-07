@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/brainwave-trivia-og.webp',
+        url: '/imgs//brainwave/brainwave-trivia-og.webp',
         width: 1200,
         height: 630,
         alt: 'Brainwave Trivia Games - Play Now',
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',
     description: 'Challenge your mind with our creative brainwave trivia games including Capitale, Plotle, Songle and more!',
-    images: ['/imgs/brainwave-trivia-og.webp'],
+    images: ['/imgs/brainwave/brainwave-trivia-og.webp'],
   },
   robots: {
     index: true,
@@ -61,7 +61,7 @@ async function getDailyPuzzles() {
       category: 'capitale',
       name: 'Capitale',
       path: '/brainwave/capitale',
-      image: '/imgs/capitale-160x160.webp',
+      image: '/imgs/thumbnails/capitale-160x160.webp',
       tagline: 'Guess world capitals in this challenging geography puzzle',
       keywords: 'capital cities game, geography puzzle, world capitals quiz'
       },
@@ -69,7 +69,7 @@ async function getDailyPuzzles() {
       category: 'plotle',
       name: 'Plotle',
       path: '/brainwave/plotle',
-      image: '/imgs/plotle-160x160.webp',
+      image: '/imgs/thumbnails/plotle-160x160.webp',
       tagline: 'Guess the movie from its plot description in emojis',
       keywords: 'movie plot game, film trivia, movie guessing game'
       },
@@ -77,7 +77,7 @@ async function getDailyPuzzles() {
       category: 'celebrile',
       name: 'Celebrile',
       path: '/brainwave/celebrile',
-      image: '/imgs/celebrile-160x160.webp',
+      image: '/imgs/thumbnails/celebrile-160x160.webp',
       tagline: 'Guess the celebrity from fun facts in this star-studded quiz',
       keywords: 'celebrity trivia game, famous people quiz, celebrity guessing game'    
       },
@@ -85,7 +85,7 @@ async function getDailyPuzzles() {
       category: 'songle',
       name: 'Songle',
       path: '/brainwave/songle',
-      image: '/imgs/songle-160x160.webp',
+      image: '/imgs/thumbnails/songle-160x160.webp',
       tagline: 'Identify songs from lyrics snippets in this music challenge',
       keywords: 'music lyrics game, song trivia, music guessing challenge'
       },
@@ -93,7 +93,7 @@ async function getDailyPuzzles() {
       category: 'historidle',
       name: 'Historidle',
       path: '/brainwave/historidle',
-      image: '/imgs/historidle-160x160.webp',
+      image: '/imgs/thumbnails/historidle-160x160.webp',
       tagline: 'Guess the historical event from dates and other intriguing clues',
       keywords: 'history trivia game, historical events quiz, history guessing game'
       },
@@ -101,7 +101,7 @@ async function getDailyPuzzles() {
       category: 'creaturedle',
       name: 'Creaturedle',
       path: '/brainwave/creaturedle',
-      image: '/imgs/creaturedle-160x160.webp',
+      image: '/imgs/thumbnails/creaturedle-160x160.webp',
       tagline: 'Identify animals and mystery creatures from interesting clues',
       keywords: 'animal trivia game, mystery creatures quiz, creature guessing challenge'
       },
@@ -109,7 +109,7 @@ async function getDailyPuzzles() {
       category: 'foodle',
       name: 'Foodle',
       path: '/brainwave/foodle',
-      image: '/imgs/foodle-160x160.webp',
+      image: '/imgs/thumbnails/foodle-160x160.webp',
       tagline: 'Guess the food from its 6 attributes in this tasty puzzle',
       keywords: 'food trivia game, dish guessing quiz, cuisine puzzle challenge'
       },
@@ -117,7 +117,7 @@ async function getDailyPuzzles() {
       category: 'literale',
       name: 'Literale',
       path: '/brainwave/literale',
-      image: '/imgs/literale-160x160.webp',
+      image: '/imgs/thumbnails/literale-160x160.webp',
       tagline: 'Guess the book from its opening line in this literary puzzle',
       keywords: 'book opening game, literature trivia, book guessing puzzle'
       },
@@ -125,7 +125,7 @@ async function getDailyPuzzles() {
       category: 'landmarkdle',
       name: 'Landmarkdle',
       path: '/brainwave/landmarkdle',
-      image: '/imgs/landmarkdle-160x160.webp',
+      image: '/imgs/thumbnails/landmarkdle-160x160.webp',
       tagline: 'Identify famous landmarks from clues in this geography challenge',
       keywords: 'landmark trivia game, famous places quiz, landmark guessing challenge'
       },
@@ -133,7 +133,7 @@ async function getDailyPuzzles() {
       category: 'inventionle',
       name: 'Inventionle',
       path: '/brainwave/inventionle',
-      image: '/imgs/inventionle-160x160.webp',
+      image: '/imgs/thumbnails/inventionle-160x160.webp',
       tagline: 'Guess the invention from historical clues and fun facts',
       keywords: 'invention trivia game, invention guessing quiz, historical inventions challenge'
       },
@@ -141,7 +141,7 @@ async function getDailyPuzzles() {
       category: 'synonymle',
       name: 'Synonymle',
       path: '/brainwave/synonymle',
-      image: '/imgs/synonymle-160x160.webp',
+      image: '/imgs/thumbnails/synonymle-160x160.webp',
       tagline: 'Guess the word based on semantic similarity and synonyms',
       keywords: 'synonymle, word puzzle, daily word, wordle vocabulary, synonym game, semantic game'
       },
@@ -149,7 +149,7 @@ async function getDailyPuzzles() {
       category: 'trordle',
       name: 'Trordle',
       path: '/brainwave/trordle',
-      image: '/imgs/trordle-160x160.webp',
+      image: '/imgs/thumbnails/trordle-160x160.webp',
       tagline: 'Wordle-inspired trivia challenges for curious minds',
       keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
       }
@@ -354,7 +354,7 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
         },
         "primaryImageOfPage": {
           "@type": "ImageObject",
-          "url": "https://triviaah.com/imgs/brainwave-trivia-og.webp",
+          "url": "https://triviaah.com/imgs/thumbnails/brainwave-trivia-og.webp",
           "width": 1200,
           "height": 630
         }

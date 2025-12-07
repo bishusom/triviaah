@@ -9,7 +9,7 @@ import HorizontalScrollSection from '@/components/home/sections/HorizontalScroll
 import Footer from '@/components/home/Footer';
 import CollapsibleSection from '@/components/home/CollapsibleSection';
 import DailyTriviaFact from '@/components/home/DailyTriviaFact';
-import { DAILY_QUIZZES, ADDITIONAL_SECTIONS, BRAIN_WAVES, PERSONALITY_TESTS } from '@/../data/homeContent';
+import { DAILY_QUIZZES, ADDITIONAL_SECTIONS, BRAIN_WAVES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
 
 // Import new section components
 import HeaderSection from '@/components/home/sections/HeaderSection';
@@ -63,8 +63,8 @@ export default function HomePageContent() {
 
         <SectionContainer className="horizontal-scroll-section">
           <HorizontalScrollSection 
-            title="Personality Tests" 
-            items={PERSONALITY_TESTS} 
+            title="IQ & Personality Tests" 
+            items={IQ_PERSONALITY_TESTS} 
           />
         </SectionContainer>
         

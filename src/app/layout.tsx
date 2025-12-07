@@ -6,7 +6,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'; // Add this import
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
 import { SoundProvider } from '@/context/SoundContext';;
 import { Metadata } from 'next';
-import '@styles/globals.css';
+import './globals.css';
 
 const geist = Geist({ 
   subsets: ['latin'], 

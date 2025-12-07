@@ -4,14 +4,12 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { createClient } from '@supabase/supabase-js';
 import { useSound } from '@/context/SoundContext';
-import gameStyles from '@styles/WordGames/WordSearch.module.css';
-import commonStyles from '@styles/WordGames/WordGames.common.module.css';
-
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
+const buttonStyle = "px-6 md:px-8 py-2 font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center";
 
 type DifficultyLevel = 'easy' | 'medium' | 'hard';
 
@@ -295,7 +293,7 @@ export default function WordSearchGame() {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     return localGrid.map(cell => ({
       ...cell,
-      letter: cell.letter || alphabet[Math.floor(Math.random() * alphabet.length)]
+      letter: (cell.letter || alphabet[Math.floor(Math.random() * alphabet.length)]).toUpperCase()
     }));
   };
 
@@ -366,7 +364,7 @@ export default function WordSearchGame() {
       if (cell.element) {
         cell.element.style.backgroundColor = '';
         cell.element.style.boxShadow = '';
-        cell.element.classList.remove(gameStyles.found);
+        cell.element.classList.remove('bg-green-500/90');
       }
     });
 
@@ -447,7 +445,7 @@ export default function WordSearchGame() {
     }
   }, [initGame, difficulty]);
 
-  // Selection handlers
+  // Selection handlers - COPIED FROM DARK VERSION
   const startSelection = (index: number) => {
     if (isLoading) return;
     setIsSelecting(true);
@@ -467,13 +465,15 @@ export default function WordSearchGame() {
 
     const rowDiff = endRow - startRow;
     const colDiff = endCol - startCol;
+    
+    // For first row specifically, ensure horizontal selection works correctly
     let direction = '';
-
-    if (Math.abs(rowDiff) <= 0 && Math.abs(colDiff) > 0) {
+    
+    if (rowDiff === 0 && Math.abs(colDiff) > 0) {
       direction = 'horizontal';
-    } else if (Math.abs(colDiff) <= 0 && Math.abs(rowDiff) > 0) {
+    } else if (colDiff === 0 && Math.abs(rowDiff) > 0) {
       direction = 'vertical';
-    } else if (Math.abs(rowDiff) === Math.abs(colDiff)) {
+    } else if (Math.abs(rowDiff) === Math.abs(colDiff) && rowDiff !== 0) {
       direction = 'diagonal';
     } else {
       return;
@@ -487,8 +487,14 @@ export default function WordSearchGame() {
     for (let i = 1; i <= steps; i++) {
       const r = startRow + i * rowStep;
       const c = startCol + i * colStep;
+      
+      // Ensure we don't go out of bounds
       if (r >= 0 && r < config[difficulty].gridRows && c >= 0 && c < config[difficulty].gridCols) {
-        newSelectedCells.push(r * size + c);
+        const cellIndex = r * size + c;
+        // Ensure we don't add duplicates
+        if (!newSelectedCells.includes(cellIndex)) {
+          newSelectedCells.push(cellIndex);
+        }
       }
     }
 
@@ -539,7 +545,7 @@ export default function WordSearchGame() {
           const element = cell.element || document.querySelector(`[data-index="${index}"]`);
           if (element instanceof HTMLElement) {
             element.style.backgroundColor = colors[colorIndex];
-            element.classList.add(gameStyles.found);
+            element.classList.add('bg-green-500/90');
           }
           return { ...cell, element };
         }
@@ -630,148 +636,195 @@ export default function WordSearchGame() {
   };
 
   return (
-    <div className={commonStyles.container}>
-      <div className={commonStyles.header}>
-        <div>
-          <h2 className={commonStyles.title}>Word Search</h2>
-          <div className={commonStyles.levelText}>
-            Level: {currentLevel} ({difficulty})
-            {difficulty !== 'hard' ? (
-              consecutiveWins < 3 ? ` • Wins to next difficulty: ${3 - consecutiveWins}` : ' • Ready to advance!'
-            ) : ' • Max difficulty!'}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 p-4 md:p-6 flex flex-col items-center justify-center">
+      <div className="w-full max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 p-4 bg-white/70 rounded-xl backdrop-blur-sm border border-gray-200 shadow-lg">
+          <div className="text-center md:text-left mb-4 md:mb-0">
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Word Search
+            </h1>
+            <div className="text-sm md:text-base text-gray-600 mt-1">
+              Level: {currentLevel} ({difficulty})
+              {difficulty !== 'hard' ? (
+                consecutiveWins < 3 ? ` • Wins to next difficulty: ${3 - consecutiveWins}` : ' • Ready to advance!'
+              ) : ' • Max difficulty!'}
+            </div>
           </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className={commonStyles.timerContainer}>
-            ⏱️ {formatTime(timer)}
-          </div>
-          <div className={commonStyles.scoreText}>
-            Words: {words.length - foundWords.length}/{words.length}
-          </div>
-        </div>
-      </div>
-   
-      {isLoading && (
-        <div className="p-3 rounded mb-4 bg-blue-100 text-blue-800 text-center">
-          <div className="flex items-center justify-center gap-2">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-800"></div>
-            <div>Creating your puzzle...</div>
-          </div>
-        </div>
-      )}
-
-      {error && (
-        <div className="p-3 rounded mb-4 bg-red-100 text-red-800 text-center">
-          <div className="flex items-center justify-center gap-2">
-            <div>{retryCountRef.current >= config.maxRetries ? '❌' : '⚠️'}</div>
-            <div>{error}</div>
-          </div>
-          {retryCountRef.current >= config.maxRetries && (
-            <button className="mt-2 px-3 py-1 bg-blue-600 text-white rounded" onClick={() => initGame()}>Try Again</button>
-          )}
-        </div>
-      )}
-
-      <div
-        key={`grid-${gridKey}`}
-        ref={gridRef}
-        className={`${gameStyles.wordSearchGrid}`}
-        style={{
-          gridTemplateColumns: `repeat(${config[difficulty].gridCols}, ${cellSize}px)`,
-          gridTemplateRows: `repeat(${config[difficulty].gridRows}, ${cellSize}px)`,
-          width: `${cellSize * config[difficulty].gridCols}px`,
-          height: `${cellSize * config[difficulty].gridRows}px`,
-        }}
-      >
-        {grid.map((cell, index) => (
-          <div
-            key={`cell-${index}-${gridKey}`}
-            data-index={index}
-            className={`${gameStyles.wordSearchCell} ${
-              selectedCells.includes(index) ? gameStyles.selected : ''
-            } ${cell.element?.classList.contains('found') ? gameStyles.found : ''}`}
-            style={{
-              width: `${cellSize}px`,
-              height: `${cellSize}px`,
-              fontSize: `${Math.max(12, cellSize * 0.6)}px`,
-            }}
-            onMouseDown={() => startSelection(index)}
-            onMouseEnter={() => continueSelection(index)}
-            onMouseUp={endSelection}
-            onTouchStart={(e) => {
-              e.preventDefault();
-              startSelection(index);
-            }}
-            onTouchMove={(e) => {
-              e.preventDefault();
-              const touch = e.touches[0];
-              const target = document.elementFromPoint(touch.clientX, touch.clientY);
-              if (target && target.classList.contains(gameStyles.wordSearchCell)) {
-                const index = parseInt(target.getAttribute('data-index') || '');
-                if (!isNaN(index)) continueSelection(index);
-              }
-            }}
-            onTouchEnd={(e) => {
-              e.preventDefault();
-              endSelection();
-            }}
-          >
-            {cell.letter}
-          </div>
-        ))}
-      </div>
-
-      {feedback.message && !isLoading && (
-        <div className={`mb-4 p-3 rounded text-center ${gameStyles[feedback.type]}`}>
-          {feedback.message}
-        </div>
-      )}
-
-      <div className={gameStyles.wordsToFind}>
-        <h3 className={gameStyles.wordsHeader}>Words to Find:</h3>
-        <div className={gameStyles.wordsGrid}>
-          {words
-            .sort((a, b) => a.word.localeCompare(b.word))
-            .map((wordObj, i) => (
-              <div
-                key={i}
-                className={`${gameStyles.wordItem} ${foundWords.includes(wordObj.word) ? gameStyles.hidden : ''}`}
-              >
-                {wordObj.word}
-              </div>
-            ))}
-        </div>
-      </div>
-
-      <div className={`${commonStyles.actionButtons}`}>
-        <button
-          onClick={() => initGame()}
-          className={`${commonStyles.actionButton} ${commonStyles.playAgainButton}`}
-          disabled={isLoading}
-        >
-          New Game
-        </button>
-        <button
-          onClick={giveHint}
-          className={`${commonStyles.actionButton} ${commonStyles.hintButton}`}
-          disabled={isLoading}
-        >
-          Hint
-        </button>
-      </div>
-
-      {showVictory && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className={gameStyles.victoryContent}>
-            <h2 className={gameStyles.victoryTitle}>Victory!</h2>
-            <p className={gameStyles.victoryMessage}>{victoryMessage}</p>
-            <p className={gameStyles.victoryStats}>Words Found: {foundWords.length}</p>
-            <div className={gameStyles.countdown}>
-              Next level in {countdown}...
+          <div className="flex items-center gap-4 md:gap-6">
+            <div className="bg-white/90 px-4 py-2 rounded-lg border border-gray-300 font-bold text-lg shadow-sm">
+              ⏱️ {formatTime(timer)}
+            </div>
+            <div className="bg-white/90 px-4 py-2 rounded-lg border border-gray-300 font-bold text-lg shadow-sm">
+              Words: {words.length - foundWords.length}/{words.length}
             </div>
           </div>
         </div>
-      )}
+
+        {/* Loading and Error States */}
+        {isLoading && (
+          <div className="p-4 rounded-xl mb-6 bg-blue-50 text-blue-700 text-center border border-blue-200 backdrop-blur-sm">
+            <div className="flex items-center justify-center gap-3">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              <div className="text-lg">Creating your puzzle...</div>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="p-4 rounded-xl mb-6 bg-red-50 text-red-700 text-center border border-red-200 backdrop-blur-sm">
+            <div className="flex items-center justify-center gap-3">
+              <div>{retryCountRef.current >= config.maxRetries ? '❌' : '⚠️'}</div>
+              <div>{error}</div>
+            </div>
+            {retryCountRef.current >= config.maxRetries && (
+              <button 
+                className="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm" 
+                onClick={() => initGame()}
+              >
+                Try Again
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Game Grid */}
+        <div className="flex justify-center mb-6 md:mb-8">
+          <div
+            key={`grid-${gridKey}`}
+            ref={gridRef}
+            className="grid gap-1 md:gap-2 p-6 bg-white/80 rounded-3xl backdrop-blur-sm border border-gray-300 shadow-2xl"
+            style={{
+              gridTemplateColumns: `repeat(${config[difficulty].gridCols}, 1fr)`,
+              gridTemplateRows: `repeat(${config[difficulty].gridRows}, 1fr)`,
+              width: 'fit-content',
+              maxWidth: '100%',
+              aspectRatio: `${config[difficulty].gridCols} / ${config[difficulty].gridRows}`,
+            }}
+          >
+            {grid.map((cell, index) => (
+              <div
+                key={`cell-${index}-${gridKey}`}
+                data-index={index}
+                className={`
+                  flex items-center justify-center font-bold text-2xl md:text-3xl
+                  transition-all duration-200 select-none rounded-xl
+                  border border-gray-300 backdrop-blur-sm
+                  ${selectedCells.includes(index)
+                    ? 'bg-blue-500 text-white scale-110 shadow-2xl shadow-blue-500/60 z-10 border-blue-400'
+                    : foundWords.some(w => grid[index].word === w)
+                      ? 'bg-green-500/90 text-white shadow-lg shadow-green-500/50 border-green-400'
+                      : 'bg-white hover:bg-gray-100 text-gray-800 border-gray-300'
+                  }
+                `}
+                style={{
+                  aspectRatio: '1 / 1',
+                  minWidth: '36px',
+                  minHeight: '36px',
+                }}
+                onMouseDown={() => startSelection(index)}
+                onMouseEnter={() => continueSelection(index)}
+                onMouseUp={endSelection}
+                onTouchStart={(e) => { e.preventDefault(); startSelection(index); }}
+                onTouchMove={(e) => {
+                  e.preventDefault();
+                  const touch = e.touches[0];
+                  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                  if (el?.hasAttribute('data-index')) {
+                    continueSelection(parseInt(el.getAttribute('data-index')!, 10));
+                  }
+                }}
+                onTouchEnd={(e) => { e.preventDefault(); endSelection(); }}
+              >
+                {cell.letter.toUpperCase()}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Feedback Message - Always reserves space to prevent layout shift */}
+        <div className="min-h-20 mb-6 md:mb-8 flex items-center justify-center">
+          {feedback.message && !isLoading ? (
+            <div
+              className={`
+                w-full max-w-2xl text-center text-lg font-medium p-4 rounded-xl border backdrop-blur-sm
+                transition-all duration-500 ease-out
+                animate-in fade-in zoom-in-95
+                ${
+                  feedback.type === 'error'
+                    ? 'bg-red-50 text-red-700 border-red-200'
+                    : feedback.type === 'success'
+                    ? 'bg-green-50 text-green-700 border-green-200'
+                    : 'bg-blue-50 text-blue-700 border-blue-200'
+                }
+              `}
+            >
+              {feedback.message}
+            </div>
+          ) : (
+            <div className="h-20" />
+          )}
+        </div>
+
+        {/* Words to Find - Now positioned lower on the page */}
+        <div className="bg-white/70 rounded-2xl p-4 md:p-6 backdrop-blur-sm border border-gray-200 shadow-lg mb-6">
+          <h3 className="text-lg md:text-xl font-bold text-center mb-4 text-gray-700">Words to Find:</h3>
+          <div className="flex flex-wrap gap-2 md:gap-3 justify-center">
+            {words
+              .sort((a, b) => a.word.localeCompare(b.word))
+              .map((wordObj, i) => (
+                <div
+                  key={i}
+                  className={`px-3 md:px-4 py-2 rounded-lg font-medium border transition-all duration-300 ${
+                    foundWords.includes(wordObj.word) 
+                      ? 'bg-green-100 text-green-700 border-green-300 opacity-60 line-through' 
+                      : 'bg-white text-gray-800 border-gray-300 shadow-sm'
+                  }`}
+                >
+                  {wordObj.word}
+                </div>
+              ))}
+          </div>
+        </div>
+
+         {/* Action Buttons */}
+        <div className="flex justify-center gap-4 md:gap-6">
+          <button
+            onClick={() => initGame()}
+            className={`${buttonStyle} bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white`}
+            disabled={isLoading}
+          >
+            New Game
+          </button>
+          <button
+            onClick={giveHint}
+            className={`${buttonStyle} bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white`}
+            disabled={isLoading}
+          >
+            Hint
+          </button>
+        </div>
+
+        {/* Victory Modal */}
+        {showVictory && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+            <div className="bg-gradient-to-br from-white to-gray-100 rounded-2xl p-6 md:p-8 max-w-md w-full border border-gray-300 shadow-2xl">
+              <h2 className="text-2xl md:text-3xl font-bold text-center mb-4 bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
+                Victory!
+              </h2>
+              <p className="text-lg text-center text-gray-700 mb-4">
+                {victoryMessage}
+              </p>
+              <p className="text-center text-gray-600 mb-6">
+                Words Found: <span className="font-bold text-green-600">{foundWords.length}</span>
+              </p>
+              <div className="text-center text-lg text-blue-600 font-mono">
+                Next level in {countdown}...
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

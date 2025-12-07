@@ -169,11 +169,11 @@ export default function NumberScramblePage() {
         </div>
       )}
 
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-3xl mx-auto p-4">
         {/* Header with Last Updated */}
         <div className="text-center mb-8">
           <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Number Sequence Puzzle Game</h1>
+            <h1 className="text-3xl font-bold">Number Scramble Puzzle Game</h1>
             <time 
               dateTime={lastUpdated} 
               className="bg-red-50 px-3 py-1 rounded-full text-xs font-medium border border-red-200"
@@ -187,7 +187,7 @@ export default function NumberScramblePage() {
             </time>
           </div>
           <p className="text-lg text-gray-600">
-            Identify number patterns and predict the next numbers in sequences. 
+            Arrange the numbers and mathematical operators in correct sequence to form the target number.
             Challenge your mathematical thinking and pattern recognition skills!
           </p>
         </div>
