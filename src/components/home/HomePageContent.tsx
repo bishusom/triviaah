@@ -14,6 +14,7 @@ import { DAILY_QUIZZES, ADDITIONAL_SECTIONS, BRAIN_WAVES, IQ_PERSONALITY_TESTS }
 // Import new section components
 import HeaderSection from '@/components/home/sections/HeaderSection';
 import HeroSection from '@/components/home/sections/HeroSection';
+import { HolidaySpecial } from '@/components/home/sections/HolidaySpecial';
 import SeoContentSection from '@/components/home/sections/SeoContentSection';
 import HowItWorksSection from '@/components/home/sections/HowItWorksSection';
 import SectionContainer from '@/components/home/sections/SectionContainer';
@@ -35,6 +36,8 @@ export default function HomePageContent() {
       
       <main className="container mx-auto px-4 py-6 flex-grow">
         <HeroSection />
+
+        <HolidaySpecial />
 
         <SectionContainer className="horizontal-scroll-section">
           <HorizontalScrollSection 

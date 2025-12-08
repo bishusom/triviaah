@@ -444,6 +444,81 @@ export async function getTodaysHistoryQuestions(count: number, userDate?: Date):
   }
 }
 
+export async function getHolidaySpecialQuiz(category: string, count: number): Promise<Question[]> {
+  try {
+    const randomSeed = Math.random();
+    // Use the random_index to get a random set
+    const { data: questions, error } = await supabase
+      .from('holiday_special_trivias')
+      .select('*')
+      .eq('category', category);
+      
+    if (error) throw error;
+    if (!questions || questions.length === 0) return [];
+
+    // Categorize questions by difficulty
+    const questionsByDifficulty = {
+      easy: [] as DbQuestion[],
+      medium: [] as DbQuestion[],
+      hard: [] as DbQuestion[]
+    };
+
+    questions.forEach((question: DbQuestion) => {
+      const difficulty = question.difficulty?.toLowerCase() || 'medium';
+      if (difficulty === 'easy') {
+        questionsByDifficulty.easy.push(question);
+      } else if (difficulty === 'hard') {
+        questionsByDifficulty.hard.push(question);
+      } else {
+        questionsByDifficulty.medium.push(question);
+      }
+    });
+
+    // Calculate how many questions to take from each difficulty
+    const easyCount = Math.min(
+      Math.ceil(count * 0.4), // 40% easy
+      questionsByDifficulty.easy.length
+    );
+    const hardCount = Math.min(
+      Math.ceil(count * 0.3), // 30% hard
+      questionsByDifficulty.hard.length
+    );
+    const mediumCount = Math.min(
+      count - easyCount - hardCount, // Remaining 30%
+      questionsByDifficulty.medium.length
+    );
+
+    // Select random questions from each difficulty
+    const getRandomQuestions = (pool: DbQuestion[], num: number) => {
+      const shuffled = [...pool].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, num);
+    };
+
+    const selectedQuestions = [
+      ...getRandomQuestions(questionsByDifficulty.easy, easyCount),
+      ...getRandomQuestions(questionsByDifficulty.medium, mediumCount),
+      ...getRandomQuestions(questionsByDifficulty.hard, hardCount)
+    ];
+
+    // Transform to Question format and shuffle
+    return shuffleArray(selectedQuestions.map(q => ({
+      id: q.id,
+      question: q.question,
+      correct: q.correct_answer,
+      options: shuffleArray([...q.incorrect_answers, q.correct_answer]),
+      difficulty: q.difficulty,
+      category: q.category,
+      ...(q.subcategory && { subcategory: q.subcategory }),
+      ...(q.titbits && { titbits: q.titbits }),
+      ...(q.image_url && { image_url: q.image_url })
+    })));
+
+  } catch (error) {
+    console.error('Error in getCategoryQuestions:', error);
+    return [];
+  }
+}
+
 function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
