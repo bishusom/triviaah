@@ -1,4 +1,5 @@
 // src/components/word-games/MiniCrosswordGame.tsx
+import { event } from '@/lib/gtag';
 import React, { useState, useEffect } from 'react';
 import { RefreshCw, Check, X, Trophy, Star, HelpCircle } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
@@ -221,9 +222,6 @@ const MiniCrosswordGame: React.FC = () => {
       setWords(selectedWords.sort((a, b) => a.number - b.number));
       setIsComplete(false);
       setShowErrors(false);
-      
-      // Record puzzle generation
-      recordPuzzleGenerated(selectedWords.length);
     } catch (error) {
       console.error('Error generating puzzle:', error);
       // Fallback to default puzzle
@@ -344,9 +342,6 @@ const MiniCrosswordGame: React.FC = () => {
       
       setGameStats(newStats);
       saveGameStats(newStats);
-      
-      // Record completion
-      recordPuzzleCompleted(words.length);
     }
   };
 
@@ -365,37 +360,6 @@ const MiniCrosswordGame: React.FC = () => {
           return;
         }
       }
-    }
-  };
-
-  const recordPuzzleGenerated = async (wordCount: number) => {
-    try {
-      await supabase
-        .from('crossword_analytics')
-        .insert([{
-          event_type: 'puzzle_generated',
-          difficulty,
-          word_count: wordCount,
-          timestamp: new Date().toISOString()
-        }]);
-    } catch (error) {
-      console.error('Error recording puzzle generation:', error);
-    }
-  };
-
-  const recordPuzzleCompleted = async (wordCount: number) => {
-    try {
-      await supabase
-        .from('crossword_analytics')
-        .insert([{
-          event_type: 'puzzle_completed',
-          difficulty,
-          word_count: wordCount,
-          time_taken: 900 - timeLeft,
-          timestamp: new Date().toISOString()
-        }]);
-    } catch (error) {
-      console.error('Error recording puzzle completion:', error);
     }
   };
 
