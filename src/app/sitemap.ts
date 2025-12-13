@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
+import { getCurrentMonthQuiz, SPECIAL_QUIZZES } from '@/config/special-quizzes' // Add this import
 
 // Contentful response types
 interface ContentfulSys {
@@ -26,8 +27,15 @@ const PRIORITY_TIERS = {
   MINIMAL: 0.3    // Archive pages, older content
 } as const;
 
+function getMonthName(monthNumber: number): string {
+  return new Date(2000, monthNumber - 1, 1).toLocaleString('default', { month: 'long' });
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://triviaah.com'
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = currentDate.getFullYear();
 
   // Static main pages - REALISTIC priorities
   const mainPages: MetadataRoute.Sitemap = [
@@ -120,6 +128,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: PRIORITY_TIERS.MEDIUM,
   }))
 
+  // 🆕 SPECIAL QUIZZES - Monthly rotating content
+  const specialQuizzesCatalog: MetadataRoute.Sitemap = [{
+    url: `${baseUrl}/special-quizzes`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly', // Updates when month changes
+    priority: PRIORITY_TIERS.MEDIUM,
+  }]
+
+  // Get current month's quiz for inclusion in sitemap
+  const currentMonthQuiz = getCurrentMonthQuiz();
+  
+  // Only include the current month's quiz in sitemap (others are not accessible)
+  const specialQuizPages: MetadataRoute.Sitemap = currentMonthQuiz ? [{
+    url: `${baseUrl}/special-quizzes/${currentMonthQuiz.category}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: PRIORITY_TIERS.MEDIUM,
+    // Optional: Add more metadata if needed
+    // i.e., `<xhtml:link rel="alternate" hreflang="en" href="..."/>`
+  }] : [];
+
   // DYNAMIC: Fetch trivia categories - MEDIUM priority for category pages
   const triviaCategories = await getCategoriesWithMinQuestions(10)
   
@@ -203,6 +232,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...dailyTriviasCatalog,
     ...dailyTriviaCategoryPages,
     ...otherDailyPages,
+    ...specialQuizzesCatalog,     // 🆕 Added special quizzes catalog
+    ...specialQuizPages,          // 🆕 Added current month's special quiz
     ...brainwaveCatalog,
     ...brainwaveCategoryPages,
     ...triviaCategoryPages,

@@ -92,29 +92,21 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
     // Fetch capital image when component mounts
     const fetchImage = async () => {
       setIsImageLoading(true);
-      setHasNoImage(false); // Reset no image state
+      setHasNoImage(false);
       
-      // Try multiple search terms in sequence
-      const searchTerms = getCapitalSearchTerms(
-        puzzleData.answer.toLowerCase(), 
-        puzzleData.country
-      );
-      
-      let imageUrl = null;
-      
-      for (const term of searchTerms) {
-        imageUrl = await fetchWikimediaImage(term);
-        if (imageUrl) {
-          break;
-        }
-      }
+      // Use the enhanced function with proper entity type and context
+      const imageUrl = await fetchWikimediaImage(puzzleData.answer, {
+        entityType: 'capital',
+        context: puzzleData.country,
+        minImageSize: 500
+      });
       
       if (imageUrl) {
         setCapitalImage(imageUrl);
       } else {
-        console.log('No image found, skipping image display');
+        console.log('No image found for capital:', puzzleData.answer);
         setCapitalImage(null);
-        setHasNoImage(true); // Mark that no image exists
+        setHasNoImage(true);
       }
       
       setIsImageLoading(false);
@@ -584,11 +576,11 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
         {/* Letter grid for previous attempts */}
         <div className="mb-6">
           {attempts.map((attempt, index) => (
-            <div key={index} className="flex justify-center mb-2">
+            <div key={index} className="flex flex-wrap justify-center gap-1 mb-2">
               {attempt.letterFeedback.map((letter, letterIndex) => (
                 <div
                   key={letterIndex}
-                  className={`w-8 h-8 flex items-center justify-center mx-1 text-xl font-bold ${
+                  className={`w-8 h-8 flex items-center justify-center text-xl font-bold ${
                     letter.status === 'correct' 
                       ? 'bg-green-500 text-white border-green-500' 
                       : letter.status === 'present' 

@@ -254,7 +254,7 @@ const PosterBlock = ({
 /* -------------------------------------------------------------------------- */
 async function fetchInventionImage(inventionName: string): Promise<string | null> {
   try {
-    const imageUrl = await fetchWikimediaImage(inventionName);
+    const imageUrl = await fetchWikimediaImage(inventionName, { entityType: 'invention' });
     if (!imageUrl) throw new Error('Failed to fetch invention image');
     return imageUrl;
   } catch (error) {

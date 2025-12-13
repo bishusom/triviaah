@@ -1,5 +1,5 @@
 // lib/musicbrainz-cache.ts
-import { fetchArtistImageFromWikipedia } from './wikimedia';
+import { fetchPersonImage } from './wikimedia';
 
 interface CoverArtCache {
   songKey: string;
@@ -199,7 +199,7 @@ export async function getSongCoverArt(songTitle: string, artist: string): Promis
     // Fallback to Wikipedia if MusicBrainz failed
     if (!imageUrl) {
       console.log('MusicBrainz cover art not found, trying Wikipedia...');
-      imageUrl = await fetchArtistImageFromWikipedia(`${artist} music artist`);
+      imageUrl = await fetchPersonImage(`${artist} music artist`);
       if (imageUrl) {
         source = 'wikipedia';
         console.log(`Found image on Wikipedia for ${artist}`);

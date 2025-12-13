@@ -254,7 +254,7 @@ const PosterBlock = ({
 /* -------------------------------------------------------------------------- */
 async function fetchFoodImage(foodName: string): Promise<string | null> {
   try {
-    const imageUrl = await fetchWikimediaImage(foodName);
+    const imageUrl = await fetchWikimediaImage(foodName, { entityType: 'food' });
     if (!imageUrl) throw new Error('Failed to fetch food image');
     return imageUrl;
   } catch (error) {

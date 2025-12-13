@@ -12,7 +12,7 @@ import {
   type CelebrileData, 
   type CelebrileGuessResult 
 } from '@/lib/brainwave/celebrile/celebrile-logic';
-import { fetchArtistImageFromWikipedia } from '@/lib/wikimedia';
+import { fetchWikimediaImage } from '@/lib/wikimedia';
 import Image from 'next/image';
 
 interface CelebrileComponentProps {
@@ -319,7 +319,7 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
       try {
         setImageLoading(true);
         setImageError(false);
-        const imageUrl = await fetchArtistImageFromWikipedia(puzzleData.targetName);
+        const imageUrl = await fetchWikimediaImage(puzzleData.targetName, { entityType: 'person' });
         
         if (imageUrl) {
           console.log('Image found:', imageUrl);

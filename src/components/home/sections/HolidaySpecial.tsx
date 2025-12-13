@@ -1,27 +1,11 @@
 // components/seasonal/HolidaySpecial.tsx
 import Link from 'next/link';
 import { useMemo } from 'react';
+import { getCurrentMonthQuiz, SPECIAL_QUIZZES, type SpecialQuiz } from '@/config/special-quizzes';
 
 export function HolidaySpecial() {
   const holiday = useMemo(() => {
-    const today = new Date();
-    const month = today.getMonth() + 1;
-    
-    if (month === 12) return {
-      theme: "Christmas Holiday",
-      category: "christmas-specials",
-      emojis: ["🎄", "🎅", "🤶", "🦌", "🎁", "🔔", "⛄", "🎶"],
-      bgColor: "bg-gradient-to-r from-blue-900 to-red-900"
-    };
-    
-    if (month === 10) return {
-      theme: "Spooky Halloween Facts", 
-      category: "history",
-      emojis: ["🎃", "👻", "💀", "🕸️", "🕷️", "😱", "🧙", "🦇"],
-      bgColor: "bg-gradient-to-r from-purple-900 to-orange-900"
-    };
-    
-    return null;
+    return getCurrentMonthQuiz();
   }, []);
 
   // Generate static emoji positions
@@ -80,12 +64,12 @@ export function HolidaySpecial() {
         <h3 className="text-2xl mb-2 drop-shadow-lg">
           {holiday.emojis[0]} {holiday.theme} {holiday.emojis[1]}
         </h3>
-        <p className="mb-4 drop-shadow-md">Special seasonal content available for limited time!</p>
+        <p className="mb-4 drop-shadow-md">{holiday.description}</p>
         <Link 
           href={`/special-quizzes/${holiday.category}`}
           className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-lg hover:shadow-xl relative z-20"
         >
-          Play {holiday.theme} Quiz
+          Play {holiday.name}
         </Link>
       </div>
     </div>

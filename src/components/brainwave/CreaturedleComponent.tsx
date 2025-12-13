@@ -254,7 +254,7 @@ const PosterBlock = ({
 /* -------------------------------------------------------------------------- */
 async function fetchAnimalImage(animalName: string): Promise<string | null> {
   try {
-    const imageUrl = await fetchWikimediaImage(animalName);
+    const imageUrl = await fetchWikimediaImage(animalName, { entityType: 'animal' });
     if (!imageUrl) throw new Error('Failed to fetch animal image');
     return imageUrl;
   } catch (error) {
