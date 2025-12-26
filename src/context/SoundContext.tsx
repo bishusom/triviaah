@@ -15,13 +15,13 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
   // Load mute state from localStorage on mount
   useEffect(() => {
-    const savedMute = localStorage.getItem('triviaahMuted');
+    const savedMute = localStorage.getItem('Elite TriviasMuted');
     setIsMuted(savedMute === 'true');
   }, []);
 
   // Save mute state to localStorage when it changes
   useEffect(() => {
-    localStorage.setItem('triviaahMuted', String(isMuted));
+    localStorage.setItem('Elite TriviasMuted', String(isMuted));
   }, [isMuted]);
 
   const toggleMute = () => {

@@ -175,7 +175,7 @@ export async function generateMetadata({ params }: PageProps) {
   const isQuickfire = resolvedParams.category === 'quick-fire';
   const timePerQuestion = isQuickfire ? 10 : 15;
 
-  const title = `${formattedCategory} Daily Quiz | Triviaah`;
+  const title = `${formattedCategory} Daily Quiz | Elite Trivias`;
   const description = `Test your ${formattedCategory.toLowerCase()} knowledge with ${timePerQuestion}-second daily trivia questions. ${isQuickfire ? 'Quickfire challenge with bonus round!' : 'New challenges every day!'} Free, no signup required.`;
 
   return {
@@ -185,7 +185,7 @@ export async function generateMetadata({ params }: PageProps) {
       title,
       description,
       type: 'website',
-      url: `https://triviaah.com/daily-trivias/${resolvedParams.category}`,
+      url: `https://elitetrivias.com/daily-trivias/${resolvedParams.category}`,
     },
     twitter: {
       card: 'summary_large_image',
@@ -193,7 +193,7 @@ export async function generateMetadata({ params }: PageProps) {
       description,
     },
     alternates: {
-      canonical: `https://triviaah.com/daily-trivias/${resolvedParams.category}`
+      canonical: `https://elitetrivias.com/daily-trivias/${resolvedParams.category}`
     }
   };
 }

@@ -18,10 +18,10 @@ export default function WordSearchPage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Word Games', 'Educational Entertainment', 'Vocabulary Games', 'Puzzle Games', 'Brain Games']
@@ -29,15 +29,15 @@ export default function WordSearchPage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free Word Search Puzzles Online | Printable Word Find Games | Triviaah',
+      name: 'Free Word Search Puzzles Online | Printable Word Find Games | Elite Trivias',
       description: 'Play free word search puzzles online. Find hidden words in our themed word find games. Perfect for vocabulary practice, relaxation, and educational fun for all ages.',
-      url: 'https://triviaah.com/word-games/word-search',
+      url: 'https://elitetrivias.com/word-games/word-search',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Word Search',
         description: 'Classic word finding puzzle where players locate hidden words in letter grids. Features multiple difficulty levels, themed puzzles, and printable options for educational and recreational use.',
-        gameLocation: 'https://triviaah.com/word-games/word-search',
+        gameLocation: 'https://elitetrivias.com/word-games/word-search',
         characterAttribute: 'Vocabulary, Pattern Recognition, Visual Scanning, Cognitive Skills, Relaxation, Educational Entertainment'
       }
     },
@@ -49,19 +49,19 @@ export default function WordSearchPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://triviaah.com'
+          item: 'https://elitetrivias.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Word Games',
-          item: 'https://triviaah.com/word-games'
+          item: 'https://elitetrivias.com/word-games'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Word Search',
-          item: 'https://triviaah.com/word-games/word-search'
+          item: 'https://elitetrivias.com/word-games/word-search'
         }
       ]
     },

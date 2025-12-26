@@ -18,10 +18,10 @@ export default function NumberSequencePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Number Games', 'Educational Entertainment', 'Math Puzzles', 'Brain Games', 'Cognitive Games']
@@ -29,15 +29,15 @@ export default function NumberSequencePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Number Sequence Puzzle Game | Free Math Pattern Challenge | Triviaah',
+      name: 'Number Sequence Puzzle Game | Free Math Pattern Challenge | Elite Trivias',
       description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
-      url: 'https://triviaah.com/number-puzzles/number-sequence',
+      url: 'https://elitetrivias.com/number-puzzles/number-sequence',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Number Sequence',
         description: 'Math puzzle game where players identify patterns and predict the next numbers in sequences. Features arithmetic, geometric, Fibonacci, and complex number patterns with multiple difficulty levels and educational benefits.',
-        gameLocation: 'https://triviaah.com/number-puzzles/number-sequence',
+        gameLocation: 'https://elitetrivias.com/number-puzzles/number-sequence',
         characterAttribute: 'Math Skills, Pattern Recognition, Logical Thinking, Problem Solving, Cognitive Skills, Mental Math, Analytical Reasoning'
       }
     },
@@ -49,19 +49,19 @@ export default function NumberSequencePage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://triviaah.com'
+          item: 'https://elitetrivias.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Number Puzzles',
-          item: 'https://triviaah.com/number-puzzles'
+          item: 'https://elitetrivias.com/number-puzzles'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Number Sequence',
-          item: 'https://triviaah.com/number-puzzles/number-sequence'
+          item: 'https://elitetrivias.com/number-puzzles/number-sequence'
         }
       ]
     },

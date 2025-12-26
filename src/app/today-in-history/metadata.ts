@@ -21,7 +21,7 @@ export function generateTodayInHistoryMetadata(): Metadata {
     openGraph: {
       title: `On This Day in History - Today's Quiz`,
       description: `What happened on this day in history? Take our daily quiz personalized for your local date!`,
-      url: 'https://triviaah.com/today-in-history',
+      url: 'https://elitetrivias.com/today-in-history',
       images: [
         {
           url: '/imgs/today-history-rect.webp',
@@ -40,7 +40,7 @@ export function generateTodayInHistoryMetadata(): Metadata {
       images: ['/imgs/today-history-rect.webp']
     },
     alternates: {
-      canonical: 'https://triviaah.com/today-in-history'
+      canonical: 'https://elitetrivias.com/today-in-history'
     },
     robots: {
       index: true,

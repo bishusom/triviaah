@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   const categoryDescription = categoryData.description;
 
   return {
-    title: `${categoryTitle} Trivia Quiz | Triviaah`,
+    title: `${categoryTitle} Trivia Quiz | Elite Trivias`,
     description: `Play free ${categoryTitle.toLowerCase()} trivia quiz. ${categoryDescription} Test your knowledge with our online trivia questions.`,
     keywords: [
       `${categoryTitle.toLowerCase()} trivia`,
@@ -56,10 +56,10 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
       ...(categoryData.keywords || [])
     ],
     openGraph: {
-      title: `${categoryTitle} Trivia Quiz | Triviaah`,
+      title: `${categoryTitle} Trivia Quiz | Elite Trivias`,
       description: `Play free ${categoryTitle.toLowerCase()} trivia quiz. ${categoryDescription} Test your knowledge with our online trivia questions.`,
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/trivias/${category}`,
-      siteName: 'Triviaah',
+      siteName: 'Elite Trivias',
       images: categoryData.ogImage ? [{ 
         url: categoryData.ogImage,
         width: 1200,
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${categoryTitle} Trivia Quiz | Triviaah`,
+      title: `${categoryTitle} Trivia Quiz | Elite Trivias`,
       description: `Play free ${categoryTitle.toLowerCase()} trivia quiz. ${categoryDescription} Test your knowledge with our online trivia questions.`,
       images: categoryData.ogImage ? [categoryData.ogImage] : [],
     },
@@ -388,7 +388,7 @@ function StructuredData({
   categoryData, 
   subcategories 
 }: StructuredDataProps) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://triviaah.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://elitetrivias.com';
   const categoryUrl = `${siteUrl}/trivias/${category}`;
 
   const structuredData = {
@@ -396,13 +396,13 @@ function StructuredData({
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://triviaah.com/#organization",
-        "name": "Triviaah",
-        "url": "https://triviaah.com/",
-        "description": "Triviaah offers engaging and educational trivia games and puzzles for everyone.",
+        "@id": "https://elitetrivias.com/#organization",
+        "name": "Elite Trivias",
+        "url": "https://elitetrivias.com/",
+        "description": "Elite Trivias offers engaging and educational trivia games and puzzles for everyone.",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://triviaah.com/logo.png",
+          "url": "https://elitetrivias.com/logo.png",
           "width": 200,
           "height": 60
         },
@@ -419,7 +419,7 @@ function StructuredData({
         "name": `${categoryData.title} Trivia Quiz | Free Online Questions`,
         "description": `Play free ${categoryData.title.toLowerCase()} trivia quiz. ${categoryData.description} Test your knowledge with our online trivia questions.`,
         "isPartOf": {
-          "@id": "https://triviaah.com/#website"
+          "@id": "https://elitetrivias.com/#website"
         },
         "about": {
           "@id": `${categoryUrl}/#game`
@@ -438,19 +438,19 @@ function StructuredData({
       },
       {
         "@type": "WebSite",
-        "@id": "https://triviaah.com/#website",
-        "url": "https://triviaah.com/",
-        "name": "Triviaah",
+        "@id": "https://elitetrivias.com/#website",
+        "url": "https://elitetrivias.com/",
+        "name": "Elite Trivias",
         "description": "Engaging trivia games and puzzles for everyone",
         "publisher": {
-          "@id": "https://triviaah.com/#organization"
+          "@id": "https://elitetrivias.com/#organization"
         },
         "potentialAction": [
           {
             "@type": "SearchAction",
             "target": {
               "@type": "EntryPoint",
-              "urlTemplate": "https://triviaah.com/search?q={search_term_string}"
+              "urlTemplate": "https://elitetrivias.com/search?q={search_term_string}"
             },
             "query-input": "required name=search_term_string"
           }
@@ -470,7 +470,7 @@ function StructuredData({
           "minValue": 1
         },
         "publisher": {
-          "@id": "https://triviaah.com/#organization"
+          "@id": "https://elitetrivias.com/#organization"
         },
         "offers": {
           "@type": "Offer",
@@ -479,7 +479,7 @@ function StructuredData({
         },
         "operatingSystem": "Any",
         "author": {
-          "@id": "https://triviaah.com/#organization"
+          "@id": "https://elitetrivias.com/#organization"
         }
       },
       {
@@ -490,13 +490,13 @@ function StructuredData({
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://triviaah.com"
+            "item": "https://elitetrivias.com"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Trivia Categories",
-            "item": "https://triviaah.com/trivias"
+            "item": "https://elitetrivias.com/trivias"
           },
           {
             "@type": "ListItem",

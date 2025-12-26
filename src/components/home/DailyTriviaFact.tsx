@@ -148,7 +148,7 @@ export default function DailyTriviaFact() {
   const shareFact = async () => {
     if (!todayFact?.fact) return;
 
-    const shareText = `🤔 Daily Trivia Fact:\n\n"${todayFact.fact.fact_text}"\n\nCategory: ${todayFact.fact.category}\nType: ${FACT_TYPES[todayFact.fact.fact_type]}\n${todayFact.fact.source ? `Source: ${todayFact.fact.source}` : ''}\n\nDiscover more at Triviaah.com!`;
+    const shareText = `🤔 Daily Trivia Fact:\n\n"${todayFact.fact.fact_text}"\n\nCategory: ${todayFact.fact.category}\nType: ${FACT_TYPES[todayFact.fact.fact_type]}\n${todayFact.fact.source ? `Source: ${todayFact.fact.source}` : ''}\n\nDiscover more at elitetrivias.com!`;
     
     if (navigator.share) {
       try {

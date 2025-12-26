@@ -18,10 +18,10 @@ export default function ScramblePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Word Games', 'Educational Entertainment', 'Vocabulary Games', 'Word Puzzles', 'Language Games', 'Spelling Games']
@@ -29,15 +29,15 @@ export default function ScramblePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Word Scramble Game | Unscramble Letters & Build Vocabulary | Triviaah',
+      name: 'Word Scramble Game | Unscramble Letters & Build Vocabulary | Elite Trivias',
       description: 'Challenge your mind with our Word Scramble game! Unscramble letters to form words, build vocabulary, and improve spelling skills with daily puzzle challenges.',
-      url: 'https://triviaah.com/word-games/scramble',
+      url: 'https://elitetrivias.com/word-games/scramble',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Word Scramble',
         description: 'Letter unscrambling game where players rearrange scrambled letters to form correct words. Features daily puzzles, multiple difficulty levels, and vocabulary building challenges.',
-        gameLocation: 'https://triviaah.com/word-games/scramble',
+        gameLocation: 'https://elitetrivias.com/word-games/scramble',
         characterAttribute: 'Vocabulary, Spelling, Word Recognition, Pattern Finding, Language Skills, Cognitive Training'
       }
     },
@@ -49,19 +49,19 @@ export default function ScramblePage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://triviaah.com'
+          item: 'https://elitetrivias.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Word Games',
-          item: 'https://triviaah.com/word-games'
+          item: 'https://elitetrivias.com/word-games'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Word Scramble',
-          item: 'https://triviaah.com/word-games/scramble'
+          item: 'https://elitetrivias.com/word-games/scramble'
         }
       ]
     },

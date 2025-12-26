@@ -66,10 +66,10 @@ export default function WordGamesClientPage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Word Games', 'Educational Entertainment', 'Vocabulary Games', 'Spelling Games', 'Language Games', 'Grid Puzzles']
@@ -77,9 +77,9 @@ export default function WordGamesClientPage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free Word Games Collection | Vocabulary & Spelling Games | Triviaah',
-      description: 'Challenge your vocabulary with our collection of free word games including Word CrossGrid, Boggle, Scramble, Spelling Bee, Word Search, and Word Ladder. Improve spelling, vocabulary, and cognitive skills.',
-      url: 'https://triviaah.com/word-games',
+      name: 'Free Word Games Collection | Vocabulary & Spelling Games | Elite Trivias',
+      description: 'Challenge your vocabulary with our collection of free word games including Mini CrossWord, Boggle, Scramble, Spelling Bee, Word Search, and Word Ladder. Improve spelling, vocabulary, and cognitive skills.',
+      url: 'https://elitetrivias.com/word-games',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'ItemList',
@@ -93,8 +93,8 @@ export default function WordGamesClientPage() {
             '@type': 'Game',
             name: game.name,
             description: game.description,
-            url: `https://triviaah.com/word-games/${game.slug}`,
-            gameLocation: `https://triviaah.com/word-games/${game.slug}`
+            url: `https://elitetrivias.com/word-games/${game.slug}`,
+            gameLocation: `https://elitetrivias.com/word-games/${game.slug}`
           }
         }))
       }
@@ -107,13 +107,13 @@ export default function WordGamesClientPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://triviaah.com'
+          item: 'https://elitetrivias.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Word Games',
-          item: 'https://triviaah.com/word-games'
+          item: 'https://elitetrivias.com/word-games'
         }
       ]
     },
@@ -126,7 +126,7 @@ export default function WordGamesClientPage() {
           name: 'What types of word games are available?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'We offer six main word games: Word Scramble (letter unscrambling), Spelling Bee (word formation), Boggle (word search in grid), Word Search (hidden word finding), Word Ladder (word transformation), and Word CrossGrid (grid-based crossword puzzles). Each game focuses on different language skills.'
+            text: 'We offer six main word games: Word Scramble (letter unscrambling), Spelling Bee (word formation), Boggle (word search in grid), Word Search (hidden word finding), Word Ladder (word transformation), and Mini CrossWord (grid-based crossword puzzles). Each game focuses on different language skills.'
           }
         },
         {
@@ -150,7 +150,7 @@ export default function WordGamesClientPage() {
           name: 'Which word game is best for beginners?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Word Search is great for beginners as it\'s relaxing and helps with word recognition. For a unique challenge, try Word CrossGrid which combines crossword and grid gameplay in an accessible way.'
+            text: 'Word Search is great for beginners as it\'s relaxing and helps with word recognition. For a unique challenge, try Mini CrossWord which combines crossword and grid gameplay in an accessible way.'
           }
         }
       ]
@@ -289,7 +289,7 @@ export default function WordGamesClientPage() {
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   We offer six main word games: <strong>Word Scramble</strong> (letter unscrambling), <strong>Spelling Bee</strong> (word formation), 
                   <strong>Boggle</strong> (word search in grid), <strong>Word Search</strong> (hidden word finding), <strong>Word Ladder</strong> (word transformation), 
-                  and <strong>Word CrossGrid</strong> (grid-based crossword puzzles). Each game focuses on different language skills and provides 
+                  and <strong>Mini CrossWord</strong> (grid-based crossword puzzles). Each game focuses on different language skills and provides 
                   unique challenges for vocabulary building and cognitive development.
                 </p>
               </div>
@@ -313,7 +313,7 @@ export default function WordGamesClientPage() {
                 <h3 className="font-semibold" itemProp="name">Which word game is best for beginners?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   <strong>Word Search</strong> is great for beginners as it&apos;s relaxing and helps with word recognition. 
-                  For a unique challenge, try <strong>Word CrossGrid</strong> which combines crossword and grid gameplay in an accessible way. 
+                  For a unique challenge, try <strong>Mini CrossWord</strong> which combines crossword and grid gameplay in an accessible way. 
                   For more challenge, try <strong>Word Scramble</strong> or <strong>Spelling Bee</strong> to build vocabulary 
                   and spelling skills. <strong>Boggle</strong> offers a good balance of challenge and accessibility, while 
                   <strong>Word Ladder</strong> is perfect for developing logical thinking and problem-solving skills.
@@ -336,9 +336,9 @@ export default function WordGamesClientPage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Word CrossGrid?</h3>
+                <h3 className="font-semibold" itemProp="name">What is Mini CrossWord?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Word CrossGrid is our newest addition - a unique grid-based word puzzle that combines elements of crossword 
+                  Mini CrossWord is our newest addition - a unique grid-based word puzzle that combines elements of crossword 
                   puzzles and letter grids. Players connect adjacent letters in a grid to form words that match given clues, 
                   with locked letters providing strategic starting points. It&apos;s perfect for those who enjoy both word 
                   formation and spatial reasoning challenges.
@@ -381,7 +381,7 @@ export default function WordGamesClientPage() {
                 <p className="text-sm">Transform words step by step through single letter changes</p>
               </div>
               <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-                <h4 className="font-bold text-red-800 mb-2">Word CrossGrid</h4>
+                <h4 className="font-bold text-red-800 mb-2">Mini CrossWord</h4>
                 <p className="text-sm">Connect letters in a grid to solve crossword-style puzzles</p>
               </div>
             </div>
@@ -393,7 +393,7 @@ export default function WordGamesClientPage() {
               <li><strong>Cognitive Development:</strong> Enhance pattern recognition, memory, and problem-solving skills</li>
               <li><strong>Language Skills:</strong> Improve reading comprehension and word recognition speed</li>
               <li><strong>Mental Agility:</strong> Develop quick thinking and mental flexibility</li>
-              <li><strong>Spatial Reasoning:</strong> Strengthen grid navigation and pattern finding (especially in Word CrossGrid)</li>
+              <li><strong>Spatial Reasoning:</strong> Strengthen grid navigation and pattern finding (especially in Mini CrossWord)</li>
             </ul>
 
             <h3 className="text-xl font-semibold mt-6 mb-3">Perfect For:</h3>
@@ -404,7 +404,7 @@ export default function WordGamesClientPage() {
               <li>Seniors maintaining cognitive health</li>
               <li>Language learners building vocabulary</li>
               <li>Families enjoying educational entertainment together</li>
-              <li>Puzzle lovers seeking grid-based challenges (Word CrossGrid)</li>
+              <li>Puzzle lovers seeking grid-based challenges (Mini CrossWord)</li>
             </ul>
 
             <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
@@ -415,7 +415,7 @@ export default function WordGamesClientPage() {
                 <li>Use the hint systems to learn new words and strategies</li>
                 <li>Challenge yourself with daily puzzles for continuous improvement</li>
                 <li>Mix different game types to develop comprehensive language skills</li>
-                <li>Try Word CrossGrid for a unique blend of word and spatial challenges</li>
+                <li>Try Mini CrossWord for a unique blend of word and spatial challenges</li>
               </ul>
             </div>
           </div>
@@ -438,7 +438,7 @@ export default function WordGamesClientPage() {
               <li><strong>Boggle:</strong> Find words by connecting adjacent letters in timed grid challenges</li>
               <li><strong>Word Search:</strong> Locate hidden words in letter grids across multiple directions</li>
               <li><strong>Word Ladder:</strong> Transform words step by step through single letter changes</li>
-              <li><strong>Word CrossGrid:</strong> Connect letters in a grid to solve crossword-style puzzles</li>
+              <li><strong>Mini CrossWord:</strong> Connect letters in a grid to solve crossword-style puzzles</li>
             </ul>
             <h3>Collection Features:</h3>
             <ul>
@@ -449,7 +449,7 @@ export default function WordGamesClientPage() {
               <li>Progress tracking and achievement systems</li>
               <li>Completely free with no registration required</li>
               <li>Mobile-friendly designs for gaming anywhere</li>
-              <li>Word CrossGrid - unique grid-based crossword gameplay</li>
+              <li>Mini CrossWord - unique grid-based crossword gameplay</li>
             </ul>
             <h3>Educational Benefits:</h3>
             <ul>
@@ -459,7 +459,7 @@ export default function WordGamesClientPage() {
               <li>Language skills enhancement</li>
               <li>Problem-solving and logical thinking</li>
               <li>Visual scanning and pattern finding</li>
-              <li>Spatial reasoning and grid navigation (Word CrossGrid)</li>
+              <li>Spatial reasoning and grid navigation (Mini CrossWord)</li>
             </ul>
             <p><strong>Ideal For:</strong> Students improving language arts, educators enhancing classroom activities, 
                word game enthusiasts seeking challenges, seniors maintaining cognitive health, language learners 

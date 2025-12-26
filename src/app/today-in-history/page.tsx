@@ -63,8 +63,8 @@ async function TodayInHistoryContent({ locationInfo }: { locationInfo: UserLocat
                 },
                 "publisher": {
                   "@type": "Organization",
-                  "name": "Triviaah",
-                  "url": "https://triviaah.com"
+                  "name": "Elite Trivias",
+                  "url": "https://elitetrivias.com"
                 },
                 "hasPart": questions.map((q: Question, index: number) => ({
                   "@type": "Question",
@@ -90,10 +90,10 @@ async function TodayInHistoryContent({ locationInfo }: { locationInfo: UserLocat
               __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "Organization",
-                "name": "Triviaah",
-                "url": "https://triviaah.com",
+                "name": "Elite Trivias",
+                "url": "https://elitetrivias.com",
                 "description": "Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.",
-                "logo": "https://triviaah.com/logo.png",
+                "logo": "https://elitetrivias.com/logo.png",
                 "sameAs": [],
                 "foundingDate": "2024",
                 "knowsAbout": ["Trivia", "Quiz Games", "General Knowledge", "Educational Entertainment", "History"]

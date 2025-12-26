@@ -6,13 +6,13 @@ import { MdLock, MdCheckCircle, MdCalendarToday } from 'react-icons/md';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Seasonal Special Quizzes - Monthly Trivia Challenges | Triviaah',
+  title: 'Seasonal Special Quizzes - Monthly Trivia Challenges | Elite Trivias',
   description: 'Play our special monthly trivia quizzes! Each month features a unique themed challenge available only during that month. Test your knowledge with time-limited trivia!',
   keywords: 'seasonal trivia, monthly quiz, special trivia challenges, holiday quizzes, time-limited trivia',
   openGraph: {
-    title: 'Seasonal Special Quizzes - Monthly Challenges | Triviaah',
+    title: 'Seasonal Special Quizzes - Monthly Challenges | Elite Trivias',
     description: 'Discover our monthly special trivia quizzes! Each month brings a new themed challenge available for limited time.',
-    url: 'https://triviaah.com/special-quizzes',
+    url: 'https://elitetrivias.com/special-quizzes',
     images: [
       {
         url: '/imgs/special-quizzes-og.webp',
@@ -42,7 +42,7 @@ export default function SpecialQuizzesPage() {
     '@type': 'WebPage',
     name: 'Seasonal Special Quizzes - Monthly Trivia Challenges',
     description: 'Play our special monthly trivia quizzes! Each month features a unique themed challenge available only during that month.',
-    url: 'https://triviaah.com/special-quizzes',
+    url: 'https://elitetrivias.com/special-quizzes',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'ItemList',
@@ -54,7 +54,7 @@ export default function SpecialQuizzesPage() {
           '@type': 'Quiz',
           name: `${quiz.name} - ${getMonthName(quiz.month)} Special`,
           description: quiz.description,
-          url: `https://triviaah.com/special-quizzes/${quiz.category}`,
+          url: `https://elitetrivias.com/special-quizzes/${quiz.category}`,
           availableMonth: getMonthName(quiz.month)
         }
       }))

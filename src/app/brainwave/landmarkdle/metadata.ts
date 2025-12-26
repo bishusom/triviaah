@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateLandmarkdleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/brainwave/landmarkdle';
+  const canonicalUrl = 'https://elitetrivias.com/brainwave/landmarkdle';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Landmarkdle - Daily Landmark Puzzle | Triviaah',
+    title: 'Landmarkdle - Daily Landmark Puzzle | Elite Trivias',
     description: 'Guess the landmark from its 6 attributes: type, location, architect, built year, height, and material. Wordle-style landmark guessing game.',
     keywords: [
       'landmarkdle',
@@ -34,10 +34,10 @@ export function generateLandmarkdleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Landmarkdle - Daily Landmark Puzzle | Triviaah',
+      title: 'Landmarkdle - Daily Landmark Puzzle | Elite Trivias',
       description: 'Guess the landmark from its 6 attributes: type, location, architect, built year, height, and material. Wordle-style landmark guessing game.',
-      url: 'https://triviaah.com/brainwave/landmarkdle',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/brainwave/landmarkdle',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs//brainwave/landmarkdle-og.webp',
@@ -51,7 +51,7 @@ export function generateLandmarkdleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Landmarkdle - Daily Landmark Puzzle | Triviaah',
+      title: 'Landmarkdle - Daily Landmark Puzzle | Elite Trivias',
       description: 'Guess the landmark from its 6 attributes: type, location, architect, built year, height, and material. Wordle-style landmark guessing game.',
       images: ['/imgs//brainwave/landmarkdle-og.webp'],
       site: '@elitetrivias',

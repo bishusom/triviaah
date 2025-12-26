@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateInventionleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/brainwave/inventionle';
+  const canonicalUrl = 'https://elitetrivias.com/brainwave/inventionle';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Inventionle - Daily Invention Puzzle | Triviaah',
+    title: 'Inventionle - Daily Invention Puzzle | Elite Trivias',
     description: 'Guess the invention from its 6 attributes: inventor, year, category, country, purpose, and impact. Wordle-style invention guessing game.',
     keywords: [
       'inventionle',
@@ -32,10 +32,10 @@ export function generateInventionleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Inventionle - Daily Invention Puzzle | Triviaah',
+      title: 'Inventionle - Daily Invention Puzzle | Elite Trivias',
       description: 'Guess the invention from its 6 attributes: inventor, year, category, country, purpose, and impact. Wordle-style invention guessing game.',
-      url: 'https://triviaah.com/brainwave/inventionle',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/brainwave/inventionle',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs//brainwave/inventionle-og.webp',
@@ -49,7 +49,7 @@ export function generateInventionleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Inventionle - Daily Invention Puzzle | Triviaah',
+      title: 'Inventionle - Daily Invention Puzzle | Elite Trivias',
       description: 'Guess the invention from its 6 attributes: inventor, year, category, country, purpose, and impact. Wordle-style invention guessing game.',
       images: ['/imgs//brainwave/inventionle-og.webp'],
       site: '@elitetrivias',

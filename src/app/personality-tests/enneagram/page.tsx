@@ -13,9 +13,9 @@ export default function EnneagramPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Free Enneagram Personality Test | Triviaah",
+    "name": "Free Enneagram Personality Test | Elite Trivias",
     "description": "Take our comprehensive Enneagram test to discover your type, wing, triad center, and growth path. Free, detailed analysis with downloadable reports.",
-    "url": "https://triviaah.com/personality/enneagram",
+    "url": "https://elitetrivias.com/personality/enneagram",
     "mainEntity": {
       "@type": "PsychologicalTest",
       "name": "Enneagram Personality Test",

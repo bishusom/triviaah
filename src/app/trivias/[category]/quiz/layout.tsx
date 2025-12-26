@@ -6,8 +6,8 @@ import MuteButton from '@/components/common/MuteButton';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://triviaah.com'),
-  title: 'Trivia Quizzes | Triviaah',
+  metadataBase: new URL('https://elitetrivias.com'),
+  title: 'Trivia Quizzes | Elite Trivias',
   description: 'Challenge yourself with our collection of trivia quizzes',
   robots: 'index, follow',
 };

@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateSongleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/brainwave/songle';
+  const canonicalUrl = 'https://elitetrivias.com/brainwave/songle';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Songle - Daily Song Guessing Puzzle | Triviaah',
+    title: 'Songle - Daily Song Guessing Puzzle | Elite Trivias',
     description: 'Guess the song from clues like lyrics, artist, and genre. A daily Wordle-style music puzzle game that tests your knowledge of music across decades and genres.',
     keywords: [
       'songle',
@@ -34,10 +34,10 @@ export function generateSongleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Songle - Daily Song Guessing Puzzle | Triviaah',
+      title: 'Songle - Daily Song Guessing Puzzle | Elite Trivias',
       description: 'Guess the song from clues like lyrics, artist, and genre. A daily Wordle-style music puzzle game that tests your knowledge of music across decades and genres.',
-      url: 'https://triviaah.com/brainwave/songle',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/brainwave/songle',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs//brainwave/songle-og.webp',
@@ -51,7 +51,7 @@ export function generateSongleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Songle - Daily Song Guessing Puzzle | Triviaah',
+      title: 'Songle - Daily Song Guessing Puzzle | Elite Trivias',
       description: 'Guess the song from clues like lyrics, artist, and genre. A daily Wordle-style music puzzle game that tests your knowledge of music across decades and genres.',
       images: ['/imgs//brainwave/songle-og.webp'],
       site: '@elitetrivias',

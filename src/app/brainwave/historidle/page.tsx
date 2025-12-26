@@ -24,10 +24,10 @@ export default function HistoridlePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'History Games', 'Historical Puzzles', 'Educational History']
@@ -35,15 +35,15 @@ export default function HistoridlePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Historidle - Daily Historical Puzzle | Triviaah',
+      name: 'Historidle - Daily Historical Puzzle | Elite Trivias',
       description: 'Guess the historical figure or event from 3 dates and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
-      url: 'https://triviaah.com/brainwave/historidle',
+      url: 'https://elitetrivias.com/brainwave/historidle',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Historidle',
         description: 'Daily historical puzzle game where players identify historical figures or events based on dates, progressive clues, and timeline information with Wordle-style feedback.',
-        gameLocation: 'https://triviaah.com/brainwave/historidle',
+        gameLocation: 'https://elitetrivias.com/brainwave/historidle',
         characterAttribute: 'History, Historical Figures, Historical Events, Timeline, Education, World History'
       }
     },

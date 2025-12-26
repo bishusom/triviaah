@@ -472,7 +472,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
       }
     });
     
-    shareText += '\n\nPlay daily at https://triviaah.com/brainwave/creaturedle';
+    shareText += '\n\nPlay daily at https://elitetrivias.com/brainwave/creaturedle';
     return shareText;
   };
 

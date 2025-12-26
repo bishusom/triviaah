@@ -18,10 +18,10 @@ export default function NumberTowerPage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Number Games', 'Educational Entertainment', 'Math Puzzles', 'Brain Games', 'Cognitive Games']
@@ -29,15 +29,15 @@ export default function NumberTowerPage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Number Tower Puzzle Game | Free Math Arrangement Challenge | Triviaah',
+      name: 'Number Tower Puzzle Game | Free Math Arrangement Challenge | Elite Trivias',
       description: 'Play Number Tower, a free online number puzzle game. Arrange numbers in a tower structure with limited moves. Improve your math skills with this fun and challenging brain game.',
-      url: 'https://triviaah.com/number-puzzles/number-tower',
+      url: 'https://elitetrivias.com/number-puzzles/number-tower',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Number Tower',
         description: 'Math puzzle game where players strategically arrange numbers in a tower structure with limited moves. Develops spatial reasoning, strategic thinking, and mathematical problem-solving skills.',
-        gameLocation: 'https://triviaah.com/number-puzzles/number-tower',
+        gameLocation: 'https://elitetrivias.com/number-puzzles/number-tower',
         characterAttribute: 'Math Skills, Spatial Reasoning, Strategic Thinking, Logical Planning, Problem Solving, Cognitive Skills, Mental Math, Analytical Reasoning'
       }
     },
@@ -49,19 +49,19 @@ export default function NumberTowerPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://triviaah.com'
+          item: 'https://elitetrivias.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Number Puzzles',
-          item: 'https://triviaah.com/number-puzzles'
+          item: 'https://elitetrivias.com/number-puzzles'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Number Tower',
-          item: 'https://triviaah.com/number-puzzles/number-tower'
+          item: 'https://elitetrivias.com/number-puzzles/number-tower'
         }
       ]
     },

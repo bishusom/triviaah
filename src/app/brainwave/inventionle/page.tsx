@@ -23,10 +23,10 @@ export default function InventionlePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'Science Games', 'Invention Puzzles', 'Technology Education']
@@ -34,15 +34,15 @@ export default function InventionlePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Inventionle - Daily Invention Puzzle | Triviaah',
+      name: 'Inventionle - Daily Invention Puzzle | Elite Trivias',
       description: 'Guess the invention from its 6 attributes: inventor, year, category, country, purpose, and impact. Wordle-style invention guessing game.',
-      url: 'https://triviaah.com/brainwave/inventionle',
+      url: 'https://elitetrivias.com/brainwave/inventionle',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Inventionle',
         description: 'Daily invention guessing game where players identify inventions based on 6 key attributes: inventor, year, category, country, purpose, and impact.',
-        gameLocation: 'https://triviaah.com/brainwave/inventionle',
+        gameLocation: 'https://elitetrivias.com/brainwave/inventionle',
         characterAttribute: 'Inventions, Technology, Science, Innovation, History, Inventors, Patents'
       }
     },

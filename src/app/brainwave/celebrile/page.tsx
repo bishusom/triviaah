@@ -24,10 +24,10 @@ export default function CelebrilePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'Celebrity Games', 'Pop Culture Puzzles']
@@ -35,15 +35,15 @@ export default function CelebrilePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Celebrile - Daily Celebrity Guessing Game | Triviaah',
+      name: 'Celebrile - Daily Celebrity Guessing Game | Elite Trivias',
       description: 'Guess the celebrity from progressive clues with limited attempts! Wordle-style feedback on name letters. Unlock more hints with each wrong guess.',
-      url: 'https://triviaah.com/celebrile',
+      url: 'https://elitetrivias.com/celebrile',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Celebrile',
         description: 'Daily celebrity guessing game where players have 6 attempts to guess the target celebrity using progressive clues and letter feedback.',
-        gameLocation: 'https://triviaah.com/celebrile',
+        gameLocation: 'https://elitetrivias.com/celebrile',
         characterAttribute: 'Celebrities, Pop Culture, Entertainment, Famous People'
       }
     },

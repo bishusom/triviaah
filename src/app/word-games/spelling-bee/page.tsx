@@ -18,10 +18,10 @@ export default function SpellingBeePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Word Games', 'Educational Entertainment', 'Vocabulary Games', 'Spelling Games', 'Language Games']
@@ -29,15 +29,15 @@ export default function SpellingBeePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free Spelling Bee Game Online | Vocabulary Challenge | Triviaah',
+      name: 'Free Spelling Bee Game Online | Vocabulary Challenge | Elite Trivias',
       description: 'Play free Spelling Bee game online. Create words from 7 letters with our daily puzzle challenge. Improve your vocabulary, spelling skills, and find all possible words.',
-      url: 'https://triviaah.com/word-games/spelling-bee',
+      url: 'https://elitetrivias.com/word-games/spelling-bee',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Spelling Bee',
         description: 'Classic word formation game where players create words from 7 letters, with daily puzzles, multiple difficulty levels, and vocabulary building challenges.',
-        gameLocation: 'https://triviaah.com/word-games/spelling-bee',
+        gameLocation: 'https://elitetrivias.com/word-games/spelling-bee',
         characterAttribute: 'Vocabulary, Spelling, Word Formation, Language Skills, Cognitive Training, Pattern Recognition'
       }
     },
@@ -49,19 +49,19 @@ export default function SpellingBeePage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://triviaah.com'
+          item: 'https://elitetrivias.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Word Games',
-          item: 'https://triviaah.com/word-games'
+          item: 'https://elitetrivias.com/word-games'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Spelling Bee',
-          item: 'https://triviaah.com/word-games/spelling-bee'
+          item: 'https://elitetrivias.com/word-games/spelling-bee'
         }
       ]
     },

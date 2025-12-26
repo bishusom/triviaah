@@ -39,10 +39,10 @@ async function QuickFireContent({ locationInfo }: { locationInfo: UserLocationIn
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "Triviaah",
-              "url": "https://triviaah.com",
+              "name": "Elite Trivias",
+              "url": "https://elitetrivias.com",
               "description": "Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.",
-              "logo": "https://triviaah.com/logo.png",
+              "logo": "https://elitetrivias.com/logo.png",
               "sameAs": [],
               "foundingDate": "2024",
               "knowsAbout": ["Trivia", "Quiz Games", "General Knowledge", "Educational Entertainment", "Quick Fire Trivia"]
@@ -67,7 +67,7 @@ async function QuickFireContent({ locationInfo }: { locationInfo: UserLocationIn
               "assesses": "General Knowledge",
               "publisher": {
                 "@type": "Organization",
-                "name": "Triviaah"
+                "name": "Elite Trivias"
               },
               "hasPart": questions.map((q: Question, index: number) => ({
                 "@type": "Question",
@@ -299,7 +299,7 @@ async function QuickFireContent({ locationInfo }: { locationInfo: UserLocationIn
 
 // Fixed and enhanced metadata generation
 export async function generateMetadata() {
-  const title = "Quick-Fire Trivia Challenge | Triviaah";
+  const title = "Quick-Fire Trivia Challenge | Elite Trivias";
   const description = "Test your reflexes with 10-second quick-fire trivia questions! 7 random questions with bonus round. Free, no signup required.";
 
   return {
@@ -310,13 +310,13 @@ export async function generateMetadata() {
       title,
       description,
       type: 'website',
-      url: `https://triviaah.com/quick-fire`,
+      url: `https://elitetrivias.com/quick-fire`,
       images: [
         {
           url: '/imgs/quick-fire-og.webp',
           width: 1200,
           height: 630,
-          alt: 'Quick-Fire Trivia Challenge - Triviaah'
+          alt: 'Quick-Fire Trivia Challenge - Elite Trivias'
         }
       ],
     },
@@ -327,7 +327,7 @@ export async function generateMetadata() {
       images: ['/imgs/quick-fire-og.webp'],
     },
     alternates: {
-      canonical: `https://triviaah.com/quick-fire`
+      canonical: `https://elitetrivias.com/quick-fire`
     },
     robots: {
       index: true,

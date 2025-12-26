@@ -23,10 +23,10 @@ export default function CapitalePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'Geography Games', 'Capital Cities']
@@ -34,15 +34,15 @@ export default function CapitalePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Capitale - Daily Capital City Guessing Game | Triviaah',
+      name: 'Capitale - Daily Capital City Guessing Game | Elite Trivias',
       description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle but with capital cities.',
-      url: 'https://triviaah.com/capitale',
+      url: 'https://elitetrivias.com/capitale',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Capitale',
         description: 'Daily capital city guessing game where players have 6 attempts to guess the target capital city.',
-        gameLocation: 'https://triviaah.com/capitale',
+        gameLocation: 'https://elitetrivias.com/capitale',
         characterAttribute: 'Geography, Capital Cities, World Knowledge'
       }
     },

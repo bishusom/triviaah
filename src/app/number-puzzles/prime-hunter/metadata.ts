@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generatePrimeHunterMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/number-puzzles/prime-hunter';
+  const canonicalUrl = 'https://elitetrivias.com/number-puzzles/prime-hunter';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Prime Hunter Puzzle Game | Free Prime Number Challenge | Triviaah',
+    title: 'Prime Hunter Puzzle Game | Free Prime Number Challenge | Elite Trivias',
     description: 'Play Prime Hunter, a free online prime number puzzle game. Identify prime numbers in a grid with limited attempts. Improve your math skills with this fun and challenging brain game.',
     keywords: [
       'prime hunter',
@@ -38,10 +38,10 @@ export function generatePrimeHunterMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Prime Hunter Puzzle Game | Free Prime Number Challenge | Triviaah',
+      title: 'Prime Hunter Puzzle Game | Free Prime Number Challenge | Elite Trivias',
       description: 'Play Prime Hunter, a free online prime number puzzle game. Identify prime numbers in a grid with limited attempts. Improve your math skills with this fun and challenging brain game.',
-      url: 'https://triviaah.com/number-puzzles/prime-hunter',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/number-puzzles/prime-hunter',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs/number-puzzles//prime-hunter.webp',
@@ -55,7 +55,7 @@ export function generatePrimeHunterMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Prime Hunter Puzzle Game | Free Prime Number Challenge | Triviaah',
+      title: 'Prime Hunter Puzzle Game | Free Prime Number Challenge | Elite Trivias',
       description: 'Play Prime Hunter, a free online prime number puzzle game. Identify prime numbers in a grid with limited attempts. Improve your math skills with this fun and challenging brain game.',
       images: ['/imgs/number-puzzles//prime-hunter.webp'],
       site: '@elitetrivias',

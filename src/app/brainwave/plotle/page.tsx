@@ -24,10 +24,10 @@ export default function PlotlePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'Movie Games', 'Film Puzzles', 'Cinema Education']
@@ -35,15 +35,15 @@ export default function PlotlePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Plotle - Daily Movie Plot Puzzle | Triviaah',
+      name: 'Plotle - Daily Movie Plot Puzzle | Elite Trivias',
       description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words. Daily movie guessing game for film lovers.',
-      url: 'https://triviaah.com/brainwave/plotle',
+      url: 'https://elitetrivias.com/brainwave/plotle',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Plotle',
         description: 'Daily movie puzzle game where players identify films based on 6-word plot summaries with Wordle-style feedback on plot words and limited attempts.',
-        gameLocation: 'https://triviaah.com/brainwave/plotle',
+        gameLocation: 'https://elitetrivias.com/brainwave/plotle',
         characterAttribute: 'Movies, Films, Cinema, Plot, Entertainment, Hollywood, Film Trivia, Movie Quotes'
       }
     },

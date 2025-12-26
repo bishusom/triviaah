@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateSpellingBeeMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/word-games/spelling-bee';
+  const canonicalUrl = 'https://elitetrivias.com/word-games/spelling-bee';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Free Spelling Bee Game Online | Vocabulary Challenge | Triviaah',
+    title: 'Free Spelling Bee Game Online | Vocabulary Challenge | Elite Trivias',
     description: 'Play free Spelling Bee game online. Create words from 7 letters with our daily puzzle challenge. Improve your vocabulary, spelling skills, and find all possible words.',
     keywords: [
       'spelling bee',
@@ -34,10 +34,10 @@ export function generateSpellingBeeMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Free Spelling Bee Game Online | Vocabulary Challenge | Triviaah',
+      title: 'Free Spelling Bee Game Online | Vocabulary Challenge | Elite Trivias',
       description: 'Play free Spelling Bee game online. Create words from 7 letters with our daily puzzle challenge. Improve your vocabulary, spelling skills, and find all possible words.',
-      url: 'https://triviaah.com/word-games/spelling-bee',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/word-games/spelling-bee',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs/word-games/spelling-bee.webp',
@@ -51,7 +51,7 @@ export function generateSpellingBeeMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Free Spelling Bee Game Online | Vocabulary Challenge | Triviaah',
+      title: 'Free Spelling Bee Game Online | Vocabulary Challenge | Elite Trivias',
       description: 'Play free Spelling Bee game online. Create words from 7 letters with our daily puzzle challenge. Improve your vocabulary, spelling skills, and find all possible words.',
       images: ['/imgs/word-games/spelling-bee.webp'],
       site: '@elitetrivias',

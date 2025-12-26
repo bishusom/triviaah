@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateNumberPuzzlesMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/number-puzzles';
+  const canonicalUrl = 'https://elitetrivias.com/number-puzzles';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah',
+    title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Elite Trivias',
     description: 'Challenge your math skills with our collection of free number puzzles including Number Scramble, Number Tower, Prime Hunter, Number Sequence, and Sudoku. Improve logical thinking and problem-solving skills.',
     keywords: [
       'number puzzles',
@@ -34,10 +34,10 @@ export function generateNumberPuzzlesMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah',
+      title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Elite Trivias',
       description: 'Challenge your math skills with our collection of free number puzzles including Number Scramble, Number Tower, Prime Hunter, Number Sequence, and Sudoku. Improve logical thinking and problem-solving skills.',
-      url: 'https://triviaah.com/number-puzzles',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/number-puzzles',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs/number-puzzles.webp',
@@ -51,7 +51,7 @@ export function generateNumberPuzzlesMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah',
+      title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Elite Trivias',
       description: 'Challenge your math skills with our collection of free number puzzles including Number Scramble, Number Tower, Prime Hunter, Number Sequence, and Sudoku. Improve logical thinking and problem-solving skills.',
       images: ['/imgs/number-puzzles.webp'],
       site: '@elitetrivias',

@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
               color: 'white',
               textShadow: '0 2px 4px rgba(0,0,0,0.3)',
             }}>
-              TRIVIAAH
+              Elite Trivias
             </div>
           </div>
 
@@ -257,7 +257,7 @@ export async function GET(request: NextRequest) {
               textAlign: 'center',
             }}>
               <span>🎯</span>
-              Can you beat this score? Play at triviaah.com
+              Can you beat this score? Play at elitetrivias.com
             </div>
           </div>
         </div>

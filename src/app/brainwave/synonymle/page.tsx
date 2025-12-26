@@ -237,13 +237,13 @@ function StructuredData() {
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://triviaah.com/#organization",
-        "name": "Triviaah",
-        "url": "https://triviaah.com/",
-        "description": "Triviaah offers engaging and educational trivia games and puzzles for everyone.",
+        "@id": "https://elitetrivias.com/#organization",
+        "name": "Elite Trivias",
+        "url": "https://elitetrivias.com/",
+        "description": "Elite Trivias offers engaging and educational trivia games and puzzles for everyone.",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://triviaah.com/logo.png",
+          "url": "https://elitetrivias.com/logo.png",
           "width": 200,
           "height": 60
         },
@@ -255,43 +255,43 @@ function StructuredData() {
       },
       {
         "@type": "WebPage",
-        "@id": "https://triviaah.com/brainwave/synonymle/#webpage",
-        "url": "https://triviaah.com/brainwave/synonymle",
-        "name": "Synonymle - Daily Word Guessing Puzzle | Triviaah",
+        "@id": "https://elitetrivias.com/brainwave/synonymle/#webpage",
+        "url": "https://elitetrivias.com/brainwave/synonymle",
+        "name": "Synonymle - Daily Word Guessing Puzzle | Elite Trivias",
         "description": "Guess the word based on semantic similarity and synonyms. Wordle-style vocabulary puzzle game that tests your understanding of word meanings.",
         "isPartOf": {
-          "@id": "https://triviaah.com/#website"
+          "@id": "https://elitetrivias.com/#website"
         },
         "about": {
-          "@id": "https://triviaah.com/brainwave/synonymle/#game"
+          "@id": "https://elitetrivias.com/brainwave/synonymle/#game"
         },
         "datePublished": "2024-01-01T00:00:00+00:00",
         "dateModified": new Date().toISOString(),
         "breadcrumb": {
-          "@id": "https://triviaah.com/brainwave/synonymle/#breadcrumb"
+          "@id": "https://elitetrivias.com/brainwave/synonymle/#breadcrumb"
         },
         "potentialAction": [
           {
             "@type": "PlayAction",
-            "target": "https://triviaah.com/brainwave/synonymle"
+            "target": "https://elitetrivias.com/brainwave/synonymle"
           }
         ]
       },
       {
         "@type": "WebSite",
-        "@id": "https://triviaah.com/#website",
-        "url": "https://triviaah.com/",
-        "name": "Triviaah",
+        "@id": "https://elitetrivias.com/#website",
+        "url": "https://elitetrivias.com/",
+        "name": "Elite Trivias",
         "description": "Engaging trivia games and puzzles for everyone",
         "publisher": {
-          "@id": "https://triviaah.com/#organization"
+          "@id": "https://elitetrivias.com/#organization"
         },
         "potentialAction": [
           {
             "@type": "SearchAction",
             "target": {
               "@type": "EntryPoint",
-              "urlTemplate": "https://triviaah.com/search?q={search_term_string}"
+              "urlTemplate": "https://elitetrivias.com/search?q={search_term_string}"
             },
             "query-input": "required name=search_term_string"
           }
@@ -299,10 +299,10 @@ function StructuredData() {
       },
       {
         "@type": "Game",
-        "@id": "https://triviaah.com/brainwave/synonymle/#game",
+        "@id": "https://elitetrivias.com/brainwave/synonymle/#game",
         "name": "Synonymle",
         "description": "Daily word guessing puzzle based on semantic similarity and synonyms",
-        "url": "https://triviaah.com/brainwave/synonymle",
+        "url": "https://elitetrivias.com/brainwave/synonymle",
         "applicationCategory": "Game",
         "gameType": "PuzzleGame,WordGame",
         "genre": ["puzzle", "word game", "educational"],
@@ -311,7 +311,7 @@ function StructuredData() {
           "minValue": 1
         },
         "publisher": {
-          "@id": "https://triviaah.com/#organization"
+          "@id": "https://elitetrivias.com/#organization"
         },
         "offers": {
           "@type": "Offer",
@@ -320,30 +320,30 @@ function StructuredData() {
         },
         "operatingSystem": "Any",
         "author": {
-          "@id": "https://triviaah.com/#organization"
+          "@id": "https://elitetrivias.com/#organization"
         }
       },
       {
         "@type": "BreadcrumbList",
-        "@id": "https://triviaah.com/brainwave/synonymle/#breadcrumb",
+        "@id": "https://elitetrivias.com/brainwave/synonymle/#breadcrumb",
         "itemListElement": [
           {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://triviaah.com"
+            "item": "https://elitetrivias.com"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Brainwave",
-            "item": "https://triviaah.com/brainwave"
+            "item": "https://elitetrivias.com/brainwave"
           },
           {
             "@type": "ListItem",
             "position": 3,
             "name": "Synonymle",
-            "item": "https://triviaah.com/brainwave/synonymle"
+            "item": "https://elitetrivias.com/brainwave/synonymle"
           }
         ]
       },

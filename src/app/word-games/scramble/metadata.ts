@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateScrambleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/word-games/scramble';
+  const canonicalUrl = 'https://elitetrivias.com/word-games/scramble';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Word Scramble Game | Unscramble Letters & Build Vocabulary | Triviaah',
+    title: 'Word Scramble Game | Unscramble Letters & Build Vocabulary | Elite Trivias',
     description: 'Challenge your mind with our Word Scramble game! Unscramble letters to form words, build vocabulary, and improve spelling skills with daily puzzle challenges.',
     keywords: [
       'word scramble',
@@ -34,10 +34,10 @@ export function generateScrambleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Word Scramble Game | Unscramble Letters & Build Vocabulary | Triviaah',
+      title: 'Word Scramble Game | Unscramble Letters & Build Vocabulary | Elite Trivias',
       description: 'Challenge your mind with our Word Scramble game! Unscramble letters to form words, build vocabulary, and improve spelling skills with daily puzzle challenges.',
-      url: 'https://triviaah.com/word-games/scramble',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/word-games/scramble',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs/word-games/word-scramble.webp',
@@ -51,7 +51,7 @@ export function generateScrambleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Word Scramble Game | Unscramble Letters & Build Vocabulary | Triviaah',
+      title: 'Word Scramble Game | Unscramble Letters & Build Vocabulary | Elite Trivias',
       description: 'Challenge your mind with our Word Scramble game! Unscramble letters to form words, build vocabulary, and improve spelling skills with daily puzzle challenges.',
       images: ['/imgs/word-games/word-scramble.webp'],
       site: '@elitetrivias',

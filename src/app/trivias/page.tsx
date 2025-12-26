@@ -253,13 +253,13 @@ export default function TriviasPage() {
       "@graph": [
         {
           "@type": "Organization",
-          "@id": "https://triviaah.com/#organization",
-          "name": "Triviaah",
-          "url": "https://triviaah.com/",
-          "description": "Triviaah offers engaging and educational trivia games and puzzles for everyone.",
+          "@id": "https://elitetrivias.com/#organization",
+          "name": "Elite Trivias",
+          "url": "https://elitetrivias.com/",
+          "description": "Elite Trivias offers engaging and educational trivia games and puzzles for everyone.",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://triviaah.com/logo.png",
+            "url": "https://elitetrivias.com/logo.png",
             "width": 200,
             "height": 60
           },
@@ -271,43 +271,43 @@ export default function TriviasPage() {
         },
         {
           "@type": "WebPage",
-          "@id": "https://triviaah.com/trivias/#webpage",
-          "url": "https://triviaah.com/trivias",
+          "@id": "https://elitetrivias.com/trivias/#webpage",
+          "url": "https://elitetrivias.com/trivias",
           "name": "Free Online Trivia Categories | Quiz Games Online Free",
           "description": "Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.",
           "isPartOf": {
-            "@id": "https://triviaah.com/#website"
+            "@id": "https://elitetrivias.com/#website"
           },
           "about": {
-            "@id": "https://triviaah.com/#organization"
+            "@id": "https://elitetrivias.com/#organization"
           },
           "datePublished": "2025-09-30T00:00:00+00:00",
           "dateModified": new Date().toISOString(),
           "breadcrumb": {
-            "@id": "https://triviaah.com/trivias/#breadcrumb"
+            "@id": "https://elitetrivias.com/trivias/#breadcrumb"
           },
           "primaryImageOfPage": {
             "@type": "ImageObject",
-            "url": "https://triviaah.com/imgs/trivia-categories-og.webp",
+            "url": "https://elitetrivias.com/imgs/trivia-categories-og.webp",
             "width": 1200,
             "height": 630
           }
         },
         {
           "@type": "WebSite",
-          "@id": "https://triviaah.com/#website",
-          "url": "https://triviaah.com/",
-          "name": "Triviaah",
+          "@id": "https://elitetrivias.com/#website",
+          "url": "https://elitetrivias.com/",
+          "name": "Elite Trivias",
           "description": "Engaging trivia games and puzzles for everyone",
           "publisher": {
-            "@id": "https://triviaah.com/#organization"
+            "@id": "https://elitetrivias.com/#organization"
           },
           "potentialAction": [
             {
               "@type": "SearchAction",
               "target": {
                 "@type": "EntryPoint",
-                "urlTemplate": "https://triviaah.com/trivias?q={search_term_string}"
+                "urlTemplate": "https://elitetrivias.com/trivias?q={search_term_string}"
               },
               "query-input": "required name=search_term_string"
             }
@@ -316,7 +316,7 @@ export default function TriviasPage() {
         {
           "@type": "ItemList",
           "name": "Trivia Categories",
-          "description": "List of all available trivia categories on Triviaah",
+          "description": "List of all available trivia categories on Elite Trivias",
           "numberOfItems": categories.length,
           "itemListElement": categories.map(([key, category], index) => ({
             "@type": "ListItem",
@@ -325,7 +325,7 @@ export default function TriviasPage() {
               "@type": "Game",
               "name": category.title,
               "description": category.description,
-              "url": `https://triviaah.com/trivias/${key}`,
+              "url": `https://elitetrivias.com/trivias/${key}`,
               "gameType": "TriviaGame",
               "genre": "trivia",
               "numberOfPlayers": {
@@ -342,19 +342,19 @@ export default function TriviasPage() {
         },
         {
           "@type": "BreadcrumbList",
-          "@id": "https://triviaah.com/trivias/#breadcrumb",
+          "@id": "https://elitetrivias.com/trivias/#breadcrumb",
           "itemListElement": [
             {
               "@type": "ListItem",
               "position": 1,
               "name": "Home",
-              "item": "https://triviaah.com"
+              "item": "https://elitetrivias.com"
             },
             {
               "@type": "ListItem",
               "position": 2,
               "name": "Trivia Categories",
-              "item": "https://triviaah.com/trivias"
+              "item": "https://elitetrivias.com/trivias"
             }
           ]
         },

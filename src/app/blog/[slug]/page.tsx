@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<{
   const { slug } = await params;
   const post: PostContent = await getPostData(slug);
   return {
-    title: `${post.title} | Triviaah`,
+    title: `${post.title} | Elite Trivias`,
     description: post.excerpt,
     openGraph: {
       images: [post.image],

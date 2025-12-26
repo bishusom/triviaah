@@ -24,7 +24,7 @@ export default function CognitiveAssessmentPage() {
     "@type": "WebPage",
     "name": "Cognitive Abilities Profile Assessment | Free Brain Analysis",
     "description": "Take our comprehensive cognitive assessment to discover your thinking style, learning preferences, and career strengths. Free, private, and scientifically-informed.",
-    "url": "https://triviaah.com/brainwave/cognitive-assessment",
+    "url": "https://elitetrivias.com/brainwave/cognitive-assessment",
     "mainEntity": {
       "@type": "PsychologicalTest",
       "name": "Cognitive Abilities Profile Assessment",

@@ -18,10 +18,10 @@ export default function BogglePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Word Games', 'Educational Entertainment', 'Vocabulary Games', 'Word Puzzles', 'Language Games']
@@ -29,15 +29,15 @@ export default function BogglePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free Boggle Game Online | Word Search Challenge | Triviaah',
+      name: 'Free Boggle Game Online | Word Search Challenge | Elite Trivias',
       description: 'Play free Boggle game online. Find words in a 4x4 or 5x5 letter grid with our daily puzzle challenge. Boost your vocabulary, word-finding skills, and uncover all possible words.',
-      url: 'https://triviaah.com/word-games/boggle',
+      url: 'https://elitetrivias.com/word-games/boggle',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Boggle',
         description: 'Classic word search game where players find words by connecting adjacent letters in a grid. Features daily puzzles, multiple grid sizes, and vocabulary building challenges.',
-        gameLocation: 'https://triviaah.com/word-games/boggle',
+        gameLocation: 'https://elitetrivias.com/word-games/boggle',
         characterAttribute: 'Vocabulary, Word Recognition, Pattern Finding, Language Skills, Cognitive Training, Word Games'
       }
     },
@@ -49,19 +49,19 @@ export default function BogglePage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://triviaah.com'
+          item: 'https://elitetrivias.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Word Games',
-          item: 'https://triviaah.com/word-games'
+          item: 'https://elitetrivias.com/word-games'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Boggle',
-          item: 'https://triviaah.com/word-games/boggle'
+          item: 'https://elitetrivias.com/word-games/boggle'
         }
       ]
     },

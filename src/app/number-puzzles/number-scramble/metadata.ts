@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateNumberScrambleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/number-puzzles/number-scramble';
+  const canonicalUrl = 'https://elitetrivias.com/number-puzzles/number-scramble';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Triviaah',
+    title: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Elite Trivias',
     description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
     keywords: [
       'number sequence',
@@ -34,10 +34,10 @@ export function generateNumberScrambleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Triviaah',
+      title: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Elite Trivias',
       description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
-      url: 'https://triviaah.com/number-puzzles/number-scramble',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/number-puzzles/number-scramble',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs/number-puzzles/number-scramble.webp',
@@ -51,7 +51,7 @@ export function generateNumberScrambleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Triviaah',
+      title: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Elite Trivias',
       description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
       images: ['/imgs/number-puzzles/number-scramble.webp'],
       site: '@elitetrivias',

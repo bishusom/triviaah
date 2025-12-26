@@ -23,10 +23,10 @@ export default function FoodlePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Triviaah',
-      url: 'https://triviaah.com',
+      name: 'Elite Trivias',
+      url: 'https://elitetrivias.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://triviaah.com/logo.png',
+      logo: 'https://elitetrivias.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'Food Games', 'Cooking Puzzles', 'Culinary Education']
@@ -34,15 +34,15 @@ export default function FoodlePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Foodle - Daily Food Puzzle | Triviaah',
+      name: 'Foodle - Daily Food Puzzle | Elite Trivias',
       description: 'Guess the food from its 6 attributes: cuisine, course, main ingredients, cooking method, flavor profile, and temperature. Wordle-style food guessing game.',
-      url: 'https://triviaah.com/brainwave/foodle',
+      url: 'https://elitetrivias.com/brainwave/foodle',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Foodle',
         description: 'Daily food guessing game where players identify dishes based on 6 key attributes: cuisine, course, main ingredients, cooking method, flavor profile, and temperature.',
-        gameLocation: 'https://triviaah.com/brainwave/foodle',
+        gameLocation: 'https://elitetrivias.com/brainwave/foodle',
         characterAttribute: 'Food, Cuisine, Cooking, Recipes, Culinary Arts, Food Education'
       }
     },

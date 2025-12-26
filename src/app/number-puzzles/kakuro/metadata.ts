@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateKakuroMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/number-puzzles/kakuro';
+  const canonicalUrl = 'https://elitetrivias.com/number-puzzles/kakuro';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Kakuro Puzzle Game | Free Math Brain Teaser | Triviaah',
+    title: 'Kakuro Puzzle Game | Free Math Brain Teaser | Elite Trivias',
     description: 'Play Kakuro, a free online number puzzle game. Fill the grid with numbers 1-9 to match the sums while avoiding duplicates. Improve your math skills with this fun and challenging brain game.',
     keywords: [
       'kakuro',
@@ -43,10 +43,10 @@ export function generateKakuroMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Kakuro Puzzle Game | Free Math Brain Teaser | Triviaah',
+      title: 'Kakuro Puzzle Game | Free Math Brain Teaser | Elite Trivias',
     description: 'Play Kakuro, a free online number puzzle game. Fill the grid with numbers 1-9 to match the sums while avoiding duplicates. Improve your math skills with this fun and challenging brain game.',
-      url: 'https://triviaah.com/number-puzzles/kakuro',
-      siteName: 'Triviaah',
+      url: 'https://elitetrivias.com/number-puzzles/kakuro',
+      siteName: 'Elite Trivias',
       images: [
         {
           url: '/imgs/number-puzzles/kakuro.webp',
@@ -60,7 +60,7 @@ export function generateKakuroMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Kakuro Puzzle Game | Free Math Brain Teaser | Triviaah',
+      title: 'Kakuro Puzzle Game | Free Math Brain Teaser | Elite Trivias',
       description: 'Play Kakuro, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
       images: ['/imgs/number-puzzles/kakuro.webp'],
       site: '@elitetrivias',
