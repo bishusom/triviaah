@@ -534,6 +534,7 @@ export default function QuizGame({
                       alt="Click to enlarge"
                       width={96}
                       height={96}
+                      unoptimized={true}
                       className="w-24 h-24 rounded-lg object-cover border-2 border-blue-200 hover:border-blue-400 transition-colors"
                     />
                     {/* Expand icon overlay */}
@@ -580,6 +581,7 @@ export default function QuizGame({
                   alt="Question image enlarged"
                   width={800}
                   height={600}
+                  unoptimized={true}
                   className="w-full h-full object-contain rounded-lg"
                   onClick={(e) => e.stopPropagation()}
                 />
