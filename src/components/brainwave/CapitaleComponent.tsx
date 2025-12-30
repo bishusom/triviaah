@@ -231,10 +231,9 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
 
   // NEW: Select suggestion
   const selectSuggestion = (capital: CapitalInfo) => {
-    setGuess(capital.name);
-    setShowSuggestions(false);
+      setShowSuggestions(false);
     setSelectedSuggestionIndex(-1);
-    inputRef.current?.focus();
+    handleGuess(capital.name);
   };
 
   const getImageSource = (imageUrl: string | null): {name: string, url: string} => {
@@ -319,10 +318,10 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
     };
   };
 
-  const handleGuess = () => {
+  const handleGuess = (userGuess?: string) => {
     if (gameState !== 'playing' || attempts.length >= 6) return;
     
-    const normalizedGuess = guess.trim();
+    const normalizedGuess = (userGuess || guess).trim();
     if (!normalizedGuess) return;
     
     console.log('User guess:', normalizedGuess);
@@ -612,7 +611,7 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
                   onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
                 />
                 <button
-                  onClick={handleGuess}
+                  onClick={() => handleGuess()}
                   disabled={!guess.trim()}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >

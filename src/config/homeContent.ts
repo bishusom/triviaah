@@ -70,6 +70,14 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
 
 export const BRAIN_WAVES: ReadonlySectionItems = [
   {
+    category: 'plotle',
+    name: 'Plotle',
+    path: '/brainwave/plotle',
+    image: '/imgs/thumbnails/plotle-160x160.webp',
+    tagline: 'Guess the movie from its plot description in emojis',
+    keywords: 'movie plot game, film trivia, movie guessing game'
+  },
+  {
     category: 'capitale',
     name: 'Capitale',
     path: '/brainwave/capitale',
@@ -78,12 +86,12 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     keywords: 'capital cities game, geography puzzle, world capitals quiz'
   },
   {
-    category: 'plotle',
-    name: 'Plotle',
-    path: '/brainwave/plotle',
-    image: '/imgs/thumbnails/plotle-160x160.webp',
-    tagline: 'Guess the movie from its plot description in emojis',
-    keywords: 'movie plot game, film trivia, movie guessing game'
+    category: 'historidle',
+    name: 'Historidle',
+    path: '/brainwave/historidle',
+    image: '/imgs/thumbnails/historidle-160x160.webp',
+    tagline: 'Guess the historical event from dates and other intriguing clues',
+    keywords: 'history trivia game, historical events quiz, history guessing game'
   },
   {
     category: 'celebrile',
@@ -102,12 +110,12 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     keywords: 'music lyrics game, song trivia, music guessing challenge'
   },
   {
-    category: 'historidle',
-    name: 'Historidle',
-    path: '/brainwave/historidle',
-    image: '/imgs/thumbnails/historidle-160x160.webp',
-    tagline: 'Guess the historical event from dates and other intriguing clues',
-    keywords: 'history trivia game, historical events quiz, history guessing game'
+    category: 'literale',
+    name: 'Literale',
+    path: '/brainwave/literale',
+    image: '/imgs/thumbnails/literale-160x160.webp',
+    tagline: 'Guess the book from its opening line in this literary puzzle',
+    keywords: 'book opening game, literature trivia, book guessing puzzle'
   },
   {
     category: 'creaturedle',
@@ -124,14 +132,6 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     image: '/imgs/thumbnails/foodle-160x160.webp',
     tagline: 'Guess the dish from its ingredients in this culinary puzzle',
     keywords: 'food trivia game, dish guessing quiz, culinary puzzle'
-  },
-  {
-    category: 'literale',
-    name: 'Literale',
-    path: '/brainwave/literale',
-    image: '/imgs/thumbnails/literale-160x160.webp',
-    tagline: 'Guess the book from its opening line in this literary puzzle',
-    keywords: 'book opening game, literature trivia, book guessing puzzle'
   },
   {
     category: 'landmarkdle',

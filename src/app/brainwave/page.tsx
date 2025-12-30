@@ -58,6 +58,14 @@ export const metadata: Metadata = {
 async function getDailyPuzzles() {
   return [  
       {
+      category: 'plotle',
+      name: 'Plotle',
+      path: '/brainwave/plotle',
+      image: '/imgs/thumbnails/plotle-160x160.webp',
+      tagline: 'Guess the movie from its plot description in emojis',
+      keywords: 'movie plot game, film trivia, movie guessing game'
+      },
+      {
       category: 'capitale',
       name: 'Capitale',
       path: '/brainwave/capitale',
@@ -66,12 +74,12 @@ async function getDailyPuzzles() {
       keywords: 'capital cities game, geography puzzle, world capitals quiz'
       },
       {
-      category: 'plotle',
-      name: 'Plotle',
-      path: '/brainwave/plotle',
-      image: '/imgs/thumbnails/plotle-160x160.webp',
-      tagline: 'Guess the movie from its plot description in emojis',
-      keywords: 'movie plot game, film trivia, movie guessing game'
+      category: 'historidle',
+      name: 'Historidle',
+      path: '/brainwave/historidle',
+      image: '/imgs/thumbnails/historidle-160x160.webp',
+      tagline: 'Guess the historical event from dates and other intriguing clues',
+      keywords: 'history trivia game, historical events quiz, history guessing game'
       },
       {
       category: 'celebrile',
@@ -90,13 +98,13 @@ async function getDailyPuzzles() {
       keywords: 'music lyrics game, song trivia, music guessing challenge'
       },
       {
-      category: 'historidle',
-      name: 'Historidle',
-      path: '/brainwave/historidle',
-      image: '/imgs/thumbnails/historidle-160x160.webp',
-      tagline: 'Guess the historical event from dates and other intriguing clues',
-      keywords: 'history trivia game, historical events quiz, history guessing game'
-      },
+      category: 'literale',
+      name: 'Literale',
+      path: '/brainwave/literale',
+      image: '/imgs/thumbnails/literale-160x160.webp',
+      tagline: 'Guess the book from its opening line in this literary puzzle',
+      keywords: 'book opening game, literature trivia, book guessing puzzle'
+      },    
       {
       category: 'creaturedle',
       name: 'Creaturedle',
@@ -112,14 +120,6 @@ async function getDailyPuzzles() {
       image: '/imgs/thumbnails/foodle-160x160.webp',
       tagline: 'Guess the food from its 6 attributes in this tasty puzzle',
       keywords: 'food trivia game, dish guessing quiz, cuisine puzzle challenge'
-      },
-      {
-      category: 'literale',
-      name: 'Literale',
-      path: '/brainwave/literale',
-      image: '/imgs/thumbnails/literale-160x160.webp',
-      tagline: 'Guess the book from its opening line in this literary puzzle',
-      keywords: 'book opening game, literature trivia, book guessing puzzle'
       },
       {
       category: 'landmarkdle',

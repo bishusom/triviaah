@@ -132,7 +132,7 @@ export async function addCreatureResult(
     const { error } = await supabase
       .from('puzzle_results')
       .insert([{
-        category: 'creature',
+        category: 'creaturedle',
         success,
         attempts,
         user_id: userId,
@@ -141,7 +141,7 @@ export async function addCreatureResult(
 
     if (error) throw error;
   } catch (error) {
-    console.error('Error saving creature result to Supabase:', error);
+    console.error('Error saving creaturedle result to Supabase:', error);
   }
 }
 
