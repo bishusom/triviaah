@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateWordLadderMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/word-games/word-ladder';
+  const canonicalUrl = 'https://triviaah.com/word-games/word-ladder';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Elite Trivias',
+    title: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Triviaah',
     description: 'Play free word ladder puzzles online. Transform one word into another by changing one letter at a time. Fun vocabulary game that improves spelling and logic skills.',
     keywords: [
       'word ladder',
@@ -34,10 +34,10 @@ export function generateWordLadderMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Elite Trivias',
+      title: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Triviaah',
       description: 'Play free word ladder puzzles online. Transform one word into another by changing one letter at a time. Fun vocabulary game that improves spelling and logic skills.',
-      url: 'https://elitetrivias.com/word-games/word-ladder',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/word-games/word-ladder',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/word-games/word-ladder.webp',
@@ -51,7 +51,7 @@ export function generateWordLadderMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Elite Trivias',
+      title: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Triviaah',
       description: 'Play free word ladder puzzles online. Transform one word into another by changing one letter at a time. Fun vocabulary game that improves spelling and logic skills.',
       images: ['/imgs/word-games/word-ladder.webp'],
       site: '@elitetrivias',

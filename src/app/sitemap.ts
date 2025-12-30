@@ -32,7 +32,7 @@ function getMonthName(monthNumber: number): string {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://elitetrivias.com'
+  const baseUrl = 'https://triviaah.com'
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();

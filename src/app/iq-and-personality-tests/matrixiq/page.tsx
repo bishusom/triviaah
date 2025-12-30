@@ -28,7 +28,7 @@ export default function MatrixIQTestPage() {
     "@type": "WebPage",
     "name": "Matrix IQ Test | Free Pattern Recognition Assessment",
     "description": "Take our Matrix IQ Test to measure your pattern recognition, abstract reasoning, and fluid intelligence. Get your IQ estimate and cognitive profile.",
-    "url": "https://elitetrivias.com/brainwave/matrix-iq",
+    "url": "https://triviaah.com/brainwave/matrix-iq",
     "mainEntity": {
       "@type": "PsychologicalTest",
       "name": "Matrix Intelligence Quotient Test",

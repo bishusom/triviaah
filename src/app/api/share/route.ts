@@ -39,7 +39,7 @@ export async function GET(request: Request) {
   
   // Determine the base URL
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
-                  (request.url.includes('localhost') ? 'http://localhost:3000' : 'https://elitetrivias.com');
+                  (request.url.includes('localhost') ? 'http://localhost:3000' : 'https://triviaah.com');
 
   // Generate clean URL without fbclid for sharing
   const cleanUrl = new URL(request.url);
@@ -76,8 +76,8 @@ export async function GET(request: Request) {
       <meta property="og:image" content="${imageUrl}">
       <meta property="og:image:width" content="1200">
       <meta property="og:image:height" content="630">
-      <meta property="og:image:alt" content="Fun Elite Trivias Challenge">
-      <meta property="og:site_name" content="Elite Trivias">
+      <meta property="og:image:alt" content="Fun Triviaah Challenge">
+      <meta property="og:site_name" content="Triviaah">
       
       <!-- Twitter -->
       <meta name="twitter:card" content="summary_large_image">
@@ -94,7 +94,7 @@ export async function GET(request: Request) {
       {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": "Elite Trivias Score Share",
+        "name": "Triviaah Score Share",
         "description": "I scored ${score} points in ${formattedCategory} trivia!",
         "url": "${shareUrl}"
       }
@@ -123,7 +123,7 @@ export async function GET(request: Request) {
   <!DOCTYPE html>
   <html>
   <head>
-    <title>Redirecting to Elite Trivias...</title>
+    <title>Redirecting to Triviaah...</title>
     <meta http-equiv="refresh" content="0;url=${redirectUrl.toString()}" />
     <script>
       window.location.href = "${redirectUrl.toString()}";

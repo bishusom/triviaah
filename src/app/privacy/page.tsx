@@ -16,7 +16,7 @@ export default function PrivacyPage() {
       <div className="prose prose-lg">
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">1. Information We Collect</h2>
-          <p>When you play Elite Trivias, we may collect:</p>
+          <p>When you play Triviaah, we may collect:</p>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>Gameplay data (scores, categories played, performance metrics)</li>
             <li>Device information (browser type, operating system)</li>

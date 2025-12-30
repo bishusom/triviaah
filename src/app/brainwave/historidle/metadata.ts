@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateHistoridleMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/brainwave/historidle';
+  const canonicalUrl = 'https://triviaah.com/brainwave/historidle';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Historidle - Daily Historical Puzzle | Elite Trivias',
+    title: 'Historidle - Daily Historical Puzzle | Triviaah',
     description: 'Guess the historical figure or event from emojis and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
     keywords: [
       'historidle',
@@ -31,10 +31,10 @@ export function generateHistoridleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Historidle - Daily Historical Puzzle | Elite Trivias',
+      title: 'Historidle - Daily Historical Puzzle | Triviaah',
       description: 'Guess the historical figure or event from 3 dates and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
-      url: 'https://elitetrivias.com/brainwave/historidle',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/brainwave/historidle',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs//brainwave/historidle-og.webp',
@@ -48,7 +48,7 @@ export function generateHistoridleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Historidle - Daily Historical Puzzle | Elite Trivias',
+      title: 'Historidle - Daily Historical Puzzle | Triviaah',
       description: 'Guess the historical figure or event from  3 dates and progressive clues with limited attempts, Wordle-style feedback. Unlock more historical hints with each wrong guess!',
       images: ['/imgs//brainwave/historidle-og.webp'],
       site: '@elitetrivias',

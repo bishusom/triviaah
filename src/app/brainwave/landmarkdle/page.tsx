@@ -23,10 +23,10 @@ export default function LandmarkdlePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'Geography Games', 'Architecture Puzzles', 'Travel Education']
@@ -34,15 +34,15 @@ export default function LandmarkdlePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Landmarkdle - Daily Landmark Puzzle | Elite Trivias',
+      name: 'Landmarkdle - Daily Landmark Puzzle | Triviaah',
       description: 'Guess the landmark from its 6 attributes: type, location, architect, built year, height, and material. Wordle-style landmark guessing game.',
-      url: 'https://elitetrivias.com/brainwave/landmarkdle',
+      url: 'https://triviaah.com/brainwave/landmarkdle',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Landmarkdle',
         description: 'Daily landmark guessing game where players identify world landmarks based on 6 key attributes: type, location, architect, built year, height, and material.',
-        gameLocation: 'https://elitetrivias.com/brainwave/landmarkdle',
+        gameLocation: 'https://triviaah.com/brainwave/landmarkdle',
         characterAttribute: 'Landmarks, Architecture, Geography, Travel, World Heritage, Famous Buildings, Historical Structures'
       }
     },

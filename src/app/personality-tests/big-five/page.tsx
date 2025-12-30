@@ -13,9 +13,9 @@ export default function BigFivePage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Free Big Five Personality Test | Elite Trivias",
+    "name": "Free Big Five Personality Test | Triviaah",
     "description": "Take our scientifically-based Big Five (OCEAN) personality test to discover your personality traits. Free, accurate, and detailed results with downloadable reports.",
-    "url": "https://elitetrivias.com/personality/big-five",
+    "url": "https://triviaah.com/personality/big-five",
     "mainEntity": {
       "@type": "PsychologicalTest",
       "name": "Big Five Personality Test",

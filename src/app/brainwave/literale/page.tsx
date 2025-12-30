@@ -24,10 +24,10 @@ export default function LiteralePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'Literature Games', 'Book Puzzles', 'Reading Education']
@@ -35,15 +35,15 @@ export default function LiteralePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Literale - Daily Literature Puzzle | Elite Trivias',
+      name: 'Literale - Daily Literature Puzzle | Triviaah',
       description: 'Guess the book title from opening lines and progressive clues with limited attempts, Wordle-style feedback on title letters. Unlock more hints with each wrong guess!',
-      url: 'https://elitetrivias.com/brainwave/literale',
+      url: 'https://triviaah.com/brainwave/literale',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Literale',
         description: 'Daily literature puzzle game where players identify book titles based on opening lines, progressive clues, and Wordle-style letter feedback with limited attempts.',
-        gameLocation: 'https://elitetrivias.com/brainwave/literale',
+        gameLocation: 'https://triviaah.com/brainwave/literale',
         characterAttribute: 'Books, Literature, Reading, Authors, Novels, Classic Literature, Book Quotes, Literary Games'
       }
     },

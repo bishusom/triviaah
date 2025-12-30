@@ -18,10 +18,10 @@ export default function MiniCrosswordPage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Word Games', 'Educational Entertainment', 'Crossword Puzzles', 'Mini Crossword']
@@ -29,15 +29,15 @@ export default function MiniCrosswordPage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free Mini Crossword Puzzles Online | 5-Letter Word Crosswords | Elite Trivias',
+      name: 'Free Mini Crossword Puzzles Online | 5-Letter Word Crosswords | Triviaah',
       description: 'Play free mini crossword puzzles online. Solve quick 5x5 crosswords with Wordle-style feedback. Perfect for daily brain training and vocabulary practice.',
-      url: 'https://elitetrivias.com/word-games/mini-crossword',
+      url: 'https://triviaah.com/word-games/mini-crossword',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Mini Crossword',
         description: 'Quick 5x5 crossword puzzles with Wordle-style letter feedback. Features daily puzzles, multiple difficulty levels, and educational word practice.',
-        gameLocation: 'https://elitetrivias.com/word-games/mini-crossword',
+        gameLocation: 'https://triviaah.com/word-games/mini-crossword',
         characterAttribute: 'Vocabulary, Spelling, Pattern Recognition, Cognitive Skills, Daily Brain Training'
       }
     },
@@ -49,19 +49,19 @@ export default function MiniCrosswordPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://elitetrivias.com'
+          item: 'https://triviaah.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Word Games',
-          item: 'https://elitetrivias.com/word-games'
+          item: 'https://triviaah.com/word-games'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Mini Crossword',
-          item: 'https://elitetrivias.com/word-games/mini-crossword'
+          item: 'https://triviaah.com/word-games/mini-crossword'
         }
       ]
     },

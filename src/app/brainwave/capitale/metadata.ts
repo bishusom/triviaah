@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateCapitaleMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/brainwave/capitale';
+  const canonicalUrl = 'https://triviaah.com/brainwave/capitale';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Capitale - Daily Capital City Guessing Game | Elite Trivias',
+    title: 'Capitale - Daily Capital City Guessing Game | Triviaah',
     description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle but with capital cities. Free, educational, and fun!',
     keywords: [
       'Capitale',
@@ -28,10 +28,10 @@ export function generateCapitaleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Capitale - Daily Capital City Guessing Game | Elite Trivias',
+      title: 'Capitale - Daily Capital City Guessing Game | Triviaah',
       description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle but with capital cities.',
-      url: 'https://elitetrivias.com/brainwave/capitale',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/brainwave/capitale',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/brainwave/capitale-og.webp',
@@ -45,7 +45,7 @@ export function generateCapitaleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Capitale - Daily Capital City Guessing Game | Elite Trivias',
+      title: 'Capitale - Daily Capital City Guessing Game | Triviaah',
       description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle.',
       images: ['/imgs/brainwave/capitale-og.webp'],
       site: '@elitetrivias', // Replace with your actual Twitter handle

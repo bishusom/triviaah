@@ -28,10 +28,10 @@ export async function StructuredData({
   const organizationStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Elite Trivias',
-    url: 'https://elitetrivias.com',
+    name: 'Triviaah',
+    url: 'https://triviaah.com',
     description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-    logo: 'https://elitetrivias.com/logo.png',
+    logo: 'https://triviaah.com/logo.png',
     sameAs: [],
     foundingDate: '2024',
     knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment']
@@ -51,7 +51,7 @@ export async function StructuredData({
     assesses: formattedCategory,
     publisher: {
       '@type': 'Organization',
-      name: 'Elite Trivias'
+      name: 'Triviaah'
     },
     hasPart: questions.map((question: Question, index: number) => ({
       '@type': 'Question',
@@ -78,14 +78,14 @@ export async function StructuredData({
     dateModified: lastUpdated,
     author: {
       '@type': 'Organization',
-      name: 'Elite Trivias'
+      name: 'Triviaah'
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Elite Trivias',
+      name: 'Triviaah',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://elitetrivias.com/logo.png'
+        url: 'https://triviaah.com/logo.png'
       }
     },
     mainEntity: questions.map((question: Question) => ({

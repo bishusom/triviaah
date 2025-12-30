@@ -81,10 +81,10 @@ export default function NumberPuzzlesPage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Number Games', 'Educational Entertainment', 'Math Puzzles', 'Brain Games', 'Cognitive Games']
@@ -92,9 +92,9 @@ export default function NumberPuzzlesPage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Elite Trivias',
+      name: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah',
       description: 'Challenge your math skills with our collection of free number puzzles including Number Scramble, Number Tower, Prime Hunter, Number Sequence, and Sudoku. Improve logical thinking and problem-solving skills.',
-      url: 'https://elitetrivias.com/number-puzzles',
+      url: 'https://triviaah.com/number-puzzles',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'ItemList',
@@ -106,8 +106,8 @@ export default function NumberPuzzlesPage() {
           position: index + 1,
           name: puzzle.name,
           description: puzzle.fullDescription,
-          url: `https://elitetrivias.com/number-puzzles/${puzzle.slug}`,
-          gameLocation: `https://elitetrivias.com/number-puzzles/${puzzle.slug}`,
+          url: `https://triviaah.com/number-puzzles/${puzzle.slug}`,
+          gameLocation: `https://triviaah.com/number-puzzles/${puzzle.slug}`,
           characterAttribute: puzzle.skills.join(', ')
         }))
       }
@@ -120,13 +120,13 @@ export default function NumberPuzzlesPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://elitetrivias.com'
+          item: 'https://triviaah.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Number Puzzles',
-          item: 'https://elitetrivias.com/number-puzzles'
+          item: 'https://triviaah.com/number-puzzles'
         }
       ]
     },
@@ -436,7 +436,7 @@ export default function NumberPuzzlesPage() {
                classroom resources, puzzle enthusiasts wanting intellectual challenges, professionals 
                maintaining analytical skills, seniors preserving cognitive health, and anyone looking 
                to improve their mathematical abilities through entertaining daily puzzles. Join thousands 
-               of players who trust Elite Trivias for quality educational entertainment!</p>
+               of players who trust Triviaah for quality educational entertainment!</p>
           </div>
         </div>
       </div>

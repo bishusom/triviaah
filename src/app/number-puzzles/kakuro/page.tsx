@@ -17,10 +17,10 @@ export default function KakuroPage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including logic puzzles, number games, and brain teasers.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Logic Puzzles', 'Number Games', 'Brain Teasers', 'Educational Games', 'Math Puzzles', 'Cognitive Games']
@@ -28,15 +28,15 @@ export default function KakuroPage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free Kakuro Puzzles Online | Daily Kakuro Games & Challenges | Elite Trivias',
+      name: 'Free Kakuro Puzzles Online | Daily Kakuro Games & Challenges | Triviaah',
       description: 'Play free Kakuro puzzles online with daily challenges. Enjoy classic cross-sum puzzles with multiple difficulty levels. One of the best free Kakuro websites with no registration required.',
-      url: 'https://elitetrivias.com/number-puzzles/kakuro',
+      url: 'https://triviaah.com/number-puzzles/kakuro',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Kakuro',
         description: 'Logic-based number puzzle game combining elements of Sudoku and crosswords. Players fill a grid with numbers 1-9 where each run sums to a given clue without repeating numbers.',
-        gameLocation: 'https://elitetrivias.com/number-puzzles/kakuro',
+        gameLocation: 'https://triviaah.com/number-puzzles/kakuro',
         characterAttribute: 'Logical Thinking, Arithmetic Skills, Pattern Recognition, Problem Solving, Analytical Reasoning, Strategic Planning'
       }
     },
@@ -48,19 +48,19 @@ export default function KakuroPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://elitetrivias.com'
+          item: 'https://triviaah.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Number Puzzles',
-          item: 'https://elitetrivias.com/number-puzzles'
+          item: 'https://triviaah.com/number-puzzles'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Kakuro',
-          item: 'https://elitetrivias.com/number-puzzles/kakuro'
+          item: 'https://triviaah.com/number-puzzles/kakuro'
         }
       ]
     },
@@ -295,7 +295,7 @@ export default function KakuroPage() {
 
           {/* Why Play Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Why Play Kakuro on Elite Trivias?</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Why Play Kakuro on Triviaah?</h3>
             <div className="prose text-gray-700">
               <p className="mb-4">
                 Kakuro is one of the world&apos;s most engaging logic puzzles, offering a perfect blend of mathematics 

@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateBoggleMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/word-games/boggle';
+  const canonicalUrl = 'https://triviaah.com/word-games/boggle';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Free Boggle Game Online | Word Search Challenge | Elite Trivias',
+    title: 'Free Boggle Game Online | Word Search Challenge | Triviaah',
     description: 'Play free Boggle game online. Find words in a 4x4 or 5x5 letter grid with our daily puzzle challenge. Boost your vocabulary, word-finding skills, and uncover all possible words.',
     keywords: [
       'boggle',
@@ -34,10 +34,10 @@ export function generateBoggleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Free Boggle Game Online | Word Search Challenge | Elite Trivias',
+      title: 'Free Boggle Game Online | Word Search Challenge | Triviaah',
       description: 'Play free Boggle game online. Find words in a 4x4 or 5x5 letter grid with our daily puzzle challenge. Boost your vocabulary, word-finding skills, and uncover all possible words.',
-      url: 'https://elitetrivias.com/word-games/boggle',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/word-games/boggle',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/word-games/boggle.webp',
@@ -51,7 +51,7 @@ export function generateBoggleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Free Boggle Game Online | Word Search Challenge | Elite Trivias',
+      title: 'Free Boggle Game Online | Word Search Challenge | Triviaah',
       description: 'Play free Boggle game online. Find words in a 4x4 or 5x5 letter grid with our daily puzzle challenge. Boost your vocabulary, word-finding skills, and uncover all possible words.',
       images: ['/imgs/word-games/boggle.webp'],
       site: '@elitetrivias',

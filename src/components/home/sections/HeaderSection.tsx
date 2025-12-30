@@ -7,7 +7,7 @@ export default function HeaderSection() {
       <div className="container mx-auto flex items-center justify-center gap-4">
         <Image
           src="/logo.webp"
-          alt="Elite Trivias - Free Daily Trivia Games"
+          alt="Triviaah - Free Daily Trivia Games"
           width={200}
           height={36}
           priority

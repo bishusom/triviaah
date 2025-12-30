@@ -3,7 +3,7 @@ export default function SeoContentSection() {
   return (
     <div className="prose text-gray-600">
       <p className="mb-4">
-        Elite Trivias offers the best collection of <strong>free daily quiz with answers</strong> and detailed explanations 
+        Triviaah offers the best collection of <strong>free daily quiz with answers</strong> and detailed explanations 
         across multiple categories. Our <strong>daily quiz with answers</strong> format helps you learn while you play, 
         with instant feedback on every question. Enjoy our <strong>free trivia games online</strong> 
         including <strong>trivia games to play with friends online</strong> and <strong>virtual trivia games for work</strong>. 

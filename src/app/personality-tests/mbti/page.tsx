@@ -13,9 +13,9 @@ export default function MBTIPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Free MBTI Personality Test | Elite Trivias",
+    "name": "Free MBTI Personality Test | Triviaah",
     "description": "Take our scientifically-based MBTI personality test to discover your personality type. Free, accurate, and detailed results with downloadable reports.",
-    "url": "https://elitetrivias.com/personality/mbti",
+    "url": "https://triviaah.com/personality/mbti",
     "mainEntity": {
       "@type": "PsychologicalTest",
       "name": "MBTI Personality Test",

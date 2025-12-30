@@ -66,10 +66,10 @@ export default function WordGamesClientPage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Word Games', 'Educational Entertainment', 'Vocabulary Games', 'Spelling Games', 'Language Games', 'Grid Puzzles']
@@ -77,9 +77,9 @@ export default function WordGamesClientPage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free Word Games Collection | Vocabulary & Spelling Games | Elite Trivias',
+      name: 'Free Word Games Collection | Vocabulary & Spelling Games | Triviaah',
       description: 'Challenge your vocabulary with our collection of free word games including Mini CrossWord, Boggle, Scramble, Spelling Bee, Word Search, and Word Ladder. Improve spelling, vocabulary, and cognitive skills.',
-      url: 'https://elitetrivias.com/word-games',
+      url: 'https://triviaah.com/word-games',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'ItemList',
@@ -93,8 +93,8 @@ export default function WordGamesClientPage() {
             '@type': 'Game',
             name: game.name,
             description: game.description,
-            url: `https://elitetrivias.com/word-games/${game.slug}`,
-            gameLocation: `https://elitetrivias.com/word-games/${game.slug}`
+            url: `https://triviaah.com/word-games/${game.slug}`,
+            gameLocation: `https://triviaah.com/word-games/${game.slug}`
           }
         }))
       }
@@ -107,13 +107,13 @@ export default function WordGamesClientPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://elitetrivias.com'
+          item: 'https://triviaah.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Word Games',
-          item: 'https://elitetrivias.com/word-games'
+          item: 'https://triviaah.com/word-games'
         }
       ]
     },

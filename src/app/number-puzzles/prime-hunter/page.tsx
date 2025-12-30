@@ -18,10 +18,10 @@ export default function PrimeHunterPage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'Number Games', 'Educational Entertainment', 'Math Puzzles', 'Brain Games', 'Cognitive Games']
@@ -29,15 +29,15 @@ export default function PrimeHunterPage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Prime Hunter Puzzle Game | Free Prime Number Challenge | Elite Trivias',
+      name: 'Prime Hunter Puzzle Game | Free Prime Number Challenge | Triviaah',
       description: 'Play Prime Hunter, a free online prime number puzzle game. Identify prime numbers in a grid with limited attempts. Improve your math skills with this fun and challenging brain game.',
-      url: 'https://elitetrivias.com/number-puzzles/prime-hunter',
+      url: 'https://triviaah.com/number-puzzles/prime-hunter',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Prime Hunter',
         description: 'Math puzzle game where players identify prime numbers in a grid with limited attempts. Develops number theory understanding, prime identification skills, and mathematical reasoning.',
-        gameLocation: 'https://elitetrivias.com/number-puzzles/prime-hunter',
+        gameLocation: 'https://triviaah.com/number-puzzles/prime-hunter',
         characterAttribute: 'Math Skills, Number Theory, Prime Identification, Logical Thinking, Problem Solving, Cognitive Skills, Mental Math, Analytical Reasoning'
       }
     },
@@ -49,19 +49,19 @@ export default function PrimeHunterPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://elitetrivias.com'
+          item: 'https://triviaah.com'
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Number Puzzles',
-          item: 'https://elitetrivias.com/number-puzzles'
+          item: 'https://triviaah.com/number-puzzles'
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Prime Hunter',
-          item: 'https://elitetrivias.com/number-puzzles/prime-hunter'
+          item: 'https://triviaah.com/number-puzzles/prime-hunter'
         }
       ]
     },

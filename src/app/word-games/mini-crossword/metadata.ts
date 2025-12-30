@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateMiniCrossWordMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/word-games/word-minicrossword';
+  const canonicalUrl = 'https://triviaah.com/word-games/word-minicrossword';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Mini Crossword Game | Letter Grid Puzzle & Vocabulary Challenge | Elite Trivias',
+    title: 'Mini Crossword Game | Letter Grid Puzzle & Vocabulary Challenge | Triviaah',
     description: 'Master our Word minicrossword puzzle! Connect letters in the grid to form words, solve crossword-style challenges, and enhance your vocabulary with this unique word game.',
     keywords: [
       'word minicrossword',
@@ -34,16 +34,16 @@ export function generateMiniCrossWordMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Mini Crossword Game | Letter Grid Puzzle & Vocabulary Challenge | Elite Trivias',
+      title: 'Mini Crossword Game | Letter Grid Puzzle & Vocabulary Challenge | Triviaah',
       description: 'Master our Word minicrossword puzzle! Connect letters in the grid to form words, solve crossword-style challenges, and enhance your vocabulary with this unique word game.',
-      url: 'https://elitetrivias.com/word-games/mini-crossword',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/word-games/mini-crossword',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs/word-games/minicrossword.webp',
           width: 1200,
           height: 630,
-          alt: 'Mini Crossword Game | Letter Grid Puzzle & Vocabulary Challenge | Elite Trivias'
+          alt: 'Mini Crossword Game | Letter Grid Puzzle & Vocabulary Challenge | Triviaah'
         }
       ],
       type: 'website',
@@ -51,7 +51,7 @@ export function generateMiniCrossWordMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-       title: 'Mini Crossword Game | Letter Grid Puzzle & Vocabulary Challenge | Elite Trivias',
+       title: 'Mini Crossword Game | Letter Grid Puzzle & Vocabulary Challenge | Triviaah',
       description: 'Master our Word minicrossword puzzle! Connect letters in the grid to form words, solve crossword-style challenges, and enhance your vocabulary with this unique word game.',
       images: ['/imgs/word-games/minicrossword.webp'],
       site: '@elitetrivias',

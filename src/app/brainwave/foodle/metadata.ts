@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateFoodleMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/brainwave/foodle';
+  const canonicalUrl = 'https://triviaah.com/brainwave/foodle';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Foodle - Daily Food Puzzle | Elite Trivias',
+    title: 'Foodle - Daily Food Puzzle | Triviaah',
     description: 'Guess the food from its 6 attributes: cuisine, course, main ingredients, cooking method, flavor profile, and temperature. Wordle-style food guessing game.',
     keywords: [
       'foodle',
@@ -30,10 +30,10 @@ export function generateFoodleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Foodle - Daily Food Puzzle | Elite Trivias',
+      title: 'Foodle - Daily Food Puzzle | Triviaah',
       description: 'Guess the food from its 6 attributes: cuisine, course, main ingredients, cooking method, flavor profile, and temperature. Wordle-style food guessing game.',
-      url: 'https://elitetrivias.com/brainwave/foodle',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/brainwave/foodle',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs//brainwave/foodle-og.webp',
@@ -47,7 +47,7 @@ export function generateFoodleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Foodle - Daily Food Puzzle | Elite Trivias',
+      title: 'Foodle - Daily Food Puzzle | Triviaah',
       description: 'Guess the food from its 6 attributes: cuisine, course, main ingredients, cooking method, flavor profile, and temperature. Wordle-style food guessing game.',
       images: ['/imgs//brainwave/foodle-og.webp'],
       site: '@elitetrivias',

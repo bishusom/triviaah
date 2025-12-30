@@ -13,9 +13,9 @@ export default function DISCPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Free DISC Personality Assessment | Elite Trivias",
+    "name": "Free DISC Personality Assessment | Triviaah",
     "description": "Take our comprehensive DISC assessment to discover your behavioral style, communication preferences, and work style adaptations.",
-    "url": "https://elitetrivias.com/personality/disc",
+    "url": "https://triviaah.com/personality/disc",
     "mainEntity": {
       "@type": "PsychologicalTest",
       "name": "DISC Behavioral Assessment",

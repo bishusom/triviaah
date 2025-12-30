@@ -13,9 +13,9 @@ export default function HollandPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Free Holland Career Assessment | Elite Trivias",
+    "name": "Free Holland Career Assessment | Triviaah",
     "description": "Discover your career interests and personality type with our comprehensive Holland Code (RIASEC) assessment based on Dr. John Holland's theory.",
-    "url": "https://elitetrivias.com/personality/holland",
+    "url": "https://triviaah.com/personality/holland",
     "mainEntity": {
       "@type": "PsychologicalTest",
       "name": "Holland Career Assessment",

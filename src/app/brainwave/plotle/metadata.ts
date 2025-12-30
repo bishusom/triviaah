@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generatePlotleMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/brainwave/plotle';
+  const canonicalUrl = 'https://triviaah.com/brainwave/plotle';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Plotle - Daily Movie Plot Puzzle | Elite Trivias',
+    title: 'Plotle - Daily Movie Plot Puzzle | Triviaah',
     description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words. Daily movie guessing game for film lovers.',
     keywords: [
       'plotle',
@@ -35,10 +35,10 @@ export function generatePlotleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Plotle - Daily Movie Plot Puzzle | Elite Trivias',
+      title: 'Plotle - Daily Movie Plot Puzzle | Triviaah',
       description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words. Daily movie guessing game for film lovers.',
-      url: 'https://elitetrivias.com/brainwave/plotle',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/brainwave/plotle',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs//brainwave/plotle-og.webp',
@@ -52,7 +52,7 @@ export function generatePlotleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Plotle - Daily Movie Plot Puzzle | Elite Trivias',
+      title: 'Plotle - Daily Movie Plot Puzzle | Triviaah',
       description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words. Daily movie guessing game for film lovers.',
       images: ['/imgs//brainwave/plotle-og.webp'],
       site: '@elitetrivias',

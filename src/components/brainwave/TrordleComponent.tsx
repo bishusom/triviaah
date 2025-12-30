@@ -528,7 +528,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       shareText += '\n';
     });
     
-    shareText += '\nPlay daily at https://elitetrivias.com/brainwave/trordle';
+    shareText += '\nPlay daily at https://triviaah.com/brainwave/trordle';
     return shareText;
   };
 

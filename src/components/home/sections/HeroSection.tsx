@@ -3,7 +3,7 @@ export default function HeroSection() {
   return (
     <div className="text-center mb-8">
       <h1 className="text-2xl font-bold text-gray-800 mb-2">
-        Elite Trivias : Free Daily Trivia Quiz with Answers & Explanations
+        Triviaah : Free Daily Trivia Quiz with Answers & Explanations
       </h1>
       <p className="text-gray-600 mb-4">
         New free online trivia games with answers every 24 hours. Test your knowledge and learn instantly!

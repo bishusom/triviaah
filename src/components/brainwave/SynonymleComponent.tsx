@@ -438,7 +438,7 @@ export default function SynonymleComponent({ initialData }: SynonymleComponentPr
     shareText += `\nSynonyms: ${puzzleData.synonyms.slice(0, 3).join(', ')}`;
   }
 
-  shareText += '\nPlay daily at https://elitetrivias.com/brainwave/synonymle';
+  shareText += '\nPlay daily at https://triviaah.com/brainwave/synonymle';
   return shareText;
   };
 

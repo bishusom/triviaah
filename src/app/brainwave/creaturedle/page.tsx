@@ -23,10 +23,10 @@ export default function CreaturedlePage() {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Elite Trivias',
-      url: 'https://elitetrivias.com',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
       description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
-      logo: 'https://elitetrivias.com/logo.png',
+      logo: 'https://triviaah.com/logo.png',
       sameAs: [],
       foundingDate: '2024',
       knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'Animal Games', 'Biology Puzzles', 'Nature Education']
@@ -34,15 +34,15 @@ export default function CreaturedlePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Creaturedle - Daily Animal Guessing Game | Elite Trivias',
+      name: 'Creaturedle - Daily Animal Guessing Game | Triviaah',
       description: 'Guess the animal from its 6 attributes: class, habitat, diet, size, activity, and body covering. Wordle-style animal guessing game for nature lovers.',
-      url: 'https://elitetrivias.com/creaturedle',
+      url: 'https://triviaah.com/creaturedle',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Creaturedle',
         description: 'Daily animal guessing game where players identify animals based on 6 key attributes: class, habitat, diet, size, activity, and body covering.',
-        gameLocation: 'https://elitetrivias.com/creaturedle',
+        gameLocation: 'https://triviaah.com/creaturedle',
         characterAttribute: 'Animals, Wildlife, Biology, Nature, Science Education'
       }
     },

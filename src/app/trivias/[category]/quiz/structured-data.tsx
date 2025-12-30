@@ -75,9 +75,9 @@ export default async function StructuredData({
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    'name': `${formattedCategory} Quiz | Elite Trivias`,
+    'name': `${formattedCategory} Quiz | Triviaah`,
     'description': `Test your knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with ${questions.length} questions!`,
-    'url': `https://elitetrivias.com/trivias/${category}/quiz`,
+    'url': `https://triviaah.com/trivias/${category}/quiz`,
     'mainEntity': {
       '@type': 'Quiz',
       'name': `${formattedCategory} Quiz`

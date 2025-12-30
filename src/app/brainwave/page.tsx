@@ -15,17 +15,17 @@ interface Puzzle {
 }
 
 export const metadata: Metadata = {
-  title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Elite Trivias',
+  title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',
   description: 'Enjoy our collection of creative brainwave trivia games including word puzzles, movie guessing, music challenges and geography quizzes.', 
   keywords: 'brainwave games, trivia puzzles, word games, movie trivia, music trivia, geography quizzes', 
   alternates: {
-    canonical: 'https://elitetrivias.com/brainwave',
+    canonical: 'https://triviaah.com/brainwave',
   },
   openGraph: {
-    title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Elite Trivias',
+    title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',
     description: 'Challenge your mind with our creative brainwave trivia games including Capitale, Plotle, Songle and more!',
-    url: 'https://elitetrivias.com/brainwave',
-    siteName: 'Elite Trivias',
+    url: 'https://triviaah.com/brainwave',
+    siteName: 'Triviaah',
     images: [
       {
         url: '/imgs//brainwave/brainwave-trivia-og.webp',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Elite Trivias',
+    title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',
     description: 'Challenge your mind with our creative brainwave trivia games including Capitale, Plotle, Songle and more!',
     images: ['/imgs/brainwave/brainwave-trivia-og.webp'],
   },
@@ -319,13 +319,13 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://elitetrivias.com/#organization",
-        "name": "Elite Trivias",
-        "url": "https://elitetrivias.com/",
-        "description": "Elite Trivias offers engaging and educational trivia games and puzzles for everyone.",
+        "@id": "https://triviaah.com/#organization",
+        "name": "Triviaah",
+        "url": "https://triviaah.com/",
+        "description": "Triviaah offers engaging and educational trivia games and puzzles for everyone.",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://elitetrivias.com/logo.png",
+          "url": "https://triviaah.com/logo.png",
           "width": 200,
           "height": 60
         },
@@ -337,43 +337,43 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
       },
       {
         "@type": "WebPage",
-        "@id": "https://elitetrivias.com/brainwave/#webpage",
-        "url": "https://elitetrivias.com/brainwave",
-        "name": "Brainwave Trivia Games - Creative Puzzle Challenges | Elite Trivias",
+        "@id": "https://triviaah.com/brainwave/#webpage",
+        "url": "https://triviaah.com/brainwave",
+        "name": "Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah",
         "description": "Enjoy our collection of creative brainwave trivia games including word puzzles, movie guessing, music challenges and geography quizzes.",
         "isPartOf": {
-          "@id": "https://elitetrivias.com/#website"
+          "@id": "https://triviaah.com/#website"
         },
         "about": {
-          "@id": "https://elitetrivias.com/brainwave/#itemlist"
+          "@id": "https://triviaah.com/brainwave/#itemlist"
         },
         "datePublished": "2024-01-01T00:00:00+00:00",
         "dateModified": currentDate.toISOString(),
         "breadcrumb": {
-          "@id": "https://elitetrivias.com/brainwave/#breadcrumb"
+          "@id": "https://triviaah.com/brainwave/#breadcrumb"
         },
         "primaryImageOfPage": {
           "@type": "ImageObject",
-          "url": "https://elitetrivias.com/imgs/thumbnails/brainwave-trivia-og.webp",
+          "url": "https://triviaah.com/imgs/thumbnails/brainwave-trivia-og.webp",
           "width": 1200,
           "height": 630
         }
       },
       {
         "@type": "WebSite",
-        "@id": "https://elitetrivias.com/#website",
-        "url": "https://elitetrivias.com/",
-        "name": "Elite Trivias",
+        "@id": "https://triviaah.com/#website",
+        "url": "https://triviaah.com/",
+        "name": "Triviaah",
         "description": "Engaging trivia games and puzzles for everyone",
         "publisher": {
-          "@id": "https://elitetrivias.com/#organization"
+          "@id": "https://triviaah.com/#organization"
         },
         "potentialAction": [
           {
             "@type": "SearchAction",
             "target": {
               "@type": "EntryPoint",
-              "urlTemplate": "https://elitetrivias.com/search?q={search_term_string}"
+              "urlTemplate": "https://triviaah.com/search?q={search_term_string}"
             },
             "query-input": "required name=search_term_string"
           }
@@ -381,7 +381,7 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
       },
       {
         "@type": "ItemList",
-        "@id": "https://elitetrivias.com/brainwave/#itemlist",
+        "@id": "https://triviaah.com/brainwave/#itemlist",
         "name": "Brainwave Daily Puzzle Games",
         "description": "Collection of creative daily puzzle challenges and trivia games",
         "numberOfItems": puzzles.length,
@@ -392,7 +392,7 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
             "@type": "Game",
             "name": puzzle.name,
             "description": puzzle.tagline,
-            "url": `https://elitetrivias.com${puzzle.path}`,
+            "url": `https://triviaah.com${puzzle.path}`,
             "gameType": "PuzzleGame",
             "genre": ["puzzle", "trivia", "educational"],
             "applicationCategory": "Game",
@@ -401,7 +401,7 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
               "minValue": 1
             },
             "publisher": {
-              "@id": "https://elitetrivias.com/#organization"
+              "@id": "https://triviaah.com/#organization"
             },
             "offers": {
               "@type": "Offer",
@@ -413,19 +413,19 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
       },
       {
         "@type": "BreadcrumbList",
-        "@id": "https://elitetrivias.com/brainwave/#breadcrumb",
+        "@id": "https://triviaah.com/brainwave/#breadcrumb",
         "itemListElement": [
           {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://elitetrivias.com"
+            "item": "https://triviaah.com"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Brainwave Games",
-            "item": "https://elitetrivias.com/brainwave"
+            "item": "https://triviaah.com/brainwave"
           }
         ]
       },

@@ -6,32 +6,32 @@ const nextConfig = {
   async redirects() {
     return [
       // Redirect triviaah.com to elitetrivias.com
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'triviaah.com' }],
-        destination: 'https://elitetrivias.com/:path*',
-        permanent: false, // Use temporary redirect for now
-      },
+      //{
+      //  source: '/:path*',
+      //  has: [{ type: 'host', value: 'triviaah.com' }],
+      //  destination: 'https://elitetrivias.com/:path*',
+      //  permanent: false, // Use temporary redirect for now
+      //},
       // Redirect www.triviaah.com to elitetrivias.com
+      //{
+      //  source: '/:path*',
+      //  has: [{ type: 'host', value: 'www.triviaah.com' }],
+      //  destination: 'https://elitetrivias.com/:path*',
+      //  permanent: false,
+      //},
+      // Remove or comment out the old redirects for elitetrivias.com to triviaah.com
+      {
+         source: '/:path*',
+         has: [{ type: 'host', value: 'elitetrivias.com' }],
+         destination: 'https://triviaah.com/:path*',
+         permanent: false,
+      },
       {
         source: '/:path*',
-        has: [{ type: 'host', value: 'www.triviaah.com' }],
-        destination: 'https://elitetrivias.com/:path*',
-        permanent: false,
+         has: [{ type: 'host', value: 'www.elitetrivias.com' }],
+         destination: 'https://triviaah.com/:path*',
+         permanent: false,
       },
-      // Remove or comment out the old redirects for elitetrivias.com to triviaah.com
-      // {
-      //   source: '/:path*',
-      //   has: [{ type: 'host', value: 'elitetrivias.com' }],
-      //   destination: 'https://triviaah.com/:path*',
-      //   permanent: false,
-      // },
-      // {
-      //   source: '/:path*',
-      //   has: [{ type: 'host', value: 'www.elitetrivias.com' }],
-      //   destination: 'https://triviaah.com/:path*',
-      //   permanent: false,
-      // },
       {
         source: '/trivia-bank/:slug',
         has: [
@@ -51,7 +51,7 @@ const nextConfig = {
   
   // Environment variables - updated to reflect new primary domain
   env: {
-    NEXT_PUBLIC_SITE_URL: 'https://elitetrivias.com', // Updated to new domain
+    NEXT_PUBLIC_SITE_URL: 'https://triviaah.com', // Updated to new domain
   },
 
   // Image optimization (your existing config is fine)

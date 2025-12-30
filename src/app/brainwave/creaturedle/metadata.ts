@@ -2,11 +2,11 @@
 import { Metadata } from 'next';
 
 export function generateCreaturdleMetadata(): Metadata {
-  const canonicalUrl = 'https://elitetrivias.com/creaturdle';
+  const canonicalUrl = 'https://triviaah.com/creaturdle';
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Creaturdle - Daily Animal Guessing Game | Elite Trivias',
+    title: 'Creaturdle - Daily Animal Guessing Game | Triviaah',
     description: 'Guess the animal from its 6 attributes: class, habitat, diet, size, activity, and body covering. Educational Wordle-style animal puzzle for nature lovers.',
     keywords: [
       'creaturdle',
@@ -30,10 +30,10 @@ export function generateCreaturdleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Creaturdle - Daily Animal Guessing Game | Elite Trivias',
+      title: 'Creaturdle - Daily Animal Guessing Game | Triviaah',
       description: 'Guess the animal from its 6 attributes: class, habitat, diet, size, activity, and body covering. Educational Wordle-style animal puzzle.',
-      url: 'https://elitetrivias.com/creaturdle',
-      siteName: 'Elite Trivias',
+      url: 'https://triviaah.com/creaturdle',
+      siteName: 'Triviaah',
       images: [
         {
           url: '/imgs//brainwave/creaturdle-og.webp',
@@ -47,7 +47,7 @@ export function generateCreaturdleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Creaturdle - Daily Animal Guessing Game | Elite Trivias',
+      title: 'Creaturdle - Daily Animal Guessing Game | Triviaah',
       description: 'Guess the animal from its 6 attributes: class, habitat, diet, size, activity, and body covering. Educational Wordle-style animal puzzle.',
       images: ['/imgs//brainwave/creaturdle-og.webp'],
       site: '@elitetrivias', // Replace with your actual Twitter handle

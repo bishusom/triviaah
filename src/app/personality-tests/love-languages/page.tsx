@@ -13,9 +13,9 @@ export default function LoveLanguagesPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Free Love Languages Assessment | Elite Trivias",
+    "name": "Free Love Languages Assessment | Triviaah",
     "description": "Discover your primary love language with our comprehensive assessment based on Dr. Gary Chapman's 5 Love Languages theory.",
-    "url": "https://elitetrivias.com/personality/love-languages",
+    "url": "https://triviaah.com/personality/love-languages",
     "mainEntity": {
       "@type": "PsychologicalTest",
       "name": "Love Languages Assessment",
