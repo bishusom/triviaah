@@ -30,7 +30,6 @@ export default function HowItWorksSection() {
     <div className="py-12">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">How It Works</h2>
           <p className="text-gray-600">Simple steps to boost your knowledge</p>
         </div>
 
