@@ -407,7 +407,7 @@ const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">How do I play Citadle?</h3>
                 <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  You have 6 attempts to guess the daily city. After each guess, you'll receive hints: 
+                  You have 6 attempts to guess the daily city. After each guess, you&apos;ll receive hints: 
                   1) Country, 2) City skyline, 3) Landmark (clears with wrong guesses), 4) Distance/direction from your guess, 
                   5) Statistical comparisons, and 6) Famous features or nicknames.
                 </p>

@@ -72,6 +72,7 @@ interface CityPuzzleRow {
   hint_column?: string;
   flag_url?: string;
   map_silhouette?: string;
+  valid_cities?: string[];
   puzzle_date: string;
   difficulty: 'easy' | 'medium' | 'hard';
   normalized_name: string;
@@ -147,7 +148,7 @@ export async function getDailyCityPuzzle(customDate?: Date): Promise<CityPuzzle 
       console.error('No puzzle data found');
       return null;
     }
-    return transformToCityPuzzle(puzzleData);
+    return transformToCityPuzzle(puzzleData as CityPuzzleRow);
   } catch (error) {
     console.error('Error getting daily city puzzle from Supabase:', error);
     return null;
@@ -221,7 +222,7 @@ export function normalizeCityName(name: string): string {
 }
 
 // Utility function to transform Supabase data to CityPuzzle interface
-function transformToCityPuzzle(puzzleData: any): CityPuzzle {
+function transformToCityPuzzle(puzzleData: CityPuzzleRow): CityPuzzle {
   return {
     id: puzzleData.id,
     answer: puzzleData.answer,
@@ -241,61 +242,24 @@ function transformToCityPuzzle(puzzleData: any): CityPuzzle {
     hintColumn: puzzleData.hint_column,
     flagUrl: puzzleData.flag_url,
     mapSilhouette: puzzleData.map_silhouette,
-    validCities: puzzleData.valid_cities || [], // Now comes from the puzzle itself
+    validCities: puzzleData.valid_cities || [],
     puzzleDate: puzzleData.puzzle_date,
     difficulty: puzzleData.difficulty || 'medium',
-    validationHints: puzzleData.validation_hints || {},
-  };
-}
-
-// Helper function to format large numbers
-function formatNumber(num: number): string {
-  if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1)}M`;
-  }
-  if (num >= 1000) {
-    return `${(num / 1000).toFixed(1)}K`;
-  }
-  return num.toString();
-}
-
-// Fallback puzzle for development/error cases
-function getFallbackCityPuzzle(): CityPuzzle {
-  return {
-    id: 'fallback-city',
-    answer: 'Paris',
-    country: 'France',
-    countryCode: 'FR',
-    latitude: 48.8566,
-    longitude: 2.3522,
-    population: 2148000,
-    areaKm2: 105.4,
-    timezone: '+1',
-    continent: 'Europe',
-    isCapital: true,
-    region: 'Île-de-France',
-    elevation: 35,
-    foundedYear: 52,
-    famousFor: ['Eiffel Tower', 'Louvre Museum', 'Notre-Dame Cathedral'],
-    hintColumn: 'Known as the "City of Light" and famous for its art and fashion',
-    validCities: ['Paris', 'London', 'New York', 'Tokyo', 'Rome', 'Berlin', 'Madrid', 'Moscow', 'Sydney', 'Cairo'],
-    puzzleDate: getClientDateString(),
-    difficulty: 'medium',
     validationHints: {
-      continent: 'Europe',
-      country: 'France',
-      coordinates: '48.86°N, 2.35°E',
-      timezone: 'UTC+1',
-      population: '2.1M',
-      area: '105.4 km²',
-      elevation: '35m',
-      cityType: 'Capital city',
-      region: 'Île-de-France',
-      foundedYear: 52,
-      famousFor: ['Eiffel Tower', 'Louvre Museum', 'Notre-Dame Cathedral'],
-      hintColumn: 'Known as the "City of Light" and famous for its art and fashion',
-      firstLetter: 'P',
-      nameLength: 5,
+      continent: puzzleData.validation_hints?.continent,
+      country: puzzleData.validation_hints?.country,
+      coordinates: puzzleData.validation_hints?.coordinates,
+      timezone: puzzleData.validation_hints?.timezone,
+      population: puzzleData.validation_hints?.population,
+      area: puzzleData.validation_hints?.area,
+      elevation: puzzleData.validation_hints?.elevation,
+      cityType: puzzleData.validation_hints?.city_type,
+      region: puzzleData.validation_hints?.region,
+      foundedYear: puzzleData.validation_hints?.founded_year,
+      famousFor: puzzleData.validation_hints?.famous_for,
+      hintColumn: puzzleData.validation_hints?.hint_column,
+      firstLetter: puzzleData.validation_hints?.first_letter,
+      nameLength: puzzleData.validation_hints?.name_length,
     }
   };
 }
