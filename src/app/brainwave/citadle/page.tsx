@@ -329,7 +329,7 @@ const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>
       
       {/* Mobile Bottom Ad */}
       {showMobileAd && (
-        <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} />
+        <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
       )}
       
       {/* Ad Controls */}
