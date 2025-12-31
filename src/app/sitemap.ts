@@ -118,7 +118,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const brainwaveCategories = [
     'capitale', 'plotle', 'celebrile', 'literale',
     'creaturedle', 'foodle', 'inventionle', 'landmarkdle',
-    'songle', 'historidle', 'synonymle', 'trordle'
+    'songle', 'historidle', 'synonymle', 'trordle',
+    'automoble', 'countridle', 'citadle', 'botanle'
   ]
 
   const brainwaveCategoryPages: MetadataRoute.Sitemap = brainwaveCategories.map(category => ({

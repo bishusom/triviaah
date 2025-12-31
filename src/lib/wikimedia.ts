@@ -48,7 +48,7 @@ interface WikipediaPagesResponse {
 }
 
 // Entity types for better classification
-export type EntityType = 'capital' | 'animal' | 'invention' | 'landmark' | 'food' | 'person' | 'general';
+export type EntityType = 'car' | 'capital' | 'city' | 'animal' | 'invention' | 'landmark' | 'food' | 'plant' | 'person' | 'general';
 
 // Scoring rules for different entity types
 const entityScoringRules: Record<EntityType, {
@@ -57,6 +57,31 @@ const entityScoringRules: Record<EntityType, {
   titlePatterns?: { pattern: RegExp; score: number }[];
   requiredTerms?: string[];
 }> = {
+  car : {
+    bonusTerms: [
+      { term: 'car', score: 10 },
+      { term: 'automobile', score: 9 },
+      { term: 'vehicle', score: 8 },
+      { term: 'make', score: 7 },
+      { term: 'model', score: 7 },
+      { term: 'engine', score: 6 },
+      { term: 'horsepower', score: 6 },
+      { term: 'torque', score: 6 },
+      { term: 'transmission', score: 5 },
+      { term: 'drivetrain', score: 5 },
+      { term: 'top speed', score: 5 },
+      { term: 'acceleration', score: 5 },
+    ],
+    penaltyTerms: [
+      { term: 'band', score: -10 },
+      { term: 'song', score: -10 },
+      { term: 'album', score: -10 },
+      { term: 'singer', score: -10 },
+      { term: 'musician', score: -10 },
+      { term: 'film', score: -8 },
+      { term: 'character', score: -7 },
+    ]
+  },
   capital: {
     bonusTerms: [
       { term: 'capital', score: 10 },
@@ -85,6 +110,38 @@ const entityScoringRules: Record<EntityType, {
       { term: 'character', score: -7 },
     ],
     titlePatterns: [
+      { pattern: /^[A-Z][a-z]+(?:[-\s][A-Z][a-z]+)*$/, score: 5 }, // Proper place name
+      { pattern: /\(city\)$/i, score: 8 },
+      { pattern: /\(capital\)$/i, score: 10 },
+    ]
+  },
+  city: {
+    bonusTerms: [
+      { term: 'skyline', score: 8 },
+      { term: 'city', score: 7 },
+      { term: 'municipality', score: 5 },
+      { term: 'located in', score: 4 },
+      { term: 'country', score: 4 },
+      { term: 'population', score: 3 },
+      { term: 'urban', score: 3 },
+      { term: 'metropolitan', score: 3 },
+      { term: 'largest city', score: 4 },
+    ],
+    penaltyTerms: [
+      { term: 'singer', score: -10 },
+      { term: 'musician', score: -10 },
+      { term: 'actor', score: -10 },
+      { term: 'artist', score: -8 },
+      { term: 'band', score: -10 },
+      { term: 'song', score: -10 },
+      { term: 'album', score: -10 },
+      { term: 'novel', score: -8 },
+      { term: 'film', score: -8 },
+      { term: 'movie', score: -8 },
+      { term: 'tv series', score: -8 },
+      { term: 'character', score: -7 },
+    ],
+     titlePatterns: [
       { pattern: /^[A-Z][a-z]+(?:[-\s][A-Z][a-z]+)*$/, score: 5 }, // Proper place name
       { pattern: /\(city\)$/i, score: 8 },
       { pattern: /\(capital\)$/i, score: 10 },
@@ -223,6 +280,34 @@ const entityScoringRules: Record<EntityType, {
       { term: 'country', score: -8 },
       { term: 'located', score: -7 },
       { term: 'population', score: -7 },
+    ]
+  },
+  plant: {
+    bonusTerms: [
+      { term: 'plant', score: 10 },
+      { term: 'species', score: 9 },
+      { term: 'genus', score: 8 },
+      { term: 'family', score: 7 },
+      { term: 'habitat', score: 6 },
+      { term: 'flora', score: 5 },
+      { term: 'botanical', score: 6 },
+      { term: 'native', score: 4 },
+      { term: 'cultivation', score: 5 },
+      { term: 'growth', score: 4 },
+      { term: 'flower', score: 7 },
+      { term: 'leaf', score: 6 },
+      { term: 'fruit', score: 6 },
+    ],
+    penaltyTerms: [
+      { term: 'band', score: -10 },
+      { term: 'singer', score: -10 },
+      { term: 'company', score: -8 },
+      { term: 'brand', score: -8 },
+      { term: 'product', score: -8 },
+      { term: 'album', score: -10 },
+      { term: 'song', score: -10 },
+      { term: 'film', score: -8 },
+      { term: 'character', score: -7 },
     ]
   },
   general: {
@@ -396,8 +481,11 @@ async function findWikipediaPage(
     // Build search query - add entity-specific modifiers
     const searchModifiers: Record<EntityType, string[]> = {
       capital: ['city', 'capital'],
+      car: ['car', 'automobile', 'vehicle'],
+      city: ['city', 'skyline'],
       animal: ['animal', 'species'],
       invention: ['invention', 'device'],
+      plant: ['plant', 'flora', 'botanical'],
       landmark: ['landmark', 'monument', 'building'],
       food: ['food', 'dish', 'cuisine'],
       person: ['biography'],
@@ -552,8 +640,14 @@ export async function fetchWikimediaImage(
 }
 
 // Convenience functions for specific entity types
+export const fetchCarImage = (car: string): Promise<string | null> =>
+  fetchWikimediaImage(car, { entityType: 'car', minImageSize: 500 });
+
 export const fetchCapitalImage = (capital: string, country?: string): Promise<string | null> =>
   fetchWikimediaImage(capital, { entityType: 'capital', context: country, minImageSize: 500 });
+
+export const fetchCityImage = (capital: string, country?: string): Promise<string | null> =>
+  fetchWikimediaImage(capital, { entityType: 'city', context: country, minImageSize: 500 });
 
 export const fetchAnimalImage = (animal: string): Promise<string | null> =>
   fetchWikimediaImage(animal, { entityType: 'animal', minImageSize: 400 });

@@ -138,6 +138,38 @@ async function getDailyPuzzles() {
       keywords: 'invention trivia game, invention guessing quiz, historical inventions challenge'
       },
       {
+        category: 'automoble',
+        name: 'Automoble',
+        path: '/brainwave/automoble',
+        image: '/imgs/thumbnails/automoble-160x160.webp',
+        tagline: 'Guess the car from its unique characteristics in this automotive puzzle',
+        keywords: 'car trivia game, automotive quiz, car guessing puzzle'
+      },
+      {
+        category: 'botanle',
+        name: 'Botanle',
+        path: '/brainwave/botanle',
+        image: '/imgs/thumbnails/botanle-160x160.webp',
+        tagline: 'Guess the plant from its unique characteristics in this botanical puzzle',
+        keywords: 'plant trivia game, botanical quiz, plant guessing puzzle'
+      },
+      {
+        category: 'citadle',
+        name: 'Citadle',
+        path: '/brainwave/citadle',
+        image: '/imgs/thumbnails/citadle-160x160.webp',
+        tagline: 'Guess the city from its unique characteristics in this urban geography puzzle',
+        keywords: 'city trivia game, urban geography quiz, city guessing puzzle'
+      },
+      {
+        category: 'countridle',
+        name: 'Countridle',
+        path: '/brainwave/countridle',
+        image: '/imgs/thumbnails/countridle-160x160.webp',
+        tagline: 'Guess the country from its unique characteristics in this global geography puzzle',
+        keywords: 'country trivia game, world geography quiz, country guessing puzzle'
+      },
+      {
       category: 'synonymle',
       name: 'Synonymle',
       path: '/brainwave/synonymle',
