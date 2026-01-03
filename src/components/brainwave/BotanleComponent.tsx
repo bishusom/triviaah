@@ -508,41 +508,68 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
           onClick={() => setShowImageModal(false)}
         >
           <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
-            <button
-              onClick={() => setShowImageModal(false)}
-              className="absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 z-60"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <div className="relative rounded-lg overflow-hidden bg-emerald-50 w-full h-full flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden bg-gray-900 border border-gray-600" style={{ width: '512px', height: '768px' }}>
+              {/* Close Button - Now positioned inside the image container */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the backdrop click
+                  setShowImageModal(false);
+                }}
+                className="absolute top-3 right-3 bg-gray-800/90 backdrop-blur-sm border border-gray-600 rounded-full p-2 shadow-xl hover:bg-gray-700/90 z-20 transition-all duration-300 hover:scale-110"
+              >
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              
               <Image
                 src={plantImage}
-                alt={`${puzzleData.answer} - full size`}
-                width={800}
-                height={600}
-                className="object-contain max-w-full max-h-full"
-                onClick={(e) => e.stopPropagation()}
+                alt="Mystery Animal"
+                fill
+                className="object-cover"
+                priority
               />
-              {revealPercentage < 100 && (
-                <div className="absolute inset-0 z-20 pointer-events-none">
-                  {blockGrid.map((pos, index) => (
-                    <PosterBlock 
-                      key={index} 
-                      {...pos} 
-                      gridCols={GRID_COLS} 
-                      gridRows={GRID_ROWS}
-                      isRevealed={isBlockRevealed(index)} 
+              {/* Same block overlay as main image */}
+              <div className="absolute inset-0">
+                {blockGrid.map((pos, index) => (
+                  <PosterBlock
+                    key={index}
+                    x={pos.x}
+                    y={pos.y}
+                    gridCols={GRID_COLS}
+                    gridRows={GRID_ROWS}
+                    isRevealed={isBlockRevealed(index)}
+                  />
+                ))}
+              </div>
+              
+              {/* Center "?" overlay for modal too */}
+              {revealPercentage === 0 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-blue-500/50">
+                      <span className="text-green-400 text-2xl font-bold">?</span>
+                    </div>
+                    <p className="text-blue-400 font-semibold">Mystery Animal</p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Progress bar for modal */}
+              <div className="absolute bottom-2 left-2 right-2">
+                <div className="bg-black/70 backdrop-blur-sm rounded-xl p-2">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-blue-400 text-xs font-medium">Image Reveal</span>
+                    <span className="text-white text-xs font-bold">{Math.round(revealPercentage)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-full h-1.5">
+                    <div 
+                      className="bg-gradient-to-r from-blue-400 to-cyan-500 h-1.5 rounded-full transition-all duration-500"
+                      style={{ width: `${revealPercentage}%` }}
                     />
-                  ))}
+                  </div>
                 </div>
-              )}
-              {revealPercentage < 100 && (
-                <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-sm px-2 py-1 rounded z-30">
-                  {Math.round(revealPercentage)}% revealed
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </div>

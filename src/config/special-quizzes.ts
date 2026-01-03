@@ -19,7 +19,7 @@ export const SPECIAL_QUIZZES: SpecialQuiz[] = [
     month: 1,
     name: "New Year's Lookback",
     theme: "2025 Lookback",
-    category: "new-year-lookback",
+    category: "2025-lookback-trivias",
     emojis: ["🥂", "🍾", "🎆", "🧨", "🎁", "✨", "2025", "🎉"],
     bgColor: "bg-gradient-to-r from-blue-900 via-purple-900 to-red-900",
     enabled: true,
