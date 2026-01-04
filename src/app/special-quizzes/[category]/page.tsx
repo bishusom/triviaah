@@ -312,39 +312,39 @@ function QuizFAQ({ category, subcategory, questionCount }: { category: string, s
     : null;
 
   return (
-    <div className="mt-12 bg-gray-50 rounded-lg p-6">
+    <div className="mt-12 bg-transparent rounded-lg p-6 text-gray-10">
       <h2 className="text-2xl font-bold mb-6 text-center">Quiz Information & FAQs</h2>
       <div className="space-y-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
           <h3 className="font-semibold text-lg mb-2">About This Quiz</h3>
-          <p className="text-gray-700">
+          <p>
             This {formattedSubcategory ? `${formattedSubcategory} ` : ''}{formattedCategory} quiz contains {questionCount} multiple-choice questions 
             designed to test your knowledge across various difficulty levels. Whether you&apos;re a beginner or an expert, 
             you&apos;ll find challenging questions that will help you learn and improve your understanding of {formattedCategory.toLowerCase()}.
           </p>
         </div>
         
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
           <h3 className="font-semibold text-lg mb-2">How to Play</h3>
-          <p className="text-gray-700">
+          <p>
             Read each question carefully and select the answer you believe is correct. You&apos;ll receive immediate 
             feedback after each question. Your score is calculated based on the number of correct answers, and 
             you can track your progress throughout the quiz.
           </p>
         </div>
         
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
           <h3 className="font-semibold text-lg mb-2">Scoring System</h3>
-          <p className="text-gray-700">
+          <p>
             Each correct answer earns you points. There&apos;s no penalty for wrong answers, so feel free to make 
             educated guesses! At the end of the quiz, you&apos;ll see your total score and can compare it with 
             previous attempts to track your improvement.
           </p>
         </div>
         
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
           <h3 className="font-semibold text-lg mb-2">Learning Objectives</h3>
-          <p className="text-gray-700">
+          <p >
             This quiz is designed to help you expand your knowledge of {formattedCategory.toLowerCase()}{formattedSubcategory ? `, particularly in the area of ${formattedSubcategory.toLowerCase()}` : ''}. 
             Whether you&apos;re studying for academic purposes, preparing for a trivia competition, or just want to 
             learn something new, this quiz provides an engaging way to test and improve your knowledge.
@@ -381,35 +381,38 @@ export default async function QuizPage({
     const structuredData = generateStructuredData(questions, category, subcategory);
 
     return (
-      <div className="quiz-container max-w-4xl mx-auto px-4 py-8">
-        <h1 className="sr-only">
-          {subcategory 
-            ? `${subcategory.replace(/-/g, ' ')} ${category.replace(/-/g, ' ')} Questions - Triviaah`
-            : `${category.replace(/-/g, ' ')} Questions - Triviaah`
-          }
-        </h1>
-        
-        {/* Inject structured data directly */}
-        <Script
-          id="quiz-structured-data"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-        
-        <QuizGame 
-          initialQuestions={questions} 
-          category={category}
-          subcategory={subcategory}
-          quizConfig={{}}
-          quizType="trivias"
-        />
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-4">
+        <div className="max-w-4xl mx-auto px-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2 text-center">
+            {subcategory 
+              ? `${subcategory.replace(/-/g, ' ')} ${category.replace(/-/g, ' ')} Questions - Triviaah`.toUpperCase()
+              : `${category.replace(/-/g, ' ')} Questions - Triviaah`.toUpperCase()
+            }
+          </h1>
+          
+          {/* Inject structured data directly */}
+          <Script
+            id="quiz-structured-data"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          />
+          
+          <QuizGame 
+            initialQuestions={questions} 
+            category={category}
+            subcategory={subcategory}
+            quizConfig={{}}
+            quizType="trivias"
+          />
 
-        {/* FAQ Section */}
-        <QuizFAQ 
-          category={category} 
-          subcategory={subcategory} 
-          questionCount={questions.length} 
-        />
+          {/* FAQ Section */}
+          <QuizFAQ 
+            category={category} 
+            subcategory={subcategory} 
+            questionCount={questions.length} 
+          />
+        </div>
+        
       </div>
     );
   } catch (error) {

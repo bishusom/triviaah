@@ -111,7 +111,7 @@ export default function BogglePage() {
   }, []);
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="boggle-organization-schema"
@@ -137,10 +137,10 @@ export default function BogglePage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -169,29 +169,8 @@ export default function BogglePage() {
         </div>
       )}
 
-      <div className="max-w-4xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Free Boggle Game Online</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
-          </div>
-          <p className="text-lg text-gray-600">
-            Challenge your vocabulary with our daily Boggle puzzle. Find as many words as possible 
-            from the letter grid and improve your word-finding skills!
-          </p>
-        </div>
-
+      <div className="max-w-3xl mx-auto p-4">
+        {/* Mute Button - Fixed Position */}
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
@@ -199,10 +178,10 @@ export default function BogglePage() {
         <BoggleGame />
 
         {/* Enhanced FAQ Section - Fixed Arrow */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Boggle Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">Boggle Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -210,54 +189,54 @@ export default function BogglePage() {
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <h3 className="font-semibold text-white">Game Updates</h3>
+                <p className="text-gray-300 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Boggle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What is Boggle?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Boggle is a classic word game where players find words by connecting adjacent letters in a 4x4 or 5x5 grid. 
                   Words are formed from sequentially adjacent letters horizontally, vertically, or diagonally. It&apos;s one of 
                   the most engaging free word puzzles available online, perfect for enhancing vocabulary and cognitive skills.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do you play Boggle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">How do you play Boggle?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Players find as many words as possible within the time limit by connecting adjacent letters. Words must be 
                   at least 3 letters long and can be formed horizontally, vertically, or diagonally in any direction. Each 
                   letter can only be used once per word, and proper nouns are not allowed.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What are the benefits of playing Boggle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What are the benefits of playing Boggle?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Boggle improves vocabulary, spelling skills, pattern recognition, and cognitive abilities. It enhances word 
                   recognition speed, builds language skills, and provides excellent mental exercise. Regular play can help 
                   with vocabulary expansion, spelling improvement, and faster word recognition.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Boggle educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">Is Boggle educational?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Boggle is highly educational for vocabulary building, spelling practice, and cognitive development. 
                   It helps players discover new words, improves pattern recognition skills, and enhances language processing 
                   speed. Many educators use Boggle as a fun way to reinforce spelling and vocabulary lessons.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What word lengths are allowed in Boggle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What word lengths are allowed in Boggle?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Words must be at least 3 letters long. There is no maximum length, but typically words found in Boggle range 
                   from 3 to 8 letters. Longer words are possible but less common due to the grid size constraints.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is this Boggle game free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">Is this Boggle game free to play?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Our online Boggle game is completely free to play with no registration required. You can play as many 
                   games as you want and enjoy daily new puzzles to keep challenging your word-finding skills.
                 </p>

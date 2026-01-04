@@ -1,4 +1,4 @@
-// src/app/plotle/page.tsx
+// src/app/plotle/page.tsx - REDESIGNED
 'use client';
 
 import PlotleComponent from '@/components/brainwave/PlotleComponent';
@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { PlotleData } from '@/lib/brainwave/plotle/plotle-logic';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { Film, Target, Users, Clock, Trophy } from 'lucide-react';
 
 export default function PlotlePage() {
   const [plotleData, setPlotleData] = useState<PlotleData | null>(null);
@@ -19,7 +20,7 @@ export default function PlotlePage() {
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
   const showAds = process.env.NEXT_PUBLIC_SHOW_ADS === 'true';
 
-  // Structured data for Plotle
+  // Structured data remains the same...
   const [structuredData, setStructuredData] = useState({
     organization: {
       '@context': 'https://schema.org',
@@ -56,7 +57,7 @@ export default function PlotlePage() {
           name: 'What is Plotle?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Plotle is a daily movie puzzle game where you guess the film using a 6-word plot summary with Wordle-style feedback. It\'s the ultimate movie guessing challenge for film enthusiasts.'
+            text: 'Plotle is a daily movie puzzle game where you guess the film using emoji clues with limited attempts. It\'s the ultimate movie guessing challenge for film enthusiasts.'
           }
         },
         {
@@ -64,7 +65,7 @@ export default function PlotlePage() {
           name: 'How do I play Plotle?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'You have 6 attempts to guess the daily movie. Each guess provides Wordle-style feedback on the 6 plot words - green for correct words in right position, yellow for correct words in wrong position, and gray for incorrect words.'
+            text: 'You have 6 attempts to guess the daily movie. The movie poster is gradually revealed with each guess, and you get progressive hints to help you solve the puzzle.'
           }
         },
         {
@@ -72,15 +73,15 @@ export default function PlotlePage() {
           name: 'What makes Plotle special?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Plotle combines the addictive Wordle format with movie trivia, using clever 6-word plot summaries that challenge your film knowledge while being fun and educational.'
+            text: 'Plotle combines the addictive puzzle format with movie trivia, using emoji clues and gradual poster reveals that challenge your film knowledge while being fun and educational.'
           }
         },
         {
           '@type': 'Question',
-          name: 'Is Plotle educational?',
+          name: 'Is Plotle free to play?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes! Plotle helps players learn about different movies, genres, directors, and film history while improving pattern recognition and deductive reasoning skills.'
+            text: 'Yes! Plotle is completely free to play with no registration required. New movie puzzles are available every day.'
           }
         }
       ]
@@ -88,7 +89,6 @@ export default function PlotlePage() {
   });
 
   useEffect(() => {
-    // Set the current date on the client side to ensure it's using client timezone
     const now = new Date();
     setCurrentDate(now);
     setLastUpdated(now.toISOString());
@@ -96,13 +96,12 @@ export default function PlotlePage() {
 
   useEffect(() => {
     const fetchDailyPlotle = async () => {
-      if (!currentDate) return; // Wait for client date to be set
+      if (!currentDate) return;
       
       try {
         setIsLoading(true);
         setError(null);
         
-        // Explicitly pass the client-side date
         const data = await getDailyPlotle(currentDate);
         
         if (!data) {
@@ -112,7 +111,6 @@ export default function PlotlePage() {
         
         setPlotleData(data);
 
-        // Update structured data with today's puzzle info
         setStructuredData(prev => ({
           ...prev,
           webpage: {
@@ -132,10 +130,10 @@ export default function PlotlePage() {
     fetchDailyPlotle();
   }, [currentDate]);
 
-  // Show loading while waiting for client date or data
-  if (isLoading || !currentDate) {
+  // Loading State
+  if (isLoading || !currentDate || !plotleData) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-gray-600 via-gray-700 to-gray-900">
         {/* Structured Data */}
         <Script
           id="plotle-organization-schema"
@@ -156,10 +154,10 @@ export default function PlotlePage() {
         {/* Desktop Side Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
@@ -167,54 +165,43 @@ export default function PlotlePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold mb-2">🎬 Plotle - Movie Plot Guessing Game</h1>
-            {/* Last Updated Timestamp */}
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-red-50 px-3 py-1 rounded-full text-xs font-medium border border-red-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-red-500 to-pink-600 p-3 rounded-2xl">
+                <Film className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">
+                PLOTLE
+              </h1>
+            </div>
+            <p className="text-gray-300 text-lg">Daily Movie Guessing Challenge</p>
           </div>
-          <p className="text-gray-600 mb-6">Six-word plot summary puzzle. Guess the movie in 6 tries!</p>
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
-          </div>
-          <p className="text-gray-500 text-sm mt-2">Loading today&apos;s movie puzzle...</p>
 
-          {/* Hidden SEO Content */}
-          <div className="sr-only" aria-hidden="false">
-            <div itemScope itemType="https://schema.org/Game">
-              <meta itemProp="dateModified" content={lastUpdated} />
-              <h2>Plotle - Daily Movie Plot Guessing Game</h2>
-              <p itemProp="description">
-                Test your movie knowledge with Plotle, the ultimate daily puzzle game where you guess films 
-                based on clever 6-word plot summaries with Wordle-style feedback. The most popular movie 
-                guessing game for film buffs and casual viewers alike.
-              </p>
-              <h3>How to Play Plotle:</h3>
-              <ul>
-                <li>Guess the movie in 6 attempts</li>
-                <li>Use the 6-word plot summary as your main clue</li>
-                <li>Get Wordle-style feedback on plot words</li>
-                <li>Green: Correct word in right position</li>
-                <li>Yellow: Correct word in wrong position</li>
-                <li>Gray: Word not in the plot summary</li>
-                <li>New movie puzzle every day</li>
-                <li>Completely free with no registration required</li>
-              </ul>
-              <p><strong>Why Players Love Plotle:</strong> Addictive Wordle-style gameplay combined with movie trivia, 
-                 challenging 6-word summaries, and the thrill of testing your film knowledge daily.</p>
+          {/* Loading Card */}
+          <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-8 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <div className="w-20 h-20 border-4 border-red-400/30 border-t-red-400 rounded-full animate-spin"></div>
+                <Film className="w-10 h-10 text-red-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Loading Today's Challenge</h2>
+            <p className="text-gray-400 mb-6">Preparing your movie puzzle...</p>
+            
+            <div className="flex justify-center gap-2">
+              {[1, 2, 3].map((dot) => (
+                <div
+                  key={dot}
+                  className="w-2 h-2 bg-red-400 rounded-full animate-pulse"
+                  style={{ animationDelay: `${dot * 0.2}s` }}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -222,9 +209,10 @@ export default function PlotlePage() {
     );
   }
 
-  if (error || !plotleData) {
+  // Error State
+  if (error) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
         {/* Structured Data */}
         <Script
           id="plotle-organization-schema"
@@ -242,57 +230,66 @@ export default function PlotlePage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.faq) }}
         />
 
-        {/* Desktop Side Ads */}
+        {/* Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
         )}
         
-        {/* Mobile Bottom Ad */}
         {showMobileAd && (
-           <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold mb-2">🎬 Plotle - Movie Plot Guessing Game</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-red-50 px-3 py-1 rounded-full text-xs font-medium border border-red-200"
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-red-500 to-pink-600 p-3 rounded-2xl">
+                <Film className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">
+                PLOTLE
+              </h1>
+            </div>
+            <p className="text-gray-300 text-lg">Daily Movie Guessing Challenge</p>
+          </div>
+
+          {/* Error Card */}
+          <div className="bg-red-500/10 backdrop-blur-lg rounded-3xl border border-red-500/30 p-8 text-center">
+            <div className="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold">!</span>
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Challenge Unavailable</h2>
+            <p className="text-red-200 mb-6">We couldn't load today's movie puzzle.</p>
+            
+            <div className="bg-red-500/20 border border-red-500/30 rounded-2xl p-4 mb-6">
+              <p className="text-red-300 text-sm">{error}</p>
+            </div>
+            
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold py-3 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105"
             >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+              Try Again
+            </button>
           </div>
-          <p className="text-gray-600 mb-4">Six-word plot summary puzzle. Guess the movie in 6 tries!</p>
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-            <p className="mb-2">No puzzle available for today.</p>
-            <p className="text-sm">Please check back tomorrow or try refreshing the page!</p>
-            {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
-          </div>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded transition-colors"
-          >
-            Refresh Page
-          </button>
         </div>
       </div>
     );
   }
 
+  // Main Game State
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="plotle-organization-schema"
@@ -313,10 +310,10 @@ export default function PlotlePage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -324,195 +321,120 @@ export default function PlotlePage() {
       
       {/* Mobile Bottom Ad */}
       {showMobileAd && (
-         <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+        <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} className="lg:hidden" />
       )}
       
       {/* Ad Controls */}
-      { showAds && (
+      {showAds && (
         <div className="fixed top-4 right-4 z-50 flex gap-2">
           <button
             onClick={() => setShowDesktopAds(!showDesktopAds)}
-            className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded hidden lg:block"
+            className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm hidden lg:block transition-all duration-300"
           >
-            {showDesktopAds ? 'Hide Side Ads' : 'Show Side Ads'}
+            {showDesktopAds ? 'Hide Ads' : 'Show Ads'}
           </button>
           <button
             onClick={() => setShowMobileAd(!showMobileAd)}
-            className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded lg:hidden"
+            className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm lg:hidden transition-all duration-300"
           >
-            {showMobileAd ? 'Hide Bottom Ad' : 'Show Bottom Ad'}
+            {showMobileAd ? 'Hide Ad' : 'Show Ad'}
           </button>
         </div>
       )}
-      
-      <div className="max-w-2xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-6">
-          <div className="flex justify-center items-center gap-4 mb-2">
-            <h1 className="text-3xl font-bold">🎬 Plotle</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-red-50 px-3 py-1 rounded-full text-xs font-medium border border-red-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+
+      <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 relative z-30">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-r from-red-500 to-pink-600 p-3 rounded-2xl shadow-lg">
+                <Film className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">
+                PLOTLE
+              </h1>
+            </div>
+            
+            <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-lg px-4 py-2 rounded-2xl border border-gray-700">
+              <Clock className="w-4 h-4 text-red-400" />
+              <time 
+                dateTime={lastUpdated} 
+                className="text-red-400 text-sm font-medium"
+              >
+                Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </time>
+            </div>
           </div>
-          <p className="text-gray-600">Six-word plot summary puzzle. Guess the movie in 6 tries!</p>
+          
+          <p className="text-gray-300 text-lg mb-2">Guess the movie from emoji clues in 6 attempts</p>
+          
+          {/* Stats Bar */}
+          <div className="flex justify-center gap-6 mb-8">
+            <div className="flex items-center gap-2 text-gray-400">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              <span className="text-sm">Daily Challenge</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Users className="w-5 h-5 text-green-500" />
+              <span className="text-sm">Global Players</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Target className="w-5 h-5 text-red-500" />
+              <span className="text-sm">6 Attempts</span>
+            </div>
+          </div>
         </div>
 
-        <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
+        {/* Mute Button */}
+        <div className="fixed right-4 z-90" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
         
+        {/* Game Component */}
         <PlotleComponent initialData={plotleData} />
 
-        {/* Enhanced FAQ Section with Special Styling for Popular Game */}
-        <div className="mt-8 bg-gradient-to-r from-red-50 to-orange-50 p-6 rounded-lg border border-red-200">
+        {/* Enhanced FAQ Section */}
+        <div className="mt-8 bg-gray-800/30 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 relative z-10">
           <details className="group">
-            <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold text-red-800">🎬 Plotle Game Information & FAQ - Most Popular Movie Game!</h2>
-              <span className="text-red-500 group-open:rotate-180 transition-transform text-lg">
+            <summary className="flex justify-between items-center cursor-pointer list-none p-4 hover:bg-gray-700/30 rounded-2xl transition-all duration-300">
+              <h2 className="text-xl font-bold text-white">Game Guide & FAQ</h2>
+              <span className="text-red-400 group-open:rotate-180 transition-transform duration-300 text-2xl">
                 ▼
               </span>
             </summary>
-            <div className="mt-4 space-y-4 pt-4 border-t border-red-200">
-              {/* Content Freshness Info */}
-              <div className="bg-white p-3 rounded-lg border">
-                <h3 className="font-semibold text-red-700">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
-                  <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
-                </p>
-                <p className="text-green-600 text-sm font-medium mt-1">
-                  ⭐ Most Popular Game - Thousands of movie lovers play daily!
-                </p>
-              </div>
-
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold text-red-700" itemProp="name">What is Plotle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Plotle is the ultimate daily movie puzzle game where you guess films using clever 6-word plot summaries 
-                  with Wordle-style feedback. It&apos;s the most popular movie guessing challenge that combines addictive 
-                  puzzle mechanics with film trivia, loved by casual viewers and cinephiles alike.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold text-red-700" itemProp="name">How do I play Plotle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  You have 6 attempts to guess the daily movie. Use the 6-word plot summary as your main clue. 
-                  Each guess provides Wordle-style color feedback: <span className="text-green-600 font-semibold">Green</span> for correct words in the right position, 
-                  <span className="text-yellow-600 font-semibold"> Yellow</span> for correct words in the wrong position, and <span className="text-gray-500 font-semibold">Gray</span> for words not in the plot summary. 
-                  This feedback helps you deduce the movie through process of elimination.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold text-red-700" itemProp="name">What makes Plotle so popular?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Plotle&apos;s popularity comes from its perfect blend of Wordle&apos;s addictive puzzle format with universal 
-                  movie knowledge. The 6-word summaries are cleverly crafted to be challenging yet solvable, appealing 
-                  to both casual movie watchers and hardcore film buffs. The daily challenge creates a shared experience 
-                  and friendly competition among players.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold text-red-700" itemProp="name">Is Plotle educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Absolutely! Plotle helps players learn about different movies, genres, directors, actors, and film history. 
-                  It improves pattern recognition, deductive reasoning, and film literacy. Many players discover new movies 
-                  to watch through the game and learn interesting facts about films they already love.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold text-red-700" itemProp="name">What types of movies are included?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Plotle features a diverse range of movies from classic Hollywood to modern blockbusters, including dramas, 
-                  comedies, action films, sci-fi, fantasy, horror, documentaries, and international cinema. The database includes 
-                  both well-known popular films and hidden gems to provide balanced challenges for all knowledge levels.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold text-red-700" itemProp="name">Can I play previous days&apos; puzzles?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Currently, Plotle features one new puzzle each day. This daily format creates anticipation and makes each 
-                  puzzle a special event that the community solves together. Many players enjoy the shared experience of 
-                  everyone working on the same movie challenge each day.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold text-red-700" itemProp="name">Is Plotle free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! Plotle is completely free to play with no registration required. New movie puzzles are available 
-                  every day at midnight local time. The game is supported by optional ads that can be hidden if desired.
-                </p>
+            <div className="mt-4 space-y-6 pt-6 border-t border-gray-700">
+              <div className="grid gap-4">
+                {[
+                  {
+                    question: "What is Plotle?",
+                    answer: "Plotle is a daily movie puzzle game where you guess the film from emoji clues in 6 attempts. The movie poster is gradually revealed with each guess, and you get progressive hints to help solve the puzzle."
+                  },
+                  {
+                    question: "How do I play Plotle?",
+                    answer: "You have 6 attempts to guess the daily movie. Use the emoji clues and gradually revealed movie poster to identify the film. Each wrong guess reveals more of the poster and unlocks additional hints."
+                  },
+                  {
+                    question: "Are hints provided?",
+                    answer: "Yes! Progressive hints are unlocked with each attempt, including release year, genre, director, actors, and more. The movie poster also becomes clearer with each guess."
+                  },
+                  {
+                    question: "Is Plotle free to play?",
+                    answer: "Yes! Plotle is completely free to play with no registration required. New movie puzzles are available every day at midnight local time."
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="bg-gray-700/30 rounded-2xl p-4">
+                    <h3 className="font-semibold text-red-400 mb-2">{faq.question}</h3>
+                    <p className="text-gray-300">{faq.answer}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </details>
-        </div>
-
-        {/* Enhanced Hidden SEO Content for Popular Game */}
-        <div className="sr-only" aria-hidden="false">
-          <div itemScope itemType="https://schema.org/Game">
-            <meta itemProp="dateModified" content={lastUpdated} />
-            <h2>Plotle - Daily Movie Plot Guessing Game</h2>
-            <p itemProp="description">
-              Test your movie knowledge with Plotle, the ultimate daily puzzle game where you guess films 
-              based on clever 6-word plot summaries with Wordle-style feedback. The most popular movie 
-              guessing game for film buffs and casual viewers alike. Join thousands of players worldwide 
-              in this addictive daily film challenge.
-            </p>
-            <h3>How to Play Plotle:</h3>
-            <ul>
-              <li>Guess the movie in 6 attempts using the 6-word plot summary</li>
-              <li>Get Wordle-style color feedback on your guesses</li>
-              <li>Green: Correct word in right position</li>
-              <li>Yellow: Correct word in wrong position</li>
-              <li>Gray: Word not in the plot summary</li>
-              <li>Use process of elimination to deduce the movie</li>
-              <li>New movie puzzle every day at midnight</li>
-              <li>Completely free with no registration required</li>
-            </ul>
-            <h3>Why Plotle is So Popular:</h3>
-            <ul>
-              <li>Perfect blend of Wordle mechanics and movie trivia</li>
-              <li>Challenging yet accessible for all knowledge levels</li>
-              <li>Clever 6-word summaries that test film literacy</li>
-              <li>Daily shared experience with global community</li>
-              <li>Discover new movies and learn film facts</li>
-              <li>Friendly competition with friends and family</li>
-              <li>Clean, intuitive interface with cinematic design</li>
-            </ul>
-            <h3>Game Features:</h3>
-            <ul>
-              <li>Daily movie challenges with diverse films</li>
-              <li>Wordle-style color feedback system</li>
-              <li>Six-word plot summary clues</li>
-              <li>Comprehensive movie database</li>
-              <li>Mobile-friendly cinematic design</li>
-              <li>No time limits - play at your pace</li>
-              <li>Share results without spoilers</li>
-              <li>Learn about film history and genres</li>
-            </ul>
-            <h3>Educational Benefits:</h3>
-            <ul>
-              <li>Improve film knowledge and recognition</li>
-              <li>Learn about different genres and directors</li>
-              <li>Enhance pattern recognition skills</li>
-              <li>Develop deductive reasoning abilities</li>
-              <li>Expand cultural and cinematic literacy</li>
-              <li>Discover new movies to watch</li>
-            </ul>
-            <p><strong>Perfect for:</strong> Movie lovers, film students, cinema enthusiasts, trivia fans, 
-               families, friends, and anyone who enjoys testing their movie knowledge in a fun, 
-               engaging daily challenge. Join the Plotle community today!</p>
-              
-            <p><strong>Player Testimonials:</strong> &quot;Addictive movie game that makes me think about films in new ways!&quot; 
-               - &quot;The perfect combination of Wordle and my love for movies!&quot; - &quot;I&apos;ve discovered so many great films 
-               through Plotle!&quot; - &quot;Our family&apos;s favorite daily ritual!&quot;</p>
-          </div>
         </div>
       </div>
     </div>

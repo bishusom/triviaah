@@ -111,7 +111,7 @@ export default function NumberTowerPage() {
   }, []);
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Structured Data */}
       <Script
         id="number-tower-organization-schema"
@@ -137,10 +137,10 @@ export default function NumberTowerPage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -170,28 +170,6 @@ export default function NumberTowerPage() {
       )}
 
       <div className="max-w-3xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Number Tower Puzzle Game</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-teal-50 px-3 py-1 rounded-full text-xs font-medium border border-teal-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
-          </div>
-          <p className="text-lg text-gray-600">
-            Strategically arrange numbers in a tower structure with limited moves. 
-            Challenge your spatial reasoning and strategic planning skills!
-          </p>
-        </div>
-
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
@@ -199,10 +177,10 @@ export default function NumberTowerPage() {
         <NumberTowerGame />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Number Tower Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">Number Tower Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -210,15 +188,15 @@ export default function NumberTowerPage() {
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <h3 className="font-semibold text-white">Game Updates</h3>
+                <p className="text-gray-300 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What is Number Tower?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Number Tower is a strategic math puzzle game where players arrange numbers in a tower 
                   structure according to mathematical rules using limited moves. It challenges spatial 
                   reasoning, strategic planning, and mathematical thinking in an engaging, game-based 
@@ -227,7 +205,7 @@ export default function NumberTowerPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">How do you play Number Tower?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Players strategically arrange numbers in a tower structure, following mathematical 
                   rules and constraints. Each level presents a new tower arrangement challenge with 
                   limited moves, requiring careful planning and strategic thinking to achieve the 
@@ -236,7 +214,7 @@ export default function NumberTowerPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What skills does Number Tower develop?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Number Tower develops essential cognitive skills including spatial reasoning, 
                   strategic planning, mathematical thinking, problem-solving abilities, logical 
                   reasoning, cognitive flexibility, and numerical processing. The game challenges 
@@ -245,7 +223,7 @@ export default function NumberTowerPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is Number Tower educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Number Tower is excellent for developing mathematical thinking, spatial 
                   reasoning, strategic planning, and problem-solving skills. It helps build 
                   foundational math abilities, improves strategic thinking capabilities, and 
@@ -255,7 +233,7 @@ export default function NumberTowerPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What mathematical concepts are involved?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Number Tower involves numerical relationships, spatial arrangements, strategic 
                   planning, logical sequencing, and mathematical problem-solving. Players must 
                   understand number properties, spatial configurations, and develop effective 
@@ -264,7 +242,7 @@ export default function NumberTowerPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is this game free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Our Number Tower game is completely free to play with no registration required. 
                   You can enjoy daily new puzzles, multiple difficulty levels, comprehensive learning 
                   features, and unlimited gameplay without any cost or subscription requirements.
@@ -275,9 +253,9 @@ export default function NumberTowerPage() {
         </div>
 
         {/* Game Information Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">About Number Tower Puzzles</h2>
-          <div className="space-y-6 text-gray-700">
+          <div className="space-y-6 text-gray-10">
             <div>
               <h3 className="text-lg font-semibold mb-2">How to Play:</h3>
               <ul className="list-disc pl-5 space-y-2">
@@ -293,29 +271,29 @@ export default function NumberTowerPage() {
             <div>
               <h3 className="text-lg font-semibold mb-2">Game Features:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Spatial Challenges:</strong> Arrange numbers in tower structures with specific rules</li>
-                <li><strong>Strategic Planning:</strong> Limited moves require careful planning and foresight</li>
-                <li><strong>Mathematical Thinking:</strong> Apply number relationships and patterns</li>
-                <li><strong>Progressive Difficulty:</strong> Multiple levels from beginner to expert</li>
-                <li><strong>Daily Challenges:</strong> Fresh puzzles with new tower arrangements</li>
-                <li><strong>Educational Content:</strong> Learn mathematical concepts through gameplay</li>
-                <li><strong>Hint System:</strong> Assistance when you need strategic guidance</li>
+                <li><strong className="text-green-300">Spatial Challenges:</strong> Arrange numbers in tower structures with specific rules</li>
+                <li><strong className="text-green-300">Strategic Planning:</strong> Limited moves require careful planning and foresight</li>
+                <li><strong className="text-green-300">Mathematical Thinking:</strong> Apply number relationships and patterns</li>
+                <li><strong className="text-green-300">Progressive Difficulty:</strong> Multiple levels from beginner to expert</li>
+                <li><strong className="text-green-300">Daily Challenges:</strong> Fresh puzzles with new tower arrangements</li>
+                <li><strong className="text-green-300">Educational Content:</strong> Learn mathematical concepts through gameplay</li>
+                <li><strong className="text-green-300">Hint System:</strong> Assistance when you need strategic guidance</li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Difficulty Progression:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Beginner Level:</strong> Simple tower structures with basic arrangement rules</li>
-                <li><strong>Intermediate Level:</strong> More complex towers with additional constraints</li>
-                <li><strong>Advanced Level:</strong> Challenging arrangements requiring multiple-step planning</li>
-                <li><strong>Expert Level:</strong> Complex towers with limited moves and strict rules</li>
-                <li><strong>Master Level:</strong> Highly complex arrangements requiring optimal strategies</li>
+                <li><strong className="text-green-300">Beginner Level:</strong> Simple tower structures with basic arrangement rules</li>
+                <li><strong className="text-green-300">Intermediate Level:</strong> More complex towers with additional constraints</li>
+                <li><strong className="text-green-300">Advanced Level:</strong> Challenging arrangements requiring multiple-step planning</li>
+                <li><strong className="text-green-300">Expert Level:</strong> Complex towers with limited moves and strict rules</li>
+                <li><strong className="text-green-300">Master Level:</strong> Highly complex arrangements requiring optimal strategies</li>
               </ul>
             </div>
 
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">Advanced Solving Strategies:</h4>
+            <div className="p-4 bg-green-500/10 border border-green-500/20 text-white">
+              <h4 className="font-bold text-white mb-2">Advanced Solving Strategies:</h4>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Plan your entire sequence of moves before making the first move</li>
                 <li>Consider the end goal and work backwards from the target arrangement</li>
@@ -331,23 +309,23 @@ export default function NumberTowerPage() {
           </div>
           
           {/* Educational Benefits Section */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="mt-8 pt-6 border-t border-gray-200 text-gray-300">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Educational Benefits of Number Tower Games</h3>
-            <div className="prose text-gray-700">
+            <div className="prose prose-invert max-w-none text-gray-300">
               <p className="mb-4">
                 Number Tower puzzles are powerful educational tools that develop essential mathematical 
                 and cognitive skills. As one of the most engaging <strong>free math brain teasers</strong> 
                 available, our Number Tower game offers comprehensive learning benefits:
               </p>
               <ul className="list-disc pl-5 space-y-2 mb-4">
-                <li><strong>Enhanced Spatial Reasoning:</strong> Develops ability to visualize and manipulate spatial arrangements</li>
-                <li><strong>Improved Strategic Planning:</strong> Strengthens ability to plan multiple steps ahead</li>
-                <li><strong>Mathematical Thinking:</strong> Builds foundational skills for mathematical problem-solving</li>
-                <li><strong>Problem-Solving Abilities:</strong> Develops systematic approaches to complex challenges</li>
-                <li><strong>Logical Sequencing:</strong> Improves understanding of logical sequences and patterns</li>
-                <li><strong>Cognitive Flexibility:</strong> Enhances ability to adapt strategies and think creatively</li>
-                <li><strong>Analytical Thinking:</strong> Strengthens ability to analyze complex arrangements</li>
-                <li><strong>Academic Performance:</strong> Supports improved performance in mathematics and logic-based subjects</li>
+                <li><strong className="text-green-300">Enhanced Spatial Reasoning:</strong> Develops ability to visualize and manipulate spatial arrangements</li>
+                <li><strong className="text-green-300">Improved Strategic Planning:</strong> Strengthens ability to plan multiple steps ahead</li>
+                <li><strong className="text-green-300">Mathematical Thinking:</strong> Builds foundational skills for mathematical problem-solving</li>
+                <li><strong className="text-green-300">Problem-Solving Abilities:</strong> Develops systematic approaches to complex challenges</li>
+                <li><strong className="text-green-300">Logical Sequencing:</strong> Improves understanding of logical sequences and patterns</li>
+                <li><strong className="text-green-300">Cognitive Flexibility:</strong> Enhances ability to adapt strategies and think creatively</li>
+                <li><strong className="text-green-300">Analytical Thinking:</strong> Strengthens ability to analyze complex arrangements</li>
+                <li><strong className="text-green-300">Academic Performance:</strong> Supports improved performance in mathematics and logic-based subjects</li>
               </ul>
               <p>
                 Whether you&apos;re a student building math skills, an educator seeking engaging teaching tools, 

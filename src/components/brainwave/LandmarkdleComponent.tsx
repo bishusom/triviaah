@@ -9,46 +9,47 @@ import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { fetchWikimediaImage } from '@/lib/wikimedia';
 import { addLandmarkResult, type LandmarkPuzzle } from '@/lib/brainwave/landmarkdle/landmarkdle-sb';
 import { checkLandmarkGuess, type LandmarkGuessResult } from '@/lib/brainwave/landmarkdle/landmarkdle-logic';
+import { Building, Target, Users, Search, Sparkles, Eye, EyeOff, Flame, MapPin } from 'lucide-react';
 
 interface LandmarkdleComponentProps {
   initialData: { puzzle: LandmarkPuzzle };
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Helper Components                                                         */
+/*  Enhanced Helper Components                                                */
 /* -------------------------------------------------------------------------- */
-const ProgressiveHint = ({ attempts }: { attempts: LandmarkGuessResult[] }) => {
+const EnhancedProgressiveHint = ({ attempts }: { attempts: LandmarkGuessResult[] }) => {
   if (attempts.length === 0) return null;
-
+  
   const latestAttempt = attempts[attempts.length - 1];
   const correctLetters = latestAttempt.letterStatuses?.filter(s => s === 'correct').length || 0;
   const presentLetters = latestAttempt.letterStatuses?.filter(s => s === 'present').length || 0;
 
   const hints = [
     {
-      icon: "🎯",
+      icon: "🏛️",
       text: `Great start! You have ${correctLetters} correct letters.`,
-      color: "bg-green-100 border-green-400 text-green-700"
+      color: "bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 text-blue-400"
     },
     {
       icon: "🔍",
       text: `Look for patterns. ${presentLetters} letters are in the name but misplaced.`,
-      color: "bg-yellow-100 border-yellow-400 text-yellow-700"
+      color: "bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 text-yellow-400"
     },
     {
-      icon: "🤔",
+      icon: "🗺️",
       text: "Compare letter positions. Focus on the green letters first.",
-      color: "bg-blue-100 border-blue-400 text-blue-700"
+      color: "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-400"
     },
     {
       icon: "💡",
       text: "Use the revealed hints below to narrow down your options.",
-      color: "bg-purple-100 border-purple-400 text-purple-700"
+      color: "bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-400"
     },
     {
       icon: "⚡",
       text: "Final attempt! Use all clues and think about landmarks that fit all hints.",
-      color: "bg-red-100 border-red-400 text-red-700"
+      color: "bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 text-red-400"
     }
   ];
 
@@ -56,19 +57,19 @@ const ProgressiveHint = ({ attempts }: { attempts: LandmarkGuessResult[] }) => {
   const currentHint = hints[hintIndex];
 
   return (
-    <div className={`rounded-lg p-4 mb-4 border ${currentHint.color}`}>
+    <div className={`rounded-2xl p-4 mb-4 ${currentHint.color}`}>
       <div className="flex items-center mb-2">
-        <span className="text-xl mr-2">{currentHint.icon}</span>
+        <span className="text-xl mr-3">{currentHint.icon}</span>
         <span className="font-semibold">{currentHint.text}</span>
       </div>
 
-      <div className="flex gap-1 mt-2">
+      <div className="flex gap-1 mt-3">
         {latestAttempt.letterStatuses?.map((status, i) => (
           <div
             key={i}
             className={`h-1 flex-1 rounded ${
-              status === 'correct' ? 'bg-green-500' :
-              status === 'present' ? 'bg-yellow-500' : 'bg-gray-300'
+              status === 'correct' ? 'bg-gradient-to-r from-blue-400 to-cyan-500' :
+              status === 'present' ? 'bg-gradient-to-r from-yellow-400 to-amber-500' : 'bg-gray-600'
             }`}
           />
         ))}
@@ -106,9 +107,9 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: LandmarkPuzzle;
     const charCount = name.replace(/\s/g, '').length;
     
     if (wordCount > 1) {
-      return `Name has ${wordCount} words with ${charCount} total letters`;
+      return `${wordCount} words with ${charCount} total letters`;
     } else {
-      return `Name has ${charCount} letters`;
+      return `${charCount} letters`;
     }
   };
 
@@ -116,14 +117,15 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: LandmarkPuzzle;
     const name = puzzleData.answer.toLowerCase();
     const latestAttempt = attempts[attempts.length - 1];
     
+    // Find correct letters from the latest attempt
     const correctLetters = latestAttempt.letterStatuses
       ?.map((status, index) => status === 'correct' ? latestAttempt.guess[index].toLowerCase() : null)
       .filter(Boolean) || [];
     
     if (correctLetters.length > 0) {
-      return `Name contains: ${correctLetters.join(', ').toUpperCase()}`;
+      return correctLetters.join(', ').toUpperCase();
     } else {
-      return `Name starts with: ${name[0].toUpperCase()}`;
+      return name[0].toUpperCase();
     }
   };
 
@@ -131,8 +133,10 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: LandmarkPuzzle;
     // Hint 1: Name structure
     attempts.length >= 1 && (
       <div key="nameStructure" className="flex-none w-full">
-        <div className="text-sm mb-2">
-          🔤 {getNameStructureHint()}
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-blue-400">🔤</span>
+          <span className="text-white font-medium">Name Structure:</span>
+          <span className="text-cyan-400 font-bold">{getNameStructureHint()}</span>
         </div>
       </div>
     ),
@@ -140,13 +144,17 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: LandmarkPuzzle;
     attempts.length >= 2 && (
       <div key="locationType" className="flex-none w-full">
         {puzzleData.location && (
-          <div className="text-sm mb-2">
-            🌍 Location: <strong>{puzzleData.location}</strong>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-blue-400">🌍</span>
+            <span className="text-white font-medium">Location:</span>
+            <span className="text-cyan-400 font-bold">{puzzleData.location}</span>
           </div>
         )}
         {puzzleData.type && (
-          <div className="text-sm">
-            🏛️ Type: <strong>{puzzleData.type}</strong>
+          <div className="flex items-center gap-2">
+            <span className="text-blue-400">🏛️</span>
+            <span className="text-white font-medium">Type:</span>
+            <span className="text-cyan-400 font-bold">{puzzleData.type}</span>
           </div>
         )}
       </div>
@@ -155,13 +163,17 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: LandmarkPuzzle;
     attempts.length >= 3 && (
       <div key="yearArchitect" className="flex-none w-full">
         {puzzleData.builtYear && (
-          <div className="text-sm mb-2">
-            📅 Built: <strong>{puzzleData.builtYear}</strong>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-blue-400">📅</span>
+            <span className="text-white font-medium">Built Year:</span>
+            <span className="text-cyan-400 font-bold">{puzzleData.builtYear}</span>
           </div>
         )}
         {puzzleData.architect && (
-          <div className="text-sm">
-            👷 Architect: <strong>{puzzleData.architect}</strong>
+          <div className="flex items-center gap-2">
+            <span className="text-blue-400">👷</span>
+            <span className="text-white font-medium">Architect:</span>
+            <span className="text-cyan-400 font-bold">{puzzleData.architect}</span>
           </div>
         )}
       </div>
@@ -170,26 +182,34 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: LandmarkPuzzle;
     attempts.length >= 4 && (
       <div key="heightMaterial" className="flex-none w-full">
         {puzzleData.height && (
-          <div className="text-sm mb-2">
-            📏 Height: <strong>{puzzleData.height}</strong>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-blue-400">📏</span>
+            <span className="text-white font-medium">Height:</span>
+            <span className="text-cyan-400 font-bold">{puzzleData.height}</span>
           </div>
         )}
         {puzzleData.material && (
-          <div className="text-sm">
-            🧱 Material: <strong>{puzzleData.material}</strong>
+          <div className="flex items-center gap-2">
+            <span className="text-blue-400">🧱</span>
+            <span className="text-white font-medium">Material:</span>
+            <span className="text-cyan-400 font-bold">{puzzleData.material}</span>
           </div>
         )}
       </div>
     ),
-    // Hint 5: Letter position & Fun Fact
+    // Hint 5: Letter position or starting letter
     attempts.length >= 5 && (
       <div key="letterHint" className="flex-none w-full">
-        <div className="text-sm mb-2">
-          💡 {getLetterPositionHint()}
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-blue-400">💡</span>
+          <span className="text-white font-medium">Letters:</span>
+          <span className="text-cyan-400 font-bold">{getLetterPositionHint()}</span>
         </div>
         {puzzleData.funFact && (
-          <div className="text-sm">
-            🎯 Fun Fact: <strong>{puzzleData.funFact}</strong>
+          <div className="flex items-center gap-2">
+            <span className="text-blue-400">🎯</span>
+            <span className="text-white font-medium">Fun Fact:</span>
+            <span className="text-cyan-400 font-bold">{puzzleData.funFact}</span>
           </div>
         )}
       </div>
@@ -197,8 +217,11 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: LandmarkPuzzle;
   ].filter(Boolean);
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-      <h4 className="font-semibold text-blue-800 mb-2">💡 Hints Revealed:</h4>
+    <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-2xl p-4 mb-6">
+      <h4 className="font-semibold text-blue-400 mb-3 flex items-center gap-2">
+        <Sparkles className="w-4 h-4" />
+        Hints Revealed:
+      </h4>
       <div className="relative overflow-hidden">
         <div
           ref={hintsScrollRef}
@@ -210,30 +233,43 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: LandmarkPuzzle;
           ))}
         </div>
         {hintItems.length > 1 && (
-          <div className="flex justify-center gap-2 mt-2">
+          <div className="flex justify-center gap-2 mt-3">
             {hintItems.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setActiveHintIndex(index)}
-                className={`w-2 h-2 rounded-full ${index === activeHintIndex ? 'bg-blue-600' : 'bg-gray-300'}`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === activeHintIndex ? 'bg-blue-400 scale-125' : 'bg-gray-600'
+                }`}
                 aria-label={`Go to hint ${index + 1}`}
               />
             ))}
           </div>
         )}
       </div>
-      <p className="text-xs text-blue-600 mt-2">
+      <p className="text-xs text-blue-400 mt-3 text-center">
         More hints unlock with each guess... ({Math.min(attempts.length, 5)}/5 revealed)
       </p>
     </div>
   );
 };
 
-const PosterBlock = ({
-  x, y, gridCols, gridRows, isRevealed
-}: { x: number; y: number; gridCols: number; gridRows: number; isRevealed: boolean; }) => {
+const ImageBlock = ({ 
+  x, 
+  y, 
+  gridCols, 
+  gridRows, 
+  isRevealed 
+}: {
+  x: number;
+  y: number;
+  gridCols: number;
+  gridRows: number;
+  isRevealed: boolean;
+}) => {
   if (isRevealed) return null;
-
+  
+  // Calculate position as percentages
   const left = (x / gridCols) * 100;
   const top = (y / gridRows) * 100;
   const width = 100 / gridCols;
@@ -241,8 +277,13 @@ const PosterBlock = ({
 
   return (
     <div
-      className="absolute bg-black"
-      style={{ left: `${left}%`, top: `${top}%`, width: `${width}%`, height: `${height}%` }}
+      className="absolute bg-gray-900/90"
+      style={{
+        left: `${left}%`,
+        top: `${top}%`,
+        width: `${width}%`,
+        height: `${height}%`,
+      }}
     />
   );
 };
@@ -281,12 +322,14 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
   const [revealPercentage, setRevealPercentage] = useState(0);
   const [revealedBlocks, setRevealedBlocks] = useState<number[]>([]);
   const blockRevealOrderRef = useRef<number[]>([]);
+  const [hardMode, setHardMode] = useState(false);
+  const [showHint, setShowHint] = useState(false);
 
-  const GRID_COLS = 30;
-  const GRID_ROWS = 40;
+  const GRID_COLS = 20;
+  const GRID_ROWS = 30;
   const totalBlocks = GRID_COLS * GRID_ROWS;
   const containerWidth = 90;
-  const containerHeight = 120;
+  const containerHeight = 130;
 
   /* ----------------------- block reveal order ----------------------- */
   useEffect(() => {
@@ -299,6 +342,7 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
           groups[groupIdx].push(index);
         }
       }
+      
       const shuffledOrder: number[] = [];
       groups.forEach(group => {
         for (let i = group.length - 1; i > 0; i--) {
@@ -307,6 +351,7 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
         }
         shuffledOrder.push(...group);
       });
+      
       blockRevealOrderRef.current = shuffledOrder;
     }
   }, []);
@@ -377,6 +422,8 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
       newReveal = 100;
     }
     setRevealPercentage(newReveal);
+
+    // Calculate number of blocks to reveal
     const numToReveal = Math.floor(totalBlocks * (newReveal / 100));
     const newRevealed = blockRevealOrderRef.current.slice(0, numToReveal);
     setRevealedBlocks(newRevealed);
@@ -400,7 +447,12 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
   const triggerConfetti = () => {
     if (confettiCanvasRef.current) {
       const myConfetti = confetti.create(confettiCanvasRef.current, { resize: true, useWorker: true });
-      myConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      myConfetti({ 
+        particleCount: 150, 
+        spread: 100, 
+        origin: { y: 0.6 },
+        colors: ['#3B82F6', '#06B6D4', '#0EA5E9']
+      });
     }
   };
 
@@ -483,13 +535,23 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
     });
   };
 
-    /* -------------------------- block grid -------------------------- */
+  const toggleHardMode = () => {
+    setHardMode(!hardMode);
+    playSound('click');
+  };
+
+  const toggleHint = () => {
+    setShowHint(!showHint);
+    playSound('click');
+  };
+
+  /* -------------------------- block grid -------------------------- */
   const blockGrid: { x: number; y: number }[] = [];
-  for (let row = 0; row < GRID_ROWS; row++) {
-    for (let col = 0; col < GRID_COLS; col++) {
-      blockGrid.push({ x: col, y: row });
+    for (let row = 0; row < GRID_ROWS; row++) {
+      for (let col = 0; col < GRID_COLS; col++) {
+        blockGrid.push({ x: col, y: row });
+      }
     }
-  }
   const isBlockRevealed = (index: number) => revealedBlocks.includes(index);
 
   const showImageLoader = imageLoading && !imageError;
@@ -497,11 +559,14 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
   const showImage = landmarkImage && !imageLoading && !imageError;
 
   const triesLeft = 6 - attempts.length;
-  const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
+  const triesLeftColor = 
+    triesLeft >= 4 ? 'text-blue-400' : 
+    triesLeft >= 2 ? 'text-yellow-400' : 
+    'text-red-400';
 
   return (
-    <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
-      <canvas ref={confettiCanvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-50" />
+    <div className="relative">
+      <canvas ref={confettiCanvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-10" />
 
       {/* Image Modal */}
       {showImageModal && landmarkImage && (
@@ -510,195 +575,295 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
           onClick={() => setShowImageModal(false)}
         >
           <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
-            <button
-              onClick={() => setShowImageModal(false)}
-              className="absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 z-60"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <div className="relative rounded-lg overflow-hidden bg-gray-100 w-full h-full flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden bg-gray-900 border border-gray-600" style={{ width: '512px', height: '768px' }}>
+              {/* Close Button - Now positioned inside the image container */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the backdrop click
+                  setShowImageModal(false);
+                }}
+                className="absolute top-3 right-3 bg-gray-800/90 backdrop-blur-sm border border-gray-600 rounded-full p-2 shadow-xl hover:bg-gray-700/90 z-20 transition-all duration-300 hover:scale-110"
+              >
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              
               <Image
                 src={landmarkImage}
-                alt={`${puzzleData.answer} - full size`}
-                width={800}
-                height={600}
-                className="object-contain max-w-full max-h-full"
-                onClick={(e) => e.stopPropagation()}
+                alt="Mystery landmark"
+                fill
+                className="object-cover"
+                priority
               />
-              {/* FIX: Update the blocks overlay to use proper positioning */}
-              {revealPercentage < 100 && (
-                <div className="absolute inset-0 z-20 pointer-events-none">
-                  {blockGrid.map((pos, index) => (
-                    <PosterBlock 
-                      key={index} 
-                      {...pos} 
-                      gridCols={GRID_COLS} 
-                      gridRows={GRID_ROWS}
-                      isRevealed={isBlockRevealed(index)} 
+              {/* Same block overlay as main image */}
+              <div className="absolute inset-0">
+                {blockGrid.map((pos, index) => (
+                  <ImageBlock
+                    key={index}
+                    x={pos.x}
+                    y={pos.y}
+                    gridCols={GRID_COLS}
+                    gridRows={GRID_ROWS}
+                    isRevealed={isBlockRevealed(index)}
+                  />
+                ))}
+              </div>
+              
+              {/* Center "?" overlay for modal too */}
+              {revealPercentage === 0 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-blue-500/50">
+                      <span className="text-blue-400 text-2xl font-bold">?</span>
+                    </div>
+                    <p className="text-blue-400 font-semibold">Mystery Landmark</p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Progress bar for modal */}
+              <div className="absolute bottom-2 left-2 right-2">
+                <div className="bg-black/70 backdrop-blur-sm rounded-xl p-2">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-blue-400 text-xs font-medium">Image Reveal</span>
+                    <span className="text-white text-xs font-bold">{Math.round(revealPercentage)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-full h-1.5">
+                    <div 
+                      className="bg-gradient-to-r from-blue-400 to-cyan-500 h-1.5 rounded-full transition-all duration-500"
+                      style={{ width: `${revealPercentage}%` }}
                     />
-                  ))}
+                  </div>
                 </div>
-              )}
-              {revealPercentage < 100 && (
-                <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-sm px-2 py-1 rounded z-30">
-                  {Math.round(revealPercentage)}% revealed
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
       )}
-        
 
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 flex-grow">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg md:text-xl font-semibold text-gray-800">
-            Guess the landmark from its attributes!
-          </h2>
-          <div className={`text-base font-bold ${triesLeftColor}`}>
-            {triesLeft} {triesLeft === 1 ? 'try' : 'tries'} left
+      {/* Main Game Card */}
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5 mb-5">
+        {/* Header with Attempts Counter */}
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-2 rounded-xl">
+              <Building className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Today&apos;s Landmark Mystery</h2>
+          </div>
+          <div className={`flex items-center gap-2 text-lg font-bold ${triesLeftColor}`}>
+            <Target className="w-5 h-5" />
+            <span>{triesLeft} {triesLeft === 1 ? 'TRY' : 'TRIES'}</span>
           </div>
         </div>
 
-        {/* Image + Category */}
-        <div className="flex flex-col md:flex-row gap-6 mb-6">
-          <div className="flex-shrink-0">
+        {/* Landmark Image & Category */}
+         <div className="flex flex-col md:flex-row gap-6 mb-6 items-center">
+          {/* Landmark Image Container */}
+          <div className="flex-shrink-0 relative">
             <div 
-              className="relative rounded-lg overflow-hidden bg-gray-100 group cursor-pointer"
+              className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-600" 
               style={{ height: `${containerHeight}px`, width: `${containerWidth}px` }}
-              onClick={() => showImage && setShowImageModal(true)}
+               onClick={() => showImage && setShowImageModal(true)}
             >
               {showImageLoader && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-100 to-gray-200 z-10">
-                  <div className="text-gray-600 flex flex-col items-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mb-1"></div>
-                    <span className="text-xs">Loading image...</span>
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-900/50 to-cyan-900/50 z-10">
+                  <div className="text-blue-400 flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400 mb-2"></div>
+                    <span className="text-sm">Loading image...</span>
                   </div>
                 </div>
               )}
+              
               {showImageError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-100 to-gray-200 z-10">
-                  <div className="text-gray-600 flex flex-col items-center text-center p-2">
-                    <span className="text-2xl mb-2">🏛️</span>
-                    <span className="text-xs">No image available</span>
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-900/50 to-cyan-900/50 z-10">
+                  <div className="text-blue-400 flex flex-col items-center text-center p-4">
+                    <span className="text-3xl mb-2">🏛️</span>
+                    <span className="text-sm">No image available</span>
                   </div>
                 </div>
               )}
+              
               {showImage && (
                 <>
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg flex items-center justify-center transition-all z-40 pointer-events-none">
-                    <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                      </svg>
-                    </div>
-                  </div>
-                  
-                  <Image 
-                    src={landmarkImage} 
-                    alt="Landmark" 
-                    fill 
+                  <Image
+                    src={landmarkImage}
+                    alt="Landmark"
+                    fill
                     className="object-cover absolute inset-0 z-10"
-                    onError={() => setImageError(true)}
+                    onError={() => {
+                      console.error('Image failed to load:', landmarkImage);
+                      setImageError(true);
+                    }}
                   />
+                  {/* Block overlay */}
                   <div className="absolute inset-0 z-20">
                     {blockGrid.map((pos, index) => (
-                      <PosterBlock key={index} {...pos} gridCols={GRID_COLS} gridRows={GRID_ROWS}
-                                   isRevealed={isBlockRevealed(index)} />
+                      <ImageBlock
+                        key={index}
+                        {...pos}
+                        gridCols={GRID_COLS}
+                        gridRows={GRID_ROWS}
+                        isRevealed={isBlockRevealed(index)}
+                      />
                     ))}
                   </div>
+                  {/* Center "?" overlay */}
                   {revealPercentage === 0 && (
-                    <div className="absolute inset-0 flex items-center justify-center z-30">
-                      <span className="text-white text-2xl font-bold bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center">?</span>
+                    <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/70">
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-blue-500/50">
+                          <span className="text-blue-400 text-2xl font-bold">?</span>
+                        </div>
+                        <p className="text-blue-400 font-semibold">Mystery Landmark</p>
+                      </div>
                     </div>
                   )}
-                  <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1 py-0.5 rounded z-30">
-                    {revealPercentage > 0 ? `${Math.round(revealPercentage)}%` : '?'}
-                  </div>
                   
-                  {revealPercentage > 0 && (
-                    <div className="absolute bottom-1 left-1 bg-black bg-opacity-70 text-white text-xs px-1 py-0.5 rounded z-30 opacity-0 group-hover:opacity-100 transition-opacity">
-                      Click to magnify
+                  {/* Reveal Progress */}
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <div className="bg-black/70 backdrop-blur-sm rounded-xl p-2">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-blue-400 text-xs font-medium">Image Reveal</span>
+                        <span className="text-white text-xs font-bold">{Math.round(revealPercentage)}%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 rounded-full h-1.5">
+                        <div 
+                          className="bg-gradient-to-r from-blue-400 to-cyan-500 h-1.5 rounded-full transition-all duration-500"
+                          style={{ width: `${revealPercentage}%` }}
+                        />
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </>
               )}
             </div>
+            {/* Click hint below the image */}
             {showImage && revealPercentage > 0 && (
-              <div className="text-xs text-gray-500 text-center mt-1 cursor-pointer" onClick={() => setShowImageModal(true)}>
+              <div className="text-xs text-gray-400 text-center mt-2 cursor-pointer hover:text-blue-400 transition-colors" onClick={() => setShowImageModal(true)}>
                 Click image to view larger
               </div>
             )}
           </div>
 
-          <div className="flex-grow">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-800 mb-2">Today&apos;s Landmark</h4>
-              <p className="text-blue-700">
-                Today&apos;s landmark is a <strong>{puzzleData.type}</strong> landmark.
+          {/* Category Section */}
+          <div className="flex-grow text-center">
+            <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-2xl p-6">
+              <h3 className="text-xl font-bold text-white mb-3">Today&apos;s Landmark</h3>
+              <p className="text-gray-300 text-lg mb-4">
+                Today&apos;s landmark is a <strong className="text-blue-400">{puzzleData.type}</strong>.
               </p>
-              <p className="text-xs text-blue-600 mt-2">
-                More clues will be revealed as you make guesses...
-              </p>
+              <div className="flex justify-center gap-4 text-sm text-gray-400">
+                <div className="flex items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  <span>Global Explorers</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  <span>6 Attributes</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Errors */}
+        {/* Game Controls */}
+        <div className="flex flex-wrap gap-3 mb-5">
+          <button
+            onClick={toggleHardMode}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
+              hardMode 
+                ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg' 
+                : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+            }`}
+          >
+            <Flame className="w-4 h-4" />
+            {hardMode ? 'Hard Mode ON' : 'Hard Mode'}
+          </button>
+          
+          {hardMode && attempts.length > 0 && !showHint && gameState === 'playing' && (
+            <button
+              onClick={toggleHint}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl hover:from-blue-600 hover:to-cyan-700 transition-all duration-300"
+            >
+              {showHint ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showHint ? 'Hide Hint' : 'Show Hint'}
+            </button>
+          )}
+        </div>
+
+        {/* Game Messages */}
         {errorMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {errorMessage}
+          <div className="bg-red-500/20 border border-red-500/30 rounded-2xl p-4 mb-4 animate-pulse">
+            <div className="flex items-center gap-2 text-red-400">
+              <span className="w-2 h-2 bg-red-400 rounded-full"></span>
+              {errorMessage}
+            </div>
           </div>
         )}
 
-        {/* Hints / Result */}
-        {gameState === 'playing' && (
-          <>
-            <ProgressiveHint attempts={attempts} />
-            <ValidationHints puzzleData={puzzleData} attempts={attempts} />
-          </>
-        )}
-
         {gameState === 'won' && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            <h3 className="font-bold text-lg mb-2">Congratulations! 🎉</h3>
-            <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
-            <p className="mt-2">The landmark was: <strong>{puzzleData.answer}</strong></p>
+          <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Victory! 🎉</h3>
+            <p className="text-blue-400 mb-2">You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
+            <p className="text-gray-300">The landmark was: <strong className="text-white">{puzzleData.answer}</strong></p>
             {attempts[attempts.length - 1]?.funFact && (
-              <p className="mt-2 italic">{attempts[attempts.length - 1].funFact}</p>
+              <p className="text-cyan-400 mt-2 italic">{attempts[attempts.length - 1].funFact}</p>
             )}
           </div>
         )}
 
         {gameState === 'lost' && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <h3 className="font-bold text-lg mb-2">Game Over</h3>
-            <p>The landmark was: <strong>{puzzleData.answer}</strong></p>
-            <p className="mt-2 italic">{puzzleData.funFact}</p>
+          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center">
+                <Building className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Game Over</h3>
+            <p className="text-red-400">The landmark was: <strong className="text-white">{puzzleData.answer}</strong></p>
+            <p className="text-pink-400 mt-2 italic">{puzzleData.funFact}</p>
           </div>
         )}
 
-        {/* --------------------- PREVIOUS ATTEMPTS (UPDATED TO MATCH PLOTLE/SONGLE/CELEBRILE/CREATUREDLE) --------------------- */}
+        {/* Progressive Hints */}
+        {gameState === 'playing' && (
+          <>
+            <EnhancedProgressiveHint attempts={attempts} />
+            <ValidationHints puzzleData={puzzleData} attempts={attempts} />
+          </>
+        )}
+
+        {/* Previous Attempts Grid */}
         {attempts.length > 0 && (
           <div className="mb-6">
-            <h3 className="font-semibold mb-3">Your Guesses:</h3>
-            <div className="space-y-4">
+            <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+              <Target className="w-4 h-4" />
+              Your Guesses:
+            </h3>
+            <div className="grid gap-3">
               {attempts.map((attempt, index) => (
-                <div key={index} className="bg-gray-50 rounded-lg p-3">
-                  <div className="flex flex-wrap justify-center gap-1 mb-2">
+                <div key={index} className="bg-gray-700/30 rounded-xl p-4 border border-gray-600">
+                  <div className="flex flex-wrap justify-center gap-2">
                     {attempt.guess.split('').map((letter, letterIndex) => {
                       const status = attempt.letterStatuses?.[letterIndex] || 'absent';
-                      const bgColor = status === 'correct' ? 'bg-green-500' : 
-                                    status === 'present' ? 'bg-yellow-500' : 'bg-gray-300';
-                      const textColor = status === 'absent' ? 'text-gray-700' : 'text-white';
+                      const bgColor = status === 'correct' 
+                        ? 'bg-gradient-to-br from-blue-500 to-cyan-600' 
+                        : status === 'present' 
+                        ? 'bg-gradient-to-br from-yellow-500 to-amber-600'
+                        : 'bg-gray-600 border border-gray-500';
+                      const textColor = status === 'absent' ? 'text-gray-300' : 'text-white';
                       
                       return (
                         <div 
                           key={letterIndex} 
-                          className={`w-8 h-8 flex items-center justify-center rounded text-sm font-bold ${bgColor} ${textColor}`}
+                          className={`w-10 h-10 flex items-center justify-center rounded-xl text-lg font-bold ${bgColor} ${textColor} transition-all duration-300 transform hover:scale-110`}
                         >
                           {letter.toUpperCase()}
                         </div>
@@ -711,63 +876,93 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
           </div>
         )}
 
-        {/* Input */}
+        {/* Input Section */}
         {gameState === 'playing' && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 -mx-4 md:-mx-6 -mb-4 md:-mb-6">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={guess}
-                onChange={e => setGuess(e.target.value)}
-                placeholder="Enter landmark name"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onKeyPress={e => e.key === 'Enter' && handleGuess()}
-                disabled={isGuessLoading}
-              />
+          <div className="sticky bottom-0 bg-gray-800/80 backdrop-blur-lg rounded-xl border border-gray-700 p-4 z-[100] -mx-2 md:-mx-4 -mb-2 md:-mb-6">
+            <div className="flex gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={guess}
+                  onChange={e => setGuess(e.target.value)}
+                  placeholder="Enter landmark name..."
+                  className="w-full pl-12 pr-4 py-4 bg-gray-700 border border-gray-600 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  onKeyPress={e => e.key === 'Enter' && handleGuess()}
+                  disabled={isGuessLoading}
+                />
+              </div>
               <button
                 onClick={handleGuess}
                 disabled={!guess.trim() || isGuessLoading}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 font-semibold"
               >
-                {isGuessLoading ? '...' : 'Guess'}
+                {isGuessLoading ? '...' : 'GUESS'}
               </button>
             </div>
           </div>
         )}
-
-        {/* Share */}
+        
+        {/* Share & Feedback Section */}
         {(gameState === 'won' || gameState === 'lost') && (
-          <div className="flex flex-col items-center mt-4">
+          <div className="flex flex-col items-center gap-4 mt-6">
             <button
               onClick={copyToClipboard}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-700 transition-all duration-300 transform hover:scale-105 font-semibold"
             >
-              <MdShare /> Share Result
+              <MdShare className="w-5 h-5" />
+              Share Result
             </button>
-            {shareMessage && <div className="mt-2 text-blue-600">{shareMessage}</div>}
+            {shareMessage && (
+              <div className="text-blue-400 font-semibold animate-pulse">{shareMessage}</div>
+            )}
 
             <FeedbackComponent
               gameType="landmarkdle"
               category="brainwave"
-              metadata={{ attempts: attempts.length, won: gameState === 'won', correctAnswer: puzzleData.answer }}
+              metadata={{ 
+                attempts: attempts.length, 
+                won: gameState === 'won', 
+                correctAnswer: puzzleData.answer,
+                hardMode
+              }}
             />
           </div>
         )}
-      </div>
+        </div>
 
-      {/* How to Play */}
-      <div className="bg-gray-100 rounded-lg p-4 mt-6">
-        <h3 className="font-bold mb-2">How to Play Landmarkdle:</h3>
-        <ul className="list-disc list-inside space-y-1 text-sm">
-          <li>Guess the landmark by entering its name</li>
-          <li>Get letter-by-letter feedback compared to the answer</li>
-          <li>🟩 Green: Letter in correct position</li>
-          <li>🟨 Yellow: Letter is in the name but wrong position</li>
-          <li>⬜ Gray: Letter not in the name</li>
-          <li>Additional hints about the landmark unlock with each attempt</li>
-          <li>The landmark image becomes clearer with each guess</li>
-          <li>You have 6 attempts to guess the landmark</li>
-        </ul>
+      {/* How to Play Section */}
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5">
+        <h3 className="font-bold text-white mb-3 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-blue-400" />
+          How to Play:
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">🏛️</span>
+            <span>Guess the landmark from 6 attributes</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">🟩</span>
+            <span>Green: Letter in correct position</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-yellow-400">🟨</span>
+            <span>Yellow: Letter in name but wrong position</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-gray-400">⬜</span>
+            <span>Gray: Letter not in the name</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-cyan-400">💡</span>
+            <span>Hints unlock after each attempt</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">🎯</span>
+            <span>6 attempts to guess correctly</span>
+          </div>
+        </div>
       </div>
     </div>
   );

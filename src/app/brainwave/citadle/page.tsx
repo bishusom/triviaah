@@ -7,9 +7,10 @@ import CitadleComponent from '@/components/brainwave/CitadleComponent';
 import { getDailyCityPuzzle, CityPuzzle } from '@/lib/brainwave/citadle/citadle-sb';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { Building, Target, Users, Clock, Trophy, Map, Globe, Compass } from 'lucide-react';
 
 export default function CitadlePage() {
-const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>(null);
+  const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
@@ -139,10 +140,10 @@ const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>
     fetchDailyCity();
   }, [currentDate]);
 
-  // Show loading while waiting for client date or data
-  if (isLoading || !currentDate || !dailyData || !dailyData.puzzle) {
+  // Loading State
+  if (isLoading || !currentDate) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900">
         {/* Structured Data */}
         <Script
           id="citadle-organization-schema"
@@ -163,10 +164,10 @@ const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>
         {/* Desktop Side Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
@@ -174,52 +175,43 @@ const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-           <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold mb-2">🏙️ Citadle - Daily City Game</h1>
-            {/* Last Updated Timestamp */}
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-3 rounded-2xl">
+                <Building className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
+                CITADLE
+              </h1>
+            </div>
+            <p className="text-gray-200 text-lg">Daily City Guessing Challenge</p>
           </div>
-          <p className="text-gray-600 mb-6">Guess the city in 6 tries! Daily geography puzzle with landmarks and skylines.</p>
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          </div>
-          <p className="text-gray-500 text-sm mt-2">Loading today&apos;s city puzzle...</p>
 
-          {/* Hidden SEO Content */}
-          <div className="sr-only" aria-hidden="false">
-            <div itemScope itemType="https://schema.org/Game">
-              <meta itemProp="dateModified" content={lastUpdated} />
-              <h2>Citadle - Daily City Guessing Game</h2>
-              <p itemProp="description">
-                Test your urban geography knowledge with Citadle, a daily puzzle game where you guess cities using landmarks, skylines, and geographical clues. 
-                Similar to Wordle but focused on world cities and urban identification.
-              </p>
-              <h3>How to Play Citadle:</h3>
-              <ul>
-                <li>Guess the target city in 6 attempts</li>
-                <li>Get progressive hints with each wrong guess</li>
-                <li>See country information and city skylines</li>
-                <li>Landmarks become clearer with each wrong guess</li>
-                <li>Compare population, elevation, and timezone</li>
-                <li>New city puzzle every day</li>
-                <li>Completely free with no registration required</li>
-              </ul>
-              <p><strong>Game Features:</strong> Daily challenges, landmark recognition, skyline identification, 
-                 geographical coordinates, statistical comparisons, and educational content about world cities.</p>
+          {/* Loading Card */}
+          <div className="bg-blue-800/50 backdrop-blur-lg rounded-3xl border border-blue-700 p-8 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <div className="w-20 h-20 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin"></div>
+                <Globe className="w-10 h-10 text-blue-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Loading Today&apos;s City</h2>
+            <p className="text-blue-200 mb-6">Mapping your urban geography puzzle...</p>
+            
+            <div className="flex justify-center gap-2">
+              {[1, 2, 3].map((dot) => (
+                <div
+                  key={dot}
+                  className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"
+                  style={{ animationDelay: `${dot * 0.2}s` }}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -227,9 +219,10 @@ const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>
     );
   }
 
-  if (error) {
+  // Error State
+  if (error || !dailyData) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 to-black text-white">
         {/* Structured Data */}
         <Script
           id="citadle-organization-schema"
@@ -247,57 +240,66 @@ const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.faq) }}
         />
 
-        {/* Desktop Side Ads */}
+        {/* Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
         )}
         
-        {/* Mobile Bottom Ad */}
         {showMobileAd && (
-           <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
-        )} 
+          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
+        )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold mb-2">🏙️ Citadle - Daily City Game</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-3 rounded-2xl">
+                <Building className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
+                CITADLE
+              </h1>
+            </div>
+            <p className="text-gray-300 text-lg">Daily City Guessing Challenge</p>
+          </div>
+
+          {/* Error Card */}
+          <div className="bg-blue-500/10 backdrop-blur-lg rounded-3xl border border-blue-500/30 p-8 text-center">
+            <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold">!</span>
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Challenge Unavailable</h2>
+            <p className="text-blue-200 mb-6">We couldn&apos;t load today&apos;s city puzzle.</p>
+            
+            <div className="bg-blue-500/20 border border-blue-500/30 rounded-2xl p-4 mb-6">
+              <p className="text-blue-300 text-sm">{error || 'No puzzle available for today'}</p>
+            </div>
+            
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105"
             >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+              Try Again
+            </button>
           </div>
-          <p className="text-gray-600 mb-4">Guess the city in 6 tries with landmarks and skylines!</p>
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-            <p className="mb-2">No puzzle available for today.</p>
-            <p className="text-sm">Please check back tomorrow or try refreshing the page!</p>
-            <p className="text-red-500 text-sm mt-2">Error: {error}</p>
-          </div>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-          >
-            Refresh Page
-          </button>
         </div>
       </div>
     );
   }
 
+  // Main Game State
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="citadle-organization-schema"
@@ -318,10 +320,10 @@ const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -329,117 +331,141 @@ const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>
       
       {/* Mobile Bottom Ad */}
       {showMobileAd && (
-        <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+        <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} className="lg:hidden" />
       )}
       
       {/* Ad Controls */}
       {showAds && (
-      <div className="fixed top-4 right-4 z-50 flex gap-2">
-        <button
-          onClick={() => setShowDesktopAds(!showDesktopAds)}
-          className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded hidden lg:block"
-        >
-          {showDesktopAds ? 'Hide Side Ads' : 'Show Side Ads'}
-        </button>
-        <button
-          onClick={() => setShowMobileAd(!showMobileAd)}
-          className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded lg:hidden"
-        >
-          {showMobileAd ? 'Hide Bottom Ad' : 'Show Bottom Ad'}
-        </button>
-      </div>
+        <div className="fixed top-4 right-4 z-50 flex gap-2">
+          <button
+            onClick={() => setShowDesktopAds(!showDesktopAds)}
+            className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm hidden lg:block transition-all duration-300"
+          >
+            {showDesktopAds ? 'Hide Ads' : 'Show Ads'}
+          </button>
+          <button
+            onClick={() => setShowMobileAd(!showMobileAd)}
+            className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm lg:hidden transition-all duration-300"
+          >
+            {showMobileAd ? 'Hide Ad' : 'Show Ad'}
+          </button>
+        </div>
       )}
 
-      <div className="max-w-2xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-6">
-          <div className="flex justify-center items-center gap-4 mb-2">
-            <h1 className="text-3xl font-bold">🏙️ Citadle</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+      <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 relative z-30">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-3 rounded-2xl shadow-lg">
+                <Building className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
+                CITADLE
+              </h1>
+            </div>
+            
+            <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-lg px-4 py-2 rounded-2xl border border-gray-700">
+              <Clock className="w-4 h-4 text-blue-400" />
+              <time 
+                dateTime={lastUpdated} 
+                className="text-blue-400 text-sm font-medium"
+              >
+                Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </time>
+            </div>
           </div>
-          <p className="text-gray-600">Guess the city in 6 tries! Daily geography puzzle with landmarks and skylines.</p>
+          
+          <p className="text-gray-300 text-lg mb-2">Guess the city from landmarks, skylines, and progressive hints in 6 attempts</p>
+          
+          {/* Stats Bar */}
+          <div className="flex justify-center gap-6 mb-8">
+            <div className="flex items-center gap-2 text-gray-400">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              <span className="text-sm">Daily Challenge</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Users className="w-5 h-5 text-blue-500" />
+              <span className="text-sm">Global Geographers</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Target className="w-5 h-5 text-red-500" />
+              <span className="text-sm">6 Attempts</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Map className="w-5 h-5 text-green-500" />
+              <span className="text-sm">Landmark Recognition</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Compass className="w-5 h-5 text-orange-500" />
+              <span className="text-sm">Geographic Clues</span>
+            </div>
+          </div>
         </div>
 
+        {/* Mute Button */}
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
         
-        <CitadleComponent 
-          initialData={dailyData.puzzle}
-        />
+        {/* Game Component */}
+        {dailyData.puzzle && <CitadleComponent initialData={dailyData.puzzle} />}
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800/30 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 relative z-10">
           <details className="group">
-            <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Citadle Game Information & FAQ</h2>
-              <span className="text-gray-500 group-open:rotate-180 transition-transform">
+            <summary className="flex justify-between items-center cursor-pointer list-none p-4 hover:bg-gray-700/30 rounded-2xl transition-all duration-300">
+              <h2 className="text-xl font-bold text-white">Game Guide & FAQ</h2>
+              <span className="text-blue-400 group-open:rotate-180 transition-transform duration-300 text-2xl">
                 ▼
               </span>
             </summary>
-            <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
-              {/* Content Freshness Info */}
-              <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
-                  <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
-                </p>
-              </div>
-
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Citadle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Citadle is a daily geography puzzle game where you guess the target city in 6 attempts. 
-                  It uses progressive hints including landmarks (initially blurred), city skylines, geographical coordinates, 
-                  and statistical comparisons to help you identify the city.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do I play Citadle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  You have 6 attempts to guess the daily city. After each guess, you&apos;ll receive hints: 
-                  1) Country, 2) City skyline, 3) Landmark (clears with wrong guesses), 4) Distance/direction from your guess, 
-                  5) Statistical comparisons, and 6) Famous features or nicknames.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What cities are included?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Citadle includes major world cities from all continents, focusing on cities that most people 
-                  would recognize. The game features a mix of capitals, famous metropolitan areas, and historically significant cities.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Citadle free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! Citadle is completely free to play with no registration required. New geography puzzles 
-                  are available every day at midnight local time.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What makes Citadle different from other geography games?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Citadle combines multiple learning approaches: landmark recognition, skyline identification, 
-                  geographical coordinates, statistical data comparison, and cultural information. The progressive 
-                  hint system makes it educational for both beginners and geography experts.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Can I play Citadle on mobile?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! Citadle is fully responsive and works perfectly on mobile devices, tablets, and desktop computers. 
-                  The interface adapts to different screen sizes for optimal gameplay.
-                </p>
+            <div className="mt-4 space-y-6 pt-6 border-t border-gray-700">
+              <div className="grid gap-4">
+                {[
+                  {
+                    question: "What is Citadle?",
+                    answer: "Citadle is a daily geography puzzle game where you guess the target city in 6 attempts. It uses progressive hints including blurred landmarks, city skylines, geographical coordinates, and statistical comparisons to help you identify the city. It's an educational game that teaches about world geography and urban landmarks."
+                  },
+                  {
+                    question: "How do I play Citadle?",
+                    answer: "You have 6 attempts to guess the daily city. After each guess, you'll receive progressive hints: starting with country and continent, then a blurred landmark that becomes clearer with each wrong guess, followed by city skylines, geographical coordinates, statistical comparisons (population, elevation, timezone), and finally distance/direction from your guesses to the target city."
+                  },
+                  {
+                    question: "What types of clues are provided?",
+                    answer: "Clues are revealed progressively: 1) Country and continent, 2) Blurred landmark image (clears 15% per attempt), 3) City skyline silhouette, 4) Geographic coordinates, 5) Statistical comparisons (population, elevation, timezone differences), 6) Distance and direction from your guesses to the target city, 7) Cultural hints and famous city features."
+                  },
+                  {
+                    question: "How does the landmark reveal work?",
+                    answer: "The landmark image starts heavily blurred and becomes clearer with each wrong guess. Each incorrect attempt reveals 15% more of the image (up to 75% after 5 attempts). When you win or lose, the full landmark is revealed to show you the complete iconic structure."
+                  },
+                  {
+                    question: "Is Citadle educational?",
+                    answer: "Yes! Citadle is designed to be both fun and educational. Players learn about world geography, recognize famous landmarks, understand city skylines, learn about population distributions, and improve their knowledge of global urban centers and their cultural significance."
+                  },
+                  {
+                    question: "Is Citadle free to play?",
+                    answer: "Yes! Citadle is completely free to play with no registration required. New city puzzles are available every day at midnight local time. We support the game through optional non-intrusive advertisements."
+                  },
+                  {
+                    question: "What types of cities are included?",
+                    answer: "The game features major world cities from all continents including capitals, famous metropolitan areas, historical cities, and culturally significant urban centers. Cities range from well-known global hubs to interesting regional capitals that represent diverse geography and cultures."
+                  },
+                  {
+                    question: "What makes Citadle different from other geography games?",
+                    answer: "Citadle combines multiple learning approaches: landmark recognition training, skyline identification, geographical coordinate understanding, statistical data interpretation, and cultural geography. The progressive hint system with distance/direction feedback makes it particularly educational for developing spatial awareness and geographical reasoning."
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="bg-gray-700/30 rounded-2xl p-4">
+                    <h3 className="font-semibold text-blue-400 mb-2">{faq.question}</h3>
+                    <p className="text-gray-300">{faq.answer}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </details>
@@ -452,36 +478,50 @@ const [dailyData, setDailyData] = useState<{ puzzle: CityPuzzle | null } | null>
             <h2>Citadle - Daily City Guessing Game</h2>
             <p itemProp="description">
               Test your urban geography knowledge with Citadle, a daily puzzle game where you guess cities 
-              using multiple clues. Perfect for geography enthusiasts, students, travelers, and anyone wanting to 
-              improve their city identification skills in a fun, interactive way.
+              using multiple clues and progressive hints. Perfect for geography enthusiasts, students, travelers, 
+              and anyone wanting to improve their city identification and landmark recognition skills in a fun, interactive way.
             </p>
             <h3>How to Play Citadle:</h3>
             <ul>
               <li>Guess the target city in 6 attempts</li>
-              <li>Progressive hints reveal more information with each wrong guess</li>
-              <li>Identify cities by their landmarks, skylines, and geographical features</li>
-              <li>Compare population, elevation, and timezone with your guesses</li>
-              <li>Learn about famous features and city nicknames</li>
+              <li>Watch blurred landmarks reveal more details with each wrong guess</li>
+              <li>Get progressive clues across 7 categories: country, landmarks, skylines, coordinates, statistics, distance/direction, and cultural hints</li>
+              <li>Use distance and direction feedback to triangulate the target city</li>
+              <li>Compare population, elevation, and timezone data</li>
+              <li>Identify cities by their iconic skylines and landmarks</li>
               <li>New city puzzle every day</li>
               <li>Completely free with no registration required</li>
               <li>Educational and fun for all ages and skill levels</li>
             </ul>
             <h3>Game Features:</h3>
             <ul>
-              <li>Daily geography challenges with 100+ major cities</li>
-              <li>Landmark recognition training (blurred landmarks become clearer)</li>
-              <li>City skyline/silhouette identification</li>
-              <li>Geographical coordinate system with distance calculations</li>
-              <li>Statistical comparisons (population, elevation, etc.)</li>
-              <li>Cultural and historical hints</li>
-              <li>Mobile-friendly responsive design</li>
+              <li>Daily geography challenges with 100+ major world cities</li>
+              <li>Progressive landmark reveal system (blurred to clear)</li>
+              <li>City skyline/silhouette identification training</li>
+              <li>Geographical coordinate system with distance and direction calculations</li>
+              <li>Statistical comparisons (population, elevation, timezone differences)</li>
+              <li>Cultural and historical hints about cities</li>
+              <li>Mobile-friendly dark mode design</li>
               <li>No time pressure - play at your own pace</li>
-              <li>Educational content about world cities</li>
+              <li>Educational content about world geography and urban studies</li>
+              <li>Image gallery with zoom functionality for landmarks</li>
             </ul>
-            <p><strong>Perfect for:</strong> Geography students, travelers, architecture enthusiasts, puzzle lovers, 
-               teachers, families, and anyone interested in learning more about world cities.</p>
-            <p><strong>Educational Value:</strong> Citadle helps improve geographical knowledge, landmark recognition, 
-               urban landscape reading skills, statistical awareness, and cultural understanding of different cities.</p>
+            <h3>Educational Benefits:</h3>
+            <ul>
+              <li>Improve geographical knowledge and spatial awareness</li>
+              <li>Learn to recognize famous landmarks and city skylines</li>
+              <li>Understand geographic coordinates and distance calculations</li>
+              <li>Develop statistical interpretation skills with real city data</li>
+              <li>Learn about cultural and historical significance of world cities</li>
+              <li>Enhance deductive reasoning and problem-solving abilities</li>
+              <li>Build mental maps of world geography and urban distributions</li>
+            </ul>
+            <p><strong>Perfect for:</strong> Geography students, teachers, travelers, architecture enthusiasts, 
+               urban planners, map lovers, trivia enthusiasts, families, and anyone interested in 
+               learning more about world cities, their landmarks, and their unique characteristics.</p>
+            <p><strong>Skill Development:</strong> Citadle helps improve geographical literacy, landmark 
+               recognition, urban landscape reading skills, statistical awareness, spatial reasoning, 
+               and cultural understanding of different cities around the world.</p>
           </div>
         </div>
       </div>

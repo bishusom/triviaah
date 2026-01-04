@@ -1,8 +1,10 @@
+// src/app/trivias/[category]/quiz/page.tsx
 import QuizGame from '@/components/trivias/QuizGame';
 import { getCategoryQuestions, getSubcategoryQuestions, Question } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
+import { Timer, ShieldQuestionMark, Trophy, Play } from 'lucide-react';
 
 interface QuizPageProps {
   params: Promise<{ category: string }>;
@@ -67,7 +69,7 @@ export async function generateMetadata({
       type: 'website',
       images: [
         {
-          url: '/imgs/quiz-og.webp',
+          url: '/imgs/triviaah-og.webp',
           width: 1200,
           height: 630,
           alt: `${formattedCategory} Quiz Challenge`
@@ -82,7 +84,7 @@ export async function generateMetadata({
       description: formattedSubcategory
         ? `How well do you know ${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()}? Test yourself!`
         : `How well do you know ${formattedCategory.toLowerCase()}? Test yourself!`,
-      images: ['/imgs/quiz-og.webp'],
+      images: ['/imgs/triviaah-og.webp'],
     },
     alternates: {
       canonical: `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
@@ -275,22 +277,6 @@ function generateStructuredData(questions: Question[], category: string, subcate
               "@type": "Answer",
               "text": "Your progress is saved in your browser's local storage. If you accidentally close the tab or navigate away, you can return and resume where you left off. However, if you clear your browser data, your progress will be lost."
             }
-          },
-          {
-            "@type": "Question",
-            "name": "Can I share my results with friends?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes! After completing the quiz, you'll have the option to share your score on social media and challenge your friends to beat it. This makes learning competitive and fun!"
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Are there different difficulty levels?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": `Our ${formattedCategory.toLowerCase()} quiz includes questions of varying difficulty levels, from beginner to expert. This ensures that both newcomers and ${formattedCategory.toLowerCase()} enthusiasts will find the quiz challenging and engaging.`
-            }
           }
         ]
       }
@@ -312,44 +298,41 @@ function QuizFAQ({ category, subcategory, questionCount }: { category: string, s
     : null;
 
   return (
-    <div className="mt-12 bg-gray-50 rounded-lg p-6">
-      <h2 className="text-2xl font-bold mb-6 text-center">Quiz Information & FAQs</h2>
-      <div className="space-y-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="font-semibold text-lg mb-2">About This Quiz</h3>
-          <p className="text-gray-700">
-            This {formattedSubcategory ? `${formattedSubcategory} ` : ''}{formattedCategory} quiz contains {questionCount} multiple-choice questions 
-            designed to test your knowledge across various difficulty levels. Whether you&apos;re a beginner or an expert, 
-            you&apos;ll find challenging questions that will help you learn and improve your understanding of {formattedCategory.toLowerCase()}.
-          </p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="font-semibold text-lg mb-2">How to Play</h3>
-          <p className="text-gray-700">
-            Read each question carefully and select the answer you believe is correct. You&apos;ll receive immediate 
-            feedback after each question. Your score is calculated based on the number of correct answers, and 
-            you can track your progress throughout the quiz.
-          </p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="font-semibold text-lg mb-2">Scoring System</h3>
-          <p className="text-gray-700">
-            Each correct answer earns you points. There&apos;s no penalty for wrong answers, so feel free to make 
-            educated guesses! At the end of the quiz, you&apos;ll see your total score and can compare it with 
-            previous attempts to track your improvement.
-          </p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="font-semibold text-lg mb-2">Learning Objectives</h3>
-          <p className="text-gray-700">
-            This quiz is designed to help you expand your knowledge of {formattedCategory.toLowerCase()}{formattedSubcategory ? `, particularly in the area of ${formattedSubcategory.toLowerCase()}` : ''}. 
-            Whether you&apos;re studying for academic purposes, preparing for a trivia competition, or just want to 
-            learn something new, this quiz provides an engaging way to test and improve your knowledge.
-          </p>
-        </div>
+    <div className="mt-12 bg-transparent"> {/* Add bg-transparent here */}
+      <h2 className="text-3xl font-bold text-white text-center mb-8">Quiz Information</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[
+          {
+            icon: "🎯",
+            title: "About This Quiz",
+            description: `This ${formattedSubcategory ? `${formattedSubcategory} ` : ''}${formattedCategory} quiz contains ${questionCount} multiple-choice questions designed to test your knowledge across various difficulty levels.`
+          },
+          {
+            icon: "⚡",
+            title: "How to Play",
+            description: "Read each question carefully and select the answer you believe is correct. You'll receive immediate feedback after each question and can track your progress throughout."
+          },
+          {
+            icon: "🏆",
+            title: "Scoring System",
+            description: "Each correct answer earns you points. There's no penalty for wrong answers, so feel free to make educated guesses! Track your improvement over time."
+          },
+          {
+            icon: "📚",
+            title: "Learning Objectives",
+            description: `This quiz helps you expand your knowledge of ${formattedCategory.toLowerCase()}${formattedSubcategory ? `, particularly in ${formattedSubcategory.toLowerCase()}` : ''}. Perfect for studying or just learning something new!`
+          }
+        ].map((item, index) => (
+          <div key={index} className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
+            <div className="flex items-center gap-4 mb-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center">
+                <span className="text-xl">{item.icon}</span>
+              </div>
+              <h3 className="font-semibold text-lg text-white">{item.title}</h3>
+            </div>
+            <p className="text-gray-300">{item.description}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -384,36 +367,93 @@ export default async function QuizPage({
     // Generate comprehensive structured data
     const structuredData = generateStructuredData(questions, category, subcategory);
 
-    return (
-      <div className="quiz-container max-w-4xl mx-auto px-4 py-8">
-        <h1 className="sr-only">
-          {subcategory 
-            ? `${subcategory.replace(/-/g, ' ')} ${category.replace(/-/g, ' ')} Questions - Triviaah`
-            : `${category.replace(/-/g, ' ')} Questions - Triviaah`
-          }
-        </h1>
-        
-        {/* Inject structured data directly */}
-        <Script
-          id="quiz-structured-data"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-        
-        <QuizGame 
-          initialQuestions={questions} 
-          category={category}
-          subcategory={subcategory}
-          quizConfig={{}}
-          quizType="trivias"
-        />
+    const formattedCategory = category
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
 
-        {/* FAQ Section */}
-        <QuizFAQ 
-          category={category} 
-          subcategory={subcategory} 
-          questionCount={questions.length} 
-        />
+    const formattedSubcategory = subcategory 
+      ? subcategory.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+      : null;
+
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-4">
+        <div className="max-w-4xl mx-auto px-4">
+          {/* Inject structured data directly */}
+          <Script
+            id="quiz-structured-data"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          />
+          
+        {/* Quiz Header */}
+        <div className="text-center mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-6">
+            <div className="flex items-center gap-4 sm:gap-6">
+              <div className="bg-gradient-to-r from-cyan-400 to-blue-500 p-3 rounded-md shadow-lg">
+                <Play className="w-3 h-3 text-white" />
+              </div>
+              <div className="text-left">
+                <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
+                  {formattedSubcategory ? formattedSubcategory : formattedCategory} Quiz Challenge
+                </h1>
+              </div>
+            </div>
+          </div>
+
+          {/* Description 
+          <p className="text-gray-300 text-base sm:text-lg mb-6 max-w-2xl mx-auto">
+            {formattedSubcategory 
+              ? `Test your ${formattedSubcategory.toLowerCase()} knowledge`
+              : `Master ${formattedCategory.toLowerCase()} trivia`
+            }
+          </p>
+          */}
+          {/* Quiz Stats 
+          <div className="flex flex-wrap justify-center gap-4 max-w-2xl mx-auto">
+            <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 border border-gray-700">
+              <ShieldQuestionMark className="text-xl text-cyan-400" />
+              <div className="text-left">
+                <div className="text-white font-bold text-sm">{questions.length}</div>
+                <div className="text-gray-400 text-xs">Questions</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 border border-gray-700">
+              <Timer className="text-xl text-yellow-400" />
+              <div className="text-left">
+                <div className="text-white font-bold text-sm">15s</div>
+                <div className="text-gray-400 text-xs">Per Question</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 border border-gray-700">
+              <Trophy className="text-xl text-green-400" />
+              <div className="text-left">
+                <div className="text-white font-bold text-sm">Free</div>
+                <div className="text-gray-400 text-xs">To Play</div>
+              </div>
+            </div>
+          </div>
+          */}
+        </div>
+
+          {/* Quiz Game Component */}
+          <div className="mb-8">
+            <QuizGame 
+              initialQuestions={questions} 
+              category={category}
+              subcategory={subcategory}
+              quizConfig={{}}
+              quizType="trivias"
+            />
+          </div>
+
+          {/* FAQ Section */}
+          <QuizFAQ 
+            category={category} 
+            subcategory={subcategory} 
+            questionCount={questions.length} 
+          />
+        </div>  
       </div>
     );
   } catch (error) {

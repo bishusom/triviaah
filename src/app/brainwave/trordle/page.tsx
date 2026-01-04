@@ -1,4 +1,4 @@
-// src/app/trordle/page.tsx
+// src/app/brainwave/trordle/page.tsx - REDESIGNED
 'use client';
 
 import TrordleComponent from '@/components/brainwave/TrordleComponent';
@@ -7,6 +7,8 @@ import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
 import { TrordleData } from '@/lib/brainwave/trordle/trordle-logic';
 import Ads from '@/components/common/Ads';
+import Script from 'next/script';
+import { HelpCircle, Target, Users, Clock, Trophy, Brain, Sparkles } from 'lucide-react';
 
 export default function TrordlePage() {
   const [trordleData, setTrordleData] = useState<TrordleData | null>(null);
@@ -15,11 +17,82 @@ export default function TrordlePage() {
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
   const showAds = process.env.NEXT_PUBLIC_SHOW_ADS === 'true';
+
+  // Structured data for Trordle
+  const [structuredData, setStructuredData] = useState({
+    organization: {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'Triviaah',
+      url: 'https://triviaah.com',
+      description: 'Free daily trivia quizzes and challenges across multiple categories including general knowledge, history, entertainment, and more.',
+      logo: 'https://triviaah.com/logo.png',
+      sameAs: [],
+      foundingDate: '2024',
+      knowsAbout: ['Trivia', 'Quiz Games', 'General Knowledge', 'Educational Entertainment', 'History', 'Science', 'Pop Culture']
+    },
+    webpage: {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: 'Trordle - Daily Trivia Puzzle | Triviaah',
+      description: 'Guess the answer to today\'s trivia puzzle with limited attempts. Wordle-style trivia game that tests your knowledge across history, science, pop culture, and more.',
+      url: 'https://triviaah.com/brainwave/trordle',
+      dateModified: lastUpdated,
+      mainEntity: {
+        '@type': 'Game',
+        name: 'Trordle',
+        description: 'Daily trivia puzzle combining Wordle mechanics with trivia questions. Players guess answers based on attribute feedback across multiple categories.',
+        gameLocation: 'https://triviaah.com/brainwave/trordle',
+        characterAttribute: 'Trivia, General Knowledge, History, Science, Geography, Pop Culture, Educational Games'
+      }
+    },
+    faq: {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'What is Trordle?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Trordle is a daily trivia puzzle game that combines the challenge of trivia questions with the word-guessing mechanics of Wordle. Each day features a new trivia question where you need to guess the answer in 6 attempts using attribute-based feedback.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'How do I play Trordle?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Read the daily trivia question and try to guess the answer from the available options. You have 6 attempts to get it right. After each guess, you\'ll get feedback on which attributes are correct (green), partially correct (yellow), or incorrect (gray).'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'What types of trivia questions are included?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Trordle features a wide variety of trivia categories including history, science, pop culture, geography, sports, art, literature, and more. The questions are designed to be challenging but accessible to general knowledge enthusiasts.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Is Trordle educational?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes! Trordle is designed to be both fun and educational. Players learn interesting facts, historical events, scientific concepts, and cultural knowledge while playing. It\'s great for trivia lovers and anyone looking to expand their general knowledge.'
+          }
+        }
+      ]
+    }
+  });
 
   useEffect(() => {
     // Set the current date on the client side to ensure it's using client timezone
-    setCurrentDate(new Date());
+    const now = new Date();
+    setCurrentDate(now);
+    setLastUpdated(now.toISOString());
   }, []);
 
   useEffect(() => {
@@ -39,6 +112,16 @@ export default function TrordlePage() {
         }
         
         setTrordleData(data);
+
+        // Update structured data with today's puzzle info
+        setStructuredData(prev => ({
+          ...prev,
+          webpage: {
+            ...prev.webpage,
+            dateModified: new Date().toISOString()
+          }
+        }));
+        
       } catch (err) {
         console.error('Error fetching daily trordle:', err);
         setError(err instanceof Error ? err.message : 'An error occurred while loading the puzzle');
@@ -48,376 +131,372 @@ export default function TrordlePage() {
     };
 
     fetchDailyTrordle();
-  }, [currentDate]); // Depend on currentDate instead of empty array
+  }, [currentDate]);
 
-  // Show loading while waiting for client date or data
+  // Loading State
   if (isLoading || !currentDate) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-emerald-900">
+        {/* Structured Data */}
+        <Script
+          id="trordle-organization-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.organization) }}
+        />
+        <Script
+          id="trordle-webpage-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.webpage) }}
+        />
+        <Script
+          id="trordle-faq-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.faq) }}
+        />
+
         {/* Desktop Side Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
-              <Ads format="vertical" style={{ width: '300px', height: '600px' }}  closeButtonPosition="top-right" />
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
+              <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
-              <Ads format="vertical" style={{ width: '300px', height: '600px' }}  closeButtonPosition="top-left" />
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
+              <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
         )}
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <h1 className="text-3xl font-bold mb-2">Trordle</h1>
-          <p className="text-gray-600 mb-6">The trivia version of Wordle. Guess the answer in 6 tries!</p>
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-2xl">
+                <HelpCircle className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+                TRORDLE
+              </h1>
+            </div>
+            <p className="text-gray-200 text-lg">Daily Trivia Guessing Challenge</p>
           </div>
-          <p className="text-gray-500 text-sm mt-2">Loading today&apos;s puzzle...</p>
+
+          {/* Loading Card */}
+          <div className="bg-green-800/50 backdrop-blur-lg rounded-3xl border border-green-700 p-8 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <div className="w-20 h-20 border-4 border-green-400/30 border-t-green-400 rounded-full animate-spin"></div>
+                <HelpCircle className="w-10 h-10 text-green-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Loading Today&apos;s Trivia</h2>
+            <p className="text-green-200 mb-6">Preparing your knowledge challenge...</p>
+            
+            <div className="flex justify-center gap-2">
+              {[1, 2, 3].map((dot) => (
+                <div
+                  key={dot}
+                  className="w-2 h-2 bg-green-400 rounded-full animate-pulse"
+                  style={{ animationDelay: `${dot * 0.2}s` }}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Error State
   if (error || !trordleData) {
     return (
-      <div className="page-with-ads">
-        {/* Desktop Side Ads */}
+      <div className="min-h-screen bg-gradient-to-br from-green-900 to-black text-white">
+        {/* Structured Data */}
+        <Script
+          id="trordle-organization-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.organization) }}
+        />
+        <Script
+          id="trordle-webpage-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.webpage) }}
+        />
+        <Script
+          id="trordle-faq-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.faq) }}
+        />
+
+        {/* Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
-              <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right" />
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
+              <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
-              <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left" />
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
+              <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
         )}
         
-        {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <h1 className="text-3xl font-bold mb-2">Trordle</h1>
-          <p className="text-gray-600 mb-4">The trivia version of Wordle. Guess the answer in 6 tries!</p>
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-            <p className="mb-2">No puzzle available for today.</p>
-            <p className="text-sm">Please check back tomorrow or try refreshing the page!</p>
-            {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-2xl">
+                <HelpCircle className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+                TRORDLE
+              </h1>
+            </div>
+            <p className="text-gray-300 text-lg">Daily Trivia Guessing Challenge</p>
           </div>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-          >
-            Refresh Page
-          </button>
+
+          {/* Error Card */}
+          <div className="bg-green-500/10 backdrop-blur-lg rounded-3xl border border-green-500/30 p-8 text-center">
+            <div className="w-16 h-16 bg-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold">!</span>
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Challenge Unavailable</h2>
+            <p className="text-green-200 mb-6">We couldn&apos;t load today&apos;s trivia puzzle.</p>
+            
+            <div className="bg-green-500/20 border border-green-500/30 rounded-2xl p-4 mb-6">
+              <p className="text-green-300 text-sm">{error || 'No puzzle available for today'}</p>
+            </div>
+            
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-3 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Main Game State
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br from-green-900 to-black text-white">
+      {/* Structured Data */}
+      <Script
+        id="trordle-organization-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.organization) }}
+      />
+      <Script
+        id="trordle-webpage-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.webpage) }}
+      />
+      <Script
+        id="trordle-faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.faq) }}
+      />
+
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
-            <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right" />
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
+            <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
-            <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left" />
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
+            <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
       )}
       
       {/* Mobile Bottom Ad */}
       {showMobileAd && (
-          <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+        <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} className="lg:hidden" />
       )}
-      
-      {/* Structured Data for SEO */}
-      <StructuredData />
       
       {/* Ad Controls */}
       {showAds && (
-        <div className="fixed top-4 right-4 z-60 flex gap-2">
+        <div className="fixed top-4 right-4 z-50 flex gap-2">
           <button
             onClick={() => setShowDesktopAds(!showDesktopAds)}
-            className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded hidden lg:block"
+            className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm hidden lg:block transition-all duration-300"
           >
-            {showDesktopAds ? 'Hide Side Ads' : 'Show Side Ads'}
+            {showDesktopAds ? 'Hide Ads' : 'Show Ads'}
           </button>
           <button
             onClick={() => setShowMobileAd(!showMobileAd)}
-            className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded lg:hidden"
+            className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm lg:hidden transition-all duration-300"
           >
-            {showMobileAd ? 'Hide Bottom Ad' : 'Show Bottom Ad'}
+            {showMobileAd ? 'Hide Ad' : 'Show Ad'}
           </button>
         </div>
       )}
-      
-      <div className="max-w-2xl mx-auto p-4">
-        <h1 className="text-3xl font-bold text-center mb-2">﹖ Trordle - The Daily Trivia Game</h1>
-        <div className="fixed right-8 z-50" style={{ top: '6rem' }}>
+
+      <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 relative z-30">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-2xl shadow-lg">
+                <HelpCircle className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+                TRORDLE
+              </h1>
+            </div>
+            
+            <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-lg px-4 py-2 rounded-2xl border border-gray-700">
+              <Clock className="w-4 h-4 text-green-400" />
+              <time 
+                dateTime={lastUpdated} 
+                className="text-green-400 text-sm font-medium"
+              >
+                Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </time>
+            </div>
+          </div>
+          
+          <p className="text-gray-300 text-lg mb-2">Guess the trivia answer from 5 attributes in 6 attempts</p>
+          
+          {/* Stats Bar */}
+          <div className="flex justify-center gap-6 mb-8">
+            <div className="flex items-center gap-2 text-gray-400">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              <span className="text-sm">Daily Challenge</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Users className="w-5 h-5 text-blue-500" />
+              <span className="text-sm">Trivia Enthusiasts</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Target className="w-5 h-5 text-green-500" />
+              <span className="text-sm">6 Attempts</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Brain className="w-5 h-5 text-purple-500" />
+              <span className="text-sm">5 Attributes</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Mute Button */}
+        <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
-        <p className="text-gray-600 text-center mb-6">The trivia version of Wordle. Guess the answer in 6 tries!</p>
         
-        {/* Last Updated Date */}
-        <div className="text-center mb-6">
-          <p className="text-sm text-gray-500">
-            Last updated: {currentDate.toLocaleDateString('en-US', { 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </p>
+        {/* Game Component */}
+        {trordleData && <TrordleComponent initialData={trordleData} />}
+
+        {/* Enhanced FAQ Section */}
+        <div className="mt-8 bg-gray-800/30 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 relative z-10">
+          <details className="group">
+            <summary className="flex justify-between items-center cursor-pointer list-none p-4 hover:bg-gray-700/30 rounded-2xl transition-all duration-300">
+              <h2 className="text-xl font-bold text-white">Game Guide & FAQ</h2>
+              <span className="text-green-400 group-open:rotate-180 transition-transform duration-300 text-2xl">
+                ▼
+              </span>
+            </summary>
+            <div className="mt-4 space-y-6 pt-6 border-t border-gray-700">
+              <div className="grid gap-4">
+                {[
+                  {
+                    question: "What is Trordle?",
+                    answer: "Trordle is a daily trivia puzzle game that combines the challenge of trivia questions with the attribute-guessing mechanics of Wordle. Each day features a new trivia question where you need to guess the answer in 6 attempts using feedback across 5 different attributes."
+                  },
+                  {
+                    question: "How do I play Trordle?",
+                    answer: "Read the daily trivia question and try to guess the answer from the available options. You have 6 attempts to get it right. After each guess, you'll get feedback on which attributes are correct (green), partially correct (yellow), or incorrect (gray). Use this feedback to narrow down your choices."
+                  },
+                  {
+                    question: "What types of trivia questions are included?",
+                    answer: "Trordle features a wide variety of trivia categories including history, science, pop culture, geography, sports, art, literature, music, and more. The questions are designed to be challenging but accessible to general knowledge enthusiasts of all levels."
+                  },
+                  {
+                    question: "What do the attribute colors mean?",
+                    answer: "🟩 Green: This attribute is exactly correct • 🟨 Yellow: This attribute is partially correct or related • ⬜ Gray: This attribute is incorrect. Use these clues to eliminate options and make educated guesses."
+                  },
+                  {
+                    question: "Is Trordle educational?",
+                    answer: "Yes! Trordle is designed to be both fun and educational. Players learn interesting facts, historical events, scientific concepts, cultural knowledge, and more while playing. It's great for trivia lovers, students, and anyone looking to expand their general knowledge in an engaging way."
+                  },
+                  {
+                    question: "Is Trordle free to play?",
+                    answer: "Yes! Trordle is completely free to play with no registration required. New trivia puzzles are available every day at midnight local time. Perfect for daily mental exercise and learning new facts."
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="bg-gray-700/30 rounded-2xl p-4">
+                    <h3 className="font-semibold text-green-400 mb-2">{faq.question}</h3>
+                    <p className="text-gray-300">{faq.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </details>
         </div>
-        
-        <TrordleComponent initialData={trordleData} />
-        
-        {/* FAQ Section */}
-        <div className="mt-12 max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="font-semibold text-lg mb-2">What is Trordle?</h3>
-              <p className="text-gray-700">
-                Trordle is a daily trivia puzzle game that combines the challenge of trivia questions with the word-guessing 
-                mechanics of Wordle. Each day features a new trivia question where you need to guess the answer in 6 attempts.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="font-semibold text-lg mb-2">How do I play Trordle?</h3>
-              <p className="text-gray-700">
-                Read the daily trivia question and try to guess the answer. You have 6 attempts to get it right. 
-                After each guess, you&apos;ll get feedback on which letters are correct and in the right position (green), 
-                correct but in the wrong position (yellow), or not in the word at all (gray).
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="font-semibold text-lg mb-2">What types of trivia questions are included?</h3>
-              <p className="text-gray-700">
-                Trordle features a wide variety of trivia categories including history, science, pop culture, geography, 
-                sports, and more. The questions are designed to be challenging but accessible to general knowledge enthusiasts.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="font-semibold text-lg mb-2">Is there a new puzzle every day?</h3>
-              <p className="text-gray-700">
-                Yes! Trordle features a new trivia question and answer every day. Come back daily to test your knowledge 
-                and keep your trivia skills sharp.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="font-semibold text-lg mb-2">What if I can&apos;t guess the answer in 6 tries?</h3>
-              <p className="text-gray-700">
-                If you use all 6 attempts without guessing the correct answer, the game will reveal the solution. 
-                You can then learn from it and come back tomorrow for a new challenge!
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="font-semibold text-lg mb-2">Is Trordle free to play?</h3>
-              <p className="text-gray-700">
-                Absolutely! Trordle is completely free to play. No subscriptions, no payments - just daily trivia fun 
-                to challenge your knowledge.
-              </p>
-            </div>
+
+        {/* Hidden SEO Content */}
+        <div className="sr-only" aria-hidden="false">
+          <div itemScope itemType="https://schema.org/Game">
+            <meta itemProp="dateModified" content={lastUpdated} />
+            <h2>Trordle - Daily Trivia Guessing Game</h2>
+            <p itemProp="description">
+              Test your general knowledge with Trordle, a daily puzzle game where you guess trivia 
+              answers based on attribute feedback across multiple categories. Educational and fun 
+              for trivia enthusiasts of all ages. Perfect for history buffs, science lovers, pop 
+              culture fans, and anyone interested in learning fascinating facts through engaging gameplay.
+            </p>
+            <h3>How to Play Trordle:</h3>
+            <ul>
+              <li>Guess the trivia answer in 6 attempts</li>
+              <li>Get attribute feedback for each guess</li>
+              <li>Use progressive hints that unlock with each attempt</li>
+              <li>Learn interesting facts across multiple categories</li>
+              <li>New trivia puzzle every day</li>
+              <li>Completely free with no registration required</li>
+              <li>Educational and entertaining for all ages</li>
+            </ul>
+            <h3>Game Features:</h3>
+            <ul>
+              <li>Daily trivia challenges across diverse categories</li>
+              <li>Attribute-based feedback system</li>
+              <li>Progressive hint system</li>
+              <li>Comprehensive trivia database</li>
+              <li>Mobile-friendly design</li>
+              <li>No time pressure - play at your own pace</li>
+              <li>Learn fascinating facts and historical events</li>
+            </ul>
+            <h3>Educational Benefits:</h3>
+            <ul>
+              <li>Expand general knowledge across multiple subjects</li>
+              <li>Learn historical events and timelines</li>
+              <li>Understand scientific concepts and discoveries</li>
+              <li>Discover cultural and geographical facts</li>
+              <li>Improve critical thinking and deduction skills</li>
+              <li>Enhance memory and recall abilities</li>
+            </ul>
+            <p><strong>Perfect for:</strong> Trivia enthusiasts, students, educators, history buffs, 
+               science lovers, and anyone wanting to expand their knowledge in an engaging, interactive way.</p>
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-// Structured Data Component for SEO
-function StructuredData() {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://triviaah.com/#organization",
-        "name": "Triviaah",
-        "url": "https://triviaah.com/",
-        "description": "Triviaah offers engaging and educational trivia games and puzzles for everyone.",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://triviaah.com/logo.png",
-          "width": 200,
-          "height": 60
-        },
-        "sameAs": [
-          "https://twitter.com/elitetrivias",
-          "https://www.facebook.com/elitetrivias",
-          "https://www.instagram.com/elitetrivias"
-        ]
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://triviaah.com/brainwave/trordle/#webpage",
-        "url": "https://triviaah.com/brainwave/trordle",
-        "name": "Trordle - Daily Trivia Puzzle | Triviaah",
-        "description": "Guess the answer to today's trivia puzzle with limited attempts, similar to Wordle but with trivia questions.",
-        "isPartOf": {
-          "@id": "https://triviaah.com/#website"
-        },
-        "about": {
-          "@id": "https://triviaah.com/brainwave/trordle/#game"
-        },
-        "datePublished": "2024-01-01T00:00:00+00:00",
-        "dateModified": new Date().toISOString(),
-        "breadcrumb": {
-          "@id": "https://triviaah.com/brainwave/trordle/#breadcrumb"
-        },
-        "potentialAction": [
-          {
-            "@type": "PlayAction",
-            "target": "https://triviaah.com/brainwave/trordle"
-          }
-        ]
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://triviaah.com/#website",
-        "url": "https://triviaah.com/",
-        "name": "Triviaah",
-        "description": "Engaging trivia games and puzzles for everyone",
-        "publisher": {
-          "@id": "https://triviaah.com/#organization"
-        },
-        "potentialAction": [
-          {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": "https://triviaah.com/search?q={search_term_string}"
-            },
-            "query-input": "required name=search_term_string"
-          }
-        ]
-      },
-      {
-        "@type": "Game",
-        "@id": "https://triviaah.com/brainwave/trordle/#game",
-        "name": "Trordle",
-        "description": "Daily trivia puzzle combining Wordle mechanics with trivia questions",
-        "url": "https://triviaah.com/brainwave/trordle",
-        "applicationCategory": "Game",
-        "gameType": "PuzzleGame,TriviaGame",
-        "genre": ["puzzle", "trivia", "educational", "word game"],
-        "numberOfPlayers": {
-          "@type": "QuantitativeValue",
-          "minValue": 1
-        },
-        "publisher": {
-          "@id": "https://triviaah.com/#organization"
-        },
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "operatingSystem": "Any",
-        "author": {
-          "@id": "https://triviaah.com/#organization"
-        }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://triviaah.com/brainwave/trordle/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://triviaah.com"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Brainwave",
-            "item": "https://triviaah.com/brainwave"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Trordle",
-            "item": "https://triviaah.com/brainwave/trordle"
-          }
-        ]
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is Trordle?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Trordle is a daily trivia puzzle game that combines the challenge of trivia questions with the word-guessing mechanics of Wordle. Each day features a new trivia question where you need to guess the answer in 6 attempts."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I play Trordle?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Read the daily trivia question and try to guess the answer. You have 6 attempts to get it right. After each guess, you'll get feedback on which letters are correct and in the right position (green), correct but in the wrong position (yellow), or not in the word at all (gray)."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What types of trivia questions are included?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Trordle features a wide variety of trivia categories including history, science, pop culture, geography, sports, and more. The questions are designed to be challenging but accessible to general knowledge enthusiasts."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is there a new puzzle every day?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes! Trordle features a new trivia question and answer every day. Come back daily to test your knowledge and keep your trivia skills sharp."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What if I can't guess the answer in 6 tries?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "If you use all 6 attempts without guessing the correct answer, the game will reveal the solution. You can then learn from it and come back tomorrow for a new challenge!"
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Trordle free to play?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Absolutely! Trordle is completely free to play. No subscriptions, no payments - just daily trivia fun to challenge your knowledge."
-            }
-          }
-        ]
-      }
-    ]
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
   );
 }

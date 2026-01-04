@@ -17,10 +17,10 @@ export default function AdLayoutClient({ children }: AdLayoutClientProps) {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>

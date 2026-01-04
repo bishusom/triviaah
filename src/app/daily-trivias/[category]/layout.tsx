@@ -79,7 +79,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
       type: 'website',
       url: `https://triviaah.com/daily/${category}`,
       images: [{
-        url: `/imgs/${category}-160x160.webp`,
+        url: `/imgs/daily-trivias/${category}.webp`,
         width: 1200,
         height: 630,
         alt: `${metadata.name} Daily Quiz`,
@@ -100,7 +100,7 @@ export default async function DailyLayout({ children }: Props) {
   // const category = resolvedParams.category;
   
   return (
-    <div className={`${inter.className} bg-gray-50`}>
+    <div className={`${inter.className} bg-gradient-to-b from-gray-900 to-gray-800`}>
       <div className="no-ads-page">
         <main className="min-h-screen p-4 md:p-8">
           <div className="fixed right-4 z-50" style={{ top: '6rem' }}>

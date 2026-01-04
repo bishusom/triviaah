@@ -39,7 +39,7 @@ const FlagBlock = ({
 
   return (
     <div
-      className="absolute bg-black"
+      className="absolute bg-gray-900"
       style={{
         left: `${left}%`,
         top: `${top}%`,
@@ -50,7 +50,7 @@ const FlagBlock = ({
   );
 };
 
-// Progressive hints component with dots navigation (UPDATED: New hint timing)
+// Progressive hints component with dots navigation
 const ProgressiveHints = ({ 
   puzzleData, 
   attempts 
@@ -61,18 +61,16 @@ const ProgressiveHints = ({
   const [activeHintIndex, setActiveHintIndex] = useState(0);
   const hintsScrollRef = useRef<HTMLDivElement>(null);
   
-  // Now we have 6 hints total (with new timing)
   const hintsRevealed = Math.min(attempts.length, 6);
   
-  // Define hints in order of revelation - UPDATED TIMING
   const hintItems = [
     attempts.length >= 1 && (
       <div key="continent-map" className="flex-none w-full">
-        <div className="text-sm mb-2">
-          🌍 Continent: <strong>{puzzleData.continent}</strong>
+        <div className="text-sm mb-2 text-gray-200">
+          🌍 Continent: <strong className="text-red-300">{puzzleData.continent}</strong>
         </div>
         {puzzleData.mapSilhouette && (
-          <div className="relative h-32 w-full bg-gray-100 rounded mt-2">
+          <div className="relative h-32 w-full bg-gray-800 rounded mt-2">
             <Image
               src={puzzleData.mapSilhouette}
               alt="Country outline"
@@ -84,50 +82,50 @@ const ProgressiveHints = ({
       </div>
     ),
     attempts.length >= 2 && (
-      <div key="coordinates" className="flex-none w-full text-sm">
-        📍 Coordinates: <strong>{puzzleData.latitude.toFixed(2)}°N, {puzzleData.longitude.toFixed(2)}°E</strong>
-        <div className="text-xs text-gray-600 mt-1">
+      <div key="coordinates" className="flex-none w-full text-sm text-gray-200">
+        📍 Coordinates: <strong className="text-red-300">{puzzleData.latitude.toFixed(2)}°N, {puzzleData.longitude.toFixed(2)}°E</strong>
+        <div className="text-xs text-gray-400 mt-1">
           Timezone: {puzzleData.timezone}
         </div>
       </div>
     ),
     attempts.length >= 3 && (
       <div key="stats" className="flex-none w-full">
-        <div className="text-sm mb-2">
+        <div className="text-sm mb-2 text-gray-200">
           📊 Statistics:
         </div>
-        <div className="grid grid-cols-2 gap-1 text-xs">
-          <div>Population: <strong>{(puzzleData.population / 1000000).toFixed(1)}M</strong></div>
-          <div>Area: <strong>{(puzzleData.areaKm2 / 1000000).toFixed(1)}M km²</strong></div>
-          <div>Driving side: <strong>{puzzleData.drivingSide}</strong></div>
-          <div>Currency: <strong>{puzzleData.currency}</strong></div>
+        <div className="grid grid-cols-2 gap-1 text-xs text-gray-300">
+          <div>Population: <strong className="text-red-300">{(puzzleData.population / 1000000).toFixed(1)}M</strong></div>
+          <div>Area: <strong className="text-red-300">{(puzzleData.areaKm2 / 1000000).toFixed(1)}M km²</strong></div>
+          <div>Driving side: <strong className="text-red-300">{puzzleData.drivingSide}</strong></div>
+          <div>Currency: <strong className="text-red-300">{puzzleData.currency}</strong></div>
         </div>
       </div>
     ),
     attempts.length >= 4 && (
-      <div key="capital" className="flex-none w-full text-sm">
-        🏛️ Capital: <strong>{puzzleData.capital}</strong>
+      <div key="capital" className="flex-none w-full text-sm text-gray-200">
+        🏛️ Capital: <strong className="text-red-300">{puzzleData.capital}</strong>
         {puzzleData.languages.length > 0 && (
           <div className="mt-1">
-            Languages: <strong>{puzzleData.languages.slice(0, 2).join(', ')}</strong>
+            Languages: <strong className="text-red-300">{puzzleData.languages.slice(0, 2).join(', ')}</strong>
           </div>
         )}
       </div>
     ),
     attempts.length >= 5 && (
-      <div key="table-hint" className="flex-none w-full text-sm">
+      <div key="table-hint" className="flex-none w-full text-sm text-gray-200">
         🔍 Extra Hint:
-        <div className="mt-1 text-xs bg-gray-50 p-2 rounded">
+        <div className="mt-1 text-xs bg-gray-800 p-2 rounded">
           {puzzleData.hint}
         </div>
       </div>
     ),
     attempts.length >= 6 && (
-      <div key="final-hint" className="flex-none w-full text-sm">
+      <div key="final-hint" className="flex-none w-full text-sm text-gray-200">
         ⚡ Final Hint:
-        <div className="mt-1 text-xs bg-yellow-50 p-2 rounded border border-yellow-200">
-          <strong>Think about:</strong>
-          <ul className="list-disc list-inside mt-1">
+        <div className="mt-1 text-xs bg-amber-900/30 p-2 rounded border border-amber-700">
+          <strong className="text-amber-300">Think about:</strong>
+          <ul className="list-disc list-inside mt-1 text-amber-200">
             <li>Letter positions from previous guesses</li>
             <li>Geographic location based on coordinates</li>
             <li>Country size relative to the continent</li>
@@ -162,8 +160,8 @@ const ProgressiveHints = ({
   if (attempts.length === 0) return null;
 
   return (
-    <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-      <h4 className="font-semibold text-green-800 mb-2">
+    <div className="bg-gray-800/50 border border-red-800/50 rounded-lg p-4 mb-4">
+      <h4 className="font-semibold text-red-300 mb-2">
         💡 Hints Revealed ({hintsRevealed}/6):
       </h4>
       <div className="relative overflow-hidden">
@@ -185,7 +183,7 @@ const ProgressiveHints = ({
                 key={index}
                 onClick={() => setActiveHintIndex(index)}
                 className={`w-2 h-2 rounded-full ${
-                  index === activeHintIndex ? 'bg-green-600' : 'bg-gray-300'
+                  index === activeHintIndex ? 'bg-red-500' : 'bg-gray-600'
                 }`}
                 aria-label={`Go to hint ${index + 1}`}
               />
@@ -193,14 +191,14 @@ const ProgressiveHints = ({
           </div>
         )}
       </div>
-      <p className="text-xs text-green-600 mt-2">
+      <p className="text-xs text-red-400 mt-2">
         Flag image reveals {Math.min(attempts.length * 15, 75)}% — Use it to help guess!
       </p>
     </div>
   );
 };
 
-// Progressive feedback component (UPDATED: New timing and messages)
+// Progressive feedback component
 const ProgressiveFeedback = ({ attempts }: { 
   attempts: CountryGuessResult[]; 
 }) => {
@@ -214,32 +212,32 @@ const ProgressiveFeedback = ({ attempts }: {
     {
       icon: "🌍",
       text: `Great start! You know the continent and can see the map outline.`,
-      color: "bg-green-100 border-green-400 text-green-700"
+      color: "bg-emerald-900/30 border-emerald-700 text-emerald-200"
     },
     {
       icon: "📍",
       text: `Coordinates and timezone revealed! ${presentLetters} letters are in the name but misplaced.`,
-      color: "bg-yellow-100 border-yellow-400 text-yellow-700"
+      color: "bg-amber-900/30 border-amber-700 text-amber-200"
     },
     {
       icon: "📊",
       text: "Statistics are now available. Use population, area, and other data to narrow it down.",
-      color: "bg-blue-100 border-blue-400 text-blue-700"
+      color: "bg-blue-900/30 border-blue-700 text-blue-200"
     },
     {
       icon: "🏛️",
       text: "Capital and languages revealed! This should help identify the country.",
-      color: "bg-red-100 border-red-400 text-red-700"
+      color: "bg-red-900/30 border-red-700 text-red-200"
     },
     {
       icon: "🔍",
       text: "Extra hint from our database! Combine all clues for the final guess.",
-      color: "bg-purple-100 border-purple-400 text-purple-700"
+      color: "bg-purple-900/30 border-purple-700 text-purple-200"
     },
     {
       icon: "⚡",
       text: "Final attempt! Use all revealed information strategically.",
-      color: "bg-orange-100 border-orange-400 text-orange-700"
+      color: "bg-orange-900/30 border-orange-700 text-orange-200"
     }
   ];
   
@@ -258,8 +256,8 @@ const ProgressiveFeedback = ({ attempts }: {
             <div
               key={i}
               className={`h-1 flex-1 rounded ${
-                letter.status === 'correct' ? 'bg-green-500' :
-                letter.status === 'present' ? 'bg-yellow-500' : 'bg-gray-300'
+                letter.status === 'correct' ? 'bg-emerald-500' :
+                letter.status === 'present' ? 'bg-amber-500' : 'bg-gray-600'
               }`}
             />
           ))}
@@ -603,7 +601,7 @@ export default function CountridleComponent({ initialData, allCountries }: count
   };
 
   const triesLeft = 6 - attempts.length;
-  const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
+  const triesLeftColor = triesLeft >= 4 ? 'text-emerald-400' : triesLeft >= 2 ? 'text-amber-400' : 'text-red-400';
 
   // Generate block grid
   const blockGrid: { x: number; y: number }[] = [];
@@ -621,16 +619,16 @@ export default function CountridleComponent({ initialData, allCountries }: count
   const showImage = puzzleData.flagUrl && !imageLoading && !imageError;
 
   return (
-    <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
+     <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5 mb-5">
       <canvas 
         ref={confettiCanvasRef} 
         className="fixed top-0 left-0 w-full h-full pointer-events-none z-50"
       />
       
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 flex-grow">
+      <div className="bg-green-800 rounded-lg shadow-lg p-4 md:p-6 mb-6 flex-grow border border-gray-700">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg md:text-xl font-semibold text-gray-800">
+          <h2 className="text-lg md:text-xl font-semibold text-gray-100">
             Guess the country from the clues!
           </h2>
           <div className={`text-base font-bold ${triesLeftColor}`}>
@@ -641,13 +639,13 @@ export default function CountridleComponent({ initialData, allCountries }: count
         {/* Flag Container */}
         <div className="flex justify-center mb-6">
           <div 
-            className="relative rounded-lg overflow-hidden bg-gradient-to-br from-green-100 to-gray-200" 
+            className="relative rounded-lg overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900" 
             style={{ height: `${containerHeight}px`, width: `${containerWidth}px`, maxWidth: '100%' }}
           >
             {showImageLoader && (
               <div className="absolute inset-0 flex items-center justify-center z-10">
-                <div className="text-gray-600 flex flex-col items-center">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-500 mb-1"></div>
+                <div className="text-gray-400 flex flex-col items-center">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-500 mb-1"></div>
                   <span className="text-xs">Loading flag...</span>
                 </div>
               </div>
@@ -655,7 +653,7 @@ export default function CountridleComponent({ initialData, allCountries }: count
             
             {showImageError && (
               <div className="absolute inset-0 flex items-center justify-center z-10">
-                <div className="text-gray-600 flex flex-col items-center text-center p-2">
+                <div className="text-gray-400 flex flex-col items-center text-center p-2">
                   <span className="text-2xl mb-2">🏴</span>
                   <span className="text-xs">No flag available</span>
                 </div>
@@ -687,7 +685,7 @@ export default function CountridleComponent({ initialData, allCountries }: count
                 {/* Center "?" overlay for completely hidden flag */}
                 {revealPercentage === 0 && (
                   <div className="absolute inset-0 flex items-center justify-center z-30">
-                    <span className="text-white text-2xl font-bold bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center">?</span>
+                    <span className="text-white text-2xl font-bold bg-black bg-opacity-70 rounded-full w-8 h-8 flex items-center justify-center">?</span>
                   </div>
                 )}
                 
@@ -702,7 +700,7 @@ export default function CountridleComponent({ initialData, allCountries }: count
 
         {/* Error message */}
         {errorMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-red-900/30 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
             {errorMessage}
           </div>
         )}
@@ -712,47 +710,47 @@ export default function CountridleComponent({ initialData, allCountries }: count
           <ProgressiveFeedback attempts={attempts} />
         )}
         
-        {/* Progressive hints with dots navigation - UPDATED: Now shows 6 hints */}
+        {/* Progressive hints with dots navigation */}
         {gameState === 'playing' && attempts.length > 0 && (
           <ProgressiveHints puzzleData={puzzleData} attempts={attempts} />
         )}
         
         {/* Game result message */}
         {gameState === 'won' && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          <div className="bg-emerald-900/30 border border-emerald-700 text-emerald-200 px-4 py-3 rounded mb-4">
             <h3 className="font-bold text-lg mb-2">Congratulations! 🎉</h3>
             <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
-            <p className="mt-2">The country was: <strong>{puzzleData.answer.toUpperCase()}</strong></p>
-            <p className="mt-1 text-sm">Capital: {puzzleData.capital} | Continent: {puzzleData.continent}</p>
+            <p className="mt-2">The country was: <strong className="text-emerald-300">{puzzleData.answer.toUpperCase()}</strong></p>
+            <p className="mt-1 text-sm text-emerald-100">Capital: {puzzleData.capital} | Continent: {puzzleData.continent}</p>
           </div>
         )}
         
         {gameState === 'lost' && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-red-900/30 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
             <h3 className="font-bold text-lg mb-2">Game Over</h3>
-            <p>The country was: <strong>{puzzleData.answer.toUpperCase()}</strong></p>
-            <p className="mt-1 text-sm">Capital: {puzzleData.capital} | Continent: {puzzleData.continent}</p>
+            <p>The country was: <strong className="text-red-300">{puzzleData.answer.toUpperCase()}</strong></p>
+            <p className="mt-1 text-sm text-red-100">Capital: {puzzleData.capital} | Continent: {puzzleData.continent}</p>
           </div>
         )}
         
         {/* Previous attempts grid (Wordle-style) */}
         {attempts.length > 0 && (
           <div className="mb-6">
-            <h3 className="font-semibold mb-3">Your Guesses:</h3>
+            <h3 className="font-semibold mb-3 text-gray-200">Your Guesses:</h3>
             <div className="space-y-3">
               {attempts.map((attempt, attemptIndex) => (
-                <div key={attemptIndex} className="bg-gray-50 rounded-lg p-3">
+                <div key={attemptIndex} className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium text-sm">{attempt.guess}</span>
-                    <span className="text-xs text-gray-500">
+                    <span className="font-medium text-sm text-gray-200">{attempt.guess}</span>
+                    <span className="text-xs text-gray-400">
                       Attempt {attemptIndex + 1}
                     </span>
                   </div>
                   <div className="flex flex-wrap justify-center gap-1">
                     {attempt.letterFeedback?.map((letter, letterIndex) => {
-                      const bgColor = letter.status === 'correct' ? 'bg-green-500' : 
-                                    letter.status === 'present' ? 'bg-yellow-500' : 'bg-gray-300';
-                      const textColor = letter.status === 'absent' ? 'text-gray-700' : 'text-white';
+                      const bgColor = letter.status === 'correct' ? 'bg-emerald-600' : 
+                                    letter.status === 'present' ? 'bg-amber-500' : 'bg-gray-700';
+                      const textColor = letter.status === 'absent' ? 'text-gray-300' : 'text-white';
                       
                       return (
                         <div 
@@ -772,7 +770,7 @@ export default function CountridleComponent({ initialData, allCountries }: count
         
         {/* Input for guesses with autocomplete */}
         {gameState === 'playing' && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 -mx-4 md:-mx-6 -mb-4 md:-mb-6">
+          <div className="sticky bottom-0 bg-gray-800 border-t border-gray-700 p-4 -mx-4 md:-mx-6 -mb-4 md:-mb-6">
             <div className="relative">
               <div className="flex gap-2">
                 <input
@@ -783,13 +781,13 @@ export default function CountridleComponent({ initialData, allCountries }: count
                   onKeyDown={handleKeyDown}
                   onFocus={() => guess.length >= 2 && setShowSuggestions(true)}
                   placeholder="Enter country name (type 2+ letters)"
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-100 placeholder-gray-400"
                   onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
                 />
                 <button
                   onClick={() => handleGuess()}
                   disabled={!guess.trim()}
-                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-red-700 text-white rounded-md hover:bg-red-600 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
                 >
                   Guess
                 </button>
@@ -799,7 +797,7 @@ export default function CountridleComponent({ initialData, allCountries }: count
               {showSuggestions && suggestions.length > 0 && (
                 <div 
                   ref={suggestionsRef}
-                  className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg z-20 mt-1 max-h-60 overflow-y-auto"
+                  className="absolute top-full left-0 right-0 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-20 mt-1 max-h-60 overflow-y-auto"
                 >
                   {suggestions.map((country, index) => (
                     <button
@@ -811,12 +809,12 @@ export default function CountridleComponent({ initialData, allCountries }: count
                         // Auto-submit after short delay
                         setTimeout(() => handleGuess(country.name), 100);
                       }}
-                      className={`w-full text-left px-4 py-2 hover:bg-green-50 focus:bg-green-50 focus:outline-none ${
-                        index === selectedSuggestionIndex ? 'bg-green-100' : ''
-                      } ${index > 0 ? 'border-t border-gray-100' : ''}`}
+                      className={`w-full text-left px-4 py-2 hover:bg-gray-700 focus:bg-gray-700 focus:outline-none ${
+                        index === selectedSuggestionIndex ? 'bg-gray-700' : ''
+                      } ${index > 0 ? 'border-t border-gray-700' : ''}`}
                     >
-                      <div className="font-medium">{country.name}</div>
-                      <div className="text-sm text-gray-600">
+                      <div className="font-medium text-gray-200">{country.name}</div>
+                      <div className="text-sm text-gray-400">
                         {country.capital} • {country.continent}
                       </div>
                     </button>
@@ -824,7 +822,7 @@ export default function CountridleComponent({ initialData, allCountries }: count
                 </div>
               )}
             </div>
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-xs text-gray-400 mt-1">
               Start typing for autocomplete suggestions (minimum 2 characters)
             </div>
           </div>
@@ -835,12 +833,12 @@ export default function CountridleComponent({ initialData, allCountries }: count
           <div className="flex flex-col items-center mt-4">
             <button
               onClick={copyToClipboard}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              className="flex items-center gap-2 px-4 py-2 bg-red-700 text-white rounded-md hover:bg-red-600 transition-colors"
             >
               <MdShare /> Share Result
             </button>
             {shareMessage && (
-              <div className="mt-2 text-green-600">{shareMessage}</div>
+              <div className="mt-2 text-red-300">{shareMessage}</div>
             )}
 
             <FeedbackComponent
@@ -858,18 +856,18 @@ export default function CountridleComponent({ initialData, allCountries }: count
         )}
       </div>
 
-      {/* How to Play section - UPDATED */}
-      <div className="bg-gray-100 rounded-lg p-4 mt-6">
-        <h3 className="font-bold mb-2">How to Play countridle:</h3>
-        <ul className="list-disc list-inside space-y-1 text-sm">
+      {/* How to Play section */}
+      <div className="bg-gray-800/50 rounded-lg p-4 mt-6 border border-gray-700">
+        <h3 className="font-bold mb-2 text-gray-200">How to Play countridle:</h3>
+        <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
           <li>Guess the country by entering its name</li>
           <li>Get letter-by-letter feedback compared to the answer</li>
-          <li>🟩 Green: Letter in correct position</li>
-          <li>🟨 Yellow: Letter is in the name but wrong position</li>
-          <li>⬜ Gray: Letter not in the name</li>
+          <li className="text-emerald-400">🟩 Green: Letter in correct position</li>
+          <li className="text-amber-400">🟨 Yellow: Letter is in the name but wrong position</li>
+          <li className="text-gray-400">⬜ Gray: Letter not in the name</li>
           <li>The flag image becomes clearer with each attempt (15% per guess)</li>
           <li>New hints unlock with each wrong guess:</li>
-          <ol className="list-decimal list-inside ml-4 mt-1 space-y-1">
+          <ol className="list-decimal list-inside ml-4 mt-1 space-y-1 text-gray-300">
             <li>Continent & Map outline (after 1 attempt)</li>
             <li>Coordinates & timezone (after 2 attempts)</li>
             <li>Statistics: population, area, driving side, currency (after 3 attempts)</li>

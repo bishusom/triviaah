@@ -1,4 +1,4 @@
-// app/countridle/page.tsx
+// app/countridle/page.tsx - REDESIGNED
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,6 +7,7 @@ import CountridleComponent from '@/components/brainwave/CountridleComponent';
 import { getDailyCountry, CountryPuzzle, CountryInfo } from '@/lib/brainwave/countridle/countridle-sb';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { Trophy, Globe, Target, Users, Clock, Flag, Map, Compass } from 'lucide-react';
 
 export default function CountridlePage() {
   const [dailyData, setDailyData] = useState<{ puzzle: CountryPuzzle | null, allCountries: CountryInfo[] } | null>(null);
@@ -139,10 +140,10 @@ export default function CountridlePage() {
     fetchDailyCountry();
   }, [currentDate]);
 
-  // Show loading while waiting for client date or data
+  // Loading State
   if (isLoading || !currentDate || !dailyData || !dailyData.puzzle) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900">
         {/* Structured Data */}
         <Script
           id="countridle-organization-schema"
@@ -163,10 +164,10 @@ export default function CountridlePage() {
         {/* Desktop Side Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
@@ -174,52 +175,43 @@ export default function CountridlePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-           <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+           <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold mb-2">🌍 countridle - Daily Country Game</h1>
-            {/* Last Updated Timestamp */}
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-green-50 px-3 py-1 rounded-full text-xs font-medium border border-green-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-emerald-400 to-green-500 p-3 rounded-2xl">
+                <Globe className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent">
+                COUNTRIDLE
+              </h1>
+            </div>
+            <p className="text-gray-300 text-lg">Daily Country Guessing Challenge</p>
           </div>
-          <p className="text-gray-600 mb-6">Guess the country in 6 tries! Daily geography puzzle with flags and maps.</p>
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-          </div>
-          <p className="text-gray-500 text-sm mt-2">Loading today&apos;s country puzzle...</p>
 
-          {/* Hidden SEO Content */}
-          <div className="sr-only" aria-hidden="false">
-            <div itemScope itemType="https://schema.org/Game">
-              <meta itemProp="dateModified" content={lastUpdated} />
-              <h2>countridle - Daily Country Guessing Game</h2>
-              <p itemProp="description">
-                Test your geography knowledge with countridle, a daily puzzle game where you guess countries using flags, maps, and geographical clues. 
-                Similar to Wordle but focused on world geography and country identification.
-              </p>
-              <h3>How to Play countridle:</h3>
-              <ul>
-                <li>Guess the target country in 6 attempts</li>
-                <li>Get progressive hints with each wrong guess</li>
-                <li>See continent information and country outlines</li>
-                <li>Flags become clearer with each wrong guess</li>
-                <li>Compare population, area, driving side, and currency</li>
-                <li>New country puzzle every day</li>
-                <li>Completely free with no registration required</li>
-              </ul>
-              <p><strong>Game Features:</strong> Daily challenges, flag recognition, map identification, 
-                 geographical coordinates, statistical comparisons, and educational content about world countries.</p>
+          {/* Loading Card */}
+          <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-8 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <div className="w-20 h-20 border-4 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin"></div>
+                <Map className="w-10 h-10 text-emerald-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Loading Today's Challenge</h2>
+            <p className="text-gray-400 mb-6">Preparing your geography puzzle with flags and maps...</p>
+            
+            <div className="flex justify-center gap-2">
+              {[1, 2, 3].map((dot) => (
+                <div
+                  key={dot}
+                  className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"
+                  style={{ animationDelay: `${dot * 0.2}s` }}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -227,9 +219,10 @@ export default function CountridlePage() {
     );
   }
 
+  // Error State
   if (error) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900">
         {/* Structured Data */}
         <Script
           id="countridle-organization-schema"
@@ -250,10 +243,10 @@ export default function CountridlePage() {
         {/* Desktop Side Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
@@ -261,43 +254,53 @@ export default function CountridlePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-           <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+           <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )} 
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold mb-2">🌍 countridle - Daily Country Game</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-green-50 px-3 py-1 rounded-full text-xs font-medium border border-green-200"
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-emerald-400 to-green-500 p-3 rounded-2xl">
+                <Globe className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent">
+                COUNTRIDLE
+              </h1>
+            </div>
+            <p className="text-gray-300 text-lg">Daily Country Guessing Challenge</p>
+          </div>
+
+          {/* Error Card */}
+          <div className="bg-red-500/10 backdrop-blur-lg rounded-3xl border border-red-500/30 p-8 text-center">
+            <div className="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold">!</span>
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Challenge Unavailable</h2>
+            <p className="text-red-200 mb-6">We couldn't load today's country puzzle.</p>
+            
+            <div className="bg-red-500/20 border border-red-500/30 rounded-2xl p-4 mb-6">
+              <p className="text-red-300 text-sm">{error}</p>
+            </div>
+            
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-semibold py-3 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105"
             >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+              Try Again
+            </button>
           </div>
-          <p className="text-gray-600 mb-4">Guess the country in 6 tries with flags and maps!</p>
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-            <p className="mb-2">No puzzle available for today.</p>
-            <p className="text-sm">Please check back tomorrow or try refreshing the page!</p>
-            <p className="text-red-500 text-sm mt-2">Error: {error}</p>
-          </div>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded transition-colors"
-          >
-            Refresh Page
-          </button>
         </div>
       </div>
     );
   }
 
+  // Main Game State
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white">
       {/* Structured Data */}
       <Script
         id="countridle-organization-schema"
@@ -318,10 +321,10 @@ export default function CountridlePage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -329,7 +332,7 @@ export default function CountridlePage() {
       
       {/* Mobile Bottom Ad */}
       {showMobileAd && (
-        <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+        <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} className="lg:hidden" />
       )}
       
       {/* Ad Controls */}
@@ -337,153 +340,143 @@ export default function CountridlePage() {
       <div className="fixed top-4 right-4 z-50 flex gap-2">
         <button
           onClick={() => setShowDesktopAds(!showDesktopAds)}
-          className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded hidden lg:block"
+          className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm hidden lg:block transition-all duration-300"
         >
-          {showDesktopAds ? 'Hide Side Ads' : 'Show Side Ads'}
+          {showDesktopAds ? 'Hide Ads' : 'Show Ads'}
         </button>
         <button
           onClick={() => setShowMobileAd(!showMobileAd)}
-          className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded lg:hidden"
+          className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm lg:hidden transition-all duration-300"
         >
-          {showMobileAd ? 'Hide Bottom Ad' : 'Show Bottom Ad'}
+          {showMobileAd ? 'Hide Ad' : 'Show Ad'}
         </button>
       </div>
       )}
 
-      <div className="max-w-2xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-6">
-          <div className="flex justify-center items-center gap-4 mb-2">
-            <h1 className="text-3xl font-bold">🌍 countridle</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-green-50 px-3 py-1 rounded-full text-xs font-medium border border-green-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+      <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 relative z-30">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-r from-emerald-400 to-green-500 p-3 rounded-2xl shadow-lg">
+                <Globe className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent">
+                COUNTRIDLE
+              </h1>
+            </div>
+            
+            <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-lg px-4 py-2 rounded-2xl border border-gray-700">
+              <Clock className="w-4 h-4 text-emerald-400" />
+              <time 
+                dateTime={lastUpdated} 
+                className="text-emerald-400 text-sm font-medium"
+              >
+                Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </time>
+            </div>
           </div>
-          <p className="text-gray-600">Guess the country in 6 tries! Daily geography puzzle with flags and maps.</p>
+          
+          <p className="text-gray-300 text-lg mb-2">Guess the country in 6 attempts with flags and maps</p>
+          
+          {/* Stats Bar */}
+          <div className="flex justify-center gap-6 mb-8">
+            <div className="flex items-center gap-2 text-gray-400">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              <span className="text-sm">Daily Challenge</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Flag className="w-5 h-5 text-red-500" />
+              <span className="text-sm">Flag Recognition</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Map className="w-5 h-5 text-blue-500" />
+              <span className="text-sm">Map Skills</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Target className="w-5 h-5 text-purple-500" />
+              <span className="text-sm">6 Attempts</span>
+            </div>
+          </div>
         </div>
 
+        {/* Mute Button */}
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
         
+        {/* Game Component */}
         <CountridleComponent 
           initialData={dailyData.puzzle} 
           allCountries={dailyData.allCountries}
         />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800/30 backdrop-blur-lg rounded-3xl border border-gray-700 p-6">
           <details className="group">
-            <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">countridle Game Information & FAQ</h2>
-              <span className="text-gray-500 group-open:rotate-180 transition-transform">
+            <summary className="flex justify-between items-center cursor-pointer list-none p-4 hover:bg-gray-700/30 rounded-2xl transition-all duration-300">
+              <h2 className="text-xl font-bold text-white">Game Guide & FAQ</h2>
+              <span className="text-emerald-400 group-open:rotate-180 transition-transform duration-300 text-2xl">
                 ▼
               </span>
             </summary>
-            <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
-              {/* Content Freshness Info */}
-              <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
-                  <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
-                </p>
+            <div className="mt-4 space-y-6 pt-6 border-t border-gray-700">
+              <div className="grid gap-4">
+                {[
+                  {
+                    question: "What is countridle?",
+                    answer: "countridle is a daily geography puzzle game where you guess the target country in 6 attempts. It uses progressive hints including flags, country outlines, geographical coordinates, and statistical comparisons."
+                  },
+                  {
+                    question: "How do I play countridle?",
+                    answer: "You have 6 attempts to guess the daily country. After each guess, you'll get hints: continent, country outline, flag (becomes clearer with wrong guesses), distance/direction, statistical comparisons, and capital/language hints."
+                  },
+                  {
+                    question: "What countries are included?",
+                    answer: "countridle includes all 195 UN-recognized sovereign states, focusing on countries that most people would recognize. The game may occasionally include well-known territories and regions for variety."
+                  },
+                  {
+                    question: "Is countridle free to play?",
+                    answer: "Yes! countridle is completely free to play with no registration required. New geography puzzles are available every day at midnight local time."
+                  },
+                  {
+                    question: "What makes countridle different?",
+                    answer: "countridle combines multiple learning approaches: flag recognition, map identification, geographical coordinates, statistical data comparison, and cultural information. The progressive hint system makes it educational for all skill levels."
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="bg-gray-700/30 rounded-2xl p-4">
+                    <h3 className="font-semibold text-emerald-400 mb-2">{faq.question}</h3>
+                    <p className="text-gray-300">{faq.answer}</p>
+                  </div>
+                ))}
               </div>
-
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is countridle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  countridle is a daily geography puzzle game where you guess the target country in 6 attempts. 
-                  It uses progressive hints including flags (initially blurred), country outlines, geographical coordinates, 
-                  and statistical comparisons to help you identify the country.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do I play countridle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  You have 6 attempts to guess the daily country. After each guess, you&apos;ll receive hints: 
-                  1) Continent, 2) Country outline, 3) Flag (clears with wrong guesses), 4) Distance/direction from your guess, 
-                  5) Statistical comparisons, and 6) Capital/language hints.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What countries are included?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  countridle includes all 195 UN-recognized sovereign states, focusing on countries that most people 
-                  would recognize. The game may occasionally include well-known territories and regions for variety.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is countridle free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! countridle is completely free to play with no registration required. New geography puzzles 
-                  are available every day at midnight local time.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What makes countridle different from other geography games?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  countridle combines multiple learning approaches: flag recognition, map identification, 
-                  geographical coordinates, statistical data comparison, and cultural information. The progressive 
-                  hint system makes it educational for both beginners and geography experts.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Can I play countridle on mobile?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! countridle is fully responsive and works perfectly on mobile devices, tablets, and desktop computers. 
-                  The interface adapts to different screen sizes for optimal gameplay.
-                </p>
+              
+              {/* Features Section */}
+              <div className="mt-8">
+                <h3 className="font-bold text-lg text-white mb-4">Game Features:</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[
+                    { icon: Flag, text: "Flag recognition training", color: "text-red-400" },
+                    { icon: Map, text: "Country outline identification", color: "text-blue-400" },
+                    { icon: Globe, text: "Geographical coordinates", color: "text-green-400" },
+                    { icon: Compass, text: "Distance & direction hints", color: "text-purple-400" },
+                    { icon: Users, text: "Population comparisons", color: "text-yellow-400" },
+                    { icon: Target, text: "6 attempts per day", color: "text-cyan-400" }
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3 bg-gray-800/50 p-3 rounded-xl">
+                      <feature.icon className={`w-5 h-5 ${feature.color}`} />
+                      <span className="text-gray-300 text-sm">{feature.text}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </details>
-        </div>
-
-        {/* Hidden SEO Content */}
-        <div className="sr-only" aria-hidden="false">
-          <div itemScope itemType="https://schema.org/Game">
-            <meta itemProp="dateModified" content={lastUpdated} />
-            <h2>countridle - Daily Country Guessing Game</h2>
-            <p itemProp="description">
-              Test your world geography knowledge with countridle, a daily puzzle game where you guess countries 
-              using multiple clues. Perfect for geography enthusiasts, students, travelers, and anyone wanting to 
-              improve their country identification skills in a fun, interactive way.
-            </p>
-            <h3>How to Play countridle:</h3>
-            <ul>
-              <li>Guess the target country in 6 attempts</li>
-              <li>Progressive hints reveal more information with each wrong guess</li>
-              <li>Identify countries by their flags, outlines, and geographical features</li>
-              <li>Compare population, area, driving side, and currency with your guesses</li>
-              <li>Learn about capital cities and official languages</li>
-              <li>New country puzzle every day</li>
-              <li>Completely free with no registration required</li>
-              <li>Educational and fun for all ages and skill levels</li>
-            </ul>
-            <h3>Game Features:</h3>
-            <ul>
-              <li>Daily geography challenges with 195+ countries</li>
-              <li>Flag recognition training (blurred flags become clearer)</li>
-              <li>Country outline/silhouette identification</li>
-              <li>Geographical coordinate system with distance calculations</li>
-              <li>Statistical comparisons (population, area, etc.)</li>
-              <li>Cultural and linguistic hints</li>
-              <li>Mobile-friendly responsive design</li>
-              <li>No time pressure - play at your own pace</li>
-              <li>Educational content about world geography</li>
-            </ul>
-            <p><strong>Perfect for:</strong> Geography students, travelers, flag enthusiasts, puzzle lovers, 
-               teachers, families, and anyone interested in learning more about world countries.</p>
-            <p><strong>Educational Value:</strong> countridle helps improve geographical knowledge, flag recognition, 
-               map reading skills, statistical awareness, and cultural understanding of different countries.</p>
-          </div>
         </div>
       </div>
     </div>

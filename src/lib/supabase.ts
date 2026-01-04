@@ -444,42 +444,9 @@ export async function getTodaysHistoryQuestions(count: number, userDate?: Date):
   }
 }
 
-// Add these functions to your existing supabase.ts file
-export async function getCategoriesBySearch(searchTerm: string, limit = 50) {
-  searchTerm = searchTerm.trim().toLowerCase();
-  const { data, error } = await supabase
-    .from('trivia_categories_view')
-    .select('*')
-    .or(`lower(category).like.%${searchTerm}%`)
-    .gte('question_count', 30)
-    .order('question_count', { ascending: false })
-    .limit(limit);
-
-  if (error) {
-    console.error('Error fetching subcategories by search:', error);
-    return [];
-  }
-
-  return data;
-}
-
-// Get all subcategories (for search index)
-export async function getAllSubcategories() {
-  const { data, error } = await supabase
-    .from('trivia_subcategories_view')
-    .select('*')
-    .gte('question_count', 30);
-
-  if (error) {
-    console.error('Error fetching all subcategories:', error);
-    return [];
-  }
-
-  return data;
-}
-
 export async function getHolidaySpecialQuiz(category: string, count: number): Promise<Question[]> {
   try {
+    const randomSeed = Math.random();
     // Use the random_index to get a random set
     const { data: questions, error } = await supabase
       .from('holiday_special_trivias')

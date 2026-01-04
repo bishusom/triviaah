@@ -30,11 +30,11 @@ export function generateCapitaleMetadata(): Metadata {
     openGraph: {
       title: 'Capitale - Daily Capital City Guessing Game | Triviaah',
       description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle but with capital cities.',
-      url: 'https://triviaah.com/brainwave/capitale',
+      url: 'https://triviaah.com/capitale',
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/brainwave/capitale-og.webp',
+          url: '/imgs/brainwave/capitale.webp',
           width: 1200,
           height: 630,
           alt: 'Capitale - Daily Capital City Guessing Game'
@@ -47,7 +47,7 @@ export function generateCapitaleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Capitale - Daily Capital City Guessing Game | Triviaah',
       description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle.',
-      images: ['/imgs/brainwave/capitale-og.webp'],
+      images: ['/imgs/brainwave/capitale.webp'],
       site: '@elitetrivias', // Replace with your actual Twitter handle
     },
     robots: {

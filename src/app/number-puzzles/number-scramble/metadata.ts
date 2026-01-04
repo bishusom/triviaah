@@ -6,10 +6,10 @@ export function generateNumberScrambleMetadata(): Metadata {
   const lastUpdated = new Date().toISOString();
 
   return {
-    title: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Triviaah',
-    description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
+    title: 'Number Scramble | Free Math Brain Teaser | Triviaah',
+    description: 'Play Number Scramble, a free online number puzzle game. Form the target number by rearranging given digits within limited attempts. Challenge your math skills with this fun and engaging brain game.',
     keywords: [
-      'number sequence',
+      'number scramble',
       'number puzzle game',
       'free number game',
       'online math games',
@@ -19,7 +19,7 @@ export function generateNumberScrambleMetadata(): Metadata {
       'free brain teasers',
       'daily math challenges',
       'math puzzles',
-      'sequence game',
+      'scramble game',
       'pattern recognition',
       'cognitive games',
       'math brain teaser',
@@ -34,8 +34,8 @@ export function generateNumberScrambleMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Triviaah',
-      description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
+      title: 'Number Scramble Puzzle Game | Free Math Brain Teaser | Triviaah',
+      description: 'Play Number Scramble, a free online number puzzle game. Form the target number by rearranging given digits within limited attempts. Challenge your math skills with this fun and engaging brain game.',
       url: 'https://triviaah.com/number-puzzles/number-scramble',
       siteName: 'Triviaah',
       images: [
@@ -43,7 +43,7 @@ export function generateNumberScrambleMetadata(): Metadata {
           url: '/imgs/number-puzzles/number-scramble.webp',
           width: 1200,
           height: 630,
-          alt: 'Number Sequence Puzzle Game - Free Math Brain Teaser'
+          alt: 'Number scramble Puzzle Game - Free Math Brain Teaser'
         }
       ],
       type: 'website',
@@ -51,8 +51,8 @@ export function generateNumberScrambleMetadata(): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Triviaah',
-      description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
+      title: 'Number scramble Puzzle Game | Free Math Brain Teaser | Triviaah',
+      description: 'Play Number Scramble, a free online number puzzle game. Form the target number by rearranging given digits within limited attempts. Challenge your math skills with this fun and engaging brain game.',
       images: ['/imgs/number-puzzles/number-scramble.webp'],
       site: '@elitetrivias',
     },

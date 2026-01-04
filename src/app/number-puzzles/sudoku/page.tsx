@@ -111,7 +111,7 @@ export default function SudokuPage() {
   }, []);
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Structured Data */}
       <Script
         id="sudoku-organization-schema"
@@ -137,10 +137,10 @@ export default function SudokuPage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -170,28 +170,6 @@ export default function SudokuPage() {
       )}
 
       <div className="max-w-3xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Free Online Sudoku Puzzles</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-teal-50 px-3 py-1 rounded-full text-xs font-medium border border-teal-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
-          </div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Play daily Sudoku challenges on one of the best free Sudoku websites. 
-            Enjoy classic 9x9 grid puzzles with multiple difficulty levels - perfect for beginners and experts alike.
-          </p>
-        </div>
-
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
@@ -199,10 +177,10 @@ export default function SudokuPage() {
         <SudokuPuzzle />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Sudoku Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">Sudoku Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -210,15 +188,15 @@ export default function SudokuPage() {
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <h3 className="font-semibold text-white">Game Updates</h3>
+                <p className="text-gray-300 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What is Sudoku?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Sudoku is a classic logic-based number puzzle game that originated in Japan and has become 
                   one of the world&apos;s most popular puzzle games. Players fill a 9x9 grid divided into nine 
                   3x3 subgrids, ensuring that each row, each column, and each subgrid contains all digits 
@@ -227,7 +205,7 @@ export default function SudokuPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">How do you play Sudoku?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Players strategically fill in the empty cells of a partially completed 9x9 grid with numbers 
                   from 1 to 9. The key rules are: no number can repeat in any row, no number can repeat in any 
                   column, and no number can repeat in any of the nine 3x3 subgrids. Players use logical deduction, 
@@ -236,7 +214,7 @@ export default function SudokuPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What are the basic rules of Sudoku?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   <strong>Rule 1:</strong> Each row must contain numbers 1-9 without repetition.<br/>
                   <strong>Rule 2:</strong> Each column must contain numbers 1-9 without repetition.<br/>
                   <strong>Rule 3:</strong> Each 3x3 box must contain numbers 1-9 without repetition.<br/>
@@ -246,7 +224,7 @@ export default function SudokuPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is Sudoku good for your brain?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Sudoku provides excellent mental exercise that improves logical thinking, concentration, 
                   problem-solving skills, memory retention, and cognitive function. Regular Sudoku play can help 
                   maintain mental sharpness, prevent cognitive decline, improve focus, and enhance overall brain 
@@ -255,7 +233,7 @@ export default function SudokuPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What difficulty levels are available?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Our Sudoku puzzles come in multiple difficulty levels: <strong>Easy</strong> (good for beginners), 
                   <strong> Medium</strong> (balanced challenge), <strong>Hard</strong> (for experienced players), 
                   and <strong>Expert</strong> (for Sudoku masters). Each level provides the appropriate number of 
@@ -264,7 +242,7 @@ export default function SudokuPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is this game completely free?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Our Sudoku game is completely free to play with no registration required. You can enjoy 
                   daily new puzzles, multiple difficulty levels, timer functionality, hint system, and unlimited 
                   gameplay without any cost, subscription fees, or registration requirements.
@@ -275,9 +253,9 @@ export default function SudokuPage() {
         </div>
 
         {/* Game Information Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">About Sudoku Puzzles</h2>
-          <div className="space-y-6 text-gray-700">
+          <div className="space-y-6 text-gray-300">
             <div>
               <h3 className="text-lg font-semibold mb-2">How to Play Sudoku:</h3>
               <ul className="list-disc pl-5 space-y-2">
@@ -294,60 +272,60 @@ export default function SudokuPage() {
             <div>
               <h3 className="text-lg font-semibold mb-2">Sudoku Difficulty Levels:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Easy:</strong> 36-45 given numbers, straightforward logic required</li>
-                <li><strong>Medium:</strong> 27-35 given numbers, requires basic techniques</li>
-                <li><strong>Hard:</strong> 22-26 given numbers, needs intermediate strategies</li>
-                <li><strong>Expert:</strong> 17-21 given numbers, demands advanced methods</li>
-                <li><strong>Extreme:</strong> 16 or fewer given numbers, master-level challenge</li>
+                <li><strong className="text-green-300">Easy:</strong> 36-45 given numbers, straightforward logic required</li>
+                <li><strong className="text-green-300">Medium:</strong> 27-35 given numbers, requires basic techniques</li>
+                <li><strong className="text-green-300">Hard:</strong> 22-26 given numbers, needs intermediate strategies</li>
+                <li><strong className="text-green-300">Expert:</strong> 17-21 given numbers, demands advanced methods</li>
+                <li><strong className="text-green-300">Extreme:</strong> 16 or fewer given numbers, master-level challenge</li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Common Solving Techniques:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Scanning:</strong> Quickly identifying obvious placements</li>
-                <li><strong>Cross-Hatching:</strong> Eliminating possibilities in rows and columns</li>
-                <li><strong>Pencil Marks:</strong> Noting possible numbers in cells</li>
-                <li><strong>Naked Singles:</strong> Cells with only one possible number</li>
-                <li><strong>Hidden Singles:</strong> Numbers that can only go in one cell in a unit</li>
-                <li><strong>Naked/Hidden Pairs/Triples:</strong> Group elimination techniques</li>
-                <li><strong>Pointing Pairs:</strong> Using subgrid constraints on rows/columns</li>
+                <li><strong className="text-green-300">Scanning:</strong> Quickly identifying obvious placements</li>
+                <li><strong className="text-green-300">Cross-Hatching:</strong> Eliminating possibilities in rows and columns</li>
+                <li><strong className="text-green-300">Pencil Marks:</strong> Noting possible numbers in cells</li>
+                <li><strong className="text-green-300">Naked Singles:</strong> Cells with only one possible number</li>
+                <li><strong className="text-green-300">Hidden Singles:</strong> Numbers that can only go in one cell in a unit</li>
+                <li><strong className="text-green-300">Naked/Hidden Pairs/Triples:</strong> Group elimination techniques</li>
+                <li><strong className="text-green-300">Pointing Pairs:</strong> Using subgrid constraints on rows/columns</li>
               </ul>
             </div>
 
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">Advanced Sudoku Strategies:</h4>
+            <div className="p-4 bg-green-500/10 border border-green-500/20 text-white">
+              <h4 className="font-bold text-white mb-2">Advanced Sudoku Strategies:</h4>
               <ul className="list-disc pl-5 space-y-1">
-                <li><strong>X-Wing:</strong> Pattern that eliminates candidates across two rows/columns</li>
-                <li><strong>Swordfish:</strong> Extended X-Wing pattern across three rows/columns</li>
-                <li><strong>XY-Wing:</strong> Three-cell pattern that creates elimination chains</li>
-                <li><strong>Unique Rectangle:</strong> Avoiding deadly patterns that create multiple solutions</li>
-                <li><strong>Colors:</strong> Tracking candidate patterns through conjugate pairs</li>
-                <li><strong>Forcing Chains:</strong> Testing candidate consequences through logical chains</li>
-                <li><strong>Nishio:</strong> Testing hypothetical placements to find contradictions</li>
-                <li><strong>BUG:</strong> Bivalue Universal Grave technique for nearly-complete puzzles</li>
+                <li><strong className="text-green-300">X-Wing:</strong> Pattern that eliminates candidates across two rows/columns</li>
+                <li><strong className="text-green-300">Swordfish:</strong> Extended X-Wing pattern across three rows/columns</li>
+                <li><strong className="text-green-300">XY-Wing:</strong> Three-cell pattern that creates elimination chains</li>
+                <li><strong className="text-green-300">Unique Rectangle:</strong> Avoiding deadly patterns that create multiple solutions</li>
+                <li><strong className="text-green-300">Colors:</strong> Tracking candidate patterns through conjugate pairs</li>
+                <li><strong className="text-green-300">Forcing Chains:</strong> Testing candidate consequences through logical chains</li>
+                <li><strong className="text-green-300">Nishio:</strong> Testing hypothetical placements to find contradictions</li>
+                <li><strong className="text-green-300">BUG:</strong> Bivalue Universal Grave technique for nearly-complete puzzles</li>
               </ul>
             </div>
           </div>
           
           {/* Educational Benefits Section */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="mt-8 pt-6 border-t border-gray-200 text-gray-300">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Educational & Cognitive Benefits of Sudoku</h3>
-            <div className="prose text-gray-700">
+            <div className="prose prose-invert max-w-none text-gray-300">
               <p className="mb-4">
                 Sudoku is more than just a puzzle game - it&apos;s a powerful tool for cognitive development 
                 and mental fitness. As one of the world&apos;s most popular <strong>free logic games</strong>, 
                 Sudoku offers comprehensive brain training benefits:
               </p>
               <ul className="list-disc pl-5 space-y-2 mb-4">
-                <li><strong>Enhanced Logical Thinking:</strong> Develops systematic reasoning and deduction skills</li>
-                <li><strong>Improved Concentration:</strong> Trains focused attention and mental stamina</li>
-                <li><strong>Better Memory:</strong> Strengthens short-term memory and pattern retention</li>
-                <li><strong>Problem-Solving Skills:</strong> Develops strategic approaches to complex challenges</li>
-                <li><strong>Pattern Recognition:</strong> Enhances ability to identify and extend patterns</li>
-                <li><strong>Cognitive Flexibility:</strong> Improves ability to shift between different strategies</li>
-                <li><strong>Mental Math:</strong> Strengthens numerical processing and quick calculation</li>
-                <li><strong>Stress Reduction:</strong> Provides meditative focus that reduces anxiety</li>
+                <li><strong className="text-green-300">Enhanced Logical Thinking:</strong> Develops systematic reasoning and deduction skills</li>
+                <li><strong className="text-green-300">Improved Concentration:</strong> Trains focused attention and mental stamina</li>
+                <li><strong className="text-green-300">Better Memory:</strong> Strengthens short-term memory and pattern retention</li>
+                <li><strong className="text-green-300">Problem-Solving Skills:</strong> Develops strategic approaches to complex challenges</li>
+                <li><strong className="text-green-300">Pattern Recognition:</strong> Enhances ability to identify and extend patterns</li>
+                <li><strong className="text-green-300">Cognitive Flexibility:</strong> Improves ability to shift between different strategies</li>
+                <li><strong className="text-green-300">Mental Math:</strong> Strengthens numerical processing and quick calculation</li>
+                <li><strong className="text-green-300">Stress Reduction:</strong> Provides meditative focus that reduces anxiety</li>
               </ul>
               <p>
                 Whether you&apos;re a student looking to improve academic performance, a professional maintaining 
@@ -361,7 +339,7 @@ export default function SudokuPage() {
           {/* Why Play Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Why Play Sudoku on Triviaah?</h3>
-            <div className="prose text-gray-700">
+            <div className="prose prose-invert max-w-none text-gray-300">
               <p className="mb-4">
                 Sudoku is one of the world&apos;s most popular puzzle games, with millions of daily players 
                 worldwide. Our free Sudoku puzzles offer the perfect brain exercise that improves logical 

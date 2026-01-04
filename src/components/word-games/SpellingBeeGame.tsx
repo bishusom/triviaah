@@ -33,9 +33,6 @@ export default function SpellingBeeGame() {
   const [showGameOverModal, setShowGameOverModal] = useState(false);
   const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
 
-  // Consistent button style for all buttons
-  const buttonStyle = "px-6 md:px-8 py-2 font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center";
-
   // Sound effects
   const playSound = useCallback((type: string) => {
     if (isMuted) return;
@@ -335,222 +332,209 @@ export default function SpellingBeeGame() {
   const HexagonButton = ({ letter, onClick, position }: HexagonButtonProps) => {
     const getColor = () => {
       switch (position) {
-        case 'center': return 'bg-yellow-200 hover:bg-yellow-300 text-gray-900 shadow-lg';
-        default: return 'bg-blue-100 hover:bg-blue-200 text-gray-800 shadow-md';
+        case 'center': return 'bg-yellow-400 hover:bg-yellow-500 text-gray-900 shadow-lg';
+        default: return 'bg-blue-200 hover:bg-blue-300 text-gray-800 shadow-md';
       }
     };
 
-    return (
-      <div className="relative w-16 h-16">
-        <button
-          onClick={onClick}
-          className={`w-full h-full flex items-center justify-center font-bold text-xl transition-all duration-200 transform hover:scale-110 ${getColor()}`}
-          style={{
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
-          }}
-        >
-          {letter}
-        </button>
-      </div>
-    );
-  };
+  return (
+    <div className="relative w-16 h-16"> {/* Slightly smaller to accommodate increased spacing */}
+      <button
+        onClick={onClick}
+        className={`w-full h-full flex items-center justify-center font-bold text-xl transition-all duration-200 transform hover:scale-110 ${getColor()}`}
+        style={{
+          clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+        }}
+      >
+        {letter}
+      </button>
+    </div>
+  );
+};
 
-  // Feedback style mapping for light theme
+  // Feedback style mapping
   const getFeedbackStyle = (type: FeedbackType | '') => {
     switch (type) {
       case 'error':
-        return 'bg-red-50 border-red-200 text-red-700';
+        return 'bg-red-500/20 border border-red-500/50 text-red-200';
       case 'success':
-        return 'bg-green-50 border-green-200 text-green-700';
+        return 'bg-green-500/20 border border-green-500/50 text-green-200';
       case 'hint':
-        return 'bg-blue-50 border-blue-200 text-blue-700';
+        return 'bg-blue-500/20 border border-blue-500/50 text-blue-200';
       case 'info':
-        return 'bg-yellow-50 border-yellow-200 text-yellow-700';
+        return 'bg-yellow-500/20 border border-yellow-500/50 text-yellow-200';
       default:
-        return 'bg-gray-50 border-gray-200 text-gray-700';
+        return 'bg-gray-500/20 border border-gray-500/50 text-gray-200';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 p-4 md:p-6 flex flex-col items-center justify-center">
-      {/* Header */}
-      <div className="w-full max-w-4xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 p-4 bg-white/70 rounded-xl backdrop-blur-sm border border-gray-200 shadow-lg">
-          <div className="text-center md:text-left mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Spelling Bee
-            </h1>
-            <div className="text-sm md:text-base text-gray-600 mt-1">
-              Rank: {rank}
-            </div>
-          </div>
-          <div className="flex items-center gap-4 md:gap-6">
-            <div className="bg-white/90 px-4 py-2 rounded-lg border border-gray-300 font-bold text-lg shadow-sm">
-              Score: {score}
-            </div>
-          </div>
-        </div>
-
-        {/* Hexagonal letter grid */}
-        <div className="flex flex-col items-center justify-center mb-6">
-          {/* Top row (2 letters) */}
-          <div className="flex justify-center -mb-4">
-            {letters.slice(1, 3).map((letter, index) => (
-              <div key={index} className="mx-2">
-                <HexagonButton
-                  letter={letter}
-                  onClick={() => selectLetter(letter)}
-                  position="top"
-                />
-              </div>
-            ))}
-          </div>
-          
-          {/* Middle row (3 letters) */}
-          <div className="flex justify-center items-center -mb-4">
-            {letters.slice(3, 4).map((letter, index) => (
-              <HexagonButton
-                key={index}
-                letter={letter}
-                onClick={() => selectLetter(letter)}
-                position="left"
-              />
-            ))}
-            <div className="mx-3">
-              <HexagonButton
-                letter={centerLetter}
-                onClick={() => selectLetter(centerLetter)}
-                position="center"
-              />
-            </div>
-            {letters.slice(4, 5).map((letter, index) => (
-              <HexagonButton
-                key={index}
-                letter={letter}
-                onClick={() => selectLetter(letter)}
-                position="right"
-              />
-            ))}
-          </div>
-          
-          {/* Bottom row (2 letters) */}
-          <div className="flex justify-center">
-            {letters.slice(5, 7).map((letter, index) => (
-              <div key={index} className="mx-2">
-                <HexagonButton
-                  letter={letter}
-                  onClick={() => selectLetter(letter)}
-                  position="bottom"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Feedback message */}
-        {feedback.message && (
-          <div className={`mb-4 p-4 rounded-lg text-center font-medium border backdrop-blur-sm ${getFeedbackStyle(feedback.type)}`}>
-            {feedback.message}
-          </div>
-        )}
-
-        {/* Current word */}
-        <div className="bg-white/70 rounded-xl p-4 mb-6 text-center border border-gray-200 shadow-lg">
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">Current Word:</h3>
-          <div className="text-2xl font-bold text-gray-800 min-h-8">
-            {currentWord.join('') || <span className="text-gray-500">Select letters to form a word</span>}
-          </div>
-        </div>
-        
-        {/* Action buttons */}
-        <div className="flex flex-wrap justify-center gap-3 mb-6">
-          <button
-            onClick={submitWord}
-            className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
-          >
-            Submit
-          </button>
-          <button
-            onClick={clearCurrentWord}
-            className={`${buttonStyle} bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-400 hover:to-gray-500 text-white`}
-          >
-            Clear
-          </button>
-          <button
-            onClick={shuffleLetters}
-            className={`${buttonStyle} bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white`}
-          >
-            Shuffle
-          </button>
-          <button
-            onClick={showHint}
-            className={`${buttonStyle} bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-white`}
-          >
-            Hint
-          </button>
-          <button
-            onClick={giveUp}
-            className={`${buttonStyle} bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white`}
-          >
-            Give Up
-          </button>
-        </div>
-        
-        {/* Found words */}
-        {foundWords.length > 0 && (
-          <div className="bg-white/70 rounded-xl p-4 mb-6 border border-gray-200 shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-700 mb-3 text-center">
-              Found Words ({foundWords.length}):
-            </h3>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {foundWords
-                .sort((a, b) => b.length - a.length)
-                .map((word, index) => (
-                  <span
-                    key={index}
-                    className={`px-3 py-1 rounded-full font-medium ${
-                      new Set(word.split('')).size === 7 
-                        ? 'bg-yellow-200 text-gray-900 font-bold border border-yellow-300' 
-                        : 'bg-blue-100 text-gray-800 border border-blue-200'
-                    }`}
-                  >
-                    {word}
-                  </span>
-                ))}
-            </div>
-          </div>
-        )}
-        
-        {/* Game over modal */}
-        {showGameOverModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <div className="bg-gradient-to-br from-white to-gray-100 rounded-2xl p-6 md:p-8 max-w-md w-full border border-gray-300 shadow-2xl">
-              <h2 className="text-2xl md:text-3xl font-bold text-center mb-4 bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
-                Game Over!
-              </h2>
-              <div className="space-y-3 text-center">
-                <p className="text-gray-600">Final Score: <span className="font-bold text-green-600">{score}</span></p>
-                <p className="text-gray-600">Rank: <span className="font-bold text-blue-600">{rank}</span></p>
-                <p className="text-gray-600">Words Found: <span className="font-bold text-purple-600">{foundWords.length}</span></p>
-              </div>
-              <div className="flex flex-col gap-3 mt-6">
-                <button
-                  onClick={initGame}
-                  className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
-                >
-                  Play Again
-                </button>
-                <button
-                  onClick={() => window.location.href = '/'}
-                  className={`${buttonStyle} bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-400 hover:to-gray-500 text-white`}
-                >
-                  Back to Home
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white p-4 md:p-6 flex flex-col items-center justify-center">
+      <h2 className="text-3xl font-bold text-white mb-2 text-center">Spelling Bee</h2>
+      
+      {/* Score and Rank */}
+      <div className="flex justify-center gap-8 mb-6">
+        <div className="text-lg font-semibold text-yellow-400">Rank: {rank}</div>
+        <div className="text-lg font-semibold text-green-400">Score: {score}</div>
       </div>
+      
+      {/* Hexagonal letter grid */}
+      <div className="flex flex-col items-center justify-center mb-6">
+        {/* Top row (2 letters) - increased horizontal gap */}
+        <div className="flex justify-center -mb-4"> {/* Increased negative margin for tighter vertical spacing */}
+          {letters.slice(1, 3).map((letter, index) => (
+            <div key={index} className="mx-2"> {/* Increased horizontal gap from mx-1 to mx-2 */}
+              <HexagonButton
+                letter={letter}
+                onClick={() => selectLetter(letter)}
+                position="top"
+              />
+            </div>
+          ))}
+        </div>
+        
+        {/* Middle row (3 letters) - keep existing spacing */}
+        <div className="flex justify-center items-center -mb-4"> {/* Increased negative margin */}
+          {letters.slice(3, 4).map((letter, index) => (
+            <HexagonButton
+              key={index}
+              letter={letter}
+              onClick={() => selectLetter(letter)}
+              position="left"
+            />
+          ))}
+          <div className="mx-3"> {/* Keep good middle row spacing */}
+            <HexagonButton
+              letter={centerLetter}
+              onClick={() => selectLetter(centerLetter)}
+              position="center"
+            />
+          </div>
+          {letters.slice(4, 5).map((letter, index) => (
+            <HexagonButton
+              key={index}
+              letter={letter}
+              onClick={() => selectLetter(letter)}
+              position="right"
+            />
+          ))}
+        </div>
+        
+        {/* Bottom row (2 letters) - increased horizontal gap */}
+        <div className="flex justify-center">
+          {letters.slice(5, 7).map((letter, index) => (
+            <div key={index} className="mx-2"> {/* Increased horizontal gap from mx-1 to mx-2 */}
+              <HexagonButton
+                letter={letter}
+                onClick={() => selectLetter(letter)}
+                position="bottom"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Feedback message */}
+      {feedback.message && (
+        <div className={`mb-4 p-4 rounded-lg text-center font-medium ${getFeedbackStyle(feedback.type)}`}>
+          {feedback.message}
+        </div>
+      )}
+
+      {/* Current word */}
+      <div className="bg-gray-700/50 rounded-lg p-4 mb-6 text-center">
+        <h3 className="text-lg font-semibold text-gray-300 mb-2">Current Word:</h3>
+        <div className="text-2xl font-bold text-white min-h-8">
+          {currentWord.join('') || <span className="text-gray-400">Select letters to form a word</span>}
+        </div>
+      </div>
+      
+      {/* Action buttons */}
+      <div className="flex flex-wrap justify-center gap-3 mb-6">
+        <button
+          onClick={submitWord}
+          className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200"
+        >
+          Submit
+        </button>
+        <button
+          onClick={clearCurrentWord}
+          className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors duration-200"
+        >
+          Clear
+        </button>
+        <button
+          onClick={shuffleLetters}
+          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200"
+        >
+          Shuffle
+        </button>
+        <button
+          onClick={showHint}
+          className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-lg transition-colors duration-200"
+        >
+          Hint
+        </button>
+        <button
+          onClick={giveUp}
+          className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors duration-200"
+        >
+          Give Up
+        </button>
+      </div>
+      
+      {/* Found words */}
+      {foundWords.length > 0 && (
+        <div className="bg-gray-700/30 rounded-lg p-4">
+          <h3 className="text-lg font-semibold text-white mb-3 text-center">
+            Found Words ({foundWords.length}):
+          </h3>
+          <div className="flex flex-wrap gap-2 justify-center">
+            {foundWords
+              .sort((a, b) => b.length - a.length)
+              .map((word, index) => (
+                <span
+                  key={index}
+                  className={`px-3 py-1 rounded-full font-medium ${
+                    new Set(word.split('')).size === 7 
+                      ? 'bg-yellow-500 text-gray-900 font-bold' 
+                      : 'bg-blue-500 text-white'
+                  }`}
+                >
+                  {word}
+                </span>
+              ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Game over modal */}
+      {showGameOverModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-gray-800 border border-gray-600 rounded-xl p-8 max-w-md mx-4 shadow-2xl">
+            <h2 className="text-2xl font-bold text-white mb-4 text-center">Game Over!</h2>
+            <div className="space-y-3 text-center">
+              <p className="text-gray-300">Final Score: <span className="font-bold text-yellow-400">{score}</span></p>
+              <p className="text-gray-300">Rank: <span className="font-bold text-green-400">{rank}</span></p>
+              <p className="text-gray-300">Words Found: <span className="font-bold text-blue-400">{foundWords.length}</span></p>
+            </div>
+            <div className="flex flex-col gap-3 mt-6">
+              <button
+                onClick={initGame}
+                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200"
+              >
+                Play Again
+              </button>
+              <button
+                onClick={() => window.location.href = '/'}
+                className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors duration-200"
+              >
+                Back to Home
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

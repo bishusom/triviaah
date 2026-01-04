@@ -39,7 +39,7 @@ const CarBlock = ({
 
   return (
     <div
-      className="absolute bg-black"
+      className="absolute bg-gray-900"
       style={{
         left: `${left}%`,
         top: `${top}%`,
@@ -64,27 +64,27 @@ const ProgressiveHint = ({ attempts }: {
     {
       icon: "🎯",
       text: `Great start! You have ${correctLetters} correct letters.`,
-      color: "bg-blue-100 border-blue-400 text-blue-700"
+      color: "bg-red-900/30 border-red-700 text-red-200"
     },
     {
       icon: "🔍",
       text: `Look for patterns. ${presentLetters} letters are in the name but misplaced.`,
-      color: "bg-yellow-100 border-yellow-400 text-yellow-700"
+      color: "bg-amber-900/30 border-amber-700 text-amber-200"
     },
     {
       icon: "🤔",
       text: "Compare letter positions. Focus on the green letters first.",
-      color: "bg-green-100 border-green-400 text-green-700"
+      color: "bg-emerald-900/30 border-emerald-700 text-emerald-200"
     },
     {
       icon: "💡",
       text: "Use the revealed hints below to narrow down your options.",
-      color: "bg-purple-100 border-purple-400 text-purple-700"
+      color: "bg-purple-900/30 border-purple-700 text-purple-200"
     },
     {
       icon: "⚡",
       text: "Final attempt! Use all clues and think about cars that fit all hints.",
-      color: "bg-orange-100 border-orange-400 text-orange-700"
+      color: "bg-orange-900/30 border-orange-700 text-orange-200"
     }
   ];
   
@@ -103,8 +103,8 @@ const ProgressiveHint = ({ attempts }: {
           <div
             key={i}
             className={`h-1 flex-1 rounded ${
-              letter.status === 'correct' ? 'bg-green-500' :
-              letter.status === 'present' ? 'bg-yellow-500' : 'bg-gray-300'
+              letter.status === 'correct' ? 'bg-emerald-500' :
+              letter.status === 'present' ? 'bg-amber-500' : 'bg-gray-600'
             }`}
           />
         ))}
@@ -160,17 +160,17 @@ const ValidationHints = ({ puzzleData, attempts }: {
         {/* Make and Decade */}
         {puzzleData.make && (
           <div className="text-sm mb-2">
-            🏭 Make: <strong>{puzzleData.make}</strong>
+            🏭 Make: <strong className="text-red-300">{puzzleData.make}</strong>
           </div>
         )}
         {puzzleData.decade && (
           <div className="text-sm mb-2">
-            📅 Decade: <strong>{puzzleData.decade}</strong>
+            📅 Decade: <strong className="text-red-300">{puzzleData.decade}</strong>
           </div>
         )}
         {puzzleData.country_origin && (
           <div className="text-sm">
-            🌍 Country: <strong>{puzzleData.country_origin}</strong>
+            🌍 Country: <strong className="text-red-300">{puzzleData.country_origin}</strong>
           </div>
         )}
       </div>
@@ -180,17 +180,17 @@ const ValidationHints = ({ puzzleData, attempts }: {
         {/* Vehicle type and fuel */}
         {puzzleData.vehicle_type && (
           <div className="text-sm mb-2">
-            🚗 Type: <strong>{puzzleData.vehicle_type}</strong>
+            🚗 Type: <strong className="text-red-300">{puzzleData.vehicle_type}</strong>
           </div>
         )}
         {puzzleData.fuel_type && (
           <div className="text-sm mb-2">
-            ⛽ Fuel: <strong>{puzzleData.fuel_type}</strong>
+            ⛽ Fuel: <strong className="text-red-300">{puzzleData.fuel_type}</strong>
           </div>
         )}
         {puzzleData.era && (
           <div className="text-sm">
-            {getEraEmoji(puzzleData.era)} Era: <strong>{puzzleData.era}</strong>
+            {getEraEmoji(puzzleData.era)} Era: <strong className="text-red-300">{puzzleData.era}</strong>
           </div>
         )}
       </div>
@@ -200,17 +200,17 @@ const ValidationHints = ({ puzzleData, attempts }: {
         {/* Category and engine specs */}
         {puzzleData.category && (
           <div className="text-sm mb-2">
-            {getCategoryEmoji(puzzleData.category)} Category: <strong>{puzzleData.category}</strong>
+            {getCategoryEmoji(puzzleData.category)} Category: <strong className="text-red-300">{puzzleData.category}</strong>
           </div>
         )}
         {puzzleData.engine && (
           <div className="text-sm mb-2">
-            ⚙️ Engine: <strong>{puzzleData.engine}</strong>
+            ⚙️ Engine: <strong className="text-red-300">{puzzleData.engine}</strong>
           </div>
         )}
         {puzzleData.horsepower && (
           <div className="text-sm">
-            💨 Horsepower: <strong>{puzzleData.horsepower} HP</strong>
+            💨 Horsepower: <strong className="text-red-300">{puzzleData.horsepower} HP</strong>
           </div>
         )}
       </div>
@@ -220,17 +220,17 @@ const ValidationHints = ({ puzzleData, attempts }: {
         {/* Performance specs */}
         {puzzleData.acceleration_0_60 && (
           <div className="text-sm mb-2">
-            ⚡ 0-60: <strong>{puzzleData.acceleration_0_60}s</strong>
+            ⚡ 0-60: <strong className="text-red-300">{puzzleData.acceleration_0_60}s</strong>
           </div>
         )}
         {puzzleData.top_speed && (
           <div className="text-sm mb-2">
-            🚀 Top Speed: <strong>{puzzleData.top_speed} mph</strong>
+            🚀 Top Speed: <strong className="text-red-300">{puzzleData.top_speed} mph</strong>
           </div>
         )}
         {puzzleData.drivetrain && (
           <div className="text-sm">
-            🔧 Drivetrain: <strong>{puzzleData.drivetrain}</strong>
+            🔧 Drivetrain: <strong className="text-red-300">{puzzleData.drivetrain}</strong>
           </div>
         )}
       </div>
@@ -240,17 +240,17 @@ const ValidationHints = ({ puzzleData, attempts }: {
         {/* Cultural and design hints */}
         {puzzleData.famous_appearance && puzzleData.famous_appearance.length > 0 && (
           <div className="text-sm mb-2">
-            🎬 Appeared in: <strong>{puzzleData.famous_appearance.slice(0, 2).join(', ')}</strong>
+            🎬 Appeared in: <strong className="text-red-300">{puzzleData.famous_appearance.slice(0, 2).join(', ')}</strong>
           </div>
         )}
         {puzzleData.nickname && (
           <div className="text-sm mb-2">
-            🏆 Nickname: <strong>&quot;{puzzleData.nickname}&quot;</strong>
+            🏆 Nickname: <strong className="text-red-300">&quot;{puzzleData.nickname}&quot;</strong>
           </div>
         )}
         {puzzleData.design_characteristics && puzzleData.design_characteristics.length > 0 && (
           <div className="text-sm">
-            🎨 Design: <strong>{puzzleData.design_characteristics.slice(0, 2).join(', ')}</strong>
+            🎨 Design: <strong className="text-red-300">{puzzleData.design_characteristics.slice(0, 2).join(', ')}</strong>
           </div>
         )}
       </div>
@@ -261,16 +261,16 @@ const ValidationHints = ({ puzzleData, attempts }: {
         {puzzleData.answer && (
           <>
             <div className="text-sm mb-2">
-              🔤 First letter: <strong>{puzzleData.answer.charAt(0).toUpperCase()}</strong>
+              🔤 First letter: <strong className="text-red-300">{puzzleData.answer.charAt(0).toUpperCase()}</strong>
             </div>
             <div className="text-sm mb-2">
-              📏 Name length: <strong>{puzzleData.answer.length} characters</strong>
+              📏 Name length: <strong className="text-red-300">{puzzleData.answer.length} characters</strong>
             </div>
           </>
         )}
         {puzzleData.hint_column && (
           <div className="text-sm">
-            💡 <strong>{puzzleData.hint_column}</strong>
+            💡 <strong className="text-red-300">{puzzleData.hint_column}</strong>
           </div>
         )}
       </div>
@@ -278,8 +278,8 @@ const ValidationHints = ({ puzzleData, attempts }: {
   ].filter(Boolean);
 
   return (
-    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-      <h4 className="font-semibold text-red-800 mb-2">💡 Hints Revealed ({hintsRevealed}/6):</h4>
+    <div className="bg-gray-800/50 border border-red-800/50 rounded-lg p-4 mb-4">
+      <h4 className="font-semibold text-red-300 mb-2">💡 Hints Revealed ({hintsRevealed}/6):</h4>
       <div className="relative overflow-hidden">
         <div
           ref={hintsScrollRef}
@@ -299,7 +299,7 @@ const ValidationHints = ({ puzzleData, attempts }: {
                 key={index}
                 onClick={() => setActiveHintIndex(index)}
                 className={`w-2 h-2 rounded-full ${
-                  index === activeHintIndex ? 'bg-red-600' : 'bg-gray-300'
+                  index === activeHintIndex ? 'bg-red-500' : 'bg-gray-600'
                 }`}
                 aria-label={`Go to hint ${index + 1}`}
               />
@@ -307,7 +307,7 @@ const ValidationHints = ({ puzzleData, attempts }: {
           </div>
         )}
       </div>
-      <p className="text-xs text-red-600 mt-2">
+      <p className="text-xs text-red-400 mt-2">
         More hints unlock with each guess... ({hintsRevealed}/6 revealed)
       </p>
     </div>
@@ -608,7 +608,7 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
   };
 
   const triesLeft = 6 - attempts.length;
-  const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
+  const triesLeftColor = triesLeft >= 4 ? 'text-emerald-400' : triesLeft >= 2 ? 'text-amber-400' : 'text-red-400';
   const difficultyColor = getDifficultyColor(puzzleData.difficulty);
 
   // Generate block grid
@@ -627,7 +627,7 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
   const showImage = carImage && !imageLoading && !imageError;
 
   return (
-    <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
+    <div className="relative flex flex-col min-h-[calc(100vh-4rem)] bg-gray-900 text-gray-100">
       <canvas 
         ref={confettiCanvasRef} 
         className="fixed top-0 left-0 w-full h-full pointer-events-none z-50"
@@ -636,19 +636,19 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
       {/* Image Modal */}
       {showImageModal && carImage && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
           onClick={() => setShowImageModal(false)}
         >
           <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
             <button
               onClick={() => setShowImageModal(false)}
-              className="absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 z-60"
+              className="absolute -top-2 -right-2 bg-red-700 rounded-full p-2 shadow-lg hover:bg-red-600 z-60"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className="relative rounded-lg overflow-hidden bg-gray-100 w-full h-full flex items-center justify-center">
+            <div className="relative rounded-lg overflow-hidden bg-gray-800 w-full h-full flex items-center justify-center">
               <Image
                 src={carImage}
                 alt={`${puzzleData.answer} - full size`}
@@ -681,21 +681,21 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
         </div>
       )}
       
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 flex-grow">
+      <div className="bg-gray-800 rounded-lg shadow-lg p-4 md:p-6 mb-6 flex-grow border border-gray-700">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h2 className="text-lg md:text-xl font-semibold text-gray-800">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-100">
               Guess the car from the clues!
             </h2>
             <div className="flex items-center gap-2 mt-1">
               <span className={`text-xs px-2 py-0.5 rounded-full ${difficultyColor}`}>
                 {getDifficultyLabel(puzzleData.difficulty)}
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-400">
                 • {getCategoryEmoji(puzzleData.category)} {puzzleData.category}
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-400">
                 • {puzzleData.year}
               </span>
             </div>
@@ -710,13 +710,13 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
           {/* Image Container */}
           <div className="flex-shrink-0">
             <div 
-              className="relative rounded-lg overflow-hidden bg-gray-100 group cursor-pointer"
+              className="relative rounded-lg overflow-hidden bg-gray-900 group cursor-pointer"
               style={{ height: `${containerHeight}px`, width: `${containerWidth}px` }}
               onClick={() => showImage && setShowImageModal(true)}
             >
               {showImageLoader && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-red-100 to-gray-200 z-10">
-                  <div className="text-gray-600 flex flex-col items-center">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-red-900/20 to-gray-800 z-10">
+                  <div className="text-gray-400 flex flex-col items-center">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-500 mb-1"></div>
                     <span className="text-xs">Loading image...</span>
                   </div>
@@ -724,8 +724,8 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
               )}
               
               {showImageError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-red-100 to-gray-200 z-10">
-                  <div className="text-gray-600 flex flex-col items-center text-center p-2">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-red-900/20 to-gray-800 z-10">
+                  <div className="text-gray-400 flex flex-col items-center text-center p-2">
                     <span className="text-2xl mb-2">🚗</span>
                     <span className="text-xs">No image available</span>
                   </div>
@@ -735,7 +735,7 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
               {showImage && (
                 <>
                   {/* Magnify icon overlay */}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg flex items-center justify-center transition-all z-40 pointer-events-none">
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 rounded-lg flex items-center justify-center transition-all z-40 pointer-events-none">
                     <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
@@ -768,7 +768,7 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
                   {/* Center "?" overlay */}
                   {revealPercentage === 0 && (
                     <div className="absolute inset-0 flex items-center justify-center z-30">
-                      <span className="text-white text-2xl font-bold bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center">?</span>
+                      <span className="text-white text-2xl font-bold bg-black bg-opacity-70 rounded-full w-8 h-8 flex items-center justify-center">?</span>
                     </div>
                   )}
                   {/* Percentage badge */}
@@ -787,7 +787,7 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
             </div>
             {/* Click hint below the image */}
             {showImage && revealPercentage > 0 && (
-              <div className="text-xs text-gray-500 text-center mt-1 cursor-pointer" onClick={() => setShowImageModal(true)}>
+              <div className="text-xs text-gray-400 text-center mt-1 cursor-pointer hover:text-red-300 transition-colors" onClick={() => setShowImageModal(true)}>
                 Click to magnify
               </div>
             )}
@@ -795,16 +795,16 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
 
           {/* Info Section */}
           <div className="flex-grow">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <h4 className="font-semibold text-red-800 mb-2">Today&apos;s Car</h4>
-              <p className="text-red-700">
-                Today&apos;s car is a <strong>{puzzleData.category}</strong> from{' '}
-                <strong>{puzzleData.country_origin}</strong>.
+            <div className="bg-gray-800/50 border border-red-800/50 rounded-lg p-4">
+              <h4 className="font-semibold text-red-300 mb-2">Today&apos;s Car</h4>
+              <p className="text-gray-200">
+                Today&apos;s car is a <strong className="text-red-300">{puzzleData.category}</strong> from{' '}
+                <strong className="text-red-300">{puzzleData.country_origin}</strong>.
               </p>
-              <p className="text-xs text-red-600 mt-2">
+              <p className="text-xs text-gray-400 mt-2">
                 {getEraEmoji(puzzleData.era)} {puzzleData.era} • {puzzleData.decade} • {puzzleData.fuel_type}
               </p>
-              <p className="text-xs text-red-600 mt-2">
+              <p className="text-xs text-gray-400 mt-2">
                 More clues will be revealed as you make guesses...
               </p>
             </div>
@@ -813,14 +813,14 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
 
         {/* Error messages */}
         {errorMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-red-900/30 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
             {errorMessage}
           </div>
         )}
         
         {/* Validation error/hint */}
         {validationError && (
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+          <div className="bg-amber-900/30 border border-amber-700 text-amber-200 px-4 py-3 rounded mb-4">
             {validationError}
           </div>
         )}
@@ -838,30 +838,30 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
         
         {/* Game result message */}
         {gameState === 'won' && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          <div className="bg-emerald-900/30 border border-emerald-700 text-emerald-200 px-4 py-3 rounded mb-4">
             <h3 className="font-bold text-lg mb-2">Congratulations! 🎉</h3>
             <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
-            <p className="mt-2">The car was: <strong>{puzzleData.answer.toUpperCase()}</strong></p>
-            <p className="mt-1 text-sm">
+            <p className="mt-2">The car was: <strong className="text-emerald-300">{puzzleData.answer.toUpperCase()}</strong></p>
+            <p className="mt-1 text-sm text-emerald-100">
               {puzzleData.make} • {puzzleData.year} • {puzzleData.country_origin}
               {puzzleData.horsepower > 0 && ` • ${puzzleData.horsepower} HP`}
             </p>
             {puzzleData.fun_fact && (
-              <p className="mt-2 italic">{puzzleData.fun_fact}</p>
+              <p className="mt-2 italic text-emerald-100">{puzzleData.fun_fact}</p>
             )}
           </div>
         )}
         
         {gameState === 'lost' && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-red-900/30 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
             <h3 className="font-bold text-lg mb-2">Game Over</h3>
-            <p>The car was: <strong>{puzzleData.answer.toUpperCase()}</strong></p>
-            <p className="mt-1 text-sm">
+            <p>The car was: <strong className="text-red-300">{puzzleData.answer.toUpperCase()}</strong></p>
+            <p className="mt-1 text-sm text-red-100">
               {puzzleData.make} • {puzzleData.year} • {puzzleData.country_origin}
               {puzzleData.horsepower > 0 && ` • ${puzzleData.horsepower} HP`}
             </p>
             {puzzleData.fun_fact && (
-              <p className="mt-2 italic">{puzzleData.fun_fact}</p>
+              <p className="mt-2 italic text-red-100">{puzzleData.fun_fact}</p>
             )}
           </div>
         )}
@@ -869,16 +869,16 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
         {/* Previous attempts grid */}
         {attempts.length > 0 && (
           <div className="mb-6">
-            <h3 className="font-semibold mb-3">Your Guesses:</h3>
+            <h3 className="font-semibold mb-3 text-gray-200">Your Guesses:</h3>
             <div className="space-y-4">
               {attempts.map((attempt, index) => (
-                <div key={index} className="bg-gray-50 rounded-lg p-3">
+                <div key={index} className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
                   <div className="flex flex-wrap justify-center gap-1 mb-2">
                     {attempt.guess.split('').map((letter: string, letterIndex: number) => {
                         const status: 'correct' | 'present' | 'absent' = attempt.letterFeedback?.[letterIndex]?.status || 'absent';
-                        const bgColor: string = status === 'correct' ? 'bg-green-500' : 
-                                                                    status === 'present' ? 'bg-yellow-500' : 'bg-gray-300';
-                        const textColor: string = status === 'absent' ? 'text-gray-700' : 'text-white';
+                        const bgColor: string = status === 'correct' ? 'bg-emerald-600' : 
+                                                                    status === 'present' ? 'bg-amber-500' : 'bg-gray-700';
+                        const textColor: string = status === 'absent' ? 'text-gray-300' : 'text-white';
                         
                         return (
                             <div 
@@ -890,7 +890,7 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
                         );
                     })}
                   </div>
-                  <div className="text-center text-xs text-gray-500">
+                  <div className="text-center text-xs text-gray-400">
                     {attempt.guess}
                   </div>
                 </div>
@@ -901,21 +901,21 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
         
         {/* Input for guesses - FREE TEXT */}
         {gameState === 'playing' && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 -mx-4 md:-mx-6 -mb-4 md:-mb-6">
+          <div className="sticky bottom-0 bg-gray-800 border-t border-gray-700 p-4 -mx-4 md:-mx-6 -mb-4 md:-mb-6">
             <div className="flex gap-2">
               <input
                 type="text"
                 value={guess}
                 onChange={(e) => setGuess(e.target.value)}
                 placeholder="Enter car name (e.g., Toyota Supra)"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-100 placeholder-gray-400"
                 onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
                 disabled={isGuessLoading}
               />
               <button
                 onClick={handleGuess}
                 disabled={!guess.trim() || isGuessLoading}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-red-700 text-white rounded-md hover:bg-red-600 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
               >
                 {isGuessLoading ? '...' : 'Guess'}
               </button>
@@ -928,12 +928,12 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
           <div className="flex flex-col items-center mt-4">
             <button
               onClick={copyToClipboard}
-              className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              className="flex items-center gap-2 px-4 py-2 bg-red-700 text-white rounded-md hover:bg-red-600 transition-colors"
             >
               <MdShare /> Share Result
             </button>
             {shareMessage && (
-              <div className="mt-2 text-red-600">{shareMessage}</div>
+              <div className="mt-2 text-red-300">{shareMessage}</div>
             )}
 
             <FeedbackComponent
@@ -955,14 +955,14 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
       </div>
 
       {/* How to Play section */}
-      <div className="bg-gray-100 rounded-lg p-4 mt-6">
-        <h3 className="font-bold mb-2">How to Play Automoble:</h3>
-        <ul className="list-disc list-inside space-y-1 text-sm">
+      <div className="bg-gray-800/50 rounded-lg p-4 mt-6 border border-gray-700">
+        <h3 className="font-bold mb-2 text-gray-200">How to Play Automoble:</h3>
+        <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
           <li>Guess the car by entering its name (free text input)</li>
           <li>Get letter-by-letter feedback compared to the answer</li>
-          <li>🟩 Green: Letter in correct position</li>
-          <li>🟨 Yellow: Letter is in the name but wrong position</li>
-          <li>⬜ Gray: Letter not in the name</li>
+          <li className="text-emerald-400">🟩 Green: Letter in correct position</li>
+          <li className="text-amber-400">🟨 Yellow: Letter is in the name but wrong position</li>
+          <li className="text-gray-400">⬜ Gray: Letter not in the name</li>
           <li>Additional hints unlock with each attempt (make, year, specs, etc.)</li>
           <li>You have 6 attempts to guess the car</li>
           <li>The car image becomes clearer with each attempt</li>

@@ -111,7 +111,7 @@ export default function ScramblePage() {
   }, []);
 
   return (
-    <div className="page-with-ads bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="scramble-organization-schema"
@@ -137,10 +137,10 @@ export default function ScramblePage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -169,28 +169,7 @@ export default function ScramblePage() {
         </div>
       )}
 
-      <div className="max-w-4xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold text-gray-900">Word Scramble Game</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-green-50 px-3 py-1 rounded-full text-xs font-medium border border-green-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
-          </div>
-          <p className="text-lg text-gray-600">
-            Unscramble letters to form words and challenge your vocabulary skills with our daily puzzles!
-          </p>
-        </div>
-
+      <div className="max-w-3xl mx-auto p-4">
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
@@ -198,34 +177,34 @@ export default function ScramblePage() {
         <ScrambleGame />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl text-gray-800 font-bold">Word Scramble Game Information & FAQ</h2>
-              <span className="text-gray-800 transition-transform duration-200 group-open:rotate-180">
+              <h2 className="text-xl font-bold text-white">Word Scramble Game Information & FAQ</h2>
+              <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
             </summary>
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-               <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <h3 className="font-semibold text-white">Game Updates</h3>
+                <p className="text-gray-300 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
-               <h3 className="font-semibold" itemProp="name">What is Word Scramble?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What is Word Scramble?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Word Scramble is a puzzle game where letters of a word are randomly rearranged, and players must 
                   unscramble them to form the original word. It&apos;s an excellent game for vocabulary building, 
                   spelling practice, and mental exercise that challenges your pattern recognition and word formation skills.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-               <h3 className="font-semibold" itemProp="name">How do you play Word Scramble?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">How do you play Word Scramble?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Players rearrange scrambled letters by clicking on them in the correct order to form words. 
                   Use hints if you&apos;re stuck, shuffle letters for a new arrangement, and submit your answer 
                   to check if it matches the original word. The game features multiple difficulty levels and 
@@ -233,16 +212,16 @@ export default function ScramblePage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-               <h3 className="font-semibold" itemProp="name">What are the benefits of playing Word Scramble?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What are the benefits of playing Word Scramble?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Word Scramble improves vocabulary, spelling skills, pattern recognition, and cognitive abilities. 
                   It enhances mental flexibility, word recognition speed, and helps discover new words and their 
                   correct spellings. Regular play can significantly boost your language skills and mental agility.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-               <h3 className="font-semibold" itemProp="name">Is Word Scramble educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">Is Word Scramble educational?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Word Scramble is highly educational for vocabulary building, spelling practice, and cognitive 
                   development. It helps players learn new words, improve spelling, enhance pattern recognition skills, 
                   and develop better language processing abilities. Many educators use word scramble games as fun 
@@ -250,16 +229,16 @@ export default function ScramblePage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-               <h3 className="font-semibold" itemProp="name">What strategies help with solving scrambles?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What strategies help with solving scrambles?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Look for common prefixes and suffixes, identify vowel and consonant patterns, try to spot smaller 
                   words within the scramble, and consider different letter combinations. Starting with the first and 
                   last letters can often provide clues to the overall word structure.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-               <h3 className="font-semibold" itemProp="name">Is this Word Scramble game free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">Is this Word Scramble game free to play?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Our online Word Scramble game is completely free to play with no registration required. 
                   You can play as many games as you want and enjoy daily new puzzles to keep challenging and 
                   improving your word skills.

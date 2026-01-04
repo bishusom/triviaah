@@ -1,4 +1,4 @@
-// src/app/brainwave/historidle/page.tsx
+// src/app/brainwave/historidle/page.tsx - REDESIGNED
 'use client';
 
 import HistoridleComponent from '@/components/brainwave/HistoridleComponent';
@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { HistoridleData } from '@/lib/brainwave/historidle/historidle-logic';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { Clock, Target, Users, Trophy, Scroll, Castle } from 'lucide-react';
 
 export default function HistoridlePage() {
   const [historidleData, setHistoridleData] = useState<HistoridleData | null>(null);
@@ -132,10 +133,10 @@ export default function HistoridlePage() {
     fetchDailyHistoridle();
   }, [currentDate]);
 
-  // Show loading while waiting for client date or data
+  // Loading State
   if (isLoading || !currentDate) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900">
         {/* Structured Data */}
         <Script
           id="historidle-organization-schema"
@@ -156,10 +157,10 @@ export default function HistoridlePage() {
         {/* Desktop Side Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
@@ -167,53 +168,43 @@ export default function HistoridlePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold mb-2">🏛️ Historidle - History Guessing Game</h1>
-            {/* Last Updated Timestamp */}
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 rounded-2xl">
+                <Scroll className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+                HISTORIDLE
+              </h1>
+            </div>
+            <p className="text-gray-200 text-lg">Daily Historical Puzzle Challenge</p>
           </div>
-          <p className="text-gray-600 mb-6">Guess the historical figure or event from dates and progressive clues!</p>
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          </div>
-          <p className="text-gray-500 text-sm mt-2">Loading today&apos;s historical puzzle...</p>
 
-          {/* Hidden SEO Content */}
-          <div className="sr-only" aria-hidden="false">
-            <div itemScope itemType="https://schema.org/Game">
-              <meta itemProp="dateModified" content={lastUpdated} />
-              <h2>Historidle - Daily Historical Puzzle Game</h2>
-              <p itemProp="description">
-                Test your history knowledge with Historidle, a daily puzzle game where you guess historical 
-                figures or events based on dates, progressive clues, and timeline information. Educational 
-                and fun for history enthusiasts of all ages.
-              </p>
-              <h3>How to Play Historidle:</h3>
-              <ul>
-                <li>Guess the historical figure or event in 6 attempts</li>
-                <li>Start with date clues and unlock more hints with wrong guesses</li>
-                <li>Use timeline information and progressive text clues</li>
-                <li>Get Wordle-style feedback on your guesses</li>
-                <li>Learn about important historical figures and events</li>
-                <li>New historical puzzle every day</li>
-                <li>Completely free with no registration required</li>
-              </ul>
-              <p><strong>Game Features:</strong> Daily history challenges, educational historical content, 
-                 progressive clue system, date-based hints, and comprehensive historical database.</p>
+          {/* Loading Card */}
+          <div className="bg-blue-800/50 backdrop-blur-lg rounded-3xl border border-blue-700 p-8 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <div className="w-20 h-20 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin"></div>
+                <Scroll className="w-10 h-10 text-blue-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Loading Today&apos;s History Puzzle</h2>
+            <p className="text-blue-200 mb-6">Preparing your historical challenge...</p>
+            
+            <div className="flex justify-center gap-2">
+              {[1, 2, 3].map((dot) => (
+                <div
+                  key={dot}
+                  className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"
+                  style={{ animationDelay: `${dot * 0.2}s` }}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -221,9 +212,10 @@ export default function HistoridlePage() {
     );
   }
 
+  // Error State
   if (error || !historidleData) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 to-black text-white">
         {/* Structured Data */}
         <Script
           id="historidle-organization-schema"
@@ -241,57 +233,66 @@ export default function HistoridlePage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.faq) }}
         />
 
-        {/* Desktop Side Ads */}
+        {/* Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
         )}
         
-        {/* Mobile Bottom Ad */}
         {showMobileAd && (
-          <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold mb-2">🏛️ Historidle - History Guessing Game</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 rounded-2xl">
+                <Scroll className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+                HISTORIDLE
+              </h1>
+            </div>
+            <p className="text-gray-300 text-lg">Daily Historical Puzzle Challenge</p>
+          </div>
+
+          {/* Error Card */}
+          <div className="bg-blue-500/10 backdrop-blur-lg rounded-3xl border border-blue-500/30 p-8 text-center">
+            <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold">!</span>
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Challenge Unavailable</h2>
+            <p className="text-blue-200 mb-6">We couldn&apos;t load today&apos;s historical puzzle.</p>
+            
+            <div className="bg-blue-500/20 border border-blue-500/30 rounded-2xl p-4 mb-6">
+              <p className="text-blue-300 text-sm">{error || 'No puzzle available for today'}</p>
+            </div>
+            
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-3 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105"
             >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+              Try Again
+            </button>
           </div>
-          <p className="text-gray-600 mb-4">Guess the historical figure or event from dates and progressive clues!</p>
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-            <p className="mb-2">No historical puzzle available for today.</p>
-            <p className="text-sm">Please check back tomorrow or try refreshing the page!</p>
-            {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
-          </div>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors"
-          >
-            Refresh Page
-          </button>
         </div>
       </div>
     );
   }
 
+  // Main Game State
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="historidle-organization-schema"
@@ -312,10 +313,10 @@ export default function HistoridlePage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -323,7 +324,7 @@ export default function HistoridlePage() {
       
       {/* Mobile Bottom Ad */}
       {showMobileAd && (
-         <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+        <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} className="lg:hidden" />
       )}
       
       {/* Ad Controls */}
@@ -331,110 +332,121 @@ export default function HistoridlePage() {
         <div className="fixed top-4 right-4 z-50 flex gap-2">
           <button
             onClick={() => setShowDesktopAds(!showDesktopAds)}
-            className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded hidden lg:block"
+            className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm hidden lg:block transition-all duration-300"
           >
-            {showDesktopAds ? 'Hide Side Ads' : 'Show Side Ads'}
+            {showDesktopAds ? 'Hide Ads' : 'Show Ads'}
           </button>
           <button
             onClick={() => setShowMobileAd(!showMobileAd)}
-            className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded lg:hidden"
+            className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm lg:hidden transition-all duration-300"
           >
-            {showMobileAd ? 'Hide Bottom Ad' : 'Show Bottom Ad'}
+            {showMobileAd ? 'Hide Ad' : 'Show Ad'}
           </button>
         </div>
       )}
 
-      <div className="max-w-2xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-6">
-          <div className="flex justify-center items-center gap-4 mb-2">
-            <h1 className="text-3xl font-bold">🏛️ Historidle</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+      <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 relative z-30">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 rounded-2xl shadow-lg">
+                <Scroll className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+                HISTORIDLE
+              </h1>
+            </div>
+            
+            <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-lg px-4 py-2 rounded-2xl border border-gray-700">
+              <Clock className="w-4 h-4 text-blue-400" />
+              <time 
+                dateTime={lastUpdated} 
+                className="text-blue-400 text-sm font-medium"
+              >
+                Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </time>
+            </div>
           </div>
-          <p className="text-gray-600">Guess the historical figure or event from dates and progressive clues in 6 tries!</p>
+          
+          <p className="text-gray-300 text-lg mb-2">Guess the historical figure or event from dates and clues in 6 attempts</p>
+          
+          {/* Stats Bar */}
+          <div className="flex justify-center gap-6 mb-8">
+            <div className="flex items-center gap-2 text-gray-400">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              <span className="text-sm">Daily Challenge</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Users className="w-5 h-5 text-blue-500" />
+              <span className="text-sm">Global Historians</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Target className="w-5 h-5 text-indigo-500" />
+              <span className="text-sm">6 Attempts</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Castle className="w-5 h-5 text-blue-500" />
+              <span className="text-sm">Progressive Clues</span>
+            </div>
+          </div>
         </div>
 
+        {/* Mute Button */}
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
         
+        {/* Game Component */}
         <HistoridleComponent initialData={historidleData} />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800/30 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 relative z-10">
           <details className="group">
-            <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Historidle Game Information & FAQ</h2>
-              <span className="text-gray-500 group-open:rotate-180 transition-transform">
+            <summary className="flex justify-between items-center cursor-pointer list-none p-4 hover:bg-gray-700/30 rounded-2xl transition-all duration-300">
+              <h2 className="text-xl font-bold text-white">Game Guide & FAQ</h2>
+              <span className="text-blue-400 group-open:rotate-180 transition-transform duration-300 text-2xl">
                 ▼
               </span>
             </summary>
-            <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
-              {/* Content Freshness Info */}
-              <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
-                  <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
-                </p>
-              </div>
-
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Historidle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Historidle is a daily historical puzzle game where you guess the target historical figure or event 
-                  using dates, progressive clues, and timeline information. It&apos;s an educational game that teaches 
-                  about important historical figures and events in a fun, interactive way with Wordle-style mechanics.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do I play Historidle?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  You have 6 attempts to guess the daily historical figure or event. Start with date clues and unlock 
-                  more detailed historical hints with each wrong guess. Use the timeline information and progressive 
-                  text clues to narrow down your answer. Each guess provides Wordle-style feedback to help you identify 
-                  the correct historical subject.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What types of clues does Historidle provide?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Historidle provides multiple types of clues: Emoji representations of the historical figure or event, 
-                  timeline information (birth/death dates for figures or event dates), progressive text hints that unlock 
-                  with wrong guesses, and Wordle-style feedback indicating how close your guess is to the correct answer.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Historidle educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! Historidle is designed to be both fun and educational. Players learn about important historical 
-                  figures, events, timelines, and historical context while playing. It&apos;s great for history enthusiasts, 
-                  students, educators, and anyone interested in learning more about the past in an engaging way.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What historical periods are covered?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Historidle covers a wide range of historical periods from ancient civilizations to modern times, 
-                  including famous leaders, inventors, artists, scientists, political figures, and significant historical 
-                  events from around the world.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Historidle free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! Historidle is completely free to play with no registration required. New historical puzzles 
-                  are available every day at midnight local time.
-                </p>
+            <div className="mt-4 space-y-6 pt-6 border-t border-gray-700">
+              <div className="grid gap-4">
+                {[
+                  {
+                    question: "What is Historidle?",
+                    answer: "Historidle is a daily historical puzzle game where you guess the target historical figure or event using dates, progressive clues, and timeline information. It's an educational game that teaches about important historical figures and events in a fun, interactive way with Wordle-style mechanics."
+                  },
+                  {
+                    question: "How do I play Historidle?",
+                    answer: "You have 6 attempts to guess the daily historical figure or event. Start with date clues and unlock more detailed historical hints with each wrong guess. Use the timeline information and progressive text clues to narrow down your answer. Each guess provides Wordle-style feedback to help you identify the correct historical subject."
+                  },
+                  {
+                    question: "What types of clues does Historidle provide?",
+                    answer: "Historidle provides multiple types of clues: Emoji representations of the historical figure or event, timeline information (birth/death dates for figures or event dates), progressive text hints that unlock with wrong guesses, and Wordle-style feedback indicating how close your guess is to the correct answer."
+                  },
+                  {
+                    question: "Is Historidle educational?",
+                    answer: "Yes! Historidle is designed to be both fun and educational. Players learn about important historical figures, events, timelines, and historical context while playing. It's great for history enthusiasts, students, educators, and anyone interested in learning more about the past in an engaging way."
+                  },
+                  {
+                    question: "What historical periods are covered?",
+                    answer: "Historidle covers a wide range of historical periods from ancient civilizations to modern times, including famous leaders, inventors, artists, scientists, political figures, and significant historical events from around the world."
+                  },
+                  {
+                    question: "Is Historidle free to play?",
+                    answer: "Yes! Historidle is completely free to play with no registration required. New historical puzzles are available every day at midnight local time."
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="bg-gray-700/30 rounded-2xl p-4">
+                    <h3 className="font-semibold text-blue-400 mb-2">{faq.question}</h3>
+                    <p className="text-gray-300">{faq.answer}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </details>

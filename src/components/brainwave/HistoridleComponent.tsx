@@ -10,6 +10,7 @@ import { checkHistoridleGuess,
         validateHistoricalGuess,
         type HistoridleData, 
         type HistoridleGuessResult } from '@/lib/brainwave/historidle/historidle-logic';
+import { Scroll, Target, Search, Sparkles, Eye, EyeOff, Clock, Castle } from 'lucide-react';
 
 interface HistoridleComponentProps {
   initialData: HistoridleData;
@@ -27,27 +28,27 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: HistoridleGuessResult
     {
       icon: "🎯",
       text: `Great start! You have ${correctLetters} correct letters.`,
-      color: "bg-green-100 border-green-400 text-green-700"
+      color: "bg-gradient-to-r from-blue-500/20 to-indigo-500/20 border border-blue-500/30 text-blue-400"
     },
     {
       icon: "🔍",
       text: `Look for patterns. ${presentLetters} letters are in the title but misplaced.`,
-      color: "bg-yellow-100 border-yellow-400 text-yellow-700"
+      color: "bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 text-yellow-400"
     },
     {
       icon: "🤔",
-      text: "Compare letter positions. Focus on the green letters first.",
-      color: "bg-blue-100 border-blue-400 text-blue-700"
+      text: "Compare letter positions. Focus on the blue letters first.",
+      color: "bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 text-indigo-400"
     },
     {
       icon: "💡",
       text: "Use the revealed hints below to narrow down your options.",
-      color: "bg-purple-100 border-purple-400 text-purple-700"
+      color: "bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-400"
     },
     {
       icon: "⚡",
       text: "Final attempt! Use all clues and think about historical figures/events that fit the pattern.",
-      color: "bg-red-100 border-red-400 text-red-700"
+      color: "bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 text-red-400"
     }
   ];
   
@@ -55,19 +56,19 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: HistoridleGuessResult
   const currentHint = hints[hintIndex];
   
   return (
-    <div className={`rounded-lg p-4 mb-4 border ${currentHint.color}`}>
+    <div className={`rounded-2xl p-4 mb-4 ${currentHint.color}`}>
       <div className="flex items-center mb-2">
-        <span className="text-xl mr-2">{currentHint.icon}</span>
+        <span className="text-xl mr-3">{currentHint.icon}</span>
         <span className="font-semibold">{currentHint.text}</span>
       </div>
       
-      <div className="flex gap-1 mt-2">
+      <div className="flex gap-1 mt-3">
         {latestAttempt.letterStatuses?.map((status, i) => (
           <div
             key={i}
             className={`h-1 flex-1 rounded ${
-              status === 'correct' ? 'bg-green-500' :
-              status === 'present' ? 'bg-yellow-500' : 'bg-gray-300'
+              status === 'correct' ? 'bg-gradient-to-r from-blue-400 to-indigo-500' :
+              status === 'present' ? 'bg-gradient-to-r from-yellow-400 to-amber-500' : 'bg-gray-600'
             }`}
           />
         ))}
@@ -116,35 +117,61 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: HistoridleData,
 
   const hintItems = [
     attempts.length >= 1 && (
-      <div key="date1" className="flex-none w-full text-sm">
-        📅 <strong>{puzzleData.dates[0]}:</strong> {puzzleData.dateSignificances[0]}
+      <div key="date1" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-blue-400">📅</span>
+          <span className="text-white font-medium">Date 1:</span>
+          <span className="text-blue-400 font-bold">{puzzleData.dates[0]}</span>
+        </div>
+        <p className="text-gray-300 ml-7">{puzzleData.dateSignificances[0]}</p>
       </div>
     ),
     attempts.length >= 2 && (
-      <div key="date2" className="flex-none w-full text-sm">
-        📅 <strong>{puzzleData.dates[1]}:</strong> {puzzleData.dateSignificances[1]}
+      <div key="date2" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-blue-400">📅</span>
+          <span className="text-white font-medium">Date 2:</span>
+          <span className="text-blue-400 font-bold">{puzzleData.dates[1]}</span>
+        </div>
+        <p className="text-gray-300 ml-7">{puzzleData.dateSignificances[1]}</p>
       </div>
     ),
     attempts.length >= 3 && (
-      <div key="date3" className="flex-none w-full text-sm">
-        📅 <strong>{puzzleData.dates[2]}:</strong> {puzzleData.dateSignificances[2]}
+      <div key="date3" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-blue-400">📅</span>
+          <span className="text-white font-medium">Date 3:</span>
+          <span className="text-blue-400 font-bold">{puzzleData.dates[2]}</span>
+        </div>
+        <p className="text-gray-300 ml-7">{puzzleData.dateSignificances[2]}</p>
       </div>
     ),
     attempts.length >= 4 && puzzleData.hints[0] && (
-      <div key="hint1" className="flex-none w-full text-sm">
-        💡 {puzzleData.hints[0]}
+      <div key="hint1" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-blue-400">💡</span>
+          <span className="text-white font-medium">Historical Hint:</span>
+        </div>
+        <p className="text-gray-300 ml-7">{puzzleData.hints[0]}</p>
       </div>
     ),
     attempts.length >= 5 && puzzleData.hints[1] && (
-      <div key="hint2" className="flex-none w-full text-sm">
-        💡 {puzzleData.hints[1]}
+      <div key="hint2" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-blue-400">💡</span>
+          <span className="text-white font-medium">Historical Hint:</span>
+        </div>
+        <p className="text-gray-300 ml-7">{puzzleData.hints[1]}</p>
       </div>
     ),
   ].filter(Boolean);
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-      <h4 className="font-semibold text-blue-800 mb-2">💡 Historical Hints Revealed:</h4>
+    <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/30 rounded-2xl p-4 mb-6">
+      <h4 className="font-semibold text-blue-400 mb-3 flex items-center gap-2">
+        <Sparkles className="w-4 h-4" />
+        Historical Hints Revealed:
+      </h4>
       <div className="relative overflow-hidden">
         <div
           ref={hintsScrollRef}
@@ -158,13 +185,13 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: HistoridleData,
           ))}
         </div>
         {hintItems.length > 1 && (
-          <div className="flex justify-center gap-2 mt-2">
+          <div className="flex justify-center gap-2 mt-3">
             {hintItems.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setActiveHintIndex(index)}
-                className={`w-2 h-2 rounded-full ${
-                  index === activeHintIndex ? 'bg-blue-600' : 'bg-gray-300'
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === activeHintIndex ? 'bg-blue-400 scale-125' : 'bg-gray-600'
                 }`}
                 aria-label={`Go to hint ${index + 1}`}
               />
@@ -172,26 +199,9 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: HistoridleData,
           </div>
         )}
       </div>
-      <p className="text-xs text-blue-600 mt-2">
+      <p className="text-xs text-blue-400 mt-3 text-center">
         More historical hints unlock with each guess... ({hintsRevealed}/5 revealed)
       </p>
-    </div>
-  );
-};
-
-const DateDisplay = ({ dates }: { dates: [string, string, string] }) => {
-  return (
-    <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-12 mb-8">
-      {dates.map((date, index) => (
-        <div key={index} className="text-center">
-          <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-6 shadow-lg">
-            <div className="text-4xl md:text-5xl font-bold text-blue-800 mb-2">
-              {/* remove the dash from the date */}
-              {date.replace(/-/g,' ')} 
-            </div>
-          </div>
-        </div>
-      ))}
     </div>
   );
 };
@@ -201,21 +211,27 @@ const AttemptHistory = ({ attempts }: { attempts: HistoridleGuessResult[] }) => 
 
   return (
     <div className="mb-6">
-      <h3 className="font-semibold mb-3 text-gray-800">Your Guesses:</h3>
-      <div className="space-y-4">
+      <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+        <Target className="w-4 h-4" />
+        Your Guesses:
+      </h3>
+      <div className="grid gap-3">
         {attempts.map((attempt, index) => (
-          <div key={index} className="bg-gray-50 rounded-lg p-3">
-            <div className="flex flex-wrap justify-center gap-1 mb-2">
+          <div key={index} className="bg-gray-700/30 rounded-xl p-4 border border-gray-600">
+            <div className="flex flex-wrap justify-center gap-2">
               {attempt.guess.split('').map((letter, letterIndex) => {
                 const status = attempt.letterStatuses?.[letterIndex] || 'absent';
-                const bgColor = status === 'correct' ? 'bg-green-500' : 
-                              status === 'present' ? 'bg-amber-500' : 'bg-gray-400';
-                const textColor = status === 'absent' ? 'text-gray-700' : 'text-white';
+                const bgColor = status === 'correct' 
+                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600' 
+                  : status === 'present' 
+                  ? 'bg-gradient-to-br from-yellow-500 to-amber-600'
+                  : 'bg-gray-600 border border-gray-500';
+                const textColor = status === 'absent' ? 'text-gray-300' : 'text-white';
                 
                 return (
                   <div 
                     key={letterIndex} 
-                    className={`w-8 h-8 flex items-center justify-center rounded text-sm font-bold ${bgColor} ${textColor}`}
+                    className={`w-10 h-10 flex items-center justify-center rounded-xl text-lg font-bold ${bgColor} ${textColor} transition-all duration-300 transform hover:scale-110`}
                   >
                     {letter.toUpperCase()}
                   </div>
@@ -237,6 +253,8 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
   const [shareMessage, setShareMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isGuessLoading, setIsGuessLoading] = useState(false);
+  const [hardMode, setHardMode] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
   const [gameStarted, setGameStarted] = useState(false);
 
@@ -261,26 +279,6 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
 
   // Sound effects
   const { isMuted } = useSound();
-  const correctSound = useRef<HTMLAudioElement | null>(null);
-  const incorrectSound = useRef<HTMLAudioElement | null>(null);
-  const winSound = useRef<HTMLAudioElement | null>(null);
-  const loseSound = useRef<HTMLAudioElement | null>(null);
-  const clickSound = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    // Initialize sound effects
-    correctSound.current = new Audio('/sounds/correct.mp3');
-    incorrectSound.current = new Audio('/sounds/incorrect.mp3');
-    winSound.current = new Audio('/sounds/win.mp3');
-    loseSound.current = new Audio('/sounds/lose.mp3');
-    clickSound.current = new Audio('/sounds/click.mp3');
-
-    return () => {
-      [correctSound, incorrectSound, winSound, loseSound, clickSound].forEach(sound => {
-        sound.current?.pause();
-      });
-    };
-  }, []);
 
   // Load saved progress
   useEffect(() => {
@@ -333,9 +331,10 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
       });
       
       myConfetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ['#3B82F6', '#6366F1', '#8B5CF6']
       });
     }
   };
@@ -438,8 +437,21 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
     });
   };
 
+  const toggleHardMode = () => {
+    setHardMode(!hardMode);
+    playSound('click');
+  };
+
+  const toggleHint = () => {
+    setShowHint(!showHint);
+    playSound('click');
+  };
+
   const triesLeft = 6 - attempts.length;
-  const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
+  const triesLeftColor = 
+    triesLeft >= 4 ? 'text-blue-400' : 
+    triesLeft >= 2 ? 'text-yellow-400' : 
+    'text-red-400';
 
   // Determine header text based on date uniqueness
   const uniqueDates = Array.from(new Set(puzzleData.dates));
@@ -447,99 +459,130 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
     ? `Guess the historical ${puzzleData.type} associated with this date!`
     : `Connect the dates to guess the historical ${puzzleData.type}!`;
 
-
-  
   const DateDisplay = ({ dates }: { dates: [string, string, string] }) => {
-  // Count unique dates
-  const uniqueDates = Array.from(new Set(dates));
-  const allSame = uniqueDates.length === 1;
-  const twoSame = uniqueDates.length === 2;
-  
-  if (allSame) {
-    // Show only one date when all are same
-    return (
-      <div className="text-center mb-8">
-        <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-6 shadow-lg inline-block">
-          <div className="text-4xl md:text-5xl font-bold text-blue-800 mb-2">
-            {dates[0].replace(/-/g, ' ')}
-          </div>
-          <div className="text-sm text-blue-600 mt-2">
-            Three significant events occurred in this date
+    // Count unique dates
+    const uniqueDates = Array.from(new Set(dates));
+    const allSame = uniqueDates.length === 1;
+    const twoSame = uniqueDates.length === 2;
+    
+    if (allSame) {
+      // Show only one date when all are same
+      return (
+        <div className="text-center mb-8">
+          <div className="bg-gradient-to-r from-blue-500/20 to-indigo-500/20 border border-blue-500/30 rounded-2xl p-8 shadow-lg inline-block">
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+              {dates[0].replace(/-/g, ' ')}
+            </div>
+            <div className="text-blue-300 mt-2 flex items-center justify-center gap-2">
+              <Clock className="w-4 h-4" />
+              Three significant events occurred on this date
+            </div>
           </div>
         </div>
-      </div>
-    );
-  } else if (twoSame) {
-    // Show two dates when two are same
-    // Find which date appears twice
-    const dateCounts = dates.reduce((acc, date) => {
-      acc[date] = (acc[date] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-    
-    const displayDates = Object.keys(dateCounts);
-    return (
-          <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-12 mb-8">
-            {displayDates.map((date, index) => (
-              <div key={index} className="text-center">
-                <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-6 shadow-lg">
-                  <div className="text-4xl md:text-5xl font-bold text-blue-800 mb-2">
-                    {date.replace(/-/g, ' ')}
+      );
+    } else if (twoSame) {
+      // Show two dates when two are same
+      const dateCounts = dates.reduce((acc, date) => {
+        acc[date] = (acc[date] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+      
+      const displayDates = Object.keys(dateCounts);
+      return (
+        <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-8">
+          {displayDates.map((date, index) => (
+            <div key={index} className="text-center">
+              <div className="bg-gradient-to-r from-blue-500/20 to-indigo-500/20 border border-blue-500/30 rounded-2xl p-6 shadow-lg">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">
+                  {date.replace(/-/g, ' ')}
+                </div>
+                {dateCounts[date] > 1 && (
+                  <div className="text-blue-300 text-sm flex items-center justify-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {dateCounts[date]} significant events
                   </div>
-                  {dateCounts[date] > 1 && (
-                    <div className="text-sm text-blue-600">
-                      {dateCounts[date]} significant events
-                    </div>
-                  )}
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    } else {
+      // Show all three dates when all are different
+      return (
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
+          {dates.map((date, index) => (
+            <div key={index} className="text-center">
+              <div className="bg-gradient-to-r from-blue-500/20 to-indigo-500/20 border border-blue-500/30 rounded-2xl p-6 shadow-lg">
+                <div className="text-2xl md:text-3xl font-bold text-white">
+                  {date.replace(/-/g, ' ')}
                 </div>
               </div>
-            ))}
-          </div>
-        );
-      } else {
-        // Show all three dates when all are different
-        return (
-          <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-12 mb-8">
-            {dates.map((date, index) => (
-              <div key={index} className="text-center">
-                <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-6 shadow-lg">
-                  <div className="text-4xl md:text-5xl font-bold text-blue-800 mb-2">
-                    {date.replace(/-/g, ' ')}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        );
-      }
-    };    
-
+            </div>
+          ))}
+        </div>
+      );
+    }
+  };    
 
   return (
-    <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
+    <div className="relative">
       <canvas 
         ref={confettiCanvasRef} 
-        className="fixed top-0 left-0 w-full h-full pointer-events-none z-50"
+        className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
       />
       
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 flex-grow">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg md:text-xl font-semibold text-gray-800">
-            {headerText}
-          </h2>
-          <div className={`text-base font-bold ${triesLeftColor}`}>
-            {triesLeft} {triesLeft === 1 ? 'try' : 'tries'} left
+      {/* Main Game Card */}
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5 mb-5">
+        {/* Header with Attempts Counter */}
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-2 rounded-xl">
+              <Scroll className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Today&apos;s Historical Mystery</h2>
+          </div>
+          <div className={`flex items-center gap-2 text-lg font-bold ${triesLeftColor}`}>
+            <Target className="w-5 h-5" />
+            <span>{triesLeft} {triesLeft === 1 ? 'TRY' : 'TRIES'}</span>
           </div>
         </div>
 
         {/* Date Display */}
         <DateDisplay dates={puzzleData.dates} />
 
+        {/* Game Controls */}
+        <div className="flex flex-wrap gap-3 mb-5">
+          <button
+            onClick={toggleHardMode}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
+              hardMode 
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg' 
+                : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+            }`}
+          >
+            <Castle className="w-4 h-4" />
+            {hardMode ? 'Hard Mode ON' : 'Hard Mode'}
+          </button>
+          
+          {hardMode && attempts.length > 0 && !showHint && gameState === 'playing' && (
+            <button
+              onClick={toggleHint}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300"
+            >
+              {showHint ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showHint ? 'Hide Hint' : 'Show Hint'}
+            </button>
+          )}
+        </div>
+
         {/* Error messages */}
         {errorMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {errorMessage}
+          <div className="bg-red-500/20 border border-red-500/30 rounded-2xl p-4 mb-4 animate-pulse">
+            <div className="flex items-center gap-2 text-red-400">
+              <span className="w-2 h-2 bg-red-400 rounded-full"></span>
+              {errorMessage}
+            </div>
           </div>
         )}
         
@@ -554,13 +597,18 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
           </>
         )}
 
-         {/* Game result message */}
+        {/* Game result message */}
         {gameState === 'won' && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-            <h3 className="font-bold text-lg mb-2">Congratulations! 🎉</h3>
-            <p>You solved it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
-            <p className="mt-2 font-semibold">The answer was: {puzzleData.targetTitle}</p>
-            <div className="mt-3 text-sm">
+          <div className="bg-gradient-to-r from-blue-500/20 to-indigo-500/20 border border-blue-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Victory! 🎉</h3>
+            <p className="text-blue-400 mb-2">You solved it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
+            <p className="text-gray-300">The answer was: <strong className="text-white">{puzzleData.targetTitle}</strong></p>
+            <div className="mt-4 text-sm text-blue-300 space-y-1">
               <p><strong>Date 1 ({puzzleData.dates[0]}):</strong> {puzzleData.dateSignificances[0]}</p>
               <p><strong>Date 2 ({puzzleData.dates[1]}):</strong> {puzzleData.dateSignificances[1]}</p>
               <p><strong>Date 3 ({puzzleData.dates[2]}):</strong> {puzzleData.dateSignificances[2]}</p>
@@ -569,10 +617,15 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
         )}
         
         {gameState === 'lost' && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-            <h3 className="font-bold text-lg mb-2">Game Over</h3>
-            <p className="mb-2">The answer was: <strong>{puzzleData.targetTitle}</strong></p>
-            <div className="text-sm">
+          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center">
+                <Scroll className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Game Over</h3>
+            <p className="text-red-400 mb-2">The answer was: <strong className="text-white">{puzzleData.targetTitle}</strong></p>
+            <div className="mt-4 text-sm text-pink-300 space-y-1">
               <p><strong>Date 1 ({puzzleData.dates[0]}):</strong> {puzzleData.dateSignificances[0]}</p>
               <p><strong>Date 2 ({puzzleData.dates[1]}):</strong> {puzzleData.dateSignificances[1]}</p>
               <p><strong>Date 3 ({puzzleData.dates[2]}):</strong> {puzzleData.dateSignificances[2]}</p>
@@ -585,39 +638,43 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
         
         {/* Input for guesses */}
         {gameState === 'playing' && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 -mx-4 md:-mx-6 -mb-4 md:-mb-6">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={guess}
-                onChange={(e) => setGuess(e.target.value)}
-                placeholder={`Enter historical ${puzzleData.type}`}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
-                disabled={isGuessLoading}
-              />
+          <div className="sticky bottom-0 bg-gray-800/80 backdrop-blur-lg rounded-xl border border-gray-700 p-4 z-[100] -mx-2 md:-mx-4 -mb-2 md:-mb-6">
+            <div className="flex gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={guess}
+                  onChange={(e) => setGuess(e.target.value)}
+                  placeholder={`Enter historical ${puzzleData.type}...`}
+                  className="w-full pl-12 pr-4 py-4 bg-gray-700 border border-gray-600 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
+                  disabled={isGuessLoading}
+                />
+              </div>
               <button
                 onClick={handleGuess}
                 disabled={!guess.trim() || isGuessLoading}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl hover:from-blue-600 hover:to-indigo-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 font-semibold"
               >
-                {isGuessLoading ? '...' : 'Guess'}
+                {isGuessLoading ? '...' : 'GUESS'}
               </button>
             </div>
           </div>
         )}
         
-        {/* Share button */}
+        {/* Share & Feedback Section */}
         {(gameState === 'won' || gameState === 'lost') && (
-          <div className="flex flex-col items-center mt-4">
+          <div className="flex flex-col items-center gap-4 mt-6">
             <button
               onClick={copyToClipboard}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 font-semibold"
             >
-              <MdShare /> Share Result
+              <MdShare className="w-5 h-5" />
+              Share Result
             </button>
             {shareMessage && (
-              <div className="mt-2 text-blue-600">{shareMessage}</div>
+              <div className="text-blue-400 font-semibold animate-pulse">{shareMessage}</div>
             )}
 
             <FeedbackComponent
@@ -628,7 +685,8 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
                 won: gameState === 'won',
                 correctAnswer: puzzleData.targetTitle,
                 correctAnswerType: puzzleData.type,
-                correctAnswerCategory: puzzleData.category
+                correctAnswerCategory: puzzleData.category,
+                hardMode
               }}
             />
           </div>
@@ -636,18 +694,37 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
       </div>
 
       {/* How to Play section */}
-      <div className="bg-gray-100 rounded-lg p-4 mt-6">
-        <h3 className="font-bold mb-2">How to Play Historidle:</h3>
-        <ul className="list-disc list-inside space-y-1 text-sm">
-          <li>Connect the three dates to identify the historical {puzzleData.type}</li>
-          <li>You have 6 attempts to guess correctly</li>
-          <li>Get letter-by-letter feedback compared to the answer</li>
-          <li>🟩 Green: Letter in correct position</li>
-          <li>🟨 Amber: Letter is in the title but wrong position</li>
-          <li>⬜ Gray: Letter not in the title</li>
-          <li>Historical hints are revealed after each attempt</li>
-          <li>5 total hints: 3 date significances + 2 additional clues</li>
-        </ul>
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5">
+        <h3 className="font-bold text-white mb-3 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-blue-400" />
+          How to Play:
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">🏛️</span>
+            <span>Connect the dates to identify the historical {puzzleData.type}</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">🟩</span>
+            <span>Blue: Letter in correct position</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-yellow-400">🟨</span>
+            <span>Yellow: Letter in title but wrong position</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-gray-400">⬜</span>
+            <span>Gray: Letter not in the title</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-indigo-400">💡</span>
+            <span>Historical hints unlock after each attempt</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">🎯</span>
+            <span>6 attempts to guess correctly</span>
+          </div>
+        </div>
       </div>
     </div>
   );

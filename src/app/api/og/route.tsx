@@ -40,7 +40,7 @@ export async function GET(request: Request) {
             key: 'subtitle',
             style: { fontSize: 28 }
           },
-          'Play now on triviaah.com'
+          'Play now on Triviaah.com'
         )
       ]
     ),

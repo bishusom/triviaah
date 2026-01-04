@@ -41,7 +41,7 @@ export function generatePlotleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs//brainwave/plotle-og.webp',
+          url: '/imgs/brainwave/plotle.webp',
           width: 1200,
           height: 630,
           alt: 'Plotle - Daily Movie Plot Puzzle Game'
@@ -54,7 +54,7 @@ export function generatePlotleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Plotle - Daily Movie Plot Puzzle | Triviaah',
       description: 'Guess the movie from its 6-word plot summary with limited attempts, Wordle-style feedback on plot words. Daily movie guessing game for film lovers.',
-      images: ['/imgs//brainwave/plotle-og.webp'],
+      images: ['/imgs/brainwave/plotle.webp'],
       site: '@elitetrivias',
     },
     robots: {

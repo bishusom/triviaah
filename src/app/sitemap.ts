@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next'
 import { getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
-import { getCurrentMonthQuiz, SPECIAL_QUIZZES } from '@/config/special-quizzes' // Add this import
 
 // Contentful response types
 interface ContentfulSys {
@@ -27,15 +26,8 @@ const PRIORITY_TIERS = {
   MINIMAL: 0.3    // Archive pages, older content
 } as const;
 
-function getMonthName(monthNumber: number): string {
-  return new Date(2000, monthNumber - 1, 1).toLocaleString('default', { month: 'long' });
-}
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://triviaah.com'
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth() + 1;
-  const currentYear = currentDate.getFullYear();
 
   // Static main pages - REALISTIC priorities
   const mainPages: MetadataRoute.Sitemap = [
@@ -47,25 +39,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/leaderboard`,
-      lastModified: new Date(),
+      lastModified: new Date('2025-11-28'),
       changeFrequency: 'daily',
-      priority: 1.0,
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date('2025-12-01'), // Use actual last update
+      lastModified: new Date('2025-11-28'), // Use actual last update
       changeFrequency: 'yearly',
       priority: PRIORITY_TIERS.LOW,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: new Date('2025-12-01'),
+      lastModified: new Date('2025-11-28'),
       changeFrequency: 'yearly',
       priority: PRIORITY_TIERS.LOW,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: new Date('2025-12-01'),
+      lastModified: new Date('2025-11-28'),
       changeFrequency: 'yearly',
       priority: PRIORITY_TIERS.MINIMAL,
     },
@@ -80,8 +72,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }]
 
   const dailyTriviaCategories = [
-    'general-knowledge', 'entertainment', 'geography', 
-    'science', 'arts-literature', 'sports'
+    'general-knowledge', 'quick-fire', 'entertainment', 'geography', 
+    'science', 'arts-literature', 'sports', 'today-in-history'
   ]
 
   const dailyTriviaCategoryPages: MetadataRoute.Sitemap = dailyTriviaCategories.map(category => ({
@@ -91,64 +83,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: PRIORITY_TIERS.HIGH,
   }))
 
-  // Other daily features - HIGH priority
-  const otherDailyPages: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/quick-fire`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: PRIORITY_TIERS.HIGH,
-    },
-    {
-      url: `${baseUrl}/today-in-history`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: PRIORITY_TIERS.HIGH,
-    },
-  ]
-
   // Brainwave games - MEDIUM priority
   const brainwaveCatalog: MetadataRoute.Sitemap = [{
     url: `${baseUrl}/brainwave`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: PRIORITY_TIERS.MEDIUM,
+    priority: PRIORITY_TIERS.HIGH,
   }]
 
   const brainwaveCategories = [
     'capitale', 'plotle', 'celebrile', 'literale',
     'creaturedle', 'foodle', 'inventionle', 'landmarkdle',
     'songle', 'historidle', 'synonymle', 'trordle',
-    'automoble', 'countridle', 'citadle', 'botanle'
+    'automoble', 'botanle', 'citadle', 'countridle'
   ]
 
   const brainwaveCategoryPages: MetadataRoute.Sitemap = brainwaveCategories.map(category => ({
     url: `${baseUrl}/brainwave/${category}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: PRIORITY_TIERS.MEDIUM,
+    priority: PRIORITY_TIERS.HIGH,
   }))
-
-  // 🆕 SPECIAL QUIZZES - Monthly rotating content
-  const specialQuizzesCatalog: MetadataRoute.Sitemap = [{
-    url: `${baseUrl}/special-quizzes`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly', // Updates when month changes
-    priority: PRIORITY_TIERS.MEDIUM,
-  }]
-
-  // Get current month's quiz for inclusion in sitemap
-  const currentMonthQuiz = getCurrentMonthQuiz();
-  
-  // Only include the current month's quiz in sitemap (others are not accessible)
-  const specialQuizPages: MetadataRoute.Sitemap = currentMonthQuiz ? [{
-    url: `${baseUrl}/special-quizzes/${currentMonthQuiz.category}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly',
-    priority: PRIORITY_TIERS.MEDIUM,
-    // Optional: Add more metadata if needed
-    // i.e., `<xhtml:link rel="alternate" hreflang="en" href="..."/>`
-  }] : [];
 
   // DYNAMIC: Fetch trivia categories - MEDIUM priority for category pages
   const triviaCategories = await getCategoriesWithMinQuestions(10)
@@ -165,26 +120,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/trivias/${category}/quiz`,
     lastModified: new Date(),
     changeFrequency: 'daily',
-    priority: PRIORITY_TIERS.HIGH,
-  }))
-
-   
-  // Word games - MEDIUM priority
-  const iQPersonalityTestsCatalog: MetadataRoute.Sitemap = [{
-    url: `${baseUrl}/iq-and-personality-tests`,
-    lastModified: new Date('2025-12-02'),
-    changeFrequency: 'yearly',
-    priority: PRIORITY_TIERS.MEDIUM,
-  }]
-
-  const iQPersonalityTests = ['capa', 'matrixiq', 'mbti', 'big-five', 'enneagram', 'disc', 'love-languages', 'holland-code']
-  const iQPersonalityTestsPages: MetadataRoute.Sitemap = iQPersonalityTests.map(test => ({
-    url: `${baseUrl}/iq-and-personality-tests/${test}`,
-    lastModified: new Date(),
-    changeFrequency: 'yearly',
     priority: PRIORITY_TIERS.MEDIUM,
   }))
-
 
   // DYNAMIC: Subcategory pages - MEDIUM priority
   const subcategoryPages = await fetchSubcategoryPages(baseUrl)
@@ -197,7 +134,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: PRIORITY_TIERS.MEDIUM,
   }]
 
-  const wordGames = ['boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder', 'mini-crossword']
+  const wordGames = ['boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder']
   const wordGamePages: MetadataRoute.Sitemap = wordGames.map(game => ({
     url: `${baseUrl}/word-games/${game}`,
     lastModified: new Date(),
@@ -213,7 +150,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: PRIORITY_TIERS.MEDIUM,
   }]
 
-  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku', 'kakuro']
+  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku']
   const numberPuzzlePages: MetadataRoute.Sitemap = numberPuzzles.map(puzzle => ({
     url: `${baseUrl}/number-puzzles/${puzzle}`,
     lastModified: new Date(),
@@ -232,16 +169,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...mainPages,
     ...dailyTriviasCatalog,
     ...dailyTriviaCategoryPages,
-    ...otherDailyPages,
-    ...specialQuizzesCatalog,     // 🆕 Added special quizzes catalog
-    ...specialQuizPages,          // 🆕 Added current month's special quiz
     ...brainwaveCatalog,
     ...brainwaveCategoryPages,
     ...triviaCategoryPages,
     ...triviaQuizPages,
     ...subcategoryPages,
-    ...iQPersonalityTestsCatalog,
-    ...iQPersonalityTestsPages,
     ...wordGamesCatalog,
     ...wordGamePages,
     ...numberPuzzleCatalog,

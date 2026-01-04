@@ -38,7 +38,7 @@ export function generateInventionleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs//brainwave/inventionle-og.webp',
+          url: '/imgs/brainwave/inventionle.webp',
           width: 1200,
           height: 630,
           alt: 'Inventionle - Daily Invention Puzzle Game'
@@ -51,7 +51,7 @@ export function generateInventionleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Inventionle - Daily Invention Puzzle | Triviaah',
       description: 'Guess the invention from its 6 attributes: inventor, year, category, country, purpose, and impact. Wordle-style invention guessing game.',
-      images: ['/imgs//brainwave/inventionle-og.webp'],
+      images: ['/imgs/brainwave/inventionle.webp'],
       site: '@elitetrivias',
     },
     robots: {

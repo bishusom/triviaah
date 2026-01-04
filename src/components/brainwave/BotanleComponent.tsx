@@ -9,18 +9,18 @@ import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { fetchWikimediaImage } from '@/lib/wikimedia';
 import { addBotanleResult, type BotanlePuzzle } from '@/lib/brainwave/botanle/botanle-sb';
 import { checkPlantGuess, type PlantGuessResult } from '@/lib/brainwave/botanle/botanle-logic';
+import { Leaf, Target, Zap, Eye, EyeOff, Search, Sparkles, ThermometerSun, Droplets, Ruler, Flower } from 'lucide-react';
 
 interface BotanleComponentProps {
   initialData: { puzzle: BotanlePuzzle };
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Helper components                                                         */
+/*  Enhanced Helper Components                                                */
 /* -------------------------------------------------------------------------- */
-
-const ProgressiveHint = ({ attempts }: { attempts: PlantGuessResult[] }) => {
+const EnhancedProgressiveHint = ({ attempts }: { attempts: PlantGuessResult[] }) => {
   if (attempts.length === 0) return null;
-
+  
   const latestAttempt = attempts[attempts.length - 1];
   const correctLetters = latestAttempt.letterFeedback?.filter(l => l.status === 'correct').length || 0;
   const presentLetters = latestAttempt.letterFeedback?.filter(l => l.status === 'present').length || 0;
@@ -29,27 +29,27 @@ const ProgressiveHint = ({ attempts }: { attempts: PlantGuessResult[] }) => {
     {
       icon: "🌱",
       text: `Great start! You have ${correctLetters} correct letters.`,
-      color: "bg-green-100 border-green-400 text-green-700"
+      color: "bg-gradient-to-r from-emerald-500/20 to-green-500/20 border border-emerald-500/30 text-emerald-400"
     },
     {
       icon: "🔍",
       text: `Look for patterns. ${presentLetters} letters are in the name but misplaced.`,
-      color: "bg-yellow-100 border-yellow-400 text-yellow-700"
+      color: "bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-500/30 text-amber-400"
     },
     {
       icon: "🌿",
       text: "Compare letter positions. Focus on the green letters first.",
-      color: "bg-blue-100 border-blue-400 text-blue-700"
+      color: "bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 text-blue-400"
     },
     {
       icon: "💡",
       text: "Use the revealed hints below to narrow down your options.",
-      color: "bg-purple-100 border-purple-400 text-purple-700"
+      color: "bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-400"
     },
     {
       icon: "🌸",
       text: "Final attempt! Use all clues and think about plants that fit all hints.",
-      color: "bg-red-100 border-red-400 text-red-700"
+      color: "bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 text-red-400"
     }
   ];
 
@@ -57,19 +57,19 @@ const ProgressiveHint = ({ attempts }: { attempts: PlantGuessResult[] }) => {
   const currentHint = hints[hintIndex];
 
   return (
-    <div className={`rounded-lg p-4 mb-4 border ${currentHint.color}`}>
+    <div className={`rounded-2xl p-4 mb-4 ${currentHint.color}`}>
       <div className="flex items-center mb-2">
-        <span className="text-xl mr-2">{currentHint.icon}</span>
+        <span className="text-xl mr-3">{currentHint.icon}</span>
         <span className="font-semibold">{currentHint.text}</span>
       </div>
 
-      <div className="flex gap-1 mt-2">
+      <div className="flex gap-1 mt-3">
         {latestAttempt.letterFeedback?.map((letter, i) => (
           <div
             key={i}
             className={`h-1 flex-1 rounded ${
-              letter.status === 'correct' ? 'bg-green-500' :
-              letter.status === 'present' ? 'bg-yellow-500' : 'bg-gray-300'
+              letter.status === 'correct' ? 'bg-gradient-to-r from-emerald-400 to-green-500' :
+              letter.status === 'present' ? 'bg-gradient-to-r from-amber-400 to-yellow-500' : 'bg-gray-600'
             }`}
           />
         ))}
@@ -100,94 +100,140 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: BotanlePuzzle; 
 
   if (attempts.length === 0) return null;
 
+  // Helper functions for name structure hints
+  const getNameStructureHint = () => {
+    const name = puzzleData.answer;
+    const wordCount = name.split(' ').length;
+    const charCount = name.replace(/\s/g, '').length;
+    
+    if (wordCount > 1) {
+      return `${wordCount} words with ${charCount} total letters`;
+    } else {
+      return `${charCount} letters`;
+    }
+  };
+
+  const getLetterPositionHint = () => {
+    const name = puzzleData.answer.toLowerCase();
+    const latestAttempt = attempts[attempts.length - 1];
+    
+    // Find correct letters from the latest attempt
+    const correctLetters = latestAttempt.letterFeedback
+      ?.filter(letter => letter.status === 'correct')
+      .map(letter => letter.letter.toLowerCase()) || [];
+    
+    if (correctLetters.length > 0) {
+      return correctLetters.join(', ').toUpperCase();
+    } else {
+      return name[0].toUpperCase();
+    }
+  };
+
   const hintItems = [
-    // Hint 1: Category & Family
+    // Hint 1: Name structure
     attempts.length >= 1 && (
+      <div key="nameStructure" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-emerald-400">🔤</span>
+          <span className="text-white font-medium">Name Structure:</span>
+          <span className="text-green-400 font-bold">{getNameStructureHint()}</span>
+        </div>
+      </div>
+    ),
+    // Hint 2: Category & Family
+    attempts.length >= 2 && (
       <div key="categoryFamily" className="flex-none w-full">
-        <div className="text-sm mb-2">
-          🌿 Category: <strong>{puzzleData.category}</strong>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-emerald-400">🌿</span>
+          <span className="text-white font-medium">Category:</span>
+          <span className="text-green-400 font-bold">{puzzleData.category}</span>
         </div>
         {puzzleData.family && (
-          <div className="text-sm">
-            🏷️ Family: <strong>{puzzleData.family}</strong>
+          <div className="flex items-center gap-2">
+            <span className="text-emerald-400">🏷️</span>
+            <span className="text-white font-medium">Family:</span>
+            <span className="text-green-400 font-bold">{puzzleData.family}</span>
           </div>
         )}
       </div>
     ),
-    // Hint 2: Native Region & Climate
-    attempts.length >= 2 && (
+    // Hint 3: Native Region & Climate
+    attempts.length >= 3 && (
       <div key="regionClimate" className="flex-none w-full">
         {puzzleData.native_region.length > 0 && (
-          <div className="text-sm mb-2">
-            🌍 Native Region: <strong>{puzzleData.native_region.slice(0, 2).join(', ')}</strong>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-emerald-400">🌍</span>
+            <span className="text-white font-medium">Native Region:</span>
+            <span className="text-green-400 font-bold">{puzzleData.native_region.slice(0, 2).join(', ')}</span>
           </div>
         )}
         {puzzleData.sun_requirements && (
-          <div className="text-sm">
-            ☀️ Sun Requirements: <strong>{puzzleData.sun_requirements.replace('_', ' ')}</strong>
+          <div className="flex items-center gap-2">
+            <ThermometerSun className="w-4 h-4 text-emerald-400" />
+            <span className="text-white font-medium">Sun Requirements:</span>
+            <span className="text-green-400 font-bold">{puzzleData.sun_requirements.replace('_', ' ')}</span>
           </div>
         )}
       </div>
     ),
-    // Hint 3: Appearance
-    attempts.length >= 3 && (
+    // Hint 4: Appearance
+    attempts.length >= 4 && (
       <div key="appearance" className="flex-none w-full">
         {puzzleData.flower_color.length > 0 && (
-          <div className="text-sm mb-2">
-            🌸 Flower Color: <strong>{puzzleData.flower_color.slice(0, 2).join(', ')}</strong>
+          <div className="flex items-center gap-2 mb-2">
+            <Flower className="w-4 h-4 text-emerald-400" />
+            <span className="text-white font-medium">Flower Color:</span>
+            <span className="text-green-400 font-bold">{puzzleData.flower_color.slice(0, 2).join(', ')}</span>
           </div>
         )}
         {puzzleData.size_category && (
-          <div className="text-sm">
-            📏 Size: <strong>{puzzleData.size_category}</strong>
+          <div className="flex items-center gap-2">
+            <Ruler className="w-4 h-4 text-emerald-400" />
+            <span className="text-white font-medium">Size:</span>
+            <span className="text-green-400 font-bold">{puzzleData.size_category}</span>
           </div>
         )}
       </div>
     ),
-    // Hint 4: Growing Requirements
-    attempts.length >= 4 && (
+    // Hint 5: Growing Requirements & Letter Position
+    attempts.length >= 5 && (
       <div key="requirements" className="flex-none w-full">
         {puzzleData.water_requirements && (
-          <div className="text-sm mb-2">
-            💧 Water Needs: <strong>{puzzleData.water_requirements}</strong>
+          <div className="flex items-center gap-2 mb-2">
+            <Droplets className="w-4 h-4 text-emerald-400" />
+            <span className="text-white font-medium">Water Needs:</span>
+            <span className="text-green-400 font-bold">{puzzleData.water_requirements}</span>
           </div>
         )}
-        {puzzleData.hardiness_zones && (
-          <div className="text-sm">
-            🌡️ Hardiness Zone: <strong>{puzzleData.hardiness_zones}</strong>
-          </div>
-        )}
-      </div>
-    ),
-    // Hint 5: Uses & Features
-    attempts.length >= 5 && (
-      <div key="usesFeatures" className="flex-none w-full">
-        {puzzleData.uses.length > 0 && (
-          <div className="text-sm mb-2">
-            🏆 Uses: <strong>{puzzleData.uses.slice(0, 2).join(', ')}</strong>
-          </div>
-        )}
-        {puzzleData.fragrance !== 'none' && (
-          <div className="text-sm">
-            👃 Fragrance: <strong>{puzzleData.fragrance}</strong>
-          </div>
-        )}
-      </div>
-    ),
-    // Hint 6: Special Features & Name Clues
-    attempts.length >= 6 && (
-      <div key="specialName" className="flex-none w-full">
-        {puzzleData.special_features.length > 0 && (
-          <div className="text-sm mb-2">
-            ✨ Special: <strong>{puzzleData.special_features.slice(0, 2).join(', ')}</strong>
-          </div>
-        )}
-        <div className="text-sm">
-          🔤 First letter: <strong>{puzzleData.answer.charAt(0).toUpperCase()}</strong>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-emerald-400">💡</span>
+          <span className="text-white font-medium">Letters:</span>
+          <span className="text-green-400 font-bold">{getLetterPositionHint()}</span>
         </div>
+        {puzzleData.fun_fact && (
+          <div className="flex items-center gap-2">
+            <span className="text-emerald-400">🎯</span>
+            <span className="text-white font-medium">Fun Fact:</span>
+            <span className="text-green-400 font-bold">{puzzleData.fun_fact}</span>
+          </div>
+        )}
+      </div>
+    ),
+    // Hint 6: Special Features (only for hard mode or final attempt)
+    attempts.length >= 6 && (
+      <div key="specialFeatures" className="flex-none w-full">
+        {puzzleData.special_features.length > 0 && (
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-emerald-400">✨</span>
+            <span className="text-white font-medium">Special Features:</span>
+            <span className="text-green-400 font-bold">{puzzleData.special_features.slice(0, 2).join(', ')}</span>
+          </div>
+        )}
         {puzzleData.hint_column && (
-          <div className="text-sm mt-2 italic">
-            💡 {puzzleData.hint_column}
+          <div className="flex items-center gap-2">
+            <span className="text-emerald-400">💎</span>
+            <span className="text-white font-medium">Final Hint:</span>
+            <span className="text-green-400 font-bold">{puzzleData.hint_column}</span>
           </div>
         )}
       </div>
@@ -195,8 +241,11 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: BotanlePuzzle; 
   ].filter(Boolean);
 
   return (
-    <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-      <h4 className="font-semibold text-green-800 mb-2">💡 Botanical Hints Revealed:</h4>
+    <div className="bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/30 rounded-2xl p-4 mb-6">
+      <h4 className="font-semibold text-emerald-400 mb-3 flex items-center gap-2">
+        <Sparkles className="w-4 h-4" />
+        Botanical Hints:
+      </h4>
       <div className="relative overflow-hidden">
         <div
           ref={hintsScrollRef}
@@ -208,30 +257,43 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: BotanlePuzzle; 
           ))}
         </div>
         {hintItems.length > 1 && (
-          <div className="flex justify-center gap-2 mt-2">
+          <div className="flex justify-center gap-2 mt-3">
             {hintItems.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setActiveHintIndex(index)}
-                className={`w-2 h-2 rounded-full ${index === activeHintIndex ? 'bg-green-600' : 'bg-gray-300'}`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === activeHintIndex ? 'bg-emerald-400 scale-125' : 'bg-gray-600'
+                }`}
                 aria-label={`Go to hint ${index + 1}`}
               />
             ))}
           </div>
         )}
       </div>
-      <p className="text-xs text-green-600 mt-2">
+      <p className="text-xs text-emerald-400 mt-3 text-center">
         More botanical hints unlock with each guess... ({Math.min(attempts.length, 6)}/6 revealed)
       </p>
     </div>
   );
 };
 
-const PosterBlock = ({
-  x, y, gridCols, gridRows, isRevealed
-}: { x: number; y: number; gridCols: number; gridRows: number; isRevealed: boolean; }) => {
+const ImageBlock = ({ 
+  x, 
+  y, 
+  gridCols, 
+  gridRows, 
+  isRevealed 
+}: {
+  x: number;
+  y: number;
+  gridCols: number;
+  gridRows: number;
+  isRevealed: boolean;
+}) => {
   if (isRevealed) return null;
-
+  
+  // Calculate position as percentages
   const left = (x / gridCols) * 100;
   const top = (y / gridRows) * 100;
   const width = 100 / gridCols;
@@ -239,8 +301,13 @@ const PosterBlock = ({
 
   return (
     <div
-      className="absolute bg-emerald-900"
-      style={{ left: `${left}%`, top: `${top}%`, width: `${width}%`, height: `${height}%` }}
+      className="absolute bg-gray-900/90"
+      style={{
+        left: `${left}%`,
+        top: `${top}%`,
+        width: `${width}%`,
+        height: `${height}%`,
+      }}
     />
   );
 };
@@ -279,12 +346,14 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
   const [revealPercentage, setRevealPercentage] = useState(0);
   const [revealedBlocks, setRevealedBlocks] = useState<number[]>([]);
   const blockRevealOrderRef = useRef<number[]>([]);
+  const [hardMode, setHardMode] = useState(false);
+  const [showHint, setShowHint] = useState(false);
 
-  const GRID_COLS = 30;
-  const GRID_ROWS = 40;
+  const GRID_COLS = 20;
+  const GRID_ROWS = 30;
   const totalBlocks = GRID_COLS * GRID_ROWS;
   const containerWidth = 90;
-  const containerHeight = 120;
+  const containerHeight = 130;
 
   /* ----------------------- block reveal order ----------------------- */
   useEffect(() => {
@@ -297,6 +366,7 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
           groups[groupIdx].push(index);
         }
       }
+      
       const shuffledOrder: number[] = [];
       groups.forEach(group => {
         for (let i = group.length - 1; i > 0; i--) {
@@ -305,6 +375,7 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
         }
         shuffledOrder.push(...group);
       });
+      
       blockRevealOrderRef.current = shuffledOrder;
     }
   }, []);
@@ -375,6 +446,8 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
       newReveal = 100;
     }
     setRevealPercentage(newReveal);
+
+    // Calculate number of blocks to reveal
     const numToReveal = Math.floor(totalBlocks * (newReveal / 100));
     const newRevealed = blockRevealOrderRef.current.slice(0, numToReveal);
     setRevealedBlocks(newRevealed);
@@ -398,7 +471,12 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
   const triggerConfetti = () => {
     if (confettiCanvasRef.current) {
       const myConfetti = confetti.create(confettiCanvasRef.current, { resize: true, useWorker: true });
-      myConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      myConfetti({ 
+        particleCount: 150, 
+        spread: 100, 
+        origin: { y: 0.6 },
+        colors: ['#10B981', '#059669', '#047857']
+      });
     }
   };
 
@@ -481,13 +559,23 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
     });
   };
 
+  const toggleHardMode = () => {
+    setHardMode(!hardMode);
+    playSound('click');
+  };
+
+  const toggleHint = () => {
+    setShowHint(!showHint);
+    playSound('click');
+  };
+
   /* -------------------------- block grid -------------------------- */
   const blockGrid: { x: number; y: number }[] = [];
-  for (let row = 0; row < GRID_ROWS; row++) {
-    for (let col = 0; col < GRID_COLS; col++) {
-      blockGrid.push({ x: col, y: row });
+    for (let row = 0; row < GRID_ROWS; row++) {
+      for (let col = 0; col < GRID_COLS; col++) {
+        blockGrid.push({ x: col, y: row });
+      }
     }
-  }
   const isBlockRevealed = (index: number) => revealedBlocks.includes(index);
 
   const showImageLoader = imageLoading && !imageError;
@@ -495,11 +583,14 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
   const showImage = plantImage && !imageLoading && !imageError;
 
   const triesLeft = 6 - attempts.length;
-  const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
+  const triesLeftColor = 
+    triesLeft >= 4 ? 'text-emerald-400' : 
+    triesLeft >= 2 ? 'text-yellow-400' : 
+    'text-red-400';
 
   return (
-    <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
-      <canvas ref={confettiCanvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-50" />
+    <div className="relative">
+      <canvas ref={confettiCanvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-10" />
 
       {/* Image Modal */}
       {showImageModal && plantImage && (
@@ -524,7 +615,7 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
               
               <Image
                 src={plantImage}
-                alt="Mystery Animal"
+                alt="Mystery Plant"
                 fill
                 className="object-cover"
                 priority
@@ -532,7 +623,7 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
               {/* Same block overlay as main image */}
               <div className="absolute inset-0">
                 {blockGrid.map((pos, index) => (
-                  <PosterBlock
+                  <ImageBlock
                     key={index}
                     x={pos.x}
                     y={pos.y}
@@ -543,14 +634,14 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
                 ))}
               </div>
               
-              {/* Center "?" overlay for modal too */}
+              {/* Center "?" overlay for modal */}
               {revealPercentage === 0 && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-30">
                   <div className="text-center">
-                    <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-blue-500/50">
-                      <span className="text-green-400 text-2xl font-bold">?</span>
+                    <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-emerald-500/50">
+                      <span className="text-emerald-400 text-2xl font-bold">?</span>
                     </div>
-                    <p className="text-blue-400 font-semibold">Mystery Animal</p>
+                    <p className="text-emerald-400 font-semibold">Mystery Plant</p>
                   </div>
                 </div>
               )}
@@ -559,12 +650,12 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
               <div className="absolute bottom-2 left-2 right-2">
                 <div className="bg-black/70 backdrop-blur-sm rounded-xl p-2">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-blue-400 text-xs font-medium">Image Reveal</span>
+                    <span className="text-emerald-400 text-xs font-medium">Image Reveal</span>
                     <span className="text-white text-xs font-bold">{Math.round(revealPercentage)}%</span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-1.5">
                     <div 
-                      className="bg-gradient-to-r from-blue-400 to-cyan-500 h-1.5 rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-emerald-400 to-green-500 h-1.5 rounded-full transition-all duration-500"
                       style={{ width: `${revealPercentage}%` }}
                     />
                   </div>
@@ -575,188 +666,247 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 flex-grow">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg md:text-xl font-semibold text-gray-800">
-            Guess the plant from its botanical attributes!
-          </h2>
-          <div className={`text-base font-bold ${triesLeftColor}`}>
-            {triesLeft} {triesLeft === 1 ? 'try' : 'tries'} left
+      {/* Main Game Card */}
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5 mb-5">
+        {/* Header with Attempts Counter */}
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-r from-emerald-500 to-green-600 p-2 rounded-xl">
+              <Leaf className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Today&apos;s Plant Mystery</h2>
+          </div>
+          <div className={`flex items-center gap-2 text-lg font-bold ${triesLeftColor}`}>
+            <Target className="w-5 h-5" />
+            <span>{triesLeft} {triesLeft === 1 ? 'TRY' : 'TRIES'}</span>
           </div>
         </div>
 
-        {/* Image + Category */}
-        <div className="flex flex-col md:flex-row gap-6 mb-6">
-          <div className="flex-shrink-0">
+        {/* Plant Image & Category */}
+         <div className="flex flex-col md:flex-row gap-6 mb-6 items-center">
+          {/* Plant Image Container */}
+          <div className="flex-shrink-0 relative">
             <div 
-              className="relative rounded-lg overflow-hidden bg-emerald-50 group cursor-pointer"
+              className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-600" 
               style={{ height: `${containerHeight}px`, width: `${containerWidth}px` }}
-              onClick={() => showImage && setShowImageModal(true)}
+               onClick={() => showImage && setShowImageModal(true)}
             >
               {showImageLoader && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-emerald-100 to-gray-200 z-10">
-                  <div className="text-gray-600 flex flex-col items-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-500 mb-1"></div>
-                    <span className="text-xs">Loading plant image...</span>
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-emerald-900/50 to-green-900/50 z-10">
+                  <div className="text-emerald-400 flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-400 mb-2"></div>
+                    <span className="text-sm">Loading plant image...</span>
                   </div>
                 </div>
               )}
+              
               {showImageError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-emerald-100 to-gray-200 z-10">
-                  <div className="text-gray-600 flex flex-col items-center text-center p-2">
-                    <span className="text-2xl mb-2">🌿</span>
-                    <span className="text-xs">No image available</span>
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-emerald-900/50 to-green-900/50 z-10">
+                  <div className="text-emerald-400 flex flex-col items-center text-center p-4">
+                    <span className="text-3xl mb-2">🌿</span>
+                    <span className="text-sm">No image available</span>
                   </div>
                 </div>
               )}
+              
               {showImage && (
                 <>
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg flex items-center justify-center transition-all z-40 pointer-events-none">
-                    <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                      </svg>
-                    </div>
-                  </div>
-                  
-                  <Image 
-                    src={plantImage} 
-                    alt="Plant" 
-                    fill 
+                  <Image
+                    src={plantImage}
+                    alt="Plant"
+                    fill
                     className="object-cover absolute inset-0 z-10"
-                    onError={() => setImageError(true)}
+                    onError={() => {
+                      console.error('Image failed to load:', plantImage);
+                      setImageError(true);
+                    }}
                   />
+                  {/* Block overlay */}
                   <div className="absolute inset-0 z-20">
                     {blockGrid.map((pos, index) => (
-                      <PosterBlock key={index} {...pos} gridCols={GRID_COLS} gridRows={GRID_ROWS}
-                                   isRevealed={isBlockRevealed(index)} />
+                      <ImageBlock
+                        key={index}
+                        {...pos}
+                        gridCols={GRID_COLS}
+                        gridRows={GRID_ROWS}
+                        isRevealed={isBlockRevealed(index)}
+                      />
                     ))}
                   </div>
+                  {/* Center "?" overlay */}
                   {revealPercentage === 0 && (
-                    <div className="absolute inset-0 flex items-center justify-center z-30">
-                      <span className="text-white text-2xl font-bold bg-emerald-600 bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center">?</span>
+                    <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/70">
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-emerald-500/50">
+                          <span className="text-emerald-400 text-2xl font-bold">?</span>
+                        </div>
+                        <p className="text-emerald-400 font-semibold">Mystery Plant</p>
+                      </div>
                     </div>
                   )}
-                  <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1 py-0.5 rounded z-30">
-                    {revealPercentage > 0 ? `${Math.round(revealPercentage)}%` : '?'}
-                  </div>
                   
-                  {revealPercentage > 0 && (
-                    <div className="absolute bottom-1 left-1 bg-black bg-opacity-70 text-white text-xs px-1 py-0.5 rounded z-30 opacity-0 group-hover:opacity-100 transition-opacity">
-                      Click to magnify
+                  {/* Reveal Progress */}
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <div className="bg-black/70 backdrop-blur-sm rounded-xl p-2">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-emerald-400 text-xs font-medium">Image Reveal</span>
+                        <span className="text-white text-xs font-bold">{Math.round(revealPercentage)}%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 rounded-full h-1.5">
+                        <div 
+                          className="bg-gradient-to-r from-emerald-400 to-green-500 h-1.5 rounded-full transition-all duration-500"
+                          style={{ width: `${revealPercentage}%` }}
+                        />
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </>
               )}
             </div>
+            {/* Click hint below the image */}
             {showImage && revealPercentage > 0 && (
-              <div className="text-xs text-gray-500 text-center mt-1 cursor-pointer" onClick={() => setShowImageModal(true)}>
+              <div className="text-xs text-gray-400 text-center mt-2 cursor-pointer hover:text-emerald-400 transition-colors" onClick={() => setShowImageModal(true)}>
                 Click image to view larger
               </div>
             )}
           </div>
 
-          <div className="flex-grow">
-            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-              <h4 className="font-semibold text-emerald-800 mb-2">🌿 Today&apos;s Plant</h4>
-              <p className="text-emerald-700 mb-2">
-                Today&apos;s plant is a <strong>{puzzleData.category}</strong>.
+          {/* Category Section */}
+          <div className="flex-grow text-center">
+            <div className="bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/30 rounded-2xl p-6">
+              <h3 className="text-xl font-bold text-white mb-3">Today&apos;s Plant</h3>
+              <p className="text-gray-300 text-lg mb-4">
+                Today&apos;s plant is a <strong className="text-emerald-400">{puzzleData.category}</strong>.
               </p>
               {puzzleData.scientific_name && (
-                <p className="text-sm text-emerald-600">
-                  Scientific name: <em>{puzzleData.scientific_name}</em>
+                <p className="text-sm text-emerald-400 mb-4">
+                  Scientific name: <em className="text-emerald-300">{puzzleData.scientific_name}</em>
                 </p>
               )}
-              <p className="text-xs text-emerald-600 mt-2">
-                More botanical clues will be revealed with each guess...
-              </p>
+              <div className="flex justify-center gap-4 text-sm text-gray-400">
+                <div className="flex items-center gap-1">
+                  <Leaf className="w-4 h-4" />
+                  <span>Botanical Challenge</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Target className="w-4 h-4" />
+                  <span>6 Attributes</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Errors */}
+        {/* Game Controls */}
+        <div className="flex flex-wrap gap-3 mb-5">
+          <button
+            onClick={toggleHardMode}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
+              hardMode 
+                ? 'bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg' 
+                : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+            }`}
+          >
+            <Zap className="w-4 h-4" />
+            {hardMode ? 'Hard Mode ON' : 'Hard Mode'}
+          </button>
+          
+          {hardMode && attempts.length > 0 && !showHint && gameState === 'playing' && (
+            <button
+              onClick={toggleHint}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all duration-300"
+            >
+              {showHint ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showHint ? 'Hide Hint' : 'Show Hint'}
+            </button>
+          )}
+        </div>
+
+        {/* Game Messages */}
         {errorMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {errorMessage}
+          <div className="bg-red-500/20 border border-red-500/30 rounded-2xl p-4 mb-4 animate-pulse">
+            <div className="flex items-center gap-2 text-red-400">
+              <span className="w-2 h-2 bg-red-400 rounded-full"></span>
+              {errorMessage}
+            </div>
           </div>
         )}
 
-        {/* Hints / Result */}
-        {gameState === 'playing' && (
-          <>
-            <ProgressiveHint attempts={attempts} />
-            <ValidationHints puzzleData={puzzleData} attempts={attempts} />
-          </>
-        )}
-
         {gameState === 'won' && (
-          <div className="bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded mb-4">
-            <h3 className="font-bold text-lg mb-2">Congratulations! 🌿🎉</h3>
-            <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
-            <p className="mt-2">The plant was: <strong>{puzzleData.answer}</strong></p>
+          <div className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border border-emerald-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Victory! 🌿🎉</h3>
+            <p className="text-emerald-400 mb-2">You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
+            <p className="text-gray-300">The plant was: <strong className="text-white">{puzzleData.answer}</strong></p>
             {puzzleData.scientific_name && (
-              <p className="text-sm italic mt-1">
+              <p className="text-sm italic text-emerald-400 mt-1">
                 (<em>{puzzleData.scientific_name}</em>)
               </p>
             )}
             {puzzleData.fun_fact && (
-              <p className="mt-2 italic">🌱 {puzzleData.fun_fact}</p>
+              <p className="mt-3 italic text-emerald-300">🌱 {puzzleData.fun_fact}</p>
             )}
           </div>
         )}
 
         {gameState === 'lost' && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <h3 className="font-bold text-lg mb-2">Game Over</h3>
-            <p>The plant was: <strong>{puzzleData.answer}</strong></p>
+          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center">
+                <Leaf className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Game Over</h3>
+            <p className="text-red-400">The plant was: <strong className="text-white">{puzzleData.answer}</strong></p>
             {puzzleData.scientific_name && (
-              <p className="text-sm italic mt-1">
+              <p className="text-sm italic text-red-400 mt-1">
                 (<em>{puzzleData.scientific_name}</em>)
               </p>
             )}
-            <p className="mt-2 italic">🌿 {puzzleData.fun_fact}</p>
+            <p className="mt-3 italic text-red-300">🌿 {puzzleData.fun_fact}</p>
           </div>
         )}
 
-        {/* Previous Attempts */}
+        {/* Progressive Hints */}
+        {gameState === 'playing' && (
+          <>
+            <EnhancedProgressiveHint attempts={attempts} />
+            <ValidationHints puzzleData={puzzleData} attempts={attempts} />
+          </>
+        )}
+
+        {/* Previous Attempts Grid */}
         {attempts.length > 0 && (
           <div className="mb-6">
-            <h3 className="font-semibold mb-3">Your Botanical Guesses:</h3>
-            <div className="space-y-4">
+            <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+              <Target className="w-4 h-4" />
+              Your Botanical Guesses:
+            </h3>
+            <div className="grid gap-3">
               {attempts.map((attempt, index) => (
-                <div key={index} className="bg-gray-50 rounded-lg p-3">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">{attempt.guess}</span>
-                      {attempt.commonNameMatch && (
-                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Common Name</span>
-                      )}
-                      {attempt.scientificNameMatch && (
-                        <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Scientific Name</span>
-                      )}
-                    </div>
-                    <div className="flex flex-wrap justify-center gap-1">
-                      {attempt.letterFeedback?.map((letter, letterIndex) => {
-                        const bgColor = letter.status === 'correct' ? 'bg-emerald-500' : 
-                                      letter.status === 'present' ? 'bg-yellow-500' : 'bg-gray-300';
-                        const textColor = letter.status === 'absent' ? 'text-gray-700' : 'text-white';
-                        
-                        return (
-                          <div 
-                            key={letterIndex} 
-                            className={`w-8 h-8 flex items-center justify-center rounded text-sm font-bold ${bgColor} ${textColor}`}
-                          >
-                            {letter.letter.toUpperCase()}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    {attempt.similarityScore && attempt.similarityScore > 0.5 && (
-                      <div className="text-xs text-gray-500 mt-1">
-                        Similarity: {Math.round(attempt.similarityScore * 100)}%
-                      </div>
-                    )}
+                <div key={index} className="bg-gray-700/30 rounded-xl p-4 border border-gray-600">
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {attempt.letterFeedback?.map((letter, letterIndex) => {
+                      const bgColor = letter.status === 'correct' 
+                        ? 'bg-gradient-to-br from-emerald-500 to-green-600' 
+                        : letter.status === 'present' 
+                        ? 'bg-gradient-to-br from-amber-500 to-yellow-600'
+                        : 'bg-gray-600 border border-gray-500';
+                      const textColor = letter.status === 'absent' ? 'text-gray-300' : 'text-white';
+                      
+                      return (
+                        <div 
+                          key={letterIndex} 
+                          className={`w-10 h-10 flex items-center justify-center rounded-xl text-lg font-bold ${bgColor} ${textColor} transition-all duration-300 transform hover:scale-110`}
+                        >
+                          {letter.letter.toUpperCase()}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
@@ -764,65 +914,102 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
           </div>
         )}
 
-        {/* Input */}
+        {/* Input Section */}
         {gameState === 'playing' && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 -mx-4 md:-mx-6 -mb-4 md:-mb-6">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={guess}
-                onChange={e => setGuess(e.target.value)}
-                placeholder="Enter plant name (common or scientific)"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                onKeyPress={e => e.key === 'Enter' && handleGuess()}
-                disabled={isGuessLoading}
-              />
+          <div className="sticky bottom-0 bg-gray-800/80 backdrop-blur-lg rounded-xl border border-gray-700 p-4 z-[100] -mx-2 md:-mx-4 -mb-2 md:-mb-6">
+            <div className="flex gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={guess}
+                  onChange={e => setGuess(e.target.value)}
+                  placeholder="Enter plant name (common or scientific)..."
+                  className="w-full pl-12 pr-4 py-4 bg-gray-700 border border-gray-600 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300"
+                  onKeyPress={e => e.key === 'Enter' && handleGuess()}
+                  disabled={isGuessLoading}
+                />
+              </div>
               <button
                 onClick={handleGuess}
                 disabled={!guess.trim() || isGuessLoading}
-                className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-2xl hover:from-emerald-600 hover:to-green-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 font-semibold"
               >
-                {isGuessLoading ? '...' : 'Guess'}
+                {isGuessLoading ? '...' : 'GUESS'}
               </button>
             </div>
           </div>
         )}
-
-        {/* Share */}
+        
+        {/* Share & Feedback Section */}
         {(gameState === 'won' || gameState === 'lost') && (
-          <div className="flex flex-col items-center mt-4">
+          <div className="flex flex-col items-center gap-4 mt-6">
             <button
               onClick={copyToClipboard}
-              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700"
+              className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-2xl hover:from-emerald-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 font-semibold"
             >
-              <MdShare /> Share Result
+              <MdShare className="w-5 h-5" />
+              Share Result
             </button>
-            {shareMessage && <div className="mt-2 text-emerald-600">{shareMessage}</div>}
+            {shareMessage && (
+              <div className="text-emerald-400 font-semibold animate-pulse">{shareMessage}</div>
+            )}
 
             <FeedbackComponent
               gameType="botanle"
               category="brainwave"
-              metadata={{ attempts: attempts.length, won: gameState === 'won', correctAnswer: puzzleData.answer }}
+              metadata={{ 
+                attempts: attempts.length, 
+                won: gameState === 'won', 
+                correctAnswer: puzzleData.answer,
+                hardMode
+              }}
             />
           </div>
         )}
-      </div>
+        </div>
 
-      {/* How to Play */}
-      <div className="bg-emerald-50 rounded-lg p-4 mt-6">
-        <h3 className="font-bold mb-2 text-emerald-800">How to Play Botanle:</h3>
-        <ul className="list-disc list-inside space-y-1 text-sm text-emerald-700">
-          <li>Guess the plant by entering its common or scientific name</li>
-          <li>Get letter-by-letter feedback compared to the answer</li>
-          <li>🟩 Green: Letter in correct position</li>
-          <li>🟨 Yellow: Letter is in the name but wrong position</li>
-          <li>⬜ Gray: Letter not in the name</li>
-          <li>Botanical hints unlock with each attempt (category, habitat, uses, etc.)</li>
-          <li>The plant image becomes clearer with each guess</li>
-          <li>You have 6 attempts to guess the plant</li>
-          <li>Both common names and scientific names are accepted</li>
-        </ul>
-        <div className="mt-3 text-xs text-emerald-600">
+      {/* How to Play Section */}
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5">
+        <h3 className="font-bold text-white mb-3 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-emerald-400" />
+          How to Play Botanle:
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-emerald-400">🌿</span>
+            <span>Guess the plant from botanical attributes</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-emerald-400">🟩</span>
+            <span>Green: Letter in correct position</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-amber-400">🟨</span>
+            <span>Yellow: Letter in name but wrong position</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-gray-400">⬜</span>
+            <span>Gray: Letter not in the name</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-emerald-400">💡</span>
+            <span>Botanical hints unlock after each attempt</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-red-400">🎯</span>
+            <span>6 attempts to guess correctly</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">📝</span>
+            <span>Both common and scientific names accepted</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-purple-400">🌱</span>
+            <span>Plant image reveals with each guess</span>
+          </div>
+        </div>
+        <div className="mt-3 text-xs text-emerald-400">
           <p><strong>Tip:</strong> Try common names first, then scientific names if you&apos;re stuck!</p>
         </div>
       </div>

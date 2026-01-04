@@ -1,4 +1,5 @@
 "use client";
+import { useSound } from '@/context/SoundContext';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import confetti from "canvas-confetti"; 
 
@@ -50,11 +51,9 @@ export default function NumberTowerGame() {
     towerStack: []
   });
 
-
   const [selectedCells, setSelectedCells] = useState<Set<number>>(new Set());
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [isMuted, setIsMuted] = useState(false);
-  const buttonStyle = "px-6 md:px-3 py-2 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center"
+  const { isMuted } = useSound();
 
   type SoundType = 'select' | 'found' | 'win' | 'error';
   const playSound = useCallback((type: SoundType) => {
@@ -303,7 +302,7 @@ export default function NumberTowerGame() {
         towerStack: [...prev.towerStack, number],
         score: newScore,
         feedbackText: 'Correct!',
-        feedbackClass: 'bg-green-100 text-green-700'
+        feedbackClass: 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border border-green-500/30'
       }));
       playSound('found');
       
@@ -319,7 +318,7 @@ export default function NumberTowerGame() {
         ...prev,
         timeLeft: Math.max(5, prev.timeLeft - 3),
         feedbackText: 'Wrong! -3 seconds',
-        feedbackClass: 'bg-red-100 text-red-700'
+        feedbackClass: 'bg-gradient-to-r from-red-500/20 to-pink-500/20 text-red-400 border border-red-500/30'
       }));
       playSound('error');
       
@@ -339,7 +338,7 @@ export default function NumberTowerGame() {
       ...prev,
       gameActive: false,
       feedbackText: `Level Complete! +${prev.level * 15} bonus points!`,
-      feedbackClass: 'bg-yellow-100 text-yellow-700 font-bold text-xl',
+      feedbackClass: 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-400 border border-yellow-500/30 font-bold text-xl',
       score: prev.score + prev.level * 15
     }));
     
@@ -411,7 +410,7 @@ export default function NumberTowerGame() {
       setGameState(prev => ({
         ...prev,
         feedbackText: `Hint: Try ${prev.currentNumbers[randomIndex]}`,
-        feedbackClass: 'bg-blue-100 text-blue-700'
+        feedbackClass: 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-400 border border-blue-500/30'
       }));
       
       setTimeout(() => {
@@ -421,7 +420,7 @@ export default function NumberTowerGame() {
       setGameState(prev => ({
         ...prev,
         feedbackText: 'No valid moves left!',
-        feedbackClass: 'bg-gray-100 text-gray-700'
+        feedbackClass: 'bg-gray-800 text-gray-400'
       }));
     }
   }, [gameState.gameActive, gameState.currentRule, gameState.currentNumbers, gameState.lastNumber, selectedCells, playSound]);
@@ -487,7 +486,7 @@ export default function NumberTowerGame() {
               timeLeft: 0,
               gameActive: false,
               feedbackText: `Game Over! Final Score: ${prev.score}`,
-              feedbackClass: 'bg-red-100 text-red-700'
+              feedbackClass: 'bg-gradient-to-r from-red-500/20 to-pink-500/20 text-red-400 border border-red-500/30'
             };
           }
           return { ...prev, timeLeft: newTimeLeft };
@@ -517,168 +516,215 @@ export default function NumberTowerGame() {
   const progressPercentage = (gameState.currentHeight / gameState.targetHeight) * 100;
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">Number Tower</h1>
-      <p className="text-gray-600 mb-6">Follow the rule to build your tower</p>
-
-      <div className="flex justify-between items-center mb-6">
-        <div className="text-lg font-semibold">Level: {gameState.level}</div>
-        <div className={`text-lg font-semibold ${gameState.timeLeft <= 10 ? 'text-red-600 animate-pulse' : ''}`}>
-          Time: {formatTime(gameState.timeLeft)}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-slate-900 py-8 px-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-3">
+            Number Tower
+          </h1>
+          <p className="text-gray-400 text-lg">Follow the rule to build your tower</p>
         </div>
-        <div className="text-lg font-semibold">Score: {gameState.score}</div>
-      </div>
 
-      <div className="flex items-center gap-2 mb-4">
-        <span className={`px-3 py-1 rounded-full text-sm font-semibold text-white ${
-          gameState.difficulty === 'easy' ? 'bg-green-500' :
-          gameState.difficulty === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
-        }`}>
-          {gameState.difficulty.toUpperCase()}
-        </span>
-        <span className="text-sm text-gray-600">
-          Tower Height: {gameState.currentHeight} / {gameState.targetHeight}
-        </span>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
-        <div 
-          className="bg-blue-500 h-4 rounded-full transition-all duration-300"
-          style={{ width: `${progressPercentage}%` }}
-        ></div>
-      </div>
-
-      {/* Objective */}
-      {gameState.currentRule && (
-        <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-6">
-          <p className="text-lg font-semibold text-blue-800">{gameState.currentRule.text}</p>
-        </div>
-      )}
-
-      {gameState.feedbackText && (
-        <div className={`p-4 rounded-lg mb-6 font-mono text-lg ${gameState.feedbackClass}`}>
-          {gameState.feedbackText}
-        </div>
-      )}
-
-      {!gameState.gameActive && gameState.timeLeft === 0 ? (
-        <div className="text-center bg-gray-100 rounded-lg p-6 mb-6">
-          <h2 className="text-3xl font-bold text-red-600 mb-4">Game Over!</h2>
-          <p className="text-xl mb-2">You reached Level {gameState.level}</p>
-          <p className="text-lg mb-6">Final Score: {gameState.score}</p>
-          <button 
-            onClick={initGame}
-            className={`${buttonStyle} bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white`}
-          >
-            Try Again
-          </button>
-        </div>
-      ) : (
-        <>
-          {/* Tower Stack Display */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">Your Tower:</h3>
-            <div className="flex flex-wrap gap-2 min-h-[60px] bg-gray-50 rounded-lg p-4">
-              {gameState.towerStack.length === 0 ? (
-                <span className="text-gray-400 italic">No blocks yet...</span>
-              ) : (
-                gameState.towerStack.map((num, idx) => (
-                  <div 
-                    key={idx}
-                    className="w-14 h-14 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold text-lg shadow-md"
-                  >
-                    {num}
-                  </div>
-                ))
-              )}
+        {/* Stats Bar */}
+        <div className="grid grid-cols-3 gap-4 mb-8 p-6 bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl">
+          <div className="text-center">
+            <div className="text-sm text-gray-400 font-medium mb-2">Level</div>
+            <div className="text-2xl font-bold text-purple-400">{gameState.level}</div>
+          </div>
+          <div className="text-center">
+            <div className="text-sm text-gray-400 font-medium mb-2">Time</div>
+            <div className={`text-2xl font-bold ${
+              gameState.timeLeft <= 10 ? 'text-red-400 animate-pulse' : 'text-cyan-400'
+            }`}>
+              {formatTime(gameState.timeLeft)}
             </div>
           </div>
-
-          {/* Number Grid */}
-          <div 
-            className="grid gap-2 mb-6"
-            style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}
-          >
-            {gameState.currentNumbers.map((number, index) => {
-              const isSelected = selectedCells.has(index);
-              
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleCellClick(number, index)}
-                  className={`h-16 rounded-lg font-bold text-lg transition-all duration-200 ${
-                    isSelected ? 'bg-gray-300 text-gray-600 cursor-not-allowed' :
-                    'bg-blue-100 text-blue-800 hover:bg-blue-200 shadow-md hover:scale-105'
-                  } border-2 ${
-                    isSelected ? 'border-gray-400' : 'border-blue-300'
-                  }`}
-                  disabled={isSelected || !gameState.gameActive}
-                >
-                  {number}
-                </button>
-              );
-            })}
+          <div className="text-center">
+            <div className="text-sm text-gray-400 font-medium mb-2">Score</div>
+            <div className="text-2xl font-bold text-green-400">{gameState.score}</div>
           </div>
+        </div>
 
-          {/* Control Buttons */}
-          <div className="flex gap-2 mb-6 flex-wrap">
-            <button
+        {/* Difficulty & Progress */}
+        <div className="flex items-center justify-between mb-6 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+          <div className="flex items-center gap-3">
+            <span className={`px-3 py-1 rounded-full text-sm font-semibold text-white ${
+              gameState.difficulty === 'easy' ? 'bg-green-500' :
+              gameState.difficulty === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
+            }`}>
+              {gameState.difficulty.toUpperCase()}
+            </span>
+            <span className="text-gray-300">
+              Tower: {gameState.currentHeight} / {gameState.targetHeight}
+            </span>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="flex-1 max-w-md">
+            <div className="w-full bg-gray-700 rounded-full h-3">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full transition-all duration-300"
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Objective */}
+        {gameState.currentRule && (
+          <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-2 border-blue-500/30 rounded-2xl p-6 mb-6 backdrop-blur-sm">
+            <p className="text-lg font-semibold text-blue-300 text-center">{gameState.currentRule.text}</p>
+          </div>
+        )}
+
+        {gameState.feedbackText && (
+          <div className={`p-4 rounded-2xl mb-6 text-center font-semibold backdrop-blur-sm ${gameState.feedbackClass}`}>
+            {gameState.feedbackText}
+          </div>
+        )}
+
+        {!gameState.gameActive && gameState.timeLeft === 0 ? (
+          <div className="text-center bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 mb-6 border border-gray-700/50">
+            <h2 className="text-3xl font-bold text-red-400 mb-4">Game Over!</h2>
+            <p className="text-xl text-gray-300 mb-2">You reached Level {gameState.level}</p>
+            <p className="text-lg text-gray-400 mb-6">Final Score: {gameState.score}</p>
+            <button 
               onClick={initGame}
-              className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
+              className="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-lg"
             >
-              New Game
-            </button>
-            <button
-              onClick={clearLastNumber}
-              className={`${buttonStyle} bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-400 hover:to-gray-500 text-white`}
-              disabled={gameState.currentHeight === 0}
-            >
-              Clear Last
-            </button>
-            <button
-              onClick={showHint}
-              className={`${buttonStyle} bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white`}
-            >
-              Hint
+              Try Again
             </button>
           </div>
+        ) : (
+          <>
+            {/* Tower Stack Display */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold mb-3 text-gray-300">Your Tower:</h3>
+              <div className="min-h-[80px] bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm">
+                <div className="flex flex-wrap gap-3 justify-center">
+                  {gameState.towerStack.length === 0 ? (
+                    <span className="text-gray-500 italic">No blocks yet...</span>
+                  ) : (
+                    gameState.towerStack.map((num, idx) => (
+                      <div 
+                        key={idx}
+                        className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
+                      >
+                        {num}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
 
-          {/* Difficulty Selection */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">Difficulty:</h3>
-            <div className="flex gap-2">
-              {(['easy', 'medium', 'hard'] as Difficulty[]).map(diff => (
-                <button
-                  key={diff}
-                  onClick={() => {
-                    setDifficulty(diff);
-                    initGame();
-                  }}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                    gameState.difficulty === diff
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {diff.charAt(0).toUpperCase() + diff.slice(1)} ({difficultySettings[diff].targetHeight})
-                </button>
-              ))}
+            {/* Number Grid */}
+            <div 
+              className="grid gap-3 mb-8 justify-center"
+              style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(60px, 80px))` }}
+            >
+              {gameState.currentNumbers.map((number, index) => {
+                const isSelected = selectedCells.has(index);
+                
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleCellClick(number, index)}
+                    className={`h-16 rounded-xl font-bold text-lg transition-all duration-200 transform ${
+                      isSelected ? 'bg-gray-700 text-gray-500 cursor-not-allowed scale-95' :
+                      'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-300 hover:from-gray-600 hover:to-gray-700 shadow-lg hover:scale-105'
+                    } border-2 ${
+                      isSelected ? 'border-gray-600' : 'border-gray-600 hover:border-blue-500/50'
+                    }`}
+                    disabled={isSelected || !gameState.gameActive}
+                  >
+                    {number}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Control Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
+              <button
+                onClick={initGame}
+                className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-lg"
+              >
+                🎮 New Game
+              </button>
+              <button
+                onClick={clearLastNumber}
+                className="px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-2xl hover:from-gray-700 hover:to-gray-800 transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-lg"
+                disabled={gameState.currentHeight === 0}
+              >
+                ↩️ Clear Last
+              </button>
+              <button
+                onClick={showHint}
+                className="px-8 py-4 bg-gradient-to-r from-yellow-500 to-amber-500 text-white rounded-2xl hover:from-yellow-600 hover:to-amber-600 transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-lg"
+              >
+                💡 Hint
+              </button>
+            </div>
+
+            {/* Difficulty Selection */}
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 mb-8">
+              <h3 className="text-lg font-semibold mb-4 text-center text-gray-300">Difficulty:</h3>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                {(['easy', 'medium', 'hard'] as Difficulty[]).map(diff => (
+                  <button
+                    key={diff}
+                    onClick={() => {
+                      setDifficulty(diff);
+                      initGame();
+                    }}
+                    className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
+                      gameState.difficulty === diff
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    {diff.charAt(0).toUpperCase() + diff.slice(1)} ({difficultySettings[diff].targetHeight})
+                  </button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Instructions */}
+        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50">
+          <h2 className="text-xl font-bold text-center mb-4 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+            How to Play
+          </h2>
+          <div className="grid md:grid-cols-2 gap-4 text-gray-400">
+            <div className="flex items-start gap-2">
+              <span className="text-blue-400 font-bold">•</span>
+              <span>Read the rule at the top - it tells you which numbers to select</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-blue-400 font-bold">•</span>
+              <span>Click numbers from the grid that follow the rule</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-blue-400 font-bold">•</span>
+              <span>Build your tower by reaching the target height</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-blue-400 font-bold">•</span>
+              <span>Wrong selections cost you 3 seconds of time</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-blue-400 font-bold">•</span>
+              <span>Complete levels to increase difficulty and score multipliers</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-blue-400 font-bold">•</span>
+              <span>Easy: 3 blocks, Medium: 5 blocks, Hard: 8 blocks</span>
             </div>
           </div>
-        </>
-      )}
-
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">How to Play</h2>
-        <ul className="list-disc pl-5 space-y-1 text-gray-600">
-          <li>Read the rule at the top - it tells you which numbers to select</li>
-          <li>Click numbers from the grid that follow the rule</li>
-          <li>Build your tower by reaching the target height</li>
-          <li>Wrong selections cost you 3 seconds of time</li>
-          <li>Complete levels to increase difficulty and score multipliers</li>
-          <li>Easy: 3 blocks, Medium: 5 blocks, Hard: 8 blocks</li>
-        </ul>
+        </div>
       </div>
     </div>
   );

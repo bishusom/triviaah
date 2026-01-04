@@ -1,6 +1,6 @@
 'use client';
 import { event } from '@/lib/gtag';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { createClient } from '@supabase/supabase-js';
 import { useSound } from '@/context/SoundContext';
@@ -9,7 +9,6 @@ import { useSound } from '@/context/SoundContext';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
-const buttonStyle = "px-6 md:px-8 py-2 font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center";
 
 // Add Merriam-Webster API key
 const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
@@ -40,49 +39,12 @@ interface GameState {
   currentLevel: number;
 }
 
-interface LetterTileProps {
-  letter: string;
-  index: number;
-  isSelected: boolean;
-  onClick: (index: number) => void;
-}
-
-const LetterTile: React.FC<LetterTileProps> = ({ letter, index, isSelected, onClick }) => (
-  <button
-    onClick={() => onClick(index)}
-    className={`
-      w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-xl md:text-2xl font-bold 
-      rounded-lg transition-all duration-200 border-2
-      ${isSelected 
-        ? 'bg-blue-500 text-white border-blue-600 transform scale-105 shadow-lg' 
-        : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-50 hover:border-blue-300 hover:shadow'
-      }
-    `}
-  >
-    {letter}
-  </button>
-);
-
-interface AlphabetTileProps {
-  letter: string;
-  onClick: (letter: string) => void;
-}
-
-const AlphabetTile: React.FC<AlphabetTileProps> = ({ letter, onClick }) => (
-  <button
-    onClick={() => onClick(letter)}
-    className="
-      w-10 h-10 md:w-11 md:h-11 flex items-center justify-center text-lg font-medium
-      bg-gray-100 text-gray-700 rounded-lg border border-gray-300
-      hover:bg-blue-100 hover:text-blue-700 hover:border-blue-400 hover:shadow
-      transition-all duration-150 active:scale-95
-    "
-  >
-    {letter}
-  </button>
-);
-
 export default function WordLadderGame() {
+  // Refs
+  const currentWordRef = useRef<HTMLDivElement>(null);
+  const letterTilesRef = useRef<HTMLDivElement>(null);
+  const wordListRef = useRef<HTMLUListElement>(null);
+
   // Game state
   const [gameState, setGameState] = useState<GameState>({
     difficulty: 'easy',
@@ -95,7 +57,10 @@ export default function WordLadderGame() {
   const [selectedLetterIndex, setSelectedLetterIndex] = useState(-1);
   const [gameActive, setGameActive] = useState(false);
   const [hintsUsed, setHintsUsed] = useState(0);
-  const [feedback, setFeedback] = useState({ message: '', type: 'info' as 'info' | 'success' | 'error' });
+  const [feedback, setFeedback] = useState<{ message: string; type: 'info' | 'success' | 'error' }>({ 
+          message: '', 
+          type: 'info' 
+        });
 
   // Game data
   const [startWord, setStartWord] = useState('');
@@ -106,16 +71,16 @@ export default function WordLadderGame() {
   const [usedPairs, setUsedPairs] = useState<Set<string>>(new Set());
   const [wordCache, setWordCache] = useState<Map<string, boolean>>(new Map());
   const [currentSolutionPath, setCurrentSolutionPath] = useState<string[]>([]);
+  
 
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
-  const feedbackTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Game configuration
   const config: GameConfig = {
     wordLength: {
-      easy: 5,
-      medium: 6,
-      hard: 7
+      easy: 4,
+      medium: 5,
+      hard: 6
     },
     timeLimit: {
       easy: 300,
@@ -147,25 +112,19 @@ export default function WordLadderGame() {
     ]
   };
 
-  // Alphabet for letter tiles
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
   // Initialize game
   useEffect(() => {
     const checkGtag = setInterval(() => {
       if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        event({ action: 'word_ladder_started', category: 'word_ladder', label: 'word_ladder' });
+        event({action: 'word_ladder_started', category: 'word_ladder',label: 'word_ladder'});
         clearInterval(checkGtag);
       }
-    }, 100);
+    }, 100)
     loadGameState();
     initGame();
     return () => {
       if (timerInterval.current) {
         clearInterval(timerInterval.current);
-      }
-      if (feedbackTimeout.current) {
-        clearTimeout(feedbackTimeout.current);
       }
     };
   }, []);
@@ -178,8 +137,8 @@ export default function WordLadderGame() {
         try {
           const parsed = JSON.parse(savedState);
           if (['easy', 'medium', 'hard'].includes(parsed.difficulty) &&
-            typeof parsed.consecutiveWins === 'number' &&
-            typeof parsed.currentLevel === 'number') {
+              typeof parsed.consecutiveWins === 'number' &&
+              typeof parsed.currentLevel === 'number') {
             setGameState(parsed);
           }
         } catch (e) {
@@ -190,9 +149,9 @@ export default function WordLadderGame() {
   };
 
   // Save game state to localStorage
-  const saveGameState = useCallback(() => {
+  const saveGameState = () => {
     localStorage.setItem('wordLadderGameState', JSON.stringify(gameState));
-  }, [gameState]);
+  };
 
   // Updated function to fetch from Supabase
   const fetchWordLadderFromSupabase = async (wordLength: number) => {
@@ -203,7 +162,7 @@ export default function WordLadderGame() {
         .eq('length', wordLength)
         .eq('difficulty', gameState.difficulty)
         .limit(100);
-
+      
       if (error) {
         throw error;
       }
@@ -245,7 +204,7 @@ export default function WordLadderGame() {
 
     try {
       const { startWord, endWord, path } = await fetchWordLadderFromSupabase(wordLength);
-
+      
       setStartWord(startWord);
       setEndWord(endWord);
       setCurrentWord(startWord);
@@ -262,7 +221,7 @@ export default function WordLadderGame() {
   };
 
   const initGameWithLocalWords = (wordLength: number) => {
-    const availableWords = wordLists[wordLength as keyof typeof wordLists] || [];
+    const availableWords = wordLists[wordLength as keyof typeof wordLists];
     let validPair = false;
     let attempts = 0;
     const maxAttempts = 50;
@@ -294,10 +253,10 @@ export default function WordLadderGame() {
 
       const sequences = fallbackSequences[wordLength as keyof typeof fallbackSequences] || [];
       for (const sequence of sequences) {
-        const pairKey = `${sequence[0]}-${sequence[sequence.length - 1]}`;
+        const pairKey = `${sequence[0]}-${sequence[sequence.length-1]}`;
         if (!usedPairs.has(pairKey)) {
           start = sequence[0];
-          end = sequence[sequence.length - 1];
+          end = sequence[sequence.length-1];
           setUsedPairs(prev => new Set(prev).add(pairKey));
           validPair = true;
           break;
@@ -305,8 +264,8 @@ export default function WordLadderGame() {
       }
 
       if (!validPair) {
-        start = availableWords[0] || 'TEST';
-        end = availableWords[1] || 'WORD';
+        start = availableWords[0];
+        end = availableWords[1];
       }
     }
 
@@ -321,6 +280,38 @@ export default function WordLadderGame() {
     showFeedback('Game started! Transform the start word to the end word.', 'info');
   };
 
+  const renderCurrentWord = () => {
+    if (!currentWordRef.current) return;
+    currentWordRef.current.innerHTML = '';
+    
+    for (let i = 0; i < currentWord.length; i++) {
+      const letterSpan = document.createElement('span');
+      letterSpan.textContent = currentWord[i];
+      letterSpan.className = `inline-flex items-center justify-center w-12 h-12 mx-1 border-2 rounded-lg font-bold text-xl cursor-pointer transition-all duration-200 ${
+        i === selectedLetterIndex 
+          ? 'bg-yellow-400 border-yellow-500 text-gray-900 scale-110' 
+          : 'bg-blue-100 border-blue-300 text-gray-800 hover:bg-blue-200'
+      }`;
+      letterSpan.addEventListener('click', () => selectLetter(i));
+      currentWordRef.current.appendChild(letterSpan);
+    }
+  };
+
+  const renderLetterTiles = () => {
+    if (!letterTilesRef.current) return;
+    letterTilesRef.current.innerHTML = '';
+    if (selectedLetterIndex === -1) return;
+
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (const letter of alphabet) {
+      const tile = document.createElement('div');
+      tile.textContent = letter;
+      tile.className = 'inline-flex items-center justify-center w-10 h-10 mx-1 my-1 bg-gray-800 border-2 border-gray-300 rounded-lg font-bold text-lg cursor-pointer hover:bg-gray-500 transition-colors duration-200';
+      tile.addEventListener('click', () => changeLetter(letter));
+      letterTilesRef.current.appendChild(tile);
+    }
+  };
+
   const selectLetter = (index: number) => {
     setSelectedLetterIndex(index);
     playSound('select');
@@ -329,9 +320,9 @@ export default function WordLadderGame() {
   const changeLetter = async (newLetter: string) => {
     if (selectedLetterIndex === -1 || !gameActive) return;
 
-    const newWord = currentWord.substring(0, selectedLetterIndex) +
-      newLetter +
-      currentWord.substring(selectedLetterIndex + 1);
+    const newWord = currentWord.substring(0, selectedLetterIndex) + 
+                   newLetter + 
+                   currentWord.substring(selectedLetterIndex + 1);
 
     if (await checkWord(newWord)) {
       setCurrentWord(newWord);
@@ -360,6 +351,17 @@ export default function WordLadderGame() {
 
       setSelectedLetterIndex(-1);
     }
+  };
+
+  const renderWordList = () => {
+    if (!wordListRef.current) return;
+    wordListRef.current.innerHTML = '';
+    ladderWords.forEach((word, index) => {
+      const li = document.createElement('li');
+      li.textContent = `${index + 1}. ${word}`;
+      li.className = 'py-1 px-3 bg-gray-700/50 rounded text-white font-mono';
+      wordListRef.current?.appendChild(li);
+    });
   };
 
   const updateTimer = () => {
@@ -392,20 +394,13 @@ export default function WordLadderGame() {
     }, 1000);
   };
 
-  const showFeedback = (message: string, type: 'success' | 'error' | 'info') => {
+  const showFeedback = (message: string, type: 'info' | 'success' | 'error') => {
     setFeedback({ message, type });
-    if (feedbackTimeout.current) {
-      clearTimeout(feedbackTimeout.current);
-    }
-    feedbackTimeout.current = setTimeout(() => {
-      setFeedback({ message: '', type: 'info' });
-    }, 3000);
     if (type === 'error') {
       playSound('error');
     }
   };
 
-  // Updated checkWord function to use Merriam-Webster API
   const checkWord = async (word: string) => {
     if (!gameActive) return false;
     if (word.length !== currentWord.length) {
@@ -435,37 +430,28 @@ export default function WordLadderGame() {
       isValid = wordCache.get(word.toLowerCase())!;
     } else {
       try {
-        // Use Merriam-Webster API similar to BoggleGame
         const response = await fetch(
           `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word.toLowerCase()}?key=${DICTIONARY_API_KEY}`
         );
-
+        
         if (!response.ok) {
           throw new Error(`API returned ${response.status}`);
         }
 
         const data = await response.json();
 
-        // Handle Merriam-Webster API response
         if (Array.isArray(data) && data.length > 0) {
-          // Check each entry in the array
           for (const entry of data) {
-            // If it's a string, it's a suggestion (not a valid entry)
             if (typeof entry === 'string') {
               continue;
             }
-
-            // If it's an object with meta data, check if it matches our word
+            
             if (typeof entry === 'object' && entry !== null) {
-              // Check multiple possible ways the word might be represented
-              const wordMatches =
-                // Check meta.id (might be "word:1" format)
+              const wordMatches = 
                 (entry.meta?.id && entry.meta.id.split(':')[0].toUpperCase() === word.toUpperCase()) ||
-                // Check hwi.hw (headword)
                 (entry.hwi?.hw && entry.hwi.hw.replace(/\*/g, '').toUpperCase() === word.toUpperCase()) ||
-                // Check stems array
                 (entry.meta?.stems && entry.meta.stems.some((stem: string) => stem.toUpperCase() === word.toUpperCase()));
-
+              
               if (wordMatches) {
                 isValid = true;
                 break;
@@ -477,10 +463,9 @@ export default function WordLadderGame() {
         setWordCache(prev => new Map(prev).set(word.toLowerCase(), isValid));
       } catch (error) {
         console.error(`Error validating word "${word}":`, error);
-        // Fallback to local word list
         isValid = wordLists[word.length as keyof typeof wordLists]?.includes(word.toUpperCase()) || false;
         setWordCache(prev => new Map(prev).set(word.toLowerCase(), isValid));
-
+        
         if (!isValid) {
           showFeedback('Dictionary API unavailable. Using local word list.', 'info');
         }
@@ -501,7 +486,7 @@ export default function WordLadderGame() {
       return;
     }
 
-    const currentIndex = currentSolutionPath.findIndex(word =>
+    const currentIndex = currentSolutionPath.findIndex(word => 
       word === currentWord || countMatchingLetters(word, currentWord) >= currentWord.length - 1
     );
 
@@ -512,7 +497,7 @@ export default function WordLadderGame() {
 
     const nextWord = currentSolutionPath[currentIndex + 1];
     let changeIndex = -1;
-
+    
     for (let i = 0; i < currentWord.length; i++) {
       if (currentWord[i] !== nextWord[i]) {
         changeIndex = i;
@@ -521,11 +506,11 @@ export default function WordLadderGame() {
     }
 
     setHintsUsed(prev => prev + 1);
-
+    
     if (changeIndex !== -1) {
       setSelectedLetterIndex(changeIndex);
       showFeedback(
-        `Change ${ordinal(changeIndex + 1)} letter to ${nextWord[changeIndex]} (→ ${nextWord})`,
+        `Change ${ordinal(changeIndex + 1)} letter to ${nextWord[changeIndex]} (→ ${nextWord})`, 
         'info'
       );
     } else {
@@ -613,178 +598,105 @@ export default function WordLadderGame() {
     }
   };
 
-  const triesLeftColor = timer <= 10 ? 'text-red-600 animate-pulse' : 'text-gray-700';
+  // Update renders when state changes
+  useEffect(() => {
+    renderCurrentWord();
+    renderLetterTiles();
+    renderWordList();
+  }, [currentWord, selectedLetterIndex, ladderWords]);
+
+  // Feedback style mapping
+  const getFeedbackStyle = (type: 'success' | 'error' | 'info') => {
+    switch (type) {
+      case 'error':
+        return 'bg-red-500/20 border border-red-500/50 text-red-200';
+      case 'success':
+        return 'bg-green-500/20 border border-green-500/50 text-green-200';
+      case 'info':
+        return 'bg-blue-500/20 border border-blue-500/50 text-blue-200';
+      default:
+        return 'bg-gray-500/20 border border-gray-500/50 text-gray-200';
+    }
+  };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6 bg-white rounded-xl shadow-lg">
+    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray=900 text-white p-4 md:p-6 flex flex-col items-center justify-center">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-6 border-b border-gray-200">
-        <div className="mb-4 md:mb-0">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Word Ladder Game</h2>
-          <div className="text-gray-600 font-medium">
-            Level: <span className="text-blue-600">{gameState.currentLevel}</span> • 
-            Difficulty: <span className="text-blue-600 capitalize">{gameState.difficulty}</span>
+      <div className="w-full max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 p-4 bg-gray-800/50 rounded-xl backdrop-blur-sm border border-gray-700">
+          <div className="text-center md:text-left mb-4 md:mb-0">
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Word Ladder
+            </h1>
+            <div className="text-sm md:text-base text-gray-300 mt-1">
+              Level: {gameState.currentLevel} ({gameState.difficulty})
+            </div>
           </div>
-        </div>
-        <div className="flex items-center gap-4 md:gap-6">
-          <div className={`text-lg md:text-xl font-bold ${triesLeftColor} bg-gray-50 px-4 py-2 rounded-lg border`}>
-            ⏱️ {updateTimer()}
-          </div>
-          <div className="text-lg md:text-xl font-bold text-gray-900 bg-blue-50 px-4 py-2 rounded-lg border border-blue-200">
-            Score: <span className="text-blue-600">{score}</span>
+          <div className="flex items-center gap-4 md:gap-6">
+            <div className={`bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg ${
+              timer <= 10 ? 'text-red-400 animate-pulse' : 'text-white'
+            }`}>
+              ⏱️ {updateTimer()}
+            </div>
+            <div className="bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg">
+              Score: {score}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Word Display */}
-      <div className="mb-8">
-        {/* Start and End Words */}
-        <div className="flex items-center justify-center gap-4 mb-6">
-          <div className="text-center">
-            <div className="text-sm text-gray-500 mb-1">Start Word</div>
-            <div className="text-2xl md:text-3xl font-bold text-green-600 bg-green-50 px-6 py-3 rounded-lg border-2 border-green-300">
-              {startWord}
-            </div>
+      <div className="text-center mb-6">
+        {/* FIXED: Start and End words display */}
+        <div className="flex justify-center items-center gap-4 mb-4">
+          <div className="text-2xl font-bold bg-blue-600 text-white px-6 py-3 rounded-lg">
+            {startWord}
           </div>
-          <div className="text-2xl text-gray-400">→</div>
-          <div className="text-center">
-            <div className="text-sm text-gray-500 mb-1">Target Word</div>
-            <div className="text-2xl md:text-3xl font-bold text-red-600 bg-red-50 px-6 py-3 rounded-lg border-2 border-red-300">
-              {endWord}
-            </div>
+          <div className="text-2xl text-yellow-400 font-bold">→</div>
+          <div className="text-2xl font-bold bg-green-600 text-white px-6 py-3 rounded-lg">
+            {endWord}
           </div>
         </div>
-
-        {/* Current Word */}
-        <div className="mb-8">
-          <div className="text-sm text-gray-500 mb-2 text-center">Current Word (click a letter to change)</div>
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-            {currentWord.split('').map((letter, index) => (
-              <LetterTile
-                key={index}
-                letter={letter}
-                index={index}
-                isSelected={selectedLetterIndex === index}
-                onClick={selectLetter}
-              />
-            ))}
-          </div>
+        
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-gray-300 mb-2">Current Word:</h3>
+          <div ref={currentWordRef} className="flex justify-center gap-2"></div>
         </div>
 
-        {/* Alphabet Tiles (only shown when a letter is selected) */}
-        {selectedLetterIndex !== -1 && (
-          <div className="mb-8">
-            <div className="text-sm text-gray-500 mb-2 text-center">Choose a new letter</div>
-            <div className="flex flex-wrap justify-center gap-2">
-              {alphabet.map((letter) => (
-                <AlphabetTile
-                  key={letter}
-                  letter={letter}
-                  onClick={changeLetter}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+        <div>
+          <h3 className="text-lg font-semibold text-gray-300 mb-2">Change Letter To:</h3>
+          <div ref={letterTilesRef} className="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto"></div>
+        </div>
       </div>
 
-      {/* Feedback Message */}
+      {/* Feedback */}
       {feedback.message && (
-        <div className={`
-          mb-6 p-4 rounded-lg border text-center font-medium
-          ${feedback.type === 'error' 
-            ? 'bg-red-50 border-red-200 text-red-800' 
-            : feedback.type === 'success' 
-            ? 'bg-green-50 border-green-200 text-green-800' 
-            : 'bg-blue-50 border-blue-200 text-blue-800'
-          }
-        `}>
+        <div className={`mb-6 p-4 rounded-lg text-center font-medium ${getFeedbackStyle(feedback.type)}`}>
           {feedback.message}
         </div>
       )}
 
-      {/* Word Ladder History */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">Word Ladder Progress</h3>
-        <div className="bg-gray-50 rounded-lg p-4 max-h-48 overflow-y-auto">
-          <div className="flex flex-wrap gap-2">
-            {ladderWords.map((word, index) => (
-              <div
-                key={index}
-                className={`
-                  px-3 py-2 rounded-lg font-medium transition-all
-                  ${index === 0 
-                    ? 'bg-green-100 text-green-800 border border-green-300' 
-                    : index === ladderWords.length - 1 
-                    ? 'bg-blue-100 text-blue-800 border border-blue-300' 
-                    : 'bg-gray-100 text-gray-800 border border-gray-300'
-                  }
-                  ${index === ladderWords.length - 1 ? 'animate-pulse' : ''}
-                `}
-              >
-                {word}
-                {index < ladderWords.length - 1 && (
-                  <span className="ml-2 text-gray-400">→</span>
-                )}
-              </div>
-            ))}
-          </div>
-          {ladderWords.length === 1 && (
-            <p className="text-gray-500 text-sm text-center mt-2">
-              Start by changing one letter at a time to reach the target word
-            </p>
-          )}
-        </div>
+      {/* Word List */}
+      <div className="bg-gray-700/30 rounded-lg p-4 mb-6">
+        <h3 className="text-lg font-semibold text-white mb-3 text-center">Word Ladder Progress:</h3>
+        <ul ref={wordListRef} className="flex flex-wrap gap-2 justify-center"></ul>
       </div>
 
       {/* Action Buttons */}
-       <div className="flex flex-col sm:flex-row justify-center gap-3 mb-6">
-          <button 
-            onClick={() => initGame()}
-            className="px-6 md:px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            New Game
-          </button>
-          <button 
-            onClick={provideHint}
-            disabled={hintsUsed >= config.maxHints || !gameActive}
-            className={`
-              px-5 py-2.5 bg-gradient-to-r text-white font-bold rounded-xl active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl
-              ${hintsUsed >= config.maxHints || !gameActive
-                ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                : 'from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'
-              }
-              `}
-          >
-            Hint ({config.maxHints - hintsUsed} left)
-          </button>
-      </div>
-
-      {/* Game Instructions */}
-      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-        <h3 className="font-bold text-gray-900 mb-2">How to Play:</h3>
-        <ul className="space-y-2 text-sm text-gray-700">
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600 mt-1">1.</span>
-            <span>Click on a letter in the current word to select it</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600 mt-1">2.</span>
-            <span>Choose a new letter from the alphabet to change it</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600 mt-1">3.</span>
-            <span>Each step must create a valid English word by changing only one letter</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600 mt-1">4.</span>
-            <span>Reach the target word to win and earn bonus points for remaining time</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600 mt-1">5.</span>
-            <span>Use hints wisely - you only have {config.maxHints} per game</span>
-          </li>
-        </ul>
+      <div className="flex justify-center gap-4">
+        <button 
+          onClick={initGame}
+          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200"
+        >
+          New Game
+        </button>
+        <button 
+          onClick={provideHint}
+          className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-lg transition-colors duration-200"
+        >
+          Hint ({config.maxHints - hintsUsed} left)
+        </button>
       </div>
     </div>
   );

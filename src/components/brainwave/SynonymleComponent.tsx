@@ -16,12 +16,15 @@ import {
   type SynonymleData, 
   type SynonymleGuessResult 
 } from '@/lib/brainwave/synonymle/synonymle-logic';
+import { Target, Users, Search, Sparkles, BookOpen, Brain, TrendingUp } from 'lucide-react';
 
 interface SynonymleComponentProps {
   initialData: SynonymleData;
 }
 
-// EnhancedProgressiveHint component for Synonymle
+/* -------------------------------------------------------------------------- */
+/*  Enhanced Helper Components                                                */
+/* -------------------------------------------------------------------------- */
 const EnhancedProgressiveHint = ({ attempts }: { attempts: SynonymleGuessResult[] }) => {
   if (attempts.length === 0) return null;
   
@@ -33,27 +36,27 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: SynonymleGuessResult[
     {
       icon: "🎯",
       text: `Great start! Your guess scored ${score}.`,
-      color: "bg-green-100 border-green-400 text-green-700"
+      color: "bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 text-blue-400"
     },
     {
       icon: "🔍",
       text: `Think about ${category} concepts. You're getting ${category}!`,
-      color: "bg-yellow-100 border-yellow-400 text-yellow-700"
+      color: "bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-400"
     },
     {
       icon: "🤔",
       text: "Consider different angles and categories for the target word.",
-      color: "bg-blue-100 border-blue-400 text-blue-700"
+      color: "bg-gradient-to-r from-indigo-500/20 to-blue-500/20 border border-indigo-500/30 text-indigo-400"
     },
     {
       icon: "💡",
       text: "Use the revealed hints below to narrow down your options.",
-      color: "bg-purple-100 border-purple-400 text-purple-700"
+      color: "bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 text-green-400"
     },
     {
       icon: "⚡",
       text: "Final attempt! Use all clues and think about the core meaning.",
-      color: "bg-red-100 border-red-400 text-red-700"
+      color: "bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 text-orange-400"
     }
   ];
   
@@ -61,49 +64,47 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: SynonymleGuessResult[
   const currentHint = hints[hintIndex];
   
   return (
-    <div className={`rounded-lg p-4 mb-4 border ${currentHint.color}`}>
+    <div className={`rounded-2xl p-4 mb-4 ${currentHint.color}`}>
       <div className="flex items-center mb-2">
-        <span className="text-xl mr-2">{currentHint.icon}</span>
+        <span className="text-xl mr-3">{currentHint.icon}</span>
         <span className="font-semibold">{currentHint.text}</span>
       </div>
       
       {/* Enhanced similarity thermometer with gradient */}
-      <div className="w-full bg-gradient-to-r from-gray-400 via-cyan-400 via-blue-400 via-orange-400 to-red-400 to-green-500 rounded-full h-3 mt-2 relative">
+      <div className="w-full bg-gradient-to-r from-gray-600 via-cyan-400 via-blue-400 via-orange-400 to-red-400 to-green-500 rounded-full h-3 mt-2 relative">
         <div 
-          className="h-3 rounded-full bg-white bg-opacity-70 transition-all duration-700 ease-out"
+          className="h-3 rounded-full bg-gray-900/80 transition-all duration-700 ease-out"
           style={{ width: `${100 - (score / 1000) * 100}%`, marginLeft: 'auto' }}
         />
         {/* Current score indicator */}
         <div 
-          className="absolute top-0 w-1 h-4 -mt-0.5 bg-black rounded-full transform -translate-y-0.5"
+          className="absolute top-0 w-1 h-4 -mt-0.5 bg-white rounded-full transform -translate-y-0.5"
           style={{ left: `${(score / 1000) * 100}%` }}
         />
         {/* Score label */}
         <div 
-          className="absolute top-0 transform -translate-y-6 -translate-x-1/2 text-xs font-bold bg-black text-white px-1 rounded"
+          className="absolute top-0 transform -translate-y-6 -translate-x-1/2 text-xs font-bold bg-white text-gray-900 px-1 rounded"
           style={{ left: `${(score / 1000) * 100}%` }}
         >
           {score}
         </div>
       </div>
-      <div className="flex justify-between text-xs mt-4 font-medium">
-        <span className="text-gray-600">Freezing</span>
-        <span className="text-cyan-500">Cold</span>
-        <span className="text-blue-500">Cool</span>
-        <span className="text-orange-500">Warm</span>
-        <span className="text-red-500">Hot</span>
-        <span className="text-green-600">Perfect</span>
+      <div className="flex justify-between text-xs mt-4 font-medium text-gray-300">
+        <span>Freezing</span>
+        <span>Cold</span>
+        <span>Cool</span>
+        <span>Warm</span>
+        <span>Hot</span>
+        <span>Perfect</span>
       </div>
     </div>
   );
 };
 
 const ValidationHints = ({ puzzleData, attempts }: { puzzleData: SynonymleData, attempts: SynonymleGuessResult[] }) => {
-  const hintsRevealed = Math.min(attempts.length, 5);
   const [activeHintIndex, setActiveHintIndex] = useState(0);
   const hintsScrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-advance effect
   useEffect(() => {
     if (attempts.length === 0) return;
     
@@ -121,7 +122,6 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: SynonymleData, 
     }
   }, [attempts.length]);
 
-  // Scroll effect
   useEffect(() => {
     const scrollContainer = hintsScrollRef.current;
     if (scrollContainer) {
@@ -136,35 +136,58 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: SynonymleData, 
 
   const hintItems = [
     attempts.length >= 1 && (
-      <div key="length" className="flex-none w-full text-sm">
-        🔤 <strong>Word Length:</strong> {puzzleData.wordLength} letters
+      <div key="length" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-blue-400">🔤</span>
+          <span className="text-white font-medium">Word Length:</span>
+          <span className="text-cyan-400 font-bold">{puzzleData.wordLength} letters</span>
+        </div>
       </div>
     ),
     attempts.length >= 2 && (
-      <div key="firstLetter" className="flex-none w-full text-sm">
-        🔠 <strong>Starts With:</strong> {puzzleData.targetWord[0].toUpperCase()}
+      <div key="firstLetter" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-blue-400">🔠</span>
+          <span className="text-white font-medium">Starts With:</span>
+          <span className="text-cyan-400 font-bold">{puzzleData.targetWord[0].toUpperCase()}</span>
+        </div>
       </div>
     ),
     attempts.length >= 3 && (
-      <div key="synonyms" className="flex-none w-full text-sm">
-        📝 <strong>Synonyms:</strong> {puzzleData.synonyms.slice(0, 3).join(', ')}
+      <div key="synonyms" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-blue-400">📝</span>
+          <span className="text-white font-medium">Synonyms:</span>
+          <span className="text-cyan-400 font-bold">{puzzleData.synonyms.slice(0, 3).join(', ')}</span>
+        </div>
       </div>
     ),
     attempts.length >= 4 && puzzleData.hints[0] && (
-      <div key="hint1" className="flex-none w-full text-sm">
-        💡 {puzzleData.hints[0]}
+      <div key="hint1" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-blue-400">💡</span>
+          <span className="text-white font-medium">Hint:</span>
+          <span className="text-cyan-400 font-bold">{puzzleData.hints[0]}</span>
+        </div>
       </div>
     ),
     attempts.length >= 5 && puzzleData.hints[1] && (
-      <div key="hint2" className="flex-none w-full text-sm">
-        💡 {puzzleData.hints[1]}
+      <div key="hint2" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-blue-400">💡</span>
+          <span className="text-white font-medium">Hint:</span>
+          <span className="text-cyan-400 font-bold">{puzzleData.hints[1]}</span>
+        </div>
       </div>
     ),
   ].filter(Boolean);
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-      <h4 className="font-semibold text-blue-800 mb-2">💡 Semantic Hints Revealed:</h4>
+    <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-2xl p-4 mb-6">
+      <h4 className="font-semibold text-blue-400 mb-3 flex items-center gap-2">
+        <Sparkles className="w-4 h-4" />
+        Semantic Hints Revealed:
+      </h4>
       <div className="relative overflow-hidden">
         <div
           ref={hintsScrollRef}
@@ -172,19 +195,17 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: SynonymleData, 
           style={{ scrollSnapType: 'x mandatory' }}
         >
           {hintItems.map((hint, index) => (
-            <div key={index} className="flex-none w-full snap-center">
-              {hint}
-            </div>
+            <div key={index} className="flex-none w-full snap-center">{hint}</div>
           ))}
         </div>
         {hintItems.length > 1 && (
-          <div className="flex justify-center gap-2 mt-2">
+          <div className="flex justify-center gap-2 mt-3">
             {hintItems.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setActiveHintIndex(index)}
-                className={`w-2 h-2 rounded-full ${
-                  index === activeHintIndex ? 'bg-blue-600' : 'bg-gray-300'
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === activeHintIndex ? 'bg-blue-400 scale-125' : 'bg-gray-600'
                 }`}
                 aria-label={`Go to hint ${index + 1}`}
               />
@@ -192,8 +213,8 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: SynonymleData, 
           </div>
         )}
       </div>
-      <p className="text-xs text-blue-600 mt-2">
-        More semantic hints unlock with each guess... ({hintsRevealed}/5 revealed)
+      <p className="text-xs text-blue-400 mt-3 text-center">
+        More semantic hints unlock with each guess... ({Math.min(attempts.length, 5)}/5 revealed)
       </p>
     </div>
   );
@@ -204,23 +225,26 @@ const AttemptHistory = ({ attempts }: { attempts: SynonymleGuessResult[] }) => {
 
   return (
     <div className="mb-6">
-      <h3 className="font-semibold mb-3 text-gray-800">Your Guesses:</h3>
+      <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+        <Target className="w-4 h-4" />
+        Your Guesses:
+      </h3>
       <div className="space-y-3">
         {attempts.map((attempt, index) => (
-          <div key={index} className="bg-gray-50 rounded-lg p-4 border">
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-semibold text-lg">{attempt.guess}</span>
+          <div key={index} className="bg-gray-700/30 rounded-xl p-4 border border-gray-600">
+            <div className="flex justify-between items-center mb-3">
+              <span className="font-semibold text-lg text-white">{attempt.guess}</span>
               <div className="flex items-center gap-2">
                 <span className={`px-3 py-1 rounded-full text-white text-sm font-medium ${getCategoryColor(attempt.similarityCategory)} ${getCategoryBorderColor(attempt.similarityCategory)} border`}>
                   {getCategoryEmoji(attempt.similarityCategory)} {attempt.similarityScore}
                 </span>
               </div>
             </div>
-            <div className="text-sm text-gray-600 mb-2">
+            <div className="text-sm text-gray-300 mb-2">
               {getCategoryLabel(attempt.similarityCategory)} • {attempt.feedback}
             </div>
             {/* Enhanced similarity bar with gradient */}
-            <div className="w-full bg-gray-200 rounded-full h-3 mt-2 relative overflow-hidden">
+            <div className="w-full bg-gray-600 rounded-full h-3 mt-2 relative overflow-hidden">
               <div 
                 className={`h-3 rounded-full ${getCategoryColor(attempt.similarityCategory)} transition-all duration-700 ease-out`}
                 style={{ width: `${(attempt.similarityScore / 1000) * 100}%` }}
@@ -237,7 +261,7 @@ const AttemptHistory = ({ attempts }: { attempts: SynonymleGuessResult[] }) => {
               </div>
             </div>
             {/* Category scale indicator */}
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className="flex justify-between text-xs text-gray-400 mt-1">
               <span>Freezing</span>
               <span>Cold</span>
               <span>Cool</span>
@@ -252,6 +276,9 @@ const AttemptHistory = ({ attempts }: { attempts: SynonymleGuessResult[] }) => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+/*  Main component                                                            */
+/* -------------------------------------------------------------------------- */
 export default function SynonymleComponent({ initialData }: SynonymleComponentProps) {
   const [puzzleData] = useState(initialData);
   const [guess, setGuess] = useState('');
@@ -284,26 +311,24 @@ export default function SynonymleComponent({ initialData }: SynonymleComponentPr
 
   // Sound effects
   const { isMuted } = useSound();
-  const correctSound = useRef<HTMLAudioElement | null>(null);
-  const incorrectSound = useRef<HTMLAudioElement | null>(null);
-  const winSound = useRef<HTMLAudioElement | null>(null);
-  const loseSound = useRef<HTMLAudioElement | null>(null);
-  const clickSound = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    // Initialize sound effects
-    correctSound.current = new Audio('/sounds/correct.mp3');
-    incorrectSound.current = new Audio('/sounds/incorrect.mp3');
-    winSound.current = new Audio('/sounds/win.mp3');
-    loseSound.current = new Audio('/sounds/lose.mp3');
-    clickSound.current = new Audio('/sounds/click.mp3');
-
-    return () => {
-      [correctSound, incorrectSound, winSound, loseSound, clickSound].forEach(sound => {
-        sound.current?.pause();
-      });
-    };
-  }, []);
+  const playSound = useCallback((soundType: 'correct' | 'incorrect' | 'win' | 'lose' | 'click') => {
+    if (isMuted) return;
+    
+    try {
+      const sounds = {
+        correct: '/sounds/correct.mp3',
+        incorrect: '/sounds/incorrect.mp3',
+        win: '/sounds/win.mp3',
+        lose: '/sounds/lose.mp3',
+        click: '/sounds/click.mp3'
+      };
+      
+      const audio = new Audio(sounds[soundType]);
+      audio.play().catch(() => {});
+    } catch (error) {
+      console.error('Error playing sound:', error);
+    }
+  }, [isMuted]);
 
   // Load saved progress
   useEffect(() => {
@@ -329,25 +354,6 @@ export default function SynonymleComponent({ initialData }: SynonymleComponentPr
     }
   }, [attempts, gameState, puzzleData.id]);
 
-  const playSound = useCallback((soundType: 'correct' | 'incorrect' | 'win' | 'lose' | 'click') => {
-    if (isMuted) return;
-    
-    try {
-      const sounds = {
-        correct: '/sounds/correct.mp3',
-        incorrect: '/sounds/incorrect.mp3',
-        win: '/sounds/win.mp3',
-        lose: '/sounds/lose.mp3',
-        click: '/sounds/click.mp3'
-      };
-      
-      const audio = new Audio(sounds[soundType]);
-      audio.play().catch(() => {});
-    } catch (error) {
-      console.error('Error playing sound:', error);
-    }
-  }, [isMuted]);
-
   const triggerConfetti = () => {
     if (confettiCanvasRef.current) {
       const myConfetti = confetti.create(confettiCanvasRef.current, {
@@ -358,7 +364,8 @@ export default function SynonymleComponent({ initialData }: SynonymleComponentPr
       myConfetti({
         particleCount: 100,
         spread: 70,
-        origin: { y: 0.6 }
+        origin: { y: 0.6 },
+        colors: ['#3B82F6', '#06B6D4', '#8B5CF6']
       });
     }
   };
@@ -419,27 +426,27 @@ export default function SynonymleComponent({ initialData }: SynonymleComponentPr
   };
 
   const generateShareMessage = () => {
-  if (gameState !== 'won' && gameState !== 'lost') return '';
+    if (gameState !== 'won' && gameState !== 'lost') return '';
 
-  const clientDate = new Date();
-  const startDate = new Date(2024, 0, 1);
-  const puzzleNumber = Math.floor((clientDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const clientDate = new Date();
+    const startDate = new Date(2024, 0, 1);
+    const puzzleNumber = Math.floor((clientDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
-  let shareText = `Synonymle #${puzzleNumber} ${gameState === 'won' ? attempts.length : 'X'}/6\n\n`;
+    let shareText = `Synonymle #${puzzleNumber} ${gameState === 'won' ? attempts.length : 'X'}/6\n\n`;
 
-  // Show attempts with category emojis and formatted scores
-  attempts.forEach(attempt => {
-    const emoji = getCategoryEmoji(attempt.similarityCategory);
-    shareText += `${emoji} ${attempt.guess} (${attempt.similarityScore})\n`;
-  });
+    // Show attempts with category emojis and formatted scores
+    attempts.forEach(attempt => {
+      const emoji = getCategoryEmoji(attempt.similarityCategory);
+      shareText += `${emoji} ${attempt.guess} (${attempt.similarityScore})\n`;
+    });
 
-  if (gameState === 'lost') {
-    shareText += `\nAnswer: ${puzzleData.targetWord}`;
-    shareText += `\nSynonyms: ${puzzleData.synonyms.slice(0, 3).join(', ')}`;
-  }
+    if (gameState === 'lost') {
+      shareText += `\nAnswer: ${puzzleData.targetWord}`;
+      shareText += `\nSynonyms: ${puzzleData.synonyms.slice(0, 3).join(', ')}`;
+    }
 
-  shareText += '\nPlay daily at https://triviaah.com/brainwave/synonymle';
-  return shareText;
+    shareText += '\nPlay daily at https://triviaah.com/brainwave/synonymle';
+    return shareText;
   };
 
   const copyToClipboard = () => {
@@ -452,126 +459,169 @@ export default function SynonymleComponent({ initialData }: SynonymleComponentPr
   };
 
   const triesLeft = 6 - attempts.length;
-  const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
+  const triesLeftColor = 
+    triesLeft >= 4 ? 'text-blue-400' : 
+    triesLeft >= 2 ? 'text-yellow-400' : 
+    'text-red-400';
 
   return (
-    <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
+    <div className="relative">
       <canvas 
         ref={confettiCanvasRef} 
-        className="fixed top-0 left-0 w-full h-full pointer-events-none z-50"
+        className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
       />
       
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 flex-grow">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg md:text-xl font-semibold text-gray-800">
-            Guess the word based on semantic similarity!
-          </h2>
-          <div className={`text-base font-bold ${triesLeftColor}`}>
-            {triesLeft} {triesLeft === 1 ? 'try' : 'tries'} left
+      {/* Main Game Card */}
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5 mb-5">
+        {/* Header with Attempts Counter */}
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-2 rounded-xl">
+              <BookOpen className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Today&apos;s Word Mystery</h2>
+          </div>
+          <div className={`flex items-center gap-2 text-lg font-bold ${triesLeftColor}`}>
+            <Target className="w-5 h-5" />
+            <span>{triesLeft} {triesLeft === 1 ? 'TRY' : 'TRIES'}</span>
           </div>
         </div>
 
-        {/* Word Info Display */}
-        <div className="text-center mb-8">
-          <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-6 shadow-lg inline-block">
-            <div className="text-2xl md:text-3xl font-bold text-blue-800 mb-2">
-              {puzzleData.wordLength}-letter Word
+        {/* Word Info & Category */}
+        <div className="flex flex-col md:flex-row gap-6 mb-6 items-center">
+          {/* Word Info Container */}
+          <div className="flex-shrink-0">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-600 rounded-2xl p-8 text-center" style={{ width: '200px', height: '120px' }}>
+              <div className="text-3xl font-bold text-blue-400 mb-2">
+                {puzzleData.wordLength}
+              </div>
+              <div className="text-white font-semibold">LETTER WORD</div>
+              <div className="text-cyan-400 text-sm mt-2">{puzzleData.category}</div>
             </div>
-            <div className="text-lg text-blue-600">
-              Category: {puzzleData.category}
+          </div>
+
+          {/* Category Section */}
+          <div className="flex-grow text-center">
+            <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-2xl p-6">
+              <h3 className="text-xl font-bold text-white mb-3">Today&apos;s Word</h3>
+              <p className="text-gray-300 text-lg mb-4">
+                Find the word in <strong className="text-blue-400">{puzzleData.category}</strong> category.
+              </p>
+              <div className="flex justify-center gap-4 text-sm text-gray-400">
+                <div className="flex items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  <span>Word Lovers</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Brain className="w-4 h-4" />
+                  <span>Semantic Analysis</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Error messages */}
+        {/* Game Messages */}
         {errorMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {errorMessage}
+          <div className="bg-red-500/20 border border-red-500/30 rounded-2xl p-4 mb-4 animate-pulse">
+            <div className="flex items-center gap-2 text-red-400">
+              <span className="w-2 h-2 bg-red-400 rounded-full"></span>
+              {errorMessage}
+            </div>
           </div>
         )}
-        
-        {/* Conditional rendering of hints or result */}
+
+        {gameState === 'won' && (
+          <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Victory! 🎉</h3>
+            <p className="text-blue-400 mb-2">You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
+            <p className="text-gray-300">The word was: <strong className="text-white">{puzzleData.targetWord}</strong></p>
+            <div className="mt-4 text-sm">
+              <p className="text-cyan-400"><strong>Synonyms:</strong> {puzzleData.synonyms.join(', ')}</p>
+              <p className="text-blue-400 mt-1"><strong>Related words:</strong> {puzzleData.relatedWords.slice(0, 5).join(', ')}</p>
+            </div>
+          </div>
+        )}
+
+        {gameState === 'lost' && (
+          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center">
+                <BookOpen className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Game Over</h3>
+            <p className="text-red-400">The word was: <strong className="text-white">{puzzleData.targetWord}</strong></p>
+            <div className="mt-4 text-sm">
+              <p className="text-pink-400"><strong>Synonyms:</strong> {puzzleData.synonyms.join(', ')}</p>
+              <p className="text-red-400 mt-1"><strong>Related words:</strong> {puzzleData.relatedWords.slice(0, 5).join(', ')}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Progressive Hints */}
         {gameState === 'playing' && (
           <>
-            {/* Enhanced progressive hints */}
             <EnhancedProgressiveHint attempts={attempts} />
-            
-            {/* Validation hints */}
             <ValidationHints puzzleData={puzzleData} attempts={attempts} />
           </>
         )}
 
-         {/* Game result message */}
-        {gameState === 'won' && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-            <h3 className="font-bold text-lg mb-2">Congratulations! 🎉</h3>
-            <p>You solved it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
-            <p className="mt-2 font-semibold">The answer was: {puzzleData.targetWord}</p>
-            <div className="mt-3 text-sm">
-              <p><strong>Synonyms:</strong> {puzzleData.synonyms.join(', ')}</p>
-              <p><strong>Related words:</strong> {puzzleData.relatedWords.slice(0, 5).join(', ')}</p>
-            </div>
-          </div>
-        )}
-        
-        {gameState === 'lost' && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-            <h3 className="font-bold text-lg mb-2">Game Over</h3>
-            <p className="mb-2">The answer was: <strong>{puzzleData.targetWord}</strong></p>
-            <div className="text-sm">
-              <p><strong>Synonyms:</strong> {puzzleData.synonyms.join(', ')}</p>
-              <p><strong>Related words:</strong> {puzzleData.relatedWords.slice(0, 5).join(', ')}</p>
-            </div>
-          </div>
-        )}
-        
-        {/* Attempt History */}
+        {/* Previous Attempts Grid */}
         <AttemptHistory attempts={attempts} />
-        
-        {/* Input for guesses */}
+
+        {/* Input Section */}
         {gameState === 'playing' && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 -mx-4 md:-mx-6 -mb-4 md:-mb-6">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={guess}
-                onChange={(e) => setGuess(e.target.value)}
-                placeholder={`Enter a ${puzzleData.wordLength}-letter word`}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
-                disabled={isGuessLoading}
-              />
+          <div className="sticky bottom-0 bg-gray-800/80 backdrop-blur-lg rounded-xl border border-gray-700 p-4 z-[100] -mx-2 md:-mx-4 -mb-2 md:-mb-6">
+            <div className="flex gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={guess}
+                  onChange={e => setGuess(e.target.value)}
+                  placeholder={`Enter a ${puzzleData.wordLength}-letter word...`}
+                  className="w-full pl-12 pr-4 py-4 bg-gray-700 border border-gray-600 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  onKeyPress={e => e.key === 'Enter' && handleGuess()}
+                  disabled={isGuessLoading}
+                />
+              </div>
               <button
                 onClick={handleGuess}
                 disabled={!guess.trim() || isGuessLoading}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 font-semibold"
               >
-                {isGuessLoading ? '...' : 'Guess'}
+                {isGuessLoading ? '...' : 'GUESS'}
               </button>
             </div>
           </div>
         )}
         
-        {/* Share button */}
+        {/* Share & Feedback Section */}
         {(gameState === 'won' || gameState === 'lost') && (
-          <div className="flex flex-col items-center mt-4">
+          <div className="flex flex-col items-center gap-4 mt-6">
             <button
               onClick={copyToClipboard}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-700 transition-all duration-300 transform hover:scale-105 font-semibold"
             >
-              <MdShare /> Share Result
+              <MdShare className="w-5 h-5" />
+              Share Result
             </button>
             {shareMessage && (
-              <div className="mt-2 text-blue-600">{shareMessage}</div>
+              <div className="text-blue-400 font-semibold animate-pulse">{shareMessage}</div>
             )}
 
             <FeedbackComponent
               gameType="synonymle"
               category="brainwave"
-              metadata={{
-                attempts: attempts.length,
-                won: gameState === 'won',
+              metadata={{ 
+                attempts: attempts.length, 
+                won: gameState === 'won', 
                 correctAnswer: puzzleData.targetWord
               }}
             />
@@ -579,21 +629,54 @@ export default function SynonymleComponent({ initialData }: SynonymleComponentPr
         )}
       </div>
 
-      {/* How to Play section */}
-      <div className="bg-gray-100 rounded-lg p-4 mt-6">
-        <h3 className="font-bold mb-2">How to Play Synonymle:</h3>
-        <ul className="list-disc list-inside space-y-1 text-sm">
-          <li>Guess the target word based on semantic similarity</li>
-          <li>You have 6 attempts to guess correctly</li>
-          <li>Get a similarity score (0-1000) for each guess</li>
-          <li>🎉 Perfect (990-1000): Exact match - you win!</li>
-          <li>🔥 Hot (900-989): Extremely close synonym</li>
-          <li>☀️ Warm (700-899): Conceptually related</li>
-          <li>💨 Cool (500-699): Broadly related concept</li>
-          <li>❄️ Cold (1-499): Semantically distant</li>
-          <li>🧊 Freezing (0): No meaningful connection</li>
-          <li>Hints are revealed after each attempt</li>
-        </ul>
+      {/* How to Play Section */}
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5">
+        <h3 className="font-bold text-white mb-3 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-blue-400" />
+          How to Play:
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">🔠</span>
+            <span>Guess the word based on semantic similarity</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">🎯</span>
+            <span>6 attempts to guess correctly</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-cyan-400">📊</span>
+            <span>Get a similarity score (0-1000) for each guess</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-green-400">🎉</span>
+            <span>Perfect (990-1000): Exact match</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-red-400">🔥</span>
+            <span>Hot (900-989): Extremely close synonym</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-orange-400">☀️</span>
+            <span>Warm (700-899): Conceptually related</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-yellow-400">💨</span>
+            <span>Cool (500-699): Broadly related concept</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">❄️</span>
+            <span>Cold (1-499): Semantically distant</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-gray-400">🧊</span>
+            <span>Freezing (0): No meaningful connection</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-purple-400">💡</span>
+            <span>Hints are revealed after each attempt</span>
+          </div>
+        </div>
       </div>
     </div>
   );

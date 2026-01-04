@@ -111,7 +111,7 @@ export default function NumberScramblePage() {
   }, []);
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Structured Data */}
       <Script
         id="number-scramble-organization-schema"
@@ -137,10 +137,10 @@ export default function NumberScramblePage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -170,28 +170,6 @@ export default function NumberScramblePage() {
       )}
 
       <div className="max-w-3xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Number Scramble Puzzle Game</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-red-50 px-3 py-1 rounded-full text-xs font-medium border border-red-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
-          </div>
-          <p className="text-lg text-gray-600">
-            Arrange the numbers and mathematical operators in correct sequence to form the target number.
-            Challenge your mathematical thinking and pattern recognition skills!
-          </p>
-        </div>
-
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
@@ -199,10 +177,10 @@ export default function NumberScramblePage() {
         <ScramblePuzzle />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Number Sequence Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">Number Sequence Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -210,15 +188,15 @@ export default function NumberScramblePage() {
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <h3 className="font-semibold text-white">Game Updates</h3>
+                <p className="text-gray-10 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What is Number Sequence?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Number Sequence is a math puzzle game where players identify patterns in number sequences 
                   and predict the next numbers. It challenges logical thinking, pattern recognition skills, 
                   and mathematical reasoning in an engaging, game-based format that makes learning math fun 
@@ -227,7 +205,7 @@ export default function NumberScramblePage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">How do you play Number Sequence?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Players are shown a sequence of numbers with a hidden pattern, and they must identify the 
                   next numbers in the sequence using logical reasoning and mathematical thinking. The game 
                   provides limited attempts and may include hints to help players understand the patterns 
@@ -236,7 +214,7 @@ export default function NumberScramblePage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What types of number patterns are used?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   The game includes various mathematical patterns such as arithmetic sequences (constant 
                   difference), geometric sequences (constant ratio), Fibonacci patterns, prime numbers, 
                   square numbers, cube numbers, and combinations of mathematical operations. Each pattern 
@@ -245,7 +223,7 @@ export default function NumberScramblePage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is Number Sequence educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Number Sequence is excellent for developing mathematical thinking, pattern recognition, 
                   logical reasoning, and problem-solving skills. It helps build foundational math skills, 
                   improves mental math abilities, and enhances cognitive functions related to numerical 
@@ -254,7 +232,7 @@ export default function NumberScramblePage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What skills does this game develop?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Number Sequence develops mathematical reasoning, pattern recognition, logical thinking, 
                   problem-solving abilities, mental math skills, analytical thinking, and cognitive 
                   flexibility. Regular play can significantly improve numerical literacy and mathematical 
@@ -263,7 +241,7 @@ export default function NumberScramblePage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is this game free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Our Number Sequence game is completely free to play with no registration required. 
                   You can enjoy daily new puzzles, multiple difficulty levels, and comprehensive learning 
                   features without any cost or subscription.
@@ -274,9 +252,9 @@ export default function NumberScramblePage() {
         </div>
 
         {/* Game Information Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">About Number Sequence Puzzles</h2>
-          <div className="space-y-6 text-gray-700">
+          <div className="space-y-6 text-gray-10">
             <div>
               <h3 className="text-lg font-semibold mb-2">How to Play:</h3>
               <ul className="list-disc pl-5 space-y-2">
@@ -291,27 +269,27 @@ export default function NumberScramblePage() {
             <div>
               <h3 className="text-lg font-semibold mb-2">Common Pattern Types:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Arithmetic:</strong> Constant difference between terms (2, 4, 6, 8...)</li>
-                <li><strong>Geometric:</strong> Constant ratio between terms (2, 4, 8, 16...)</li>
-                <li><strong>Fibonacci:</strong> Each term is sum of two previous terms (1, 1, 2, 3, 5...)</li>
-                <li><strong>Prime Numbers:</strong> Sequence of prime numbers (2, 3, 5, 7, 11...)</li>
-                <li><strong>Squares/Cubes:</strong> Square or cube numbers (1, 4, 9, 16... or 1, 8, 27, 64...)</li>
-                <li><strong>Combination:</strong> Mix of mathematical operations</li>
+                <li><strong className="text-green-300">Arithmetic:</strong> Constant difference between terms (2, 4, 6, 8...)</li>
+                <li><strong className="text-green-300">Geometric:</strong> Constant ratio between terms (2, 4, 8, 16...)</li>
+                <li><strong className="text-green-300">Fibonacci:</strong> Each term is sum of two previous terms (1, 1, 2, 3, 5...)</li>
+                <li><strong className="text-green-300">Prime Numbers:</strong> Sequence of prime numbers (2, 3, 5, 7, 11...)</li>
+                <li><strong className="text-green-300">Squares/Cubes:</strong> Square or cube numbers (1, 4, 9, 16... or 1, 8, 27, 64...)</li>
+                <li><strong className="text-green-300">Combination:</strong> Mix of mathematical operations</li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Difficulty Levels:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Beginner:</strong> Simple arithmetic and basic patterns</li>
-                <li><strong>Intermediate:</strong> Geometric sequences and combined operations</li>
-                <li><strong>Advanced:</strong> Complex patterns and multiple mathematical concepts</li>
-                <li><strong>Expert:</strong> Challenging sequences requiring deep mathematical insight</li>
+                <li><strong className="text-green-300">Beginner:</strong> Simple arithmetic and basic patterns</li>
+                <li><strong className="text-green-300">Intermediate:</strong> Geometric sequences and combined operations</li>
+                <li><strong className="text-green-300">Advanced:</strong> Complex patterns and multiple mathematical concepts</li>
+                <li><strong className="text-green-300">Expert:</strong> Challenging sequences requiring deep mathematical insight</li>
               </ul>
             </div>
 
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">Solving Strategies:</h4>
+            <div className="p-4 bg-green-500/10 border border-green-500/20 text-white">
+              <h4 className="font-bold text-white mb-2">Solving Strategies:</h4>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Look for constant differences between consecutive terms</li>
                 <li>Check if numbers are doubling, tripling, or following other multiplicative patterns</li>
@@ -327,7 +305,7 @@ export default function NumberScramblePage() {
           {/* Educational Benefits Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Educational Benefits of Number Sequence Games</h3>
-            <div className="prose text-gray-700">
+            <div className="prose prose-invert max-w-none text-gray-10">
               <p className="mb-4">
                 Number Sequence puzzles are more than just entertaining games—they&apos;re powerful educational 
                 tools that develop essential mathematical and cognitive skills. As one of the most engaging 

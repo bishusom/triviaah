@@ -40,7 +40,7 @@ export function generateSpellingBeeMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/word-games/spelling-bee.webp',
+          url: '/imgs/spelling-bee-og.webp',
           width: 1200,
           height: 630,
           alt: 'Free Spelling Bee Game Online'
@@ -53,7 +53,7 @@ export function generateSpellingBeeMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Free Spelling Bee Game Online | Vocabulary Challenge | Triviaah',
       description: 'Play free Spelling Bee game online. Create words from 7 letters with our daily puzzle challenge. Improve your vocabulary, spelling skills, and find all possible words.',
-      images: ['/imgs/word-games/spelling-bee.webp'],
+      images: ['/imgs/spelling-bee-og.webp'],
       site: '@elitetrivias',
     },
     robots: {

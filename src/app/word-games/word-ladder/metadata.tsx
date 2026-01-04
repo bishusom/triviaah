@@ -40,7 +40,7 @@ export function generateWordLadderMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/word-games/word-ladder.webp',
+          url: '/imgs/word-ladder.webp',
           width: 1200,
           height: 630,
           alt: 'Free Word Ladder Puzzles Online'
@@ -53,7 +53,7 @@ export function generateWordLadderMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Free Word Ladder Puzzles Online | Vocabulary Brain Game | Triviaah',
       description: 'Play free word ladder puzzles online. Transform one word into another by changing one letter at a time. Fun vocabulary game that improves spelling and logic skills.',
-      images: ['/imgs/word-games/word-ladder.webp'],
+      images: ['/imgs/word-ladder.webp'],
       site: '@elitetrivias',
     },
     robots: {

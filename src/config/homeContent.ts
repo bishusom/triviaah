@@ -70,14 +70,6 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
 
 export const BRAIN_WAVES: ReadonlySectionItems = [
   {
-    category: 'plotle',
-    name: 'Plotle',
-    path: '/brainwave/plotle',
-    image: '/imgs/thumbnails/plotle-160x160.webp',
-    tagline: 'Guess the movie from its plot description in emojis',
-    keywords: 'movie plot game, film trivia, movie guessing game'
-  },
-  {
     category: 'capitale',
     name: 'Capitale',
     path: '/brainwave/capitale',
@@ -86,12 +78,12 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     keywords: 'capital cities game, geography puzzle, world capitals quiz'
   },
   {
-    category: 'historidle',
-    name: 'Historidle',
-    path: '/brainwave/historidle',
-    image: '/imgs/thumbnails/historidle-160x160.webp',
-    tagline: 'Guess the historical event from dates and other intriguing clues',
-    keywords: 'history trivia game, historical events quiz, history guessing game'
+    category: 'plotle',
+    name: 'Plotle',
+    path: '/brainwave/plotle',
+    image: '/imgs/thumbnails/plotle-160x160.webp',
+    tagline: 'Guess the movie from its plot description in emojis',
+    keywords: 'movie plot game, film trivia, movie guessing game'
   },
   {
     category: 'celebrile',
@@ -110,12 +102,12 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     keywords: 'music lyrics game, song trivia, music guessing challenge'
   },
   {
-    category: 'literale',
-    name: 'Literale',
-    path: '/brainwave/literale',
-    image: '/imgs/thumbnails/literale-160x160.webp',
-    tagline: 'Guess the book from its opening line in this literary puzzle',
-    keywords: 'book opening game, literature trivia, book guessing puzzle'
+    category: 'historidle',
+    name: 'Historidle',
+    path: '/brainwave/historidle',
+    image: '/imgs/thumbnails/historidle-160x160.webp',
+    tagline: 'Guess the historical event from dates and other intriguing clues',
+    keywords: 'history trivia game, historical events quiz, history guessing game'
   },
   {
     category: 'creaturedle',
@@ -132,6 +124,14 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     image: '/imgs/thumbnails/foodle-160x160.webp',
     tagline: 'Guess the dish from its ingredients in this culinary puzzle',
     keywords: 'food trivia game, dish guessing quiz, culinary puzzle'
+  },
+  {
+    category: 'literale',
+    name: 'Literale',
+    path: '/brainwave/literale',
+    image: '/imgs/thumbnails/literale-160x160.webp',
+    tagline: 'Guess the book from its opening line in this literary puzzle',
+    keywords: 'book opening game, literature trivia, book guessing puzzle'
   },
   {
     category: 'landmarkdle',
@@ -153,7 +153,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'automoble',
     name: 'Automoble',
     path: '/brainwave/automoble',
-    image: '/imgs/thumbnails/automoble-160x160.webp',
+    image: '/imgs/brainwave/automoble.webp',
     tagline: 'Guess the car from its unique characteristics in this automotive puzzle',
     keywords: 'car trivia game, automotive quiz, car guessing puzzle'
   },
@@ -161,7 +161,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'botanle',
     name: 'Botanle',
     path: '/brainwave/botanle',
-    image: '/imgs/thumbnails/botanle-160x160.webp',
+    image: '/imgs/brainwave/botanle.webp',
     tagline: 'Guess the plant from its unique characteristics in this botanical puzzle',
     keywords: 'plant trivia game, botanical quiz, plant guessing puzzle'
   },
@@ -169,7 +169,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'citadle',
     name: 'Citadle',
     path: '/brainwave/citadle',
-    image: '/imgs/thumbnails/citadle-160x160.webp',
+    image: '/imgs/brainwave/citadle.webp',
     tagline: 'Guess the city from its unique characteristics in this urban geography puzzle',
     keywords: 'city trivia game, urban geography quiz, city guessing puzzle'
   },
@@ -177,7 +177,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'countridle',
     name: 'Countridle',
     path: '/brainwave/countridle',
-    image: '/imgs/thumbnails/countridle-160x160.webp',
+    image: '/imgs/brainwave/countridle.webp',
     tagline: 'Guess the country from its unique characteristics in this global geography puzzle',
     keywords: 'country trivia game, world geography quiz, country guessing puzzle'
   },

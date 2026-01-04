@@ -28,7 +28,7 @@ export default function MatrixIQTestPage() {
     "@type": "WebPage",
     "name": "Matrix IQ Test | Free Pattern Recognition Assessment",
     "description": "Take our Matrix IQ Test to measure your pattern recognition, abstract reasoning, and fluid intelligence. Get your IQ estimate and cognitive profile.",
-    "url": "https://triviaah.com/brainwave/matrix-iq",
+    "url": "https://elitetrivias.com/brainwave/matrix-iq",
     "mainEntity": {
       "@type": "PsychologicalTest",
       "name": "Matrix Intelligence Quotient Test",
@@ -38,7 +38,7 @@ export default function MatrixIQTestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="matrixiq-schema"
@@ -89,10 +89,10 @@ export default function MatrixIQTestPage() {
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 mb-6">
             <Brain size={40} className="text-white" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-30 mb-4">
             Matrix Intelligence Quotient Test
           </h1>
-          <p className="text-mb text-gray-600 mb-6 max-w-3xl mx-auto">
+          <p className="text-mb text-gray-30 mb-6 max-w-3xl mx-auto">
             Measure your pattern recognition, abstract reasoning, and fluid intelligence abilities
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-8">

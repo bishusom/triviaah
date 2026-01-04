@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaChevronRight } from 'react-icons/fa';
+import { ChevronRight } from 'lucide-react';
 
 export function Breadcrumbs() {
   const pathname = usePathname();
@@ -13,13 +13,13 @@ export function Breadcrumbs() {
   return (
     <nav 
       aria-label="Breadcrumb navigation" 
-      className="bg-blue-700 text-white px-4 py-3 shadow-md"
+      className="bg-gray-800 border-b border-gray-700 text-white px-4 py-3 shadow-md"
     >
       <ol className="container mx-auto flex items-center gap-2 text-sm">
         <li>
           <Link 
             href="/" 
-            className="hover:text-blue-200 transition-colors"
+            className="hover:text-grey-200 transition-colors"
             aria-label="Home"
           >
             Home
@@ -32,7 +32,7 @@ export function Breadcrumbs() {
 
           return (
             <li key={href} className="flex items-center gap-2">
-              <FaChevronRight className="text-blue-300 text-xs" />
+              <ChevronRight className="text-grey-300 text-xs" />
               {isLast ? (
                 <span 
                   className="font-medium capitalize text-white" 
@@ -43,7 +43,7 @@ export function Breadcrumbs() {
               ) : (
                 <Link 
                   href={href}
-                  className="hover:text-blue-200 transition-colors capitalize"
+                  className="hover:text-grey-200 transition-colors capitalize"
                 >
                   {name}
                 </Link>

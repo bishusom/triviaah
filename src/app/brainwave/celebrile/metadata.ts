@@ -31,11 +31,11 @@ export function generateCelebrileMetadata(): Metadata {
     openGraph: {
       title: 'Celebrile - Daily Celebrity Guessing Game | Triviaah',
       description: 'Guess the celebrity from progressive clues in 6 tries! Wordle-style letter feedback. Unlock more hints with each wrong guess.',
-      url: 'https://triviaah.com/brainwave/celebrile',
+      url: 'https://triviaah.com/celebrile',
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs//brainwave/celebrile-og.webp',
+          url: '/imgs/brainwave/celebrile.webp',
           width: 1200,
           height: 630,
           alt: 'Celebrile - Daily Celebrity Guessing Game'
@@ -48,7 +48,7 @@ export function generateCelebrileMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Celebrile - Daily Celebrity Guessing Game | Triviaah',
       description: 'Guess the celebrity from progressive clues in 6 tries! Wordle-style letter feedback. Unlock more hints with each wrong guess.',
-      images: ['/imgs//brainwave/celebrile-og.webp'],
+      images: ['/imgs/brainwave/celebrile.webp'],
       site: '@elitetrivias', // Replace with your actual Twitter handle
     },
     robots: {

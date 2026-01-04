@@ -141,7 +141,7 @@ export async function addCreatureResult(
 
     if (error) throw error;
   } catch (error) {
-    console.error('Error saving creaturedle result to Supabase:', error);
+    console.error('Error saving creature result to Supabase:', error);
   }
 }
 
@@ -154,7 +154,7 @@ export async function getCreatureStats(): Promise<{
     const { data: results, error } = await supabase
       .from('puzzle_results')
       .select('*')
-      .eq('category', 'creature');
+      .eq('category', 'creaturedle');
 
     if (error) throw error;
     

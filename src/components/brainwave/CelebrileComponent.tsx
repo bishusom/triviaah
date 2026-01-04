@@ -14,6 +14,7 @@ import {
 } from '@/lib/brainwave/celebrile/celebrile-logic';
 import { fetchWikimediaImage } from '@/lib/wikimedia';
 import Image from 'next/image';
+import { User, Target, Users, Clock, Trophy, Star, Sparkles, Eye, EyeOff, Search, Zap } from 'lucide-react';
 
 interface CelebrileComponentProps {
   initialData: CelebrileData;
@@ -27,8 +28,8 @@ function getArticle(word: string): string {
   return vowels.includes(firstLetter) ? 'an' : 'a';
 }
 
-// ProgressiveHint component for Celebrile
-const ProgressiveHint = ({ attempts }: { 
+// EnhancedProgressiveHint component with gaming UI
+const EnhancedProgressiveHint = ({ attempts }: { 
   attempts: CelebrileGuessResult[]; 
 }) => {
   if (attempts.length === 0) return null;
@@ -41,27 +42,27 @@ const ProgressiveHint = ({ attempts }: {
     {
       icon: "🎯",
       text: `Great start! You have ${correctLetters} correct letters.`,
-      color: "bg-green-100 border-green-400 text-green-700"
+      color: "bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 text-green-400"
     },
     {
       icon: "🔍",
       text: `Look for patterns. ${presentLetters} letters are in the name but misplaced.`,
-      color: "bg-yellow-100 border-yellow-400 text-yellow-700"
+      color: "bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 text-yellow-400"
     },
     {
       icon: "🤔",
       text: "Compare letter positions. Focus on the green letters first.",
-      color: "bg-blue-100 border-blue-400 text-blue-700"
+      color: "bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 text-blue-400"
     },
     {
       icon: "💡",
       text: "Use the revealed hints below to narrow down your options.",
-      color: "bg-purple-100 border-purple-400 text-purple-700"
+      color: "bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-400"
     },
     {
       icon: "⚡",
       text: "Final attempt! Use all clues and think about celebrities that fit all hints.",
-      color: "bg-red-100 border-red-400 text-red-700"
+      color: "bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 text-red-400"
     }
   ];
   
@@ -69,19 +70,19 @@ const ProgressiveHint = ({ attempts }: {
   const currentHint = hints[hintIndex];
   
   return (
-    <div className={`rounded-lg p-4 mb-4 border ${currentHint.color}`}>
+    <div className={`rounded-2xl p-4 mb-4 ${currentHint.color}`}>
       <div className="flex items-center mb-2">
-        <span className="text-xl mr-2">{currentHint.icon}</span>
+        <span className="text-xl mr-3">{currentHint.icon}</span>
         <span className="font-semibold">{currentHint.text}</span>
       </div>
       
-      <div className="flex gap-1 mt-2">
+      <div className="flex gap-1 mt-3">
         {latestAttempt.letterStatuses?.map((status, i) => (
           <div
             key={i}
             className={`h-1 flex-1 rounded ${
-              status === 'correct' ? 'bg-green-500' :
-              status === 'present' ? 'bg-yellow-500' : 'bg-gray-300'
+              status === 'correct' ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
+              status === 'present' ? 'bg-gradient-to-r from-yellow-400 to-amber-500' : 'bg-gray-600'
             }`}
           />
         ))}
@@ -100,11 +101,9 @@ const ValidationHints = ({ puzzleData, attempts }: {
   const [activeHintIndex, setActiveHintIndex] = useState(0);
   const hintsScrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-advance effect - triggers on attempts change
   useEffect(() => {
     if (attempts.length === 0) return;
     
-    // Updated: Show one hint per attempt (1st attempt = 1st hint, 2nd attempt = 2nd hint, etc.)
     const visibleHints = [
       attempts.length >= 1, // Birth Year
       attempts.length >= 2, // Category + Profession
@@ -119,7 +118,6 @@ const ValidationHints = ({ puzzleData, attempts }: {
     }
   }, [attempts.length]);
 
-  // Scroll effect - triggers on activeHintIndex change
   useEffect(() => {
     const scrollContainer = hintsScrollRef.current;
     if (scrollContainer) {
@@ -130,25 +128,32 @@ const ValidationHints = ({ puzzleData, attempts }: {
     }
   }, [activeHintIndex]);
 
-  // Early return after all hooks
   if (attempts.length === 0) return null;
 
   const hintItems = [
     attempts.length >= 1 && hints.birthYear && (
-      <div key="birthYear" className="flex-none w-full text-sm">
-        🎂 Born in: <strong>{hints.birthYear}</strong>
+      <div key="birthYear" className="flex-none w-full">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-purple-400">🎂</span>
+          <span className="text-white font-medium">Born in:</span>
+          <span className="text-cyan-400 font-bold">{hints.birthYear}</span>
+        </div>
       </div>
     ),
     attempts.length >= 2 && (
       <div key="categoryProfession" className="flex-none w-full">
         {puzzleData.category && (
-          <div className="text-sm mb-2">
-            🎭 Category: <strong>{puzzleData.category}</strong>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-purple-400">🎭</span>
+            <span className="text-white font-medium">Category:</span>
+            <span className="text-cyan-400 font-bold">{puzzleData.category}</span>
           </div>
         )}
         {hints.profession && (
-          <div className="text-sm">
-            💼 Profession: <strong>{hints.profession?.join(', ')}</strong>
+          <div className="flex items-center gap-2">
+            <span className="text-purple-400">💼</span>
+            <span className="text-white font-medium">Profession:</span>
+            <span className="text-cyan-400 font-bold">{hints.profession?.join(', ')}</span>
           </div>
         )}
       </div>
@@ -156,13 +161,17 @@ const ValidationHints = ({ puzzleData, attempts }: {
     attempts.length >= 3 && (
       <div key="nationalityWorks" className="flex-none w-full">
         {hints.nationality && (
-          <div className="text-sm mb-2">
-            🌍 Nationality: <strong>{hints.nationality}</strong>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-purple-400">🌍</span>
+            <span className="text-white font-medium">Nationality:</span>
+            <span className="text-cyan-400 font-bold">{hints.nationality}</span>
           </div>
         )}
         {hints.notableWorks && (
-          <div className="text-sm">
-            🏆 Known for: <strong>{hints.notableWorks?.slice(0, 2).join(', ')}</strong>
+          <div className="flex items-center gap-2">
+            <span className="text-purple-400">🏆</span>
+            <span className="text-white font-medium">Known for:</span>
+            <span className="text-cyan-400 font-bold">{hints.notableWorks?.slice(0, 2).join(', ')}</span>
           </div>
         )}
       </div>
@@ -170,25 +179,36 @@ const ValidationHints = ({ puzzleData, attempts }: {
     attempts.length >= 4 && (
       <div key="yearsLetter" className="flex-none w-full">
         {hints.yearsActive && (
-          <div className="text-sm mb-2">
-            ⏳ Active: <strong>{hints.yearsActive}</strong>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-purple-400">⏳</span>
+            <span className="text-white font-medium">Active:</span>
+            <span className="text-cyan-400 font-bold">{hints.yearsActive}</span>
           </div>
         )}
-        <div className="text-sm">
-          🔤 Starts with: <strong>{puzzleData.targetName.charAt(0).toUpperCase()}</strong>
+        <div className="flex items-center gap-2">
+          <span className="text-purple-400">🔤</span>
+          <span className="text-white font-medium">Starts with:</span>
+          <span className="text-cyan-400 font-bold">{puzzleData.targetName.charAt(0).toUpperCase()}</span>
         </div>
       </div>
     ),
     attempts.length >= 5 && (
-      <div key="wordCount" className="flex-none w-full text-sm">
-        📝 Name has: <strong>{puzzleData.targetName.split(' ').length} words</strong>
+      <div key="wordCount" className="flex-none w-full">
+        <div className="flex items-center gap-2">
+          <span className="text-purple-400">📝</span>
+          <span className="text-white font-medium">Name has:</span>
+          <span className="text-cyan-400 font-bold">{puzzleData.targetName.split(' ').length} words</span>
+        </div>
       </div>
     ),
   ].filter(Boolean);
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-      <h4 className="font-semibold text-blue-800 mb-2">💡 Hints Revealed:</h4>
+    <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-2xl p-4 mb-6">
+      <h4 className="font-semibold text-cyan-400 mb-3 flex items-center gap-2">
+        <Sparkles className="w-4 h-4" />
+        Hints Revealed:
+      </h4>
       <div className="relative overflow-hidden">
         <div
           ref={hintsScrollRef}
@@ -202,13 +222,13 @@ const ValidationHints = ({ puzzleData, attempts }: {
           ))}
         </div>
         {hintItems.length > 1 && (
-          <div className="flex justify-center gap-2 mt-2">
+          <div className="flex justify-center gap-2 mt-3">
             {hintItems.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setActiveHintIndex(index)}
-                className={`w-2 h-2 rounded-full ${
-                  index === activeHintIndex ? 'bg-blue-600' : 'bg-gray-300'
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === activeHintIndex ? 'bg-cyan-400 scale-125' : 'bg-gray-600'
                 }`}
                 aria-label={`Go to hint ${index + 1}`}
               />
@@ -216,14 +236,14 @@ const ValidationHints = ({ puzzleData, attempts }: {
           </div>
         )}
       </div>
-      <p className="text-xs text-blue-600 mt-2">
+      <p className="text-xs text-cyan-400 mt-3 text-center">
         More hints unlock with each guess... ({hintsRevealed}/5 revealed)
       </p>
     </div>
   );
 };
 
-// Block component for pixelated reveal (same as Plotle)
+// Block component for pixelated reveal
 const PosterBlock = ({ 
   x, 
   y, 
@@ -246,7 +266,7 @@ const PosterBlock = ({
 
   return (
     <div
-      className="absolute bg-black"
+      className="absolute bg-gray-900/90"
       style={{
         left: `${left}%`,
         top: `${top}%`,
@@ -274,17 +294,16 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
   const [revealedBlocks, setRevealedBlocks] = useState<number[]>([]);
   const blockRevealOrderRef = useRef<number[]>([]);
   const [gameStarted, setGameStarted] = useState(false);
+  const [hardMode, setHardMode] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   
   // Grid settings for blocks
   const GRID_COLS = 30;
   const GRID_ROWS = 40;
   const totalBlocks = GRID_COLS * GRID_ROWS;
   const containerWidth = 90;
-  const containerHeight = 120;
+  const containerHeight = 130;
   
-  // Remove unused revealedClues variable
-  // const revealedClues = getRevealedClues(attempts.length, puzzleData.clues);
-
   // Get the correct article for the category
   const categoryArticle = getArticle(puzzleData.category);
 
@@ -325,7 +344,7 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
           console.log('Image found:', imageUrl);
           setCelebrityImage(imageUrl);
           
-          // Preload the image to ensure it's cached - FIXED: use window.Image
+          // Preload the image
           const img = new window.Image();
           img.src = imageUrl;
           img.onload = () => {
@@ -418,7 +437,7 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
   useEffect(() => {
     let newReveal = 0;
     if (attempts.length > 0 && gameState === 'playing') {
-      newReveal = Math.min(attempts.length * 15, 75); // 15% per attempt, max 75%
+      newReveal = Math.min(attempts.length * 15, 75);
     } else if (gameState === 'won' || gameState === 'lost') {
       newReveal = 100;
     }
@@ -437,9 +456,10 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
       });
       
       myConfetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ['#00FFFF', '#0066FF', '#9933FF']
       });
     }
   };
@@ -458,13 +478,11 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
     
     playSound('click');
     setIsGuessLoading(true);
-    setValidationError(null); // Clear previous validation errors
+    setValidationError(null);
     
     try {
-      // Validate the celebrity guess (for errors only)
       const validation = await validateCelebrityGuess(normalizedGuess, puzzleData);
       
-      // Only show validation error if there's an actual error (not the initial hint)
       if (validation.hint && !validation.isValid) {
         setValidationError(validation.hint);
       }
@@ -513,7 +531,7 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
     
     let shareText = `Celebrile #${puzzleNumber} ${gameState === 'won' ? attempts.length : 'X'}/6\n\n`;
     
-    attempts.forEach((attempt, index) => {
+    attempts.forEach(attempt => {
       attempt.letterStatuses?.forEach(status => {
         if (status === 'correct') {
           shareText += '🟩';
@@ -523,12 +541,10 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
           shareText += '⬜';
         }
       });
-      if (index < attempts.length - 1) {
-        shareText += '\n';
-      }
+      shareText += '\n';
     });
     
-    shareText += '\n\nPlay daily at https://triviaah.com/brainwave/celebrile';
+    shareText += '\nPlay daily at https://triviaah.com/brainwave/celebrile';
     return shareText;
   };
 
@@ -541,8 +557,21 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
     });
   };
 
+  const toggleHardMode = () => {
+    setHardMode(!hardMode);
+    playSound('click');
+  };
+
+  const toggleHint = () => {
+    setShowHint(!showHint);
+    playSound('click');
+  };
+
   const triesLeft = 6 - attempts.length;
-  const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-amber-600' : 'text-red-600';
+  const triesLeftColor = 
+    triesLeft >= 4 ? 'text-green-400' : 
+    triesLeft >= 2 ? 'text-yellow-400' : 
+    'text-red-400';
 
   // Generate block grid
   const blockGrid: { x: number; y: number }[] = [];
@@ -560,45 +589,50 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
   const showImage = celebrityImage && !imageLoading && !imageError;
 
   return (
-    <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
+    <div className="relative">
       <canvas 
         ref={confettiCanvasRef} 
-        className="fixed top-0 left-0 w-full h-full pointer-events-none z-50"
+        className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
       />
       
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 flex-grow">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg md:text-xl font-semibold text-gray-800">
-            Guess the celebrity from the clues!
-          </h2>
-          <div className={`text-base font-bold ${triesLeftColor}`}>
-            {triesLeft} {triesLeft === 1 ? 'try' : 'tries'} left
+      {/* Main Game Card */}
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5 mb-5">
+        {/* Header with Attempts Counter */}
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-r from-purple-500 to-pink-600 p-2 rounded-xl">
+              <User className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Today&apos;s Celebrity Mystery</h2>
+          </div>
+          <div className={`flex items-center gap-2 text-lg font-bold ${triesLeftColor}`}>
+            <Target className="w-5 h-5" />
+            <span>{triesLeft} {triesLeft === 1 ? 'TRY' : 'TRIES'}</span>
           </div>
         </div>
 
-        {/* Image and Category Container */}
-        <div className="flex flex-col md:flex-row gap-6 mb-6">
-          {/* Image Container */}
-          <div className="flex-shrink-0">
+        {/* Celebrity Image & Category Section */}
+        <div className="flex flex-col md:flex-row gap-6 mb-6 items-center">
+          {/* Celebrity Image Container */}
+          <div className="flex-shrink-0 relative">
             <div 
-              className="relative rounded-lg overflow-hidden bg-gray-100" 
+              className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-600" 
               style={{ height: `${containerHeight}px`, width: `${containerWidth}px` }}
             >
               {showImageLoader && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-100 to-gray-200 z-10">
-                  <div className="text-gray-600 flex flex-col items-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-500 mb-1"></div>
-                    <span className="text-xs">Loading image...</span>
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-pink-900/50 z-10">
+                  <div className="text-purple-400 flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400 mb-2"></div>
+                    <span className="text-sm">Loading image...</span>
                   </div>
                 </div>
               )}
               
               {showImageError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-100 to-gray-200 z-10">
-                  <div className="text-gray-600 flex flex-col items-center text-center p-2">
-                    <span className="text-2xl mb-2">👤</span>
-                    <span className="text-xs">No image available</span>
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-pink-900/50 z-10">
+                  <div className="text-purple-400 flex flex-col items-center text-center p-4">
+                    <span className="text-3xl mb-2">👤</span>
+                    <span className="text-sm">No image available</span>
                   </div>
                 </div>
               )}
@@ -629,92 +663,158 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
                   </div>
                   {/* Center "?" overlay */}
                   {revealPercentage === 0 && (
-                    <div className="absolute inset-0 flex items-center justify-center z-30">
-                      <span className="text-white text-2xl font-bold bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center">?</span>
+                    <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/70">
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-purple-500/50">
+                          <span className="text-purple-400 text-2xl font-bold">?</span>
+                        </div>
+                        <p className="text-purple-400 font-semibold">Mystery Celebrity</p>
+                      </div>
                     </div>
                   )}
-                  {/* Percentage badge */}
-                  <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1 py-0.5 rounded z-30">
-                    {revealPercentage > 0 ? `${Math.round(revealPercentage)}%` : '?'}
+                  
+                  {/* Reveal Progress */}
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <div className="bg-black/70 backdrop-blur-sm rounded-xl p-2">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-purple-400 text-xs font-medium">Image Reveal</span>
+                        <span className="text-white text-xs font-bold">{Math.round(revealPercentage)}%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 rounded-full h-1.5">
+                        <div 
+                          className="bg-gradient-to-r from-purple-400 to-pink-500 h-1.5 rounded-full transition-all duration-500"
+                          style={{ width: `${revealPercentage}%` }}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </>
               )}
             </div>
           </div>
-
-          {/* Category Section - Replaced CluesDisplay */}
-          <div className="flex-grow">
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <h4 className="font-semibold text-purple-800 mb-2">Today&apos;s Celebrity</h4>
-              <p className="text-purple-700">
-                Today&apos;s celebrity is {categoryArticle} <strong>{puzzleData.category}</strong>.
+          
+          {/* Category Section */}
+          <div className="flex-grow text-center">
+            <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-2xl p-6">
+              <h3 className="text-xl font-bold text-white mb-3">Today&apos;s Celebrity</h3>
+              <p className="text-gray-300 text-lg mb-4">
+                Today&apos;s celebrity is {categoryArticle} <strong className="text-purple-400">{puzzleData.category}</strong>.
               </p>
-              <p className="text-xs text-purple-600 mt-2">
-                More clues will be revealed as you make guesses...
-              </p>
+              <div className="flex justify-center gap-4 text-sm text-gray-400">
+                <div className="flex items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  <span>Global Players</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Star className="w-4 h-4" />
+                  <span>Letter Hints</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Error messages */}
+        {/* Game Controls */}
+        <div className="flex flex-wrap gap-3 mb-5">
+          <button
+            onClick={toggleHardMode}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
+              hardMode 
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
+                : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+            }`}
+          >
+            <Zap className="w-4 h-4" />
+            {hardMode ? 'Hard Mode ON' : 'Hard Mode'}
+          </button>
+          
+          {hardMode && attempts.length > 0 && !showHint && gameState === 'playing' && (
+            <button
+              onClick={toggleHint}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-xl hover:from-purple-600 hover:to-pink-700 transition-all duration-300"
+            >
+              {showHint ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showHint ? 'Hide Hint' : 'Show Hint'}
+            </button>
+          )}
+        </div>
+
+        {/* Game Messages */}
         {errorMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {errorMessage}
+          <div className="bg-red-500/20 border border-red-500/30 rounded-2xl p-4 mb-4 animate-pulse">
+            <div className="flex items-center gap-2 text-red-400">
+              <span className="w-2 h-2 bg-red-400 rounded-full"></span>
+              {errorMessage}
+            </div>
           </div>
         )}
-        
-        {/* Validation error - Only show when there's an actual error (not the initial question) */}
+
         {validationError && (
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-            {validationError}
+          <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-2xl p-4 mb-4">
+            <div className="flex items-center gap-2 text-yellow-400">
+              <span className="w-2 h-2 bg-yellow-400 rounded-full"></span>
+              {validationError}
+            </div>
           </div>
         )}
-        
-        {/* Conditional rendering of hints or result */}
-        {gameState === 'playing' && (
-          <>
-            {/* Progressive hints */}
-            <ProgressiveHint attempts={attempts} />
-            
-            {/* Validation hints (Plotle-style) */}
-            <ValidationHints puzzleData={puzzleData} attempts={attempts} />
-          </>
-        )}
-        
-        {/* Game result message */}
+
         {gameState === 'won' && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            <h3 className="font-bold text-lg mb-2">Congratulations! 🎉</h3>
-            <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
-            <p className="mt-2">The celebrity was: <strong>{puzzleData.targetName}</strong></p>
+          <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Victory! 🎉</h3>
+            <p className="text-green-400 mb-2">You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
+            <p className="text-gray-300">The celebrity was: <strong className="text-white">{puzzleData.targetName}</strong></p>
           </div>
         )}
         
         {gameState === 'lost' && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <h3 className="font-bold text-lg mb-2">Game Over</h3>
-            <p>The celebrity was: <strong>{puzzleData.targetName}</strong></p>
+          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center">
+                <User className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Game Over</h3>
+            <p className="text-red-400">The celebrity was: <strong className="text-white">{puzzleData.targetName}</strong></p>
           </div>
         )}
-        
-        {/* Previous attempts grid - UPDATED TO MATCH PLOTLECOMPONENT */}
+
+        {/* Progressive Hints */}
+        {gameState === 'playing' && (
+          <>
+            <EnhancedProgressiveHint attempts={attempts} />
+            <ValidationHints puzzleData={puzzleData} attempts={attempts} />
+          </>
+        )}
+
+        {/* Previous Attempts Grid */}
         {attempts.length > 0 && (
           <div className="mb-6">
-            <h3 className="font-semibold mb-3">Your Guesses:</h3>
-            <div className="space-y-4">
+            <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+              <Target className="w-4 h-4" />
+              Your Guesses:
+            </h3>
+            <div className="grid gap-3">
               {attempts.map((attempt, index) => (
-                <div key={index} className="bg-gray-50 rounded-lg p-3">
-                  <div className="flex flex-wrap justify-center gap-1 mb-2">
+                <div key={index} className="bg-gray-700/30 rounded-xl p-4 border border-gray-600">
+                  <div className="flex flex-wrap justify-center gap-2">
                     {attempt.guess.split('').map((letter, letterIndex) => {
                       const status = attempt.letterStatuses?.[letterIndex] || 'absent';
-                      const bgColor = status === 'correct' ? 'bg-green-500' : 
-                                    status === 'present' ? 'bg-yellow-500' : 'bg-gray-300';
-                      const textColor = status === 'absent' ? 'text-gray-700' : 'text-white';
+                      const bgColor = status === 'correct' 
+                        ? 'bg-gradient-to-br from-green-500 to-emerald-600' 
+                        : status === 'present' 
+                        ? 'bg-gradient-to-br from-yellow-500 to-amber-600'
+                        : 'bg-gray-600 border border-gray-500';
+                      const textColor = status === 'absent' ? 'text-gray-300' : 'text-white';
                       
                       return (
                         <div 
                           key={letterIndex} 
-                          className={`w-8 h-8 flex items-center justify-center rounded text-sm font-bold ${bgColor} ${textColor}`}
+                          className={`w-10 h-10 flex items-center justify-center rounded-xl text-lg font-bold ${bgColor} ${textColor} transition-all duration-300 transform hover:scale-110`}
                         >
                           {letter.toUpperCase()}
                         </div>
@@ -726,42 +826,46 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
             </div>
           </div>
         )}
-        
-        {/* Input for guesses */}
+
+        {/* Input Section */}
         {gameState === 'playing' && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 -mx-4 md:-mx-6 -mb-4 md:-mb-6">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={guess}
-                onChange={(e) => setGuess(e.target.value)}
-                placeholder="Enter celebrity name"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
-                disabled={isGuessLoading}
-              />
+          <div className="sticky bottom-0 bg-gray-800/80 backdrop-blur-lg rounded-xl border border-gray-700 p-4 z-[100] -mx-2 md:-mx-4 -mb-2 md:-mb-6">
+            <div className="flex gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={guess}
+                  onChange={(e) => setGuess(e.target.value)}
+                  placeholder="Enter celebrity name..."
+                  className="w-full pl-12 pr-4 py-4 bg-gray-700 border border-gray-600 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                  onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
+                  disabled={isGuessLoading}
+                />
+              </div>
               <button
                 onClick={handleGuess}
                 disabled={!guess.trim() || isGuessLoading}
-                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-2xl hover:from-purple-600 hover:to-pink-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 font-semibold"
               >
-                {isGuessLoading ? '...' : 'Guess'}
+                {isGuessLoading ? '...' : 'GUESS'}
               </button>
             </div>
           </div>
         )}
         
-        {/* Share button */}
+        {/* Share & Feedback Section */}
         {(gameState === 'won' || gameState === 'lost') && (
-          <div className="flex flex-col items-center mt-4">
+          <div className="flex flex-col items-center gap-4 mt-6">
             <button
               onClick={copyToClipboard}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+              className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-2xl hover:from-purple-600 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 font-semibold"
             >
-              <MdShare /> Share Result
+              <MdShare className="w-5 h-5" />
+              Share Result
             </button>
             {shareMessage && (
-              <div className="mt-2 text-purple-600">{shareMessage}</div>
+              <div className="text-purple-400 font-semibold animate-pulse">{shareMessage}</div>
             )}
 
             <FeedbackComponent
@@ -778,19 +882,38 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
         )}
       </div>
 
-      {/* How to Play section */}
-      <div className="bg-gray-100 rounded-lg p-4 mt-6">
-        <h3 className="font-bold mb-2">How to Play Celebrile:</h3>
-        <ul className="list-disc list-inside space-y-1 text-sm">
-          <li>Guess the celebrity by entering their name</li>
-          <li>Get letter-by-letter feedback compared to the answer</li>
-          <li>🟩 Green: Letter in correct position</li>
-          <li>🟨 Yellow: Letter is in the name but wrong position</li>
-          <li>⬜ Gray: Letter not in the name</li>
-          <li>Additional hints unlock with each attempt</li>
-          <li>You have 6 attempts to guess the celebrity</li>
-          <li>The image becomes clearer with each attempt</li>
-        </ul>
+      {/* How to Play Section */}
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5">
+        <h3 className="font-bold text-white mb-3 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-purple-400" />
+          How to Play:
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-purple-400">👤</span>
+            <span>Guess the celebrity from progressive clues</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-green-400">🟩</span>
+            <span>Green: Letter in correct position</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-yellow-400">🟨</span>
+            <span>Yellow: Letter in name but wrong position</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-gray-400">⬜</span>
+            <span>Gray: Letter not in the name</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-cyan-400">💡</span>
+            <span>Hints unlock after each attempt</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-red-400">🎯</span>
+            <span>6 attempts to guess correctly</span>
+          </div>
+        </div>
       </div>
     </div>
   );

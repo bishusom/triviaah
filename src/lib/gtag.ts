@@ -14,10 +14,17 @@ const ensureDataLayer = (): void => {
   }
 };
 
+// Safe gtag function that checks if gtag exists
+const safeGtag = (...args: unknown[]): void => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag(...args);
+  }
+};
+
 export const pageview = (url: string): void => {
   if (typeof window !== 'undefined') {
     ensureDataLayer();
-    window.gtag('config', GA_TRACKING_ID, {
+    safeGtag('config', GA_TRACKING_ID, {
       page_path: url,
     });
   }
@@ -34,7 +41,7 @@ interface EventParams {
 export const event = (params: EventParams): void => {
   if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
     ensureDataLayer();
-    window.gtag('event', params.action, {
+    safeGtag('event', params.action, {
       event_category: params.category,
       event_label: params.label,
       ...(params.value !== undefined && { value: params.value }),

@@ -111,7 +111,7 @@ export default function PrimeHunterPage() {
   }, []);
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Structured Data */}
       <Script
         id="prime-hunter-organization-schema"
@@ -137,10 +137,10 @@ export default function PrimeHunterPage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -171,26 +171,6 @@ export default function PrimeHunterPage() {
 
       <div className="max-w-3xl mx-auto p-4">
         {/* Header with Last Updated */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Prime Hunter Puzzle Game</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-teal-50 px-3 py-1 rounded-full text-xs font-medium border border-teal-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
-          </div>
-          <p className="text-lg text-gray-600">
-            Hunt for prime numbers in challenging grids with limited attempts. 
-            Sharpen your number theory skills and mathematical intuition!
-          </p>
-        </div>
 
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
@@ -199,10 +179,10 @@ export default function PrimeHunterPage() {
         <PrimeHunterPuzzle />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Prime Hunter Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">Prime Hunter Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -210,15 +190,15 @@ export default function PrimeHunterPage() {
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <h3 className="font-semibold text-white">Game Updates</h3>
+                <p className="text-gray-300 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What is Prime Hunter?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Prime Hunter is an engaging math puzzle game where players identify prime numbers 
                   in various grid configurations with limited attempts. It challenges number theory 
                   knowledge, prime identification skills, and mathematical reasoning in a fun, 
@@ -228,7 +208,7 @@ export default function PrimeHunterPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">How do you play Prime Hunter?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Players analyze number grids to identify which numbers are prime numbers, using 
                   limited attempts to select the correct primes. Each level presents new challenges 
                   with different grid sizes and number ranges, requiring quick mathematical thinking 
@@ -237,7 +217,7 @@ export default function PrimeHunterPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What are prime numbers?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Prime numbers are natural numbers greater than 1 that have exactly two distinct 
                   positive divisors: 1 and the number itself. They cannot be formed by multiplying 
                   two smaller natural numbers. Examples include 2, 3, 5, 7, 11, 13, 17, 19, 23, 
@@ -246,7 +226,7 @@ export default function PrimeHunterPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is Prime Hunter educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Prime Hunter is excellent for developing mathematical thinking, number theory 
                   understanding, prime identification skills, and problem-solving abilities. It helps 
                   build foundational math knowledge, improves mental calculation capabilities, and 
@@ -256,7 +236,7 @@ export default function PrimeHunterPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What mathematical skills does this game develop?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Prime Hunter develops number theory understanding, prime identification, mathematical 
                   reasoning, problem-solving abilities, mental math skills, analytical thinking, and 
                   cognitive flexibility. Regular play significantly improves numerical literacy, 
@@ -265,7 +245,7 @@ export default function PrimeHunterPage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is this game free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Our Prime Hunter game is completely free to play with no registration required. 
                   You can enjoy daily new puzzles, multiple difficulty levels, comprehensive learning 
                   features, and unlimited gameplay without any cost or subscription requirements.
@@ -276,7 +256,7 @@ export default function PrimeHunterPage() {
         </div>
 
         {/* Game Information Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">About Prime Hunter Puzzles</h2>
           <div className="space-y-6 text-gray-700">
             <div>
@@ -294,29 +274,29 @@ export default function PrimeHunterPage() {
             <div>
               <h3 className="text-lg font-semibold mb-2">Prime Number Properties:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Definition:</strong> Numbers greater than 1 with exactly two distinct positive divisors</li>
-                <li><strong>Even Prime:</strong> 2 is the only even prime number</li>
-                <li><strong>Odd Primes:</strong> All other prime numbers are odd (3, 5, 7, 11, etc.)</li>
-                <li><strong>Divisibility:</strong> Prime numbers are only divisible by 1 and themselves</li>
-                <li><strong>Fundamental Theorem:</strong> Every number greater than 1 is either prime or can be factored into primes</li>
-                <li><strong>Distribution:</strong> Prime numbers become less frequent as numbers get larger</li>
-                <li><strong>Twin Primes:</strong> Prime pairs that differ by 2 (3-5, 5-7, 11-13, etc.)</li>
+                <li><strong className="text-green-300">Definition:</strong> Numbers greater than 1 with exactly two distinct positive divisors</li>
+                <li><strong className="text-green-300">Even Prime:</strong> 2 is the only even prime number</li>
+                <li><strong className="text-green-300">Odd Primes:</strong> All other prime numbers are odd (3, 5, 7, 11, etc.)</li>
+                <li><strong className="text-green-300">Divisibility:</strong> Prime numbers are only divisible by 1 and themselves</li>
+                <li><strong className="text-green-300">Fundamental Theorem:</strong> Every number greater than 1 is either prime or can be factored into primes</li>
+                <li><strong className="text-green-300">Distribution:</strong> Prime numbers become less frequent as numbers get larger</li>
+                <li><strong className="text-green-300">Twin Primes:</strong> Prime pairs that differ by 2 (3-5, 5-7, 11-13, etc.)</li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Difficulty Progression:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Beginner Level:</strong> Small numbers (1-50) with obvious primes</li>
-                <li><strong>Intermediate Level:</strong> Medium numbers (1-100) with more attempts needed</li>
-                <li><strong>Advanced Level:</strong> Larger numbers (1-200) requiring prime testing strategies</li>
-                <li><strong>Expert Level:</strong> Complex grids with numbers up to 500</li>
-                <li><strong>Master Level:</strong> Challenging grids with limited attempts and time constraints</li>
+                <li><strong className="text-green-300">Beginner Level:</strong> Small numbers (1-50) with obvious primes</li>
+                <li><strong className="text-green-300">Intermediate Level:</strong> Medium numbers (1-100) with more attempts needed</li>
+                <li><strong className="text-green-300">Advanced Level:</strong> Larger numbers (1-200) requiring prime testing strategies</li>
+                <li><strong className="text-green-300">Expert Level:</strong> Complex grids with numbers up to 500</li>
+                <li><strong className="text-green-300">Master Level:</strong> Challenging grids with limited attempts and time constraints</li>
               </ul>
             </div>
 
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">Prime Identification Strategies:</h4>
+            <div className="p-4 bg-green-500/10 border border-green-500/20 text-white">
+              <h4 className="font-bold text-white mb-2">Prime Identification Strategies:</h4>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Remember that 2 is the only even prime number</li>
                 <li>Check divisibility by small primes (2, 3, 5, 7) first</li>
@@ -334,21 +314,21 @@ export default function PrimeHunterPage() {
           {/* Educational Benefits Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Educational Benefits of Prime Hunter Games</h3>
-            <div className="prose text-gray-700">
+            <div className="prose prose-invert max-w-none text-gray-300">
               <p className="mb-4">
                 Prime Hunter puzzles are powerful educational tools that develop essential mathematical 
                 and cognitive skills. As one of the most engaging <strong>free math brain teasers</strong> 
                 available, our Prime Hunter game offers comprehensive learning benefits:
               </p>
               <ul className="list-disc pl-5 space-y-2 mb-4">
-                <li><strong>Number Theory Foundation:</strong> Builds understanding of prime numbers and their properties</li>
-                <li><strong>Mathematical Reasoning:</strong> Develops logical thinking and deductive reasoning skills</li>
-                <li><strong>Pattern Recognition:</strong> Enhances ability to identify numerical patterns and properties</li>
-                <li><strong>Problem-Solving Skills:</strong> Develops systematic approaches to mathematical challenges</li>
-                <li><strong>Mental Math Abilities:</strong> Improves quick calculation and number sense</li>
-                <li><strong>Cognitive Flexibility:</strong> Enhances ability to apply different mathematical strategies</li>
-                <li><strong>Analytical Thinking:</strong> Strengthens ability to analyze numerical properties</li>
-                <li><strong>Academic Performance:</strong> Supports improved performance in mathematics and number theory</li>
+                <li><strong className="text-green-300">Number Theory Foundation:</strong> Builds understanding of prime numbers and their properties</li>
+                <li><strong className="text-green-300">Mathematical Reasoning:</strong> Develops logical thinking and deductive reasoning skills</li>
+                <li><strong className="text-green-300">Pattern Recognition:</strong> Enhances ability to identify numerical patterns and properties</li>
+                <li><strong className="text-green-300">Problem-Solving Skills:</strong> Develops systematic approaches to mathematical challenges</li>
+                <li><strong className="text-green-300">Mental Math Abilities:</strong> Improves quick calculation and number sense</li>
+                <li><strong className="text-green-300">Cognitive Flexibility:</strong> Enhances ability to apply different mathematical strategies</li>
+                <li><strong className="text-green-300">Analytical Thinking:</strong> Strengthens ability to analyze numerical properties</li>
+                <li><strong className="text-green-300">Academic Performance:</strong> Supports improved performance in mathematics and number theory</li>
               </ul>
               <p>
                 Whether you&apos;re a student building math skills, an educator seeking engaging teaching tools, 

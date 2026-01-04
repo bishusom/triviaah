@@ -111,7 +111,7 @@ export default function WordSearchPage() {
   }, []);
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="word-search-organization-schema"
@@ -137,10 +137,10 @@ export default function WordSearchPage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -170,28 +170,6 @@ export default function WordSearchPage() {
       )}
 
       <div className="max-w-3xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Free Word Search Puzzles Online</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-orange-50 px-3 py-1 rounded-full text-xs font-medium border border-orange-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
-          </div>
-          <p className="text-lg text-gray-600">
-            Discover hidden words in our themed word find games. Perfect for vocabulary practice, 
-            relaxation, and educational fun for all ages.
-          </p>
-        </div>
-
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
@@ -199,10 +177,10 @@ export default function WordSearchPage() {
         <WordSearchGame />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Word Search Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">Word Search Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -210,39 +188,39 @@ export default function WordSearchPage() {
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <h3 className="font-semibold text-white">Game Updates</h3>
+                <p className="text-gray-300 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Word Search?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What is Word Search?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Word Search is a classic puzzle game where players find hidden words in a grid of letters. 
                   Words can be placed horizontally, vertically, diagonally, and sometimes backwards. It&apos;s 
                   one of the most popular and relaxing word games enjoyed by people of all ages worldwide.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do you play Word Search?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">How do you play Word Search?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Players scan the letter grid to find words from a given list. Words can be found in any 
                   straight line direction (horizontal, vertical, diagonal) and are typically highlighted 
                   when found. The goal is to locate all hidden words in the grid as quickly as possible.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What are the benefits of playing Word Search?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What are the benefits of playing Word Search?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Word Search improves vocabulary, spelling, pattern recognition, visual scanning skills, 
                   and provides relaxing mental exercise. It&apos;s great for cognitive maintenance, stress 
                   relief, and can even help improve concentration and attention to detail.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Word Search educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">Is Word Search educational?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Word Search is excellent for vocabulary building, spelling practice, and developing 
                   pattern recognition skills. It&apos;s widely used in educational settings for language 
                   learning, and themed puzzles can help reinforce subject-specific terminology in an 
@@ -250,16 +228,16 @@ export default function WordSearchPage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What difficulty levels are available?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What difficulty levels are available?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   We offer three difficulty levels: Easy (10x10 grid with 10 words), Medium (15x15 grid 
                   with 15 words), and Hard (20x20 grid with 20 words). Each level features appropriately 
                   sized words and grid complexity to provide the right challenge for different skill levels.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Are there printable word search options?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">Are there printable word search options?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Many of our word search puzzles are available as printable PDFs for offline enjoyment. 
                   This makes them perfect for classrooms, travel, or anywhere you want screen-free 
                   entertainment and educational activities.
@@ -270,9 +248,9 @@ export default function WordSearchPage() {
         </div>
 
         {/* Game Information Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">How to Play Word Search</h2>
-          <div className="space-y-6 text-gray-700">
+          <div className="space-y-6 text-gray-300">
             <div>
               <h3 className="text-lg font-semibold mb-2">Game Rules:</h3>
               <ul className="list-disc pl-5 space-y-2">
@@ -287,9 +265,9 @@ export default function WordSearchPage() {
             <div>
               <h3 className="text-lg font-semibold mb-2">Difficulty Levels:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Easy:</strong> 10x10 grid, 10 words (3-5 letters)</li>
-                <li><strong>Medium:</strong> 15x15 grid, 15 words (4-7 letters)</li>
-                <li><strong>Hard:</strong> 20x20 grid, 20 words (5-8 letters)</li>
+                <li><strong className="text-green-300">Easy:</strong> 10x10 grid, 10 words (3-5 letters)</li>
+                <li><strong className="text-green-300">Medium:</strong> 15x15 grid, 15 words (4-7 letters)</li>
+                <li><strong className="text-green-300">Hard:</strong> 20x20 grid, 20 words (5-8 letters)</li>
               </ul>
             </div>
 
@@ -303,8 +281,8 @@ export default function WordSearchPage() {
               </ul>
             </div>
 
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">Word Search Pro Tips:</h4>
+            <div className="p-4 bg-green-500/10 border border-green-500/20 text-white">
+              <h4 className="font-bold text-white mb-2">Word Search Pro Tips:</h4>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Look for unique letters in words (Q, X, Z) to help spot them quickly</li>
                 <li>Scan rows, then columns, then diagonals systematically</li>
@@ -319,8 +297,8 @@ export default function WordSearchPage() {
           
           {/* Educational Benefits Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Why Play Word Search?</h3>
-            <div className="prose text-gray-700">
+            <h3 className="text-xl font-semibold text-white mb-4">Why Play Word Search?</h3>
+            <div className="prose prose-invert max-w-none text-gray-300">
               <p className="mb-4">
                 Word Search is one of the most popular <strong>free word puzzles</strong> enjoyed by 
                 millions worldwide. Our <strong>online word search</strong> games offer numerous benefits:

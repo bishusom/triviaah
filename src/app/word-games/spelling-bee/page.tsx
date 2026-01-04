@@ -111,7 +111,7 @@ export default function SpellingBeePage() {
   }, []);
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="spelling-bee-organization-schema"
@@ -137,10 +137,10 @@ export default function SpellingBeePage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -171,12 +171,12 @@ export default function SpellingBeePage() {
 
       <div className="max-w-3xl mx-auto p-4">
         {/* Header with Last Updated */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-12">
           <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Free Spelling Bee Game Online</h1>
+            <h1 className="text-3xl font-bold mb-2">Free Spelling Bee Game Online</h1>
             <time 
               dateTime={lastUpdated} 
-              className="bg-yellow-50 px-3 py-1 rounded-full text-xs font-medium border border-yellow-200"
+              className="bg-green-500/10 border border-green-500/20 text-white"
             >
               Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
                 month: 'short',
@@ -186,7 +186,7 @@ export default function SpellingBeePage() {
               })}
             </time>
           </div>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Challenge your vocabulary with our daily Spelling Bee puzzle. Find as many words as possible 
             from 7 letters and aim for the coveted Genius rank!
           </p>
@@ -199,10 +199,10 @@ export default function SpellingBeePage() {
         <SpellingBeeGame />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Spelling Bee Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">Spelling Bee Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -210,55 +210,55 @@ export default function SpellingBeePage() {
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <h3 className="font-semibold text-white">Game Updates</h3>
+                <p className="text-gray-300 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Spelling Bee?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What is Spelling Bee?</h3>
+                <p className="text-gray-200" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Spelling Bee is a classic word game where players create words from 7 letters arranged in a honeycomb pattern. 
                   Every word must include the center letter, and words must be at least 4 letters long. It&apos;s an engaging 
                   vocabulary challenge that tests your word knowledge and pattern recognition skills.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do you play Spelling Bee?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">How do you play Spelling Bee?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Create words using the letters in the honeycomb. Every word must contain the center letter, be at least 
                   4 letters long, and can use letters multiple times. Proper nouns, hyphenated words, and offensive terms 
                   are not allowed. The goal is to find as many words as possible to achieve the highest rank.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What are pangrams in Spelling Bee?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What are pangrams in Spelling Bee?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Pangrams are words that use all 7 letters at least once. They earn significant bonus points (typically 
                   +7 points) and are essential for achieving higher scores and reaching the Genius rank. Finding the 
                   pangram is often key to maximizing your score in each puzzle.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Spelling Bee educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">Is Spelling Bee educational?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Spelling Bee is excellent for vocabulary building, spelling practice, and cognitive development. 
                   It helps players discover new words, improve spelling, enhance pattern recognition skills, and develop 
                   better language processing abilities. Many educators use spelling bee games as effective teaching tools.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is the scoring system?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What is the scoring system?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   4-letter words earn 1 point, with each additional letter adding 1 more point. Pangrams (words using 
                   all 7 letters) earn a 7-point bonus. The ranking system progresses from Beginner (0-4 points) to 
                   Genius (200+ points), with multiple tiers in between to track your progress.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is this Spelling Bee game free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">Is this Spelling Bee game free to play?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Our online Spelling Bee game is completely free to play with no registration required. 
                   You can play daily new puzzles, track your progress, and challenge yourself to reach Genius 
                   rank without any cost or subscription.
@@ -269,9 +269,9 @@ export default function SpellingBeePage() {
         </div>
 
         {/* Game Rules Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">How to Play Spelling Bee</h2>
-          <div className="space-y-6 text-gray-700">
+          <div className="space-y-6 text-gray-300">
             <div>
               <h3 className="text-lg font-semibold mb-2">Game Rules:</h3>
               <ul className="list-disc pl-5 space-y-2">
@@ -295,20 +295,20 @@ export default function SpellingBeePage() {
             <div>
               <h3 className="text-lg font-semibold mb-2">Ranking System:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Beginner:</strong> 0-4 points</li>
-                <li><strong>Good Start:</strong> 5-9 points</li>
-                <li><strong>Moving Up:</strong> 10-19 points</li>
-                <li><strong>Good:</strong> 20-29 points</li>
-                <li><strong>Solid:</strong> 30-49 points</li>
-                <li><strong>Nice:</strong> 50-69 points</li>
-                <li><strong>Great:</strong> 70-99 points</li>
-                <li><strong>Amazing:</strong> 100-199 points</li>
-                <li><strong>Genius:</strong> 200+ points</li>
+                <li><strong className="text-green-300">Beginner:</strong> 0-4 points</li>
+                <li><strong className="text-green-300">Good Start:</strong> 5-9 points</li>
+                <li><strong className="text-green-300">Moving Up:</strong> 10-19 points</li>
+                <li><strong className="text-green-300">Good:</strong> 20-29 points</li>
+                <li><strong className="text-green-300">Solid:</strong> 30-49 points</li>
+                <li><strong className="text-green-300">Nice:</strong> 50-69 points</li>
+                <li><strong className="text-green-300">Great:</strong> 70-99 points</li>
+                <li><strong className="text-green-300">Amazing:</strong> 100-199 points</li>
+                <li><strong className="text-green-300">Genius:</strong> 200+ points</li>
               </ul>
             </div>
 
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">Pro Tips:</h4>
+            <div className="p-4 bg-green-500/10 border border-green-500/20 text-white">
+              <h4 className="font-bold text-white mb-2">Pro Tips:</h4>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Look for common prefixes (re-, un-, pre-) and suffixes (-ing, -tion, -ment)</li>
                 <li>Start with the center letter and build outward</li>

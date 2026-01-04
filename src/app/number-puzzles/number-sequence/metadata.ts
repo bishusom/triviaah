@@ -43,7 +43,7 @@ export function generateNumberSequenceMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/number-puzzles//number-sequence.webp',
+          url: '/imgs/number-sequence.webp',
           width: 1200,
           height: 630,
           alt: 'Number Sequence Puzzle Game - Free Math Pattern Challenge'
@@ -56,7 +56,7 @@ export function generateNumberSequenceMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Number Sequence Puzzle Game | Free Math Pattern Challenge | Triviaah',
       description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
-      images: ['/imgs/number-puzzles//number-sequence.webp'],
+      images: ['/imgs/number-sequence.webp'],
       site: '@elitetrivias',
     },
     robots: {

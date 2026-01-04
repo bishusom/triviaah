@@ -62,7 +62,7 @@ export default function SpecialQuizzesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Schema Markup */}
       <Script
         id="special-quizzes-schema"
@@ -76,18 +76,18 @@ export default function SpecialQuizzesPage() {
         {/* Hero Section */}
         <div className="text-center mb-10">
           <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
-              Seasonal Special Quizzes <span className="text-blue-600">(Monthly Rotating)</span>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">
+              Seasonal Special Quizzes <span className="text-cyan-400">(Monthly Rotating)</span>
             </h1>
             <time 
               dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
+              className="bg-cyan-900/30 px-3 py-1 rounded-full text-xs font-medium border border-cyan-500/30 text-cyan-300"
               title="Current month"
             >
               {getMonthName(currentMonth)} {currentYear}
             </time>
           </div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Each month features a unique themed trivia challenge. Play the current month&apos;s quiz before it disappears!
           </p>
         </div>
@@ -95,8 +95,8 @@ export default function SpecialQuizzesPage() {
         {/* Current Month Highlight */}
         {currentMonthQuiz && (
           <div className="mb-10">
-            <div className={`${currentMonthQuiz.bgColor} rounded-xl shadow-xl text-white p-8 text-center relative overflow-hidden`}>
-              <div className="absolute inset-0 opacity-20">
+            <div className={`${currentMonthQuiz.bgColor.replace('100', '800').replace('200', '900').replace('300', '700')} rounded-2xl shadow-2xl text-white p-8 text-center relative overflow-hidden border border-cyan-500/20`}>
+              <div className="absolute inset-0 opacity-10">
                 {currentMonthQuiz.emojis.map((emoji, index) => (
                   <div 
                     key={index}
@@ -112,13 +112,16 @@ export default function SpecialQuizzesPage() {
                 ))}
               </div>
               
+              {/* Glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/5 to-cyan-500/0 translate-x-[-100%] animate-glow" />
+              
               <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 bg-black/30 px-4 py-2 rounded-full mb-4">
+                <div className="inline-flex items-center gap-2 bg-black/50 px-4 py-2 rounded-full mb-4 border border-green-500/30">
                   <MdCheckCircle className="text-green-300" />
-                  <span className="font-semibold">CURRENTLY AVAILABLE</span>
+                  <span className="font-semibold text-green-300">CURRENTLY AVAILABLE</span>
                 </div>
                 <h2 className="text-3xl font-bold mb-3">{currentMonthQuiz.name}</h2>
-                <p className="text-xl mb-6 max-w-2xl mx-auto">{currentMonthQuiz.description}</p>
+                <p className="text-xl mb-6 max-w-2xl mx-auto text-gray-100">{currentMonthQuiz.description}</p>
                 <div className="flex justify-center gap-4 mb-6">
                   {currentMonthQuiz.emojis.map((emoji, index) => (
                     <span key={index} className="text-2xl animate-bounce" style={{animationDelay: `${index * 100}ms`}}>
@@ -128,11 +131,11 @@ export default function SpecialQuizzesPage() {
                 </div>
                 <Link 
                   href={`/special-quizzes/${currentMonthQuiz.category}`}
-                  className="inline-block bg-white text-gray-800 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  className="inline-block bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-8 py-3 rounded-lg font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105"
                 >
                   Play Now →
                 </Link>
-                <p className="mt-4 text-sm opacity-80">
+                <p className="mt-4 text-sm text-gray-300">
                   Available until {getMonthName(currentMonth)} 31st, {currentYear}
                 </p>
               </div>
@@ -142,7 +145,7 @@ export default function SpecialQuizzesPage() {
 
         {/* All Special Quizzes Grid */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">
             All Monthly Special Quizzes
           </h2>
           
@@ -154,64 +157,67 @@ export default function SpecialQuizzesPage() {
               return (
                 <div 
                   key={quiz.month}
-                  className={`bg-white rounded-lg shadow-md overflow-hidden border-2 ${
+                  className={`bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg overflow-hidden border-2 ${
                     isAvailable 
-                      ? 'border-blue-500 shadow-lg transform hover:-translate-y-1 transition-transform duration-200' 
-                      : 'border-gray-200 opacity-80'
-                  }`}
+                      ? 'border-cyan-500 shadow-cyan-500/20 hover:-translate-y-1 transition-all duration-300' 
+                      : 'border-gray-700 opacity-80 hover:opacity-100'
+                  } hover:shadow-xl`}
                 >
                   {/* Emoji Header */}
-                  <div className={`${quiz.bgColor} p-4 text-center`}>
-                    <div className="flex justify-center gap-2 mb-2">
-                      {quiz.emojis.slice(0, 4).map((emoji, index) => (
-                        <span key={index} className="text-2xl">
-                          {emoji}
-                        </span>
-                      ))}
+                  <div className={`${quiz.bgColor.replace('100', '800').replace('200', '700').replace('300', '600')} p-4 text-center relative`}>
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent" />
+                    <div className="relative z-10">
+                      <div className="flex justify-center gap-2 mb-2">
+                        {quiz.emojis.slice(0, 4).map((emoji, index) => (
+                          <span key={index} className="text-2xl">
+                            {emoji}
+                          </span>
+                        ))}
+                      </div>
+                      <h3 className="text-xl font-bold text-white">{quiz.name}</h3>
                     </div>
-                    <h3 className="text-xl font-bold text-white">{quiz.name}</h3>
                   </div>
                   
                   {/* Content */}
                   <div className="p-6">
                     <div className="flex justify-between items-center mb-4">
                       <div className="flex items-center gap-2">
-                        <MdCalendarToday className="text-gray-500" />
-                        <span className="font-semibold text-gray-700">{monthName}</span>
+                        <MdCalendarToday className="text-cyan-400" />
+                        <span className="font-semibold text-gray-300">{monthName}</span>
                       </div>
                       {isAvailable ? (
-                        <span className="inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                        <span className="inline-flex items-center gap-1 bg-green-900/30 text-green-300 px-3 py-1 rounded-full text-sm border border-green-500/30">
                           <MdCheckCircle /> Available Now
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">
+                        <span className="inline-flex items-center gap-1 bg-gray-800 text-gray-400 px-3 py-1 rounded-full text-sm border border-gray-700">
                           <MdLock /> Available in {monthName}
                         </span>
                       )}
                     </div>
                     
-                    <p className="text-gray-600 mb-6">{quiz.description}</p>
+                    <p className="text-gray-400 mb-6">{quiz.description}</p>
                     
                     <div className="space-y-3">
                       {isAvailable ? (
                         <Link 
                           href={`/special-quizzes/${quiz.category}`}
-                          className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-lg font-semibold transition-colors duration-200"
+                          className="block w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white text-center py-3 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg"
                         >
                           Play This Quiz
                         </Link>
                       ) : (
                         <button
                           disabled
-                          className="w-full bg-gray-200 text-gray-500 py-3 rounded-lg font-semibold cursor-not-allowed"
+                          className="w-full bg-gray-800 text-gray-500 py-3 rounded-lg font-semibold cursor-not-allowed border border-gray-700"
                         >
                           Available in {monthName}
                         </button>
                       )}
                       
                       <div className="text-xs text-gray-500 flex items-center justify-center gap-2">
-                        <MdCalendarToday />
-                        <span>Available {quiz.month === 12 ? 'Dec 1-31' : `${monthName} 1-30`}</span>
+                        <MdCalendarToday className="text-gray-400" />
+                        <span className="text-gray-400">Available {quiz.month === 12 ? 'Dec 1-31' : `${monthName} 1-30`}</span>
                       </div>
                     </div>
                   </div>
@@ -222,24 +228,24 @@ export default function SpecialQuizzesPage() {
         </div>
 
         {/* How It Works */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">How Special Quizzes Work</h2>
+        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg p-6 mb-12 border border-gray-700">
+          <h2 className="text-2xl font-bold text-white mb-4">How Special Quizzes Work</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="border-l-4 border-purple-500 pl-4">
-              <h3 className="font-bold text-gray-800 mb-2">1. Monthly Rotation</h3>
-              <p className="text-gray-600">
+            <div className="border-l-4 border-cyan-500 pl-4">
+              <h3 className="font-bold text-white mb-2">1. Monthly Rotation</h3>
+              <p className="text-gray-400">
                 Each special quiz is available only during its assigned month. Mark your calendar for favorites!
               </p>
             </div>
             <div className="border-l-4 border-purple-500 pl-4">
-              <h3 className="font-bold text-gray-800 mb-2">2. Limited Time Access</h3>
-              <p className="text-gray-600">
+              <h3 className="font-bold text-white mb-2">2. Limited Time Access</h3>
+              <p className="text-gray-400">
                 Play the current month&apos;s quiz anytime before the month ends. Once gone, you&apos;ll have to wait until next year!
               </p>
             </div>
-            <div className="border-l-4 border-purple-500 pl-4">
-              <h3 className="font-bold text-gray-800 mb-2">3. Unique Themes</h3>
-              <p className="text-gray-600">
+            <div className="border-l-4 border-green-500 pl-4">
+              <h3 className="font-bold text-white mb-2">3. Unique Themes</h3>
+              <p className="text-gray-400">
                 Each month features a completely new theme, emoji set, and custom questions you won&apos;t find elsewhere.
               </p>
             </div>
@@ -247,25 +253,40 @@ export default function SpecialQuizzesPage() {
         </div>
 
         {/* SEO Content */}
-        <section className="prose max-w-none mb-12">
-          <h2 className="text-2xl font-bold text-gray-800">Monthly Special Trivia Challenges</h2>
-          <p>
-            Our <strong>seasonal special quizzes</strong> offer unique trivia experiences that change every month. 
-            Unlike our daily trivia games, these special quizzes are available for a <strong>limited time only</strong> — 
+        <section className="prose prose-invert max-w-none mb-12 bg-gray-800/50 rounded-2xl p-8 border border-gray-700">
+          <h2 className="text-2xl font-bold text-white">Monthly Special Trivia Challenges</h2>
+          <p className="text-gray-300">
+            Our <strong className="text-cyan-400">seasonal special quizzes</strong> offer unique trivia experiences that change every month. 
+            Unlike our daily trivia games, these special quizzes are available for a <strong className="text-cyan-400">limited time only</strong> — 
             typically just during the month they&apos;re themed for.
           </p>
           
-          <h3>Why Players Love Our Special Quizzes:</h3>
-          <ul>
-            <li><strong>Exclusive content</strong> available only during specific months</li>
-            <li><strong>Perfect for holidays</strong> and seasonal celebrations</li>
-            <li><strong>Collectible experience</strong> - complete them all throughout the year</li>
-            <li><strong>Surprise themes</strong> that keep gameplay fresh and exciting</li>
-            <li><strong>Share with friends</strong> to see who can get the highest score before time runs out</li>
+          <h3 className="text-xl font-bold text-white">Why Players Love Our Special Quizzes:</h3>
+          <ul className="text-gray-300 space-y-2">
+            <li className="flex items-start">
+              <span className="text-cyan-400 font-bold mr-2">•</span>
+              <span><strong>Exclusive content</strong> available only during specific months</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-green-400 font-bold mr-2">•</span>
+              <span><strong>Perfect for holidays</strong> and seasonal celebrations</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-purple-400 font-bold mr-2">•</span>
+              <span><strong>Collectible experience</strong> - complete them all throughout the year</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-yellow-400 font-bold mr-2">•</span>
+              <span><strong>Surprise themes</strong> that keep gameplay fresh and exciting</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-blue-400 font-bold mr-2">•</span>
+              <span><strong>Share with friends</strong> to see who can get the highest score before time runs out</span>
+            </li>
           </ul>
 
-          <h3>Coming Up Next:</h3>
-          <p>
+          <h3 className="text-xl font-bold text-white">Coming Up Next:</h3>
+          <p className="text-gray-300">
             Looking ahead to next month? Check back on the first day of each month to discover the new special quiz theme! 
             Our quizzes are designed to celebrate holidays, seasons, and special occasions throughout the year.
           </p>

@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 
 export function generateCreaturdleMetadata(): Metadata {
-  const canonicalUrl = 'https://triviaah.com/creaturdle';
+  const canonicalUrl = 'https://triviaah.com/brainwave/creaturdle';
   const lastUpdated = new Date().toISOString();
 
   return {
@@ -36,7 +36,7 @@ export function generateCreaturdleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs//brainwave/creaturdle-og.webp',
+          url: '/imgs/brainwave/creaturdle.webp',
           width: 1200,
           height: 630,
           alt: 'Creaturdle - Daily Animal Guessing Game'
@@ -49,7 +49,7 @@ export function generateCreaturdleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Creaturdle - Daily Animal Guessing Game | Triviaah',
       description: 'Guess the animal from its 6 attributes: class, habitat, diet, size, activity, and body covering. Educational Wordle-style animal puzzle.',
-      images: ['/imgs//brainwave/creaturdle-og.webp'],
+      images: ['/imgs/brainwave/creaturdle.webp'],
       site: '@elitetrivias', // Replace with your actual Twitter handle
     },
     robots: {

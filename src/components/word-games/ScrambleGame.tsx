@@ -9,7 +9,6 @@ import { useSound } from '@/context/SoundContext';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
-const buttonStyle = "px-6 md:px-3 py-2 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center"
 
 type DifficultyLevel = {
   difficulty: string;
@@ -132,7 +131,6 @@ export default function ScrambleGame() {
             timerInterval.current = null;
           }
           showFeedback('Time\'s up!', 'error');
-          // Don't auto-progress here, let user click "New Word"
           return 0;
         }
         return prev - 1;
@@ -164,7 +162,6 @@ export default function ScrambleGame() {
         `Level-up!  Next: ${next?.difficulty ?? 'finished'} difficulty`,
         'success'
       );
-      //showFeedback(`Level up! Now at ${getCurrentDifficulty(newLevel).difficulty} difficulty`, 'success');
       
       if (newLevel > totalGames) {
         playSound('win');
@@ -189,7 +186,6 @@ export default function ScrambleGame() {
   }, [currentWord, playSound]);
 
   const submitWord = useCallback(() => {
-    // Prevent submission if word was revealed or timer is stopped
     if (timer === 0 && timerInterval.current === null) {
       showFeedback('Game over! Start a new word.', 'error');
       return;
@@ -256,13 +252,12 @@ export default function ScrambleGame() {
     setCurrentWord([]);
     playSound('error');
     
-    // Disable further interactions and move to next word after delay
     setTimeout(() => {
       checkLevelProgress();
     }, 3000);
   }, [baseWord, foundWords, showFeedback, playSound, stopTimer, checkLevelProgress]);
 
-  // Main game initialization - simplified to avoid loops
+  // Main game initialization
   const initGame = useCallback(async () => {
     try {
       stopTimer();
@@ -270,7 +265,6 @@ export default function ScrambleGame() {
       const currentDifficulty = getCurrentDifficulty(currentLevel);
       if (!currentDifficulty) return;
 
-      /* 1.  Clear used words when we just changed difficulty ---------- */
       if (prevDifficulty.current?.difficulty !== currentDifficulty.difficulty) {
         setUsedBaseWords([]);
         prevDifficulty.current = currentDifficulty;
@@ -283,7 +277,6 @@ export default function ScrambleGame() {
 
       let newBaseWord = '';
 
-      /* 2.  Try Supabase first --------------------------------------- */
       try {
         const randomFloor = Math.floor(Math.random() * 900_000);
         const { data, error } = await supabase
@@ -307,7 +300,6 @@ export default function ScrambleGame() {
         console.warn('Supabase fetch failed, using local list', e);
       }
 
-      /* 3.  Fallback local list -------------------------------------- */
       if (!newBaseWord) {
         const localList = [
           'PICTURE','SILENCE','CAPTURE','MOUNTAIN','ADVENTURE',
@@ -321,14 +313,12 @@ export default function ScrambleGame() {
         }
       }
 
-      /* 4.  Last-resort reset --------------------------------------- */
       if (!newBaseWord) {
-        setUsedBaseWords([]);                 // wipe and retry
+        setUsedBaseWords([]);
         newBaseWord =
           ['PICTURE','SILENCE','CAPTURE','MOUNTAIN','ADVENTURE'][0] ?? 'EXAMPLE';
       }
 
-      /* 5.  Update board -------------------------------------------- */
       setBaseWord(newBaseWord);
       setUsedBaseWords((prev) => [...prev, newBaseWord]);
       setScrambledLetters(scrambleWord(newBaseWord).split(''));
@@ -359,9 +349,9 @@ export default function ScrambleGame() {
       }
     }, 100);
 
-    initGame();                 // first board
+    initGame();
 
-    return () => stopTimer();   // clean-up
+    return () => stopTimer();
   }, []);   
 
   // Effect to handle game completion and start new game
@@ -374,137 +364,171 @@ export default function ScrambleGame() {
     return () => clearTimeout(t);
   }, [wordSolved, initGame]);
 
-
   const newWord = useCallback(() => {
     stopTimer();
     initGame();
   }, [initGame, stopTimer]);
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Word Scramble Game</h2>
-          <div className="text-lg font-semibold text-gray-600">
-            Level: {currentLevel} ({getCurrentDifficulty(currentLevel).difficulty})
+    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray=900 text-white p-4 md:p-6 flex flex-col items-center justify-center">
+      <div className="w-full max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 p-4 bg-gray-800/50 rounded-xl backdrop-blur-sm border border-gray-700">
+          <div className="text-center md:text-left mb-4 md:mb-0">
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Word Scramble
+            </h1>
+            <div className="text-sm md:text-base text-gray-300 mt-1">
+              Level: {currentLevel} ({getCurrentDifficulty(currentLevel).difficulty})
+            </div>
+          </div>
+          <div className="flex items-center gap-4 md:gap-6">
+            <div className={`bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg ${
+              timer <= 10 ? 'text-red-400 animate-pulse' : 'text-white'
+            }`}>
+              ⏱️ {formatTime(timer)}
+            </div>
+            <div className="bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg">
+              Score: {score}
+            </div>
           </div>
         </div>
-         <div className="flex items-center gap-4">
-          <div className={`text-lg font-semibold ${timer <= 10 ? 'text-red-600 animate-pulse' : 'text-gray-800'}`}>
-            ⏱️ {formatTime(timer)}
-          </div>
-          <div className="text-lg font-semibold text-gray-800">
-            Score: {score}
-          </div>
-        </div>
-      </div>
 
-      <div className="mb-6">
-        <div className="flex flex-wrap gap-2 mb-4">
-          {scrambledLetters.map((letter, index) => (
-            <button
+        {/* Scrambled Letters Grid */}
+        <div className="bg-gray-800/30 rounded-2xl p-6 md:p-8 mb-6 backdrop-blur-sm border border-gray-700/50">
+          <div className="flex flex-wrap gap-3 md:gap-4 justify-center mb-6">
+            {scrambledLetters.map((letter, index) => (
+              <button
                 key={index}
                 onClick={() => selectLetter(index)}
                 disabled={currentWord.includes(index)}
                 className={`
-                    w-14 h-14
-                    flex items-center justify-center
-                    text-2xl font-bold rounded-lg
-                    ${currentWord.includes(index) 
-                    ? 'bg-gradient-to-r from-gray-200 to-gray-300 cursor-not-allowed' 
-                    : 'bg-gradient-to-r bg-blue-300 to-blue-500 text-white hover:bg-blue-700 cursor-pointer'}
-                    transition-all duration-200
+                  w-12 h-12 md:w-16 md:h-16 flex items-center justify-center
+                  text-xl md:text-2xl font-bold rounded-xl transition-all duration-200
+                  border-2
+                  ${currentWord.includes(index) 
+                    ? 'bg-gray-600 text-gray-400 border-gray-500 cursor-not-allowed' 
+                    : 'bg-gray-700/80 text-white border-gray-600 hover:bg-blue-600 hover:border-blue-400 hover:scale-105 cursor-pointer'}
                 `}
-                >
+              >
                 {letter}
-            </button>
-          ))}
-        </div>
-
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2 text-gray-800">Current Attempt:</h3>
-          <div className="flex flex-wrap gap-2 min-h-14">
-            {currentWord.map((index, i) => (
-              <span key={i} className="w-14 h-14 flex items-center justify-center text-2xl font-bold rounded-lg bg-blue-200 text-gray-800">
-                {scrambledLetters[index]}
-              </span>
+              </button>
             ))}
+          </div>
+
+          {/* Current Attempt */}
+          <div className="mb-6">
+            <h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-200 text-center">Current Attempt:</h3>
+            <div className="flex flex-wrap gap-3 md:gap-4 justify-center min-h-16 bg-gray-700/30 rounded-xl p-4 border border-gray-600/50">
+              {currentWord.map((index, i) => (
+                <span key={i} className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-xl md:text-2xl font-bold rounded-xl bg-blue-600 text-white border-2 border-blue-400">
+                  {scrambledLetters[index]}
+                </span>
+              ))}
+              {currentWord.length === 0 && (
+                <div className="text-gray-400 text-lg flex items-center justify-center">
+                  Select letters to form the word
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Feedback Message */}
+          {feedback.message && (
+            <div className={`text-center text-lg font-medium p-4 rounded-xl border backdrop-blur-sm mb-6 ${
+              feedback.type === 'error' ? 'bg-red-500/20 text-red-300 border-red-500/50' : 
+              feedback.type === 'success' ? 'bg-green-500/20 text-green-300 border-green-500/50' : 
+              'bg-blue-500/20 text-blue-300 border-blue-500/50'
+            }`}>
+              {feedback.message}
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3 justify-center">
+            <button 
+              onClick={submitWord}
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+            >
+              Submit
+            </button>
+            <button 
+              onClick={clearCurrentAttempt}
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-500 hover:to-gray-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+            >
+              Clear
+            </button>
+            <button 
+              onClick={shuffleLetters}
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+            >
+              Shuffle
+            </button>
+            <button 
+              onClick={showHint}
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+            >
+              Hint
+            </button>
+            <button 
+              onClick={giveUp}
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+            >
+              Give Up
+            </button>
+            <button 
+              onClick={newWord}
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+            >
+              New Word
+            </button>
           </div>
         </div>
 
-        {feedback.message && (
-          <div className={`p-4 rounded-lg mb-4 font-bold text-lg ${
-            feedback.type === 'error' ? 'bg-red-100 text-red-700' : 
-            feedback.type === 'success' ? 'bg-green-100 text-green-700' : 
-            'bg-blue-50 text-blue-700'
-          }`}>
-            {feedback.message}
+        {/* Found Words */}
+        {foundWords.length > 0 && (
+          <div className="bg-gray-800/50 rounded-2xl p-4 md:p-6 mb-6 backdrop-blur-sm border border-gray-700">
+            <h3 className="text-lg md:text-xl font-bold text-center mb-4 text-gray-200">Found Words:</h3>
+            <div className="flex flex-wrap gap-2 md:gap-3 justify-center">
+              {foundWords.map((word, i) => (
+                <span key={i} className="px-3 md:px-4 py-2 bg-green-600/20 text-green-300 rounded-lg font-medium border border-green-500/50">
+                  {word}
+                </span>
+              ))}
+            </div>
           </div>
         )}
-      </div>
 
-      <div className="flex flex-wrap gap-2 mb-6">
-        <button 
-          onClick={submitWord}
-          className={`${buttonStyle} bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white`}
-        >
-          Submit
-        </button>
-        <button 
-          onClick={clearCurrentAttempt}
-           className={`${buttonStyle} bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-400 hover:to-gray-500 text-white`}
-        >
-          Clear
-        </button>
-        <button 
-          onClick={shuffleLetters}
-          className={`${buttonStyle} bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white`}
-        >
-          Shuffle
-        </button>
-        <button 
-          onClick={showHint}
-          className={`${buttonStyle} bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white`}
-        >
-          Hint
-        </button>
-        <button 
-          onClick={giveUp}
-          className={`${buttonStyle} bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white`}
-        >
-          Give Up
-        </button>
-        <button 
-          onClick={newWord}
-          className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
-        >
-          New Word
-        </button>
-      </div>
-
-      {foundWords.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2 text-gray-800">Found Words:</h3>
-          <div className="flex flex-wrap gap-2">
-            {foundWords.map((word, i) => (
-              <span key={i} className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">
-                {word}
-              </span>
-            ))}
-          </div>
+        {/* How to Play */}
+        <div className="bg-gray-800/50 rounded-2xl p-4 md:p-6 backdrop-blur-sm border border-gray-700">
+          <h2 className="text-xl md:text-2xl font-bold text-center mb-4 text-gray-200">How to Play</h2>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-300">
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Click on letters to unscramble them and form the correct word</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Complete words before time runs out</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Progress through easy, medium, and hard difficulty levels</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Use hints if you get stuck (shows first 2 letters)</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Shuffle the letters for a different view</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Earn points based on word length (5 points per letter)</span>
+            </li>
+          </ul>
         </div>
-      )}
-
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">How to Play</h2>
-        <ul className="list-disc pl-5 space-y-1 text-gray-600">
-          <li>Click on letters to unscramble them and form the correct word</li>
-          <li>Complete words before time runs out</li>
-          <li>Progress through easy, medium, and hard difficulty levels</li>
-          <li>Use hints if you get stuck (shows first 2 letters)</li>
-          <li>Shuffle the letters for a different view</li>
-          <li>Earn points based on word length (5 points per letter)</li>
-        </ul>
       </div>
     </div>
   );

@@ -5,9 +5,9 @@ import AutomobleComponent from '@/components/brainwave/AutomobleComponent';
 import { getDailyCar, AutomoblePuzzle } from '@/lib/brainwave/automoble/automoble-sb';
 import MuteButton from '@/components/common/MuteButton';
 import { useState, useEffect } from 'react';
-//import { AutomobleData } from '@/lib/brainwave/automoble/automoble-logic';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { Car, Target, Users, Clock, Trophy, Zap, Wrench } from 'lucide-react';
 
 export default function AutomoblePage() {
   const [automobileData, setAutomobileData] = useState<AutomoblePuzzle | null>(null);
@@ -35,15 +35,15 @@ export default function AutomoblePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Automobile - Daily Vehicle Guessing Game | Triviaah',
+      name: 'Automoble - Daily Vehicle Guessing Game | Triviaah',
       description: 'Guess the vehicle from progressive clues with limited attempts! Wordle-style feedback on model names. Unlock more hints with each wrong guess.',
-      url: 'https://triviaah.com/automobile',
+      url: 'https://triviaah.com/brainwave/automoble',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
-        name: 'Automobile',
+        name: 'Automoble',
         description: 'Daily vehicle guessing game where players have 6 attempts to guess the target vehicle using progressive clues and letter feedback.',
-        gameLocation: 'https://triviaah.com/automobile',
+        gameLocation: 'https://triviaah.com/brainwave/automoble',
         characterAttribute: 'Cars, Vehicles, Automotive, Brands, Models, Engineering'
       }
     },
@@ -53,15 +53,15 @@ export default function AutomoblePage() {
       mainEntity: [
         {
           '@type': 'Question',
-          name: 'What is Automobile?',
+          name: 'What is Automoble?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Automobile is a daily vehicle puzzle game where you guess the target car or vehicle in 6 attempts. It features progressive clues and Wordle-style letter feedback to help you solve the puzzle.'
+            text: 'Automoble is a daily vehicle puzzle game where you guess the target car or vehicle in 6 attempts. It features progressive clues and Wordle-style letter feedback to help you solve the puzzle.'
           }
         },
         {
           '@type': 'Question',
-          name: 'How do I play Automobile?',
+          name: 'How do I play Automoble?',
           acceptedAnswer: {
             '@type': 'Answer',
             text: 'You have 6 attempts to guess the daily vehicle. Start with basic clues, and get more detailed hints with each wrong guess. You also get letter feedback similar to Wordle.'
@@ -77,10 +77,10 @@ export default function AutomoblePage() {
         },
         {
           '@type': 'Question',
-          name: 'Is Automobile free to play?',
+          name: 'Is Automoble free to play?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes! Automobile is completely free to play with no registration required. New vehicle puzzles are available every day.'
+            text: 'Yes! Automoble is completely free to play with no registration required. New vehicle puzzles are available every day.'
           }
         }
       ]
@@ -132,23 +132,23 @@ export default function AutomoblePage() {
     fetchDailyAutomobile();
   }, [currentDate]);
 
-  // Show loading while waiting for client date or data
+  // Loading State
   if (isLoading || !currentDate) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-700 to-red-900">
         {/* Structured Data */}
         <Script
-          id="organization-schema"
+          id="automoble-organization-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.organization) }}
         />
         <Script
-          id="webpage-schema"
+          id="automoble-webpage-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.webpage) }}
         />
         <Script
-          id="faq-schema"
+          id="automoble-faq-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.faq) }}
         />
@@ -156,10 +156,10 @@ export default function AutomoblePage() {
         {/* Desktop Side Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
@@ -167,51 +167,43 @@ export default function AutomoblePage() {
         
         {/* Mobile Bottom Ad */}
         {showMobileAd && (
-           <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold mb-2">🚗 Automobile - Vehicle Guessing Game</h1>
-            {/* Last Updated Timestamp */}
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-red-500 to-red-600 p-3 rounded-2xl">
+                <Car className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
+                AUTOMOBLE
+              </h1>
+            </div>
+            <p className="text-gray-200 text-lg">Daily Vehicle Guessing Challenge</p>
           </div>
-          <p className="text-gray-600 mb-6">Guess the vehicle from progressive clues in 6 tries!</p>
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          </div>
-          <p className="text-gray-500 text-sm mt-2">Loading today&apos;s vehicle puzzle...</p>
 
-          {/* Hidden SEO Content */}
-          <div className="sr-only" aria-hidden="false">
-            <div itemScope itemType="https://schema.org/Game">
-              <meta itemProp="dateModified" content={lastUpdated} />
-              <h2>Automobile - Daily Vehicle Guessing Game</h2>
-              <p itemProp="description">
-                Test your automotive knowledge with Automobile, a daily puzzle game where you guess vehicles 
-                from progressive clues. Similar to Wordle but focused on automotive knowledge and vehicle identification.
-              </p>
-              <h3>How to Play Automobile:</h3>
-              <ul>
-                <li>Guess the target vehicle in 6 attempts</li>
-                <li>Get progressive clues that become more specific with each wrong guess</li>
-                <li>Receive Wordle-style letter feedback on vehicle names</li>
-                <li>Use hints about manufacturer, vehicle type, year, and specifications</li>
-                <li>New vehicle puzzle every day</li>
-                <li>Completely free with no registration required</li>
-              </ul>
-              <p><strong>Game Features:</strong> Daily automotive challenges, progressive hint system, 
-                 educational automotive content, and comprehensive vehicle database.</p>
+          {/* Loading Card */}
+          <div className="bg-red-800/50 backdrop-blur-lg rounded-3xl border border-red-700 p-8 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <div className="w-20 h-20 border-4 border-red-400/30 border-t-red-400 rounded-full animate-spin"></div>
+                <Car className="w-10 h-10 text-red-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Loading Today&apos;s Vehicle</h2>
+            <p className="text-red-200 mb-6">Revving up your automotive puzzle...</p>
+            
+            <div className="flex justify-center gap-2">
+              {[1, 2, 3].map((dot) => (
+                <div
+                  key={dot}
+                  className="w-2 h-2 bg-red-400 rounded-full animate-pulse"
+                  style={{ animationDelay: `${dot * 0.2}s` }}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -219,90 +211,100 @@ export default function AutomoblePage() {
     );
   }
 
+  // Error State
   if (error || !automobileData) {
     return (
-      <div className="page-with-ads">
+      <div className="min-h-screen bg-gradient-to-br from-red-900 to-black text-white">
         {/* Structured Data */}
         <Script
-          id="organization-schema"
+          id="automoble-organization-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.organization) }}
         />
         <Script
-          id="webpage-schema"
+          id="automoble-webpage-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.webpage) }}
         />
         <Script
-          id="faq-schema"
+          id="automoble-faq-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.faq) }}
         />
 
-        {/* Desktop Side Ads */}
+        {/* Ads */}
         {showDesktopAds && (
           <>
-            <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
             </div>
-            <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+            <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
               <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
             </div>
           </>
         )}
         
-        {/* Mobile Bottom Ad */}
         {showMobileAd && (
-           <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+          <Ads format="horizontal" isMobileFooter={true} style={{ width: '100%', height: '100px' }} className="lg:hidden" />
         )}
         
-        <div className="max-w-2xl mx-auto p-6 text-center">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold mb-2">🚗 Automobile - Vehicle Guessing Game</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="bg-gradient-to-r from-red-500 to-red-600 p-3 rounded-2xl">
+                <Car className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
+                AUTOMOBLE
+              </h1>
+            </div>
+            <p className="text-gray-300 text-lg">Daily Vehicle Guessing Challenge</p>
+          </div>
+
+          {/* Error Card */}
+          <div className="bg-red-500/10 backdrop-blur-lg rounded-3xl border border-red-500/30 p-8 text-center">
+            <div className="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold">!</span>
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">Challenge Unavailable</h2>
+            <p className="text-red-200 mb-6">We couldn&apos;t load today&apos;s vehicle puzzle.</p>
+            
+            <div className="bg-red-500/20 border border-red-500/30 rounded-2xl p-4 mb-6">
+              <p className="text-red-300 text-sm">{error || 'No puzzle available for today'}</p>
+            </div>
+            
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105"
             >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+              Try Again
+            </button>
           </div>
-          <p className="text-gray-600 mb-4">Guess the vehicle from progressive clues in 6 tries!</p>
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-            <p className="mb-2">No vehicle puzzle available for today.</p>
-            <p className="text-sm">Please check back tomorrow or try refreshing the page!</p>
-            {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
-          </div>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-          >
-            Refresh Page
-          </button>
         </div>
       </div>
     );
   }
 
+  // Main Game State
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br from-red-900 to-black text-white">
       {/* Structured Data */}
       <Script
-        id="organization-schema"
+        id="automoble-organization-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.organization) }}
       />
       <Script
-        id="webpage-schema"
+        id="automoble-webpage-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.webpage) }}
       />
       <Script
-        id="faq-schema"
+        id="automoble-faq-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.faq) }}
       />
@@ -310,10 +312,10 @@ export default function AutomoblePage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -321,7 +323,7 @@ export default function AutomoblePage() {
       
       {/* Mobile Bottom Ad */}
       {showMobileAd && (
-         <Ads format="horizontal" isMobileFooter={true} className="lg:hidden" />
+        <Ads isMobileFooter={true} format="horizontal" style={{ width: '100%', height: '100px' }} className="lg:hidden" />
       )}
       
       {/* Ad Controls */}
@@ -329,104 +331,133 @@ export default function AutomoblePage() {
         <div className="fixed top-4 right-4 z-50 flex gap-2">
           <button
             onClick={() => setShowDesktopAds(!showDesktopAds)}
-            className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded hidden lg:block"
+            className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm hidden lg:block transition-all duration-300"
           >
-            {showDesktopAds ? 'Hide Side Ads' : 'Show Side Ads'}
+            {showDesktopAds ? 'Hide Ads' : 'Show Ads'}
           </button>
           <button
             onClick={() => setShowMobileAd(!showMobileAd)}
-            className="bg-gray-600 hover:bg-gray-800 text-white text-xs px-2 py-1 rounded lg:hidden"
+            className="bg-gray-700/80 hover:bg-gray-600/80 text-white text-xs px-3 py-2 rounded-2xl backdrop-blur-sm lg:hidden transition-all duration-300"
           >
-            {showMobileAd ? 'Hide Bottom Ad' : 'Show Bottom Ad'}
+            {showMobileAd ? 'Hide Ad' : 'Show Ad'}
           </button>
         </div>
       )}
-      <div className="max-w-2xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-6">
-          <div className="flex justify-center items-center gap-4 mb-2">
-            <h1 className="text-3xl font-bold">🚗 Automobile</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-blue-50 px-3 py-1 rounded-full text-xs font-medium border border-blue-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
+
+      <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 relative z-30">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-r from-red-500 to-red-600 p-3 rounded-2xl shadow-lg">
+                <Car className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
+                AUTOMOBLE
+              </h1>
+            </div>
+            
+            <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-lg px-4 py-2 rounded-2xl border border-gray-700">
+              <Clock className="w-4 h-4 text-red-400" />
+              <time 
+                dateTime={lastUpdated} 
+                className="text-red-400 text-sm font-medium"
+              >
+                Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </time>
+            </div>
           </div>
-          <p className="text-gray-600">Guess the vehicle from progressive clues in 6 tries! Daily automotive puzzle.</p>
+          
+          <p className="text-gray-300 text-lg mb-2">Guess the car from pixelated image and progressive clues in 6 attempts</p>
+          
+          {/* Stats Bar */}
+          <div className="flex justify-center gap-6 mb-8">
+            <div className="flex items-center gap-2 text-gray-400">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              <span className="text-sm">Daily Challenge</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Users className="w-5 h-5 text-blue-500" />
+              <span className="text-sm">Global Car Enthusiasts</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Target className="w-5 h-5 text-red-500" />
+              <span className="text-sm">6 Attempts</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Wrench className="w-5 h-5 text-orange-500" />
+              <span className="text-sm">Progressive Hints</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-400">
+              <Zap className="w-5 h-5 text-emerald-500" />
+              <span className="text-sm">Letter Feedback</span>
+            </div>
+          </div>
         </div>
 
+        {/* Mute Button */}
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
-
-        <AutomobleComponent initialData={automobileData} />
+        
+        {/* Game Component */}
+        {automobileData && <AutomobleComponent initialData={automobileData} />}
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800/30 backdrop-blur-lg rounded-3xl border border-gray-700 p-6 relative z-10">
           <details className="group">
-            <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Automobile Game Information & FAQ</h2>
-              <span className="text-gray-500 group-open:rotate-180 transition-transform">
+            <summary className="flex justify-between items-center cursor-pointer list-none p-4 hover:bg-gray-700/30 rounded-2xl transition-all duration-300">
+              <h2 className="text-xl font-bold text-white">Game Guide & FAQ</h2>
+              <span className="text-red-400 group-open:rotate-180 transition-transform duration-300 text-2xl">
                 ▼
               </span>
             </summary>
-            <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
-              {/* Content Freshness Info */}
-              <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
-                  <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
-                </p>
-              </div>
-
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Automobile?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Automobile is a daily vehicle puzzle game where you guess the target car or vehicle in 6 attempts. 
-                  It features progressive clues and Wordle-style letter feedback to help you solve the puzzle.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do I play Automobile?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  You have 6 attempts to guess the daily vehicle. Start with basic clues, and get more detailed hints 
-                  with each wrong guess. You also get letter feedback similar to Wordle to help identify the vehicle&apos;s name.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What types of clues are provided?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Clues include manufacturer, vehicle type, year range, engine specifications, country of origin, 
-                  notable features, and other identifying information about the vehicle. Clues become more specific 
-                  with each attempt to help you narrow down possibilities.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How does the letter feedback work?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Similar to Wordle, letters in your guess are color-coded: green for correct letter in correct position, 
-                  yellow for correct letter in wrong position, and gray for letters not in the vehicle&apos;s name.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Automobile free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! Automobile is completely free to play with no registration required. New vehicle puzzles 
-                  are available every day at midnight local time.
-                </p>
-              </div>
-              <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What types of vehicles are included?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  The game includes cars, trucks, motorcycles, concept vehicles, and historical automobiles from various 
-                  eras, countries, and manufacturers around the world.
-                </p>
+            <div className="mt-4 space-y-6 pt-6 border-t border-gray-700">
+              <div className="grid gap-4">
+                {[
+                  {
+                    question: "What is Automoble?",
+                    answer: "Automoble is a daily vehicle puzzle game where you guess the target car or vehicle in 6 attempts. It features progressive clues, Wordle-style letter feedback, and a pixelated image that becomes clearer with each guess. It's an educational game that teaches about different vehicles, manufacturers, and automotive history."
+                  },
+                  {
+                    question: "How do I play Automoble?",
+                    answer: "You have 6 attempts to guess the daily vehicle. Start with a pixelated image and basic clues about the car's category, era, and country of origin. With each wrong guess, you unlock more detailed hints. You also get Wordle-style letter feedback on the vehicle's name to help you narrow down possibilities."
+                  },
+                  {
+                    question: "What types of clues are provided?",
+                    answer: "Clues are revealed progressively: basic info (make, decade, country), type info (vehicle type, fuel, era), technical specs (engine, horsepower, category), performance specs (0-60, top speed, drivetrain), cultural hints (movie appearances, nicknames, design), and final hints (first letter, name length, custom hints)."
+                  },
+                  {
+                    question: "How does the letter feedback work?",
+                    answer: "Similar to Wordle, letters in your guess are color-coded: green for correct letter in correct position, yellow for correct letter in wrong position, and gray for letters not in the vehicle's name. This helps you deduce the correct vehicle name through logical deduction."
+                  },
+                  {
+                    question: "Is Automoble educational?",
+                    answer: "Yes! Automoble is designed to be both fun and educational. Players learn about automotive history, different manufacturers, vehicle specifications, engineering concepts, and cultural aspects of automobiles from around the world."
+                  },
+                  {
+                    question: "Is Automoble free to play?",
+                    answer: "Yes! Automoble is completely free to play with no registration required. New vehicle puzzles are available every day at midnight local time. We support the game through optional non-intrusive advertisements."
+                  },
+                  {
+                    question: "What types of vehicles are included?",
+                    answer: "The game features a wide variety of vehicles including classic cars, modern supercars, concept vehicles, iconic production models, racing cars, and culturally significant automobiles from different eras and countries around the world."
+                  },
+                  {
+                    question: "How does the pixelated image work?",
+                    answer: "The vehicle image starts heavily pixelated and becomes clearer with each attempt. Each wrong guess reveals 15% more of the image (up to 75% after 5 attempts). When you win or lose, the full image is revealed to show you the complete vehicle."
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="bg-gray-700/30 rounded-2xl p-4">
+                    <h3 className="font-semibold text-red-400 mb-2">{faq.question}</h3>
+                    <p className="text-gray-300">{faq.answer}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </details>
@@ -436,15 +467,16 @@ export default function AutomoblePage() {
         <div className="sr-only" aria-hidden="false">
           <div itemScope itemType="https://schema.org/Game">
             <meta itemProp="dateModified" content={lastUpdated} />
-            <h2>Automobile - Daily Vehicle Guessing Game</h2>
+            <h2>Automoble - Daily Vehicle Guessing Game</h2>
             <p itemProp="description">
-              Test your automotive knowledge with Automobile, a daily puzzle game where you guess vehicles 
-              from progressive clues. Similar to Wordle but focused on automotive knowledge and vehicle identification. 
-              Perfect for car enthusiasts, mechanics, engineers, and anyone who loves vehicles.
+              Test your automotive knowledge with Automoble, a daily puzzle game where you guess vehicles 
+              from pixelated images and progressive clues. Similar to Wordle but focused on automotive knowledge 
+              and vehicle identification. Perfect for car enthusiasts, mechanics, engineers, and anyone who loves vehicles.
             </p>
-            <h3>How to Play Automobile:</h3>
+            <h3>How to Play Automoble:</h3>
             <ul>
               <li>Guess the target vehicle in 6 attempts</li>
+              <li>Watch the pixelated image reveal more details with each guess</li>
               <li>Get progressive clues that become more specific with each wrong guess</li>
               <li>Receive Wordle-style letter feedback on vehicle names</li>
               <li>Use hints about manufacturer, vehicle type, year, and specifications</li>
@@ -454,16 +486,26 @@ export default function AutomoblePage() {
             </ul>
             <h3>Game Features:</h3>
             <ul>
-              <li>Daily vehicle challenges from various categories</li>
-              <li>Progressive hint system that adapts to your progress</li>
+              <li>Daily vehicle challenges with pixelated image reveal</li>
+              <li>Progressive hint system across 6 categories</li>
               <li>Wordle-inspired letter feedback mechanics</li>
-              <li>Comprehensive vehicle database</li>
-              <li>Mobile-friendly design</li>
+              <li>Comprehensive vehicle database from classic to modern cars</li>
+              <li>Mobile-friendly dark mode design</li>
               <li>No time pressure - play at your own pace</li>
-              <li>Learn interesting facts about automotive history</li>
+              <li>Learn interesting facts about automotive history and engineering</li>
+              <li>Image gallery with zoom functionality</li>
+            </ul>
+            <h3>Educational Benefits:</h3>
+            <ul>
+              <li>Learn about automotive history and engineering</li>
+              <li>Understand different vehicle specifications and classifications</li>
+              <li>Explore car manufacturers from around the world</li>
+              <li>Discover cultural significance of iconic vehicles</li>
+              <li>Improve deductive reasoning and pattern recognition skills</li>
             </ul>
             <p><strong>Perfect for:</strong> Car enthusiasts, automotive professionals, engineering students, 
-               trivia lovers, and anyone wanting to test their knowledge of vehicles from classic cars to modern supercars.</p>
+               collectors, racing fans, mechanics, and anyone wanting to test their knowledge of vehicles 
+               from classic cars to modern supercars and concept vehicles.</p>
           </div>
         </div>
       </div>

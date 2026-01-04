@@ -2,6 +2,8 @@ import { getTriviaData, getAllTriviaPreviews } from '@/lib/tbank';
 import TriviaContent from '@/components/trivia-bank/TriviaContent';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
+import { ArrowLeft } from 'lucide-react';
 
 interface Params {
   slug: string;
@@ -23,7 +25,6 @@ interface TriviaData {
 
 interface TriviaPageProps {
   params: Promise<Params>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({ params }: TriviaPageProps): Promise<Metadata> {
@@ -67,33 +68,40 @@ export async function generateStaticParams() {
 
 function LoadingFallback() {
   return (
-    <div className="flex items-center justify-center min-h-[400px]">
-      <div className="text-lg text-gray-600">Loading trivia questions...</div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
+        <p className="text-gray-400">Loading trivia questions...</p>
+      </div>
     </div>
   );
 }
 
-export default async function TriviaPage({ params, searchParams }: TriviaPageProps) {
+export default async function TriviaPage({ params }: TriviaPageProps) {
   const { slug } = await params;
-  const queryParams = await searchParams;
-  const showParam = queryParams?.show;
-  
   const trivia: TriviaData | null = await getTriviaData(slug);
 
   if (!trivia) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Trivia Not Found</h1>
-        <p className="text-gray-600 mb-6">The requested trivia category could not be found.</p>
-        <Link 
-          href="/trivia-bank" 
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          ← Back to All Trivia Categories
-        </Link>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+        <div className="container mx-auto px-4 py-12 text-center">
+          <h1 className="text-4xl font-bold mb-4 text-white">Trivia Not Found</h1>
+          <p className="text-gray-400 mb-8">The requested trivia category could not be found.</p>
+          <Link 
+            href="/trivia-bank" 
+            className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors"
+          >
+            <ArrowLeft size={20} />
+            Back to All Trivia Categories
+          </Link>
+        </div>
       </div>
     );
   }
 
-  return <TriviaContent trivia={trivia} showParam={showParam} />;
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <TriviaContent trivia={trivia} />
+    </Suspense>
+  );
 }

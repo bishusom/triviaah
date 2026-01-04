@@ -111,7 +111,7 @@ export default function WordLadderPage() {
   }, []);
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="word-ladder-organization-schema"
@@ -137,10 +137,10 @@ export default function WordLadderPage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -170,28 +170,6 @@ export default function WordLadderPage() {
       )}
 
       <div className="max-w-3xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Free Word Ladder Puzzles Online</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-purple-50 px-3 py-1 rounded-full text-xs font-medium border border-purple-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
-          </div>
-          <p className="text-lg text-gray-600">
-            Transform words step by step in this classic vocabulary puzzle game. 
-            Perfect for word game enthusiasts and anyone looking to improve their spelling skills.
-          </p>
-        </div>
-
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
@@ -199,10 +177,10 @@ export default function WordLadderPage() {
         <WordLadderGame />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Word Ladder Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">Word Ladder Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -210,23 +188,23 @@ export default function WordLadderPage() {
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <h3 className="font-semibold text-white">Game Updates</h3>
+                <p className="text-gray-300 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is a Word Ladder?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What is a Word Ladder?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   A Word Ladder is a classic word puzzle where you transform one word into another by changing 
                   one letter at a time, with each intermediate step forming a valid English word. It&apos;s an 
                   engaging vocabulary and logic game that challenges your word knowledge and problem-solving skills.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do you play Word Ladder?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">How do you play Word Ladder?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Start with the beginning word and change one letter to form a new valid word. Continue changing 
                   one letter at a time until you reach the target word. Each step must be a valid dictionary word, 
                   and you can only change one letter per step. The goal is to find the shortest possible path between 
@@ -234,16 +212,16 @@ export default function WordLadderPage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What are the benefits of playing Word Ladder?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What are the benefits of playing Word Ladder?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Word Ladder improves vocabulary, spelling skills, logical thinking, problem-solving abilities, 
                   and pattern recognition. It&apos;s excellent mental exercise for cognitive development, helping 
                   players develop strategic thinking and word association skills while expanding their vocabulary.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Word Ladder educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">Is Word Ladder educational?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Word Ladder is highly educational for vocabulary building, spelling practice, and developing 
                   logical thinking skills. It helps players discover word patterns, understand word relationships, 
                   and improves overall language skills. Many educators use word ladder puzzles as effective teaching 
@@ -251,16 +229,16 @@ export default function WordLadderPage() {
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What strategies help solve Word Ladders?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">What strategies help solve Word Ladders?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Look for common word patterns and endings, try changing vowels first as they often create new words, 
                   work from both the start and end words simultaneously, and consider multiple possibilities for each 
                   step. Using word families and common prefixes/suffixes can also help find the solution faster.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is this Word Ladder game free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <h3 className="font-semibold text-gray-300" itemProp="name">Is this Word Ladder game free to play?</h3>
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Our online Word Ladder game is completely free to play with no registration required. 
                   You can play multiple difficulty levels, enjoy daily new puzzles, and challenge yourself 
                   to improve your word skills without any cost or subscription.
@@ -271,9 +249,9 @@ export default function WordLadderPage() {
         </div>
 
         {/* Game Information Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">About Word Ladder Puzzles</h2>
-          <div className="prose text-gray-700">
+          <div className="prose prose-invert max-w-none text-gray-300">
             <p className="mb-4">
               Word Ladder is a classic word game where you transform one word into another by 
               changing a single letter at a time, with each intermediate step forming a valid word. 
@@ -307,8 +285,8 @@ export default function WordLadderPage() {
               <li>Completely free with no registration required</li>
             </ul>
             
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">Word Ladder Tips & Strategies:</h4>
+            <div className="mt-6 p-4 bg-green-500/10 border border-green-500/20 text-white">
+              <h4 className="font-bold text-white mb-2">Word Ladder Tips & Strategies:</h4>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Start by looking for common word patterns and endings</li>
                 <li>Try changing vowels first as they often create new words</li>

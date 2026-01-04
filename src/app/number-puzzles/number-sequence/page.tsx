@@ -111,7 +111,7 @@ export default function NumberSequencePage() {
   }, []);
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Structured Data */}
       <Script
         id="number-sequence-organization-schema"
@@ -137,10 +137,10 @@ export default function NumberSequencePage() {
       {/* Desktop Side Ads */}
       {showDesktopAds && (
         <>
-          <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed left-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-right"/>
           </div>
-          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
+          <div className="fixed right-4 bottom-8 z-40 hidden lg:block">
             <Ads format="vertical" style={{ width: '300px', height: '600px' }} closeButtonPosition="top-left"/>
           </div>
         </>
@@ -170,28 +170,6 @@ export default function NumberSequencePage() {
       )}
 
       <div className="max-w-3xl mx-auto p-4">
-        {/* Header with Last Updated */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-3">
-            <h1 className="text-3xl font-bold">Number Sequence Puzzle Game</h1>
-            <time 
-              dateTime={lastUpdated} 
-              className="bg-teal-50 px-3 py-1 rounded-full text-xs font-medium border border-teal-200"
-            >
-              Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </time>
-          </div>
-          <p className="text-lg text-gray-600">
-            Identify number patterns and predict the next numbers in sequences. 
-            Challenge your mathematical thinking and pattern recognition skills!
-          </p>
-        </div>
-
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
           <MuteButton />
         </div>
@@ -199,10 +177,10 @@ export default function NumberSequencePage() {
         <NumberSequenceGame />
 
         {/* Enhanced FAQ Section */}
-        <div className="mt-8 bg-gray-50 p-6 rounded-lg">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold">Number Sequence Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">Number Sequence Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -210,15 +188,15 @@ export default function NumberSequencePage() {
             <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
               {/* Content Freshness Info */}
               <div>
-                <h3 className="font-semibold">Game Updates</h3>
-                <p className="text-gray-600 text-sm">
+                <h3 className="font-semibold text-white">Game Updates</h3>
+                <p className="text-gray-300 text-sm">
                   <strong>Last updated:</strong> {new Date(lastUpdated).toLocaleString()} (Server Time)
                 </p>
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What is Number Sequence?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Number Sequence is a math puzzle game where players identify patterns in number sequences 
                   and predict the next numbers. It challenges logical thinking, pattern recognition, and 
                   mathematical reasoning skills in an engaging, game-based format that makes learning math 
@@ -227,7 +205,7 @@ export default function NumberSequencePage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">How do you play Number Sequence?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Players analyze given number sequences to identify hidden patterns, then predict and submit 
                   the next numbers in the sequence using logical reasoning and mathematical thinking. The game 
                   provides limited attempts and may include hints to help players understand the patterns and 
@@ -236,7 +214,7 @@ export default function NumberSequencePage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What types of number patterns are included?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   The game includes various mathematical patterns such as arithmetic sequences (constant difference), 
                   geometric sequences (constant ratio), Fibonacci patterns, prime numbers, square numbers, cube numbers, 
                   and combinations of mathematical operations. Each pattern type challenges different aspects of 
@@ -245,7 +223,7 @@ export default function NumberSequencePage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is Number Sequence educational?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Number Sequence is excellent for developing mathematical thinking, pattern recognition, 
                   logical reasoning, and problem-solving skills. It helps build foundational math abilities, 
                   improves mental math capabilities, and enhances cognitive functions related to numerical 
@@ -254,7 +232,7 @@ export default function NumberSequencePage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">What mathematical skills does this game develop?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Number Sequence develops mathematical reasoning, pattern recognition, logical thinking, 
                   problem-solving abilities, mental math skills, analytical thinking, and cognitive flexibility. 
                   Regular play can significantly improve numerical literacy, mathematical confidence, and 
@@ -263,7 +241,7 @@ export default function NumberSequencePage() {
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is this game free to play?</h3>
-                <p className="text-gray-600" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
+                <p className="text-gray-300" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
                   Yes! Our Number Sequence game is completely free to play with no registration required. 
                   You can enjoy daily new puzzles, multiple difficulty levels, comprehensive learning features, 
                   and unlimited gameplay without any cost or subscription requirements.
@@ -274,9 +252,9 @@ export default function NumberSequencePage() {
         </div>
 
         {/* Game Information Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+        <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">About Number Sequence Puzzles</h2>
-          <div className="space-y-6 text-gray-700">
+          <div className="space-y-6 text-gray-10">
             <div>
               <h3 className="text-lg font-semibold mb-2">How to Play:</h3>
               <ul className="list-disc pl-5 space-y-2">
@@ -292,29 +270,29 @@ export default function NumberSequencePage() {
             <div>
               <h3 className="text-lg font-semibold mb-2">Common Pattern Types:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Arithmetic Sequences:</strong> Constant difference between terms (2, 4, 6, 8, 10...)</li>
-                <li><strong>Geometric Sequences:</strong> Constant ratio between terms (2, 4, 8, 16, 32...)</li>
-                <li><strong>Fibonacci Patterns:</strong> Each term is sum of two previous terms (1, 1, 2, 3, 5, 8...)</li>
-                <li><strong>Prime Numbers:</strong> Sequence of prime numbers only (2, 3, 5, 7, 11, 13...)</li>
-                <li><strong>Square Numbers:</strong> Sequence of perfect squares (1, 4, 9, 16, 25, 36...)</li>
-                <li><strong>Cube Numbers:</strong> Sequence of perfect cubes (1, 8, 27, 64, 125...)</li>
-                <li><strong>Combination Patterns:</strong> Mix of mathematical operations and rules</li>
+                <li><strong className="text-green-300">Arithmetic Sequences:</strong> Constant difference between terms (2, 4, 6, 8, 10...)</li>
+                <li><strong className="text-green-300">Geometric Sequences:</strong> Constant ratio between terms (2, 4, 8, 16, 32...)</li>
+                <li><strong className="text-green-300">Fibonacci Patterns:</strong> Each term is sum of two previous terms (1, 1, 2, 3, 5, 8...)</li>
+                <li><strong className="text-green-300">Prime Numbers:</strong> Sequence of prime numbers only (2, 3, 5, 7, 11, 13...)</li>
+                <li><strong className="text-green-300">Square Numbers:</strong> Sequence of perfect squares (1, 4, 9, 16, 25, 36...)</li>
+                <li><strong className="text-green-300">Cube Numbers:</strong> Sequence of perfect cubes (1, 8, 27, 64, 125...)</li>
+                <li><strong className="text-green-300">Combination Patterns:</strong> Mix of mathematical operations and rules</li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Difficulty Progression:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Beginner Level:</strong> Simple arithmetic and basic recognizable patterns</li>
-                <li><strong>Intermediate Level:</strong> Geometric sequences and combined operations</li>
-                <li><strong>Advanced Level:</strong> Complex patterns involving multiple mathematical concepts</li>
-                <li><strong>Expert Level:</strong> Challenging sequences requiring deep mathematical insight</li>
-                <li><strong>Master Level:</strong> Highly complex patterns with multiple layers of operations</li>
+                <li><strong className="text-green-300">Beginner Level:</strong> Simple arithmetic and basic recognizable patterns</li>
+                <li><strong className="text-green-300">Intermediate Level:</strong> Geometric sequences and combined operations</li>
+                <li><strong className="text-green-300">Advanced Level:</strong> Complex patterns involving multiple mathematical concepts</li>
+                <li><strong className="text-green-300">Expert Level:</strong> Challenging sequences requiring deep mathematical insight</li>
+                <li><strong className="text-green-300">Master Level:</strong> Highly complex patterns with multiple layers of operations</li>
               </ul>
             </div>
 
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">Advanced Solving Strategies:</h4>
+            <div className="p-4 bg-green-500/10 border border-green-500/20 text-white">
+              <h4 className="font-bold text-white mb-2">Advanced Solving Strategies:</h4>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Look for constant differences between consecutive terms first</li>
                 <li>Check if numbers follow multiplicative patterns like doubling or tripling</li>
@@ -332,21 +310,21 @@ export default function NumberSequencePage() {
           {/* Educational Benefits Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Educational Benefits of Number Sequence Games</h3>
-            <div className="prose text-gray-700">
+            <div className="prose prose-invert max-w-none text-gray-300">
               <p className="mb-4">
                 Number Sequence puzzles are powerful educational tools that develop essential mathematical 
                 and cognitive skills. As one of the most engaging <strong>free math brain teasers</strong> 
                 available, our Number Sequence game offers comprehensive learning benefits:
               </p>
               <ul className="list-disc pl-5 space-y-2 mb-4">
-                <li><strong>Enhanced Pattern Recognition:</strong> Develops ability to identify and extend numerical patterns</li>
-                <li><strong>Improved Logical Reasoning:</strong> Strengthens deductive and inductive reasoning skills</li>
-                <li><strong>Mathematical Thinking:</strong> Builds foundational skills for advanced mathematical concepts</li>
-                <li><strong>Problem-Solving Abilities:</strong> Develops systematic approaches to complex challenges</li>
-                <li><strong>Mental Math Skills:</strong> Improves numerical processing speed and accuracy</li>
-                <li><strong>Cognitive Flexibility:</strong> Enhances ability to switch between different thinking strategies</li>
-                <li><strong>Analytical Thinking:</strong> Strengthens ability to break down complex problems</li>
-                <li><strong>Academic Performance:</strong> Supports improved performance in mathematics and related subjects</li>
+                <li><strong className="text-green-300">Enhanced Pattern Recognition:</strong> Develops ability to identify and extend numerical patterns</li>
+                <li><strong className="text-green-300">Improved Logical Reasoning:</strong> Strengthens deductive and inductive reasoning skills</li>
+                <li><strong className="text-green-300">Mathematical Thinking:</strong> Builds foundational skills for advanced mathematical concepts</li>
+                <li><strong className="text-green-300">Problem-Solving Abilities:</strong> Develops systematic approaches to complex challenges</li>
+                <li><strong className="text-green-300">Mental Math Skills:</strong> Improves numerical processing speed and accuracy</li>
+                <li><strong className="text-green-300">Cognitive Flexibility:</strong> Enhances ability to switch between different thinking strategies</li>
+                <li><strong className="text-green-300">Analytical Thinking:</strong> Strengthens ability to break down complex problems</li>
+                <li><strong className="text-green-300">Academic Performance:</strong> Supports improved performance in mathematics and related subjects</li>
               </ul>
               <p>
                 Whether you&apos;re a student building math skills, an educator seeking engaging teaching tools, 

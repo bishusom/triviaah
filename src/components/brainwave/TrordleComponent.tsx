@@ -10,6 +10,7 @@ import { MdShare } from "react-icons/md";
 import { addTrordleResult } from '@/lib/brainwave/trordle/trordle-sb';
 import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { checkTrordleGuess, TrordleData, TrordleGuessResult } from '@/lib/brainwave/trordle/trordle-logic';
+import { Target, Users, Search, Sparkles, HelpCircle, Trophy, Clock } from 'lucide-react';
 
 interface TrordleComponentProps {
   initialData: TrordleData;
@@ -98,7 +99,7 @@ const getAttributeHint = (attrName: string, attrValue: string, status: string, c
   return 'Not related to the correct answer';
 };
 
-// FeedbackCard component - now with Tailwind
+// FeedbackCard component
 const FeedbackCard = ({ attribute, correctValue }: {
   attribute: Attribute;
   correctValue: string;
@@ -106,40 +107,41 @@ const FeedbackCard = ({ attribute, correctValue }: {
   const hintText = getAttributeHint(attribute.name, attribute.value, attribute.status, correctValue);
   
   const statusColors = {
-    correct: 'bg-green-50 border-green-200',
-    partial: 'bg-yellow-50 border-yellow-200',
-    incorrect: 'bg-red-50 border-red-200'
+    correct: 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30',
+    partial: 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30',
+    incorrect: 'bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30'
   };
-
+  
   const statusIcons = {
-    correct: 'bg-green-100 text-green-800',
-    partial: 'bg-yellow-100 text-yellow-800',
-    incorrect: 'bg-red-100 text-red-800'
+    correct: '✓',
+    partial: '~',
+    incorrect: '✗'
+  };
+  
+  const statusTextColors = {
+    correct: 'text-green-400',
+    partial: 'text-yellow-400',
+    incorrect: 'text-red-400'
   };
 
   return (
-    <div className={`rounded-lg border p-4 ${statusColors[attribute.status]}`}>
-      <div className="flex justify-between items-start mb-3">
+    <div className={`rounded-xl p-4 ${statusColors[attribute.status]}`}>
+      <div className="flex justify-between items-center mb-2">
         <div className="flex-1">
-          <div className="font-semibold text-gray-900 text-sm uppercase tracking-wide mb-1">
-            {attribute.name}
-          </div>
-          <div className="font-medium text-gray-800">
-            {attribute.value}
-          </div>
+          <div className="text-white font-semibold text-sm">{attribute.name}</div>
+          <div className="text-gray-300 text-sm">{attribute.value}</div>
         </div>
-        <div className={`w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm ${statusIcons[attribute.status]}`}>
-          {attribute.status === 'correct' ? '✓' : 
-           attribute.status === 'partial' ? '~' : '✗'}
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${statusTextColors[attribute.status]} bg-gray-800/50`}>
+          {statusIcons[attribute.status]}
         </div>
       </div>
-      <div className="text-sm text-gray-700">
+      <div className="text-xs text-gray-300">
         <strong>Hint:</strong> {hintText}
         {attribute.status !== 'correct' && (
           <>
             <br />
-            <span className="text-gray-600 text-sm">
-              Correct: <strong className="font-semibold">{correctValue}</strong>
+            <span className="text-white">
+              Correct: <strong>{correctValue}</strong>
             </span>
           </>
         )}
@@ -148,7 +150,7 @@ const FeedbackCard = ({ attribute, correctValue }: {
   );
 };
 
-// EnhancedProgressiveHint component with Tailwind
+// EnhancedProgressiveHint component
 const EnhancedProgressiveHint = ({ attempts }: { attempts: TrordleGuessResult[] }) => {
   if (attempts.length === 0) return null;
   
@@ -156,27 +158,27 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: TrordleGuessResult[] 
     {
       icon: "🎯",
       text: "Great start! Focus on the green matches.",
-      color: "bg-green-50 border-green-200 text-green-800"
+      color: "bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 text-green-400"
     },
     {
       icon: "🔗",
       text: "Yellow means you're close - look for connections!",
-      color: "bg-yellow-50 border-yellow-200 text-yellow-800"
+      color: "bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 text-yellow-400"
     },
     {
       icon: "🤔",
       text: "Compare your guesses to find patterns.",
-      color: "bg-blue-50 border-blue-200 text-blue-800"
+      color: "bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 text-blue-400"
     },
     {
       icon: "🔍",
       text: "You're narrowing it down - focus on remaining attributes.",
-      color: "bg-purple-50 border-purple-200 text-purple-800"
+      color: "bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-400"
     },
     {
       icon: "⚡",
       text: "Last chance! Use all clues wisely.",
-      color: "bg-red-50 border-red-200 text-red-800"
+      color: "bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 text-orange-400"
     }
   ];
   
@@ -184,19 +186,19 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: TrordleGuessResult[] 
   const currentHint = hints[hintIndex];
   
   return (
-    <div className={`rounded-lg border p-4 mb-6 ${currentHint.color}`}>
-      <div className="flex items-center gap-3 mb-3">
-        <span className="text-xl">{currentHint.icon}</span>
-        <span className="font-medium">{currentHint.text}</span>
+    <div className={`rounded-2xl p-4 mb-4 ${currentHint.color}`}>
+      <div className="flex items-center mb-2">
+        <span className="text-xl mr-3">{currentHint.icon}</span>
+        <span className="font-semibold">{currentHint.text}</span>
       </div>
       
-      <div className="flex gap-1">
+      <div className="flex gap-1 mt-3">
         {attempts[attempts.length - 1].attributes.map((attr, i) => (
           <div
             key={i}
-            className={`flex-1 h-2 rounded-full ${
-              attr.status === 'correct' ? 'bg-green-500' :
-              attr.status === 'partial' ? 'bg-yellow-500' : 'bg-red-500'
+            className={`h-1 flex-1 rounded ${
+              attr.status === 'correct' ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
+              attr.status === 'partial' ? 'bg-gradient-to-r from-yellow-400 to-amber-500' : 'bg-gray-600'
             }`}
           />
         ))}
@@ -205,7 +207,7 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: TrordleGuessResult[] 
   );
 };
 
-// ResultModal component with Tailwind
+// ResultModal component with X button and auto-timer
 const ResultModal = ({ result, onClose, onViewHistory, puzzleData }: {
   result: TrordleGuessResult;
   onClose: () => void;
@@ -226,24 +228,13 @@ const ResultModal = ({ result, onClose, onViewHistory, puzzleData }: {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-gray-800 border border-gray-700 rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="p-6">
-          {/* Header */}
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-1">
-                ❌ Wrong Guess
-              </h3>
-              <p className="text-gray-700 mb-2">
-                <strong className="text-lg">{result.guess}</strong>
-              </p>
-              <p className="text-sm text-gray-600">
-                {getSummaryText()} ({correctCount + partialCount} of {total} attributes)
-              </p>
-            </div>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-bold text-white">❌ Wrong Guess</h3>
             <button 
-              className="text-gray-500 hover:text-gray-700 text-xl"
+              className="text-gray-400 hover:text-white transition-colors"
               onClick={onClose}
               aria-label="Close modal"
             >
@@ -251,63 +242,43 @@ const ResultModal = ({ result, onClose, onViewHistory, puzzleData }: {
             </button>
           </div>
           
-          {/* Body */}
+          <div className="text-center mb-6">
+            <p className="text-white font-semibold text-lg mb-2">{result.guess}</p>
+            <p className="text-gray-300">
+              {getSummaryText()} ({correctCount + partialCount} of {total} attributes)
+            </p>
+          </div>
+          
           <div className="space-y-3 mb-6">
             {result.attributes.map((attr, index) => {
               const correctAttribute = puzzleData.attributes[index];
               const correctValue = correctAttribute.optionValues[correctAnswer];
-              const statusColors = {
-                correct: 'bg-green-50 border-green-200',
-                partial: 'bg-yellow-50 border-yellow-200',
-                incorrect: 'bg-red-50 border-red-200'
-              };
               
-              const statusIcons = {
-                correct: 'bg-green-100 text-green-800',
-                partial: 'bg-yellow-100 text-yellow-800',
-                incorrect: 'bg-red-100 text-red-800'
-              };
-
               return (
-                <div key={index} className={`rounded-lg border p-4 ${statusColors[attr.status]}`}>
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-1">
-                      <div className="font-semibold text-gray-900 text-sm uppercase tracking-wide mb-1">
-                        {attr.name}
-                      </div>
-                      <div className="font-medium text-gray-800">
-                        {attr.value}
-                      </div>
-                    </div>
-                    <div className={`w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm ${statusIcons[attr.status]}`}>
-                      {attr.status === 'correct' ? '✓' : 
-                       attr.status === 'partial' ? '~' : '✗'}
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-700">
-                    {getAttributeHint(attr.name, attr.value, attr.status, correctValue)}
-                  </div>
-                </div>
+                <FeedbackCard
+                  key={index}
+                  attribute={attr}
+                  correctValue={correctValue}
+                />
               );
             })}
           </div>
           
-          {/* Footer */}
           <div className="flex gap-3">
             <button 
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+              className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-600 text-white py-3 rounded-2xl font-semibold hover:from-blue-600 hover:to-cyan-700 transition-all duration-300"
               onClick={onClose}
             >
               Try Again
             </button>
             <button 
-              className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-4 rounded-lg transition-colors"
+              className="flex-1 bg-gradient-to-r from-purple-500 to-pink-600 text-white py-3 rounded-2xl font-semibold hover:from-purple-600 hover:to-pink-700 transition-all duration-300"
               onClick={() => {
                 onClose();
                 onViewHistory();
               }}
             >
-              View All Guesses
+              View All
             </button>
           </div>
         </div>
@@ -333,41 +304,6 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
   
   // Sound effects
   const { isMuted } = useSound();
-  const correctSound = useRef<HTMLAudioElement | null>(null);
-  const incorrectSound = useRef<HTMLAudioElement | null>(null);
-  const winSound = useRef<HTMLAudioElement | null>(null);
-  const loseSound = useRef<HTMLAudioElement | null>(null);
-  const clickSound = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    // Initialize sound effects
-    correctSound.current = new Audio('/sounds/correct.mp3');
-    incorrectSound.current = new Audio('/sounds/incorrect.mp3');
-    winSound.current = new Audio('/sounds/win.mp3');
-    loseSound.current = new Audio('/sounds/lose.mp3');
-    clickSound.current = new Audio('/sounds/click.mp3');
-
-    return () => {
-      [correctSound, incorrectSound, winSound, loseSound, clickSound].forEach(sound => {
-        sound.current?.pause();
-      });
-    };
-  }, []);
-
-  useEffect(() => {
-    // Fetch category image
-    const fetchImage = async () => {
-      setIsImageLoading(true);
-      const imageUrl = await fetchPexelsImage('', puzzleData.category);
-      if (imageUrl) {
-        setCategoryImage(imageUrl);
-      }
-      setIsImageLoading(false);
-    };
-
-    fetchImage();
-  }, [puzzleData.category]);
-
   const playSound = useCallback((soundType: 'correct' | 'incorrect' | 'win' | 'lose' | 'click') => {
     if (isMuted) return;
     
@@ -386,6 +322,20 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       console.error('Error playing sound:', error);
     }
   }, [isMuted]);
+
+  useEffect(() => {
+    // Fetch category image
+    const fetchImage = async () => {
+      setIsImageLoading(true);
+      const imageUrl = await fetchPexelsImage('', puzzleData.category);
+      if (imageUrl) {
+        setCategoryImage(imageUrl);
+      }
+      setIsImageLoading(false);
+    };
+
+    fetchImage();
+  }, [puzzleData.category]);
 
   useEffect(() => {
     const savedProgress = localStorage.getItem(`trordle-${puzzleData.id}`);
@@ -431,7 +381,8 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       myConfetti({
         particleCount: 100,
         spread: 70,
-        origin: { y: 0.6 }
+        origin: { y: 0.6 },
+        colors: ['#10B981', '#059669', '#047857']
       });
       
       setTimeout(() => myConfetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0 } }), 250);
@@ -439,6 +390,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
     }
   };
 
+  // Update handleGuess to use modal
   const handleGuess = (option: string) => {
     if (gameState !== 'playing' || attempts.length >= 6) return;
     
@@ -489,6 +441,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
     }, 500);
   };
 
+  // Add modal close function
   const closeModal = () => {
     if (timerId) {
       clearTimeout(timerId);
@@ -498,6 +451,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
     setModalData(null);
   };
 
+  // Add cleanup on unmount
   useEffect(() => {
     return () => {
       if (timerId) {
@@ -547,20 +501,23 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
   };
 
   const triesLeft = 6 - attempts.length;
-  const triesLeftColor = triesLeft >= 4 ? 'text-green-600' : triesLeft >= 2 ? 'text-yellow-600' : 'text-red-600';
+  const triesLeftColor = 
+    triesLeft >= 4 ? 'text-green-400' : 
+    triesLeft >= 2 ? 'text-yellow-400' : 
+    'text-red-400';
 
   const availableOptions = puzzleData.options.filter(
     option => !attempts.some(attempt => attempt.guess === option)
   );
 
   return (
-    <div className="relative flex flex-col min-h-[calc(100vh-4rem)]">
+    <div className="relative">
       <canvas 
         ref={confettiCanvasRef} 
-        className="fixed top-0 left-0 w-full h-full pointer-events-none z-50"
+        className="fixed top-0 left-0 w-full h-full pointer-events-none z-10"
       />
       
-      {/* Modal */}
+      {/* Add modal here */}
       {showModal && modalData && (
         <ResultModal 
           result={modalData} 
@@ -570,84 +527,108 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
         />
       )}
       
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 flex-grow">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg md:text-xl font-semibold text-gray-900">
-            Today&apos;s Category: {puzzleData.category}
-          </h2>
-          <div className={`text-base font-bold ${triesLeftColor}`}>
-            {triesLeft} {triesLeft === 1 ? 'try' : 'tries'} left
+      {/* Main Game Card */}
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5 mb-5">
+        {/* Header with Attempts Counter */}
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-2 rounded-xl">
+              <HelpCircle className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Today&apos;s Trivia Challenge</h2>
+          </div>
+          <div className={`flex items-center gap-2 text-lg font-bold ${triesLeftColor}`}>
+            <Target className="w-5 h-5" />
+            <span>{triesLeft} {triesLeft === 1 ? 'TRY' : 'TRIES'}</span>
           </div>
         </div>
-        
-        {/* Progressive hints */}
-        <EnhancedProgressiveHint attempts={attempts} />
-        
-        {/* Question and Image Container */}
-        <div className="flex items-start gap-4 mb-6">
+
+        {/* Category & Image Container */}
+        <div className="flex flex-col md:flex-row gap-6 mb-6 items-center">
+          {/* Category Image Container */}
           <div className="flex-shrink-0">
-            <div className={`relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100 ${categoryImage ? '' : 'animate-pulse'}`}>
+            <div className={`relative rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-600 ${categoryImage ? '' : 'animate-pulse'}`} style={{ width: '200px', height: '120px' }}>
               {categoryImage ? (
                 <Image 
                   src={categoryImage} 
                   alt={`${puzzleData.category} illustration`}
                   fill
                   className="object-cover"
-                  sizes="80px"
+                  loading="lazy"
+                  onError={() => setCategoryImage(null)}
                 />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
+                <div className="absolute inset-0 flex items-center justify-center text-gray-400">
                   {isImageLoading ? 'Loading...' : 'No image'}
                 </div>
               )}
             </div>
           </div>
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-800">{puzzleData.question}</h3>
+
+          {/* Question Section */}
+          <div className="flex-grow text-center">
+            <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/30 rounded-2xl p-6">
+              <h3 className="text-xl font-bold text-white mb-3">Today&apos;s Category: {puzzleData.category}</h3>
+              <p className="text-gray-300 text-lg mb-4">
+                {puzzleData.question}
+              </p>
+              <div className="flex justify-center gap-4 text-sm text-gray-400">
+                <div className="flex items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  <span>Trivia Enthusiasts</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Trophy className="w-4 h-4" />
+                  <span>6 Attributes</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        
-        {/* Attempt History */}
+
+        {/* Enhanced progressive hints */}
+        <EnhancedProgressiveHint attempts={attempts} />
+
+        {/* Collapsible Attempt History */}
         {attempts.length > 0 && (
           <div className="mb-6">
-            <button 
-              onClick={toggleHistory}
-              className="text-blue-600 hover:text-blue-800 font-semibold mb-3 text-sm md:text-base transition-colors"
-            >
-              {showHistory ? 'Hide Guesses' : 'Show Your Guesses'}
-            </button>
-            
-            {/* Attempt dots */}
-            <div className="flex gap-2 mb-3">
-              {[...Array(6)].map((_, index) => (
-                <div
-                  key={index}
-                  onClick={toggleHistory}
-                  className={`w-6 h-6 rounded-full cursor-pointer transition-all ${
-                    index < attempts.length 
-                      ? attempts[index].isCorrect 
-                        ? 'bg-green-500 hover:bg-green-600' 
-                        : 'bg-red-500 hover:bg-red-600'
-                      : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                  title={index < attempts.length ? `Guess ${index + 1}` : 'Unused attempt'}
-                />
-              ))}
+            <div className="flex items-center justify-between mb-4">
+              <button 
+                onClick={toggleHistory}
+                className="text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-2 transition-colors"
+              >
+                {showHistory ? 'Hide Guesses' : 'Show Your Guesses'}
+                <Sparkles className="w-4 h-4" />
+              </button>
+              
+              <div className="flex gap-1">
+                {[...Array(6)].map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-3 h-3 rounded-full ${
+                      index < attempts.length 
+                        ? attempts[index].isCorrect 
+                          ? 'bg-gradient-to-r from-green-400 to-emerald-500' 
+                          : 'bg-gradient-to-r from-yellow-400 to-amber-500'
+                        : 'bg-gray-600'
+                    }`}
+                    title={index < attempts.length ? `Guess ${index + 1}` : 'Unused attempt'}
+                  />
+                ))}
+              </div>
             </div>
             
-            {/* History details */}
             {showHistory && (
-              <div className="space-y-4 mt-4">
+              <div className="space-y-3">
                 {attempts.slice().reverse().map((attempt, index) => {
                   const correctAnswer = puzzleData.answer;
                   
                   return (
-                    <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                      <div className="bg-gray-50 px-4 py-3 border-b">
-                        <div className="font-bold text-lg text-center">
+                    <div key={index} className="bg-gray-700/30 rounded-xl border border-gray-600 overflow-hidden">
+                      <div className="bg-gray-600/50 px-4 py-3 border-b border-gray-600">
+                        <div className="font-bold text-lg text-center text-white">
                           {attempt.guess}
-                          {attempt.isCorrect && <span className="ml-2 text-green-600">🎯</span>}
+                          {attempt.isCorrect && <span className="ml-2 text-green-400">🎯</span>}
                         </div>
                       </div>
                       
@@ -675,34 +656,43 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
           </div>
         )}
         
-        {/* Game result messages */}
+        {/* Game result message */}
         {gameState === 'won' && (
-          <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-4">
-            <h3 className="font-bold text-lg mb-2">Congratulations! 🎉</h3>
-            <p>You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
+          <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Congratulations! 🎉</h3>
+            <p className="text-green-400 mb-2">You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
+            <p className="text-gray-300">The answer was: <strong className="text-white">{puzzleData.answer}</strong></p>
           </div>
         )}
         
         {gameState === 'lost' && (
-          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-4">
-            <h3 className="font-bold text-lg mb-2">Game Over</h3>
-            <p>The answer was: <strong className="text-lg">{puzzleData.answer}</strong></p>
+          <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center">
+                <HelpCircle className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Game Over</h3>
+            <p className="text-red-400">The answer was: <strong className="text-white">{puzzleData.answer}</strong></p>
           </div>
         )}
         
-        {/* Answer Options */}
+        {/* Sticky Answer Options */}
         {gameState === 'playing' && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 -mx-4 md:-mx-6 -mb-4 md:-mb-6 mt-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="sticky bottom-0 bg-gray-800/80 backdrop-blur-lg rounded-xl border border-gray-700 p-4 z-[100] -mx-2 md:-mx-4 -mb-2 md:-mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {availableOptions.map((option) => (
                 <button
                   key={option}
                   onClick={() => handleGuess(option)}
                   disabled={selectedOption === option}
-                  className={`px-4 py-3 rounded-lg font-medium transition-all text-sm md:text-base ${
-                    selectedOption === option 
-                      ? 'bg-blue-600 text-white transform scale-95' 
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-800 hover:shadow'
+                  className={`py-3 px-4 bg-gray-700 border border-gray-600 rounded-2xl text-white font-semibold hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed transition-all duration-300 ${
+                    selectedOption === option ? 'ring-2 ring-blue-500' : ''
                   }`}
                 >
                   {option}
@@ -713,29 +703,29 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
         )}
       </div>
       
-      {/* Share Results */}
+      {/* Share results */}
       {(gameState === 'won' || gameState === 'lost') && (
-        <div className="mt-6 text-center bg-white rounded-lg shadow-md p-6">
+        <div className="flex flex-col items-center gap-4 mt-6 bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-6">
           <button
             onClick={copyToClipboard}
-            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-700 transition-all duration-300 transform hover:scale-105 font-semibold"
           >
-            <MdShare className="w-5 h-5" /> Share Results
+            <MdShare className="w-5 h-5" />
+            Share Results
           </button>
           {shareMessage && (
-            <div className="mt-2 text-green-600 font-medium">{shareMessage}</div>
+            <div className="text-blue-400 font-semibold animate-pulse">{shareMessage}</div>
           )}
           
-          {/* Share grid visualization */}
-          <div className="grid grid-cols-5 gap-2 max-w-xs mx-auto mt-6">
+          <div className="grid grid-cols-5 gap-2 max-w-md">
             {attempts.flatMap(attempt => 
               attempt.attributes.map((attr, i) => (
                 <div 
                   key={`${attempt.guess}-${i}`} 
-                  className={`aspect-square flex items-center justify-center rounded font-bold ${
-                    attr.status === 'correct' ? 'bg-green-500 text-white' :
-                    attr.status === 'partial' ? 'bg-yellow-500 text-white' :
-                    'bg-gray-300 text-gray-700'
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white ${
+                    attr.status === 'correct' ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
+                    attr.status === 'partial' ? 'bg-gradient-to-r from-yellow-400 to-amber-500' :
+                    'bg-gradient-to-r from-red-400 to-pink-500'
                   }`}
                 >
                   {attr.status === 'correct' ? '✓' : attr.status === 'partial' ? '~' : '✗'}
@@ -744,7 +734,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
             )}
             {[...Array(6 - attempts.length)].flatMap((_, attemptIndex) => 
               [...Array(5)].map((_, attrIndex) => (
-                <div key={`empty-${attemptIndex}-${attrIndex}`} className="aspect-square bg-gray-200 text-gray-500 flex items-center justify-center rounded">
+                <div key={`empty-${attemptIndex}-${attrIndex}`} className="w-8 h-8 rounded-lg bg-gray-600 flex items-center justify-center text-gray-400">
                   ?
                 </div>
               ))
@@ -765,30 +755,37 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       )}
       
       {/* How to Play section */}
-      <div className="bg-gray-50 rounded-lg p-4 mt-6 border border-gray-200">
-        <h3 className="font-bold text-gray-900 mb-3">How to Play:</h3>
-        <ul className="space-y-2 text-sm text-gray-700">
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600 mt-1">•</span>
+      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5 mt-6">
+        <h3 className="font-bold text-white mb-3 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-green-400" />
+          How to Play:
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-green-400">🎯</span>
             <span>Guess the answer to the trivia question in 6 tries</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-blue-600 mt-1">•</span>
-            <span>Click the colored dots or &quot;Show Your Guesses&quot; to view your guesses</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-green-600 mt-1">🟩</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-green-400">🔍</span>
+            <span>Click colored dots or &quot;Show Your Guesses&quot; to view your guesses</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-green-400">🟩</span>
             <span>Green: This attribute is exactly correct</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-yellow-600 mt-1">🟨</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-yellow-400">🟨</span>
             <span>Yellow: This attribute is partially correct or related</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-gray-600 mt-1">⬜</span>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-gray-400">⬜</span>
             <span>Gray: This attribute is incorrect</span>
-          </li>
-        </ul>
+          </div>
+          <div className="flex items-start gap-2 text-gray-300">
+            <span className="text-blue-400">💡</span>
+            <span>Use hints to narrow down your choices</span>
+          </div>
+        </div>
       </div>
     </div>
   );

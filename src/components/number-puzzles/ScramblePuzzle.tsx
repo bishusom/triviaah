@@ -1,7 +1,6 @@
 'use client';
 import { event } from '@/lib/gtag';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { evaluate } from 'mathjs';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/context/SoundContext';
 
@@ -24,8 +23,6 @@ interface GameState {
   };
 }
 
-const buttonStyle = "px-6 md:px-3 py-2 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center"
-
 export default function ScramblePuzzle() {
   const [gameState, setGameState] = useState<GameState>({
     numbers: [1, 2, 3, 4, 5, 6],
@@ -47,6 +44,7 @@ export default function ScramblePuzzle() {
   const [feedback, setFeedback] = useState({ message: '', type: '' });
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const { isMuted } = useSound();
+  const mathjsRef = useRef<any>(null);
 
   type SoundType = 'select' | 'found' | 'win' | 'error';
 
@@ -66,6 +64,31 @@ export default function ScramblePuzzle() {
       console.error('Sound error:', err);
     }
   }, [isMuted]);
+
+  // Load mathjs dynamically on client side
+  useEffect(() => {
+    const loadMathJS = async () => {
+      try {
+        const mathjs = await import('mathjs');
+        mathjsRef.current = mathjs.evaluate;
+      } catch (error) {
+        console.error('Failed to load mathjs:', error);
+        // Fallback to a simple eval-based solution
+        mathjsRef.current = (expression: string) => {
+          try {
+            // Basic safe evaluation (for simple arithmetic only)
+            // Remove any characters that aren't numbers or basic operators
+            const sanitized = expression.replace(/[^0-9+\-*/().]/g, '');
+            return Function(`"use strict"; return (${sanitized})`)();
+          } catch {
+            throw new Error('Invalid expression');
+          }
+        };
+      }
+    };
+
+    loadMathJS();
+  }, []);
 
   const generateNumbers = useCallback((difficulty: Difficulty, level: number): number[] => {
     const count = 6 + Math.floor(level / 5);
@@ -99,12 +122,10 @@ export default function ScramblePuzzle() {
   }, []);
 
   const generateNewPuzzle = useCallback(() => {
-    // Clear existing timer
     if (timerInterval.current) {
       clearInterval(timerInterval.current);
     }
 
-    // Reset game state for new puzzle
     setFeedback({ message: '', type: '' });
     setGameState(prev => ({
       ...prev,
@@ -115,17 +136,14 @@ export default function ScramblePuzzle() {
       timeLeft: 120,
     }));
 
-    // Start timer
     timerInterval.current = setInterval(() => {
       setGameState(prev => {
         const newTimeLeft = Math.max(0, prev.timeLeft - 1);
         if (newTimeLeft <= 0) {
           timerInterval.current = null;
-          // Handle time expiration
           setFeedback({ message: "Time's up!", type: 'error' });
           setGameState(prevState => ({ ...prevState, consecutiveHardWins: 0 }));
           playSound('error');
-          // Schedule new puzzle after delay
           setTimeout(() => {
             setFeedback({ message: '', type: '' });
             setGameState(prevState => ({
@@ -136,7 +154,6 @@ export default function ScramblePuzzle() {
               target: generateTarget(prevState.difficulty, prevState.level),
               timeLeft: 120,
             }));
-            // Restart timer for the new puzzle
             timerInterval.current = setInterval(() => {
               setGameState(prevState => {
                 const newTimeLeftInner = Math.max(0, prevState.timeLeft - 1);
@@ -281,7 +298,12 @@ export default function ScramblePuzzle() {
     }
 
     try {
-      const result = evaluate(gameState.currentExpression);
+      if (!mathjsRef.current) {
+        setFeedback({ message: 'Math engine not loaded yet', type: 'error' });
+        return;
+      }
+
+      const result = mathjsRef.current(gameState.currentExpression);
       if (Math.abs(result - gameState.target) < 0.0001) {
         handleCorrectSolution();
       } else {
@@ -336,100 +358,160 @@ export default function ScramblePuzzle() {
   }, [generateNewPuzzle]);
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">Number Scramble - Beat the timer</h1>
-      <p className="text-gray-600 mb-6">Combine numbers with operators to reach the target</p>
-
-      <div className="flex justify-between items-center mb-6">
-        <div className="text-lg font-semibold">Level: {gameState.level}</div>
-        <div className={`text-lg font-semibold ${gameState.timeLeft <= 10 ? 'text-red-600 animate-pulse' : ''}`}>
-          Time: {formatTime(gameState.timeLeft)}
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="text-lg font-semibold">Score: {gameState.score}</div>
-        </div>
-      </div>
-
-      <div className="bg-gray-100 rounded-lg p-6 mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <div className="text-xl font-bold">Target: {gameState.target}</div>
-        </div>
-
-        <div
-          className={`p-4 rounded-lg mb-4 font-mono text-lg ${
-            feedback.type === 'error' ? 'bg-red-100 text-red-700' :
-            feedback.type === 'success' ? 'bg-green-100 text-green-700' :
-            'bg-blue-50 text-blue-700'
-          }`}
-        >
-          {feedback.message || `Current: ${gameState.currentExpression || 'Empty'}`}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white p-4 md:p-6 flex flex-col items-center justify-center">
+      <div className="w-full max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 p-4 bg-gray-800/50 rounded-xl backdrop-blur-sm border border-gray-700">
+          <div className="text-center md:text-left mb-4 md:mb-0">
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Number Scramble
+            </h1>
+            <div className="text-sm md:text-base text-gray-300 mt-1">
+              Level: {gameState.level} • Combine numbers to reach the target
+            </div>
+          </div>
+          <div className="flex items-center gap-4 md:gap-6">
+            <div className={`bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg ${
+              gameState.timeLeft <= 10 ? 'text-red-400 animate-pulse' : 'text-white'
+            }`}>
+              ⏱️ {formatTime(gameState.timeLeft)}
+            </div>
+            <div className="bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg">
+              Score: {gameState.score}
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-4">
-          {gameState.numbers.map((num, index) => (
+        {/* Game Area */}
+        <div className="bg-gray-800/30 rounded-2xl p-6 md:p-8 mb-6 backdrop-blur-sm border border-gray-700/50">
+          {/* Target Display */}
+          <div className="text-center mb-6">
+            <div className="text-lg md:text-xl text-gray-300 mb-2">Target Number</div>
+            <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+              {gameState.target}
+            </div>
+          </div>
+
+          {/* Feedback Message */}
+          {feedback.message && (
+            <div className={`text-center text-lg font-medium p-4 rounded-xl border backdrop-blur-sm mb-6 ${
+              feedback.type === 'error' ? 'bg-red-500/20 text-red-300 border-red-500/50' : 
+              feedback.type === 'success' ? 'bg-green-500/20 text-green-300 border-green-500/50' : 
+              feedback.type === 'hint' ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/50' :
+              'bg-blue-500/20 text-blue-300 border-blue-500/50'
+            }`}>
+              {feedback.message}
+            </div>
+          )}
+
+          {/* Current Expression */}
+          <div className="bg-gray-700/50 rounded-xl p-4 mb-6 border border-gray-600/50">
+            <div className="text-sm text-gray-400 mb-2">Current Expression</div>
+            <div className="text-xl md:text-2xl font-mono text-center min-h-8 bg-gray-800/30 rounded-lg p-3 border border-gray-600/30">
+              {gameState.currentExpression || 'Select numbers and operators...'}
+            </div>
+          </div>
+
+          {/* Numbers Grid */}
+          <div className="mb-6">
+            <div className="text-lg font-semibold text-center mb-4 text-gray-200">Available Numbers</div>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {gameState.numbers.map((num, index) => (
+                <button
+                  key={index}
+                  onClick={() => selectNumber(index)}
+                  disabled={gameState.usedIndices.includes(index)}
+                  className={`
+                    w-14 h-14 md:w-16 md:h-16 flex items-center justify-center
+                    text-lg md:text-xl font-bold rounded-xl transition-all duration-200
+                    border-2
+                    ${gameState.usedIndices.includes(index)
+                      ? 'bg-gray-600 text-gray-400 border-gray-500 cursor-not-allowed'
+                      : 'bg-gray-700/80 text-white border-gray-600 hover:bg-blue-600 hover:border-blue-400 hover:scale-105 cursor-pointer'
+                    }
+                  `}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Operators */}
+          <div className="mb-6">
+            <div className="text-lg font-semibold text-center mb-4 text-gray-200">Operators</div>
+            <div className="flex gap-3 justify-center">
+              {['+', '-', '*', '/'].map(op => (
+                <button
+                  key={`op-${op}`}
+                  onClick={() => addOperator(op)}
+                  className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center text-xl md:text-2xl font-bold rounded-xl bg-purple-600 text-white border-2 border-purple-400 hover:bg-purple-500 hover:scale-105 transition-all duration-200"
+                >
+                  {op}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3 justify-center">
             <button
-              key={index}
-              onClick={() => selectNumber(index)}
-              disabled={gameState.usedIndices.includes(index)}
-              className={`px-6 py-3 text-lg font-bold rounded-lg transition-all ${
-                gameState.usedIndices.includes(index)
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-blue-500 text-white hover:bg-blue-600'
-              }`}
+              onClick={submitSolution}
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
             >
-              {num}
+              Submit
             </button>
-          ))}
-        </div>
-
-        <div className="flex gap-2 mb-6">
-          {['+', '-', '*', '/'].map(op => (
             <button
-              key={`op-${op}`}
-              onClick={() => addOperator(op)}
-              className="px-6 py-3 text-lg font-bold rounded-lg bg-purple-500 text-white hover:bg-purple-600 transition-all"
+              onClick={clearInput}
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-500 hover:to-gray-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
             >
-              {op}
+              Clear
             </button>
-          ))}
+            <button
+              onClick={generateNewPuzzle}
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+            >
+              New Puzzle
+            </button>
+            <button
+              onClick={showHint}
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+            >
+              Hint
+            </button>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={submitSolution}
-            className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
-          >
-            Submit
-          </button>
-          <button
-            onClick={clearInput}
-            className={`${buttonStyle} bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-400 hover:to-gray-500 text-white`}
-          >
-            Clear
-          </button>
-          <button
-            onClick={generateNewPuzzle}
-            className={`${buttonStyle} bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white`}
-          >
-            New Puzzle
-          </button>
-          <button
-            onClick={showHint}
-            className={`${buttonStyle} bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white`}
-          >
-            Hint
-          </button>
+        {/* How to Play */}
+        <div className="bg-gray-800/50 rounded-2xl p-4 md:p-6 backdrop-blur-sm border border-gray-700">
+          <h2 className="text-xl md:text-2xl font-bold text-center mb-4 text-gray-200">How to Play</h2>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-300">
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Combine the given numbers with +, -, ×, ÷ operators</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Use each number exactly once</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Reach the target value to solve the puzzle</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Longer expressions and higher difficulties earn more points</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Complete before time runs out</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-400 mt-1">•</span>
+              <span>Use hints if you get stuck</span>
+            </li>
+          </ul>
         </div>
-      </div>
-
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">How to Play</h2>
-        <ul className="list-disc pl-5 space-y-1 text-gray-600">
-          <li>Combine the given numbers with +, -, ×, ÷ operators</li>
-          <li>Use each number exactly once</li>
-          <li>Reach the target value to solve the puzzle</li>
-          <li>Longer expressions and higher difficulties earn more points</li>
-        </ul>
       </div>
     </div>
   );

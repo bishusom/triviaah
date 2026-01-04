@@ -1,9 +1,11 @@
 // app/brainwave/page.tsx
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import { MdInfo } from 'react-icons/md';
-import DailyPuzzlesGrid from '@/components/daily/DailyPuzzlesGrid';
+import Link from 'next/link';
+import Image from 'next/image';
 import Ads from '@/components/common/Ads';
+import { BRAIN_WAVES } from '@/config/homeContent';
+import { Play, Boxes, Star, Clock, Users } from 'lucide-react';
 
 interface Puzzle {
   category: string;
@@ -28,7 +30,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs//brainwave/brainwave-trivia-og.webp',
+        url: '/imgs/brainwave/brainwave-trivia-og.webp',
         width: 1200,
         height: 630,
         alt: 'Brainwave Trivia Games - Play Now',
@@ -61,7 +63,7 @@ async function getDailyPuzzles() {
       category: 'plotle',
       name: 'Plotle',
       path: '/brainwave/plotle',
-      image: '/imgs/thumbnails/plotle-160x160.webp',
+      image: '/imgs/brainwave/plotle.webp',
       tagline: 'Guess the movie from its plot description in emojis',
       keywords: 'movie plot game, film trivia, movie guessing game'
       },
@@ -69,7 +71,7 @@ async function getDailyPuzzles() {
       category: 'capitale',
       name: 'Capitale',
       path: '/brainwave/capitale',
-      image: '/imgs/thumbnails/capitale-160x160.webp',
+      image: '/imgs/brainwave/capitale.webp',
       tagline: 'Guess world capitals in this challenging geography puzzle',
       keywords: 'capital cities game, geography puzzle, world capitals quiz'
       },
@@ -77,7 +79,7 @@ async function getDailyPuzzles() {
       category: 'historidle',
       name: 'Historidle',
       path: '/brainwave/historidle',
-      image: '/imgs/thumbnails/historidle-160x160.webp',
+      image: '/imgs/brainwave/historidle.webp',
       tagline: 'Guess the historical event from dates and other intriguing clues',
       keywords: 'history trivia game, historical events quiz, history guessing game'
       },
@@ -85,7 +87,7 @@ async function getDailyPuzzles() {
       category: 'celebrile',
       name: 'Celebrile',
       path: '/brainwave/celebrile',
-      image: '/imgs/thumbnails/celebrile-160x160.webp',
+      image: '/imgs/brainwave/celebrile.webp',
       tagline: 'Guess the celebrity from fun facts in this star-studded quiz',
       keywords: 'celebrity trivia game, famous people quiz, celebrity guessing game'    
       },
@@ -93,7 +95,7 @@ async function getDailyPuzzles() {
       category: 'songle',
       name: 'Songle',
       path: '/brainwave/songle',
-      image: '/imgs/thumbnails/songle-160x160.webp',
+      image: '/imgs/brainwave/songle.webp',
       tagline: 'Identify songs from lyrics snippets in this music challenge',
       keywords: 'music lyrics game, song trivia, music guessing challenge'
       },
@@ -101,7 +103,7 @@ async function getDailyPuzzles() {
       category: 'literale',
       name: 'Literale',
       path: '/brainwave/literale',
-      image: '/imgs/thumbnails/literale-160x160.webp',
+      image: '/imgs/brainwave/literale.webp',
       tagline: 'Guess the book from its opening line in this literary puzzle',
       keywords: 'book opening game, literature trivia, book guessing puzzle'
       },    
@@ -109,7 +111,7 @@ async function getDailyPuzzles() {
       category: 'creaturedle',
       name: 'Creaturedle',
       path: '/brainwave/creaturedle',
-      image: '/imgs/thumbnails/creaturedle-160x160.webp',
+      image: '/imgs/brainwave/creaturedle.webp',
       tagline: 'Identify animals and mystery creatures from interesting clues',
       keywords: 'animal trivia game, mystery creatures quiz, creature guessing challenge'
       },
@@ -117,7 +119,7 @@ async function getDailyPuzzles() {
       category: 'foodle',
       name: 'Foodle',
       path: '/brainwave/foodle',
-      image: '/imgs/thumbnails/foodle-160x160.webp',
+      image: '/imgs/brainwave/foodle.webp',
       tagline: 'Guess the food from its 6 attributes in this tasty puzzle',
       keywords: 'food trivia game, dish guessing quiz, cuisine puzzle challenge'
       },
@@ -125,7 +127,7 @@ async function getDailyPuzzles() {
       category: 'landmarkdle',
       name: 'Landmarkdle',
       path: '/brainwave/landmarkdle',
-      image: '/imgs/thumbnails/landmarkdle-160x160.webp',
+      image: '/imgs/brainwave/landmarkdle.webp',
       tagline: 'Identify famous landmarks from clues in this geography challenge',
       keywords: 'landmark trivia game, famous places quiz, landmark guessing challenge'
       },
@@ -133,7 +135,7 @@ async function getDailyPuzzles() {
       category: 'inventionle',
       name: 'Inventionle',
       path: '/brainwave/inventionle',
-      image: '/imgs/thumbnails/inventionle-160x160.webp',
+      image: '/imgs/brainwave/inventionle.webp',
       tagline: 'Guess the invention from historical clues and fun facts',
       keywords: 'invention trivia game, invention guessing quiz, historical inventions challenge'
       },
@@ -141,7 +143,7 @@ async function getDailyPuzzles() {
         category: 'automoble',
         name: 'Automoble',
         path: '/brainwave/automoble',
-        image: '/imgs/thumbnails/automoble-160x160.webp',
+        image: '/imgs/brainwave/automoble.webp',
         tagline: 'Guess the car from its unique characteristics in this automotive puzzle',
         keywords: 'car trivia game, automotive quiz, car guessing puzzle'
       },
@@ -149,7 +151,7 @@ async function getDailyPuzzles() {
         category: 'botanle',
         name: 'Botanle',
         path: '/brainwave/botanle',
-        image: '/imgs/thumbnails/botanle-160x160.webp',
+        image: '/imgs/brainwave/botanle.webp',
         tagline: 'Guess the plant from its unique characteristics in this botanical puzzle',
         keywords: 'plant trivia game, botanical quiz, plant guessing puzzle'
       },
@@ -157,7 +159,7 @@ async function getDailyPuzzles() {
         category: 'citadle',
         name: 'Citadle',
         path: '/brainwave/citadle',
-        image: '/imgs/thumbnails/citadle-160x160.webp',
+        image: '/imgs/brainwave/citadle.webp',
         tagline: 'Guess the city from its unique characteristics in this urban geography puzzle',
         keywords: 'city trivia game, urban geography quiz, city guessing puzzle'
       },
@@ -165,7 +167,7 @@ async function getDailyPuzzles() {
         category: 'countridle',
         name: 'Countridle',
         path: '/brainwave/countridle',
-        image: '/imgs/thumbnails/countridle-160x160.webp',
+        image: '/imgs/brainwave/countridle.webp',
         tagline: 'Guess the country from its unique characteristics in this global geography puzzle',
         keywords: 'country trivia game, world geography quiz, country guessing puzzle'
       },
@@ -173,7 +175,7 @@ async function getDailyPuzzles() {
       category: 'synonymle',
       name: 'Synonymle',
       path: '/brainwave/synonymle',
-      image: '/imgs/thumbnails/synonymle-160x160.webp',
+      image: '/imgs/brainwave/synonymle.webp',
       tagline: 'Guess the word based on semantic similarity and synonyms',
       keywords: 'synonymle, word puzzle, daily word, wordle vocabulary, synonym game, semantic game'
       },
@@ -181,11 +183,67 @@ async function getDailyPuzzles() {
       category: 'trordle',
       name: 'Trordle',
       path: '/brainwave/trordle',
-      image: '/imgs/thumbnails/trordle-160x160.webp',
+      image: '/imgs/brainwave/trordle.webp',
       tagline: 'Wordle-inspired trivia challenges for curious minds',
       keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
       }
  ];
+}
+
+// Gaming-style puzzle card matching the trivias page design
+function PuzzleCard({ puzzle, index }: { puzzle: Puzzle; index: number }) {
+  return (
+    <Link
+      key={puzzle.category}
+      href={puzzle.path}
+      className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
+    >
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      
+      {/* Glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+      
+      {/* Puzzle Image */}
+      <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">  
+        <Image
+          src={puzzle.image}
+          alt={puzzle.name}
+          fill
+          className="object-contain transition-all duration-500 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          loading={index < 8 ? "eager" : "lazy"}
+          priority={index < 4}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+        
+        {/* Play button overlay */}
+        <div className="absolute bottom-4 right-4 w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+          <Play className="w-5 h-5 text-white" />
+        </div>
+
+        {/* Puzzle number badge */}
+        <div className="absolute top-4 left-4 bg-black/70 text-white text-sm font-semibold px-3 py-1 rounded-full">
+          #{index + 1}
+        </div>
+      </div>
+      
+      {/* Puzzle Content */}
+      <div className="p-6 relative z-10">
+        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-cyan-300 transition-colors">
+          {puzzle.name}
+        </h3>
+        <p className="text-sm text-gray-300 line-clamp-2">
+          {puzzle.tagline}
+        </p>
+        
+        {/* Progress bar effect */}
+        <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 w-0 group-hover:w-full transition-all duration-700" />
+        </div>
+      </div>
+    </Link>
+  );
 }
 
 export default async function DailyQuizzesPage() {
@@ -193,23 +251,55 @@ export default async function DailyQuizzesPage() {
   const currentDate = new Date();
   
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Structured Data for SEO */}
-      <StructuredData puzzles={dailyPuzzles} currentDate={currentDate} />
-
-      <main className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Structured Data for SEO */}
+        <StructuredData puzzles={dailyPuzzles} currentDate={currentDate} />
+        
         {/* Hero Section */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-            Brainwave Trivia Games <span className="text-blue-600">(Creative Challenges)</span>
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Exercise your mind with our creative trivia puzzles including <strong>word games, movie plots, song lyrics, and geography challenges</strong>. 
-          </p>
+        <div className="text-center mb-12">
+          <div className="flex justify-center items-center gap-3 mb-4">
+            <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-2xl">
+              <Star className="text-4xl text-white" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Brainwave Games
+            </h1>
+          </div>
           
+          <div className="max-w-3xl mx-auto">  
+            <span className="block text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-xl md:text-2xl mt-2">
+                Creative Daily Puzzle Challenges
+              </span>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              Challenge your mind with our collection of creative trivia puzzles. 
+              From word games to geography challenges, each game offers a unique twist on traditional trivia.
+            </p>
+            
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto mb-8 py-4">
+            <div className="bg-gray-800 rounded-xl p-2 border border-gray-700 text-center">
+              <Boxes className="text-2xl text-cyan-400 mx-auto mb-2" />
+              <div className="text-white font-bold text-xl">{dailyPuzzles.length}</div>
+              <div className="text-gray-400 text-sm">Games</div>
+            </div>
+            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
+              <Clock className="text-2xl text-yellow-400 mx-auto mb-2" />
+              <div className="text-white font-bold text-xl">Daily</div>
+              <div className="text-gray-400 text-sm">Challenges</div>
+            </div>
+            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
+              <Users className="text-2xl text-green-400 mx-auto mb-2" />
+              <div className="text-white font-bold text-xl">Free</div>
+              <div className="text-gray-400 text-sm">To Play</div>
+            </div>
+          </div>
+
           {/* Last Updated Date */}
-          <div className="mt-4 text-center">
-            <p className="text-sm text-gray-500">
+          <div className="text-center">
+            <p className="text-sm text-gray-500 bg-gray-800/50 rounded-lg px-4 py-2 inline-block border border-gray-700">
               Last updated: {currentDate.toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
@@ -219,132 +309,171 @@ export default async function DailyQuizzesPage() {
           </div>
         </div>
 
-        {/* Brainwave Grid - Client-side component */}
-        <DailyPuzzlesGrid quizzes={dailyPuzzles} />
+        <div className="py-4">
+          <Ads format="horizontal" isMobileFooter={false} className="lg:hidden" />
+        </div>
 
-        {/* Ads Section */}
-        <div className="max-w-3xl mx-auto p-6">
-          <Ads format="horizontal" style={{ width: '100%', height: '90px' }} />
+        {/* Mobile: Vertical Scroll Layout (Single Column) */}
+        <div className="lg:hidden mb-16">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">All Brainwave Games</h2>
+          <div className="grid grid-cols-1 gap-6">
+            {dailyPuzzles.map((puzzle, index) => (
+              <PuzzleCard key={puzzle.category} puzzle={puzzle} index={index} />
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: Grid Layout */}
+        <div className="hidden lg:block mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {dailyPuzzles.map((puzzle, index) => (
+              <PuzzleCard key={puzzle.category} puzzle={puzzle} index={index} />
+            ))}
+          </div>
+        </div>
+
+        <div className="py-4">
+          <Ads format="horizontal" isMobileFooter={false} className="lg:hidden" />
         </div>
         
-        {/* How It Works Section */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-            <MdInfo className="mr-2 text-blue-600" />
-            How Brainwave Games Work
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="border-l-4 border-purple-500 pl-4">
-              <h3 className="font-bold text-gray-800 mb-2">Creative Challenges</h3>
-              <p className="text-gray-600">
-                Each game offers a unique twist on traditional trivia with puzzle elements.
-              </p>
+        {/* Gaming Features Section */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">Why Players Love Brainwave</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-2xl p-6 border border-cyan-500/20 text-center">
+              <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🎯</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Creative Challenges</h3>
+              <p className="text-gray-300">Unique twists on traditional trivia with innovative puzzle mechanics</p>
             </div>
-            <div className="border-l-4 border-purple-500 pl-4">
-              <h3 className="font-bold text-gray-800 mb-2">No Daily Limits</h3>
-              <p className="text-gray-600">
-                Play brainwave games as much as you want - they&apos;re always available!
-              </p>
+            
+            <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-6 border border-purple-500/20 text-center">
+              <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">⚡</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">No Daily Limits</h3>
+              <p className="text-gray-300">Play anytime, anywhere - all games are always available!</p>
             </div>
-            <div className="border-l-4 border-purple-500 pl-4">
-              <h3 className="font-bold text-gray-800 mb-2">Progressive Difficulty</h3>
-              <p className="text-gray-600">
-                Challenges get progressively harder as you advance through levels.
-              </p>
+            
+            <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20 text-center">
+              <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🧠</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Learn & Grow</h3>
+              <p className="text-gray-300">Expand your knowledge across multiple topics while having fun</p>
             </div>
-            <div className="border-l-4 border-purple-500 pl-4">
-              <h3 className="font-bold text-gray-800 mb-2">Share Your Achievements</h3>
-              <p className="text-gray-600">
-                Brag about your puzzle-solving skills with friends and family.
-              </p>
+            
+            <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl p-6 border border-orange-500/20 text-center">
+              <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🏆</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Share Results</h3>
+              <p className="text-gray-300">Challenge friends and share your achievements on social media</p>
             </div>
           </div>
         </div>
 
-        {/* FAQ Section */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="font-semibold text-lg mb-2">What are Brainwave games?</h3>
-              <p className="text-gray-700">
-                Brainwave games are creative daily puzzle challenges that combine trivia with unique gameplay mechanics. 
-                Each game focuses on a specific theme like geography, movies, music, or literature, offering a fresh 
-                challenge every day to test your knowledge and problem-solving skills.
-              </p>
-            </div>
-            
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="font-semibold text-lg mb-2">Are these games free to play?</h3>
-              <p className="text-gray-700">
-                Yes! All Brainwave games are completely free to play. No registration, no subscriptions, 
-                and no hidden fees. You can enjoy all our daily puzzle challenges without any cost.
-              </p>
-            </div>
-            
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="font-semibold text-lg mb-2">How often are new puzzles available?</h3>
-              <p className="text-gray-700">
-                Each Brainwave game features a new challenge every day. The puzzles reset at midnight local time, 
-                giving you fresh content to enjoy daily. You can play previous days&apos; puzzles if you miss them.
-              </p>
-            </div>
-            
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="font-semibold text-lg mb-2">Can I play on mobile devices?</h3>
-              <p className="text-gray-700">
-                Absolutely! All Brainwave games are fully responsive and work perfectly on smartphones, tablets, 
-                and desktop computers. The interface adapts to your screen size for the best playing experience.
-              </p>
-            </div>
-            
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="font-semibold text-lg mb-2">What if I can&apos;t solve a puzzle?</h3>
-              <p className="text-gray-700">
-                Don&apos;t worry! Each game provides hints and progressive clues to help you solve challenging puzzles. 
-                You can also share the puzzle with friends to collaborate, or check back the next day for the solution.
-              </p>
-            </div>
-            
-            <div className="pb-2">
-              <h3 className="font-semibold text-lg mb-2">Can I share my results?</h3>
-              <p className="text-gray-700">
-                Yes! After completing each Brainwave game, you&apos;ll have the option to share your results on social media 
-                and challenge your friends to beat your score. It&apos;s a great way to compete and learn together.
-              </p>
-            </div>
+        {/* FAQ Section - Gaming Style */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              {
+                question: "What are Brainwave games?",
+                answer: "Brainwave games are creative daily puzzle challenges that combine trivia with unique gameplay mechanics. Each game focuses on a specific theme like geography, movies, music, or literature."
+              },
+              {
+                question: "Are these games free to play?",
+                answer: "Yes! All Brainwave games are completely free to play. No registration, no subscriptions, and no hidden fees. You can enjoy all our daily puzzle challenges without any cost."
+              },
+              {
+                question: "How often are new puzzles available?",
+                answer: "Each Brainwave game features a new challenge every day. The puzzles reset at midnight local time, giving you fresh content to enjoy daily."
+              },
+              {
+                question: "Can I play on mobile devices?",
+                answer: "Absolutely! All Brainwave games are fully responsive and work perfectly on smartphones, tablets, and desktop computers. Play anytime, anywhere."
+              },
+              {
+                question: "What if I can't solve a puzzle?",
+                answer: "Don't worry! Each game provides hints and progressive clues to help you solve challenging puzzles. You can also share the puzzle with friends to collaborate."
+              },
+              {
+                question: "Can I share my results?",
+                answer: "Yes! After completing each Brainwave game, you'll have the option to share your results on social media and challenge your friends to beat your score."
+              }
+            ].map((faq, index) => (
+              <div key={index} className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
+                <h3 className="font-semibold text-lg text-white mb-3">{faq.question}</h3>
+                <p className="text-gray-300">{faq.answer}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* SEO-Friendly Content */}
-        <section className="prose max-w-none mb-12">
-          <h2 className="text-2xl font-bold text-gray-800">Brainwave Trivia Challenges</h2>
-          <p>
-            Our <strong>brainwave trivia games</strong> offer creative twists on traditional trivia with puzzle elements that challenge different cognitive skills. 
-            Each game focuses on a specific type of knowledge and problem-solving:
-          </p>
-          <ul>
-            <li><strong>Capitale</strong>: Geography puzzle where you guess world capitals</li>
-            <li><strong>Plotle</strong>: Movie trivia game where you identify films from plot descriptions</li>
-            <li><strong>Songle</strong>: Music challenge where you guess songs from lyrics snippets</li>
-            <li><strong>Trordle</strong>: Wordle-inspired trivia with multiple categories</li>
-          </ul>
-          
-          <h3>Why Players Love Our Brainwave Games:</h3>
-          <ul>
-            <li>Perfect for <strong>developing problem-solving skills</strong></li>
-            <li>Great for <strong>music, movie and geography enthusiasts</strong></li>
-            <li>Learn <strong>through engaging gameplay</strong> rather than memorization</li>
-          </ul>
+        {/* SEO Content Section */}
+        <section className="bg-gray-800 rounded-2xl p-8 mb-12 border border-gray-700">
+          <div className="prose prose-invert max-w-none">
+            <h2 className="text-3xl font-bold text-white mb-6">Brainwave Trivia Challenges</h2>
+            <p className="text-lg text-gray-300 mb-6">
+              Our <strong className="text-cyan-400">brainwave trivia games</strong> offer creative twists on traditional trivia with puzzle elements 
+              that challenge different cognitive skills and knowledge domains.
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-xl font-bold text-white mb-4">Popular Game Categories</h3>
+                <ul className="space-y-3 text-gray-300">
+                  <li className="flex items-start">
+                    <span className="text-cyan-400 font-bold mr-2">•</span>
+                    <span><strong>Capitale</strong>: Geography puzzle where you guess world capitals</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-purple-400 font-bold mr-2">•</span>
+                    <span><strong>Plotle</strong>: Movie trivia game identifying films from plot descriptions</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-400 font-bold mr-2">•</span>
+                    <span><strong>Songle</strong>: Music challenge guessing songs from lyrics snippets</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-yellow-400 font-bold mr-2">•</span>
+                    <span><strong>Trordle</strong>: Wordle-inspired trivia with multiple categories</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-bold text-white mb-4">Why Players Love Brainwave</h3>
+                <ul className="space-y-3 text-gray-300">
+                  <li className="flex items-start">
+                    <span className="text-cyan-400 font-bold mr-2">✓</span>
+                    <span>Perfect for <strong>developing problem-solving skills</strong></span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-400 font-bold mr-2">✓</span>
+                    <span>Great for <strong>music, movie and geography enthusiasts</strong></span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-purple-400 font-bold mr-2">✓</span>
+                    <span>Learn <strong>through engaging gameplay</strong> rather than memorization</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-yellow-400 font-bold mr-2">✓</span>
+                    <span><strong>Daily challenges</strong> keep your mind sharp and engaged</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </section>
-      </main>
+      </div>
     </div>
   );
 }
 
-// Structured Data Component for SEO
+// Structured Data Component for SEO (unchanged)
 function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDate: Date }) {
   const structuredData = {
     "@context": "https://schema.org",
@@ -386,7 +515,7 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
         },
         "primaryImageOfPage": {
           "@type": "ImageObject",
-          "url": "https://triviaah.com/imgs/thumbnails/brainwave-trivia-og.webp",
+          "url": "https://triviaah.com/imgs/brainwave/brainwave-trivia-og.webp",
           "width": 1200,
           "height": 630
         }

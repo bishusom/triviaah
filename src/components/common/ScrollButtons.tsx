@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { MoveUp, MoveDown } from 'lucide-react';
 
 export default function ScrollButtons() {
   const [showTop, setShowTop] = useState(false);
@@ -35,7 +35,7 @@ export default function ScrollButtons() {
           className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
           aria-label="Scroll to top"
         >
-          <FaArrowUp />
+          <MoveUp />
         </button>
       )}
       {showBottom && (
@@ -44,7 +44,7 @@ export default function ScrollButtons() {
           className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
           aria-label="Scroll to bottom"
         >
-          <FaArrowDown />
+          <MoveDown />
         </button>
       )}
     </div>

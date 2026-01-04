@@ -42,8 +42,10 @@ const OptionButton: React.FC<OptionProps> = ({ children, onClick, disabled, clas
   <button
     className={
       className ??
-      `px-6 py-3 text-lg font-bold rounded-lg transition-all ${
-        disabled ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'
+      `px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+        disabled 
+          ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+          : 'bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl'
       }`
     }
     onClick={onClick}
@@ -52,8 +54,6 @@ const OptionButton: React.FC<OptionProps> = ({ children, onClick, disabled, clas
     {children}
   </button>
 );
-
-const buttonStyle = "px-6 md:px-3 py-2 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] text-center"
 
 export default function NumberSequenceGame() {
   const [gameState, setGameState] = useState<GameState>({
@@ -107,7 +107,7 @@ export default function NumberSequenceGame() {
     }
   }, []);
 
-  // Sequence generators
+  // Sequence generators (unchanged)
   const generateArithmeticSequence = useCallback((): SequenceType => {
     const start = Math.floor(Math.random() * 10) + 1;
     const difference = Math.floor(Math.random() * 6) + 2;
@@ -173,7 +173,7 @@ export default function NumberSequenceGame() {
     const options: OptionState[] = [{
       value: correctAnswer,
       disabled: false,
-      className: 'bg-blue-500 text-white hover:bg-blue-600 px-6 py-3 text-lg font-bold rounded-lg transition-all'
+      className: 'bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105'
     }];
     
     while (options.length < 4) {
@@ -189,7 +189,7 @@ export default function NumberSequenceGame() {
         options.push({
           value: wrongAnswer,
           disabled: false,
-          className: 'bg-blue-500 text-white hover:bg-blue-600 px-6 py-3 text-lg font-bold rounded-lg transition-all'
+          className: 'bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105'
         });
       }
     }
@@ -232,19 +232,18 @@ export default function NumberSequenceGame() {
   ]);
 
   const generateNewPuzzle = useCallback(() => {
-    // Clear existing timer
     if (timerIntervalRef.current) {
       clearInterval(timerIntervalRef.current);
     }
 
     const { sequence, answer, description } = generateSequenceData(gameState.level);
     const displayElements = sequence.map((num, index) => (
-      <span key={index} className="px-4 py-2 text-lg font-semibold bg-gray-200 rounded-lg">
+      <span key={index} className="px-6 py-3 text-xl text-white font-bold bg-gradient-to-br from-gray-600 to-gray-800 rounded-xl shadow-md border border-gray-300">
         {num}
       </span>
     ));
     displayElements.push(
-      <span key={sequence.length} className="px-4 py-2 text-lg font-semibold bg-gray-300 rounded-lg text-gray-500">
+      <span key={sequence.length} className="px-6 py-3 text-xl text-white font-bold bg-gradient-to-br from-blue-300 to-blue-400 rounded-xl shadow-md border border-blue-300 animate-pulse">
         ?
       </span>
     );
@@ -265,7 +264,6 @@ export default function NumberSequenceGame() {
       hintText: "",
     }));
 
-    // Start timer
     timerIntervalRef.current = setInterval(() => {
       setGameState(prev => {
         const newTimeLeft = Math.max(0, prev.timeLeft - 1);
@@ -274,15 +272,13 @@ export default function NumberSequenceGame() {
             clearInterval(timerIntervalRef.current);
             timerIntervalRef.current = null;
           }
-          // Handle time expiration
           setGameState(prevState => ({ 
             ...prevState, 
             feedbackText: "Time's up!", 
-            feedbackClass: "bg-red-100 text-red-700" 
+            feedbackClass: "bg-gradient-to-r from-red-100 to-red-200 text-red-800 border border-red-300" 
           }));
           playSound('error');
           
-          // Schedule new puzzle after delay
           setTimeout(() => {
             generateNewPuzzle();
           }, 2000);
@@ -313,7 +309,7 @@ export default function NumberSequenceGame() {
     setGameState(prev => ({
       ...prev,
       feedbackText: `Correct! Well done! (+${points} points)`,
-      feedbackClass: "bg-green-100 text-green-700",
+      feedbackClass: "bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300",
     }));
     playSound('found');
     playSound('win');
@@ -326,7 +322,6 @@ export default function NumberSequenceGame() {
     (selected: number) => {
       playSound("select");
 
-      // Disable all options immediately and show visual feedback
       setGameState(prev => ({
         ...prev,
         options: prev.options.map(option => ({
@@ -334,12 +329,12 @@ export default function NumberSequenceGame() {
           disabled: true,
           className: option.value === selected 
             ? (option.value === correctAnswerRef.current 
-                ? 'bg-green-100 text-green-700 px-6 py-3 text-lg font-bold rounded-lg transition-all cursor-not-allowed'
-                : 'bg-red-100 text-red-700 px-6 py-3 text-lg font-bold rounded-lg transition-all cursor-not-allowed'
+                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 cursor-not-allowed'
+                : 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 cursor-not-allowed'
               )
             : (option.value === correctAnswerRef.current
-                ? 'bg-green-100 text-green-700 px-6 py-3 text-lg font-bold rounded-lg transition-all cursor-not-allowed'
-                : 'bg-gray-300 text-gray-500 px-6 py-3 text-lg font-bold rounded-lg transition-all cursor-not-allowed'
+                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 cursor-not-allowed'
+                : 'bg-gray-200 text-gray-400 px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 cursor-not-allowed'
               )
         }))
       }));
@@ -350,11 +345,10 @@ export default function NumberSequenceGame() {
         setGameState(prev => ({
           ...prev,
           feedbackText: "Incorrect. Try again!",
-          feedbackClass: "bg-red-100 text-red-700",
+          feedbackClass: "bg-gradient-to-r from-red-100 to-red-200 text-red-800 border border-red-300",
         }));
         playSound("error");
         
-        // Re-enable options after a delay for another try
         setTimeout(() => {
           setGameState(prev => ({
             ...prev,
@@ -363,7 +357,7 @@ export default function NumberSequenceGame() {
             options: prev.options.map(option => ({
               ...option,
               disabled: false,
-              className: 'bg-blue-500 text-white hover:bg-blue-600 px-6 py-3 text-lg font-bold rounded-lg transition-all'
+              className: 'bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105'
             }))
           }));
         }, 1000);
@@ -425,70 +419,114 @@ export default function NumberSequenceGame() {
   }, [generateNewPuzzle]);
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">Number Sequence - Guess the next number?</h1>
-      <p className="text-gray-600 mb-6">Identify the pattern and select the next number</p>
-
-      <div className="flex justify-between items-center mb-6">
-        <div className="text-lg font-semibold">Level: {gameState.level}</div>
-        <div className={`text-lg font-semibold ${gameState.timeLeft <= 10 ? 'text-red-600 animate-pulse' : ''}`}>
-          Time: {formatTime(gameState.timeLeft)}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-slate-900 py-8 px-4">
+      <div className="bg-black backdrop-blur-sm rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto border border-gray/60">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
+            Number Sequence
+          </h1>
+          <p className="text-gray-300 text-lg">Identify the pattern and select the next number</p>
         </div>
-        <div className="text-lg font-semibold">Score: {gameState.score}</div>
-      </div>
 
-      <div className="flex flex-wrap gap-2 mb-6">{gameState.sequenceDisplay}</div>
-
-      {gameState.hintText && (
-        <div className="p-4 rounded-lg mb-4 font-mono text-lg bg-blue-50 text-blue-700">
-          {gameState.hintText}
+        {/* Stats Bar */}
+        <div className="flex justify-between items-center mb-8 p-6 bg-gray-800/50 rounded-2xl shadow-inner border border-blue-100/50">
+          <div className="text-center">
+            <div className="text-sm text-gray-500 font-medium">Level</div>
+            <div className="text-2xl font-bold text-blue-600">{gameState.level}</div>
+          </div>
+          <div className="text-center">
+            <div className="text-sm text-gray-500 font-medium">Time</div>
+            <div className={`text-2xl font-bold ${gameState.timeLeft <= 10 ? 'text-red-600 animate-pulse' : 'text-purple-600'}`}>
+              {formatTime(gameState.timeLeft)}
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="text-sm text-gray-500 font-medium">Score</div>
+            <div className="text-2xl font-bold text-green-600">{gameState.score}</div>
+          </div>
         </div>
-      )}
 
-      <div className="flex flex-wrap gap-2 mb-6">
-        {gameState.options.map((option, index) => (
-          <OptionButton
-            key={index}
-            onClick={() => checkAnswer(option.value)}
-            disabled={option.disabled}
-            className={option.className}
+        {/* Sequence Display */}
+        <div className="flex flex-wrap justify-center gap-3 mb-8 p-6 bg-gray-800/50 rounded-2xl shadow-lg border border-gray-100">
+          {gameState.sequenceDisplay}
+        </div>
+
+        {/* Hint */}
+        {gameState.hintText && (
+          <div className="p-4 rounded-2xl mb-6 font-mono text-lg bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700 border border-blue-200 shadow-sm">
+            💡 {gameState.hintText}
+          </div>
+        )}
+
+        {/* Options Grid */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          {gameState.options.map((option, index) => (
+            <OptionButton
+              key={index}
+              onClick={() => checkAnswer(option.value)}
+              disabled={option.disabled}
+              className={option.className}
+            >
+              {option.value}
+            </OptionButton>
+          ))}
+        </div>
+
+        {/* Feedback */}
+        {gameState.feedbackText && (
+          <div className={`p-4 rounded-2xl mb-6 font-semibold text-lg text-center shadow-lg ${gameState.feedbackClass}`}>
+            {gameState.feedbackText}
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="flex gap-4 mb-8">
+          <button
+            onClick={showHint}
+            className="flex-1 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
           >
-            {option.value}
-          </OptionButton>
-        ))}
-      </div>
-
-      {gameState.feedbackText && (
-        <div className={`p-4 rounded-lg mb-4 font-mono text-lg ${gameState.feedbackClass}`}>
-          {gameState.feedbackText}
+            💡 Show Hint
+          </button>
+          <button
+            onClick={initGame}
+            className="flex-1 px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-2xl hover:from-emerald-600 hover:to-green-600 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
+          >
+            🎮 New Game
+          </button>
         </div>
-      )}
 
-      <div className="flex gap-2 mb-6">
-        <button
-          onClick={showHint}
-          className={`${buttonStyle} bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-amber-400 hover:to-amber-500 text-white`}
-        >
-          Show Hint
-        </button>
-        <button
-          onClick={initGame}
-          className={`${buttonStyle} bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white`}
-        >
-          New Game
-        </button>
-      </div>
-
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">How to Play</h2>
-        <ul className="list-disc pl-5 space-y-1 text-gray-600">
-          <li>Identify the pattern in the number sequence</li>
-          <li>Select the correct next number from the options</li>
-          <li>Correct answers earn points based on your level</li>
-          <li>Each correct answer advances you to the next level</li>
-          <li>Higher levels feature more complex patterns</li>
-          <li>Use hints if you get stuck (but try without first!)</li>
-        </ul>
+        {/* Instructions */}
+        <div className="mt-8 p-6 bg-gradient-to-r from-gray-500 to-gray-800 text-white rounded-2xl border border-gray-200">
+          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+            <span>🎯</span> How to Play
+          </h2>
+          <div className="grid md:grid-cols-2 gap-3">
+            <div className="flex items-start gap-2">
+              <span className="text-orange-500 font-bold">•</span>
+              <span>Identify the pattern in the number sequence</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-orange-500 font-bold">•</span>
+              <span>Select the correct next number from the options</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-orange-500 font-bold">•</span>
+              <span>Correct answers earn points based on your level</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-orange-500 font-bold">•</span>
+              <span>Each correct answer advances you to the next level</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-orange-500 font-bold">•</span>
+              <span>Higher levels feature more complex patterns</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-orange-500 font-bold">•</span>
+              <span>Use hints if you get stuck (but try without first!)</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
