@@ -66,6 +66,7 @@ export default function HomePageContent() {
         <div className="bg-gray-900 dark:bg-gray-800">
           <div className="container mx-auto px-4 py-3">
             <Ads 
+              slot='9040722315'
               format="fluid" 
               className="rounded-xl shadow-smooth"
               style={{ width: '100%', height: '90px' }} 
@@ -87,6 +88,7 @@ export default function HomePageContent() {
         <div className="bg-gray-900 dark:bg-gray-800 py-6">
           <div className="container mx-auto px-4">
             <Ads 
+              slot='8810472236'
               format="fluid" 
               className="rounded-xl shadow-smooth"
               style={{ width: '100%', height: '90px' }} 
