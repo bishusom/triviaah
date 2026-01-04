@@ -357,7 +357,9 @@ export default function WordGamesClientPage() {
 
           {/* Gaming Features Section */}
           <div className="mb-16">
+            {/* Only one ad allowed per page
             <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
+            */}
             <h2 className="text-3xl font-bold text-white text-center mb-8">Why Players Love Word Games</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20 text-center">

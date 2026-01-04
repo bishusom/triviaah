@@ -266,10 +266,12 @@ export default async function DailyQuizzesPage() {
           </div>
         </div>
 
-         <div className="py-4">
+        {/* Only one ad allowed per page
+        <div className="py-4">
           <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
         </div>
-        
+        */}
+
         {/* Gaming Features Section */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-white text-center mb-8">How Daily Quizzes Work</h2>
