@@ -367,10 +367,12 @@ export default function NumberPuzzlesPage() {
             </div>
           </div>
 
+          {/* Only one ad allowed per page
           <div className="py-4">
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
-
+          */}
+            
           {/* Puzzles Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-16">
             {numberPuzzles.map((puzzle, index) => (
