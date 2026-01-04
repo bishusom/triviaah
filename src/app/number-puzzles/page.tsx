@@ -368,7 +368,7 @@ export default function NumberPuzzlesPage() {
           </div>
 
           <div className="py-4">
-            <Ads format="horizontal" isMobileFooter={false} className="lg:hidden" />
+            <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
 
           {/* Puzzles Grid */}
@@ -379,7 +379,7 @@ export default function NumberPuzzlesPage() {
           </div>
 
           <div className="py-4">
-            <Ads format="horizontal" isMobileFooter={false} className="lg:hidden" />
+            <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
           </div>
 
           {/* Gaming Features Section */}
