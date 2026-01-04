@@ -1,10 +1,10 @@
 // app/layout.tsx (fixed)
 import { Geist } from 'next/font/google';
-import { AuthProvider } from '@/context/AuthContext';
+import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { SpeedInsights } from '@vercel/speed-insights/next'; // Add this import
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
-import { SoundProvider } from '@/context/SoundContext';
+import { SoundProvider } from '@/context/SoundContext';;
 import { Metadata } from 'next';
 import './globals.css';
 
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/triviaah-og.webp',
+        url: '/imgs/Triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'Triviaah - Free Daily Trivia & Quiz Games'
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Triviaah: Free Daily Trivia & Quiz Games',
     description: 'Play free daily trivia challenges across 20+ categories. New questions every 24 hours!',
-    images: ['/imgs/triviaah-og.webp'],
+    images: ['/imgs/Triviaah-og.webp'],
   },
 };
 
@@ -122,23 +122,42 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
 
       <body className={`${geist.variable} font-[Geist,Geist-fallback] overflow-x-hidden`}>
-        <AuthProvider>
-          <SoundProvider>
-            <Breadcrumbs />
-            <div className="w-full overflow-x-hidden">
-              {children}
-            </div>
-            <SeoBreadcrumbs />
-            
-            {/* Google Analytics - only load in production */}
-            {isProduction && <GoogleAnalytics gaId="G-K4KZ7XR85V" />}
-            
-            {/* Vercel Speed Insights */}
-            {isProduction && <SpeedInsights />}
-
-        </SoundProvider>    
-        </AuthProvider>
-
+        <SoundProvider>
+          <Breadcrumbs />
+          <div className="w-full overflow-x-hidden">
+            {children}
+          </div>
+          <SeoBreadcrumbs />
+          
+          {/* Google Analytics - only load in production */}
+          {isProduction && <GoogleAnalytics gaId="G-K4KZ7XR85V" />}
+          
+          {/* Vercel Speed Insights */}
+          {isProduction && <SpeedInsights />}
+          
+          {/* AdSense Configuration */}
+          {isProduction && (
+            <>
+              <Script
+                id="adsense-config"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    (window.adsbygoogle = window.adsbygoogle || []).push({
+                      google_ad_client: "ca-pub-4386714040098164",
+                      enable_page_level_ads: false
+                    });
+                  `,
+                }}
+              />
+              <Script
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164"
+                strategy="lazyOnload"
+                crossOrigin="anonymous"
+              />
+            </>
+          )}
+        </SoundProvider>
       </body>
     </html>
   );
