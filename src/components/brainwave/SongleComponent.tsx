@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
 import { useSound } from '@/context/SoundContext';
@@ -11,7 +12,7 @@ import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { useCoverArt } from '@/hooks/useCoverArt';
 import { SonglePuzzle, addSongleResult } from '@/lib/brainwave/songle/songle-sb';
 import { checkSongleGuess, SongleGuessResult, getProgressiveClues } from '@/lib/brainwave/songle/songle-logic';
-import { Music, Target, Users, Search, Sparkles, Eye, EyeOff, Flame, Mic } from 'lucide-react';
+import { Home, Brain, Music, Target, Users, Search, Sparkles, Eye, EyeOff, Flame, Mic } from 'lucide-react';
 
 interface SongleComponentProps {
   initialData: SonglePuzzle;
@@ -933,6 +934,23 @@ export default function SongleComponent({ initialData }: SongleComponentProps) {
                 hardMode
               }}
             />
+
+            {/* Navigation Buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mt-4 w-full">
+              <Link href="/"
+                className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-br from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
+              >
+                <Home className="text-lg md:text-xl" />
+                Home
+              </Link>
+
+              <Link href="/brainwave"
+                  className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
+                >
+                  <Brain className="w-4 h-4" />
+                  More Brain Teasers
+              </Link>
+            </div>
           </div>
         )}
         </div>

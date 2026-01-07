@@ -9,7 +9,8 @@ import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { fetchWikimediaImage } from '@/lib/wikimedia';
 import { addLandmarkResult, type LandmarkPuzzle } from '@/lib/brainwave/landmarkdle/landmarkdle-sb';
 import { checkLandmarkGuess, type LandmarkGuessResult } from '@/lib/brainwave/landmarkdle/landmarkdle-logic';
-import { Building, Target, Users, Search, Sparkles, Eye, EyeOff, Flame, MapPin } from 'lucide-react';
+import { Home, Brain, Building, Target, Users, Search, Sparkles, Eye, EyeOff, Flame, MapPin } from 'lucide-react';
+import Link from 'next/link';
 
 interface LandmarkdleComponentProps {
   initialData: { puzzle: LandmarkPuzzle };
@@ -927,6 +928,23 @@ export default function LandmarkdleComponent({ initialData }: LandmarkdleCompone
                 hardMode
               }}
             />
+
+            {/* Navigation Buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mt-4 w-full">
+              <Link href="/"
+                className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-br from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
+              >
+                <Home className="text-lg md:text-xl" />
+                Home
+              </Link>
+
+              <Link href="/brainwave"
+                  className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
+                >
+                  <Brain className="w-4 h-4" />
+                  More Brain Teasers
+              </Link>
+            </div>
           </div>
         )}
         </div>

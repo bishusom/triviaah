@@ -14,7 +14,8 @@ import {
 } from '@/lib/brainwave/celebrile/celebrile-logic';
 import { fetchWikimediaImage } from '@/lib/wikimedia';
 import Image from 'next/image';
-import { User, Target, Users, Clock, Trophy, Star, Sparkles, Eye, EyeOff, Search, Zap } from 'lucide-react';
+import { Home, Brain, User, Target, Users, Clock, Trophy, Star, Sparkles, Eye, EyeOff, Search, Zap } from 'lucide-react';
+import Link from 'next/link';
 
 interface CelebrileComponentProps {
   initialData: CelebrileData;
@@ -878,6 +879,23 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
                 correctAnswerCategory: puzzleData.category
               }}
             />
+
+            {/* Navigation Buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mt-4 w-full">
+              <Link href="/"
+                className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-br from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
+              >
+                <Home className="text-lg md:text-xl" />
+                Home
+              </Link>
+
+              <Link href="/brainwave"
+                  className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
+                >
+                  <Brain className="w-4 h-4" />
+                  More Brain Teasers
+              </Link>
+            </div>
           </div>
         )}
       </div>

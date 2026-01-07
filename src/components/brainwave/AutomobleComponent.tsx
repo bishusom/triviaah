@@ -11,6 +11,8 @@ import { AutomoblePuzzle, addAutomobleResult } from '@/lib/brainwave/automoble/a
 import { checkCarGuess, CarGuessResult, validateCarGuess, getDifficultyColor, getDifficultyLabel, getCategoryEmoji, getEraEmoji } from '@/lib/brainwave/automoble/automoble-logic';
 import { fetchWikimediaImage } from '@/lib/wikimedia';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Home, Brain } from 'lucide-react';
 
 interface AutomobleComponentProps {
   initialData: AutomoblePuzzle;
@@ -950,6 +952,26 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
                 difficulty: puzzleData.difficulty
               }}
             />
+
+            {/* Navigation Buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mt-4 w-full">
+              <Link href="/">
+                <button
+                  className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 text-white rounded-2xl hover:from-gray-800 hover:to-gray-900 transition-all duration-300 transform hover:scale-105 font-semibold border border-gray-600"
+                >
+                  <Home className="w-4 h-4" />
+                  Home
+                </button>
+              </Link>
+              <Link href="/brainwave">
+                <button
+                  className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl hover:from-amber-600 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 font-semibold"
+                >
+                  <Brain className="w-4 h-4" />
+                  More Brain Teasers
+                </button>
+              </Link>
+            </div>
           </div>
         )}
       </div>
