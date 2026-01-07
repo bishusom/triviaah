@@ -892,9 +892,9 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
                   <div className="flex flex-wrap justify-center gap-2">
                     {attempt.letterFeedback?.map((letter, letterIndex) => {
                       const bgColor = letter.status === 'correct' 
-                        ? 'bg-gradient-to-br from-emerald-500 to-green-600' 
+                        ? 'bg-gradient-to-br from-green-500 to-emerald-600'  
                         : letter.status === 'present' 
-                        ? 'bg-gradient-to-br from-amber-500 to-yellow-600'
+                        ? 'bg-gradient-to-br from-yellow-500 to-amber-600'
                         : 'bg-gray-600 border border-gray-500';
                       const textColor = letter.status === 'absent' ? 'text-gray-300' : 'text-white';
                       

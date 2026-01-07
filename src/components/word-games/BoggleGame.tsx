@@ -15,45 +15,54 @@ interface GameConfig {
     easy: number;
     medium: number;
     hard: number;
+    expert: number;
   };
   minWordLength: {
     easy: number;
     medium: number;
     hard: number;
+    expert: number;
   };
   maxWordLength: {
     easy: number;
     medium: number;
     hard: number;
+    expert: number;
   };
   timeLimit: {
     easy: number;
     medium: number;
     hard: number;
+    expert: number;
   };
   scorePerLetter: {
     easy: number;
     medium: number;
     hard: number;
+    expert: number;
   };
   winThreshold: {
     easy: number;
     medium: number;
     hard: number;
+    expert: number;
   };
   vowelPercentage: {
     easy: number;
     medium: number;
     hard: number;
+    expert: number;
   };
 }
 
-interface ExtendedLevel {
+interface LevelConfig {
   level: number;
+  difficulty: 'easy' | 'medium' | 'hard' | 'expert';
+  minWordLength: number;
   winThreshold: number;
   timeLimit: number;
-  minWordLength: number;
   scoreMultiplier: number;
+  description: string;
 }
 
 export default function BoggleGame() {
@@ -61,15 +70,14 @@ export default function BoggleGame() {
   const gridElement = useRef<HTMLDivElement>(null);
   const timeElement = useRef<HTMLSpanElement>(null);
   const scoreElement = useRef<HTMLSpanElement>(null);
+  const targetScoreElement = useRef<HTMLSpanElement>(null);
   const levelElement = useRef<HTMLSpanElement>(null);
-  const gamesRemainingElement = useRef<HTMLSpanElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   // Game state
   const [selectedCells, setSelectedCells] = useState<number[]>([]);
   const [grid, setGrid] = useState<GridCell[]>([]);
   const [foundWords, setFoundWords] = useState<Set<string>>(new Set());
-  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
-  const [consecutiveWins, setConsecutiveWins] = useState(0);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(180);
@@ -77,62 +85,179 @@ export default function BoggleGame() {
   const [isSelecting, setIsSelecting] = useState(false);
   const [usedLetters, setUsedLetters] = useState<Set<number>>(new Set());
   const [wordCache, setWordCache] = useState<Map<string, boolean>>(new Map());
-  const [extendedLevels, setExtendedLevels] = useState<ExtendedLevel[]>([]);
-  const [currentExtendedLevel, setCurrentExtendedLevel] = useState(0);
+  const [levels, setLevels] = useState<LevelConfig[]>([]);
+  const [isLevelsLoaded, setIsLevelsLoaded] = useState(false);
 
-  const timerInterval = useRef<NodeJS.Timeout| null>(null)
+  const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
 
-  // Game configuration - wrapped in useMemo to prevent recreating on every render
+  // Game configuration - UPDATED with expert level
   const config: GameConfig = useMemo(() => ({
     gridSize: {
       easy: 4,
       medium: 5,
-      hard: 5
+      hard: 5,
+      expert: 6
     },
     minWordLength: {
       easy: 3,
       medium: 3,
-      hard: 3
+      hard: 3,
+      expert: 4
     },
     maxWordLength: {
-      easy: 4,
-      medium: 4,
-      hard: 5
+      easy: 5,
+      medium: 6,
+      hard: 7,
+      expert: 8
     },
     timeLimit: {
-      easy: 240,
-      medium: 300,
-      hard: 360
+      easy: 180,
+      medium: 180,
+      hard: 180,
+      expert: 210
     },
     scorePerLetter: {
       easy: 10,
-      medium: 15,
-      hard: 20
+      medium: 12,
+      hard: 15,
+      expert: 18
     },
     winThreshold: {
       easy: 100,
-      medium: 200,
-      hard: 300
+      medium: 150,
+      hard: 200,
+      expert: 250
     },
     vowelPercentage: {
       easy: 0.4,
       medium: 0.35,
-      hard: 0.3
+      hard: 0.3,
+      expert: 0.4
     }
   }), []);
 
-  // Common words for fallback - wrapped in useMemo to prevent recreating on every render
+  // Common words for fallback - EXPANDED
   const commonWords = useMemo(() => [
     'CAT', 'DOG', 'HAT', 'RUN', 'SUN', 'PEN', 'RED', 'BLUE', 'TREE', 'BIRD',
     'FISH', 'STAR', 'MOON', 'PLAY', 'BOOK', 'FOOD', 'GOOD', 'LOVE', 'HOME', 'TIME',
     'BALL', 'GAME', 'CARS', 'SHIP', 'WIND', 'RAIN', 'SNOW', 'FIRE', 'WAVE', 'HILL',
-    'HOUSE', 'TABLE', 'CHAIR', 'WINDOW', 'DOOR', 'FLOOR'
+    'HOUSE', 'TABLE', 'CHAIR', 'WINDOW', 'DOOR', 'FLOOR', 'BRAIN', 'CHAINS', 'THREAD',
+    'STREAM', 'POWER', 'LIGHT', 'SHADOW', 'MUSIC', 'RHYTHM', 'PUZZLE', 'CHALLENGE',
+    'COMPLEX', 'DYNAMIC', 'SYSTEM', 'PATTERN', 'STRUCTURE', 'SOLUTION', 'QUESTION',
+    'ABILITY', 'CHANCE', 'DANCE', 'EARTH', 'FOREST', 'GARDEN', 'HEART', 'ISLAND',
+    'JUNGLE', 'KNIGHT', 'LANGUAGE', 'MAGIC', 'NATURE', 'OCEAN', 'PICTURE', 'QUALITY',
+    'RIVER', 'SPIRIT', 'TRAVEL', 'UNIVERSE', 'VICTORY', 'WONDER', 'YOUTH', 'ZENITH',
+    'ADVENTURE', 'BEAUTIFUL', 'CELEBRATE', 'DISCOVER', 'ELEPHANT', 'FANTASY', 'GRACEFUL',
+    'HARMONY', 'IMAGINE', 'JOURNEY', 'KINDNESS', 'LIBERTY', 'MYSTERY', 'NOVEMBER',
+    'OBSERVER', 'PARADISE', 'QUIETLY', 'RAINBOW', 'SUNSHINE', 'TREASURE', 'UMBRELLA',
+    'VIBRANT', 'WHISPER', 'XENON', 'YELLOW', 'ZEALOUS'
   ].map(word => word.toUpperCase()), []);
 
   const { isMuted } = useSound();
-
   const isTouchDevice = useRef(false);
+
+  // Generate levels function - Simplified progression
+  const generateLevels = useCallback(() => {
+    const generatedLevels: LevelConfig[] = [];
+    
+    // Level 1-4: Easy levels
+    for (let i = 1; i <= 4; i++) {
+      generatedLevels.push({
+        level: i,
+        difficulty: 'easy',
+        minWordLength: 3,
+        winThreshold: 80 + (i * 20),
+        timeLimit: 180,
+        scoreMultiplier: 1.0,
+        description: `Beginner Level ${i} - Find 3-letter words`
+      });
+    }
+    
+    // Level 5-8: Medium levels
+    for (let i = 5; i <= 8; i++) {
+      generatedLevels.push({
+        level: i,
+        difficulty: 'medium',
+        minWordLength: 4,
+        winThreshold: 200 + ((i - 4) * 50),
+        timeLimit: 180,
+        scoreMultiplier: 1.2 + ((i - 4) * 0.1),
+        description: `Intermediate Level ${i-4} - Find 4-5 letter words`
+      });
+    }
+    
+    // Level 9-12: Hard levels
+    for (let i = 9; i <= 12; i++) {
+      generatedLevels.push({
+        level: i,
+        difficulty: 'hard',
+        minWordLength: 5,
+        winThreshold: 420 + ((i - 8) * 80),
+        timeLimit: 180,
+        scoreMultiplier: 1.6 + ((i - 8) * 0.1),
+        description: `Advanced Level ${i-8} - Find 5-6 letter words`
+      });
+    }
+    
+    // Level 13-16: Expert levels
+    for (let i = 13; i <= 16; i++) {
+      generatedLevels.push({
+        level: i,
+        difficulty: 'expert',
+        minWordLength: 6,
+        winThreshold: 780 + ((i - 12) * 120),
+        timeLimit: 210,
+        scoreMultiplier: 2.0 + ((i - 12) * 0.2),
+        description: `Expert Level ${i-12} - Find 6-7 letter words`
+      });
+    }
+    
+    // Level 17-20: Master levels
+    for (let i = 17; i <= 20; i++) {
+      generatedLevels.push({
+        level: i,
+        difficulty: 'expert',
+        minWordLength: 7,
+        winThreshold: 1320 + ((i - 16) * 180),
+        timeLimit: 200,
+        scoreMultiplier: 2.8 + ((i - 16) * 0.25),
+        description: `Master Level ${i-16} - Find 7-8 letter words`
+      });
+    }
+    
+    return generatedLevels;
+  }, []);
+
+  // Get current level configuration
+  const getCurrentLevelConfig = useCallback((): LevelConfig | null => {
+    if (!levels.length) return null;
+    return levels.find(l => l.level === currentLevel) || levels[0];
+  }, [currentLevel, levels]);
+
+  // Calculate current target score
+  const calculateTargetScore = useCallback(() => {
+    const levelConfig = getCurrentLevelConfig();
+    return levelConfig?.winThreshold || 100;
+  }, [getCurrentLevelConfig]);
+
+  // Calculate min word length based on level
+  const calculateMinWordLength = useCallback(() => {
+    const levelConfig = getCurrentLevelConfig();
+    return levelConfig?.minWordLength || 3;
+  }, [getCurrentLevelConfig]);
+
+  // Get current difficulty
+  const getCurrentDifficulty = useCallback(() => {
+    const levelConfig = getCurrentLevelConfig();
+    return levelConfig?.difficulty || 'easy';
+  }, [getCurrentLevelConfig]);
+
+  // Get current grid size (dynamic based on level)
+  const getCurrentGridSize = useCallback(() => {
+    const difficulty = getCurrentDifficulty();
+    return config.gridSize[difficulty];
+  }, [getCurrentDifficulty, config]);
 
   // Play sound
   const playSound = useCallback((type: string) => {
@@ -186,36 +311,31 @@ export default function BoggleGame() {
       if (savedState) {
         try {
           const parsed = JSON.parse(savedState);
-          if (['easy', 'medium', 'hard'].includes(parsed.difficulty) &&
-              typeof parsed.consecutiveWins === 'number' &&
-              typeof parsed.currentLevel === 'number') {
-            setDifficulty(parsed.difficulty);
-            setConsecutiveWins(parsed.consecutiveWins);
-            setCurrentLevel(parsed.currentLevel);
+          if (typeof parsed.currentLevel === 'number' && parsed.currentLevel >= 1) {
+            setCurrentLevel(Math.min(parsed.currentLevel, levels.length || 1));
           }
         } catch (e) {
           console.error('Invalid saved game state', e);
         }
       }
     }
-  }, []);
+  }, [levels.length]);
 
   // Save game state to localStorage
   const saveGameState = useCallback(() => {
     const gameState = {
-      difficulty,
-      consecutiveWins,
-      currentLevel,
-      currentExtendedLevel
+      currentLevel
     };
     localStorage.setItem('boggleGameState', JSON.stringify(gameState));
-  }, [difficulty, consecutiveWins, currentLevel, currentExtendedLevel]);
+  }, [currentLevel]);
 
   // Generate game grid
   const generateGrid = useCallback(() => {
+    const difficulty = getCurrentDifficulty();
     const size = config.gridSize[difficulty];
     const vowels = 'AEIOU';
-    const minVowels = Math.ceil(size * size * config.vowelPercentage[difficulty]);
+    const vowelPercent = config.vowelPercentage[difficulty];
+    const minVowels = Math.ceil(size * size * vowelPercent);
     let vowelCount = 0;
 
     // Create letter pool
@@ -226,14 +346,16 @@ export default function BoggleGame() {
       word.split('').forEach(letter => letterPool.push(letter));
     });
 
-    // Add vowels to ensure enough vowels are available
-    for (let i = 0; i < 30; i++) {
+    // Add extra vowels
+    const extraVowels = difficulty === 'expert' ? 50 : 30;
+    for (let i = 0; i < extraVowels; i++) {
       letterPool.push(vowels[Math.floor(Math.random() * vowels.length)]);
     }
 
     // Add common consonants
     const commonConsonants = 'BCDFGHJKLMNPQRSTVWXYZ';
-    for (let i = 0; i < 40; i++) {
+    const extraConsonants = difficulty === 'expert' ? 50 : 40;
+    for (let i = 0; i < extraConsonants; i++) {
       letterPool.push(commonConsonants[Math.floor(Math.random() * commonConsonants.length)]);
     }
 
@@ -254,7 +376,9 @@ export default function BoggleGame() {
     }
 
     // Ensure minimum vowels are met by replacing consonants
-    while (vowelCount < minVowels) {
+    let attempts = 0;
+    const maxAttempts = size * size * 2;
+    while (vowelCount < minVowels && attempts < maxAttempts) {
       const consonantIndices = newGrid
         .map((cell, idx) => (!vowels.includes(cell.letter) ? idx : -1))
         .filter(idx => idx !== -1);
@@ -263,13 +387,28 @@ export default function BoggleGame() {
         const randomIndex = consonantIndices[Math.floor(Math.random() * consonantIndices.length)];
         newGrid[randomIndex].letter = vowels[Math.floor(Math.random() * vowels.length)];
         vowelCount++;
-      } else {
-        break;
+      }
+      attempts++;
+    }
+
+    // For expert levels, add more common letter combinations
+    if (difficulty === 'expert') {
+      const suffixes = ['ING', 'ED', 'ER', 'EST', 'LY', 'MENT', 'NESS', 'TION'];
+      const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+      
+      const availablePositions = newGrid
+        .map((cell, idx) => idx)
+        .sort(() => Math.random() - 0.5);
+      
+      for (let i = 0; i < Math.min(suffix.length, 3); i++) {
+        if (availablePositions.length > i) {
+          newGrid[availablePositions[i]].letter = suffix[i];
+        }
       }
     }
 
     setGrid(newGrid);
-  }, [difficulty, config, commonWords]);
+  }, [getCurrentDifficulty, config, commonWords]);
 
   // Show feedback
   const showFeedback = useCallback(({ message, type }: { message: string; type: 'success' | 'error' | 'info' }) => {
@@ -281,7 +420,7 @@ export default function BoggleGame() {
     if (!timeElement.current) return;
     const minutes = Math.floor(timer / 60);
     const seconds = timer % 60;
-    timeElement.current.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+    timeElement.current.textContent = `⏱️ ${minutes}:${seconds.toString().padStart(2, '0')}`;
   }, [timer]);
 
   // Update score display
@@ -290,25 +429,41 @@ export default function BoggleGame() {
     scoreElement.current.textContent = `Score: ${score}`;
   }, [score]);
 
+  // Update target score display
+  const updateTargetScore = useCallback(() => {
+    if (!targetScoreElement.current || !progressBarRef.current) return;
+    const currentTarget = calculateTargetScore();
+    const progressPercent = Math.min(100, (score / currentTarget) * 100);
+    
+    targetScoreElement.current.textContent = `Target: ${score}/${currentTarget}`;
+    
+    const progressBar = progressBarRef.current;
+    progressBar.style.width = `${progressPercent}%`;
+    
+    if (progressPercent >= 100) {
+      progressBar.style.backgroundColor = '#10b981';
+      targetScoreElement.current.textContent = `🎯 Target: ${score}/${currentTarget} 🎯`;
+    } else if (progressPercent >= 75) {
+      progressBar.style.backgroundColor = '#f59e0b';
+    } else if (progressPercent >= 50) {
+      progressBar.style.backgroundColor = '#3b82f6';
+    } else {
+      progressBar.style.backgroundColor = '#ef4444';
+    }
+    
+    progressBar.offsetHeight;
+  }, [score, calculateTargetScore]);
+
   // Update level info
   const updateLevelInfo = useCallback(() => {
-    if (!levelElement.current || !gamesRemainingElement.current) return;
+    if (!levelElement.current) return;
     
-    if (currentLevel >= 4) {
-      levelElement.current.textContent = `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`;
-      gamesRemainingElement.current.textContent = `Next level: ${extendedLevels[currentExtendedLevel]?.winThreshold || 300} points`;
-    } else {
-      levelElement.current.textContent = `Level: ${currentLevel} (${difficulty})`;
-      if (difficulty !== 'hard') {
-        const winsNeeded = 3 - consecutiveWins;
-        gamesRemainingElement.current.textContent = winsNeeded > 0
-          ? `Wins to next difficulty: ${winsNeeded}`
-          : 'Ready to advance difficulty!';
-      } else {
-        gamesRemainingElement.current.textContent = 'Max difficulty reached!';
-      }
-    }
-  }, [currentLevel, difficulty, consecutiveWins, extendedLevels, currentExtendedLevel]);
+    const levelConfig = getCurrentLevelConfig();
+    if (!levelConfig) return;
+    
+    levelElement.current.textContent = `Level ${levelConfig.level}: ${levelConfig.description}`;
+    updateTargetScore();
+  }, [getCurrentLevelConfig, updateTargetScore]);
 
   // Start timer
   const startTimer = useCallback(() => {
@@ -320,8 +475,11 @@ export default function BoggleGame() {
       setTimer(prev => {
         if (prev <= 0) {
           clearInterval(timerInterval.current!);
-          showFeedback({ message: 'Time\'s up!', type: 'error' });
-          setTimeout(() => initGameRef.current(), 2000);
+          showFeedback({ 
+            message: 'Time\'s up! Better luck next time!', 
+            type: 'error' 
+          });
+          setTimeout(() => initGameRef.current(), 3000);
           return 0;
         }
         return prev - 1;
@@ -358,30 +516,19 @@ export default function BoggleGame() {
         throw new Error('Invalid JSON from API');
       }
 
-      console.log('MW API response:', data);
-
-      // Handle different response types from Merriam-Webster
       if (Array.isArray(data) && data.length > 0) {
-        // Check each entry in the array
         for (const entry of data) {
-          // If it's a string, it's a suggestion (not a valid entry)
           if (typeof entry === 'string') {
             continue;
           }
           
-          // If it's an object with meta data, check if it matches our word
           if (typeof entry === 'object' && entry !== null) {
-            // Check multiple possible ways the word might be represented
             const wordMatches = 
-              // Check meta.id (might be "word:1" format)
               (entry.meta?.id && entry.meta.id.split(':')[0].toUpperCase() === word.toUpperCase()) ||
-              // Check hwi.hw (headword)
               (entry.hwi?.hw && entry.hwi.hw.replace(/\*/g, '').toUpperCase() === word.toUpperCase()) ||
-              // Check stems array
               (entry.meta?.stems && entry.meta.stems.some((stem: string) => stem.toUpperCase() === word.toUpperCase()));
             
             if (wordMatches) {
-              console.log(`Word "${word}" validated via Merriam-Webster API.`);
               setWordCache(prev => new Map(prev).set(wordLower, true));
               return true;
             }
@@ -389,13 +536,11 @@ export default function BoggleGame() {
         }
       }
       
-      // Word not found in dictionary
       setWordCache(prev => new Map(prev).set(wordLower, false));
       return false;
     } catch (error) {
       console.error(`Error validating word "${word}":`, error);
       
-      // Fallback to local word list
       const isInLocalList = commonWords.includes(word.toUpperCase());
       if (!isInLocalList) {
         showFeedback({ message: 'Dictionary API unavailable. Using local word list.', type: 'info' });
@@ -407,17 +552,17 @@ export default function BoggleGame() {
 
   // Initialize game
   const initGame = useCallback(() => {
+    if (!isLevelsLoaded || !levels.length) return;
+    
     if (timerInterval.current !== null) {
       window.clearInterval(timerInterval.current);
       timerInterval.current = null;
     }
     
-    if (currentLevel >= 4 && extendedLevels[currentExtendedLevel]) {
-      setTimer(extendedLevels[currentExtendedLevel].timeLimit);
-    } else {
-      setTimer(config.timeLimit[difficulty]);
-    }
+    const levelConfig = getCurrentLevelConfig();
+    if (!levelConfig) return;
     
+    setTimer(levelConfig.timeLimit);
     setScore(0);
     setFoundWords(new Set());
     setSelectedCells([]);
@@ -431,17 +576,17 @@ export default function BoggleGame() {
     updateLevelInfo();
     updateTimer();
 
-    const minLen = currentLevel >= 4 
-      ? extendedLevels[currentExtendedLevel]?.minWordLength || config.minWordLength[difficulty]
-      : config.minWordLength[difficulty];
-      
+    const currentMinLength = calculateMinWordLength();
+    const difficulty = getCurrentDifficulty();
     const maxLen = config.maxWordLength[difficulty];
+    const currentTarget = calculateTargetScore();
+    const gridSize = getCurrentGridSize();
     
     showFeedback({
-      message: `How to Play Boggle: Find words by selecting adjacent letters.\nWords must be ${minLen}-${maxLen} letters long.\nScore ${config.scorePerLetter[difficulty]} points per letter. Reach ${currentLevel >= 4 ? extendedLevels[currentExtendedLevel]?.winThreshold : config.winThreshold[difficulty]} points to win!`,
+      message: `Level ${currentLevel}: ${levelConfig.description}\n\n${gridSize}x${gridSize} Grid | Words: ${currentMinLength}-${maxLen} letters\nScore ${config.scorePerLetter[difficulty]} points per letter\nReach ${currentTarget} points to win!`,
       type: 'info'
     });
-  }, [currentLevel, extendedLevels, currentExtendedLevel, config, difficulty, generateGrid, startTimer, updateScore, updateLevelInfo, updateTimer, showFeedback]);
+  }, [currentLevel, getCurrentLevelConfig, config, generateGrid, startTimer, updateScore, updateLevelInfo, updateTimer, showFeedback, calculateMinWordLength, getCurrentDifficulty, calculateTargetScore, isLevelsLoaded, levels.length, getCurrentGridSize]);
 
   // Store initGame in ref for timer callback
   const initGameRef = useRef(initGame);
@@ -452,6 +597,8 @@ export default function BoggleGame() {
 
   // Handle game win
   const handleGameWin = useCallback(() => {
+    if (!levels.length) return;
+    
     const messages = [
       "Amazing! You're crushing it!",
       "Incredible skills!",
@@ -471,12 +618,15 @@ export default function BoggleGame() {
       clearInterval(timerInterval.current);
     }
 
-    // Play win sound
+    updateTargetScore();
     playSound('win');
 
+    const levelConfig = getCurrentLevelConfig();
+    if (!levelConfig) return;
+    
     const confettiConfig = {
-      particleCount: difficulty === 'hard' ? 300 : 200,
-      spread: difficulty === 'hard' ? 120 : 100,
+      particleCount: levelConfig.difficulty === 'expert' ? 350 : (levelConfig.difficulty === 'hard' ? 300 : 200),
+      spread: levelConfig.difficulty === 'expert' ? 150 : (levelConfig.difficulty === 'hard' ? 120 : 100),
       colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
     };
 
@@ -484,57 +634,37 @@ export default function BoggleGame() {
     setTimeout(() => fireConfetti({ ...confettiConfig, origin: { x: 0.25, y: 0.5 } }), 300);
     setTimeout(() => fireConfetti({ ...confettiConfig, origin: { x: 0.75, y: 0.5 } }), 600);
 
-    const newConsecutiveWins = consecutiveWins + 1;
-    setConsecutiveWins(newConsecutiveWins);
-
-    let newDifficulty = difficulty;
-    let newLevel = currentLevel;
-    let newExtendedLevel = currentExtendedLevel;
-
-    if (currentLevel >= 4) {
-      if (currentExtendedLevel < extendedLevels.length - 1) {
-        newExtendedLevel = currentExtendedLevel + 1;
-        setCurrentExtendedLevel(newExtendedLevel);
-      }
-    } else {
-      if (newConsecutiveWins >= 3) {
-        if (difficulty === 'easy') {
-          newDifficulty = 'medium';
-        } else if (difficulty === 'medium') {
-          newDifficulty = 'hard';
-        }
-        newLevel++;
-        setConsecutiveWins(0);
+    const nextLevel = Math.min(currentLevel + 1, levels.length);
+    
+    if (targetScoreElement.current) {
+      targetScoreElement.current.textContent = `🎯 Target Achieved! ${score}/${calculateTargetScore()} 🎯`;
+      const progressBar = document.querySelector('.progress-bar-fill') as HTMLElement;
+      if (progressBar) {
+        progressBar.style.width = '100%';
+        progressBar.style.backgroundColor = '#10b981';
       }
     }
 
-    setDifficulty(newDifficulty);
-    setCurrentLevel(newLevel);
-    saveGameState();
-
-    let victoryMessage = '';
-    if (currentLevel >= 4) {
-      victoryMessage = `🌟 ${randomMessage} (Level ${extendedLevels[currentExtendedLevel]?.level || currentLevel}) 🌟`;
-    } else {
-      victoryMessage = difficulty === 'hard' 
-        ? '🎊 Great job in tackling this hard level! 🎊' 
-        : `🎊 Great job! ${3 - newConsecutiveWins} more wins to advance. 🎊`;
-    }
+    const victoryMessage = currentLevel < levels.length
+      ? `🎊 ${randomMessage} Level ${currentLevel} completed! 🎊\nAdvancing to Level ${nextLevel}...`
+      : `🏆 ${randomMessage} 🏆\nYou've completed all levels! You're a true Boggle Champion!`;
 
     showFeedback({
       message: victoryMessage,
       type: 'success'
     });
 
-    // Increase delay to 5 seconds to let players see the message
     setTimeout(() => {
-      initGameRef.current();
-    }, 5000);
-  }, [consecutiveWins, currentLevel, currentExtendedLevel, difficulty, extendedLevels, fireConfetti, playSound, saveGameState, showFeedback]);
+      setCurrentLevel(nextLevel);
+      saveGameState();
+      setTimeout(() => {
+        initGameRef.current();
+      }, 500);
+    }, 4000);
+  }, [currentLevel, levels.length, getCurrentLevelConfig, fireConfetti, playSound, saveGameState, showFeedback, calculateTargetScore, updateTargetScore, score]);
 
   // Initialize game on mount
   useEffect(() => {
-    // Detect if it's a touch device
     isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     
     const checkGtag = setInterval(() => {
@@ -542,31 +672,14 @@ export default function BoggleGame() {
         event({action: 'boggle_started', category: 'boggle',label: 'boggle'});
         clearInterval(checkGtag);
       }
-    }, 100)
+    }, 100);
 
-    const generateExtendedLevels = () => {
-      const levels: ExtendedLevel[] = [];
-      for (let i = 0; i < 20; i++) {
-        levels.push({
-          level: i + 5,
-          winThreshold: 300 + (i * 50),
-          timeLimit: Math.max(120, 300 - (i * 5)),
-          minWordLength: 3 + Math.floor(i / 5),
-          scoreMultiplier: 1 + (i * 0.1)
-        });
-      }
-      return levels;
-    };
-
-    setExtendedLevels(generateExtendedLevels());
+    const generatedLevels = generateLevels();
+    setLevels(generatedLevels);
+    setIsLevelsLoaded(true);
+    
     loadGameState();
     
-    // Use timeout to call initGame after state is loaded
-    setTimeout(() => {
-      initGameRef.current();
-    }, 0);
-
-    // Prevent default touch behavior to avoid scrolling
     const preventDefault = (e: TouchEvent) => {
       if (e.touches.length > 1) {
         e.preventDefault();
@@ -581,12 +694,30 @@ export default function BoggleGame() {
       }
       document.removeEventListener('touchmove', preventDefault);
     };
-  }, [loadGameState]);
+  }, [loadGameState, generateLevels]);
 
-  // Regenerate grid when difficulty or level changes
+  // Initialize game when levels are loaded
   useEffect(() => {
-    generateGrid();
-  }, [generateGrid]);
+    if (isLevelsLoaded && levels.length > 0) {
+      setTimeout(() => {
+        initGameRef.current();
+      }, 0);
+    }
+  }, [isLevelsLoaded, levels.length]);
+
+  // Regenerate grid when level changes
+  useEffect(() => {
+    if (isLevelsLoaded && levels.length > 0) {
+      generateGrid();
+    }
+  }, [currentLevel, isLevelsLoaded, levels.length, generateGrid]);
+
+  // Update target score when level or score changes
+  useEffect(() => {
+    if (isLevelsLoaded && levels.length > 0) {
+      updateTargetScore();
+    }
+  }, [score, currentLevel, isLevelsLoaded, levels.length, updateTargetScore]);
 
   // Add selection line effect
   useEffect(() => {
@@ -609,7 +740,6 @@ export default function BoggleGame() {
         const startRect = startCell.getBoundingClientRect();
         const endRect = endCell.getBoundingClientRect();
 
-        // Calculate positions relative to the grid container
         const startX = startRect.left + startRect.width / 2 - gridRect.left;
         const startY = startRect.top + startRect.height / 2 - gridRect.top;
         const endX = endRect.left + endRect.width / 2 - gridRect.left;
@@ -640,7 +770,7 @@ export default function BoggleGame() {
 
   // Check if two cells are adjacent
   const isAdjacent = (index1: number, index2: number) => {
-    const size = config.gridSize[difficulty];
+    const size = getCurrentGridSize();
     const pos1 = { row: Math.floor(index1 / size), col: index1 % size };
     const pos2 = { row: Math.floor(index2 / size), col: index2 % size };
 
@@ -674,12 +804,10 @@ export default function BoggleGame() {
       case 'end':
         if (!isSelecting) return;
         
-        // Create a copy of selectedCells before clearing them
         const finalSelectedCells = [...selectedCells];
         setIsSelecting(false);
         
         if (finalSelectedCells.length >= 2) {
-          // Pass the final selected cells to checkSelectedWord
           checkSelectedWord(finalSelectedCells);
         }
         break;
@@ -688,15 +816,12 @@ export default function BoggleGame() {
 
   // Check selected word
   const checkSelectedWord = async (cellsToCheck: number[]) => {
-    const minWordLength = currentLevel >= 4 
-      ? extendedLevels[currentExtendedLevel]?.minWordLength || config.minWordLength[difficulty]
-      : config.minWordLength[difficulty];
+    const currentMinLength = calculateMinWordLength();
 
-    if (cellsToCheck.length < minWordLength) {
-      showFeedback({ message: `Word too short (min ${minWordLength} letters)`, type: 'error' });
+    if (cellsToCheck.length < currentMinLength) {
+      showFeedback({ message: `Word too short (min ${currentMinLength} letters)`, type: 'error' });
       playSound('error');
       
-      // Add a brief delay before clearing to show visual feedback
       setTimeout(() => {
         setSelectedCells([]);
       }, 100);
@@ -709,7 +834,6 @@ export default function BoggleGame() {
       showFeedback({ message: 'Word already found', type: 'error' });
       playSound('error');
       
-      // Add a brief delay before clearing to show visual feedback
       setTimeout(() => {
         setSelectedCells([]);
       }, 100);
@@ -723,12 +847,18 @@ export default function BoggleGame() {
       newFoundWords.add(selectedWord);
       setFoundWords(newFoundWords);
 
-      const scoreMultiplier = currentLevel >= 4 
-        ? extendedLevels[currentExtendedLevel]?.scoreMultiplier || 1 
-        : 1;
+      const levelConfig = getCurrentLevelConfig();
+      if (!levelConfig) return;
       
-      const points = Math.floor(selectedWord.length * config.scorePerLetter[difficulty] * scoreMultiplier);
-      setScore(prev => prev + points);
+      const difficulty = getCurrentDifficulty();
+      
+      const points = Math.floor(selectedWord.length * config.scorePerLetter[difficulty] * levelConfig.scoreMultiplier);
+      const newScore = score + points;
+      setScore(newScore);
+
+      setTimeout(() => {
+        updateTargetScore();
+      }, 0);
 
       setGrid(prev => 
         prev.map((cell, idx) => 
@@ -739,11 +869,9 @@ export default function BoggleGame() {
       showFeedback({ message: `Found: ${selectedWord} (+${points} points)`, type: 'success' });
       playSound('correct');
 
-      const winThreshold = currentLevel >= 4 
-        ? extendedLevels[currentExtendedLevel]?.winThreshold || config.winThreshold[difficulty]
-        : config.winThreshold[difficulty];
+      const currentTarget = calculateTargetScore();
 
-      if (score + points >= winThreshold) {
+      if (newScore >= currentTarget) {
         handleGameWin();
       }
     } else {
@@ -751,7 +879,6 @@ export default function BoggleGame() {
       playSound('error');
     }
 
-    // Clear the selection after validation
     setSelectedCells([]);
   };
 
@@ -769,9 +896,20 @@ export default function BoggleGame() {
 
     const hint = commonWords[Math.floor(Math.random() * commonWords.length)];
     if (hint) {
-      showFeedback({ message: `Hint: Try finding a word starting with ${hint[0]}`, type: 'success' });
+      showFeedback({ message: `Hint: Try finding a word starting with "${hint[0]}"`, type: 'success' });
     } else {
       showFeedback({ message: "No hints available", type: 'error' });
+    }
+  };
+
+  // Handle level selection
+  const handleLevelSelect = (level: number) => {
+    if (level >= 1 && level <= levels.length) {
+      setCurrentLevel(level);
+      saveGameState();
+      setTimeout(() => {
+        initGame();
+      }, 100);
     }
   };
 
@@ -782,28 +920,85 @@ export default function BoggleGame() {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
+  if (!isLevelsLoaded) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-gray-800 to-gray-900">
+        <div className="w-full max-w-2xl bg-gray-800/50 rounded-2xl p-8 text-center border border-gray-700">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Loading Boggle Game...</h2>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
+  const currentGridSize = getCurrentGridSize();
+  const currentDifficulty = getCurrentDifficulty();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white p-4 md:p-6 flex flex-col items-center justify-center">
       <div className="w-full max-w-4xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 p-4 bg-gray-800/50 rounded-xl backdrop-blur-sm border border-gray-700">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 p-4 bg-gray-800/50 rounded-xl backdrop-blur-sm border border-gray-700">
           <div className="text-center md:text-left mb-4 md:mb-0">
             <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               Boggle Game
             </h1>
             <div className="text-sm md:text-base text-gray-300 mt-1">
-              {currentLevel >= 4 
-                ? `Level: ${extendedLevels[currentExtendedLevel]?.level || currentLevel} (${difficulty}+)`
-                : `Level: ${currentLevel} (${difficulty})`}
+              <span ref={levelElement}>
+                Level {currentLevel}: {getCurrentLevelConfig()?.description || 'Loading...'}
+              </span>
+              <div className="text-sm text-gray-400 mt-1">
+                {currentGridSize}x{currentGridSize} Grid | Min word length: {calculateMinWordLength()} letters | Difficulty: {currentDifficulty}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-4 md:gap-6">
             <div className="bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg">
-              ⏱️ {formatTime(timer)}
+              <span ref={timeElement}>⏱️ {formatTime(timer)}</span>
             </div>
-            <div className="bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg">
-              Score: {score}
+            <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 rounded-lg border border-purple-500 font-bold text-lg">
+              <span ref={scoreElement}>Score: {score}</span>
             </div>
+          </div>
+        </div>
+
+        {/* Target Score Progress Bar */}
+        <div className="mb-6 p-4 bg-gray-800/30 rounded-xl border border-gray-700/50">
+          <div className="flex justify-between items-center mb-2">
+            <span ref={targetScoreElement} className="text-lg font-semibold text-white">
+              Target: {score}/{calculateTargetScore()}
+            </span>
+            <span className="text-sm text-gray-300">
+              {Math.min(100, Math.round((score / calculateTargetScore()) * 100))}%
+            </span>
+          </div>
+          <div className="w-full bg-gray-700/50 rounded-full h-3 overflow-hidden">
+            <div 
+              ref={progressBarRef}
+              className="progress-bar-fill h-full rounded-full transition-all duration-500 ease-out"
+              style={{ 
+                width: `${Math.min(100, (score / calculateTargetScore()) * 100)}%`,
+                backgroundColor: '#3b82f6'
+              }}
+            />
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2 items-center">
+            <span className="text-sm text-gray-300">
+              <strong>Level Progress:</strong> {currentLevel}/{levels.length}
+            </span>
+            {levels.length > 0 && (
+              <select 
+                value={currentLevel}
+                onChange={(e) => handleLevelSelect(parseInt(e.target.value))}
+                className="text-sm border border-gray-600 rounded px-2 py-1 bg-gray-800 text-white min-w-[200px] transition-colors duration-200 hover:border-blue-500"
+              >
+                {levels.map(level => (
+                  <option key={level.level} value={level.level}>
+                    Level {level.level}: {level.description}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
         </div>
 
@@ -813,8 +1008,8 @@ export default function BoggleGame() {
             <div 
               className="grid gap-2 md:gap-3 p-4 bg-gray-800/30 rounded-2xl backdrop-blur-sm border border-gray-700/50"
               style={{ 
-                gridTemplateColumns: `repeat(${config.gridSize[difficulty]}, 1fr)`,
-                gridTemplateRows: `repeat(${config.gridSize[difficulty]}, 1fr)`,
+                gridTemplateColumns: `repeat(${currentGridSize}, 1fr)`,
+                gridTemplateRows: `repeat(${currentGridSize}, 1fr)`,
                 touchAction: 'none'
               }}
             >
@@ -822,7 +1017,8 @@ export default function BoggleGame() {
                 <button
                   key={index}
                   className={`
-                    w-12 h-12 md:w-16 md:h-16 rounded-lg md:rounded-xl font-bold text-lg md:text-xl transition-all duration-200
+                    ${currentGridSize <= 5 ? 'w-12 h-12 md:w-14 md:h-14 text-lg md:text-xl' : 'w-10 h-10 md:w-11 md:h-11 text-base md:text-lg'}
+                    rounded-lg md:rounded-xl font-bold transition-all duration-200
                     ${selectedCells.includes(index) 
                       ? 'bg-blue-500 text-white scale-105 shadow-lg' 
                       : selectedCells[selectedCells.length - 1] === index 
@@ -849,7 +1045,7 @@ export default function BoggleGame() {
                     const touch = e.touches[0];
                     const element = document.elementFromPoint(touch.clientX, touch.clientY);
                     
-                    if (element && element.classList.contains('bg-gray-700/80')) {
+                    if (element && element.classList.contains('bg-gray-700\\/80')) {
                       const cells = Array.from(gridElement.current?.querySelectorAll('.bg-gray-700\\/80, .bg-blue-500, .bg-blue-600, .bg-green-600\\/80') || []);
                       const idx = cells.indexOf(element);
                       if (idx >= 0) {
@@ -890,23 +1086,23 @@ export default function BoggleGame() {
             onClick={handleNewGame}
             className="px-6 md:px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
           >
-            New Game
+            Restart Level
           </button>
           <button 
             onClick={handleHint}
             className="px-6 md:px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
           >
-            Hint
+            Get Hint
           </button>
         </div>
 
         {/* Found Words */}
         {foundWords.size > 0 && (
           <div className="bg-gray-800/50 rounded-2xl p-4 md:p-6 backdrop-blur-sm border border-gray-700">
-            <h3 className="text-lg md:text-xl font-bold text-center mb-4 text-gray-200">Found Words:</h3>
+            <h3 className="text-lg md:text-xl font-bold text-center mb-4 text-gray-200">Found Words ({foundWords.size}):</h3>
             <div className="flex flex-wrap gap-2 md:gap-3 justify-center">
               {Array.from(foundWords).sort().map((word, i) => (
-                <span key={i} className="px-3 md:px-4 py-2 bg-gray-700/80 text-white rounded-lg font-medium border border-gray-600">
+                <span key={i} className="px-3 md:px-4 py-2 bg-gradient-to-r from-blue-600/30 to-purple-600/30 text-white rounded-lg font-medium border border-gray-600">
                   {word}
                 </span>
               ))}

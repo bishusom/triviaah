@@ -222,7 +222,7 @@ const AttemptHistory = ({ attempts }: { attempts: HistoridleGuessResult[] }) => 
               {attempt.guess.split('').map((letter, letterIndex) => {
                 const status = attempt.letterStatuses?.[letterIndex] || 'absent';
                 const bgColor = status === 'correct' 
-                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600' 
+                  ? 'bg-gradient-to-br from-green-500 to-emerald-600' 
                   : status === 'present' 
                   ? 'bg-gradient-to-br from-yellow-500 to-amber-600'
                   : 'bg-gray-600 border border-gray-500';
@@ -540,7 +540,7 @@ export default function HistoridleComponent({ initialData }: HistoridleComponent
             <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-2 rounded-xl">
               <Scroll className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-xl font-bold text-white">Today&apos;s Historical Mystery</h2>
+            <h2 className="text-xl font-bold text-white">Today&apos;s Historical Mystery {puzzleData.type.replace(/^./, puzzleData.type[0].toUpperCase())}</h2>
           </div>
           <div className={`flex items-center gap-2 text-lg font-bold ${triesLeftColor}`}>
             <Target className="w-5 h-5" />

@@ -854,7 +854,7 @@ export default function FoodleComponent({ initialData }: FoodleComponentProps) {
                     {attempt.guess.split('').map((letter, letterIndex) => {
                       const status = attempt.letterStatuses?.[letterIndex] || 'absent';
                       const bgColor = status === 'correct' 
-                        ? 'bg-gradient-to-br from-orange-500 to-red-600' 
+                        ? 'bg-gradient-to-br from-green-500 to-emerald-600' 
                         : status === 'present' 
                         ? 'bg-gradient-to-br from-yellow-500 to-amber-600'
                         : 'bg-gray-600 border border-gray-500';

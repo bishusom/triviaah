@@ -859,7 +859,7 @@ export default function SongleComponent({ initialData }: SongleComponentProps) {
                     {attempt.guess.split('').map((letter, letterIndex) => {
                       const status = attempt.statuses[letterIndex];
                       const bgColor = status === 'correct' 
-                        ? 'bg-gradient-to-br from-blue-500 to-purple-600' 
+                        ? 'bg-gradient-to-br from-green-500 to-emerald-600' 
                         : status === 'present' 
                         ? 'bg-gradient-to-br from-yellow-500 to-amber-600'
                         : 'bg-gray-600 border border-gray-500';
