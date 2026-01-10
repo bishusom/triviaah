@@ -603,19 +603,24 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
         )}
 
         {/* Attempts Grid */}
-        <div className="grid gap-3 mb-5">
+        <div className="mb-5">
           {attempts.map((attempt, index) => (
-            <div key={index} className="flex justify-center gap-2">
+            <div key={index} className="flex flex-wrap justify-center gap-1 mb-2">
               {attempt.letterFeedback.map((letter, letterIndex) => (
                 <div
                   key={letterIndex}
-                  className={`w-12 h-12 flex items-center justify-center text-xl font-bold rounded-xl transition-all duration-500 transform hover:scale-110 ${
+                  className={`flex items-center justify-center text-lg font-bold rounded-lg transition-all duration-500 transform hover:scale-105 min-w-[40px] h-10 ${
                     letter.status === 'correct' 
                       ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg' 
                       : letter.status === 'present' 
                       ? 'bg-gradient-to-br from-yellow-500 to-amber-600 text-white shadow-lg'
                       : 'bg-gray-700 text-gray-300 border border-gray-600'
                   }`}
+                  style={{ 
+                    width: `calc(100% / ${attempt.letterFeedback.length > 10 ? 10 : attempt.letterFeedback.length} - 8px)`,
+                    maxWidth: '48px',
+                    minWidth: '36px'
+                  }}
                 >
                   {letter.letter.toUpperCase()}
                 </div>
@@ -681,47 +686,21 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
         )}  
         
         {/* Share & Feedback Section */}
-        {(gameState === 'won' || gameState === 'lost') && (
-          <div className="flex flex-col items-center gap-4 mt-6">
-            <button
-              onClick={copyToClipboard}
-              className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-2xl hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 font-semibold"
-            >
-              <MdShare className="w-5 h-5" />
-              Share Result
-            </button>
-            {shareMessage && (
-              <div className="text-cyan-400 font-semibold animate-pulse">{shareMessage}</div>
-            )}
-
-            <FeedbackComponent
-              gameType="capitale"
-              category="brainwave"
-              metadata={{
-                attempts: attempts.length,
-                won: gameState === 'won',
-                targetCountry: puzzleData.country,
-                targetCapital: puzzleData.answer,
-                hardMode
-              }}
-            />
-
-            {/* Navigation Buttons */}
-            <div className="flex flex-wrap justify-center gap-4 mt-4 w-full">
-              <Link href="/"
-                className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-br from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
-              >
-                <Home className="text-lg md:text-xl" />
-                Home
-              </Link>
-
-              <Link href="/brainwave"
-                  className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
-                >
-                  <Brain className="w-4 h-4" />
-                  More Brain Teasers
-              </Link>
+        {gameState === 'won' && (
+          <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-2xl p-6 mb-6 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
             </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Victory! 🎉</h3>
+            <p className="text-green-400 mb-2">You guessed it in {attempts.length} {attempts.length === 1 ? 'try' : 'tries'}!</p>
+            <p className="text-gray-300 break-words">
+              The capital of {puzzleData.country} is{" "}
+              <strong className="text-white text-lg md:text-xl">
+                {puzzleData.answer.toUpperCase()}
+              </strong>
+            </p>
           </div>
         )}
       </div>
