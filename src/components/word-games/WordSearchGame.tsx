@@ -288,13 +288,13 @@ export default function WordSearchGame() {
     return { success: false, grid: localGrid };
   };
 
-  const fillEmptyCells = (localGrid: Cell[]) => {
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  function fillEmptyCells(localGrid: Cell[]) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     return localGrid.map(cell => ({
       ...cell,
       letter: (cell.letter || alphabet[Math.floor(Math.random() * alphabet.length)]).toUpperCase()
     }));
-  };
+  }
 
   // Word generation
   const generateWordList = async (diffConfig: GameConfig, limitOverride: number | null = null) => {
