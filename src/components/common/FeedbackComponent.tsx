@@ -15,28 +15,12 @@ interface FeedbackProps {
 
 const FEEDBACK_OPTIONS = [
   { 
-    icon: SmilePlus, 
-    label: 'Excellent', 
-    value: 5, 
-    color: 'text-emerald-400',
-    hoverColor: 'text-emerald-300',
-    bgColor: 'bg-emerald-500'
-  },
-  { 
-    icon: Smile, 
-    label: 'Good', 
-    value: 4, 
-    color: 'text-cyan-400',
-    hoverColor: 'text-cyan-300',
-    bgColor: 'bg-cyan-500'
-  },
-  { 
-    icon: Annoyed, 
-    label: 'Average', 
-    value: 3, 
-    color: 'text-amber-400',
-    hoverColor: 'text-amber-300',
-    bgColor: 'bg-amber-500'
+    icon: Angry, 
+    label: 'Bad', 
+    value: 1, 
+    color: 'text-red-400',
+    hoverColor: 'text-red-300',
+    bgColor: 'bg-red-500'
   },
   { 
     icon: Frown, 
@@ -47,12 +31,28 @@ const FEEDBACK_OPTIONS = [
     bgColor: 'bg-pink-500'
   },
   { 
-    icon: Angry, 
-    label: 'Bad', 
-    value: 1, 
-    color: 'text-red-400',
-    hoverColor: 'text-red-300',
-    bgColor: 'bg-red-500'
+    icon: Annoyed, 
+    label: 'Average', 
+    value: 3, 
+    color: 'text-amber-400',
+    hoverColor: 'text-amber-300',
+    bgColor: 'bg-amber-500'
+  },
+  { 
+    icon: Smile, 
+    label: 'Good', 
+    value: 4, 
+    color: 'text-cyan-400',
+    hoverColor: 'text-cyan-300',
+    bgColor: 'bg-cyan-500'
+  },
+  { 
+    icon: SmilePlus, 
+    label: 'Excellent', 
+    value: 5, 
+    color: 'text-emerald-400',
+    hoverColor: 'text-emerald-300',
+    bgColor: 'bg-emerald-500'
   }
 ];
 
@@ -102,19 +102,18 @@ export default function FeedbackComponent({
     <div className="text-center">
       <h4 className="text-lg font-bold text-white mb-3">Enjoyed the game?</h4>
       <div className="flex justify-center gap-1 mb-2">
-        {FEEDBACK_OPTIONS.map((option, index) => {
-          const rating = index + 1;
-          const isActive = hoveredRating >= rating;
-          const isHovered = hoveredRating === rating;
+        {FEEDBACK_OPTIONS.map((option) => {
+          const isActive = hoveredRating >= option.value;
+          const isHovered = hoveredRating === option.value;
           
           return (
             <button
-              key={rating}
-              onClick={() => handleFeedback(rating)}
-              onMouseEnter={() => setHoveredRating(rating)}
+              key={option.value}
+              onClick={() => handleFeedback(option.value)}
+              onMouseEnter={() => setHoveredRating(option.value)}
               onMouseLeave={() => setHoveredRating(0)}
               className="p-3 transition-all duration-200 transform hover:scale-125"
-              aria-label={`Rate ${rating} stars - ${option.label}`}
+              aria-label={`Rate ${option.value} stars - ${option.label}`}
             >
               <option.icon 
                 size={28} 
@@ -130,7 +129,7 @@ export default function FeedbackComponent({
       </div>
       <p className="text-gray-400 text-sm">
         {hoveredRating ? 
-          `Rate ${hoveredRating} stars - ${FEEDBACK_OPTIONS[hoveredRating - 1]?.label}` : 
+          `Rate ${hoveredRating} stars - ${FEEDBACK_OPTIONS.find(opt => opt.value === hoveredRating)?.label}` : 
           'Tap to rate your experience'
         }
       </p>
