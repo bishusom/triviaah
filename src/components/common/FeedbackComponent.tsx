@@ -93,7 +93,8 @@ export default function FeedbackComponent({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <p className="text-cyan-400 font-semibold">Thank you! 🎮</p>
+        <p className="text-cyan-400 font-semibold">Thank you for your feedback! 💫</p>
+        <p className="text-cyan-400">For detailed feedback, use <a href="/contact" className="underline">our contact form</a>.</p>
       </div>
     );
   }

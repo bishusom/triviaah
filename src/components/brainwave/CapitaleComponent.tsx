@@ -703,6 +703,49 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
             </p>
           </div>
         )}
+
+        {/* Share button & feedback */}
+        {(gameState === 'won' || gameState === 'lost') && (
+          <div className="flex flex-col items-center mt-4">
+            <button
+              onClick={copyToClipboard}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              <MdShare /> Share Result
+            </button>
+            {shareMessage && (
+              <div className="mt-2 text-blue-600">{shareMessage}</div>
+            )}
+
+            <FeedbackComponent
+              gameType="capitale"
+              category="brainwave"
+              metadata={{
+                attempts: attempts.length,
+                won: gameState === 'won',
+                targetCountry: puzzleData.country,
+                targetCapital: puzzleData.answer,
+                hardMode // if you track this
+              }}
+            />
+            {/* Navigation Buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mt-4 w-full">
+              <Link href="/"
+                className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-br from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
+              >
+                <Home className="text-lg md:text-xl" />
+                Home
+              </Link>
+
+              <Link href="/brainwave"
+                  className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
+                >
+                  <Brain className="w-4 h-4" />
+                  More Brain Teasers
+              </Link>
+            </div>
+          </div>
+        )}  
       </div>
     </div>
   );
