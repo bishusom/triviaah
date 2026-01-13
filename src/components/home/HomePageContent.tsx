@@ -1,108 +1,101 @@
+// components/home/HomePageContent.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Ads from '@/components/common/Ads';
-import Header from './Header';
-import EngagementHero from './EngagementHero';
-import { HolidaySpecial } from './HolidaySpecial';
-import DailyTriviaCards from './DailyTriviaCards';
-import MoreGames from './MoreGames';
-import KeyFeatures from './KeyFeatures';
-import CategoryShowcase from './CategoryShowcase';
-import BrainTeaserRow from './BrainTeaserRow';
-import IQTestCards from './IQTestCards';
-import DailyTriviaFact  from './DailyTriviaFact';
+import NavBar from '@/components/home/NavBar';
+import CategoryShowcase from '@/components/home/sections/CategoryShowcase';
+import HorizontalScrollSection from '@/components/home/sections/HorizontalScrollSection';
+import Footer from '@/components/home/Footer'
+import { DAILY_QUIZZES, BRAIN_WAVES } from '@/config/homeContent';
 
-import Footer from './Footer';
+// Import new section components
+import HeaderSection from '@/components/home/sections/HeaderSection';
+import HeroSection from '@/components/home/sections/HeroSection';
+import { HolidaySpecial } from '@/components/home/sections/HolidaySpecial';
+//import SeoContentSection from '@/components/home/sections/SeoContentSection';
+import KeyFeatures from '@/components/home/sections/KeyFeatures';
+import DailyTriviaFact from '@/components/home/sections/DailyTriviaFact';
+import SectionContainer from '@/components/home/sections/SectionContainer';
+import MoreGames from '@/components/home/sections/MoreGames';
 
 export default function HomePageContent() {
-  const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 500);
-    return () => clearTimeout(timer);
+    const sections = document.querySelectorAll('.horizontal-scroll-section, .category-section');
+    sections.forEach(section => {
+      section.setAttribute('data-no-ads', 'true');
+    });
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-pulse text-white text-xl">Triviaah</div>
-      </div>
-    );
-  }
+  // Check if holiday specials should be shown
+  const showHolidaySpecial = process.env.NEXT_PUBLIC_SHOW_HOLIDAY_SPECIALS === 'true';
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">   
-      <Header />
-
-      {/* Top Banner Ad */}
-      <div className="bg-gray-900">
-        <div className="container mx-auto px-4 py-3">
-          <Ads 
-            format="fluid" 
-            className="rounded-xl shadow-smooth"
-            style={{ width: '100%', height: '90px' }} 
-          />
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex flex-col">
+      <HeaderSection />
+      <NavBar />
+     
+      <div className="bg-gray-800/50 py-6">
+        <div className="container mx-auto px-4">
+          <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
         </div>
       </div>
+      
+      <main className="container mx-auto px-4 py-6 flex-grow">
+        <HeroSection />
 
-      <main>
-        {/* 1. Enhanced Hero Section */}
-        <EngagementHero />
+        {/* Conditionally show holiday special based on env variable */}
+        {showHolidaySpecial && <HolidaySpecial />}
 
-        {/* Holiday Special Banner */}
-        <HolidaySpecial />
+        <SectionContainer className="horizontal-scroll-section">
+          <HorizontalScrollSection 
+            title="Daily Quiz Challenges" 
+            items={DAILY_QUIZZES} 
+            isQuizSection={true}
+          />
+        </SectionContainer>
+
+        <SectionContainer className="horizontal-scroll-section">
+          <HorizontalScrollSection 
+            title="Brain Waves - Daily Puzzle Games" 
+            items={BRAIN_WAVES} 
+          />
+        </SectionContainer>
         
-        {/* 2. Featured Quizzes Carousel - IMMEDIATELY after hero */}
-        <DailyTriviaCards />
-        
-        {/* 4. Key Features with Value Proposition */}
-        <DailyTriviaFact />
-
-        {/* 3. Key Features with Value Proposition */}
-        <BrainTeaserRow />
-
-        {/* Mid-page Ad */}
-        <div className="bg-gray-900 dark:bg-gray-800">
-          <div className="container mx-auto px-4 py-3">
-            <Ads 
-              slot='9040722315'
-              format="fluid" 
-              className="rounded-xl shadow-smooth"
-              style={{ width: '100%', height: '90px' }} 
-            />
+        <div className="bg-gray-800/50 py-6 rounded-xl my-6">
+          <div className="container mx-auto px-4">
+            <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
           </div>
         </div>
 
-        {/* 4. IQ Tests Section 
-        <IQTestCards />
+        <SectionContainer className="horizontal-scroll-section">
+          <DailyTriviaFact />
+        </SectionContainer>
+
+        {/* Commented out IQ & Personality Tests section for future use
+        <SectionContainer className="horizontal-scroll-section">
+          <HorizontalScrollSection 
+            title="IQ & Personality Tests" 
+            items={IQ_PERSONALITY_TESTS} 
+          />
+        </SectionContainer>
         */}
-          
-        {/* 5. More Games Section */}
+
         <MoreGames />
 
-        {/* 6. Key Features with Value Proposition */}
         <CategoryShowcase />
-
-        {/* Footer Ad */}
-        <div className="bg-gray-900 dark:bg-gray-800 py-6">
-          <div className="container mx-auto px-4">
-            <Ads 
-              slot='8810472236'
-              format="fluid" 
-              className="rounded-xl shadow-smooth"
-              style={{ width: '100%', height: '90px' }} 
-            />
-          </div>
-        </div>
-     
-
-        {/* 7. Clean Category Showcase */}
+ 
         <KeyFeatures />
+
         
-        {/* 7. Social Proof & Final CTA 
-        <SocialProof />*/}
       </main>
+
+      <div className="bg-gray-800/50 py-6">
+        <div className="container mx-auto px-4">
+          <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
+        </div>
+      </div>
+      
       <Footer />
     </div>
   );

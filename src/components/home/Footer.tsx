@@ -1,27 +1,19 @@
-// components/home/Footer.tsx
+// components/home/Footer.tsx - Dark Theme
 import Link from 'next/link';
-import Image from 'next/image';
 import { MdInfo, MdEmail, MdSecurity, MdLeaderboard } from 'react-icons/md';
 import { FaGamepad, FaTwitter, FaDiscord, FaTrophy } from 'react-icons/fa';
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-gray-800 border-t border-gray-700 py-12 px-4" data-no-ads="true">
+    <footer className="bg-gray-900 border-t border-gray-800 py-12 px-4" data-no-ads="true">
       <div className="container mx-auto max-w-6xl">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand Section */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              {/* Logo with SVG */}
               <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center">
-                <Image 
-                  src="/imgs/bulb.svg" 
-                  alt="Triviaah Logo" 
-                  width={20} 
-                  height={20}
-                  className="text-white" // You can adjust this if needed
-                />
+                <div className="text-white text-xl">🧠</div>
               </div>
               <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
                 Triviaah
@@ -48,13 +40,13 @@ export default function Footer() {
               <li>
                 <Link href="/brainwave" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300 flex items-center gap-2 group">
                   <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full group-hover:scale-150 transition-transform"></div>
-                  Brain Teasers
+                  Brain Waves
                 </Link>
               </li>
               <li>
                 <Link href="/categories" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300 flex items-center gap-2 group">
                   <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full group-hover:scale-150 transition-transform"></div>
-                  All Quizzes
+                  All Trivias
                 </Link>
               </li>
               <li>
@@ -63,7 +55,6 @@ export default function Footer() {
                   Leaderboard
                 </Link>
               </li>
-              
             </ul>
           </div>
 
@@ -103,7 +94,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-gray-700">
+        <div className="pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-gray-400 text-sm">
               © {new Date().getFullYear()} Triviaah. Play free daily trivia challenges with answers and online quiz games.

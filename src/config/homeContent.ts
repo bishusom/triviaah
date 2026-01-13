@@ -5,7 +5,7 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
    {
     category: 'quick-fire',
     name: 'Quick Fire',
-    path: '/quick-fire',
+    path: '/daily-trivias/quick-fire',
     image: '/imgs/thumbnails/quick-fire-160x160.webp',
     tagline: 'Test your reaction time and knowledge with our 60-second challenge!',
     keywords: 'rapid fire trivia, quick fire triva, general knowledge quiz, daily trivia, daily quiz with answers',
@@ -21,7 +21,7 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
   {
     category: 'today-in-history',
     name: 'Today in History',
-    path: '/today-in-history',
+    path: '/daily-trivias/today-in-history',
     image: '/imgs/thumbnails/today-history-160x160.webp',
     tagline: 'Discover historical events from this date in free online trivia',
     keywords: 'historical trivia quiz, on this day trivia, history facts game, history quiz with answers',
