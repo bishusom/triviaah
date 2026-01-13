@@ -24,6 +24,17 @@ interface ContentfulAsset {
 
 const options = {
   renderNode: {
+     [BLOCKS.PARAGRAPH]: (node: Block | Inline, next: (nodes: (Block | Inline)[]) => string) => {
+      const content = next(node.content as (Block | Inline)[]);
+      
+      // Check if the paragraph is empty (only whitespace or line breaks)
+      if (!content || content.trim() === '') {
+        // Return a paragraph with non-breaking space to preserve the empty line
+        return '<p>&nbsp;</p>';
+      }
+      
+      return `<p>${content}</p>`;
+    },
     [BLOCKS.EMBEDDED_ASSET]: (node: Block | Inline) => {
       // Type guard to ensure we have the right node structure
       if ('data' in node && node.data && typeof node.data === 'object' && 'target' in node.data) {

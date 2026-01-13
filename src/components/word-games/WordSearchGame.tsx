@@ -680,55 +680,59 @@ export default function WordSearchGame() {
 
         {/* Game Grid */}
         <div className="flex justify-center mb-6 md:mb-8">
-          <div
-            key={`grid-${gridKey}`}
-            ref={gridRef}
-            className="grid gap-1 md:gap-2 p-6 bg-gray-800/30 rounded-3xl backdrop-blur-sm border border-gray-700/60 shadow-2xl"
-            style={{
-              gridTemplateColumns: `repeat(${config[difficulty].gridCols}, 1fr)`,
-              gridTemplateRows: `repeat(${config[difficulty].gridRows}, 1fr)`,
-              width: 'fit-content',        // ← Crucial: let grid define its own size
-              maxWidth: '100%',
-              aspectRatio: `${config[difficulty].gridCols} / ${config[difficulty].gridRows}`,
-            }}
-          >
-            {grid.map((cell, index) => (
-              <div
-                key={`cell-${index}-${gridKey}`}
-                data-index={index}
-                className={`
-                  flex items-center justify-center font-bold text-2xl md:text-3xl
-                  transition-all duration-200 select-none rounded-xl
-                  border border-white/20 backdrop-blur-sm
-                  ${selectedCells.includes(index)
-                    ? 'bg-blue-500 text-white scale-110 shadow-2xl shadow-blue-500/60 z-10 border-blue-300'
-                    : foundWords.some(w => grid[index].word === w)
-                      ? 'bg-green-600/90 text-white shadow-lg shadow-green-500/50 border-green-400'
-                      : 'bg-gray-700/90 hover:bg-gray-600/90 text-white border-gray-600'
-                  }
-                `}
-                style={{
-                  aspectRatio: '1 / 1',
-                  minWidth: '36px',
-                  minHeight: '36px',
-                }}
-                onMouseDown={() => startSelection(index)}
-                onMouseEnter={() => continueSelection(index)}
-                onMouseUp={endSelection}
-                onTouchStart={(e) => { e.preventDefault(); startSelection(index); }}
-                onTouchMove={(e) => {
-                  e.preventDefault();
-                  const touch = e.touches[0];
-                  const el = document.elementFromPoint(touch.clientX, touch.clientY);
-                  if (el?.hasAttribute('data-index')) {
-                    continueSelection(parseInt(el.getAttribute('data-index')!, 10));
-                  }
-                }}
-                onTouchEnd={(e) => { e.preventDefault(); endSelection(); }}
-              >
-                {cell.letter.toUpperCase()}
-              </div>
-            ))}
+          <div className="overflow-hidden touch-none">
+            <div
+              key={`grid-${gridKey}`}
+              ref={gridRef}
+              className="grid gap-1 md:gap-2 p-6 bg-gray-800/30 rounded-3xl backdrop-blur-sm border border-gray-700/60 shadow-2xl"
+              style={{
+                gridTemplateColumns: `repeat(${config[difficulty].gridCols}, 1fr)`,
+                gridTemplateRows: `repeat(${config[difficulty].gridRows}, 1fr)`,
+                width: 'fit-content',        // ← Crucial: let grid define its own size
+                maxWidth: '100%',
+                aspectRatio: `${config[difficulty].gridCols} / ${config[difficulty].gridRows}`,
+                touchAction: 'none',
+              }}
+              onTouchMove={(e) => e.preventDefault()}
+            >
+              {grid.map((cell, index) => (
+                <div
+                  key={`cell-${index}-${gridKey}`}
+                  data-index={index}
+                  className={`
+                    flex items-center justify-center font-bold text-2xl md:text-3xl
+                    transition-all duration-200 select-none rounded-xl
+                    border border-white/20 backdrop-blur-sm
+                    ${selectedCells.includes(index)
+                      ? 'bg-blue-500 text-white scale-110 shadow-2xl shadow-blue-500/60 z-10 border-blue-300'
+                      : foundWords.some(w => grid[index].word === w)
+                        ? 'bg-green-600/90 text-white shadow-lg shadow-green-500/50 border-green-400'
+                        : 'bg-gray-700/90 hover:bg-gray-600/90 text-white border-gray-600'
+                    }
+                  `}
+                  style={{
+                    aspectRatio: '1 / 1',
+                    minWidth: '36px',
+                    minHeight: '36px',
+                  }}
+                  onMouseDown={() => startSelection(index)}
+                  onMouseEnter={() => continueSelection(index)}
+                  onMouseUp={endSelection}
+                  onTouchStart={(e) => { e.preventDefault(); startSelection(index); }}
+                  onTouchMove={(e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                    if (el?.hasAttribute('data-index')) {
+                      continueSelection(parseInt(el.getAttribute('data-index')!, 10));
+                    }
+                  }}
+                  onTouchEnd={(e) => { e.preventDefault(); endSelection(); }}
+                >
+                  {cell.letter.toUpperCase()}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
