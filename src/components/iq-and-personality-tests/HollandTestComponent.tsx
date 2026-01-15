@@ -777,8 +777,8 @@ Discover your career interests at https://elitetrivias.com/brainwave/holland`;
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <div className="bg-orange-50 p-4 rounded-lg">
                   <div className="flex items-center mb-2">
-                    <span className="text-2xl mr-2">🔧</span>
-                    <h5 className="font-medium text-orange-700">Realistic</h5>
+                    <span className="text-sm mr-2">🔧</span>
+                    <h5 className="font-small text-orange-700">Realistic</h5>
                   </div>
                   <div className="text-2xl font-bold text-gray-800 mb-1">
                     {scores.R}%
@@ -788,8 +788,8 @@ Discover your career interests at https://elitetrivias.com/brainwave/holland`;
                 
                 <div className="bg-green-50 p-4 rounded-lg">
                   <div className="flex items-center mb-2">
-                    <span className="text-2xl mr-2">🔬</span>
-                    <h5 className="font-medium text-green-700">Investigative</h5>
+                    <span className="text-sm mr-2">🔬</span>
+                    <h5 className="font-medium text-green-700">Investig.</h5>
                   </div>
                   <div className="text-2xl font-bold text-gray-800 mb-1">
                     {scores.I}%
@@ -799,7 +799,7 @@ Discover your career interests at https://elitetrivias.com/brainwave/holland`;
                 
                 <div className="bg-purple-50 p-4 rounded-lg">
                   <div className="flex items-center mb-2">
-                    <span className="text-2xl mr-2">🎨</span>
+                    <span className="text-sm mr-2">🎨</span>
                     <h5 className="font-medium text-purple-700">Artistic</h5>
                   </div>
                   <div className="text-2xl font-bold text-gray-800 mb-1">
@@ -810,7 +810,7 @@ Discover your career interests at https://elitetrivias.com/brainwave/holland`;
                 
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <div className="flex items-center mb-2">
-                    <span className="text-2xl mr-2">🤝</span>
+                    <span className="text-sm mr-2">🤝</span>
                     <h5 className="font-medium text-blue-700">Social</h5>
                   </div>
                   <div className="text-2xl font-bold text-gray-800 mb-1">
@@ -821,8 +821,8 @@ Discover your career interests at https://elitetrivias.com/brainwave/holland`;
                 
                 <div className="bg-red-50 p-4 rounded-lg">
                   <div className="flex items-center mb-2">
-                    <span className="text-2xl mr-2">💼</span>
-                    <h5 className="font-medium text-red-700">Enterprising</h5>
+                    <span className="text-sm mr-2">💼</span>
+                    <h5 className="font-medium text-red-700">Enterpr.</h5>
                   </div>
                   <div className="text-2xl font-bold text-gray-800 mb-1">
                     {scores.E}%
@@ -832,8 +832,8 @@ Discover your career interests at https://elitetrivias.com/brainwave/holland`;
                 
                 <div className="bg-yellow-50 p-4 rounded-lg">
                   <div className="flex items-center mb-2">
-                    <span className="text-2xl mr-2">📊</span>
-                    <h5 className="font-medium text-yellow-700">Conventional</h5>
+                    <span className="text-sm mr-2">📊</span>
+                    <h5 className="font-medium text-yellow-700">Convent.</h5>
                   </div>
                   <div className="text-2xl font-bold text-gray-800 mb-1">
                     {scores.C}%
@@ -1239,7 +1239,7 @@ Discover your career interests at https://elitetrivias.com/brainwave/holland`;
       </div>
 
       {/* How It Works Section */}
-      <div className="bg-gray-100 rounded-lg p-4 mt-6">
+      <div className="bg-gray-100 text-gray-800 rounded-lg p-4 mt-6">
         <h3 className="font-bold mb-3">🎯 How the Holland Career Assessment Works:</h3>
         <ul className="list-disc list-inside space-y-2 text-sm">
           <li><strong>Realistic (R):</strong> Practical, hands-on people who enjoy working with tools and machinery</li>

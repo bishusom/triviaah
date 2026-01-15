@@ -485,7 +485,7 @@ educational purposes only. It is not a clinical evaluation.
                 onChange={(e) => setMemoryInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAnswer(memoryInput)}
                 placeholder="e.g. Apple, River, Mountain, Clock, Bridge"
-                className="w-full px-6 py-4 text-xl text-center border-2 border-indigo-200 rounded-xl focus:border-indigo-500 focus:outline-none"
+                className="w-full px-6 py-4 text-xl text-gray-800 text-center border-2 border-indigo-200 rounded-xl focus:border-indigo-500 focus:outline-none"
               />
               <button
                 onClick={() => handleAnswer(memoryInput)}
@@ -513,7 +513,7 @@ educational purposes only. It is not a clinical evaluation.
                             {String.fromCharCode(65 + index)}
                           </span>
                         </div>
-                        <span>{option}</span>
+                        <span className="text-gray-800">{option}</span>
                       </div>
                     </button>
                   ))}

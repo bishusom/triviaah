@@ -832,7 +832,7 @@ Discover your DISC profile at https://elitetrivias.com/brainwave/disc`;
               <h4 className="font-semibold text-gray-700 mb-4 text-lg">
                 {isWorkStylePhase ? 'Your Work Style Scores' : 'Your Natural Style Scores'}
               </h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-red-50 p-4 rounded-lg">
                   <div className="flex items-center mb-2">
                     <span className="text-2xl mr-2">⚡</span>
@@ -869,12 +869,12 @@ Discover your DISC profile at https://elitetrivias.com/brainwave/disc`;
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <div className="flex items-center mb-2">
                     <span className="text-2xl mr-2">📊</span>
-                    <h5 className="font-medium text-blue-700">Conscientiousness</h5>
+                    <h5 className="font-medium text-blue-700 break-words sm:break-normal">Conscient..</h5>
                   </div>
                   <div className="text-2xl font-bold text-gray-800 mb-1">
                     {isWorkStylePhase ? behavior.adapted.C : behavior.natural.C}%
                   </div>
-                  <div className="text-xs text-gray-500">Careful, quality-focused</div>
+                  <div className="text-xs text-gray-500">Careful & analytical</div> {/* Shortened text */}
                 </div>
               </div>
             </div>
@@ -1236,7 +1236,7 @@ Discover your DISC profile at https://elitetrivias.com/brainwave/disc`;
       </div>
 
       {/* How It Works Section */}
-      <div className="bg-gray-100 rounded-lg p-4 mt-6">
+      <div className="bg-gray-100 text-gray-800 rounded-lg p-4 mt-6">
         <h3 className="font-bold mb-3">📊 How the DISC Assessment Works:</h3>
         <ul className="list-disc list-inside space-y-2 text-sm">
           <li><strong>Dominance (D):</strong> Measures directness, assertiveness, and results-orientation</li>

@@ -947,7 +947,7 @@ Discover your personality type at https://elitetrivias.com/brainwave/big-five`;
       </div>
 
       {/* How It Works Section */}
-      <div className="bg-gray-100 rounded-lg p-4 mt-6">
+      <div className="bg-gray-100 text-gray-800 rounded-lg p-4 mt-6">
         <h3 className="font-bold mb-3">📊 How the Big Five Test Works:</h3>
         <ul className="list-disc list-inside space-y-2 text-sm">
           <li><strong>Openness (O):</strong> Measures imagination, creativity, and willingness to try new things</li>

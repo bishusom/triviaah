@@ -25,7 +25,7 @@ export default function DISCPage() {
   };
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="disc-schema"
@@ -68,19 +68,19 @@ export default function DISCPage() {
         </div>
       )}
       
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-3xl mx-auto p-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-3">
+          <h1 className="text-4xl font-bold text-gray-30 mb-3">
             📊 DISC Behavioral Assessment
           </h1>
-          <p className="text-lg text-gray-600 mb-2">
+          <p className="text-lg text-gray-30 mb-2">
             Discover your communication style and behavioral preferences
           </p>
           <div className="inline-flex items-center bg-gradient-to-r from-red-100 to-blue-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium mb-2">
             💼 Professional Development • Team Building • Communication Skills
           </div>
-          <p className="text-gray-500">
+          <p className="text-gray-30">
             28 questions • Natural & Work Styles • Communication Insights • Team Dynamics
           </p>
         </div>
@@ -115,122 +115,123 @@ export default function DISCPage() {
         </div>
 
         {/* The Four DISC Styles */}
-        <div className="mt-8 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 className="font-bold text-2xl text-gray-800 mb-6 text-center">The Four DISC Behavioral Styles</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-red-50 p-6 rounded-lg">
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">D</div>
-                <div>
-                  <h4 className="font-bold text-lg text-red-800">Dominance</h4>
-                  <p className="text-sm text-red-600">Direct & Decisive</p>
-                </div>
-              </div>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">•</span>
-                  <span>Results-oriented</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">•</span>
-                  <span>Competitive</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">•</span>
-                  <span>Assertive</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">•</span>
-                  <span>Problem-solver</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="bg-yellow-50 p-6 rounded-lg">
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">I</div>
-                <div>
-                  <h4 className="font-bold text-lg text-yellow-800">Influence</h4>
-                  <p className="text-sm text-yellow-600">Outgoing & Optimistic</p>
-                </div>
-              </div>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-yellow-500 mr-2">•</span>
-                  <span>People-oriented</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-yellow-500 mr-2">•</span>
-                  <span>Enthusiastic</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-yellow-500 mr-2">•</span>
-                  <span>Persuasive</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-yellow-500 mr-2">•</span>
-                  <span>Trusting</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="bg-green-50 p-6 rounded-lg">
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">S</div>
-                <div>
-                  <h4 className="font-bold text-lg text-green-800">Steadiness</h4>
-                  <p className="text-sm text-green-600">Steady & Supportive</p>
-                </div>
-              </div>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">•</span>
-                  <span>Team player</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">•</span>
-                  <span>Patient</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">•</span>
-                  <span>Good listener</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">•</span>
-                  <span>Reliable</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="bg-blue-50 p-6 rounded-lg">
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">C</div>
-                <div>
-                  <h4 className="font-bold text-lg text-blue-800">Conscientiousness</h4>
-                  <p className="text-sm text-blue-600">Careful & Analytical</p>
-                </div>
-              </div>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2">•</span>
-                  <span>Detail-oriented</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2">•</span>
-                  <span>Systematic</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2">•</span>
-                  <span>Quality-focused</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2">•</span>
-                  <span>Accurate</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+{/* The Four DISC Styles */}
+<div className="mt-8 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+  <h3 className="font-bold text-2xl text-gray-800 mb-6 text-center">The Four DISC Behavioral Styles</h3>
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6"> {/* Changed to 2x2 on desktop */}
+    <div className="bg-red-50 p-6 rounded-lg">
+      <div className="flex items-center mb-4">
+        <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">D</div>
+        <div>
+          <h4 className="font-bold text-lg text-red-800">Dominance</h4>
+          <p className="text-sm text-red-600">Direct & Decisive</p>
         </div>
+      </div>
+      <ul className="space-y-2 text-sm text-gray-700">
+        <li className="flex items-start">
+          <span className="text-red-500 mr-2">•</span>
+          <span>Results-oriented</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-red-500 mr-2">•</span>
+          <span>Competitive</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-red-500 mr-2">•</span>
+          <span>Assertive</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-red-500 mr-2">•</span>
+          <span>Problem-solver</span>
+        </li>
+      </ul>
+    </div>
+    
+    <div className="bg-yellow-50 p-6 rounded-lg">
+      <div className="flex items-center mb-4">
+        <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">I</div>
+        <div>
+          <h4 className="font-bold text-lg text-yellow-800">Influence</h4>
+          <p className="text-sm text-yellow-600">Outgoing & Optimistic</p>
+        </div>
+      </div>
+      <ul className="space-y-2 text-sm text-gray-700">
+        <li className="flex items-start">
+          <span className="text-yellow-500 mr-2">•</span>
+          <span>People-oriented</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-yellow-500 mr-2">•</span>
+          <span>Enthusiastic</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-yellow-500 mr-2">•</span>
+          <span>Persuasive</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-yellow-500 mr-2">•</span>
+          <span>Trusting</span>
+        </li>
+      </ul>
+    </div>
+    
+    <div className="bg-green-50 p-6 rounded-lg">
+      <div className="flex items-center mb-4">
+        <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">S</div>
+        <div>
+          <h4 className="font-bold text-lg text-green-800">Steadiness</h4>
+          <p className="text-sm text-green-600">Steady & Supportive</p>
+        </div>
+      </div>
+      <ul className="space-y-2 text-sm text-gray-700">
+        <li className="flex items-start">
+          <span className="text-green-500 mr-2">•</span>
+          <span>Team player</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-green-500 mr-2">•</span>
+          <span>Patient</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-green-500 mr-2">•</span>
+          <span>Good listener</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-green-500 mr-2">•</span>
+          <span>Reliable</span>
+        </li>
+      </ul>
+    </div>
+    
+    <div className="bg-blue-50 p-6 rounded-lg">
+      <div className="flex items-center mb-4">
+        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">C</div>
+        <div>
+          <h4 className="font-bold text-lg text-blue-800">Conscientiousness</h4>
+          <p className="text-sm text-blue-600">Careful & Analytical</p>
+        </div>
+      </div>
+      <ul className="space-y-2 text-sm text-gray-700">
+        <li className="flex items-start">
+          <span className="text-blue-500 mr-2">•</span>
+          <span>Detail-oriented</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-blue-500 mr-2">•</span>
+          <span>Systematic</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-blue-500 mr-2">•</span>
+          <span>Quality-focused</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-blue-500 mr-2">•</span>
+          <span>Accurate</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
 
         {/* Benefits Section */}
         <div className="mt-8 bg-gradient-to-r from-green-50 to-teal-50 p-6 rounded-lg border border-green-200">

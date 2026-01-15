@@ -126,6 +126,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // DYNAMIC: Subcategory pages - MEDIUM priority
   const subcategoryPages = await fetchSubcategoryPages(baseUrl)
 
+  // IQ Tests - MEDIUM priority
+  const iQPersonalityTestsCatalog: MetadataRoute.Sitemap = [{
+    url: `${baseUrl}/iq-and-personality-tests`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: PRIORITY_TIERS.MEDIUM,
+  }]
+
+  const iQPersonalityTests = ['capa', 'matrixiq', 'mbti', 'big-five', 'enneagram', 'disc', 'love-languages', 'holland-code']
+  const iQPersonalityTestsPages: MetadataRoute.Sitemap = iQPersonalityTests.map(test => ({
+    url: `${baseUrl}/iq-and-personality-tests/${test}`,
+    lastModified: new Date(),
+    changeFrequency: 'yearly',
+    priority: PRIORITY_TIERS.MEDIUM,
+  }))
+
   // Word games - MEDIUM priority
   const wordGamesCatalog: MetadataRoute.Sitemap = [{
     url: `${baseUrl}/word-games`,
@@ -174,6 +190,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...triviaCategoryPages,
     ...triviaQuizPages,
     ...subcategoryPages,
+    ...iQPersonalityTestsCatalog,
+    ...iQPersonalityTestsPages,
     ...wordGamesCatalog,
     ...wordGamePages,
     ...numberPuzzleCatalog,

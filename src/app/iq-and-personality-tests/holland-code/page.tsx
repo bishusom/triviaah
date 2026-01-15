@@ -25,7 +25,7 @@ export default function HollandPage() {
   };
 
   return (
-    <div className="page-with-ads">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="holland-schema"
@@ -68,19 +68,19 @@ export default function HollandPage() {
         </div>
       )}
       
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-3xl mx-auto p-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-3">
+          <h1 className="text-4xl font-bold text-gray-30 mb-3">
             🎯 Holland Career Assessment
           </h1>
-          <p className="text-lg text-gray-600 mb-2">
+          <p className="text-lg text-gray-30 mb-2">
             Discover your career interests based on the RIASEC theory
           </p>
           <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-green-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium mb-2">
             💼 Career Guidance • Personality Matching • Professional Development
           </div>
-          <p className="text-gray-500">
+          <p className="text-gray-30">
             36 questions • Get Your Holland Code • Career Recommendations • Growth Insights
           </p>
         </div>

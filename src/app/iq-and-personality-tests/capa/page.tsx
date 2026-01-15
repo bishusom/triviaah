@@ -122,8 +122,8 @@ export default function CognitiveAssessmentPage() {
             <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
               <Brain size={28} className="text-blue-600" />
             </div>
-            <h3 className="text-xl font-bold text-gray-30 mb-3">Scientifically-Informed</h3>
-            <p className="text-gray-30">
+            <h3 className="text-xl font-bold text-gray-800 mb-3">Scientifically-Informed</h3>
+            <p className="text-gray-800">
               Based on cognitive psychology research, neuroscience, and psychometric principles.
             </p>
           </div>
@@ -132,8 +132,8 @@ export default function CognitiveAssessmentPage() {
             <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mb-4">
               <Users size={28} className="text-green-600" />
             </div>
-            <h3 className="text-xl font-bold text-gray-30 mb-3">Personalized Insights</h3>
-            <p className="text-gray-30">
+            <h3 className="text-xl font-bold text-gray-800 mb-3">Personalized Insights</h3>
+            <p className="text-gray-800">
               Receive tailored learning strategies and career suggestions based on your unique profile.
             </p>
           </div>
@@ -142,8 +142,8 @@ export default function CognitiveAssessmentPage() {
             <div className="w-14 h-14 rounded-full bg-purple-100 flex items-center justify-center mb-4">
               <Award size={28} className="text-purple-600" />
             </div>
-            <h3 className="text-xl font-bold text-gray-30 mb-3">No Registration</h3>
-            <p className="text-gray-30">
+            <h3 className="text-xl font-bold text-gray-800 mb-3">No Registration</h3>
+            <p className="text-gray-800">
               Start immediately. All processing happens on your device for maximum privacy.
             </p>
           </div>
@@ -156,36 +156,36 @@ export default function CognitiveAssessmentPage() {
 
         {/* FAQ Section */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-16">
-          <h2 className="text-3xl font-bold text-gray-30 mb-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
             Frequently Asked Questions
           </h2>
           
           <div className="space-y-6">
             <div className="border border-gray-200 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-30 mb-3">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">
                 🤔 What makes this assessment different from IQ tests?
               </h3>
-              <p className="text-gray-30">
+              <p className="text-gray-800">
                 This assessment focuses on understanding your unique cognitive profile rather than calculating a single number. 
                 It measures 6 distinct domains and provides practical insights for learning and career development.
               </p>
             </div>
             
             <div className="border border-gray-200 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-30 mb-3">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">
                 🔒 How is my privacy protected?
               </h3>
-              <p className="text-gray-30">
+              <p className="text-gray-800">
                 All test processing happens locally on your device. We don&apos;t store your answers or results on our servers. 
                 You can download your report and it remains with you.
               </p>
             </div>
             
             <div className="border border-gray-200 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-30 mb-3">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">
                 📊 How accurate are the results?
               </h3>
-              <p className="text-gray-30">
+              <p className="text-gray-800">
                 This assessment is designed for self-discovery and educational purposes. 
                 While it&apos;s based on cognitive science principles, it&apos;s not a clinical evaluation. 
                 For formal assessments, consult a licensed psychologist.
@@ -193,10 +193,10 @@ export default function CognitiveAssessmentPage() {
             </div>
             
             <div className="border border-gray-200 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-30 mb-3">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">
                 💼 How can I use my results?
               </h3>
-              <p className="text-gray-30">
+              <p className="text-gray-800">
                 Your cognitive profile can help you understand your optimal learning styles, 
                 choose careers that match your strengths, develop better study strategies, 
                 and improve your problem-solving approaches.
@@ -212,12 +212,12 @@ export default function CognitiveAssessmentPage() {
               <span className="text-2xl">⚠️</span>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-30 mb-3">Important Disclaimer</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-3">Important Disclaimer</h3>
               <p className="text-gray-700 mb-3">
                 This cognitive assessment is for self-discovery, educational, and entertainment purposes only. 
                 It is not a psychological evaluation, clinical diagnosis, or professional assessment of intelligence.
               </p>
-              <ul className="text-gray-30 space-y-2">
+              <ul className="text-gray-800 space-y-2">
                 <li className="flex items-start">
                   <span className="text-gray-400 mr-2">•</span>
                   <span>Not for use in clinical, educational, or occupational selection</span>

@@ -70,20 +70,20 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
 
 export const BRAIN_WAVES: ReadonlySectionItems = [
   {
-    category: 'capitale',
-    name: 'Capitale',
-    path: '/brainwave/capitale',
-    image: '/imgs/thumbnails/capitale-160x160.webp',
-    tagline: 'Guess world capitals in this challenging geography puzzle',
-    keywords: 'capital cities game, geography puzzle, world capitals quiz'
-  },
-  {
     category: 'plotle',
     name: 'Plotle',
     path: '/brainwave/plotle',
     image: '/imgs/thumbnails/plotle-160x160.webp',
     tagline: 'Guess the movie from its plot description in emojis',
     keywords: 'movie plot game, film trivia, movie guessing game'
+  },
+  {
+    category: 'capitale',
+    name: 'Capitale',
+    path: '/brainwave/capitale',
+    image: '/imgs/thumbnails/capitale-160x160.webp',
+    tagline: 'Guess world capitals in this challenging geography puzzle',
+    keywords: 'capital cities game, geography puzzle, world capitals quiz'
   },
   {
     category: 'celebrile',

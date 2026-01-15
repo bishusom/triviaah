@@ -1115,7 +1115,7 @@ Discover your love language at https://elitetrivias.com/brainwave/love-languages
       </div>
 
       {/* How It Works Section */}
-      <div className="bg-gray-100 rounded-lg p-4 mt-6">
+      <div className="bg-gray-100 text-gray-800 rounded-lg p-4 mt-6">
         <h3 className="font-bold mb-3">❤️ How Love Languages Work:</h3>
         <ul className="list-disc list-inside space-y-2 text-sm">
           <li><strong>Words of Affirmation (WA):</strong> Expressing affection through spoken words, praise, or appreciation</li>

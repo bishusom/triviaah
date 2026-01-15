@@ -7,7 +7,7 @@ import NavBar from '@/components/home/NavBar';
 import CategoryShowcase from '@/components/home/sections/CategoryShowcase';
 import HorizontalScrollSection from '@/components/home/sections/HorizontalScrollSection';
 import Footer from '@/components/home/Footer'
-import { DAILY_QUIZZES, BRAIN_WAVES } from '@/config/homeContent';
+import { DAILY_QUIZZES, BRAIN_WAVES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
 
 // Import new section components
 import HeaderSection from '@/components/home/sections/HeaderSection';
@@ -72,14 +72,12 @@ export default function HomePageContent() {
           <DailyTriviaFact />
         </SectionContainer>
 
-        {/* Commented out IQ & Personality Tests section for future use
         <SectionContainer className="horizontal-scroll-section">
           <HorizontalScrollSection 
             title="IQ & Personality Tests" 
             items={IQ_PERSONALITY_TESTS} 
           />
         </SectionContainer>
-        */}
 
         <MoreGames />
 
