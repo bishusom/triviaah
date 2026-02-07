@@ -7,7 +7,7 @@ import NavBar from '@/components/home/NavBar';
 import CategoryShowcase from '@/components/home/sections/CategoryShowcase';
 import HorizontalScrollSection from '@/components/home/sections/HorizontalScrollSection';
 import Footer from '@/components/home/Footer'
-import { DAILY_QUIZZES, BRAIN_WAVES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
+import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
 
 // Import new section components
 import HeaderSection from '@/components/home/sections/HeaderSection';
@@ -67,6 +67,13 @@ export default function HomePageContent() {
             <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
           </div>
         </div>
+
+        <SectionContainer className="horizontal-scroll-section">
+          <HorizontalScrollSection 
+            title="Retro Games Collection" 
+            items={RETRO_GAMES} 
+          />
+        </SectionContainer>
 
         <SectionContainer className="horizontal-scroll-section">
           <DailyTriviaFact />

@@ -266,6 +266,41 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
   }
 ] as const;
 
+export const RETRO_GAMES: ReadonlySectionItems = [
+  {
+    category: 'snake',
+    name: 'Snake',
+    path: '/retro-games/snake',
+    image: '/imgs/thumbnails/snake-160x160.webp',
+    tagline: 'Classic arcade game where you control a snake to eat food and avoid collisions',
+    keywords: 'snake game, classic arcade game, retro gaming, mobile snake game, snake puzzle'
+  },
+  {
+    category: 'pong',
+    name: 'Pong',
+    path: '/retro-games/pong',
+    image: '/imgs/thumbnails/pong-160x160.webp',
+    tagline: 'Timeless table tennis arcade game where players control paddles to hit a ball back and forth',
+    keywords: 'pong game, table tennis arcade, retro gaming, classic pong, competitive game'
+  },
+  {
+    category: 'minesweeper',
+    name: 'Minesweeper',
+    path: '/retro-games/minesweeper',
+    image: '/imgs/thumbnails/minesweeper-160x160.webp',
+    tagline: 'Classic puzzle game where you uncover safe tiles while avoiding hidden mines',
+    keywords: 'minesweeper game, classic puzzle game, retro gaming, mine detection, strategy game'
+  },
+  {
+    category: 'tetris',
+    name: 'Tetris',
+    path: '/retro-games/tetris',
+    image: '/imgs/thumbnails/tetris-160x160.webp',
+    tagline: 'Classic puzzle game where you stack falling blocks to complete lines',
+    keywords: 'tetris game, classic puzzle game, retro gaming, block stacking, strategy game'
+  }
+] as const;
+
 export const ADDITIONAL_SECTIONS: ReadonlySectionItems = [
   {
     category: 'word-games',

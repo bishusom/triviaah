@@ -126,6 +126,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // DYNAMIC: Subcategory pages - MEDIUM priority
   const subcategoryPages = await fetchSubcategoryPages(baseUrl)
 
+  // Retro Game - MEDIUM priority
+  const retroGamesCatalog: MetadataRoute.Sitemap = [{
+    url: `${baseUrl}/retro-games`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: PRIORITY_TIERS.MEDIUM,
+  }]
+
+  const retroGames = ['snake', 'pong', 'minesweeper', 'tetris']
+  const retroGamePages: MetadataRoute.Sitemap = retroGames.map(game => ({
+    url: `${baseUrl}/retro-games/${game}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: PRIORITY_TIERS.MEDIUM,
+  }))
+
   // IQ Tests - MEDIUM priority
   const iQPersonalityTestsCatalog: MetadataRoute.Sitemap = [{
     url: `${baseUrl}/iq-and-personality-tests`,
@@ -190,6 +206,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...triviaCategoryPages,
     ...triviaQuizPages,
     ...subcategoryPages,
+    ...retroGamesCatalog,
+    ...retroGamePages,
     ...iQPersonalityTestsCatalog,
     ...iQPersonalityTestsPages,
     ...wordGamesCatalog,
