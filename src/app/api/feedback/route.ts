@@ -1,4 +1,4 @@
-// app/api/feedback/route.ts - Clean version
+// app/api/feedback/route.ts - Updated with comment support
 import { NextRequest, NextResponse } from 'next/server';
 import { addFeedback, getFeedback } from '@/lib/supabase';
 
@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
     
     const { 
       rating, 
+      comment = '',
       category, 
       gameType = 'trivia', 
       metadata = {},
@@ -23,6 +24,7 @@ export async function POST(request: NextRequest) {
 
     const feedbackData = {
       rating: Number(rating),
+      comment: comment.trim(),
       category: category || gameType,
       gameType,
       metadata,
@@ -50,8 +52,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const limitCount = Number(searchParams.get('limit')) || 50;
     const gameType = searchParams.get('gameType');
+    const minRating = searchParams.get('minRating');
+    const hasComments = searchParams.get('hasComments');
     
-    const feedback = await getFeedback(limitCount, gameType);
+    const feedback = await getFeedback(limitCount, gameType, minRating, hasComments);
 
     return NextResponse.json(feedback);
 

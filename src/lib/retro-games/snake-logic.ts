@@ -1,8 +1,7 @@
-// src/lib/retrogames/snake-logic.ts
+// src/lib/retrogames/snake-logic-simple.ts
+
 export type Direction = 'up' | 'down' | 'left' | 'right';
 export type GameState = 'playing' | 'paused' | 'gameover';
-export type Difficulty = 'easy' | 'medium' | 'hard';
-export type GameMode = 'classic' | 'wrapped' | 'portal';
 
 export interface Position {
   x: number;
@@ -15,9 +14,8 @@ export interface SnakeSegment extends Position {
 }
 
 export interface Food extends Position {
-  type: 'normal' | 'golden' | 'speed';
+  type: 'normal';
   value: number;
-  expiresAt?: number; // For timed food items
 }
 
 export interface SnakeGame {
@@ -31,85 +29,17 @@ export interface SnakeGame {
   score: number;
   highScore: number;
   gameState: GameState;
-  difficulty: Difficulty;
-  mode: GameMode;
   speed: number;
-  foodsEaten: number;
-  streak: number;
   lastUpdateTime: number;
   isGrowing: boolean;
 }
 
-// Constants
 export const GRID_SIZE = 20;
 export const INITIAL_SPEED = 150; // ms per move
-
-export const DIFFICULTIES = {
-  easy: {
-    speed: 200,
-    foodSpawnRate: 0.05,
-    goldenFoodChance: 0.1,
-    speedFoodChance: 0.05,
-  },
-  medium: {
-    speed: 150,
-    foodSpawnRate: 0.07,
-    goldenFoodChance: 0.15,
-    speedFoodChance: 0.07,
-  },
-  hard: {
-    speed: 100,
-    foodSpawnRate: 0.1,
-    goldenFoodChance: 0.2,
-    speedFoodChance: 0.1,
-  },
-};
-
-export const GAME_MODES = {
-  classic: {
-    name: 'Classic',
-    description: 'Hit walls or yourself = game over',
-    width: 30,
-    height: 20,
-  },
-  wrapped: {
-    name: 'Wrapped',
-    description: 'Walls wrap around to opposite side',
-    width: 30,
-    height: 20,
-  },
-  portal: {
-    name: 'Portal',
-    description: 'Portals appear randomly on walls',
-    width: 30,
-    height: 20,
-  },
-};
-
-export const FOOD_TYPES = {
-  normal: {
-    color: 'bg-red-500',
-    value: 1,
-    lifetime: Infinity,
-  },
-  golden: {
-    color: 'bg-yellow-500',
-    value: 5,
-    lifetime: 10000, // 10 seconds
-  },
-  speed: {
-    color: 'bg-blue-500',
-    value: 3,
-    lifetime: 5000, // 5 seconds
-    effect: 0.7, // 70% of normal speed
-  },
-};
 
 export function createGame(
   width: number = 30,
   height: number = 20,
-  difficulty: Difficulty = 'medium',
-  mode: GameMode = 'classic'
 ): SnakeGame {
   const centerX = Math.floor(width / 2);
   const centerY = Math.floor(height / 2);
@@ -132,11 +62,7 @@ export function createGame(
     score: 0,
     highScore: 0,
     gameState: 'paused',
-    difficulty,
-    mode,
-    speed: DIFFICULTIES[difficulty].speed,
-    foodsEaten: 0,
-    streak: 0,
+    speed: INITIAL_SPEED,
     lastUpdateTime: Date.now(),
     isGrowing: false,
   };
@@ -174,36 +100,14 @@ export function updateGame(game: SnakeGame): SnakeGame {
       break;
   }
   
-  // Handle game modes
-  if (newGame.mode === 'wrapped') {
-    // Wrap around edges
-    if (newHead.x < 0) newHead.x = newGame.width - 1;
-    if (newHead.x >= newGame.width) newHead.x = 0;
-    if (newHead.y < 0) newHead.y = newGame.height - 1;
-    if (newHead.y >= newGame.height) newHead.y = 0;
-  } else if (newGame.mode === 'portal') {
-    // Portal logic (simplified - teleport to random location)
-    if (newHead.x < 0 || newHead.x >= newGame.width || 
-        newHead.y < 0 || newHead.y >= newGame.height) {
-      newHead = {
-        x: Math.floor(Math.random() * newGame.width),
-        y: Math.floor(Math.random() * newGame.height),
-      };
-      // Add portal effect score
-      newGame.score += 1;
-    }
-  }
-  
-  // Check collision with walls (for classic mode)
-  if (newGame.mode === 'classic') {
-    if (
-      newHead.x < 0 ||
-      newHead.x >= newGame.width ||
-      newHead.y < 0 ||
-      newHead.y >= newGame.height
-    ) {
-      return { ...newGame, gameState: 'gameover' };
-    }
+  // Check collision with walls
+  if (
+    newHead.x < 0 ||
+    newHead.x >= newGame.width ||
+    newHead.y < 0 ||
+    newHead.y >= newGame.height
+  ) {
+    return { ...newGame, gameState: 'gameover' };
   }
   
   // Check collision with self
@@ -259,27 +163,11 @@ export function updateGame(game: SnakeGame): SnakeGame {
   // Check for food collision
   let foodEaten = false;
   let foodValue = 0;
-  let speedEffect = 1;
   
   newGame.food = newGame.food.filter(food => {
     if (food.x === newHead.x && food.y === newHead.y) {
       foodEaten = true;
       foodValue = food.value;
-      
-      // Apply food effects
-      if (food.type === 'speed') {
-        speedEffect = 0.7; // 30% faster for a short time
-        setTimeout(() => {
-          // Reset speed after effect wears off
-          // We'll handle this through game state updates
-        }, 5000);
-      }
-      
-      // Remove expired food
-      if (food.expiresAt && now > food.expiresAt) {
-        return false;
-      }
-      
       return false; // Remove eaten food
     }
     return true;
@@ -291,33 +179,17 @@ export function updateGame(game: SnakeGame): SnakeGame {
     
     // Update score
     newGame.score += foodValue;
-    newGame.foodsEaten += 1;
-    newGame.streak += 1;
-    
-    // Apply speed effect
-    if (speedEffect !== 1) {
-      newGame.speed = Math.floor(DIFFICULTIES[newGame.difficulty].speed * speedEffect);
-    }
     
     // Update high score
     if (newGame.score > newGame.highScore) {
       newGame.highScore = newGame.score;
     }
-  } else {
-    // Reset streak if no food eaten this move
-    newGame.streak = 0;
   }
   
-  // Spawn new food
-  spawnFood(newGame);
-  
-  // Remove expired food
-  newGame.food = newGame.food.filter(food => {
-    if (food.expiresAt && now > food.expiresAt) {
-      return false;
-    }
-    return true;
-  });
+  // Spawn new food if there is none
+  if (newGame.food.length === 0) {
+    newGame = spawnFood(newGame);
+  }
   
   newGame.lastUpdateTime = now;
   return newGame;
@@ -325,13 +197,6 @@ export function updateGame(game: SnakeGame): SnakeGame {
 
 function spawnFood(game: SnakeGame): SnakeGame {
   const newGame = { ...game };
-  const now = Date.now();
-  const settings = DIFFICULTIES[newGame.difficulty];
-  
-  // Check if we should spawn food
-  if (Math.random() > settings.foodSpawnRate) {
-    return newGame;
-  }
   
   // Try to find empty cell
   let attempts = 0;
@@ -344,27 +209,12 @@ function spawnFood(game: SnakeGame): SnakeGame {
     const isOnFood = newGame.food.some(food => food.x === x && food.y === y);
     
     if (!isOnSnake && !isOnFood) {
-      // Determine food type
-      let type: 'normal' | 'golden' | 'speed' = 'normal';
-      const rand = Math.random();
-      
-      if (rand < settings.speedFoodChance) {
-        type = 'speed';
-      } else if (rand < settings.speedFoodChance + settings.goldenFoodChance) {
-        type = 'golden';
-      }
-      
       const food: Food = {
         x,
         y,
-        type,
-        value: FOOD_TYPES[type].value,
+        type: 'normal',
+        value: 1,
       };
-      
-      // Add expiration for special foods
-      if (type !== 'normal') {
-        food.expiresAt = now + FOOD_TYPES[type].lifetime!;
-      }
       
       newGame.food.push(food);
       break;
@@ -407,8 +257,6 @@ export function resetGame(game: SnakeGame): SnakeGame {
   const newGame = createGame(
     game.width,
     game.height,
-    game.difficulty,
-    game.mode
   );
   return {
     ...newGame,
@@ -419,9 +267,4 @@ export function resetGame(game: SnakeGame): SnakeGame {
 
 export function getSnakeLength(game: SnakeGame): number {
   return game.snake.length;
-}
-
-export function getSpeedLevel(game: SnakeGame): number {
-  const baseSpeed = DIFFICULTIES[game.difficulty].speed;
-  return Math.floor((baseSpeed - game.speed) / 10) + 1;
 }

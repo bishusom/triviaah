@@ -63,7 +63,7 @@ function GameCard({ game, index }: { game: typeof retroGames[0]; index: number }
   return (
     <Link
       key={game.slug}
-      href={`/brainwave/${game.slug}`}
+      href={`/retro-games/${game.slug}`}
       className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-gray-800 to-gray-900 border border-amber-500/20 hover:border-amber-400/40"
     >
       {/* Animated background gradient */}

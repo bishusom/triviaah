@@ -651,6 +651,7 @@ export async function addHighScore(scoreData: Omit<HighScore, 'id'>): Promise<st
 interface DatabaseFeedbackRow {
   id: string;
   rating: number;
+  comment?: string;
   category: string;
   game_type: string;
   metadata: Record<string, unknown>;
@@ -662,6 +663,7 @@ interface DatabaseFeedbackRow {
 export type Feedback = {
   id?: string;
   rating: number;
+  comment?: string;
   category: string;
   gameType: string;
   metadata: Record<string, unknown>;
@@ -676,6 +678,7 @@ export async function addFeedback(feedbackData: Omit<Feedback, 'id'>): Promise<s
       .from('feedback')
       .insert([{
         rating: feedbackData.rating,
+        comment: feedbackData.comment || null,
         category: feedbackData.category,
         game_type: feedbackData.gameType,
         metadata: feedbackData.metadata,
@@ -696,7 +699,9 @@ export async function addFeedback(feedbackData: Omit<Feedback, 'id'>): Promise<s
 
 export async function getFeedback(
   limitCount: number = 50, 
-  gameType?: string | null
+  gameType?: string | null,
+  minRating?: string | null,
+  hasComments?: string | null
 ): Promise<Feedback[]> {
   try {
     let query = supabase
@@ -709,6 +714,16 @@ export async function getFeedback(
       query = query.eq('game_type', gameType);
     }
 
+    if (minRating) {
+      query = query.gte('rating', parseInt(minRating));
+    }
+
+    if (hasComments === 'true') {
+      query = query.not('comment', 'is', null).not('comment', 'eq', '');
+    } else if (hasComments === 'false') {
+      query = query.or('comment.is.null,comment.eq.');
+    }
+
     const { data: feedback, error } = await query;
 
     if (error) throw error;
@@ -716,6 +731,7 @@ export async function getFeedback(
     return (feedback || []).map((item: DatabaseFeedbackRow) => ({
       id: item.id,
       rating: item.rating,
+      comment: item.comment || undefined,
       category: item.category,
       gameType: item.game_type,
       metadata: item.metadata || {},
