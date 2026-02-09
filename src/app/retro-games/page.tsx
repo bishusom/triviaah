@@ -6,8 +6,21 @@ import { useState, useEffect } from 'react';
 import { Play, Boxes, Star, Clock, Users, Gamepad2, Zap, Target, Trophy, History } from 'lucide-react';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { slu } from 'mathjs';
 
 const retroGames = [
+  {
+    slug: 'tic-tac-toe',
+    name: 'Tic Tac Toe',
+    image: '/imgs/retro-games/tictactoe.webp',
+    description: 'Classic two-player game of Xs and Os on a 3x3 grid',
+    tagline: 'Challenge a friend or the AI in this timeless game of strategy and skill',
+    features: ['Two-player mode', 'AI opponent', 'Score tracking'],
+    color: 'orange',
+    keywords: 'tic tac toe, noughts and crosses, two-player game, classic strategy game',
+    year: '1952',
+    difficulty: 'Easy'
+  },
    {
     slug: 'snake',
     name: 'Snake',
@@ -55,6 +68,42 @@ const retroGames = [
     keywords: 'tetris, block puzzle, falling blocks, line clear game',
     year: '1984',
     difficulty: 'Easy to Hard'
+  },
+  {
+    slug: 'space-invaders',
+    name: 'Space Invaders',
+    image: '/imgs/retro-games/space-invaders.webp',
+    description: 'Defend Earth from waves of descending alien invaders',
+    tagline: 'Pilot your spaceship to shoot down alien invaders and protect humanity',
+    features: ['Classic shooter', 'Multiple levels', 'Power-ups'],
+    color: 'red',
+    keywords: 'space invaders, alien shooter, classic arcade game, spaceship defense',
+    year: '1978',
+    difficulty: 'Medium'
+  },
+  {
+    slug: 'pacman',
+    name: 'PacMan',
+    image: '/imgs/retro-games/pacman.webp',
+    description: 'Navigate the maze collecting dots while avoiding ghosts',
+    tagline: 'Eat dots and avoid ghosts in this classic arcade game',
+    features: ['Maze navigation', 'Ghost AI', 'Power pellets'],
+    color: 'yellow',
+    keywords: 'pac-man, maze game, ghost avoidance, classic arcade game',
+    year: '1980',
+    difficulty: 'Medium'
+  },
+  {  
+    slug: 'breakout',
+    name: 'Breakout',
+    image: '/imgs/retro-games/breakout.webp',
+    description: 'Bounce a ball to break bricks and clear levels',
+    tagline: 'Control the paddle to bounce the ball and break all the bricks',
+    features: ['Brick breaking', 'Power-ups', 'Multiple levels'],
+    color: 'teal',
+    keywords: 'arkanoid, breakout, brick breaker, paddle game, classic arcade game',
+    year: '1976',
+    difficulty: 'Easy to Medium'
   },
 ];
 

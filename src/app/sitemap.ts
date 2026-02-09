@@ -134,7 +134,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: PRIORITY_TIERS.MEDIUM,
   }]
 
-  const retroGames = ['snake', 'pong', 'minesweeper', 'tetris']
+  const retroGames = ['snake', 'tic-tac-toe', 'pong', 'minesweeper', 'tetris', 'pacman', 'space-invaders', 'breakout']
   const retroGamePages: MetadataRoute.Sitemap = retroGames.map(game => ({
     url: `${baseUrl}/retro-games/${game}`,
     lastModified: new Date(),

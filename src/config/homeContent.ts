@@ -267,7 +267,14 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
 ] as const;
 
 export const RETRO_GAMES: ReadonlySectionItems = [
-  {
+  {    
+    category: 'tic-tac-toe',
+    name: 'Tic Tac Toe',
+    path: '/retro-games/tic-tac-toe',
+    image: '/imgs/thumbnails/tictactoe-160x160.webp',
+    tagline: 'Classic two-player game of Xs and Os on a 3x3 grid',
+    keywords: 'tic tac toe game, noughts and crosses, classic arcade game, two-player game'
+  },{
     category: 'snake',
     name: 'Snake',
     path: '/retro-games/snake',
@@ -280,7 +287,7 @@ export const RETRO_GAMES: ReadonlySectionItems = [
     name: 'Pong',
     path: '/retro-games/pong',
     image: '/imgs/thumbnails/pong-160x160.webp',
-    tagline: 'Timeless table tennis arcade game where players control paddles to hit a ball back and forth',
+    tagline: 'Classic arcade game where players control paddles to hit a ball back and forth',
     keywords: 'pong game, table tennis arcade, retro gaming, classic pong, competitive game'
   },
   {
@@ -289,7 +296,7 @@ export const RETRO_GAMES: ReadonlySectionItems = [
     path: '/retro-games/minesweeper',
     image: '/imgs/thumbnails/minesweeper-160x160.webp',
     tagline: 'Classic puzzle game where you uncover safe tiles while avoiding hidden mines',
-    keywords: 'minesweeper game, classic puzzle game, retro gaming, mine detection, strategy game'
+    keywords: 'minesweeper game, classic puzzle game, retro gaming, mine detection, strategy game' 
   },
   {
     category: 'tetris',
@@ -298,7 +305,31 @@ export const RETRO_GAMES: ReadonlySectionItems = [
     image: '/imgs/thumbnails/tetris-160x160.webp',
     tagline: 'Classic puzzle game where you stack falling blocks to complete lines',
     keywords: 'tetris game, classic puzzle game, retro gaming, block stacking, strategy game'
-  }
+  },
+  {
+    category: 'space-invaders',
+    name: 'Space Invaders',
+    path: '/retro-games/space-invaders',
+    image: '/imgs/thumbnails/space-invaders-160x160.webp',
+    tagline: 'Iconic 1978 shooter game where you defend Earth from waves of alien invaders',
+    keywords: 'space invaders game, classic arcade game, retro gaming, alien shooter, galactic defense'
+  },
+   {
+    category: 'pacman',
+    name: 'PacMan',
+    path: '/retro-games/pacman',
+    image: '/imgs/thumbnails/pacman-160x160.webp',
+    tagline: 'Classic puzzle game where you uncover safe tiles while avoiding hidden mines',
+    keywords: 'minesweeper game, classic puzzle game, retro gaming, mine detection, strategy game'
+  },
+  {
+    category: 'breakout',
+    name: 'Breakout',
+    path: '/retro-games/breakout',
+    image: '/imgs/thumbnails/breakout-160x160.webp',
+    tagline: 'Classic arcade game where you bounce a ball to break bricks and clear levels',
+    keywords: 'breakout game, brick breaker, classic arcade game, retro gaming, paddle ball game'
+  },
 ] as const;
 
 export const ADDITIONAL_SECTIONS: ReadonlySectionItems = [

@@ -79,16 +79,16 @@ export default function HomePageContent() {
           <DailyTriviaFact />
         </SectionContainer>
 
+        <MoreGames />
+
+        <CategoryShowcase />
+
         <SectionContainer className="horizontal-scroll-section">
           <HorizontalScrollSection 
             title="IQ & Personality Tests" 
             items={IQ_PERSONALITY_TESTS} 
           />
         </SectionContainer>
-
-        <MoreGames />
-
-        <CategoryShowcase />
  
         <KeyFeatures />
 

@@ -11,9 +11,9 @@ const NavBar = () => {
     { name: 'All Trivias', href: '/trivias' },
     { name: 'Leaderboard', href: '/leaderboard' },
     { name: 'Retro Games', href: '/retro-games' },
-    { name: 'IQ/Personality Tests', href: '/iq-and-personality-tests' },
     { name: 'Word Games', href: '/word-games' },
     { name: 'Number Puzzles', href: '/number-puzzles' },
+    { name: 'IQ/Personality Tests', href: '/iq-and-personality-tests' },
     { name: 'Blog', href: '/blog' },
     { name: 'Trivia Bank', href: '/trivia-bank' },
   ];
