@@ -137,7 +137,13 @@ export default function SnakeComponent() {
           newGame.score += 1;
           if (newGame.score > newGame.highScore) {
             newGame.highScore = newGame.score;
-            localStorage.setItem('snakeHighScore', newGame.highScore.toString());
+            if (typeof window !== 'undefined') {
+              try {
+                localStorage.setItem('snakeHighScore', newGame.highScore.toString());
+              } catch (error) {
+                console.warn('Failed to save high score:', error);
+              }
+            }
           }
           
           // Generate new food (not on snake)
@@ -256,6 +262,18 @@ function createGame(): SnakeGame {
   const centerX = Math.floor(width / 2);
   const centerY = Math.floor(height / 2);
   
+  // Safely access localStorage (only in browser)
+  let highScore = 0;
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem('snakeHighScore');
+      highScore = stored ? parseInt(stored) : 0;
+    } catch (error) {
+      console.warn('Failed to read high score:', error);
+      highScore = 0;
+    }
+  }
+  
   return {
     width,
     height,
@@ -268,7 +286,7 @@ function createGame(): SnakeGame {
     nextDirection: 'right',
     food: { x: 10, y: 5 },
     score: 0,
-    highScore: parseInt(localStorage.getItem('snakeHighScore') || '0'),
+    highScore,
     gameState: 'paused',
     speed: 150,
   };
