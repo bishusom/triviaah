@@ -31,74 +31,69 @@ export default function Breakout() {
     keysPressed.current[e.key] = false;
   }, []);
 
+  // HOOK 1: Keyboard Listeners
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ([' ', 'ArrowLeft', 'ArrowRight'].includes(e.key)) e.preventDefault();
+      keysPressed.current[e.key] = true;
+      if ((e.key === ' ' || e.key === 'Enter') && game.gameState === 'ready') setGame(g => serveBall(g));
+      if ((e.key === ' ' || e.key === 'Enter') && (game.gameState === 'gameover' || game.gameState === 'win')) setGame(createGame());
+    };
+    const handleKeyUp = (e: KeyboardEvent) => { keysPressed.current[e.key] = false; };
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, [handleKeyDown, handleKeyUp]);
+    return () => { window.removeEventListener('keydown', handleKeyDown); window.removeEventListener('keyup', handleKeyUp); };
+  }, [game.gameState]);
 
-  // Optimized Game Loop
-  const animate = useCallback(() => {
-    setGame(prev => updateGame(prev, keysPressed.current));
+  // HOOK 2: The Game Loop (Physics)
+  useEffect(() => {
+    const animate = () => {
+      setGame(prev => updateGame(prev, keysPressed.current));
+      requestRef.current = requestAnimationFrame(animate);
+    };
     requestRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(requestRef.current!);
   }, []);
 
+  // HOOK 3: Drawing (Rendering)
   useEffect(() => {
-    requestRef.current = requestAnimationFrame(animate);
-    return () => {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
-    };
-  }, [animate]);
-
-  // Drawing Logic
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
 
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    
-    // Background Gradient
-    const grad = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-    grad.addColorStop(0, '#0f172a');
-    grad.addColorStop(1, '#1e293b');
-    ctx.fillStyle = grad;
+    ctx.fillStyle = '#111827';
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // Bricks
-    game.bricks.forEach(brick => {
-      if (!brick.alive) return;
-      ctx.fillStyle = brick.color;
-      ctx.shadowBlur = 4;
-      ctx.shadowColor = 'rgba(0,0,0,0.5)';
-      ctx.fillRect(brick.position.x, brick.position.y, brick.width, brick.height);
-      ctx.shadowBlur = 0;
-      
-      // Bevel effect
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-      ctx.strokeRect(brick.position.x, brick.position.y, brick.width, brick.height);
+    // Draw Bricks
+    game.bricks.forEach(b => {
+      if (!b.alive) return;
+      ctx.fillStyle = b.powerUp ? '#fff' : b.color;
+      ctx.fillRect(b.position.x, b.position.y, b.width, b.height);
+      if (b.powerUp) { ctx.strokeStyle = '#00f2ff'; ctx.strokeRect(b.position.x, b.position.y, b.width, b.height); }
     });
 
-    // Paddle
-    ctx.fillStyle = '#38bdf8';
+    // Draw Paddle
+    ctx.fillStyle = game.paddle.isLaser ? '#ef4444' : '#0ea5e9';
     ctx.beginPath();
-    // RoundRect is modern, standard in most browsers now
     ctx.roundRect(game.paddle.position.x, game.paddle.position.y, game.paddle.width, game.paddle.height, 4);
     ctx.fill();
 
-    // Ball
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = '#fff';
-    ctx.beginPath();
-    ctx.arc(game.ball.position.x, game.ball.position.y, game.ball.radius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
+    // Draw Balls
+    ctx.fillStyle = '#fff';
+    game.balls.forEach(b => {
+      ctx.beginPath(); ctx.arc(b.position.x, b.position.y, b.radius, 0, Math.PI * 2); ctx.fill();
+    });
 
+    // Draw PowerUps
+    game.powerUps.forEach(p => {
+      const colors = { multiball: '#00f2ff', enlarge: '#d946ef', laser: '#ef4444' };
+      ctx.fillStyle = colors[p.type];
+      ctx.beginPath(); ctx.roundRect(p.position.x, p.position.y, p.width, p.height, 4); ctx.fill();
+    });
+
+    // Draw Bullets
+    ctx.fillStyle = '#ef4444';
+    game.bullets.forEach(b => ctx.fillRect(b.position.x - 1, b.position.y, 2, 12));
   }, [game]);
 
   return (
