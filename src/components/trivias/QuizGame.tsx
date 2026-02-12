@@ -94,7 +94,6 @@ export default function QuizGame({
   const questions = showBonusQuestion && bonusQuestion ? [bonusQuestion] : regularQuestions;
   const currentQuestion = questions[currentIndex];
 
-  /* ---------- Shuffling Options ---------- */
   useEffect(() => {
     if (!currentQuestion?.options) return;
     const arr = [...currentQuestion.options];
@@ -172,9 +171,7 @@ export default function QuizGame({
     setShowFeedback(true);
     setHasAnswered(true);
     setTitbit(currentQuestion?.titbits || 'Time\'s up!');
-    
-    // Auto-advance even in regular mode if time runs out to keep the game moving
-    setTimeout(() => { handleAdvance(); }, 3500);
+    setTimeout(() => { handleAdvance(); }, 4500);
   }, [showFeedback, gameStarted, playSound, currentQuestion, handleAdvance]);
 
   const handleAnswer = useCallback((option: string) => {
@@ -203,11 +200,11 @@ export default function QuizGame({
     }
     
     if (isQuickfire) {
-      setTimeout(() => { handleAdvance(); }, 3500);
+      setTimeout(() => { handleAdvance(); }, 4500);
     }
   }, [gameStarted, showFeedback, timeUp, currentQuestion, isQuickfire, showBonusQuestion, timeLeft, correctCount, score, playSound, handleAdvance]);
 
-  /* ---------- Timer & Image Logic ---------- */
+  /* ---------- Timer & Images ---------- */
   useEffect(() => {
     if (!gameStarted || timeLeft <= 0 || showFeedback) {
       if (tickSound.current) tickSound.current.pause();
@@ -266,7 +263,6 @@ export default function QuizGame({
 
       {gameStarted && currentQuestion && (
         <>
-          {/* Stats Bar */}
           <div className="flex justify-between items-center mb-4 p-3 bg-blue-600 rounded-xl text-white font-bold text-sm sm:text-base">
             <span>{showBonusQuestion ? 'BONUS' : `Q${currentIndex + 1}/${regularQuestions.length + (bonusQuestion ? 1 : 0)}`}</span>
             <div className="flex gap-4">
@@ -275,11 +271,40 @@ export default function QuizGame({
             </div>
           </div>
 
-          {/* Question */}
-          <motion.div key={currentQuestion.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-gray-800 border border-gray-600 p-6 rounded-xl mb-4 text-center">
-            {questionImage && <div className="relative w-full h-40 mb-4"><Image src={questionImage} alt="Quiz" fill className="object-contain" unoptimized /></div>}
-            <h2 className="text-xl font-bold text-white">{currentQuestion.question}</h2>
+          {/* QUESTION CARD: Restored Side-by-Side Image Display */}
+          <motion.div 
+            key={currentQuestion.id} 
+            initial={{ opacity: 0, y: 10 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            className="bg-gray-800 border border-gray-600 p-4 sm:p-6 rounded-xl mb-4"
+          >
+            <div className={`flex flex-col sm:flex-row gap-6 ${questionImage ? 'items-start' : 'items-center justify-center text-center'}`}>
+              {questionImage && (
+                <div className="relative w-28 h-28 sm:w-36 sm:h-36 flex-shrink-0 mx-auto sm:mx-0">
+                  <Image 
+                    src={questionImage} 
+                    alt="Quiz" 
+                    fill 
+                    className="object-cover rounded-xl border-2 border-cyan-500/30 cursor-pointer" 
+                    unoptimized 
+                    onClick={() => setShowImageModal(true)}
+                  />
+                </div>
+              )}
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight flex-1">
+                {currentQuestion.question}
+              </h2>
+            </div>
           </motion.div>
+
+          {/* Image Zoom Modal */}
+          {showImageModal && questionImage && (
+            <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4" onClick={() => setShowImageModal(false)}>
+              <div className="relative max-w-4xl max-h-[80vh] w-full h-full">
+                <Image src={questionImage} alt="Zoom" fill className="object-contain" unoptimized />
+              </div>
+            </div>
+          )}
 
           {/* Factoid */}
           <AnimatePresence>
@@ -290,7 +315,7 @@ export default function QuizGame({
             )}
           </AnimatePresence>
 
-          {/* Options - Corrected logic */}
+          {/* Options */}
           <div className="grid gap-3 mb-6">
             {shuffledOptions.map((opt) => {
               const isCorrect = opt === currentQuestion.correct;
@@ -303,7 +328,7 @@ export default function QuizGame({
                   disabled={showFeedback || timeUp}
                   onClick={() => handleAnswer(opt)}
                   className={`p-4 rounded-xl text-left border-2 transition-all font-medium ${
-                    status === 'correct' ? 'bg-green-600/40 border-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' :
+                    status === 'correct' ? 'bg-green-600/40 border-green-500 text-white' :
                     status === 'wrong' ? 'bg-red-600/40 border-red-500 text-white' :
                     status === 'dimmed' ? 'bg-gray-800 border-gray-700 opacity-50 text-gray-500' :
                     'bg-gray-700 border-gray-600 text-gray-200 hover:border-cyan-500 hover:bg-gray-600'
@@ -319,25 +344,18 @@ export default function QuizGame({
             })}
           </div>
 
-          {/* Next Button - Manual for Regular Mode */}
+          {/* Manual Next Button for Regular Mode */}
           {!isQuickfire && hasAnswered && (
             <motion.button
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               onClick={handleAdvance}
-              className="w-full py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-lg rounded-xl shadow-lg uppercase tracking-wider border-b-4 border-cyan-800 active:border-b-0 active:translate-y-1 transition-all"
+              className="w-full py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-lg rounded-xl shadow-lg uppercase tracking-wider border-b-4 border-cyan-800"
             >
               { (currentIndex >= regularQuestions.length - 1 && !showBonusQuestion && !bonusQuestion) 
                 ? "See Final Results" 
                 : "Next Question →" }
             </motion.button>
-          )}
-
-          {/* Quickfire auto-advance hint */}
-          {isQuickfire && showFeedback && (
-            <div className="text-center text-gray-400 text-xs animate-pulse">
-              Next question starting soon...
-            </div>
           )}
         </>
       )}
