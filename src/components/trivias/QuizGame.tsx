@@ -61,6 +61,7 @@ export default function QuizGame({
   const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [hasAnswered, setHasAnswered] = useState(false); 
   const [timeLeft, setTimeLeft] = useState<number>(timePerQuestion);
   const [titbit, setTitbit] = useState('');
   const [timeUsed, setTimeUsed] = useState(0);
@@ -75,11 +76,10 @@ export default function QuizGame({
   const [showSummary, setShowSummary] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
-  /* ---------- Hooks ---------- */
   const { isMuted } = useSound();
   const { width, height } = useWindowSize();
 
-  /* ---------- Data Initialization ---------- */
+  /* ---------- Initialization ---------- */
   useEffect(() => {
     if (isQuickfire && hasBonusQuestion && initialQuestions.length >= 6) {
       setRegularQuestions(initialQuestions.slice(0, 6));
@@ -94,7 +94,18 @@ export default function QuizGame({
   const questions = showBonusQuestion && bonusQuestion ? [bonusQuestion] : regularQuestions;
   const currentQuestion = questions[currentIndex];
 
-  /* ---------- Sound Refs & Logic ---------- */
+  /* ---------- Shuffling Options ---------- */
+  useEffect(() => {
+    if (!currentQuestion?.options) return;
+    const arr = [...currentQuestion.options];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    setShuffledOptions(arr);
+  }, [currentQuestion?.id, currentQuestion?.options]);
+
+  /* ---------- Sound Logic ---------- */
   const correctSound = useRef<HTMLAudioElement | null>(null);
   const incorrectSound = useRef<HTMLAudioElement | null>(null);
   const timeUpSound = useRef<HTMLAudioElement | null>(null);
@@ -106,10 +117,7 @@ export default function QuizGame({
     timeUpSound.current = new Audio('/sounds/timeout.mp3');
     tickSound.current = new Audio('/sounds/tick.mp3');
     if (tickSound.current) tickSound.current.loop = true;
-    
-    return () => {
-      [correctSound, incorrectSound, timeUpSound, tickSound].forEach(s => s.current?.pause());
-    };
+    return () => { [correctSound, incorrectSound, timeUpSound, tickSound].forEach(s => s.current?.pause()); };
   }, []);
 
   const playSound = useCallback((type: 'correct' | 'incorrect' | 'timeUp' | 'tick') => {
@@ -118,7 +126,7 @@ export default function QuizGame({
     map[type].current?.play();
   }, [isMuted]);
 
-  /* ---------- Navigation Logic ---------- */
+  /* ---------- Navigation ---------- */
   const moveToNextQuestion = useCallback(() => {
     if (isQuickfire && hasBonusQuestion && bonusQuestion && currentIndex === regularQuestions.length - 1 && !showBonusQuestion) {
       setShowBonusQuestion(true);
@@ -129,62 +137,56 @@ export default function QuizGame({
     setTimeLeft(timePerQuestion);
     setSelectedOption(null);
     setShowFeedback(false);
+    setHasAnswered(false);
     setTimeUp(false);
   }, [timePerQuestion, isQuickfire, hasBonusQuestion, currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion]);
 
   const finishQuiz = useCallback(async (finalScore: number, finalCorrectCount: number) => {
     event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});    
-    const totalQuestions = regularQuestions.length + (bonusQuestion ? 1 : 0);
     setQuizResult({
       score: finalScore,
       correctCount: finalCorrectCount,
-      totalQuestions,
-      timeUsed,
-      category,
-      subcategory,
-      isTimedMode,
-      helpUsed: 0
+      totalQuestions: regularQuestions.length + (bonusQuestion ? 1 : 0),
+      timeUsed, category, subcategory, isTimedMode, helpUsed: 0
     });
     setShowSummary(true);
   }, [regularQuestions.length, bonusQuestion, timeUsed, category, subcategory, isTimedMode]);
 
-  const handleAdvance = useCallback((currentScore: number, currentCorrect: number) => {
+  const handleAdvance = useCallback(() => {
     const isLastRegularQuestion = currentIndex >= regularQuestions.length - 1 && !showBonusQuestion;
     const isLastBonusQuestion = showBonusQuestion;
     const finished = isLastBonusQuestion || (isLastRegularQuestion && !bonusQuestion);
     
     if (finished) {
-      finishQuiz(currentScore, currentCorrect);
+      finishQuiz(score, correctCount);
     } else {
       moveToNextQuestion();
     }
-  }, [currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion, finishQuiz, moveToNextQuestion]);
+  }, [currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion, finishQuiz, moveToNextQuestion, score, correctCount]);
 
-  /* ---------- Core Game Handlers ---------- */
+  /* ---------- Game Handlers ---------- */
   const handleTimeUp = useCallback(() => {
     if (showFeedback || !gameStarted) return;
     setTimeUp(true);
     playSound('timeUp');
     setShowFeedback(true);
+    setHasAnswered(true);
     setTitbit(currentQuestion?.titbits || 'Time\'s up!');
     
-    // Auto-advance after timeout regardless of mode to keep flow
-    setTimeout(() => {
-      handleAdvance(score, correctCount);
-    }, 3000);
-  }, [showFeedback, gameStarted, playSound, currentQuestion, handleAdvance, score, correctCount]);
+    // Auto-advance even in regular mode if time runs out to keep the game moving
+    setTimeout(() => { handleAdvance(); }, 3500);
+  }, [showFeedback, gameStarted, playSound, currentQuestion, handleAdvance]);
 
   const handleAnswer = useCallback((option: string) => {
     if (!gameStarted || showFeedback || timeUp) return;
     
     const correct = option === currentQuestion.correct;
     const base = { easy: 100, medium: 200, hard: 300 }[currentQuestion.difficulty || 'easy'] || 100;
-    const earned = isQuickfire
-      ? (showBonusQuestion ? 500 : base + (timeLeft || 0) * 10)
-      : (timeLeft || 0) * 10 + 50;
+    const earned = isQuickfire ? (showBonusQuestion ? 500 : base + (timeLeft || 0) * 10) : (timeLeft || 0) * 10 + 50;
     
     setSelectedOption(option);
     setShowFeedback(true);
+    setHasAnswered(true);
     setTitbit(currentQuestion.titbits || '');
 
     const newCorrectCount = correct ? correctCount + 1 : correctCount;
@@ -200,16 +202,12 @@ export default function QuizGame({
       playSound('incorrect');
     }
     
-    // Quickfire: Auto-advance after 3.5s
-    // Regular: No auto-advance (UI shows Next button)
     if (isQuickfire) {
-      setTimeout(() => {
-        handleAdvance(newScore, newCorrectCount);
-      }, 3500);
+      setTimeout(() => { handleAdvance(); }, 3500);
     }
   }, [gameStarted, showFeedback, timeUp, currentQuestion, isQuickfire, showBonusQuestion, timeLeft, correctCount, score, playSound, handleAdvance]);
 
-  /* ---------- Effects (Timer, Fullscreen, Images) ---------- */
+  /* ---------- Timer & Image Logic ---------- */
   useEffect(() => {
     if (!gameStarted || timeLeft <= 0 || showFeedback) {
       if (tickSound.current) tickSound.current.pause();
@@ -217,11 +215,7 @@ export default function QuizGame({
     }
     const timer = setInterval(() => {
       setTimeLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          handleTimeUp();
-          return 0;
-        }
+        if (prev <= 1) { clearInterval(timer); handleTimeUp(); return 0; }
         return prev - 1;
       });
       setTimeUsed(u => u + 1);
@@ -235,9 +229,8 @@ export default function QuizGame({
     const fetchImage = async () => {
       setQuestionImage(null);
       try {
-        if (currentQuestion.image_url) {
-          setQuestionImage(currentQuestion.image_url);
-        } else {
+        if (currentQuestion.image_url) setQuestionImage(currentQuestion.image_url);
+        else {
           const img = await fetchPixabayImage(extractKeywords(currentQuestion.question)[0] || '', category);
           setQuestionImage(img || null);
         }
@@ -253,113 +246,67 @@ export default function QuizGame({
       document.documentElement.requestFullscreen().catch(() => {});
       setIsFullScreen(true);
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-        setIsFullScreen(false);
-      }
+      if (document.exitFullscreen) { document.exitFullscreen(); setIsFullScreen(false); }
     }
   }, []);
 
-  /* ---------- Render Logic ---------- */
-  if (isLoading) return (
-    <div className="flex items-center justify-center min-h-[400px]">
-      <motion.div className="w-16 h-16 border-4 border-cyan-500 border-dashed rounded-full" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} />
-    </div>
-  );
+  /* ---------- Render ---------- */
+  if (isLoading) return <div className="flex items-center justify-center min-h-[400px]"><motion.div className="w-16 h-16 border-4 border-cyan-500 border-dashed rounded-full" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} /></div>;
 
-  if (showSummary && quizResult) {
-    return (
-      <QuizSummary 
-        result={quizResult} 
-        onRestart={() => {
-          setShowSummary(false); setQuizResult(null); setCurrentIndex(0); setScore(0);
-          setCorrectCount(0); setTimeUsed(0); setGameStarted(false); setShowBonusQuestion(false);
-          setTitbit(''); setTimeLeft(timePerQuestion);
-        }}
-        context={quizType || 'trivias'}
-      />
-    );
-  }
-
-  const containerClasses = isFullScreen 
-    ? "fixed inset-0 z-50 bg-gradient-to-br from-gray-900 to-gray-800 overflow-y-auto p-4"
-    : "relative max-w-4xl mx-auto p-4 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 shadow-2xl overflow-hidden";
+  if (showSummary && quizResult) return <QuizSummary result={quizResult} onRestart={() => window.location.reload()} context={quizType || 'trivias'} />;
 
   return (
-    <div className={containerClasses}>
+    <div className={isFullScreen ? "fixed inset-0 z-50 bg-gray-900 overflow-y-auto p-4" : "relative max-w-4xl mx-auto p-4 bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl"}>
       {showConfetti && <Confetti width={width} height={height} recycle={false} />}
       
-      {/* Header Controls */}
+      {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <button onClick={toggleFullScreen} className="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white">
-          {isFullScreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
-        </button>
-        {isFullScreen && (
-          <button onClick={() => window.location.href = '/'} className="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white flex items-center gap-2">
-            <Home size={18} /> <span className="text-sm">Home</span>
-          </button>
-        )}
+        <button onClick={toggleFullScreen} className="p-2 bg-gray-700 rounded-lg text-white hover:bg-gray-600">{isFullScreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}</button>
       </div>
 
       {gameStarted && currentQuestion && (
         <>
-          {/* Progress Header */}
-          <div className="flex justify-between items-center gap-2 mb-4 p-3 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl border border-cyan-500/50 shadow-lg text-white">
-            <div className="flex gap-2">
-              <span className="bg-white/10 px-2 py-1 rounded-full text-xs font-bold">
-                {showBonusQuestion ? 'BONUS' : `Q${currentIndex + 1}/${regularQuestions.length + (bonusQuestion ? 1 : 0)}`}
-              </span>
-              <span className="bg-white/10 px-2 py-1 rounded-full text-xs font-bold capitalize">{currentQuestion.difficulty}</span>
-            </div>
-            <div className="flex gap-2">
-              <span className="bg-white/10 px-2 py-1 rounded-full text-xs font-bold">⏱ {timeLeft}s</span>
-              <span className="bg-cyan-500 px-3 py-1 rounded-full text-xs font-bold shadow-inner"><CountUp end={score} duration={0.3} /></span>
+          {/* Stats Bar */}
+          <div className="flex justify-between items-center mb-4 p-3 bg-blue-600 rounded-xl text-white font-bold text-sm sm:text-base">
+            <span>{showBonusQuestion ? 'BONUS' : `Q${currentIndex + 1}/${regularQuestions.length + (bonusQuestion ? 1 : 0)}`}</span>
+            <div className="flex gap-4">
+              <span>⏱ {timeLeft}s</span>
+              <span>Score: <CountUp end={score} /></span>
             </div>
           </div>
 
-          {/* Progress Bar */}
-          <div className="w-full bg-gray-700 rounded-full h-2 mb-6">
-            <motion.div className="h-full bg-cyan-500 rounded-full" animate={{ width: `${((currentIndex + (showBonusQuestion ? regularQuestions.length : 0)) / (regularQuestions.length + (bonusQuestion ? 1 : 0))) * 100}%` }} />
-          </div>
-
-          {/* Question Card */}
-          <motion.div key={currentQuestion.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gray-800/50 rounded-xl border border-gray-600 p-6 mb-4">
-            <div className="flex flex-col sm:flex-row gap-6 items-center">
-              {questionImage && (
-                <div className="relative w-32 h-32 flex-shrink-0 cursor-pointer" onClick={() => setShowImageModal(true)}>
-                  <Image src={questionImage} alt="Quiz" fill className="object-cover rounded-xl border-2 border-cyan-500/30" />
-                </div>
-              )}
-              <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">{currentQuestion.question}</h2>
-            </div>
+          {/* Question */}
+          <motion.div key={currentQuestion.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-gray-800 border border-gray-600 p-6 rounded-xl mb-4 text-center">
+            {questionImage && <div className="relative w-full h-40 mb-4"><Image src={questionImage} alt="Quiz" fill className="object-contain" unoptimized /></div>}
+            <h2 className="text-xl font-bold text-white">{currentQuestion.question}</h2>
           </motion.div>
 
-          {/* Factoid (Titbit) */}
+          {/* Factoid */}
           <AnimatePresence>
             {showFeedback && titbit && (
-              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="mb-4 p-4 bg-amber-500/10 border-l-4 border-amber-500 rounded-r-lg">
-                <p className="text-amber-200 text-sm sm:text-base">💡 <span className="font-semibold">Did you know?</span> {titbit}</p>
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mb-4 p-4 bg-amber-500/20 border-l-4 border-amber-500 rounded text-amber-100 text-sm">
+                💡 <strong>Did you know?</strong> {titbit}
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Options Grid */}
-          <div className="grid gap-3">
+          {/* Options - Corrected logic */}
+          <div className="grid gap-3 mb-6">
             {shuffledOptions.map((opt) => {
               const isCorrect = opt === currentQuestion.correct;
               const isSelected = selectedOption === opt;
-              const status = showFeedback ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'inactive') : 'default';
+              const status = showFeedback ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dimmed') : 'default';
 
               return (
                 <button
                   key={opt}
                   disabled={showFeedback || timeUp}
                   onClick={() => handleAnswer(opt)}
-                  className={`w-full p-4 rounded-xl text-left font-medium transition-all border-2 ${
-                    status === 'correct' ? 'bg-green-500/20 border-green-500 text-green-100' :
-                    status === 'wrong' ? 'bg-red-500/20 border-red-500 text-red-100' :
-                    status === 'inactive' ? 'bg-gray-800/50 border-gray-700 opacity-50 text-gray-400' :
-                    'bg-gray-700 border-gray-600 hover:border-cyan-500 text-white'
+                  className={`p-4 rounded-xl text-left border-2 transition-all font-medium ${
+                    status === 'correct' ? 'bg-green-600/40 border-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' :
+                    status === 'wrong' ? 'bg-red-600/40 border-red-500 text-white' :
+                    status === 'dimmed' ? 'bg-gray-800 border-gray-700 opacity-50 text-gray-500' :
+                    'bg-gray-700 border-gray-600 text-gray-200 hover:border-cyan-500 hover:bg-gray-600'
                   }`}
                 >
                   <div className="flex justify-between items-center">
@@ -372,36 +319,27 @@ export default function QuizGame({
             })}
           </div>
 
-          {/* NEXT BUTTON (Only for Regular Mode) */}
-          {!isQuickfire && showFeedback && !timeUp && (
+          {/* Next Button - Manual for Regular Mode */}
+          {!isQuickfire && hasAnswered && (
             <motion.button
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              onClick={() => handleAdvance(score, correctCount)}
-              className="w-full mt-6 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-xl shadow-lg transition-all"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              onClick={handleAdvance}
+              className="w-full py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-lg rounded-xl shadow-lg uppercase tracking-wider border-b-4 border-cyan-800 active:border-b-0 active:translate-y-1 transition-all"
             >
               { (currentIndex >= regularQuestions.length - 1 && !showBonusQuestion && !bonusQuestion) 
-                ? "Finish Quiz" 
+                ? "See Final Results" 
                 : "Next Question →" }
             </motion.button>
           )}
 
-          {/* Time Up Message */}
-          {timeUp && (
-            <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-xl text-red-200 text-center text-sm font-bold">
-              ⏰ Time&apos;s up! Moving on...
+          {/* Quickfire auto-advance hint */}
+          {isQuickfire && showFeedback && (
+            <div className="text-center text-gray-400 text-xs animate-pulse">
+              Next question starting soon...
             </div>
           )}
         </>
-      )}
-
-      {/* Image Modal */}
-      {showImageModal && (
-        <div className="fixed inset-0 bg-black/95 z-[60] flex items-center justify-center p-4" onClick={() => setShowImageModal(false)}>
-          <div className="relative max-w-4xl w-full h-[80vh]">
-            <Image src={questionImage!} alt="Zoom" fill className="object-contain" />
-          </div>
-        </div>
       )}
     </div>
   );
