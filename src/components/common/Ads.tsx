@@ -54,21 +54,21 @@ export default function Ads({
 
   if (!shouldShowAds || !isVisible) return null;
 
-  // FIX: Explicitly set fixed bottom for mobile footer
   if (isMobileFooter) {
     return (
       <div 
         ref={adRef}
-        className={`fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-[9999] shadow-inner ${className}`}
+        // Fixed at bottom on mobile (default), relative/static on desktop (md:)
+        className={`fixed bottom-0 left-0 right-0 md:relative md:bottom-auto bg-white md:bg-transparent border-t border-gray-200 md:border-none z-[9999] md:z-auto ${className}`}
         style={{
           height: '65px',
-          display: 'block',
           ...style
         }}
       >
+        {/* Close button only shows on mobile */}
         <button
           onClick={() => setIsVisible(false)}
-          className="absolute -top-3 right-2 z-[10000] w-6 h-6 bg-gray-800 text-white rounded-full flex items-center justify-center text-xs shadow-lg"
+          className="absolute -top-3 right-2 md:hidden z-[10000] w-6 h-6 bg-gray-800 text-white rounded-full flex items-center justify-center text-xs shadow-lg"
           aria-label="Close"
         >
           ×
