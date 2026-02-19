@@ -10,7 +10,7 @@ interface AdsProps {
   style?: React.CSSProperties;
   closeButtonPosition?: 'top-left' | 'top-right';
   isMobileFooter?: boolean;
-  isInArticle?: boolean; // Prop for blog articles
+  isInArticle?: boolean; // New prop for blog context
 }
 
 export default function Ads({
@@ -33,72 +33,90 @@ export default function Ads({
   useEffect(() => {
     if (!isVisible || !shouldShowAds) return;
 
-    const loadAd = () => {
+    // Small delay ensures the parent container has a width/height calculated
+    const timer = setTimeout(() => {
       if (typeof window !== 'undefined' && window.adsbygoogle && insRef.current) {
-        try {
-          (window.adsbygoogle as Record<string, unknown>[]).push({});
-          setIsLoaded(true);
-        } catch (error) {
-          console.error('AdSense error:', error);
+        // Only push if the element is actually in the DOM and has width
+        if (insRef.current.offsetWidth > 0) {
+          try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            setIsLoaded(true);
+          } catch (error) {
+            console.error('AdSense error:', error);
+          }
         }
       }
-    };
+    }, 200);
 
-    if (typeof window !== 'undefined' && window.adsbygoogle) {
-      loadAd();
-    } else {
-      const checkAdSense = setInterval(() => {
-        if (typeof window !== 'undefined' && window.adsbygoogle) {
-          clearInterval(checkAdSense);
-          loadAd();
-        }
-      }, 100);
-      setTimeout(() => clearInterval(checkAdSense), 10000);
-      return () => clearInterval(checkAdSense);
-    }
+    return () => clearTimeout(timer);
   }, [isVisible, shouldShowAds]);
 
   if (!shouldShowAds || !isVisible) return null;
 
-  // Layout for blog-specific ads
+  // Grey container style for in-article ads
   const containerStyle: React.CSSProperties = isInArticle ? {
-    margin: '3rem 0',
+    margin: '2.5rem 0',
     padding: '1.5rem',
-    backgroundColor: '#e5e7eb', // Grayish div
-    borderRadius: '16px',
-    border: '1px solid #d1d5db',
+    backgroundColor: '#f3f4f6', // Greyish background
+    borderRadius: '12px',
+    border: '1px solid #e5e7eb',
+    display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     ...style
   } : {
     backgroundColor: '#f5f5f5',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     ...style
   };
-
-  if (isMobileFooter) {
-    return (
-      <div ref={adRef} className={`fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 ${className}`} style={{ height: '60px', ...style }}>
-        <button onClick={() => setIsVisible(false)} className="absolute top-1 right-1 z-50 w-5 h-5 bg-gray-600 text-white rounded-full flex items-center justify-center text-xs">×</button>
-        <div className="flex justify-center items-center w-full h-full px-2">
-          <ins ref={insRef} className="adsbygoogle" style={{ display: 'block', width: '100%', height: '50px' }} data-ad-client="ca-pub-4386714040098164" data-ad-slot={slot} data-ad-format="horizontal" data-full-width-responsive="false" />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div 
       ref={adRef}
-      className={`relative ad-container flex items-center justify-center ${className}`}
-      style={{ minHeight: '90px', overflow: 'hidden', ...containerStyle }}
+      className={`relative ad-container w-full ${className}`}
+      style={{
+        minHeight: '100px',
+        ...containerStyle
+      }}
     >
-      {isInArticle && <span className="text-[10px] uppercase tracking-widest text-gray-500 mb-4 font-bold">Advertisement</span>}
-      
-      <button onClick={() => setIsVisible(false)} className="absolute top-2 right-2 z-50 w-6 h-6 bg-gray-500 text-white rounded-full flex items-center justify-center text-sm font-bold">×</button>
+      {isInArticle && (
+        <span className="text-[10px] uppercase tracking-widest text-gray-400 mb-3 font-semibold">
+          Advertisement
+        </span>
+      )}
 
-      <div className="flex justify-center items-center w-full">
-        <ins ref={insRef} className="adsbygoogle" style={{ display: 'block', textAlign: 'center', margin: '0 auto', maxWidth: '100%', ...style }} data-ad-client="ca-pub-4386714040098164" data-ad-slot={slot} data-ad-format={format} data-full-width-responsive={fullWidthResponsive.toString()} />
+      <button
+        onClick={() => setIsVisible(false)}
+        className="absolute top-2 right-2 z-50 w-6 h-6 bg-gray-400 hover:bg-gray-600 text-white rounded-full flex items-center justify-center text-sm"
+      >
+        ×
+      </button>
+
+      <div className="flex justify-center items-center w-full overflow-hidden">
+        <ins
+          ref={insRef}
+          className="adsbygoogle"
+          style={{ 
+            display: 'block', 
+            minWidth: '250px', 
+            minHeight: '90px', 
+            width: '100%',
+            ...style 
+          }}
+          data-ad-client="ca-pub-4386714040098164"
+          data-ad-slot={slot}
+          data-ad-format={format}
+          data-full-width-responsive={fullWidthResponsive.toString()}
+        />
       </div>
-      {!isLoaded && <div className="absolute inset-0 flex items-center justify-center bg-gray-100/50 text-gray-400 text-xs">Loading Ad...</div>}
+
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+          <div className="text-gray-400 text-xs italic">Loading Ad...</div>
+        </div>
+      )}
     </div>
   );
 }

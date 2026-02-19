@@ -9,62 +9,56 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const post = await getPostData(slug);
 
-  // Logic to inject an Ad: Split at the middle paragraph
-  const paragraphs = post.contentHtml.split('</p>');
-  const midPoint = Math.floor(paragraphs.length / 2);
-  const firstHalf = paragraphs.slice(0, midPoint).join('</p>') + '</p>';
-  const secondHalf = paragraphs.slice(midPoint).join('</p>');
+  // Split HTML content at paragraph tags to inject an ad
+  const contentParts = post.contentHtml.split('</p>');
+  const middleIndex = Math.floor(contentParts.length / 2);
+  
+  const topContent = contentParts.slice(0, middleIndex).join('</p>') + '</p>';
+  const bottomContent = contentParts.slice(middleIndex).join('</p>');
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white">
       <nav className="border-b border-gray-800">
         <div className="container mx-auto px-4 py-4">
-          <Link href="/blog" className="text-purple-400 hover:text-purple-300 transition-colors">← Back to Blog</Link>
+          <Link href="/blog" className="text-purple-400 hover:text-purple-300">← Back to Blog</Link>
         </div>
       </nav>
 
       <article className="container mx-auto px-4 py-12 max-w-4xl">
         <header className="text-center mb-12">
-          <div className="inline-block bg-purple-600 text-white px-4 py-1 rounded-full text-xs font-bold mb-6 uppercase">Triviaah Blog</div>
           <h1 className="text-4xl md:text-6xl font-extrabold mb-4">{post.header}</h1>
           <time className="text-gray-400">{post.date}</time>
         </header>
 
-        {/* Gray Container for Readability */}
-        <div className="bg-gray-100 rounded-3xl shadow-2xl overflow-hidden text-black border border-gray-300">
-          {post.image && post.image !== '/default-image.jpg' && (
+        {/* Grayish readability container */}
+        <div className="bg-gray-50 rounded-2xl shadow-xl overflow-hidden text-black">
+          {post.image && (
             <div className="relative h-64 md:h-96 w-full border-b border-gray-200">
               <Image src={post.image} alt={post.title} fill className="object-cover" priority />
             </div>
           )}
 
           <div className="px-6 py-10 md:px-16 md:py-16">
-            {/* Content Top Half */}
+            {/* Top Half - prose-p:mb-6 fixes the line break issue */}
             <div 
-              className="prose prose-lg max-w-none 
-                         prose-p:text-gray-900 prose-p:mb-6 prose-p:leading-relaxed
-                         prose-headings:text-black prose-headings:font-bold
-                         prose-strong:text-black prose-a:text-purple-600"
-              dangerouslySetInnerHTML={{ __html: firstHalf }} 
+              className="prose prose-lg max-w-none prose-p:mb-6 prose-p:text-gray-800 prose-headings:text-black prose-strong:text-black"
+              dangerouslySetInnerHTML={{ __html: topContent }} 
             />
 
-            {/* In-Article Ad 1 */}
-            <Ads isInArticle={true} format="rectangle" />
+            {/* In-Article Ad */}
+            <Ads isInArticle={true} format="fluid" />
 
-            {/* Content Bottom Half */}
+            {/* Bottom Half */}
             <div 
-              className="prose prose-lg max-w-none 
-                         prose-p:text-gray-900 prose-p:mb-6 prose-p:leading-relaxed
-                         prose-headings:text-black prose-headings:font-bold
-                         prose-strong:text-black prose-a:text-purple-600"
-              dangerouslySetInnerHTML={{ __html: secondHalf }} 
+              className="prose prose-lg max-w-none prose-p:mb-6 prose-p:text-gray-800 prose-headings:text-black prose-strong:text-black"
+              dangerouslySetInnerHTML={{ __html: bottomContent }} 
             />
           </div>
         </div>
 
         {/* Final Footer Ad */}
-        <div className="mt-12">
-           <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
+        <div className="mt-8">
+          <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
         </div>
 
         <footer className="mt-16 pt-8 border-t border-gray-800">
