@@ -3,108 +3,70 @@ import Link from 'next/link';
 import { getPostData } from '@/lib/markdown';
 import { Twitter, Linkedin, Facebook, Share2 } from 'lucide-react';
 import CopyLinkButton from '@/components/blog/CopyLinkButton';
+import Ads from '@/components/common/Ads';
 
-interface Params {
-  slug: string;
-}
-
-interface PostContent {
-  slug: string;
-  title: string;
-  header: string;
-  date: string;
-  isoDate: string;
-  excerpt: string;
-  image: string;
-  contentHtml: string;
-}
-
-interface PostPageProps {
-  params: Promise<Params>;
-}
-
-export async function generateMetadata({ params }: PostPageProps) {
-  const { slug } = await params;
-  const post: PostContent = await getPostData(slug);
-  return {
-    title: `${post.title} | Triviaah`,
-    description: post.excerpt,
-    openGraph: {
-      images: [post.image],
-    },
-  };
-}
-
-export default async function PostPage({ params }: PostPageProps) {
+export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await getPostData(slug);
 
+  // Logic to inject an Ad: Split at the middle paragraph
+  const paragraphs = post.contentHtml.split('</p>');
+  const midPoint = Math.floor(paragraphs.length / 2);
+  const firstHalf = paragraphs.slice(0, midPoint).join('</p>') + '</p>';
+  const secondHalf = paragraphs.slice(midPoint).join('</p>');
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-      {/* Navigation */}
+    <div className="min-h-screen bg-[#0f172a] text-white">
       <nav className="border-b border-gray-800">
         <div className="container mx-auto px-4 py-4">
-          <Link 
-            href="/blog" 
-            className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
-          >
-            ← Back to Blog
-          </Link>
+          <Link href="/blog" className="text-purple-400 hover:text-purple-300 transition-colors">← Back to Blog</Link>
         </div>
       </nav>
 
-      {/* Article Header */}
       <article className="container mx-auto px-4 py-12 max-w-4xl">
         <header className="text-center mb-12">
-          <div className="inline-block bg-gradient-to-r from-purple-600 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
-            TRIVIAAH BLOG
-          </div>
-          
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            {post.header}
-          </h1>
-          
-          <div className="flex items-center justify-center gap-6 text-gray-400">
-            <time dateTime={post.isoDate} className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              {post.date}
-            </time>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              Gaming
-            </div>
-          </div>
+          <div className="inline-block bg-purple-600 text-white px-4 py-1 rounded-full text-xs font-bold mb-6 uppercase">Triviaah Blog</div>
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-4">{post.header}</h1>
+          <time className="text-gray-400">{post.date}</time>
         </header>
 
-        {/* Featured Image */}
-        {post.image && post.image !== '/default-image.jpg' && (
-          <div className="relative h-80 md:h-96 rounded-2xl overflow-hidden mb-12 border-2 border-gray-700">
-            <Image
-              src={post.image}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
+        {/* Gray Container for Readability */}
+        <div className="bg-gray-100 rounded-3xl shadow-2xl overflow-hidden text-black border border-gray-300">
+          {post.image && post.image !== '/default-image.jpg' && (
+            <div className="relative h-64 md:h-96 w-full border-b border-gray-200">
+              <Image src={post.image} alt={post.title} fill className="object-cover" priority />
+            </div>
+          )}
+
+          <div className="px-6 py-10 md:px-16 md:py-16">
+            {/* Content Top Half */}
+            <div 
+              className="prose prose-lg max-w-none 
+                         prose-p:text-gray-900 prose-p:mb-6 prose-p:leading-relaxed
+                         prose-headings:text-black prose-headings:font-bold
+                         prose-strong:text-black prose-a:text-purple-600"
+              dangerouslySetInnerHTML={{ __html: firstHalf }} 
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent"></div>
+
+            {/* In-Article Ad 1 */}
+            <Ads isInArticle={true} format="rectangle" />
+
+            {/* Content Bottom Half */}
+            <div 
+              className="prose prose-lg max-w-none 
+                         prose-p:text-gray-900 prose-p:mb-6 prose-p:leading-relaxed
+                         prose-headings:text-black prose-headings:font-bold
+                         prose-strong:text-black prose-a:text-purple-600"
+              dangerouslySetInnerHTML={{ __html: secondHalf }} 
+            />
           </div>
-        )}
+        </div>
 
-        {/* Article Content */}
-        <div 
-          className="prose prose-lg prose-invert max-w-none
-                     prose-headings:text-white prose-headings:font-bold
-                     prose-p:text-gray-300 prose-p:leading-relaxed
-                     prose-a:text-purple-400 prose-a:no-underline hover:prose-a:text-purple-300
-                     prose-strong:text-white prose-strong:font-bold
-                     prose-blockquote:border-purple-500 prose-blockquote:text-gray-400
-                     prose-ul:text-gray-300 prose-ol:text-gray-300
-                     prose-code:text-purple-300 prose-code:bg-gray-800 prose-code:px-2 prose-code:py-1 prose-code:rounded
-                     prose-pre:bg-gray-800 prose-pre:border prose-pre:border-gray-700"
-          dangerouslySetInnerHTML={{ __html: post.contentHtml }} 
-        />
+        {/* Final Footer Ad */}
+        <div className="mt-12">
+           <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
+        </div>
 
-        {/* Article Footer */}
         <footer className="mt-16 pt-8 border-t border-gray-800">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <Link 
