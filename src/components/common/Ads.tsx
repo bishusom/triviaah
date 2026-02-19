@@ -10,7 +10,7 @@ interface AdsProps {
   style?: React.CSSProperties;
   closeButtonPosition?: 'top-left' | 'top-right';
   isMobileFooter?: boolean;
-  isInArticle?: boolean; // New prop for blog context
+  isInArticle?: boolean;
 }
 
 export default function Ads({
@@ -33,11 +33,10 @@ export default function Ads({
   useEffect(() => {
     if (!isVisible || !shouldShowAds) return;
 
-    // Small delay ensures the parent container has a width/height calculated
-    const timer = setTimeout(() => {
+    const loadAd = () => {
       if (typeof window !== 'undefined' && window.adsbygoogle && insRef.current) {
-        // Only push if the element is actually in the DOM and has width
-        if (insRef.current.offsetWidth > 0) {
+        // Only initialize if this specific element hasn't been processed
+        if (insRef.current.getAttribute('data-adsbygoogle-status') !== 'processed') {
           try {
             (window.adsbygoogle = window.adsbygoogle || []).push({});
             setIsLoaded(true);
@@ -46,64 +45,98 @@ export default function Ads({
           }
         }
       }
-    }, 200);
+    };
 
+    // Delay initialization to ensure DOM and width are ready (fixes availableWidth=0)
+    const timer = setTimeout(loadAd, 300);
     return () => clearTimeout(timer);
   }, [isVisible, shouldShowAds]);
 
   if (!shouldShowAds || !isVisible) return null;
 
-  // Grey container style for in-article ads
+  // FIX: Explicitly set fixed bottom for mobile footer
+  if (isMobileFooter) {
+    return (
+      <div 
+        ref={adRef}
+        className={`fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-[9999] shadow-inner ${className}`}
+        style={{
+          height: '65px',
+          display: 'block',
+          ...style
+        }}
+      >
+        <button
+          onClick={() => setIsVisible(false)}
+          className="absolute -top-3 right-2 z-[10000] w-6 h-6 bg-gray-800 text-white rounded-full flex items-center justify-center text-xs shadow-lg"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        <div className="flex justify-center items-center w-full h-full overflow-hidden">
+          <ins
+            ref={insRef}
+            className="adsbygoogle"
+            style={{
+              display: 'inline-block',
+              width: '320px',
+              height: '50px'
+            }}
+            data-ad-client="ca-pub-4386714040098164"
+            data-ad-slot={slot}
+            data-ad-format="horizontal"
+            data-full-width-responsive="false"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Styles for In-Article and Standard Ads
   const containerStyle: React.CSSProperties = isInArticle ? {
     margin: '2.5rem 0',
     padding: '1.5rem',
-    backgroundColor: '#f3f4f6', // Greyish background
+    backgroundColor: '#f3f4f6',
     borderRadius: '12px',
     border: '1px solid #e5e7eb',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    ...style
+    flexDirection: 'column'
   } : {
     backgroundColor: '#f5f5f5',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...style
   };
 
   return (
     <div 
       ref={adRef}
-      className={`relative ad-container w-full ${className}`}
+      className={`relative ad-container flex items-center justify-center w-full ${className}`}
       style={{
         minHeight: '100px',
-        ...containerStyle
+        ...containerStyle,
+        ...style
       }}
     >
       {isInArticle && (
-        <span className="text-[10px] uppercase tracking-widest text-gray-400 mb-3 font-semibold">
+        <span className="text-[10px] uppercase tracking-widest text-gray-400 mb-3 font-bold">
           Advertisement
         </span>
       )}
 
       <button
         onClick={() => setIsVisible(false)}
-        className="absolute top-2 right-2 z-50 w-6 h-6 bg-gray-400 hover:bg-gray-600 text-white rounded-full flex items-center justify-center text-sm"
+        className="absolute top-2 right-2 z-50 w-6 h-6 bg-gray-500/50 hover:bg-gray-700 text-white rounded-full flex items-center justify-center text-sm transition-colors"
       >
         ×
       </button>
 
-      <div className="flex justify-center items-center w-full overflow-hidden">
+      <div className="w-full flex justify-center overflow-hidden">
         <ins
           ref={insRef}
           className="adsbygoogle"
           style={{ 
             display: 'block', 
+            width: '100%', 
             minWidth: '250px', 
-            minHeight: '90px', 
-            width: '100%',
-            ...style 
+            minHeight: '90px'
           }}
           data-ad-client="ca-pub-4386714040098164"
           data-ad-slot={slot}
@@ -113,8 +146,8 @@ export default function Ads({
       </div>
 
       {!isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-          <div className="text-gray-400 text-xs italic">Loading Ad...</div>
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100/50 text-gray-400 text-xs">
+          Loading Ad...
         </div>
       )}
     </div>
