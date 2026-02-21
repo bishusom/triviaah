@@ -1016,6 +1016,7 @@ export default function BoggleGame() {
               {grid.map((cell, index) => (
                 <button
                   key={index}
+                  data-cell-index={index}
                   className={`
                     ${currentGridSize <= 5 ? 'w-12 h-12 md:w-14 md:h-14 text-lg md:text-xl' : 'w-10 h-10 md:w-11 md:h-11 text-base md:text-lg'}
                     rounded-lg md:rounded-xl font-bold transition-all duration-200
@@ -1042,15 +1043,16 @@ export default function BoggleGame() {
                   }}
                   onTouchMove={(e) => {
                     e.preventDefault();
+                    if (!isSelecting) return; // Only process if we are in a selection
+
                     const touch = e.touches[0];
-                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const button = elem?.closest('button');
                     
-                    if (element && element.classList.contains('bg-gray-700\\/80')) {
-                      const cells = Array.from(gridElement.current?.querySelectorAll('.bg-gray-700\\/80, .bg-blue-500, .bg-blue-600, .bg-green-600\\/80') || []);
-                      const idx = cells.indexOf(element);
-                      if (idx >= 0) {
-                        handleCellInteraction(idx, 'continue');
-                      }
+                    if (button && button.hasAttribute('data-cell-index')) {
+                      const idx = parseInt(button.getAttribute('data-cell-index')!, 10);
+                      // Let handleCellInteraction handle adjacency and usedLetters checks
+                      handleCellInteraction(idx, 'continue');
                     }
                   }}
                   onTouchEnd={(e) => {
