@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function HeaderSection() {
   return (
-    <header className="bg-blue-700 text-white py-4 px-4">
+    <header className="sticky top-0 z-50 bg-gray-700/80 backdrop-blur-md border-b border-white/10 py-3 px-4">
       <div className="container mx-auto flex items-center justify-center gap-4">
         <Image
           src="/logo.webp"
