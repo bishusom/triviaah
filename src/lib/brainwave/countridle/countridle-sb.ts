@@ -208,7 +208,7 @@ export async function addCountryResult(
     const { error } = await supabase
       .from('puzzle_results')
       .insert([{
-        category: 'country',
+        category: 'countridle',
         success,
         attempts,
         user_id: userId,
@@ -296,7 +296,7 @@ export async function setDailyCountryPuzzle(
       .from('daily_puzzles')
       .upsert([{
         date: dateString,
-        category: 'country',
+        category: 'countridle',
         puzzle_id: puzzleId
       }], {
         onConflict: 'date,category'
