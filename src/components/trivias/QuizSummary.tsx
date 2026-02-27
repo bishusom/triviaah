@@ -33,6 +33,22 @@ const MESSAGES = {
   participation: ["🌱 Learning Mode", "📚 Keep Reading!", "🔄 Try Again!"]
 };
 
+interface HistoricalDay {
+  label: string;
+  dateParam: string;
+}
+
+const getLast7Days = (): HistoricalDay[] => {
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (i + 1));
+    return {
+      label: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      dateParam: d.toISOString().split('T')[0]
+    };
+  });
+};
+
 export default function QuizSummary({
   result,
   onRestart,
@@ -92,6 +108,7 @@ export default function QuizSummary({
   const percentage = Math.round((result.correctCount / result.totalQuestions) * 100);
   const tier = percentage >= 90 ? 'gold' : percentage >= 70 ? 'silver' : percentage >= 40 ? 'bronze' : 'participation';
   const rankMessage = MESSAGES[tier][Math.floor(Math.random() * MESSAGES[tier].length)];
+  console.log("context:", context);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8 flex flex-col items-center">
@@ -199,6 +216,37 @@ export default function QuizSummary({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* NEW SECTION: Previous Daily Quizzes (Only for daily-trivias) */}
+      {context === 'daily-trivias' && result.category !== 'quick-fire' && (
+        <div className="mt-12 w-full max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="flex items-center justify-between mb-4 px-2">
+            <h3 className="text-sm font-black italic uppercase tracking-tighter flex items-center gap-2 text-yellow-500">
+              <RotateCcw size={18} className="text-yellow-600" /> 
+              Missed a Day?
+            </h3>
+            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Previous 7 Sessions</span>
+          </div>
+          
+          {/* Updated Grid: 4 columns on mobile, 7 on medium screens up */}
+          <div className="grid grid-cols-4 md:grid-cols-7 gap-2 sm:gap-3">
+            {getLast7Days().map((day: HistoricalDay) => (
+              <Link
+                key={day.dateParam}
+                href={`/daily-trivias/${result.category}?date=${day.dateParam}`}
+                className="group relative flex flex-col items-center justify-center bg-gray-800/40 hover:bg-gray-700/60 border border-white/5 hover:border-yellow-500/50 p-2 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-300 shadow-lg hover:shadow-yellow-500/10"
+              >
+                <p className="text-[9px] sm:text-[10px] font-black text-gray-500 group-hover:text-yellow-400 uppercase mb-1 transition-colors">
+                  {day.label}
+                </p>
+                <p className="text-[10px] sm:text-xs font-black text-white group-hover:scale-110 transition-transform">
+                  PLAY
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
       
       <div className="mt-20 w-full max-w-4xl">
         <FeedbackComponent
@@ -218,6 +266,7 @@ export default function QuizSummary({
           }}
         />
       </div>
+
       {/* Action buttons */}
       <div className="mt-12 flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
         {/* Show Play Again only for regular trivias, not quick-fire or today-in-history */}
@@ -254,7 +303,7 @@ export default function QuizSummary({
             Daily Trivias
           </Link>
         )}
-        
+  
         <Link
           href="/"
           className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-br from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"

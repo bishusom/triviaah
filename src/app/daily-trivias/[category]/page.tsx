@@ -78,29 +78,15 @@ const categoryConfigs = {
   }
 };
 
-export default async function DailyQuizPage({ params }: PageProps) {
-  const resolvedParams = await params;
-  const category = resolvedParams.category;
-
-  return (
-    <WithTimezone>
-      {(locationInfo) => (
-        <DailyQuizContent 
-          category={category} 
-          locationInfo={locationInfo} 
-          params={params}
-        />
-      )}
-    </WithTimezone>
-  );
-}
-
 async function DailyQuizContent({ 
   category, 
   locationInfo,
   params 
 }: DailyQuizContentProps) {
   try {
+    const activeDate = locationInfo.userLocalDate;
+    const dateKey = activeDate.toISOString().split('T')[0];
+
     let questions: Question[];
 
     if (category === 'quick-fire') {
@@ -159,44 +145,6 @@ async function DailyQuizContent({
             </div>
           </div>
 
-          {/* Description 
-          <p className="text-gray-300 text-base sm:text-bs mb-6 max-w-2xl mx-auto">
-            {categoryConfig.description}
-          </p>
-          */}
-          {/* Updated Quiz Stats 
-          <div className="flex flex-wrap justify-center gap-4 max-w-2xl mx-auto mb-6">
-            <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 border border-gray-700">
-              <ShieldQuestionMark className="text-xl text-cyan-400" />
-              <div className="text-left">
-                <div className="text-white font-bold text-sm">{questions.length}</div>
-                <div className="text-gray-400 text-xs">Questions</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 border border-gray-700">
-              <Timer className="text-xl text-yellow-400" />
-              <div className="text-left">
-                <div className="text-white font-bold text-sm">{timePerQuestion}s</div>
-                <div className="text-gray-400 text-xs">Per Question</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 border border-gray-700">
-              <span className="text-xl">⏱️</span>
-              <div className="text-left">
-                <div className="text-white font-bold text-sm">{Math.round((timePerQuestion * questions.length) / 60)}min</div>
-                <div className="text-gray-400 text-xs">Total Time</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 border border-gray-700">
-              <Trophy className="text-xl text-green-400" />
-              <div className="text-left">
-                <div className="text-white font-bold text-sm">{hasBonusQuestion ? 'Yes' : 'No'}</div>
-                <div className="text-gray-400 text-xs">Bonus Round</div>
-              </div>
-            </div>
-          </div>
-          */}
-
           {/* Time Info */}
           <div className="flex flex-col items-center gap-3 text-sm">
             <TimezoneInfo locationInfo={locationInfo} />
@@ -205,7 +153,8 @@ async function DailyQuizContent({
 
         {/* Quiz Game Component */}
         <div className="mb-8">
-          <QuizGame 
+          <QuizGame
+            key={`${category}-${dateKey}`} 
             initialQuestions={questions} 
             category={category} 
             quizConfig={quizConfig}
@@ -298,4 +247,34 @@ export async function generateMetadata({ params }: PageProps) {
       canonical: `https://triviaah.com/daily-trivias/${resolvedParams.category}`
     }
   };
+}
+
+export default async function DailyQuizPage({ 
+  params, 
+  searchParams 
+}: { 
+  params: Promise<{ category: string }>, 
+  searchParams: Promise<{ date?: string }> 
+}) {
+  const resolvedParams = await params;
+  const resolvedSearch = await searchParams; // Await the searchParams
+
+  return (
+    <WithTimezone>
+      {(locationInfo) => {
+        // Use the date from URL if it exists, otherwise use today
+        const displayDate = resolvedSearch.date 
+          ? new Date(resolvedSearch.date) 
+          : locationInfo.userLocalDate;
+
+        return (
+          <DailyQuizContent 
+            category={resolvedParams.category} 
+            locationInfo={{ ...locationInfo, userLocalDate: displayDate }} 
+            params={params}
+          />
+        );
+      }}
+    </WithTimezone>
+  );
 }
