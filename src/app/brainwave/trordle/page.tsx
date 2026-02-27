@@ -4,17 +4,22 @@
 import TrordleComponent from '@/components/brainwave/TrordleComponent';
 import { getDailyTrordle } from '@/lib/brainwave/trordle/trordle-sb';
 import MuteButton from '@/components/common/MuteButton';
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { TrordleData } from '@/lib/brainwave/trordle/trordle-logic';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { useSearchParams } from 'next/navigation';
 import { HelpCircle, Target, Users, Clock, Trophy, Brain, Sparkles } from 'lucide-react';
 
-export default function TrordlePage() {
+function TrordleContent() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const [trordleData, setTrordleData] = useState<TrordleData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [currentDate] = useState(new Date());
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
@@ -88,23 +93,29 @@ export default function TrordlePage() {
     }
   });
 
+  // Parse date parameter
   useEffect(() => {
-    // Set the current date on the client side to ensure it's using client timezone
-    const now = new Date();
-    setCurrentDate(now);
-    setLastUpdated(now.toISOString());
-  }, []);
+    let date = currentDate;
+    if (dateParam) {
+      const parsed = new Date(dateParam + 'T00:00:00');
+      if (!isNaN(parsed.getTime()) && parsed <= currentDate) {
+        date = parsed;
+      }
+    }
+    setTargetDate(date);
+    setLastUpdated(new Date().toISOString());
+  }, [dateParam, currentDate]);
 
   useEffect(() => {
     const fetchDailyTrordle = async () => {
-      if (!currentDate) return; // Wait for client date to be set
+      if (!targetDate) return; // Wait for target date to be set
       
       try {
         setIsLoading(true);
         setError(null);
         
         // Explicitly pass the client-side date
-        const data = await getDailyTrordle(currentDate);
+        const data = await getDailyTrordle(targetDate);
         
         if (!data) {
           setError('No puzzle available for today');
@@ -131,10 +142,10 @@ export default function TrordlePage() {
     };
 
     fetchDailyTrordle();
-  }, [currentDate]);
+  }, [targetDate]);
 
   // Loading State
-  if (isLoading || !currentDate) {
+  if (isLoading || !targetDate) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-emerald-900">
         {/* Structured Data */}
@@ -498,5 +509,17 @@ export default function TrordlePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function TrordlePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+      </div>
+    }>
+      <TrordleContent />
+    </Suspense>
   );
 }

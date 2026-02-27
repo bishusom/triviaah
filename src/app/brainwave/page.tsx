@@ -4,7 +4,6 @@ import Script from 'next/script';
 import Link from 'next/link';
 import Image from 'next/image';
 import Ads from '@/components/common/Ads';
-import { BRAIN_WAVES } from '@/config/homeContent';
 import { Play, Boxes, Star, Clock, Users } from 'lucide-react';
 
 interface Puzzle {

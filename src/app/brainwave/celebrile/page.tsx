@@ -4,17 +4,22 @@
 import CelebrileComponent from '@/components/brainwave/CelebrileComponent';
 import { getDailyCelebrile } from '@/lib/brainwave/celebrile/celebrile-sb';
 import MuteButton from '@/components/common/MuteButton';
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { CelebrileData } from '@/lib/brainwave/celebrile/celebrile-logic';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { useSearchParams } from 'next/navigation';
 import { User, Target, Users, Clock, Trophy, Star } from 'lucide-react';
 
-export default function CelebrilePage() {
+function CelebrileContent() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const [celebrileData, setCelebrileData] = useState<CelebrileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [currentDate] = useState(new Date());
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
@@ -88,29 +93,35 @@ export default function CelebrilePage() {
     }
   });
 
-  useEffect(() => {
-    // Set the current date on the client side to ensure it's using client timezone
-    const now = new Date();
-    setCurrentDate(now);
-    setLastUpdated(now.toISOString());
-  }, []);
 
+  // Parse date parameter
   useEffect(() => {
-    const fetchDailyCelebrile = async () => {
-      if (!currentDate) return; // Wait for client date to be set
-      
+    let date = currentDate;
+    if (dateParam) {
+      const parsed = new Date(dateParam + 'T00:00:00');
+      if (!isNaN(parsed.getTime()) && parsed <= currentDate) {
+        date = parsed;
+      }
+    }
+    setTargetDate(date);
+    setLastUpdated(new Date().toISOString());
+  }, [dateParam, currentDate]);
+  
+  // Fetch puzzle for the target date
+  useEffect(() => {
+    if (!targetDate) return;
+
+    const fetchPuzzle = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        
-        // Explicitly pass the client-side date
-        const data = await getDailyCelebrile(currentDate);
-        
+
+        const data = await getDailyCelebrile(targetDate);
         if (!data) {
-          setError('No puzzle available for today');
+          setError('No puzzle available for this date');
           return;
         }
-        
+
         setCelebrileData(data);
 
         // Update structured data with today's puzzle info
@@ -121,17 +132,17 @@ export default function CelebrilePage() {
             dateModified: new Date().toISOString()
           }
         }));
-        
       } catch (err) {
         console.error('Error fetching daily celebrile:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred while loading the puzzle');
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchDailyCelebrile();
-  }, [currentDate]);
+    fetchPuzzle();
+  }, [targetDate]);
+  
 
   // Loading State
   if (isLoading || !currentDate) {
@@ -194,7 +205,7 @@ export default function CelebrilePage() {
               </div>
             </div>
             
-            <h2 className="text-2xl font-bold text-white mb-4">Loading Today's Celebrity</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">Loading Celebrity Puzzle</h2>
             <p className="text-purple-200 mb-6">Preparing your celebrity puzzle...</p>
             
             <div className="flex justify-center gap-2">
@@ -488,5 +499,17 @@ export default function CelebrilePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CelebrilePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+      </div>
+    }>
+      <CelebrileContent />
+    </Suspense>
   );
 }

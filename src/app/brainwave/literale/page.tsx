@@ -1,21 +1,25 @@
 // app/literale/page.tsx - REDESIGNED
 'use client';
 
-import { useState, useEffect } from 'react';
-
+import { Suspense, useState, useEffect } from 'react';
 import MuteButton from '@/components/common/MuteButton';
 import { LiteraleData } from '@/lib/brainwave/literale/literale-logic';
 import LiteraleComponent from '@/components/brainwave/LiteraleComponent';
 import { getDailyLiterale } from '@/lib/brainwave/literale/literale-sb';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { useSearchParams } from 'next/navigation';
 import { BookOpen, Clock, Sparkles, Target, Zap } from 'lucide-react';
 
-export default function LiteralePage() {
+function LiteraleContent() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const [literaleData, setLiteraleData] = useState<LiteraleData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [currentDate] = useState(new Date());
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
@@ -91,21 +95,27 @@ export default function LiteralePage() {
   });
 
   useEffect(() => {
-    const now = new Date();
-    setCurrentDate(now);
-    setLastUpdated(now.toISOString());
-  }, []);
+    let date = currentDate;
+    if (dateParam) {
+      const parsed = new Date(dateParam + 'T00:00:00');
+      if (!isNaN(parsed.getTime()) && parsed <= currentDate) {
+        date = parsed;
+      }
+    }
+    setTargetDate(date);
+    setLastUpdated(new Date().toISOString());
+  }, [dateParam, currentDate]);
 
   useEffect(() => {
     const fetchDailyLiterale = async () => {
-      if (!currentDate) return; // Wait for client date to be set
+      if (!targetDate) return; // Wait for target date to be set
       
       try {
         setIsLoading(true);
         setError(null);
         
         // Explicitly pass the client-side date
-        const data = await getDailyLiterale(currentDate);
+        const data = await getDailyLiterale(targetDate);
         
         if (!data) {
           setError('No puzzle available for today');
@@ -132,7 +142,7 @@ export default function LiteralePage() {
     };
 
     fetchDailyLiterale();
-  }, [currentDate]);
+  }, [targetDate]);
 
   // Loading State
   if (isLoading || !currentDate) {
@@ -195,7 +205,7 @@ export default function LiteralePage() {
               </div>
             </div>
             
-            <h2 className="text-2xl font-bold text-white mb-4">Loading Today's Challenge</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">Loading Literale Challenge</h2>
             <p className="text-gray-400 mb-6">Preparing your book puzzle...</p>
             
             <div className="flex justify-center gap-2">
@@ -444,5 +454,17 @@ export default function LiteralePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LiteralePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+      </div>
+    }>
+      <LiteraleContent />
+    </Suspense>
   );
 }

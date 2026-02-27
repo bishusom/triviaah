@@ -1,26 +1,29 @@
 // app/capitale/page.tsx - REDESIGNED
 'use client';
 
-import { useState, useEffect } from 'react';
-
+import { Suspense, useState, useEffect } from 'react';
 import MuteButton from '@/components/common/MuteButton';
 import CapitaleComponent from '@/components/brainwave/CapitaleComponent';
 import { getDailyCapitale, CapitalePuzzle, CapitalInfo } from '@/lib/brainwave/capitale/capitale-sb';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { useSearchParams } from 'next/navigation';
 import { Trophy, Globe, Target, Users, Clock } from 'lucide-react';
 
-export default function CapitalePage() {
+function CapitaleContent() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const [dailyData, setDailyData] = useState<{ puzzle: CapitalePuzzle | null, allCapitals: CapitalInfo[] } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [currentDate] = useState(new Date());
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
   const showAds = process.env.NEXT_PUBLIC_SHOW_ADS === 'true';
   const [showFAQ, setShowFAQ] = useState(false);
-
 
   // Structured data remains the same
   const [structuredData, setStructuredData] = useState({
@@ -88,49 +91,48 @@ export default function CapitalePage() {
         }
       ]
     }
-  });;
+  });
 
+  // Parse date parameter
   useEffect(() => {
-    const now = new Date();
-    setCurrentDate(now);
-    setLastUpdated(now.toISOString());
-  }, []);
+    let date = currentDate;
+    if (dateParam) {
+      const parsed = new Date(dateParam + 'T00:00:00');
+      if (!isNaN(parsed.getTime()) && parsed <= currentDate) {
+        date = parsed;
+      }
+    }
+    setTargetDate(date);
+    setLastUpdated(new Date().toISOString());
+  }, [dateParam, currentDate]);
+  
+  // Fetch puzzle for the target date
+  useEffect(() => {
+    if (!targetDate) return;
 
-  useEffect(() => {
-    const fetchDailyCapitale = async () => {
-      if (!currentDate) return;
-      
+    const fetchPuzzle = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        
-        const data = await getDailyCapitale(currentDate);
-        
-        if (!data.puzzle) {
-          setError('No puzzle available for today');
+
+        const data = await getDailyCapitale(targetDate);
+        if (!data) {
+          setError('No puzzle available for this date');
           return;
         }
-        
-        setDailyData(data);
 
-        setStructuredData(prev => ({
-          ...prev,
-          webpage: {
-            ...prev.webpage,
-            dateModified: new Date().toISOString()
-          }
-        }));
-        
+        setDailyData(data);
       } catch (err) {
         console.error('Error fetching daily capitale:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred while loading the puzzle');
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchDailyCapitale();
-  }, [currentDate]);
+    fetchPuzzle();
+  }, [targetDate]);
+
 
   // Loading State
   if (isLoading || !currentDate || !dailyData || !dailyData.puzzle) {
@@ -445,5 +447,17 @@ export default function CapitalePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CapitalePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+      </div>
+    }>
+      <CapitaleContent />
+    </Suspense>
   );
 }

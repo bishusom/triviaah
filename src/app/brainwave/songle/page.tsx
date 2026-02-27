@@ -4,17 +4,22 @@
 import SongleComponent from '@/components/brainwave/SongleComponent';
 import { getDailySongle } from '@/lib/brainwave/songle/songle-sb';
 import MuteButton from '@/components/common/MuteButton';
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { SongleData } from '@/lib/brainwave/songle/songle-logic';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { useSearchParams } from 'next/navigation';
 import { Music, Target, Users, Clock, Trophy, Mic } from 'lucide-react';
 
-export default function SonglePage() {
+function SongleContent() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const [songleData, setSongleData] = useState<SongleData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [currentDate] = useState(new Date());
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
@@ -88,21 +93,28 @@ export default function SonglePage() {
     }
   });
 
+  // Parse date parameter
   useEffect(() => {
-    const now = new Date();
-    setCurrentDate(now);
-    setLastUpdated(now.toISOString());
-  }, []);
+    let date = currentDate;
+    if (dateParam) {
+      const parsed = new Date(dateParam + 'T00:00:00');
+      if (!isNaN(parsed.getTime()) && parsed <= currentDate) {
+        date = parsed;
+      }
+    }
+    setTargetDate(date);
+    setLastUpdated(new Date().toISOString());
+  }, [dateParam, currentDate]);
 
   useEffect(() => {
     const fetchDailySongle = async () => {
-      if (!currentDate) return;
+      if (!targetDate) return;
       
       try {
         setIsLoading(true);
         setError(null);
         
-        const data = await getDailySongle(currentDate);
+        const data = await getDailySongle(targetDate);
         
         if (!data) {
           setError('No puzzle available for today');
@@ -128,10 +140,10 @@ export default function SonglePage() {
     };
 
     fetchDailySongle();
-  }, [currentDate]);
+  }, [targetDate]);
 
   // Loading State
-  if (isLoading || !currentDate || !songleData) {
+  if (isLoading || !targetDate || !songleData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-600 via-gray-700 to-gray-900">
         {/* Structured Data */}
@@ -191,7 +203,7 @@ export default function SonglePage() {
               </div>
             </div>
             
-            <h2 className="text-2xl font-bold text-white mb-4">Loading Today&apos;s Challenge</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">Loading Songle Challenge</h2>
             <p className="text-gray-400 mb-6">Preparing your music puzzle...</p>
             
             <div className="flex justify-center gap-2">
@@ -442,5 +454,17 @@ export default function SonglePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SonglePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+      </div>
+    }>
+      <SongleContent />
+    </Suspense>
   );
 }

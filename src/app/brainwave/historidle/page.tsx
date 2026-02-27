@@ -4,17 +4,22 @@
 import HistoridleComponent from '@/components/brainwave/HistoridleComponent';
 import { getDailyHistoridle } from '@/lib/brainwave/historidle/historidle-sb';
 import MuteButton from '@/components/common/MuteButton';
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { HistoridleData } from '@/lib/brainwave/historidle/historidle-logic';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { useSearchParams } from 'next/navigation';
 import { Clock, Target, Users, Trophy, Scroll, Castle } from 'lucide-react';
 
-export default function HistoridlePage() {
+function HistoridleContent() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const [historidleData, setHistoridleData] = useState<HistoridleData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [currentDate] = useState(new Date());
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
@@ -88,29 +93,35 @@ export default function HistoridlePage() {
     }
   });
 
-  useEffect(() => {
-    // Set the current date on the client side to ensure it's using client timezone
-    const now = new Date();
-    setCurrentDate(now);
-    setLastUpdated(now.toISOString());
-  }, []);
 
+  // Parse date parameter
   useEffect(() => {
-    const fetchDailyHistoridle = async () => {
-      if (!currentDate) return; // Wait for client date to be set
-      
+    let date = currentDate;
+    if (dateParam) {
+      const parsed = new Date(dateParam + 'T00:00:00');
+      if (!isNaN(parsed.getTime()) && parsed <= currentDate) {
+        date = parsed;
+      }
+    }
+    setTargetDate(date);
+    setLastUpdated(new Date().toISOString());
+  }, [dateParam, currentDate]);
+  
+  // Fetch puzzle for the target date
+  useEffect(() => {
+    if (!targetDate) return;
+
+    const fetchPuzzle = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        
-        // Explicitly pass the client-side date
-        const data = await getDailyHistoridle(currentDate);
-        
+
+        const data = await getDailyHistoridle(targetDate);
         if (!data) {
-          setError('No puzzle available for today');
+          setError('No puzzle available for this date');
           return;
         }
-        
+
         setHistoridleData(data);
 
         // Update structured data with today's puzzle info
@@ -121,17 +132,16 @@ export default function HistoridlePage() {
             dateModified: new Date().toISOString()
           }
         }));
-        
       } catch (err) {
-        console.error('Error fetching daily historidle:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred while loading the puzzle');
+        console.error('Error fetching daily country:', err);
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchDailyHistoridle();
-  }, [currentDate]);
+    fetchPuzzle();
+  }, [targetDate]);
 
   // Loading State
   if (isLoading || !currentDate) {
@@ -194,7 +204,7 @@ export default function HistoridlePage() {
               </div>
             </div>
             
-            <h2 className="text-2xl font-bold text-white mb-4">Loading Today&apos;s History Puzzle</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">Loading History Puzzle</h2>
             <p className="text-blue-200 mb-6">Preparing your historical challenge...</p>
             
             <div className="flex justify-center gap-2">
@@ -501,5 +511,17 @@ export default function HistoridlePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function HistoridlePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+      </div>
+    }>
+      <HistoridleContent />
+    </Suspense>
   );
 }

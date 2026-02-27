@@ -4,21 +4,66 @@
 import PlotleComponent from '@/components/brainwave/PlotleComponent';
 import { getDailyPlotle } from '@/lib/brainwave/plotle/plotle-sb';
 import MuteButton from '@/components/common/MuteButton';
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { PlotleData } from '@/lib/brainwave/plotle/plotle-logic';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
 import { Film, Target, Users, Clock, Trophy } from 'lucide-react';
 
-export default function PlotlePage() {
+function PlotleContent() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const [plotleData, setPlotleData] = useState<PlotleData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [currentDate] = useState(new Date());
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
   const showAds = process.env.NEXT_PUBLIC_SHOW_ADS === 'true';
+
+  // Parse date parameter
+  useEffect(() => {
+    let date = currentDate;
+    if (dateParam) {
+      const parsed = new Date(dateParam + 'T00:00:00');
+      if (!isNaN(parsed.getTime()) && parsed <= currentDate) {
+        date = parsed;
+      }
+    }
+    setTargetDate(date);
+    setLastUpdated(new Date().toISOString());
+  }, [dateParam, currentDate]);
+
+  // Fetch puzzle for the target date
+  useEffect(() => {
+    if (!targetDate) return;
+
+    const fetchPuzzle = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const data = await getDailyPlotle(targetDate);
+        if (!data) {
+          setError('No puzzle available for this date');
+          return;
+        }
+
+        setPlotleData(data);
+      } catch (err) {
+        console.error('Error fetching daily plotle:', err);
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPuzzle();
+  }, [targetDate]);
 
   // Structured data remains the same...
   const [structuredData, setStructuredData] = useState({
@@ -87,12 +132,6 @@ export default function PlotlePage() {
       ]
     }
   });
-
-  useEffect(() => {
-    const now = new Date();
-    setCurrentDate(now);
-    setLastUpdated(now.toISOString());
-  }, []);
 
   useEffect(() => {
     const fetchDailyPlotle = async () => {
@@ -438,5 +477,17 @@ export default function PlotlePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PlotlePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+      </div>
+    }>
+      <PlotleContent />
+    </Suspense>
   );
 }

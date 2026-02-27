@@ -4,16 +4,21 @@
 import CreaturedleComponent from '@/components/brainwave/CreaturedleComponent';
 import { getDailyCreature, CreaturePuzzle } from '@/lib/brainwave/creaturedle/creaturdle-sb';
 import MuteButton from '@/components/common/MuteButton';
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { useSearchParams } from 'next/navigation';
 import { PawPrint, Target, Users, Clock, Trophy, Leaf, Zap } from 'lucide-react';
 
-export default function CreaturedlePage() {
+function CreaturedleContent() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const [creatureData, setCreatureData] = useState<{puzzle: CreaturePuzzle | null} | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [currentDate] = useState(new Date());
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
@@ -87,29 +92,34 @@ export default function CreaturedlePage() {
     }
   });
 
+  // Parse date parameter and set target date for puzzle
   useEffect(() => {
-    // Set the current date on the client side to ensure it's using client timezone
-    const now = new Date();
-    setCurrentDate(now);
-    setLastUpdated(now.toISOString());
-  }, []);
+      let date = currentDate;
+      if (dateParam) {
+        const parsed = new Date(dateParam + 'T00:00:00');
+        if (!isNaN(parsed.getTime()) && parsed <= currentDate) {
+          date = parsed;
+        }
+      }
+      setTargetDate(date);
+      setLastUpdated(new Date().toISOString());
+    }, [dateParam, currentDate]);
+    
+  // Fetch puzzle for the target date
+  useEffect(() => {
+    if (!targetDate) return;
 
-  useEffect(() => {
-    const fetchDailyCreature = async () => {
-      if (!currentDate) return; // Wait for client date to be set
-      
+    const fetchPuzzle = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        
-        // Explicitly pass the client-side date
-        const data = await getDailyCreature(currentDate);
-        
-        if (!data || !data.puzzle) {
-          setError('No puzzle available for today');
+
+        const data = await getDailyCreature(targetDate);
+        if (!data) {
+          setError('No puzzle available for this date');
           return;
         }
-        
+
         setCreatureData(data);
 
         // Update structured data with today's puzzle info
@@ -120,17 +130,16 @@ export default function CreaturedlePage() {
             dateModified: new Date().toISOString()
           }
         }));
-        
       } catch (err) {
         console.error('Error fetching daily creature:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred while loading the puzzle');
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchDailyCreature();
-  }, [currentDate]);
+    fetchPuzzle();
+  }, [targetDate]);
 
   // Loading State
   if (isLoading || !currentDate) {
@@ -495,5 +504,17 @@ export default function CreaturedlePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CreaturedlePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+      </div>
+    }>
+      <CreaturedleContent />
+    </Suspense>
   );
 }

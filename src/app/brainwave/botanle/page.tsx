@@ -4,16 +4,21 @@
 import BotanleComponent from '@/components/brainwave/BotanleComponent';
 import { getDailyPlant, BotanlePuzzle } from '@/lib/brainwave/botanle/botanle-sb';
 import MuteButton from '@/components/common/MuteButton';
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { useSearchParams } from 'next/navigation';
 import { Leaf, Clock, Sparkles, Target, Zap, ThermometerSun, Droplets, Flower } from 'lucide-react';
 
-export default function BotanlePage() {
+function BotanleContent() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const [botanleData, setBotanleData] = useState<BotanlePuzzle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [currentDate] = useState(new Date());
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
@@ -95,27 +100,34 @@ export default function BotanlePage() {
     }
   });
 
+  // Parse date parameter
   useEffect(() => {
-    const now = new Date();
-    setCurrentDate(now);
-    setLastUpdated(now.toISOString());
-  }, []);
+    let date = currentDate;
+    if (dateParam) {
+      const parsed = new Date(dateParam + 'T00:00:00');
+      if (!isNaN(parsed.getTime()) && parsed <= currentDate) {
+        date = parsed;
+      }
+    }
+    setTargetDate(date);
+    setLastUpdated(new Date().toISOString());
+  }, [dateParam, currentDate]);
+  
+  // Fetch puzzle for the target date
+  useEffect(() => {
+    if (!targetDate) return;
 
-  useEffect(() => {
-    const fetchDailyPlant = async () => {
-      if (!currentDate) return;
-      
+    const fetchPuzzle = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        
-        const data = await getDailyPlant(currentDate);
-        
-        if (!data || !data.puzzle) {
-          setError('No plant puzzle available for today');
+
+        const data = await getDailyPlant(targetDate);
+        if (!data) {
+          setError('No puzzle available for this date');
           return;
         }
-        
+
         setBotanleData(data.puzzle);
 
         setStructuredData(prev => ({
@@ -125,17 +137,17 @@ export default function BotanlePage() {
             dateModified: new Date().toISOString()
           }
         }));
-        
       } catch (err) {
-        console.error('Error fetching daily botanle puzzle:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred while loading the puzzle');
+        console.error('Error fetching daily plant:', err);
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchDailyPlant();
-  }, [currentDate]);
+    fetchPuzzle();
+  }, [targetDate]);
+  
 
   // Loading State
   if (isLoading || !currentDate) {
@@ -500,5 +512,17 @@ export default function BotanlePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BotanlePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+      </div>
+    }>
+      <BotanleContent />
+    </Suspense>
   );
 }

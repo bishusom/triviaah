@@ -325,6 +325,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
   const blockRevealOrderRef = useRef<number[]>([]);
   const [hardMode, setHardMode] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [timeToNext, setTimeToNext] = useState<{ hours: number; minutes: number } | null>(null);
 
   const GRID_COLS = 20;
   const GRID_ROWS = 30;
@@ -454,6 +455,49 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
         colors: ['#00FF00', '#00CC00', '#009900']
       });
     }
+  };
+
+  /* --------------------------- history handler -------------------------- */
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const midnight = new Date(now);
+      midnight.setHours(24, 0, 0, 0); // next midnight local time
+      const diffMs = midnight.getTime() - now.getTime();
+      const diffMinutes = Math.floor(diffMs / 60000);
+      const hours = Math.floor(diffMinutes / 60);
+      const minutes = diffMinutes % 60;
+      setTimeToNext({ hours, minutes });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 60000); // update every minute
+    return () => clearInterval(interval);
+  }, []);
+
+  // Generate last 7 days (including today)
+  const getLast7Days = () => {
+    const today = new Date();
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      days.push(date);
+    }
+    return days;
+  };
+
+  // Format date for display (e.g., "Feb 26")
+  const formatDateDisplay = (date: Date) => {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  // Format date for URL parameter (YYYY-MM-DD)
+  const formatDateParam = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   /* --------------------------- guess handler -------------------------- */
@@ -650,7 +694,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
             <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-2 rounded-xl">
               <PawPrint className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-xl font-bold text-white">Today&apos;s Creature Mystery</h2>
+            <h2 className="text-xl font-bold text-white">Guess the Mystery Creature</h2>
           </div>
           <div className={`flex items-center gap-2 text-lg font-bold ${triesLeftColor}`}>
             <Target className="w-5 h-5" />
@@ -668,17 +712,17 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
                onClick={() => showImage && setShowImageModal(true)}
             >
               {showImageLoader && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-pink-900/50 z-10">
-                  <div className="text-purple-400 flex flex-col items-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400 mb-2"></div>
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-700/50 to-green-900/50 z-10">
+                  <div className="text-green-400 flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-400 mb-2"></div>
                     <span className="text-sm">Loading image...</span>
                   </div>
                 </div>
               )}
               
               {showImageError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-pink-900/50 z-10">
-                  <div className="text-purple-400 flex flex-col items-center text-center p-4">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-700/50 to-green-900/50 z-10">
+                  <div className="text-green-400 flex flex-col items-center text-center p-4">
                     <span className="text-3xl mb-2">👤</span>
                     <span className="text-sm">No image available</span>
                   </div>
@@ -689,7 +733,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
                 <>
                   <Image
                     src={animalImage}
-                    alt="Celebrity"
+                    alt="Creature Image"
                     fill
                     className="object-cover absolute inset-0 z-10"
                     onError={() => {
@@ -713,7 +757,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
                   {revealPercentage === 0 && (
                     <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/70">
                       <div className="text-center">
-                        <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-purple-500/50">
+                        <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-green-500/50">
                           <span className="text-green-400 text-2xl font-bold">?</span>
                         </div>
                         <p className="text-green-400 font-semibold">Mystery Animal</p>
@@ -829,6 +873,48 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
             <h3 className="text-2xl font-bold text-white mb-2">Game Over</h3>
             <p className="text-red-400">The animal was: <strong className="text-white">{puzzleData.answer}</strong></p>
             <p className="text-pink-400 mt-2 italic">{puzzleData.funFact}</p>
+          </div>
+        )}
+
+        {/* Countdown + Last 7 Days (now directly after the outcome box) */}
+        {(gameState === 'won' || gameState === 'lost') && (
+          <div className="flex flex-col items-center gap-4 mt-2 mb-6">
+            {/* Countdown */}
+            {timeToNext && (
+              <div className="text-center bg-gray-800/50 backdrop-blur-sm rounded-xl px-4 py-2 border border-gray-700">
+                <p className="text-gray-300 text-sm">
+                  New puzzle in{' '}
+                  <span className="text-cyan-400 font-bold">
+                    {timeToNext.hours}h {timeToNext.minutes}m
+                  </span>
+                </p>
+              </div>
+            )}
+
+            {/* Last 7 days buttons */}
+            <div className="w-full">
+              <h4 className="text-sm font-semibold text-gray-400 mb-3 text-center">Previous Puzzles</h4>
+              <div className="flex flex-wrap justify-center gap-2">
+                {getLast7Days().map((date) => {
+                  const dateParam = formatDateParam(date);
+                  const isToday = date.toDateString() === new Date().toDateString();
+                  return (
+                    <Link
+                      key={dateParam}
+                      href={`/brainwave/creaturedle${isToday ? '' : `?date=${dateParam}`}`}
+                      className={`px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        isToday
+                          ? 'bg-gradient-to-r from-green-500 to-green-600 text-white'
+                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                      }`}
+                    >
+                      {formatDateDisplay(date)}
+                      {isToday && ' (Today)'}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         )}
 

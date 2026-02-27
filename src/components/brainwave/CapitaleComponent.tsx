@@ -34,6 +34,7 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [revealPercentage, setRevealPercentage] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
+  const [timeToNext, setTimeToNext] = useState<{ hours: number; minutes: number } | null>(null);
   
   // Autocomplete state
   const [suggestions, setSuggestions] = useState<CapitalInfo[]>([]);
@@ -410,6 +411,49 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
     });
   };
 
+
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const midnight = new Date(now);
+      midnight.setHours(24, 0, 0, 0); // next midnight local time
+      const diffMs = midnight.getTime() - now.getTime();
+      const diffMinutes = Math.floor(diffMs / 60000);
+      const hours = Math.floor(diffMinutes / 60);
+      const minutes = diffMinutes % 60;
+      setTimeToNext({ hours, minutes });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 60000); // update every minute
+    return () => clearInterval(interval);
+  }, []);
+
+  // Generate last 7 days (including today)
+  const getLast7Days = () => {
+    const today = new Date();
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      days.push(date);
+    }
+    return days;
+  };
+
+  // Format date for display (e.g., "Feb 26")
+  const formatDateDisplay = (date: Date) => {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  // Format date for URL parameter (YYYY-MM-DD)
+  const formatDateParam = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const toggleHardMode = () => {
     setHardMode(!hardMode);
     playSound('click');
@@ -442,7 +486,7 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
             <div className="bg-gradient-to-r from-cyan-500 to-blue-600 p-2 rounded-xl">
               <MapPin className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-xl font-bold text-white">Today's Capital City</h2>
+            <h2 className="text-xl font-bold text-white">Guess the Capital City</h2>
           </div>
           <div className={`flex items-center gap-2 text-lg font-bold ${triesLeftColor}`}>
             <Target className="w-5 h-5" />
@@ -701,6 +745,48 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
                 {puzzleData.answer.toUpperCase()}
               </strong>
             </p>
+          </div>
+        )}
+
+        {/* Countdown + Last 7 Days (now directly after the outcome box) */}
+        {(gameState === 'won' || gameState === 'lost') && (
+          <div className="flex flex-col items-center gap-4 mt-2 mb-6">
+            {/* Countdown */}
+            {timeToNext && (
+              <div className="text-center bg-gray-800/50 backdrop-blur-sm rounded-xl px-4 py-2 border border-gray-700">
+                <p className="text-gray-300 text-sm">
+                  New puzzle in{' '}
+                  <span className="text-cyan-400 font-bold">
+                    {timeToNext.hours}h {timeToNext.minutes}m
+                  </span>
+                </p>
+              </div>
+            )}
+
+            {/* Last 7 days buttons */}
+            <div className="w-full">
+              <h4 className="text-sm font-semibold text-gray-400 mb-3 text-center">Previous Puzzles</h4>
+              <div className="flex flex-wrap justify-center gap-2">
+                {getLast7Days().map((date) => {
+                  const dateParam = formatDateParam(date);
+                  const isToday = date.toDateString() === new Date().toDateString();
+                  return (
+                    <Link
+                      key={dateParam}
+                      href={`/brainwave/capitale${isToday ? '' : `?date=${dateParam}`}`}
+                      className={`px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        isToday
+                          ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                      }`}
+                    >
+                      {formatDateDisplay(date)}
+                      {isToday && ' (Today)'}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         )}
 
