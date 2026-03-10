@@ -130,7 +130,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SeoBreadcrumbs />
           
           {/* Google Analytics - only load in production */}
-          {isProduction && <GoogleAnalytics gaId="G-8TSCQ9M9Q3" />}
+          {isProduction && <GoogleAnalytics gaId="G-K4KZ7XR85V" />}
           
           {/* Vercel Speed Insights */}
           {isProduction && <SpeedInsights />}
