@@ -1,106 +1,75 @@
-// components/home/HomePageContent.tsx
 'use client';
-
-import { useEffect } from 'react';
+import NavBar from './NavBar';
+import Billboard from './sections/Billboard';
+import { NetflixRow } from './sections/NetflixRow';
+import Footer from './Footer';
 import Ads from '@/components/common/Ads';
-import NavBar from '@/components/home/NavBar';
-import CategoryShowcase from '@/components/home/sections/CategoryShowcase';
-import HorizontalScrollSection from '@/components/home/sections/HorizontalScrollSection';
-import Footer from '@/components/home/Footer'
-import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
-
-// Import new section components
-import HeaderSection from '@/components/home/sections/HeaderSection';
-import HeroSection from '@/components/home/sections/HeroSection';
-import { HolidaySpecial } from '@/components/home/sections/HolidaySpecial';
-//import SeoContentSection from '@/components/home/sections/SeoContentSection';
-import KeyFeatures from '@/components/home/sections/KeyFeatures';
-import DailyTriviaFact from '@/components/home/sections/DailyTriviaFact';
-import SectionContainer from '@/components/home/sections/SectionContainer';
-import MoreGames from '@/components/home/sections/MoreGames';
+import DailyTriviaFact from './sections/DailyTriviaFact';
+import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES } from '@/config/homeContent';
 
 export default function HomePageContent() {
-  useEffect(() => {
-    const sections = document.querySelectorAll('.horizontal-scroll-section, .category-section');
-    sections.forEach(section => {
-      section.setAttribute('data-no-ads', 'true');
-    });
-  }, []);
+  // Mapping your specific categories for the Netflix rows
+  const wordGames = [
+    { title: "Word Scramble", image: "/imgs/word-games/word-scramble.webp", href: "/word-games/word-scramble" },
+    { title: "Spelling Bee", image: "/imgs/word-games/spelling-bee.webp", href: "/word-games/spelling-bee" },
+    { title: "Boggle", image: "/imgs/word-games/boggle.webp", href: "/word-games/boggle" },
+    { title: "Word Search", image: "/imgs/word-games/word-search.webp", href: "/word-games/word-search" },
+    { title: "Word Ladder", image: "/imgs/word-games/word-ladder.webp", href: "/word-games/word-ladder" },
+  ];
 
-  // Check if holiday specials should be shown
-  const showHolidaySpecial = process.env.NEXT_PUBLIC_SHOW_HOLIDAY_SPECIALS === 'true';
+  const numberGames = [
+    { title: "Number Scramble", image: "/imgs/number-puzzles/number-scramble.webp", href: "/number-puzzles/number-scramble" },
+    { title: "Prime Hunter", image: "/imgs/number-puzzles/prime-hunter.webp", href: "/number-puzzles/prime-hunter" },
+    { title: "Number Sequence", image: "/imgs/number-puzzles/number-sequence.webp", href: "/number-puzzles/number-sequence" },
+    { title: "Number Tower", image: "/imgs/number-puzzles/number-tower.webp", href: "/number-puzzles/number-tower" },
+    { title: "Sudoku Challenge", image: "/imgs/number-puzzles/sudoku.webp", href: "/number-puzzles/sudoku" }
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex flex-col">
-      <HeaderSection />
+    <div className="bg-[#141414] min-h-screen text-white overflow-x-hidden">
       <NavBar />
-     
-      <div className="bg-gray-800/50 py-6">
-        <div className="container mx-auto px-4">
-          <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
-        </div>
-      </div>
       
-      <main className="container mx-auto px-4 py-6 flex-grow">
-        <HeroSection />
-
-        {/* Conditionally show holiday special based on env variable */}
-        {showHolidaySpecial && <HolidaySpecial />}
-
-        <SectionContainer className="horizontal-scroll-section">
-          <HorizontalScrollSection 
-            title="Daily Quiz Challenges" 
-            items={DAILY_QUIZZES} 
-            isQuizSection={true}
-          />
-        </SectionContainer>
-
-        <SectionContainer className="horizontal-scroll-section">
-          <HorizontalScrollSection 
-            title="Brain Waves - Daily Puzzle Games" 
-            items={BRAIN_WAVES} 
-          />
-        </SectionContainer>
-        
-        <div className="bg-gray-800/50 py-6 rounded-xl my-6">
-          <div className="container mx-auto px-4">
-            <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
-          </div>
+      <main className="flex flex-col">
+        {/* Top Ad Slot */}
+        <div className="w-full pt-24 pb-4 bg-black/20 flex justify-center">
+          <Ads format="fluid" style={{ width: '100%', maxWidth: '1200px', height: '90px' }} />
         </div>
 
-        <SectionContainer className="horizontal-scroll-section">
-          <HorizontalScrollSection 
-            title="Retro Games Collection" 
-            items={RETRO_GAMES} 
-          />
-        </SectionContainer>
+        <Billboard />
 
-        <SectionContainer className="horizontal-scroll-section">
-          <DailyTriviaFact />
-        </SectionContainer>
+        {/* FIX: Changed -mt-48 to -mt-24 to prevent overlap with Billboard text/buttons.
+            Added pt-10 to give the first row some breathing room.
+        */}
+        <div className="relative z-20 -mt-24 md:-mt-32 pt-10 space-y-12 pb-24 bg-gradient-to-t from-[#141414] via-[#141414]/95 to-transparent">
+          
+          <NetflixRow title="Daily Quizzes - Updated 24 hours" items={DAILY_QUIZZES} sectionHref="/daily-trivias" />
 
-        <MoreGames />
+          {/* DAILY TRIVIA FACT: 
+              Now styled to match the page width and mobile padding 
+          */}
+          <section className="px-4 md:px-12">
+            <h2 className="text-gray-300 text-md md:text-xl font-bold mb-4 ml-4 md:ml-4">
+              Did You Know?
+            </h2>
+            <div className="bg-gray-900/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md">
+              <DailyTriviaFact />
+            </div>
+          </section>
 
-        <CategoryShowcase />
+          <NetflixRow title="Brain Waves - Daily Puzzles" items={BRAIN_WAVES} sectionHref="/brainwave" />
 
-        <SectionContainer className="horizontal-scroll-section">
-          <HorizontalScrollSection 
-            title="IQ & Personality Tests" 
-            items={IQ_PERSONALITY_TESTS} 
-          />
-        </SectionContainer>
- 
-        <KeyFeatures />
+          <div className="px-4 md:px-12">
+            <Ads format="fluid" style={{ width: '100%', height: '120px' }} />
+          </div>
 
-        
+          <NetflixRow title="Retro Classics" items={RETRO_GAMES} sectionHref="/retro-games" />
+
+          <NetflixRow title="Word Games" items={wordGames} sectionHref="/word-games" />
+
+          <NetflixRow title="Number Puzzles" items={numberGames} sectionHref="/number-puzzles" />
+        </div>
       </main>
 
-      <div className="bg-gray-800/50 py-6">
-        <div className="container mx-auto px-4">
-          <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
-        </div>
-      </div>
-      
       <Footer />
     </div>
   );

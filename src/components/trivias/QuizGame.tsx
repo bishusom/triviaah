@@ -10,6 +10,7 @@ import { extractKeywords } from '@/lib/nlpKeywords';
 import { fetchPixabayImage } from '@/lib/pixabay';
 import { useSound } from '@/context/SoundContext';
 import useWindowSize from 'react-use/lib/useWindowSize';
+import { updateGuestStats } from '@/lib/guestStats';
 import QuizSummary from '@/components/trivias/QuizSummary';
 import { Maximize2, Minimize2, Flame, Zap } from 'lucide-react';
 
@@ -153,6 +154,7 @@ export default function QuizGame({
       wrongAnswers: wrongAnswers
     });
     setShowSummary(true);
+    updateGuestStats(finalScore);
   }, [regularQuestions.length, bonusQuestion, timeUsed, category, subcategory, isTimedMode, wrongAnswers]);
 
   const handleAdvance = useCallback(() => {

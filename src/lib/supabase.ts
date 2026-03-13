@@ -789,3 +789,54 @@ export async function getQuestionCountByCategory(category: string): Promise<numb
     return 0;
   }
 }
+
+// lib/supabase.ts
+
+export interface SearchResult {
+  name: string;
+  type: 'category' | 'subcategory';
+  slug: string;
+  count: number;
+}
+
+export async function getSearchableItems(): Promise<SearchResult[]> {
+  try {
+    // Fetch from both views in parallel
+    const [categories, subcategories] = await Promise.all([
+      supabase.from('trivia_categories_view').select('category, question_count'),
+      supabase.from('trivia_subcategories_view').select('category, subcategory, question_count')
+    ]);
+
+    const results: SearchResult[] = [];
+
+    // Process Categories
+    if (categories.data) {
+      categories.data.forEach(c => {
+        results.push({
+          name: c.category,
+          type: 'category',
+          slug: `/trivias/${c.category.toLowerCase().replace(/\s+/g, '-')}`,
+          count: c.question_count
+        });
+      });
+    }
+
+    // Process Subcategories
+    if (subcategories.data) {
+      subcategories.data.forEach(s => {
+        results.push({
+          name: s.subcategory,
+          type: 'subcategory',
+          // Link format: /trivias/[category]/[subcategory]
+          slug: `/trivias/${s.category.toLowerCase().replace(/\s+/g, '-')}/${s.subcategory.toLowerCase().replace(/\s+/g, '-')}`,
+          count: s.question_count
+        });
+      });
+    }
+
+    return results;
+  } catch (error) {
+    console.error('Search fetch error:', error);
+    return [];
+  }
+}
