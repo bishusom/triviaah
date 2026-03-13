@@ -154,7 +154,12 @@ export default function QuizGame({
       wrongAnswers: wrongAnswers
     });
     setShowSummary(true);
-    updateGuestStats(finalScore);
+    updateGuestStats(score, {
+      title: subcategory || category || "Daily Trivia",
+      score: score,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      href: window.location.pathname
+    });
   }, [regularQuestions.length, bonusQuestion, timeUsed, category, subcategory, isTimedMode, wrongAnswers]);
 
   const handleAdvance = useCallback(() => {

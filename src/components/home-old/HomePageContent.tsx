@@ -3,21 +3,21 @@
 
 import { useEffect } from 'react';
 import Ads from '@/components/common/Ads';
-import NavBar from '@/components/home/NavBar';
-import CategoryShowcase from '@/components/home/sections/CategoryShowcase';
-import HorizontalScrollSection from '@/components/home/sections/HorizontalScrollSection';
-import Footer from '@/components/home/Footer'
+import NavBar from './NavBar';
+import CategoryShowcase from './sections/CategoryShowcase';
+import HorizontalScrollSection from './sections/HorizontalScrollSection';
+import Footer from './Footer'
 import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
 
 // Import new section components
-import HeaderSection from '@/components/home/sections/HeaderSection';
-import HeroSection from '@/components/home/sections/HeroSection';
-import { HolidaySpecial } from '@/components/home/sections/HolidaySpecial';
-//import SeoContentSection from '@/components/home/sections/SeoContentSection';
-import KeyFeatures from '@/components/home/sections/KeyFeatures';
-import DailyTriviaFact from '@/components/home/sections/DailyTriviaFact';
-import SectionContainer from '@/components/home/sections/SectionContainer';
-import MoreGames from '@/components/home/sections/MoreGames';
+import HeaderSection from './sections/HeaderSection';
+import HeroSection from './sections/HeroSection';
+import { HolidaySpecial } from './sections/HolidaySpecial';
+//import SeoContentSection from './sections/SeoContentSection';
+import KeyFeatures from './sections/KeyFeatures';
+import DailyTriviaFact from './sections/DailyTriviaFact';
+import SectionContainer from './sections/SectionContainer';
+import MoreGames from './sections/MoreGames';
 
 export default function HomePageContent() {
   useEffect(() => {

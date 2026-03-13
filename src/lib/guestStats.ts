@@ -1,3 +1,5 @@
+// lib/guestStats.ts
+
 export interface RecentQuiz {
   title: string;
   score: number;
@@ -5,6 +7,7 @@ export interface RecentQuiz {
   href: string;
 }
 
+// Added 'export' here to fix the first error
 export interface GuestStats {
   gamesPlayed: number;
   totalScore: number;
@@ -13,49 +16,52 @@ export interface GuestStats {
   recentQuizzes: RecentQuiz[];
 }
 
-const STORAGE_KEY = 'triviaah_guest_v1';
+const STATS_KEY = 'triviaah_guest_v1';
+const HISTORY_KEY = 'playedQuizzes';
 
-export const getGuestStats = (): GuestStats => {
-  if (typeof window === 'undefined') return defaultStats;
-  const saved = localStorage.getItem(STORAGE_KEY);
-  return saved ? JSON.parse(saved) : defaultStats;
-};
-
-const defaultStats: GuestStats = {
+const defaultStats: Omit<GuestStats, 'recentQuizzes'> = {
   gamesPlayed: 0,
   totalScore: 0,
   streak: 0,
   lastPlayed: '',
-  recentQuizzes: []
+};
+
+export const getGuestStats = (): GuestStats => {
+  if (typeof window === 'undefined') return { ...defaultStats, recentQuizzes: [] };
+  
+  const savedStats = localStorage.getItem(STATS_KEY);
+  const savedHistory = localStorage.getItem(HISTORY_KEY);
+  
+  const stats = savedStats ? JSON.parse(savedStats) : defaultStats;
+  const history = savedHistory ? JSON.parse(savedHistory) : [];
+
+  return { 
+    ...stats, 
+    recentQuizzes: history 
+  };
 };
 
 export const updateGuestStats = (points: number, quizData?: RecentQuiz) => {
   const stats = getGuestStats();
   const today = new Date().toISOString().split('T')[0];
   
-  // Update Recent List: Add new, remove duplicate of same title, limit to 5
-  let newRecent = stats.recentQuizzes || [];
+  let currentHistory: RecentQuiz[] = stats.recentQuizzes || [];
   if (quizData) {
-    newRecent = [quizData, ...newRecent.filter(q => q.title !== quizData.title)].slice(0, 5);
+    currentHistory = [
+      quizData, 
+      ...currentHistory.filter(q => q.title !== quizData.title)
+    ].slice(0, 5);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(currentHistory));
   }
 
-  // Calculate Streak
-  let newStreak = stats.streak;
-  if (stats.lastPlayed !== today) {
-    // Check if they played yesterday to continue streak, otherwise reset or increment
-    // For simplicity: increment if it's a new day
-    newStreak += 1;
-  }
-
-  const updated: GuestStats = {
-    ...stats,
-    gamesPlayed: stats.gamesPlayed + 1,
-    totalScore: stats.totalScore + points,
-    recentQuizzes: newRecent,
+  const updatedStats = {
+    gamesPlayed: (stats.gamesPlayed || 0) + 1,
+    totalScore: (stats.totalScore || 0) + points,
     lastPlayed: today,
-    streak: newStreak
+    streak: stats.lastPlayed === today ? stats.streak : (stats.streak || 0) + 1
   };
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  return updated;
+  localStorage.setItem(STATS_KEY, JSON.stringify(updatedStats));
+  
+  return { ...updatedStats, recentQuizzes: currentHistory };
 };
