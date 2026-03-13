@@ -8,7 +8,7 @@ const BILLBOARD_DATA = [
   {
     id: 1,
     title: "GENERAL KNOWLEDGE",
-    description: "Put your wits to the test with our most popular daily challenge.",
+    description: "The ultimate testing ground for trivia fans. Thousands of questions across every topic imaginable.",
     image: "/imgs/billboard/abstract-intel.webp",
     link: "/daily-trivias/general-knowledge"
   },
@@ -21,6 +21,27 @@ const BILLBOARD_DATA = [
   },
   {
     id: 3,
+    title: "MOVIES",
+    description: "Step into the spotlight and test your knowledge of cinema history, from silent classics to modern blockbusters.",
+    image: "/imgs/billboard/cinema-mastery.webp",
+    link: "/trivias/movies/quiz"
+  },
+  {
+    id: 4,
+    title: "WORD SEARCH",
+    description: "Sharpen your focus and hunt for hidden patterns in our signature daily word puzzles.",
+    image: "/imgs/billboard/word-search-glow.webp",
+    link: "/word-games/word-search"
+  },
+  {
+    id: 5,
+    title: "SCIENCE & TECH",
+    description: "From quantum physics to the latest in AI. Challenge your understanding of the world and beyond.",
+    image: "/imgs/billboard/science-future.webp",
+    link: "/trivias/science/quiz"
+  },
+  {
+    id: 6,
     title: "BRAIN WAVES",
     description: "Elevate your cognitive skills with our trending logic and pattern recognition puzzles.",
     image: "/imgs/billboard/game-stage.webp",
