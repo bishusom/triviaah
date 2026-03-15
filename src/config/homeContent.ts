@@ -204,7 +204,7 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
     category: 'capa',
     name: 'Cognitive Abilities Profile Assessment (CAPA) Test',
     path: '/iq-and-personality-tests/capa',
-    image: '/imgs/thumbnails/capa-160x160.webp',
+    image: '/imgs/iq-personality-tests/capa-rect.webp',
     tagline: 'Comprehensive assessment of your cognitive strengths across multiple intelligence domains',
     keywords: 'cognitive assessment, multiple intelligences test, cognitive strengths analysis, learning style assessment, cognitive profile, memory test, reasoning test'
   },
@@ -212,7 +212,7 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
     category: 'matrixiq',
     name: 'MatrixIQ Test',
     path: '/iq-and-personality-tests/matrixiq',
-    image: '/imgs/thumbnails/matrixiq-160x160.webp',
+    image: '/imgs/iq-personality-tests/matrixiq-rect.webp',
     tagline: 'Measure your fluid intelligence with advanced pattern recognition and abstract reasoning challenges',
     keywords: 'matrix reasoning test, fluid intelligence test, pattern recognition, abstract reasoning, Raven\'s matrices, non-verbal IQ test, visual-spatial reasoning'
   },
@@ -220,7 +220,7 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
     category: 'mbti',
     name: 'MBTI Personality Test',
     path: '/iq-and-personality-tests/mbti',
-    image: '/imgs/thumbnails/mbti-160x160.webp',
+    image: '/imgs/iq-personality-tests/mbti-rect.webp',
     tagline: 'Discover your Myers-Briggs Type (INFP, ESTJ, etc.) with detailed career matches and strengths analysis',
     keywords: 'MBTI test, Myers-Briggs personality test, personality type assessment, career matching, INFP, ESTJ, personality traits'
   },
@@ -228,7 +228,7 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
     category: 'big-five',
     name: 'Big Five (OCEAN) Test',
     path: '/iq-and-personality-tests/big-five',
-    image: '/imgs/thumbnails/big-five-160x160.webp',
+    image: '/imgs/iq-personality-tests/big-five-rect.webp',
     tagline: 'Scientifically-validated trait analysis with percentile scores for all 5 major personality dimensions',
     keywords: 'Big Five personality test, OCEAN model, personality traits assessment, openness, conscientiousness, extraversion, agreeableness, neuroticism'
   },
@@ -236,7 +236,7 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
     category: 'enneagram',
     name: 'Enneagram Test',
     path: '/iq-and-personality-tests/enneagram',
-    image: '/imgs/thumbnails/enneagram-160x160.webp',
+    image: '/imgs/iq-personality-tests/enneagram-rect.webp',
     tagline: 'Discover your Enneagram type with core motivations, fears, and growth paths',
     keywords: 'Enneagram personality test, Enneagram types, personality assessment, self-discovery, type 1-9 Enneagram, personal growth'
   },
@@ -244,7 +244,7 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
     category: 'disc',
     name: 'DISC Assessment',
     path: '/iq-and-personality-tests/disc',
-    image: '/imgs/thumbnails/disc-160x160.webp',
+    image: '/imgs/iq-personality-tests/disc-rect.webp',
     tagline: 'Understand your communication style (Dominance, Influence, Steadiness, Conscientiousness)',
     keywords: 'DISC assessment, communication style test, personality assessment, workplace communication, DISC profile, behavioral assessment'
   },
@@ -252,7 +252,7 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
     category: 'love-languages',
     name: 'Love Languages Test',
     path: '/iq-and-personality-tests/love-languages',
-    image: '/imgs/thumbnails/love-languages-160x160.webp',
+    image: '/imgs/iq-personality-tests/love-languages-rect.webp',
     tagline: 'Discover how you give and receive love in relationships',
     keywords: 'love languages test, relationship assessment, 5 love languages, Gary Chapman, relationship advice, emotional connection'
   },
@@ -260,7 +260,7 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
     category: 'holland-code',
     name: 'Holland Career Test',
     path: '/iq-and-personality-tests/holland-code',
-    image: '/imgs/thumbnails/holland-code-160x160.webp',
+    image: '/imgs/iq-personality-tests/holland-code-rect.webp',
     tagline: 'Find your ideal career path based on your personality (RIASEC model)',
     keywords: 'Holland Code test, RIASEC career assessment, career personality test, vocational test, job matching, career guidance'
   }
