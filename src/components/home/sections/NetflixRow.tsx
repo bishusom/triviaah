@@ -10,7 +10,7 @@ interface TriviaItem {
   name?: string; 
   image?: string;
   image_url?: string;
-  href?: string;
+  path?: string;
 }
 
 interface NetflixRowProps {
@@ -68,7 +68,7 @@ export const NetflixRow = ({ title, items, sectionHref = "#" }: NetflixRowProps)
           className="flex gap-3 overflow-x-auto px-8 md:px-12 no-scrollbar scroll-smooth py-4"
         >
           {items.map((item, i) => (
-            <Link href={item.href || '#'} key={item.id || i} className="flex-none">
+            <Link href={item.path || '#'} key={item.id || i} className="flex-none">
               <motion.div
                 whileHover={{ scale: 1.08, zIndex: 10 }}
                 className="relative w-44 md:w-72 aspect-video bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer border border-white/5"

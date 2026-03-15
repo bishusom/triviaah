@@ -10,19 +10,19 @@ import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES } from '@/config/homeContent';
 export default function HomePageContent() {
   // Mapping your specific categories for the Netflix rows
   const wordGames = [
-    { title: "Word Scramble", image: "/imgs/word-games/word-scramble.webp", href: "/word-games/word-scramble" },
-    { title: "Spelling Bee", image: "/imgs/word-games/spelling-bee.webp", href: "/word-games/spelling-bee" },
-    { title: "Boggle", image: "/imgs/word-games/boggle.webp", href: "/word-games/boggle" },
-    { title: "Word Search", image: "/imgs/word-games/word-search.webp", href: "/word-games/word-search" },
-    { title: "Word Ladder", image: "/imgs/word-games/word-ladder.webp", href: "/word-games/word-ladder" },
+    { title: "Word Scramble", image: "/imgs/word-games/word-scramble.webp", path: "/word-games/scramble" },
+    { title: "Spelling Bee", image: "/imgs/word-games/spelling-bee.webp", path: "/word-games/spelling-bee" },
+    { title: "Boggle", image: "/imgs/word-games/boggle.webp", path: "/word-games/boggle" },
+    { title: "Word Search", image: "/imgs/word-games/word-search.webp", path: "/word-games/word-search" },
+    { title: "Word Ladder", image: "/imgs/word-games/word-ladder.webp", path: "/word-games/word-ladder" },
   ];
 
   const numberGames = [
-    { title: "Number Scramble", image: "/imgs/number-puzzles/number-scramble.webp", href: "/number-puzzles/number-scramble" },
-    { title: "Prime Hunter", image: "/imgs/number-puzzles/prime-hunter.webp", href: "/number-puzzles/prime-hunter" },
-    { title: "Number Sequence", image: "/imgs/number-puzzles/number-sequence.webp", href: "/number-puzzles/number-sequence" },
-    { title: "Number Tower", image: "/imgs/number-puzzles/number-tower.webp", href: "/number-puzzles/number-tower" },
-    { title: "Sudoku Challenge", image: "/imgs/number-puzzles/sudoku.webp", href: "/number-puzzles/sudoku" }
+    { title: "Number Scramble", image: "/imgs/number-puzzles/number-scramble.webp", path: "/number-puzzles/number-scramble" },
+    { title: "Prime Hunter", image: "/imgs/number-puzzles/prime-hunter.webp", path: "/number-puzzles/prime-hunter" },
+    { title: "Number Sequence", image: "/imgs/number-puzzles/number-sequence.webp", path: "/number-puzzles/number-sequence" },
+    { title: "Number Tower", image: "/imgs/number-puzzles/number-tower.webp", path: "/number-puzzles/number-tower" },
+    { title: "Sudoku Challenge", image: "/imgs/number-puzzles/sudoku.webp", path: "/number-puzzles/sudoku" }
   ];
 
   return (
