@@ -5,7 +5,7 @@ import { NetflixRow } from './sections/NetflixRow';
 import Footer from './Footer';
 import Ads from '@/components/common/Ads';
 import DailyTriviaFact from './sections/DailyTriviaFact';
-import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES } from '@/config/homeContent';
+import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
 
 export default function HomePageContent() {
   // Mapping your specific categories for the Netflix rows
@@ -67,6 +67,8 @@ export default function HomePageContent() {
           <NetflixRow title="Word Games" items={wordGames} sectionHref="/word-games" />
 
           <NetflixRow title="Number Puzzles" items={numberGames} sectionHref="/number-puzzles" />
+
+          <NetflixRow title="IQ & Personality Tests" items={IQ_PERSONALITY_TESTS} sectionHref="/iq-and-personality-tests" />
         </div>
       </main>
 
