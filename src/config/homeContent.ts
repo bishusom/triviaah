@@ -73,7 +73,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'plotle',
     name: 'Plotle',
     path: '/brainwave/plotle',
-    image: '/imgs/thumbnails/plotle-160x160.webp',
+    image: '/imgs/brainwave/plotle-rect.webp',
     tagline: 'Guess the movie from its plot description in emojis',
     keywords: 'movie plot game, film trivia, movie guessing game'
   },
@@ -81,7 +81,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'capitale',
     name: 'Capitale',
     path: '/brainwave/capitale',
-    image: '/imgs/thumbnails/capitale-160x160.webp',
+    image: '/imgs/brainwave/capitale-rect.webp',
     tagline: 'Guess world capitals in this challenging geography puzzle',
     keywords: 'capital cities game, geography puzzle, world capitals quiz'
   },
@@ -89,7 +89,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'celebrile',
     name: 'Celebrile',
     path: '/brainwave/celebrile',
-    image: '/imgs/thumbnails/celebrile-160x160.webp',
+    image: '/imgs/brainwave/celebrile-rect.webp',
     tagline: 'Guess the celebrity from fun facts in this star-studded quiz',
     keywords: 'celebrity trivia game, famous people quiz, celebrity guessing game'    
   },
@@ -97,7 +97,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'songle',
     name: 'Songle',
     path: '/brainwave/songle',
-    image: '/imgs/thumbnails/songle-160x160.webp',
+    image: '/imgs/brainwave/songle-rect.webp',
     tagline: 'Identify songs from lyrics snippets in this music challenge',
     keywords: 'music lyrics game, song trivia, music guessing challenge'
   },
@@ -105,7 +105,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'historidle',
     name: 'Historidle',
     path: '/brainwave/historidle',
-    image: '/imgs/thumbnails/historidle-160x160.webp',
+    image: '/imgs/brainwave/historidle-rect.webp',
     tagline: 'Guess the historical event from dates and other intriguing clues',
     keywords: 'history trivia game, historical events quiz, history guessing game'
   },
@@ -113,7 +113,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'creaturedle',
     name: 'Creaturedle',
     path: '/brainwave/creaturedle',
-    image: '/imgs/thumbnails/creaturedle-160x160.webp',
+    image: '/imgs/brainwave/creaturedle-rect.webp',
     tagline: 'Guess the animal from its unique characteristics in this wildlife puzzle',
     keywords: 'animal trivia game, wildlife quiz, animal guessing puzzle'
   },
@@ -121,7 +121,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'foodle',
     name: 'Foodle',
     path: '/brainwave/foodle',
-    image: '/imgs/thumbnails/foodle-160x160.webp',
+    image: '/imgs/brainwave/foodle-rect.webp',
     tagline: 'Guess the dish from its ingredients in this culinary puzzle',
     keywords: 'food trivia game, dish guessing quiz, culinary puzzle'
   },
@@ -129,7 +129,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'literale',
     name: 'Literale',
     path: '/brainwave/literale',
-    image: '/imgs/thumbnails/literale-160x160.webp',
+    image: '/imgs/brainwave/literale-rect.webp',
     tagline: 'Guess the book from its opening line in this literary puzzle',
     keywords: 'book opening game, literature trivia, book guessing puzzle'
   },
@@ -137,7 +137,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'landmarkdle',
     name: 'Landmarkdle',
     path: '/brainwave/landmarkdle',
-    image: '/imgs/thumbnails/landmarkdle-160x160.webp',
+    image: '/imgs/brainwave/landmarkdle-rect.webp',
     tagline: 'Guess the famous landmark from intriguing clues in this geography puzzle',
     keywords: 'landmark trivia game, famous places quiz, landmark guessing puzzle'
   },
@@ -145,7 +145,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'inventionle',
     name: 'Inventionle',
     path: '/brainwave/inventionle',
-    image: '/imgs/thumbnails/inventionle-160x160.webp',
+    image: '/imgs/brainwave/inventionle-rect.webp',
     tagline: 'Guess the invention from its 6 attributes in this technology puzzle',
     keywords: 'invention trivia game, technology quiz, invention guessing puzzle'
   },
@@ -153,7 +153,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'automoble',
     name: 'Automoble',
     path: '/brainwave/automoble',
-    image: '/imgs/brainwave/automoble.webp',
+    image: '/imgs/brainwave/automoble-rect.webp',
     tagline: 'Guess the car from its unique characteristics in this automotive puzzle',
     keywords: 'car trivia game, automotive quiz, car guessing puzzle'
   },
@@ -161,7 +161,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'botanle',
     name: 'Botanle',
     path: '/brainwave/botanle',
-    image: '/imgs/brainwave/botanle.webp',
+    image: '/imgs/brainwave/botanle-rect.webp',
     tagline: 'Guess the plant from its unique characteristics in this botanical puzzle',
     keywords: 'plant trivia game, botanical quiz, plant guessing puzzle'
   },
@@ -169,7 +169,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'citadle',
     name: 'Citadle',
     path: '/brainwave/citadle',
-    image: '/imgs/brainwave/citadle.webp',
+    image: '/imgs/brainwave/citadle-rect.webp',
     tagline: 'Guess the city from its unique characteristics in this urban geography puzzle',
     keywords: 'city trivia game, urban geography quiz, city guessing puzzle'
   },
@@ -177,7 +177,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'countridle',
     name: 'Countridle',
     path: '/brainwave/countridle',
-    image: '/imgs/brainwave/countridle.webp',
+    image: '/imgs/brainwave/countridle-rect.webp',
     tagline: 'Guess the country from its unique characteristics in this global geography puzzle',
     keywords: 'country trivia game, world geography quiz, country guessing puzzle'
   },
@@ -185,7 +185,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'synonymle',
     name: 'Synonymle',
     path: '/brainwave/synonymle',
-    image: '/imgs/thumbnails/synonymle-160x160.webp',
+    image: '/imgs/brainwave/synonymle-rect.webp',
     tagline: 'Guess the word based on semantic similarity and synonyms',
     keywords: 'synonymle, word puzzle, daily word, wordle vocabulary, synonym game, semantic game'
   },
@@ -193,7 +193,7 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     category: 'trordle',
     name: 'Trordle',
     path: '/brainwave/trordle',
-    image: '/imgs/thumbnails/trordle-160x160.webp',
+    image: '/imgs/brainwave/trordle-rect.webp',
     tagline: 'Wordle-inspired trivia challenges for curious minds',
     keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
   },

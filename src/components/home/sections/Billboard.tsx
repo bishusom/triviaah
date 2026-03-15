@@ -96,7 +96,7 @@ export default function Billboard() {
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center gap-2 mb-4">
-              <span className="bg-cyan-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">
+              <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">
                 Featured
               </span>
             </div>

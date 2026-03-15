@@ -18,7 +18,7 @@ export default function NavBar() {
 
   const navLinks = [
     { name: 'Daily Trivias', href: '/daily-trivias' },
-    { name: 'Brain Waves', href: '/brain-waves' },
+    { name: 'Brain Waves', href: '/brainwave' },
     { name: 'All Trivias', href: '/trivias' },
     { name: 'Leaderboard', href: '/leaderboard' },
     { name: 'Word Games', href: '/word-games' },
