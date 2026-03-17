@@ -199,6 +199,31 @@ export default function TriviasPage() {
           ))}
         </div>
 
+        {/* CTA Section for Trivia Bank */}
+        <section className="mt-16 p-8 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+          <div className="max-w-2xl mx-auto">
+            <div className="flex justify-center mb-4">
+              <div className="p-3 bg-blue-100 rounded-full">
+                <Boxes className="w-8 h-8 text-blue-600" />
+              </div>
+            </div>
+            <h2 className="text-2xl text-white font-bold text-slate-900 mb-2">
+              Looking for Printables?
+            </h2>
+            <p className="text-white mb-6">
+              Access our comprehensive <strong>Trivia Bank</strong> featuring downloadable quiz sheets 
+              and curated "Top 50" lists perfect for pub nights, classrooms, or family gatherings.
+            </p>
+            <Link 
+              href="/trivia-bank"
+              className="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 shadow-sm"
+            >
+              Browse Downloadable Quiz Sheets
+              <Play className="ml-2 w-4 h-4" />
+            </Link>
+          </div>
+        </section>
+
         {/*
         <div className="py-4">
           <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
