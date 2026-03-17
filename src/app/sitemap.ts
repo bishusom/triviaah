@@ -111,7 +111,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const triviaCategoryPages: MetadataRoute.Sitemap = triviaCategories.map(category => ({
     url: `${baseUrl}/trivias/${category}`,
     lastModified: new Date(),
-    changeFrequency: 'weekly', // More realistic than daily
+    changeFrequency: 'monthly', // More realistic than daily
     priority: PRIORITY_TIERS.MEDIUM,
   }))
 
@@ -119,12 +119,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const triviaQuizPages: MetadataRoute.Sitemap = triviaCategories.map(category => ({
     url: `${baseUrl}/trivias/${category}/quiz`,
     lastModified: new Date(),
-    changeFrequency: 'daily',
+    changeFrequency: 'monthly',
     priority: PRIORITY_TIERS.MEDIUM,
   }))
 
   // DYNAMIC: Subcategory pages - MEDIUM priority
-  const subcategoryPages = await fetchSubcategoryPages(baseUrl)
+  //const subcategoryPages = await fetchSubcategoryPages(baseUrl)
 
   // Retro Game - MEDIUM priority
   const retroGamesCatalog: MetadataRoute.Sitemap = [{
@@ -190,36 +190,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: PRIORITY_TIERS.MEDIUM,
   }))
 
-  // DYNAMIC: Trivia bank - LOW priority (archive content)
-  const triviaBankPages = await fetchTriviaBankPages(baseUrl)
-
-  // DYNAMIC: Blog posts - MEDIUM for index, LOW for individual
-  const blogPages = await fetchBlogPages(baseUrl)
-
-  // Combine all routes with realistic priorities
-  return [
-    ...mainPages,
-    ...dailyTriviasCatalog,
-    ...dailyTriviaCategoryPages,
-    ...brainwaveCatalog,
-    ...brainwaveCategoryPages,
-    ...triviaCategoryPages,
-    ...triviaQuizPages,
-    ...subcategoryPages,
-    ...retroGamesCatalog,
-    ...retroGamePages,
-    ...iQPersonalityTestsCatalog,
-    ...iQPersonalityTestsPages,
-    ...wordGamesCatalog,
-    ...wordGamePages,
-    ...numberPuzzleCatalog,
-    ...numberPuzzlePages,
-    ...triviaBankPages,
-    ...blogPages
-  ]
-}
-
-// Updated subcategory pages with realistic priorities
+  // Updated subcategory pages with realistic priorities
 async function fetchSubcategoryPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   const pages: MetadataRoute.Sitemap = []
 
@@ -321,4 +292,33 @@ async function fetchBlogPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   }
 
   return pages
+}
+
+  // DYNAMIC: Trivia bank - LOW priority (archive content)
+  const triviaBankPages = await fetchTriviaBankPages(baseUrl)
+
+  // DYNAMIC: Blog posts - MEDIUM for index, LOW for individual
+  const blogPages = await fetchBlogPages(baseUrl)
+
+  // Combine all routes with realistic priorities
+  return [
+    ...mainPages,
+    ...dailyTriviasCatalog,
+    ...dailyTriviaCategoryPages,
+    ...brainwaveCatalog,
+    ...brainwaveCategoryPages,
+    ...triviaCategoryPages,
+    ...triviaQuizPages,
+    //...subcategoryPages,
+    ...retroGamesCatalog,
+    ...retroGamePages,
+    ...iQPersonalityTestsCatalog,
+    ...iQPersonalityTestsPages,
+    ...wordGamesCatalog,
+    ...wordGamePages,
+    ...numberPuzzleCatalog,
+    ...numberPuzzlePages,
+    //...triviaBankPages,
+    ...blogPages
+  ]
 }
