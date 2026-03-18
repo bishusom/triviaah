@@ -71,17 +71,26 @@ export const NetflixRow = ({ title, items, sectionHref = "#" }: NetflixRowProps)
             <Link href={item.path || '#'} key={item.id || i} className="flex-none">
               <motion.div
                 whileHover={{ scale: 1.08, zIndex: 10 }}
-                className="relative w-44 md:w-72 aspect-video bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer border border-white/5"
+                className="group relative w-44 md:w-72 aspect-video bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer border border-white/5"
               >
                 <img 
                   src={item.image || item.image_url || "/api/placeholder/400/225"} 
                   alt={item.title || item.name}
-                  className="w-full h-full object-cover brightness-90 group-hover:brightness-100 transition-all"
+                  className="w-full h-full object-cover brightness-90 group-hover:brightness-100 transition-all duration-300"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
-                  <p className="text-white font-bold text-xs md:text-sm drop-shadow-md">
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 p-3 md:p-4 flex flex-col justify-end pointer-events-none">
+                  <motion.p 
+                    variants={{
+                      hover: { scale: 1.15, x: 5 }
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="text-white font-bold text-xs md:text-sm drop-shadow-md origin-left"
+                  >
                     {item.title || item.name}
-                  </p>
+                  </motion.p>
+                  <div className="w-0 group-hover:w-12 h-0.5 bg-cyan-500 transition-all duration-300 mt-1" />
                 </div>
               </motion.div>
             </Link>
