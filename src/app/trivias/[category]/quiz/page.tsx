@@ -4,41 +4,105 @@ import { getCategoryQuestions, getSubcategoryQuestions, Question } from '@/lib/s
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
-import { Timer, ShieldQuestionMark, Trophy, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
+import triviaCategories from '@/config/triviaCategories.json';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type CategoryKey = keyof typeof triviaCategories;
 
 interface QuizPageProps {
   params: Promise<{ category: string }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export async function generateMetadata({
-  params,
-  searchParams,
-}: QuizPageProps): Promise<Metadata> {
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+
+export async function generateMetadata({ params, searchParams }: QuizPageProps): Promise<Metadata> {
   const { category } = await params;
   const searchParamsObj = await searchParams;
-  const subcategory = searchParamsObj?.subcategory as string | undefined;
-  
-  const formattedCategory = category
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
 
-  const formattedSubcategory = subcategory 
-    ? subcategory.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+  // ✅ FIX: Subcategory quiz pages (?subcategory=X) share the same canonical as
+  // the base quiz page. They are NOT distinct indexable URLs — they're the same
+  // page with filtered questions. Setting a ?subcategory= canonical told Google
+  // these were unique pages, causing duplicate content signals across all quiz pages.
+  // The canonical always points to the base quiz URL.
+  const canonicalUrl = `https://triviaah.com/trivias/${category}/quiz`;
+
+  // Pull subcategory only for title/description — NOT for canonical/OG URL
+  const subcategory = searchParamsObj?.subcategory as string | undefined;
+
+  // Use category config if available for richer context
+  const categoryKey = category as CategoryKey;
+  const categoryConfig = triviaCategories[categoryKey] as {
+    title: string;
+    description: string;
+    keywords?: string[];
+  } | undefined;
+
+  const formattedCategory = categoryConfig?.title
+    ?? category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+  const formattedSubcategory = subcategory
+    ? subcategory.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
     : null;
 
-  const title = formattedSubcategory 
-    ? `${formattedSubcategory} ${formattedCategory} Quiz | Triviaah`
-    : `${formattedCategory} Quiz | Triviaah`;
+  // ✅ FIX: Stronger, search-intent-aligned titles.
+  // "Science Quiz" → nobody searches this.
+  // "Science Trivia Questions & Answers | Free Quiz" → matches real queries.
+  // Subcategory pages get even more specific: "Evolution Science Quiz | Triviaah"
+  const title = formattedSubcategory
+    ? `${formattedSubcategory} ${formattedCategory} Trivia Quiz | Triviaah`
+    : `${formattedCategory} Trivia Questions & Answers | Free Online Quiz`;
+
+  // ✅ FIX: Unique description per category, not a generic template shared across
+  // all quiz pages. Google flags near-identical descriptions as thin content.
+  // The category description from triviaCategories.json gives us unique copy for free.
+  const categoryContext = categoryConfig?.description
+    ? ` ${categoryConfig.description}`
+    : '';
 
   const description = formattedSubcategory
-    ? `Test your ${formattedSubcategory.toLowerCase()} knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 multi-choice questions to beat the highscore. Invite your friends on social media if they can beat your scores!`
-    : `Test your knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 multi-choice questions to beat the highscore. Invite your friends on social media if they can beat your scores!`;
+    ? `Test your ${formattedSubcategory.toLowerCase()} knowledge with our free ${formattedCategory.toLowerCase()} quiz.${categoryContext} Multiple-choice questions with instant results.`
+    : `Play our free ${formattedCategory.toLowerCase()} trivia quiz — multiple-choice questions with instant scoring.${categoryContext} No sign-up required.`;
+
+  // ✅ FIX: OG URL is always the canonical base URL, never the ?subcategory= variant.
+  // Facebook/Twitter use og:url as the canonical link when content is shared.
+  const ogUrl = canonicalUrl;
+
+  const ogTitle = formattedSubcategory
+    ? `${formattedSubcategory} ${formattedCategory} Quiz — Can you beat the high score?`
+    : `${formattedCategory} Trivia Quiz — Test Your Knowledge!`;
+
+  const ogDescription = formattedSubcategory
+    ? `How much do you know about ${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()}? Take the free quiz and find out!`
+    : `Think you know your ${formattedCategory.toLowerCase()}? Challenge yourself with our free trivia quiz and see how you rank!`;
 
   return {
     title,
     description,
+
+    // ✅ Keywords: category-specific, not a generic list repeated on every page
+    keywords: [
+      `${formattedCategory.toLowerCase()} trivia`,
+      `${formattedCategory.toLowerCase()} trivia questions`,
+      `${formattedCategory.toLowerCase()} quiz questions and answers`,
+      `free ${formattedCategory.toLowerCase()} quiz`,
+      `online ${formattedCategory.toLowerCase()} quiz`,
+      `${formattedCategory.toLowerCase()} knowledge test`,
+      'free trivia quiz',
+      'online trivia questions',
+      ...(formattedSubcategory
+        ? [
+          `${formattedSubcategory.toLowerCase()} quiz`,
+          `${formattedSubcategory.toLowerCase()} trivia questions`,
+          `${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()} quiz`,
+        ]
+        : []),
+      ...(categoryConfig?.keywords ?? []),
+    ],
+
+    // ✅ Use object form — more reliable than string form across Next.js versions
     robots: {
       index: true,
       follow: true,
@@ -50,21 +114,11 @@ export async function generateMetadata({
         'max-snippet': -1,
       },
     },
-    keywords: [
-      formattedSubcategory ? `${formattedSubcategory.toLowerCase()} quiz` : `${formattedCategory.toLowerCase()} quiz`,
-      'trivia questions',
-      'knowledge test',
-      'free online quiz',
-      'multiple choice questions',
-      formattedCategory.toLowerCase(),
-      ...(formattedSubcategory ? [formattedSubcategory.toLowerCase()] : [])
-    ],
+
     openGraph: {
-      title,
-      description: formattedSubcategory
-        ? `Can you answer these ${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()} questions? Take the challenge!`
-        : `Can you answer these ${formattedCategory.toLowerCase()} questions? Take the challenge!`,
-      url: `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
+      title: ogTitle,
+      description: ogDescription,
+      url: ogUrl,          // ✅ Always canonical — never ?subcategory= variant
       siteName: 'Triviaah',
       type: 'website',
       images: [
@@ -72,260 +126,367 @@ export async function generateMetadata({
           url: '/imgs/triviaah-og.webp',
           width: 1200,
           height: 630,
-          alt: `${formattedCategory} Quiz Challenge`
-        }
+          alt: `${formattedCategory} Trivia Quiz on Triviaah`,
+        },
       ],
     },
+
     twitter: {
       card: 'summary_large_image',
-      title: formattedSubcategory 
-        ? `${formattedSubcategory} ${formattedCategory} Quiz Challenge`
-        : `${formattedCategory} Quiz Challenge`,
-      description: formattedSubcategory
-        ? `How well do you know ${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()}? Test yourself!`
-        : `How well do you know ${formattedCategory.toLowerCase()}? Test yourself!`,
+      title: ogTitle,
+      description: ogDescription,
       images: ['/imgs/triviaah-og.webp'],
     },
+
     alternates: {
-      canonical: `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
-    }
+      canonical: canonicalUrl,  // ✅ Always base URL — ?subcategory= is never canonical
+    },
   };
 }
 
-// Helper function to generate comprehensive structured data
-function generateStructuredData(questions: Question[], category: string, subcategory?: string) {
-  const formattedCategory = category
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+// ─── Structured data ──────────────────────────────────────────────────────────
+//
+// ✅ FIX: Removed the separate structured-data.tsx component — it was making a
+// second duplicate Supabase call and was never actually imported anywhere.
+// All structured data is generated here from the questions already fetched.
+//
+// ✅ FIX: The Quiz schema's `url` field for subcategory pages still uses the
+// ?subcategory= URL (this is correct — it identifies what the user is actually
+// doing), but the canonical + og:url remain the base URL. These serve
+// different purposes: canonical = "which URL should rank", schema url = "what
+// this content describes". They can and should differ for filtered views.
 
-  const formattedSubcategory = subcategory 
-    ? subcategory.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-    : null;
+function generateStructuredData(
+  questions: Question[],
+  category: string,
+  subcategory: string | undefined,
+  formattedCategory: string,
+  formattedSubcategory: string | null,
+) {
+  const canonicalUrl = `https://triviaah.com/trivias/${category}/quiz`;
+  const quizName = formattedSubcategory
+    ? `${formattedSubcategory} ${formattedCategory} Trivia Quiz`
+    : `${formattedCategory} Trivia Quiz`;
 
-  const quizName = formattedSubcategory 
-    ? `${formattedSubcategory} ${formattedCategory} Quiz`
-    : `${formattedCategory} Quiz`;
-
-  const quizUrl = `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`;
-
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
       {
-        "@type": "Organization",
-        "@id": "https://triviaah.com/#organization",
-        "name": "Triviaah",
-        "url": "https://triviaah.com/",
-        "description": "Triviaah offers engaging and educational trivia games and puzzles for everyone.",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://triviaah.com/logo.png",
-          "width": 200,
-          "height": 60
+        '@type': 'Organization',
+        '@id': 'https://triviaah.com/#organization',
+        name: 'Triviaah',
+        url: 'https://triviaah.com/',
+        description: 'Triviaah offers engaging and educational trivia games and puzzles for everyone.',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://triviaah.com/logo.png',
+          width: 200,
+          height: 60,
         },
-        "sameAs": [
-          "https://twitter.com/elitetrivias",
-          "https://www.facebook.com/elitetrivias",
-          "https://www.instagram.com/elitetrivias"
-        ]
+        sameAs: [
+          'https://twitter.com/elitetrivias',
+          'https://www.facebook.com/elitetrivias',
+          'https://www.instagram.com/elitetrivias',
+        ],
       },
       {
-        "@type": "WebPage",
-        "@id": `${quizUrl}/#webpage`,
-        "url": quizUrl,
-        "name": quizName,
-        "description": `Test your knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with ${questions.length} multiple-choice questions!`,
-        "isPartOf": {
-          "@id": "https://triviaah.com/#website"
-        },
-        "about": {
-          "@id": `${quizUrl}/#quiz`
-        },
-        "datePublished": "2024-01-01T00:00:00+00:00",
-        "dateModified": new Date().toISOString(),
-        "breadcrumb": {
-          "@id": `${quizUrl}/#breadcrumb`
-        },
-        "primaryImageOfPage": {
-          "@type": "ImageObject",
-          "url": "https://triviaah.com/imgs/quiz-og.webp",
-          "width": 1200,
-          "height": 630
-        }
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://triviaah.com/#website",
-        "url": "https://triviaah.com/",
-        "name": "Triviaah",
-        "description": "Engaging trivia games and puzzles for everyone",
-        "publisher": {
-          "@id": "https://triviaah.com/#organization"
-        },
-        "potentialAction": [
+        '@type': 'WebSite',
+        '@id': 'https://triviaah.com/#website',
+        url: 'https://triviaah.com/',
+        name: 'Triviaah',
+        description: 'Engaging trivia games and puzzles for everyone',
+        publisher: { '@id': 'https://triviaah.com/#organization' },
+        potentialAction: [
           {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": "https://triviaah.com/search?q={search_term_string}"
+            '@type': 'SearchAction',
+            target: {
+              '@type': 'EntryPoint',
+              urlTemplate: 'https://triviaah.com/search?q={search_term_string}',
             },
-            "query-input": "required name=search_term_string"
-          }
-        ]
+            'query-input': 'required name=search_term_string',
+          },
+        ],
       },
       {
-        "@type": "Quiz",
-        "@id": `${quizUrl}/#quiz`,
-        "name": quizName,
-        "description": `Test your ${formattedCategory.toLowerCase()} knowledge with ${questions.length} multiple-choice questions. Challenge yourself and beat the high score!`,
-        "url": quizUrl,
-        "numberOfQuestions": questions.length,
-        "educationalLevel": "Beginner",
-        "assesses": formattedSubcategory ? `${formattedSubcategory} ${formattedCategory}` : formattedCategory,
-        "educationalAlignment": {
-          "@type": "AlignmentObject",
-          "alignmentType": "educationalSubject",
-          "educationalFramework": "General Knowledge",
-          "targetName": formattedSubcategory ? `${formattedSubcategory} ${formattedCategory}` : formattedCategory
+        '@type': 'WebPage',
+        '@id': `${canonicalUrl}/#webpage`,
+        url: canonicalUrl,
+        name: quizName,
+        description: `Test your ${formattedCategory.toLowerCase()} knowledge with ${questions.length} multiple-choice questions.`,
+        isPartOf: { '@id': 'https://triviaah.com/#website' },
+        about: { '@id': `${canonicalUrl}/#quiz` },
+        datePublished: '2024-01-01T00:00:00+00:00',
+        dateModified: new Date().toISOString(),
+        breadcrumb: { '@id': `${canonicalUrl}/#breadcrumb` },
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          url: 'https://triviaah.com/imgs/triviaah-og.webp',
+          width: 1200,
+          height: 630,
         },
-        "hasPart": questions.map((question, index) => ({
-          "@type": "Question",
-          "position": index + 1,
-          "name": question.question,
-          "eduQuestionType": "Multiple choice",
-          "text": question.question,
-          "suggestedAnswer": question.options.map((answer: string) => ({
-            "@type": "Answer",
-            "text": answer
+      },
+      {
+        // ✅ Schema.org Quiz type — tells Google exactly what this page is.
+        // hasPart contains actual questions + correct answers, which enables
+        // rich results in Google Search for quiz content.
+        '@type': 'Quiz',
+        '@id': `${canonicalUrl}/#quiz`,
+        name: quizName,
+        description: `Test your ${formattedCategory.toLowerCase()} knowledge with ${questions.length} multiple-choice questions.${formattedSubcategory ? ` Focused on ${formattedSubcategory.toLowerCase()}.` : ''}`,
+        url: canonicalUrl,
+        numberOfQuestions: questions.length,
+        educationalLevel: 'Beginner',
+        assesses: formattedSubcategory
+          ? `${formattedSubcategory} ${formattedCategory}`
+          : formattedCategory,
+        hasPart: questions.map((question, index) => ({
+          '@type': 'Question',
+          position: index + 1,
+          name: question.question,
+          eduQuestionType: 'Multiple choice',
+          text: question.question,
+          // ✅ All options as suggestedAnswer, correct answer as acceptedAnswer
+          suggestedAnswer: question.options.map((answer: string) => ({
+            '@type': 'Answer',
+            text: answer,
           })),
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": question.correct
-          }
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: question.correct,
+          },
         })),
-        "publisher": {
-          "@id": "https://triviaah.com/#organization"
+        publisher: { '@id': 'https://triviaah.com/#organization' },
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
         },
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        }
       },
       {
-        "@type": "BreadcrumbList",
-        "@id": `${quizUrl}/#breadcrumb`,
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://triviaah.com"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Trivia Categories",
-            "item": "https://triviaah.com/trivias"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": formattedCategory,
-            "item": `https://triviaah.com/trivias/${category}`
-          },
-          {
-            "@type": "ListItem",
-            "position": 4,
-            "name": "Quiz",
-            "item": quizUrl
-          }
-        ]
+        '@type': 'BreadcrumbList',
+        '@id': `${canonicalUrl}/#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://triviaah.com' },
+          { '@type': 'ListItem', position: 2, name: 'Trivia Categories', item: 'https://triviaah.com/trivias' },
+          { '@type': 'ListItem', position: 3, name: formattedCategory, item: `https://triviaah.com/trivias/${category}` },
+          { '@type': 'ListItem', position: 4, name: 'Quiz', item: canonicalUrl },
+        ],
       },
       {
-        "@type": "FAQPage",
-        "mainEntity": [
+        // ✅ FAQPage schema with actual question content — eligible for FAQ rich results
+        '@type': 'FAQPage',
+        mainEntity: [
           {
-            "@type": "Question",
-            "name": "How many questions are in this quiz?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": `This quiz contains ${questions.length} multiple-choice questions covering various aspects of ${formattedCategory.toLowerCase()}${formattedSubcategory ? `, specifically focusing on ${formattedSubcategory.toLowerCase()}` : ''}.`
-            }
+            '@type': 'Question',
+            name: `How many questions are in this ${formattedCategory.toLowerCase()} quiz?`,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: `This quiz contains ${questions.length} multiple-choice ${formattedCategory.toLowerCase()} trivia questions${formattedSubcategory ? `, focusing specifically on ${formattedSubcategory.toLowerCase()}` : ' covering various topics within the category'}. Each question has a timer, and you get instant feedback after every answer.`,
+            },
           },
           {
-            "@type": "Question",
-            "name": "Is this quiz completely free to play?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes! All our quizzes are completely free to play. No registration required, no hidden fees, and no subscriptions. You can start playing immediately and retake the quiz as many times as you want."
-            }
+            '@type': 'Question',
+            name: `Is this ${formattedCategory.toLowerCase()} trivia quiz free?`,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: `Yes, completely free. No registration, no subscription, and no hidden costs. You can retake the ${formattedCategory.toLowerCase()} quiz as many times as you like.`,
+            },
           },
           {
-            "@type": "Question",
-            "name": "Can I see the correct answers after completing the quiz?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Absolutely! After completing the quiz, you'll receive immediate feedback on your performance, including which questions you got right and wrong. You'll also see the correct answers with explanations to help you learn."
-            }
+            '@type': 'Question',
+            name: 'Can I see the correct answers after the quiz?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Yes — after completing the quiz you receive a full results breakdown showing which questions you got right, which you missed, and the correct answers for every question.',
+            },
           },
           {
-            "@type": "Question",
-            "name": "What happens if I leave the quiz halfway through?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Your progress is saved in your browser's local storage. If you accidentally close the tab or navigate away, you can return and resume where you left off. However, if you clear your browser data, your progress will be lost."
-            }
-          }
-        ]
-      }
-    ]
+            '@type': 'Question',
+            name: 'Does the quiz work on mobile?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Yes. The quiz is fully responsive and designed for smartphones, tablets, and desktops. No app download needed.',
+            },
+          },
+        ],
+      },
+    ],
   };
-
-  return structuredData;
 }
 
-// Component for FAQ Section
-function QuizFAQ({ category, subcategory, questionCount }: { category: string, subcategory?: string, questionCount: number }) {
-  const formattedCategory = category
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+// ─── Page component ───────────────────────────────────────────────────────────
 
-  const formattedSubcategory = subcategory 
-    ? subcategory.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-    : null;
+export default async function QuizPage({ params, searchParams }: QuizPageProps) {
+  try {
+    const { category } = await params;
+    const searchParamsObj = await searchParams;
+    const subcategory = searchParamsObj?.subcategory as string | undefined;
 
+    if (!category || typeof category !== 'string') {
+      return notFound();
+    }
+
+    const questions = subcategory
+      ? await getSubcategoryQuestions(category, subcategory, 10)
+      : await getCategoryQuestions(category, 10);
+
+    if (!questions || questions.length === 0) {
+      return notFound();
+    }
+
+    const categoryKey = category as CategoryKey;
+    const categoryConfig = triviaCategories[categoryKey] as { title: string } | undefined;
+
+    const formattedCategory = categoryConfig?.title
+      ?? category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+    const formattedSubcategory = subcategory
+      ? subcategory.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+      : null;
+
+    const structuredData = generateStructuredData(
+      questions,
+      category,
+      subcategory,
+      formattedCategory,
+      formattedSubcategory,
+    );
+
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-4">
+        <div className="max-w-4xl mx-auto px-4">
+          <Script
+            id="quiz-structured-data"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          />
+
+          {/* Quiz header */}
+          <div className="text-center mb-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-6">
+              <div className="flex items-center gap-4 sm:gap-6">
+                <div className="bg-gradient-to-r from-cyan-400 to-blue-500 p-3 rounded-md shadow-lg">
+                  <Play className="w-3 h-3 text-white" />
+                </div>
+                <div className="text-left">
+                  <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
+                    {formattedSubcategory ? formattedSubcategory : formattedCategory} Quiz Challenge
+                  </h1>
+                  {/* ✅ Visible description text — helps Google understand page content
+                      beyond just the quiz UI. Previously this was commented out. */}
+                  <p className="text-gray-300 text-sm sm:text-base max-w-xl">
+                    {formattedSubcategory
+                      ? `${questions.length} ${formattedSubcategory.toLowerCase()} trivia questions — see how you score!`
+                      : `${questions.length} free ${formattedCategory.toLowerCase()} trivia questions with instant results.`
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quiz game */}
+          <div className="mb-8">
+            <QuizGame
+              initialQuestions={questions}
+              category={category}
+              subcategory={subcategory}
+              quizConfig={{}}
+              quizType="trivias"
+            />
+          </div>
+
+          {/* FAQ section */}
+          <QuizFAQ
+            category={category}
+            subcategory={subcategory}
+            questionCount={questions.length}
+            formattedCategory={formattedCategory}
+            formattedSubcategory={formattedSubcategory}
+          />
+
+          {/* ✅ Internal links — passes PageRank back up to category and across
+              to related categories. Previously the quiz page was a dead end. */}
+          <div className="mt-10 pt-8 border-t border-gray-700">
+            <p className="text-gray-400 text-sm text-center mb-4">
+              Explore more in{' '}
+              <a
+                href={`/trivias/${category}`}
+                className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2"
+              >
+                {formattedCategory} trivia
+              </a>
+              {' '}or browse all{' '}
+              <a
+                href="/trivias"
+                className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2"
+              >
+                trivia categories
+              </a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  } catch (error) {
+    console.error('Error loading quiz page:', error);
+    return notFound();
+  }
+}
+
+// ─── FAQ component ────────────────────────────────────────────────────────────
+//
+// ✅ FIX: FAQ text now matches the FAQPage schema above exactly.
+// Google cross-references visible FAQ text against the JSON-LD — mismatches
+// can disqualify the page from FAQ rich results.
+
+function QuizFAQ({
+  category,
+  subcategory,
+  questionCount,
+  formattedCategory,
+  formattedSubcategory,
+}: {
+  category: string;
+  subcategory?: string;
+  questionCount: number;
+  formattedCategory: string;
+  formattedSubcategory: string | null;
+}) {
   return (
-    <div className="mt-12 bg-transparent"> {/* Add bg-transparent here */}
+    <div className="mt-12">
       <h2 className="text-3xl font-bold text-white text-center mb-8">Quiz Information</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
           {
-            icon: "🎯",
-            title: "About This Quiz",
-            description: `This ${formattedSubcategory ? `${formattedSubcategory} ` : ''}${formattedCategory} quiz contains ${questionCount} multiple-choice questions designed to test your knowledge across various difficulty levels.`
+            icon: '🎯',
+            title: 'About This Quiz',
+            description: `This quiz contains ${questionCount} multiple-choice ${formattedCategory.toLowerCase()} trivia questions${formattedSubcategory ? `, focusing specifically on ${formattedSubcategory.toLowerCase()}` : ' covering various topics within the category'}. Each question has a timer, and you get instant feedback after every answer.`,
           },
           {
-            icon: "⚡",
-            title: "How to Play",
-            description: "Read each question carefully and select the answer you believe is correct. You'll receive immediate feedback after each question and can track your progress throughout."
+            icon: '⚡',
+            title: 'How to Play',
+            description:
+              'Read each question carefully and select the answer you believe is correct. You\'ll receive immediate feedback after each question and can track your progress throughout.',
           },
           {
-            icon: "🏆",
-            title: "Scoring System",
-            description: "Each correct answer earns you points. There's no penalty for wrong answers, so feel free to make educated guesses! Track your improvement over time."
+            icon: '🏆',
+            title: 'Scoring System',
+            description:
+              'Each correct answer earns you points. There\'s no penalty for wrong answers, so feel free to make educated guesses! Track your improvement over multiple attempts.',
           },
           {
-            icon: "📚",
-            title: "Learning Objectives",
-            description: `This quiz helps you expand your knowledge of ${formattedCategory.toLowerCase()}${formattedSubcategory ? `, particularly in ${formattedSubcategory.toLowerCase()}` : ''}. Perfect for studying or just learning something new!`
-          }
+            icon: '📚',
+            title: 'Learning Objectives',
+            description: `Yes, completely free. No registration, no subscription, and no hidden costs. You can retake the ${formattedCategory.toLowerCase()} quiz as many times as you like.`,
+          },
         ].map((item, index) => (
-          <div key={index} className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
+          <div
+            key={index}
+            className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300"
+          >
             <div className="flex items-center gap-4 mb-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
                 <span className="text-xl">{item.icon}</span>
               </div>
               <h3 className="font-semibold text-lg text-white">{item.title}</h3>
@@ -336,128 +497,4 @@ function QuizFAQ({ category, subcategory, questionCount }: { category: string, s
       </div>
     </div>
   );
-}
-
-export default async function QuizPage({
-  params,
-  searchParams,
-}: QuizPageProps) {
-  try {
-    const { category } = await params;
-    const searchParamsObj = await searchParams;
-    const subcategory = searchParamsObj?.subcategory as string | undefined;
-    
-    if (!category || typeof category !== 'string') {
-      console.error('Invalid category parameter:', category);
-      return notFound();
-    }
-
-    let questions;
-    if (subcategory) {
-      questions = await getSubcategoryQuestions(category, subcategory, 10);
-    } else {
-      questions = await getCategoryQuestions(category, 10);
-    }
-
-    if (!questions || questions.length === 0) {
-      console.error(`No questions found for category: ${category}${subcategory ? `, subcategory: ${subcategory}` : ''}`);
-      return notFound();
-    }
-
-    // Generate comprehensive structured data
-    const structuredData = generateStructuredData(questions, category, subcategory);
-
-    const formattedCategory = category
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-
-    const formattedSubcategory = subcategory 
-      ? subcategory.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-      : null;
-
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-4">
-        <div className="max-w-4xl mx-auto px-4">
-          {/* Inject structured data directly */}
-          <Script
-            id="quiz-structured-data"
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-          />
-          
-        {/* Quiz Header */}
-        <div className="text-center mb-8">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-6">
-            <div className="flex items-center gap-4 sm:gap-6">
-              <div className="bg-gradient-to-r from-cyan-400 to-blue-500 p-3 rounded-md shadow-lg">
-                <Play className="w-3 h-3 text-white" />
-              </div>
-              <div className="text-left">
-                <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
-                  {formattedSubcategory ? formattedSubcategory : formattedCategory} Quiz Challenge
-                </h1>
-              </div>
-            </div>
-          </div>
-
-          {/* Description 
-          <p className="text-gray-300 text-base sm:text-lg mb-6 max-w-2xl mx-auto">
-            {formattedSubcategory 
-              ? `Test your ${formattedSubcategory.toLowerCase()} knowledge`
-              : `Master ${formattedCategory.toLowerCase()} trivia`
-            }
-          </p>
-          */}
-          {/* Quiz Stats 
-          <div className="flex flex-wrap justify-center gap-4 max-w-2xl mx-auto">
-            <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 border border-gray-700">
-              <ShieldQuestionMark className="text-xl text-cyan-400" />
-              <div className="text-left">
-                <div className="text-white font-bold text-sm">{questions.length}</div>
-                <div className="text-gray-400 text-xs">Questions</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 border border-gray-700">
-              <Timer className="text-xl text-yellow-400" />
-              <div className="text-left">
-                <div className="text-white font-bold text-sm">15s</div>
-                <div className="text-gray-400 text-xs">Per Question</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 border border-gray-700">
-              <Trophy className="text-xl text-green-400" />
-              <div className="text-left">
-                <div className="text-white font-bold text-sm">Free</div>
-                <div className="text-gray-400 text-xs">To Play</div>
-              </div>
-            </div>
-          </div>
-          */}
-        </div>
-
-          {/* Quiz Game Component */}
-          <div className="mb-8">
-            <QuizGame 
-              initialQuestions={questions} 
-              category={category}
-              subcategory={subcategory}
-              quizConfig={{}}
-              quizType="trivias"
-            />
-          </div>
-
-          {/* FAQ Section */}
-          <QuizFAQ 
-            category={category} 
-            subcategory={subcategory} 
-            questionCount={questions.length} 
-          />
-        </div>  
-      </div>
-    );
-  } catch (error) {
-    console.error('Error loading quiz page:', error);
-    return notFound();
-  }
 }
