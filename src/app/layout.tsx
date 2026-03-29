@@ -137,26 +137,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           
           {/* AdSense Configuration */}
           {isProduction && (
-            <>
-              <Script
-                id="adsense-config"
-                strategy="afterInteractive"
-                dangerouslySetInnerHTML={{
-                  __html: `
-                    (window.adsbygoogle = window.adsbygoogle || []).push({
-                      google_ad_client: "ca-pub-4386714040098164",
-                      enable_page_level_ads: false
-                    });
-                  `,
-                }}
-              />
-              <Script
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164"
-                strategy="lazyOnload"
-                crossOrigin="anonymous"
-              />
-            </>
-          )}
+          <Script
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4386714040098164"
+            strategy="lazyOnload"
+            crossOrigin="anonymous"
+          />
+        )}
         </SoundProvider>
       </body>
     </html>
