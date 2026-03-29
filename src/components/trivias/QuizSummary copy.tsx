@@ -3,12 +3,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Home, Medal, RotateCcw, Share2, Trophy,
+import { 
+  Home, Medal, RotateCcw, Share2, Trophy, 
   BookOpen, XCircle, CheckCircle2, User
 } from 'lucide-react';
 import FeedbackComponent from '@/components/common/FeedbackComponent';
-import Ads from '@/components/common/Ads';
 import { getPersistentGuestId } from '@/lib/guestId';
 
 type QuizResult = {
@@ -28,10 +27,10 @@ type HighScore = {
 };
 
 const MESSAGES = {
-  gold:          ['🏆 Trivia Deity!', '🧠 Mind = Blown!', '🤯 Unstoppable Genius!'],
-  silver:        ['✨ Brainiac Alert!', '🚀 Knowledge Rocket!', '💎 Diamond Mind!'],
-  bronze:        ['👍 Great Effort!', '📈 On the Rise!', '🎯 Nice Aim!'],
-  participation: ['🌱 Learning Mode', '📚 Keep Reading!', '🔄 Try Again!'],
+  gold: ["🏆 Trivia Deity!", "🧠 Mind = Blown!", "🤯 Unstoppable Genius!"],
+  silver: ["✨ Brainiac Alert!", "🚀 Knowledge Rocket!", "💎 Diamond Mind!"],
+  bronze: ["👍 Great Effort!", "📈 On the Rise!", "🎯 Nice Aim!"],
+  participation: ["🌱 Learning Mode", "📚 Keep Reading!", "🔄 Try Again!"]
 };
 
 interface HistoricalDay {
@@ -39,15 +38,16 @@ interface HistoricalDay {
   dateParam: string;
 }
 
-const getLast7Days = (): HistoricalDay[] =>
-  Array.from({ length: 7 }, (_, i) => {
+const getLast7Days = (): HistoricalDay[] => {
+  return Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - (i + 1));
     return {
       label: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      dateParam: d.toISOString().split('T')[0],
+      dateParam: d.toISOString().split('T')[0]
     };
   });
+};
 
 export default function QuizSummary({
   result,
@@ -62,8 +62,8 @@ export default function QuizSummary({
   const [highScores, setHighScores] = useState<HighScore[]>([]);
   const [isLoadingScores, setIsLoadingScores] = useState(true);
   const [scoreSaved, setScoreSaved] = useState(false);
-  const [playerMoniker] = useState(getPersistentGuestId());
-
+  const [playerMoniker] = useState(getPersistentGuestId()); // Get the player's moniker
+  
   const saveAttemptedRef = useRef(false);
 
   const fetchHighScores = useCallback(async () => {
@@ -72,7 +72,7 @@ export default function QuizSummary({
       const data = await res.json();
       setHighScores(Array.isArray(data) ? data : data.localHighScores || []);
     } catch (err) {
-      console.error('Leaderboard fetch failed', err);
+      console.error("Leaderboard fetch failed", err);
     } finally {
       setIsLoadingScores(false);
     }
@@ -82,6 +82,7 @@ export default function QuizSummary({
     const saveScore = async () => {
       if (saveAttemptedRef.current) return;
       saveAttemptedRef.current = true;
+      
       try {
         await fetch('/api/highscores', {
           method: 'POST',
@@ -98,37 +99,30 @@ export default function QuizSummary({
         setScoreSaved(true);
         fetchHighScores();
       } catch (err) {
-        console.error('Save failed', err);
+        console.error("Save failed", err);
       }
     };
     saveScore();
   }, [result, fetchHighScores, playerMoniker]);
 
   const percentage = Math.round((result.correctCount / result.totalQuestions) * 100);
-  const tier =
-    percentage >= 90 ? 'gold' :
-    percentage >= 70 ? 'silver' :
-    percentage >= 40 ? 'bronze' : 'participation';
+  const tier = percentage >= 90 ? 'gold' : percentage >= 70 ? 'silver' : percentage >= 40 ? 'bronze' : 'participation';
   const rankMessage = MESSAGES[tier][Math.floor(Math.random() * MESSAGES[tier].length)];
+  console.log("context:", context);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8 flex flex-col items-center">
-
-      {/* ── Row 1: Results + Leaderboard ──────────────────────────────────── */}
       <div className="w-full max-w-4xl grid lg:grid-cols-2 gap-6">
-
-        {/* Results card */}
-        <motion.div
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          className="bg-gray-800 rounded-3xl p-6 border border-gray-700 shadow-2xl flex flex-col items-center text-center"
-        >
+        
+        {/* LEFT COLUMN: Results */}
+        <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="bg-gray-800 rounded-3xl p-6 border border-gray-700 shadow-2xl flex flex-col items-center text-center">
           <div className="relative mb-4">
             <Trophy className={`w-16 h-16 ${tier === 'gold' ? 'text-yellow-400' : 'text-gray-400'}`} />
           </div>
 
           <h1 className="text-3xl font-black italic uppercase mb-1">{rankMessage}</h1>
-
+          
+          {/* Display Player Moniker */}
           <div className="flex items-center gap-2 bg-gray-900/50 px-4 py-1.5 rounded-full border border-white/5 mb-6">
             <User size={14} className="text-cyan-400" />
             <span className="text-xs font-bold text-gray-300 tracking-widest uppercase">{playerMoniker}</span>
@@ -151,11 +145,8 @@ export default function QuizSummary({
 
           <div className="flex flex-col gap-3 w-full">
             <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setShowReview(!showReview)}
-                className="bg-gray-700 py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-gray-600 transition-colors"
-              >
-                <BookOpen size={20} /> {showReview ? 'GOT IT!' : 'SEE WHAT I MISSED'}
+              <button onClick={() => setShowReview(!showReview)} className="bg-gray-700 py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-gray-600 transition-colors">
+                <BookOpen size={20} /> {showReview ? "GOT IT!" : "SEE WHAT I MISSED"}
               </button>
               <button className="bg-indigo-600 py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-indigo-500">
                 <Share2 size={20} /> SHARE
@@ -164,37 +155,24 @@ export default function QuizSummary({
           </div>
         </motion.div>
 
-        {/* Leaderboard card */}
-        <motion.div
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          className="bg-gray-800/50 rounded-3xl p-6 border border-gray-700"
-        >
+        {/* RIGHT COLUMN: Leaderboard */}
+        <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="bg-gray-800/50 rounded-3xl p-6 border border-gray-700">
           <h3 className="text-lg font-bold flex items-center gap-2 mb-6 text-yellow-500 uppercase tracking-tighter">
             <Medal /> Category Leaderboard
           </h3>
 
           {isLoadingScores ? (
             <div className="space-y-3 animate-pulse">
-              {[1, 2, 3, 4, 5].map(i => (
-                <div key={i} className="h-12 bg-gray-700 rounded-xl w-full" />
-              ))}
+              {[1,2,3,4,5].map(i => <div key={i} className="h-12 bg-gray-700 rounded-xl w-full" />)}
             </div>
           ) : (
             <div className="space-y-2">
               {highScores.map((s, i) => (
-                <div
-                  key={s.id}
-                  className={`flex justify-between items-center p-3 rounded-xl border ${
-                    s.name === playerMoniker
-                      ? 'bg-cyan-500/10 border-cyan-500/30'
-                      : 'bg-gray-900/30 border-white/5'
-                  }`}
-                >
+                <div key={s.id} className={`flex justify-between items-center p-3 rounded-xl border ${s.name === playerMoniker ? 'bg-cyan-500/10 border-cyan-500/30' : 'bg-gray-900/30 border-white/5'}`}>
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-bold text-gray-500">{i + 1}</span>
                     <span className={`font-bold text-sm ${s.name === playerMoniker ? 'text-cyan-400' : 'text-gray-200'}`}>
-                      {s.name} {s.name === playerMoniker && '(You)'}
+                        {s.name} {s.name === playerMoniker && "(You)"}
                     </span>
                   </div>
                   <span className="font-black text-white">{s.score}</span>
@@ -205,70 +183,52 @@ export default function QuizSummary({
         </motion.div>
       </div>
 
-      {/* ── Ad 1: after score reveal, before review ────────────────────────
-          Horizontal banner. High-attention position — user just saw their
-          score and is deciding what to do next. Uses the leaderboard slot
-          (you can swap to a dedicated slot once you have one).           */}
-      <div className="w-full max-w-4xl mt-6">
-        <Ads
-          slot="2207590813"
-          format="horizontal"
-          isMobileFooter={false}
-          className="rounded-xl overflow-hidden"
-        />
-      </div>
-
-      {/* ── Review section ────────────────────────────────────────────────── */}
+      {/* Review Section with Perfect Score Logic */}
       <AnimatePresence>
         {showReview && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="w-full max-w-4xl mt-6 space-y-4 overflow-hidden"
-          >
-            {result.wrongAnswers.length > 0 ? (
-              result.wrongAnswers.map((item, idx) => (
-                <div key={idx} className="bg-gray-800 border border-gray-700 p-4 rounded-2xl shadow-xl">
-                  <p className="text-sm font-bold text-gray-200 mb-3">{item.question}</p>
-                  <div className="flex flex-wrap gap-3">
-                    <div className="text-xs font-bold text-red-400 bg-red-400/10 px-4 py-2 rounded-xl border border-red-400/20 flex items-center gap-2">
-                      <XCircle size={14} /> {item.userSelected}
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="w-full max-w-4xl mt-6 space-y-4 overflow-hidden">
+             {result.wrongAnswers.length > 0 ? (
+               result.wrongAnswers.map((item, idx) => (
+                 <div key={idx} className="bg-gray-800 border border-gray-700 p-4 rounded-2xl shadow-xl">
+                   <p className="text-sm font-bold text-gray-200 mb-3">{item.question}</p>
+                   <div className="flex flex-wrap gap-3">
+                     <div className="text-xs font-bold text-red-400 bg-red-400/10 px-4 py-2 rounded-xl border border-red-400/20 flex items-center gap-2">
+                        <XCircle size={14} /> {item.userSelected}
+                     </div>
+                     <div className="text-xs font-bold text-green-400 bg-green-400/10 px-4 py-2 rounded-xl border border-green-400/20 flex items-center gap-2">
+                        <CheckCircle2 size={14} /> {item.correct}
+                     </div>
+                   </div>
+                 </div>
+               ))
+             ) : (
+               /* This shows when the player answers all questions correctly */
+               <div className="bg-green-500/10 border border-green-500/30 p-10 rounded-3xl text-center">
+                 <div className="flex justify-center mb-4">
+                    <div className="bg-green-500 rounded-full p-3 shadow-[0_0_20px_rgba(34,197,94,0.4)]">
+                        <CheckCircle2 className="text-white" size={32} />
                     </div>
-                    <div className="text-xs font-bold text-green-400 bg-green-400/10 px-4 py-2 rounded-xl border border-green-400/20 flex items-center gap-2">
-                      <CheckCircle2 size={14} /> {item.correct}
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="bg-green-500/10 border border-green-500/30 p-10 rounded-3xl text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="bg-green-500 rounded-full p-3 shadow-[0_0_20px_rgba(34,197,94,0.4)]">
-                    <CheckCircle2 className="text-white" size={32} />
-                  </div>
-                </div>
-                <p className="text-green-400 font-black text-2xl mb-1 uppercase italic">Flawless Victory!</p>
-                <p className="text-green-300/60 text-sm">
-                  You didn&apos;t miss a single question. You are a true Master of {result.category}!
-                </p>
-              </div>
-            )}
+                 </div>
+                 <p className="text-green-400 font-black text-2xl mb-1 uppercase italic">Flawless Victory!</p>
+                 <p className="text-green-300/60 text-sm">You didn't miss a single question. You are a true Master of {result.category}!</p>
+               </div>
+             )}
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ── Previous daily quizzes (daily-trivias only) ───────────────────── */}
+      {/* NEW SECTION: Previous Daily Quizzes (Only for daily-trivias) */}
       {context === 'daily-trivias' && result.category !== 'quick-fire' && (
         <div className="mt-12 w-full max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="flex items-center justify-between mb-4 px-2">
             <h3 className="text-sm font-black italic uppercase tracking-tighter flex items-center gap-2 text-yellow-500">
-              <RotateCcw size={18} className="text-yellow-600" />
+              <RotateCcw size={18} className="text-yellow-600" /> 
               Missed a Day?
             </h3>
             <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Previous 7 Sessions</span>
           </div>
-
+          
+          {/* Updated Grid: 4 columns on mobile, 7 on medium screens up */}
           <div className="grid grid-cols-4 md:grid-cols-7 gap-2 sm:gap-3">
             {getLast7Days().map((day: HistoricalDay) => (
               <Link
@@ -287,22 +247,8 @@ export default function QuizSummary({
           </div>
         </div>
       )}
-
-      {/* ── Ad 2: after review / previous days, before feedback ───────────
-          In-article style. User has finished reviewing — natural pause
-          before the feedback widget and action buttons.                  */}
-      <div className="w-full max-w-4xl mt-10">
-        <Ads
-          slot="9040722315"
-          format="auto"
-          isInArticle={true}
-          isMobileFooter={false}
-          className="rounded-xl overflow-hidden"
-        />
-      </div>
-
-      {/* ── Feedback ──────────────────────────────────────────────────────── */}
-      <div className="mt-6 w-full max-w-4xl">
+      
+      <div className="mt-20 w-full max-w-4xl">
         <FeedbackComponent
           gameType="trivia"
           category={result.category}
@@ -311,43 +257,29 @@ export default function QuizSummary({
             correctCount: result.correctCount,
             totalQuestions: result.totalQuestions,
             timeUsed: result.timeUsed,
-            performance:
-              result.correctCount / result.totalQuestions >= 0.9 ? 'gold' :
-              result.correctCount / result.totalQuestions >= 0.7 ? 'silver' :
-              result.correctCount / result.totalQuestions >= 0.5 ? 'bronze' : 'default',
+            performance: result.correctCount / result.totalQuestions >= 0.9 ? 'gold' : 
+                        result.correctCount / result.totalQuestions >= 0.7 ? 'silver' : 
+                        result.correctCount / result.totalQuestions >= 0.5 ? 'bronze' : 'default',
             subcategory: result.subcategory,
             difficulty: 'mixed',
-            completedAt: new Date().toISOString(),
+            completedAt: new Date().toISOString()
           }}
         />
       </div>
 
-      {/* ── Ad 3: above action buttons ────────────────────────────────────
-          Mobile footer style on small screens, inline on desktop.
-          Last impression before the user navigates away.                */}
-      <div className="w-full max-w-4xl mt-10">
-        <Ads
-          slot="2207590813"
-          format="horizontal"
-          isMobileFooter={false}
-          className="rounded-xl overflow-hidden"
-        />
-      </div>
-
-      {/* ── Action buttons ────────────────────────────────────────────────── */}
-      <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
-        {context === 'trivias' &&
-          result.category !== 'quick-fire' &&
-          result.category !== 'today-in-history' && (
-            <button
-              onClick={() => onRestart()}
-              className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base"
-            >
-              <RotateCcw className="text-lg md:text-xl" />
-              Play Again
-            </button>
-          )}
-
+      {/* Action buttons */}
+      <div className="mt-12 flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
+        {/* Show Play Again only for regular trivias, not quick-fire or today-in-history */}
+        {context === 'trivias' && result.category !== 'quick-fire' && result.category !== 'today-in-history' && (
+          <button
+            onClick={() => onRestart()}
+            className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base"
+          >
+            <RotateCcw className="text-lg md:text-xl" />
+            Play Again
+          </button>
+        )}
+        
         {context === 'trivias' ? (
           <>
             <Link
@@ -371,7 +303,7 @@ export default function QuizSummary({
             Daily Trivias
           </Link>
         )}
-
+  
         <Link
           href="/"
           className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-br from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
