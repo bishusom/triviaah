@@ -307,12 +307,10 @@ export default async function DailyQuizzesPage() {
             </p>
           </div>
         </div>
-
-        {/*
+       
         <div className="py-4">
           <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
         </div>
-        */}
 
         {/* Mobile: Vertical Scroll Layout (Single Column) */}
         <div className="lg:hidden mb-16">

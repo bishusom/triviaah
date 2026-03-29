@@ -181,11 +181,9 @@ export default function TriviasPage() {
           </div>
         </div>
 
-         {/*
          <div className="py-4">
           <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
         </div>
-        */}
 
         {/* Categories Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-16">
@@ -224,11 +222,10 @@ export default function TriviasPage() {
           </div>
         </section>
 
-        {/*
+        
         <div className="py-4">
           <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
         </div>
-        */}
                 
         {/* Gaming Features Section */}
         <div className="mb-16">
