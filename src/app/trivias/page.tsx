@@ -198,7 +198,7 @@ export default function TriviasPage() {
         </div>
 
         {/* CTA Section for Trivia Bank */}
-        <section className="mt-16 p-8 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+        <section className="mt-16 p-8 rounded-2xl border border-cyan-500/20 text-center">
           <div className="max-w-2xl mx-auto">
             <div className="flex justify-center mb-4">
               <div className="p-3 bg-blue-100 rounded-full">
