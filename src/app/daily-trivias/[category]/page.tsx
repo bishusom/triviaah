@@ -54,7 +54,6 @@ const CATEGORY_CONFIG: Record<string, {
     keywords: 'general knowledge quiz, daily trivia facts, world trivia questions, daily quiz with answers',
     color: 'from-blue-500 to-cyan-500',
     icon: '🌎',
-    triviaSlug: 'general-knowledge',
   },
   'today-in-history': {
     name: 'Today in History',
@@ -72,7 +71,7 @@ const CATEGORY_CONFIG: Record<string, {
     keywords: 'pop culture trivia quiz, movie trivia game, celebrity quiz, entertainment quiz answers, daily entertainment trivia',
     color: 'from-purple-500 to-pink-500',
     icon: '🎬',
-    triviaSlug: 'entertainment',
+    triviaSlug: 'movies',
   },
   'geography': {
     name: 'Geography',
@@ -99,7 +98,7 @@ const CATEGORY_CONFIG: Record<string, {
     keywords: 'literature trivia quiz, famous authors quiz, art history questions, classic books quiz, daily arts trivia',
     color: 'from-pink-500 to-rose-500',
     icon: '🎨',
-    triviaSlug: 'arts-literature',
+    triviaSlug: 'literature',
   },
   'sports': {
     name: 'Sports',
