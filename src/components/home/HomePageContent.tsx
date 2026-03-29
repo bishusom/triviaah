@@ -5,7 +5,7 @@ import { NetflixRow } from './sections/NetflixRow';
 import Footer from './Footer';
 import Ads from '@/components/common/Ads';
 import DailyTriviaFact from './sections/DailyTriviaFact';
-import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
+import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, WORD_GAMES, NUMBER_PUZZLES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
 
 export default function HomePageContent() {
   // Mapping your specific categories for the Netflix rows
@@ -40,9 +40,15 @@ export default function HomePageContent() {
         {/* FIX: Changed -mt-48 to -mt-24 to prevent overlap with Billboard text/buttons.
             Added pt-10 to give the first row some breathing room.
         */}
-        <div className="relative z-20 -mt-24 md:-mt-32 pt-10 space-y-12 pb-24 bg-gradient-to-t from-[#141414] via-[#141414]/95 to-transparent">
+        <div className="relative z-20 -mt-24 md:-mt-32 pt-10 space-y-20 pb-24 bg-gradient-to-t from-[#141414] via-[#141414]/95 to-transparent">
           
           <NetflixRow title="Daily Quizzes - Updated 24 hours" items={DAILY_QUIZZES} sectionHref="/daily-trivias" />
+
+          <NetflixRow title="Brain Waves - Daily Puzzles" items={BRAIN_WAVES} sectionHref="/brainwave" />
+
+          <div className="px-4 md:px-12">
+            <Ads format="fluid" style={{ width: '100%', height: '120px' }} />
+          </div>
 
           {/* DAILY TRIVIA FACT: 
               Now styled to match the page width and mobile padding 
@@ -56,17 +62,11 @@ export default function HomePageContent() {
             </div>
           </section>
 
-          <NetflixRow title="Brain Waves - Daily Puzzles" items={BRAIN_WAVES} sectionHref="/brainwave" />
-
-          <div className="px-4 md:px-12">
-            <Ads format="fluid" style={{ width: '100%', height: '120px' }} />
-          </div>
-
           <NetflixRow title="Retro Classics" items={RETRO_GAMES} sectionHref="/retro-games" />
 
-          <NetflixRow title="Word Games" items={wordGames} sectionHref="/word-games" />
+          <NetflixRow title="Word Games" items={WORD_GAMES} sectionHref="/word-games" />
 
-          <NetflixRow title="Number Puzzles" items={numberGames} sectionHref="/number-puzzles" />
+          <NetflixRow title="Number Puzzles" items={NUMBER_PUZZLES} sectionHref="/number-puzzles" />
 
           <NetflixRow title="IQ & Personality Tests" items={IQ_PERSONALITY_TESTS} sectionHref="/iq-and-personality-tests" />
         </div>

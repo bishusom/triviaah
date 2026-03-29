@@ -3,10 +3,11 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Flame, History, User, Hash } from 'lucide-react'; // Added Hash icon
+import { Trophy, Flame, History, User, Heart, Hash } from 'lucide-react'; // Added Hash icon
 import { getGuestStats, GuestStats } from '@/lib/guestStats';
 import { userProfile } from '@/hooks/userProfile';
 import { getPersistentGuestId } from '@/lib/guestId'; // Import your existing utility
+import { getFavorites, FavoriteItem } from '@/lib/favourites';
 
 export default function UserStatsPopover() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +26,13 @@ export default function UserStatsPopover() {
   const isFirstTime = !stats || stats.gamesPlayed === 0;
   const displayTitle = isFirstTime ? "Knowledge Seeker" : guestId;
   const displaySub = isFirstTime ? "Welcome to Triviaah" : "Guest Player";
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+
+  useEffect(() => {
+    setStats(getGuestStats());
+    setGuestId(getPersistentGuestId());
+    setFavorites(getFavorites()); // load favorites when popover opens
+  }, [isOpen]);
 
   return (
     <div className="relative">
@@ -71,6 +79,36 @@ export default function UserStatsPopover() {
                   <span className="text-white font-bold">{stats?.totalScore || 0}</span>
                   <span className="text-[10px] text-gray-500 uppercase font-bold">Points</span>
                 </div>
+              </div>
+
+              <div className="px-4 pb-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Heart size={14} className="text-cyan-500" />
+                  <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                    My List
+                  </span>
+                </div>
+                {favorites.length > 0 ? (
+                  <div className="space-y-2">
+                    {favorites.slice(0, 5).map((fav) => (
+                      <Link
+                        key={fav.id}
+                        href={fav.path}
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-3 bg-white/5 hover:bg-white/10 rounded-md p-2 transition-all"
+                      >
+                        <div className="w-10 h-10 bg-gray-800 rounded overflow-hidden flex-shrink-0">
+                          <img src={fav.image || "/api/placeholder/40/40"} alt={fav.title} className="w-full h-full object-cover" />
+                        </div>
+                        <span className="text-sm text-gray-200 truncate">{fav.title}</span>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-4 text-center border border-dashed border-white/10 rounded bg-white/5">
+                    <p className="text-xs text-gray-600 italic">Click + on any quiz to add to your list.</p>
+                  </div>
+                )}
               </div>
 
               {/* Recent Activity Section */}
