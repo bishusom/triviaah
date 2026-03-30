@@ -40,7 +40,7 @@ export default function HomePageContent() {
         {/* FIX: Changed -mt-48 to -mt-24 to prevent overlap with Billboard text/buttons.
             Added pt-10 to give the first row some breathing room.
         */}
-        <div className="relative z-20 -mt-24 md:-mt-32 pt-10 space-y-20 pb-24 bg-gradient-to-t from-[#141414] via-[#141414]/95 to-transparent">
+        <div className="relative z-20 -mt-24 md:-mt-32 pt-10 space-y-12 pb-24 bg-gradient-to-t from-[#141414] via-[#141414]/95 to-transparent">
           
           <NetflixRow title="Daily Quizzes - Updated 24 hours" items={DAILY_QUIZZES} sectionHref="/daily-trivias" />
 

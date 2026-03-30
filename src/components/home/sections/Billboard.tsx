@@ -8,7 +8,7 @@ const BILLBOARD_DATA = [
   {
     id: 1,
     title: "GENERAL KNOWLEDGE",
-    description: "The ultimate testing ground for trivia fans. Thousands of questions across every topic imaginable.",
+    description: "Thousands of questions across every topic imaginable.",
     image: "/imgs/billboard/abstract-intel.webp",
     link: "/daily-trivias/general-knowledge"
   },
@@ -101,7 +101,7 @@ export default function Billboard() {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-4 leading-none tracking-tighter italic">
+            <h1 className="text-5xl md:text-7xl font-black text-white mb-3 leading-none tracking-tighter italic">
               {current.title}
             </h1>
             

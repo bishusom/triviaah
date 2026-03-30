@@ -110,24 +110,27 @@ export default function DailyTriviaFact() {
 
       <div className="flex-grow text-center md:text-left">
         <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
-          <span className="text-cyan-400 text-xs font-black tracking-widest uppercase">
+          {/* Reduced from text-xs to text-[10px] for mobile */}
+          <span className="text-cyan-400 text-[10px] md:text-xs font-black tracking-widest uppercase">
             {fact.category}
           </span>
           {fact.subcategory && (
-            <span className="text-gray-400 text-xs uppercase tracking-wide">
+            <span className="text-gray-400 text-[10px] md:text-xs uppercase tracking-wide">
               {fact.subcategory}
             </span>
           )}
         </div>
         
-        <p className="text-xl md:text-2xl text-gray-200 font-medium leading-relaxed tracking-tight group-hover:text-white transition-colors duration-500">
+        {/* Changed from text-xl to text-lg for mobile; kept md:text-2xl */}
+        <p className="text-lg md:text-2xl text-gray-200 font-medium leading-relaxed tracking-tight group-hover:text-white transition-colors duration-500">
           {displayText}
         </p>
         
+        {/* Optional: Slightly smaller button text for mobile */}
         {fact.fact_text.length > 140 && (
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-cyan-400 hover:text-cyan-300 text-xs font-semibold flex items-center gap-1 uppercase tracking-wider"
+            className="text-cyan-400 hover:text-cyan-300 text-[10px] md:text-xs font-semibold flex items-center gap-1 uppercase tracking-wider mt-2"
           >
             {isExpanded ? <>Collapse <ChevronUp className="w-3 h-3" /></> : <>Expand Fact <ChevronDown className="w-3 h-3" /></>}
           </button>
