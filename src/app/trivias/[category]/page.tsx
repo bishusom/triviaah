@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import triviaCategories from '@/config/triviaCategories.json';
 import { getSubcategoriesWithMinQuestions } from '@/lib/supabase';
-import { Play, Timer, ShieldQuestionMark, Trophy, CircleStar } from 'lucide-react';
+import { Play, Timer, Info, ShieldQuestionMark, BookOpen, Trophy, CircleStar } from 'lucide-react';
 
 
 
@@ -13,6 +13,8 @@ type CategoryKey = keyof typeof triviaCategories;
 interface TriviaCategory {
   title: string;
   description: string;
+  longDescription?: string;
+  learningPoints?: string[];
   keywords?: string[];
   ogImage?: string;
   related?: string[];
@@ -176,7 +178,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         {/* Subcategories Section */}
         {subcategories.length > 0 && (
           <div className="mb-16">
-            <h2 className="text-3xl font-bold text-white text-center mb-8">Choose Your Challenge</h2>
+            <h2 className="text-3xl font-bold text-white text-center mb-8">Or Choose Your Challenge</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {subcategories.map((subcat) => (
                 <Link
@@ -216,64 +218,43 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         {/* Learning Objectives */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-white text-center mb-8">What You&apos;ll Master</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: "🎯",
-                title: "Core Concepts",
-                description: `Master fundamental ${categoryData.title.toLowerCase()} principles and terminology`
-              },
-              {
-                icon: "📚",
-                title: "Historical Context",
-                description: `Understand key developments and milestones in ${categoryData.title.toLowerCase()}`
-              },
-              {
-                icon: "💡",
-                title: "Practical Applications",
-                description: `Discover real-world uses and implications of ${categoryData.title.toLowerCase()} knowledge`
-              }
-            ].map((item, index) => (
-              <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">{item.icon}</span>
+          <section className="mb-24">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {(categoryData.learningPoints || [
+                "Master fundamental principles and terminology",
+                "Understand key historical developments",
+                "Discover practical applications and trivia facts"
+              ]).map((point, index) => (
+                <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-8 border border-gray-700 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <BookOpen size={64} className="text-cyan-400" />
+                  </div>
+                  <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center text-white font-bold text-xl mb-6 shadow-lg shadow-cyan-500/20">
+                    {index + 1}
+                  </div>
+                  <p className="text-gray-300 leading-relaxed font-medium">
+                    {point}
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-                <p className="text-gray-300">{item.description}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </section>
         </div>
 
-        {/* FAQ Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              {
-                question: `How many questions are in the ${categoryData.title} trivia quiz?`,
-                answer: `Our ${categoryData.title.toLowerCase()} trivia quiz contains a variety of questions. The full category quiz includes questions from all topics, while specific subcategory quizzes focus on particular areas.`
-              },
-              {
-                question: `Is this ${categoryData.title} trivia completely free to play?`,
-                answer: `Yes! All our ${categoryData.title.toLowerCase()} trivia quizzes are completely free to play. No registration, no subscriptions, and no hidden fees.`
-              },
-              {
-                question: `What difficulty levels are available?`,
-                answer: `Our ${categoryData.title.toLowerCase()} trivia questions span various difficulty levels, from beginner to expert. Both casual players and experts will find engaging questions.`
-              },
-              {
-                question: `Can I play on my phone or tablet?`,
-                answer: `Absolutely! Our ${categoryData.title.toLowerCase()} trivia quizzes are fully responsive and work perfectly on all devices including smartphones, tablets, and desktop computers.`
-              }
-            ].map((faq, index) => (
-              <div key={index} className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
-                <h3 className="font-semibold text-lg text-white mb-3">{faq.question}</h3>
-                <p className="text-gray-300">{faq.answer}</p>
-              </div>
-            ))}
+        {/* 4. LONG-FORM CONTENT SECTION: Vital for SEO Information Gain */}
+        <section className="bg-gray-800/30 rounded-3xl p-8 md:p-12 border border-gray-700 mb-20">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="bg-blue-500/20 p-2 rounded-lg">
+              <Info className="text-blue-400" size={24} />
+            </div>
+            <h2 className="text-2xl font-bold text-white">Deep Dive: {categoryData.title}</h2>
           </div>
-        </div>
+          <div className="prose prose-invert max-w-none">
+            <p className="text-gray-400 leading-loose text-lg italic">
+              {categoryData.longDescription}
+            </p>
+          </div>
+        </section>
 
         {/* Related Categories */}
         {categoryData.related && categoryData.related.length > 0 && (
@@ -306,6 +287,37 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             </div>
           </div>
         )}
+
+        {/* FAQ Section */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              {
+                question: `How many questions are in the ${categoryData.title} trivia quiz?`,
+                answer: `Our ${categoryData.title.toLowerCase()} trivia quiz contains a variety of questions. The full category quiz includes questions from all topics, while specific subcategory quizzes focus on particular areas.`
+              },
+              {
+                question: `Is this ${categoryData.title} trivia completely free to play?`,
+                answer: `Yes! All our ${categoryData.title.toLowerCase()} trivia quizzes are completely free to play. No registration, no subscriptions, and no hidden fees.`
+              },
+              {
+                question: `What difficulty levels are available?`,
+                answer: `Our ${categoryData.title.toLowerCase()} trivia questions span various difficulty levels, from beginner to expert. Both casual players and experts will find engaging questions.`
+              },
+              {
+                question: `Can I play on my phone or tablet?`,
+                answer: `Absolutely! Our ${categoryData.title.toLowerCase()} trivia quizzes are fully responsive and work perfectly on all devices including smartphones, tablets, and desktop computers.`
+              }
+            ].map((faq, index) => (
+              <div key={index} className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
+                <h3 className="font-semibold text-lg text-white mb-3">{faq.question}</h3>
+                <p className="text-gray-300">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* CTA for Specific Trivia Bank Content */}
         <section className="mt-12 p-6 bg-gray-800 rounded-xl border border-gray-200">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -331,6 +343,12 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           </div>
         </section>
       </div>
+      {/* JSON-LD Structured Data */}
+      <StructuredData 
+        category={category} 
+        categoryData={categoryData} 
+        subcategories={subcategories} 
+      />
     </div>
   );
 }
