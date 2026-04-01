@@ -3,6 +3,8 @@ declare module '@/config/triviaCategories.json' {
     [key: string]: {
       title: string;
       description: string;
+      longDescription?: string;
+      learningPoints?: string[];
       keywords?: string[];
       ogImage?: string;
       related?: string[];

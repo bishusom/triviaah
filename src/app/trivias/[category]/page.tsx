@@ -307,7 +307,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           </div>
         )}
         {/* CTA for Specific Trivia Bank Content */}
-        <section className="mt-12 p-6 bg-amber-50 rounded-xl border border-amber-200">
+        <section className="mt-12 p-6 bg-gray-800 rounded-xl border border-gray-200">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
@@ -323,7 +323,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             </div>
             <Link 
               href={`/trivia-bank`}
-              className="whitespace-nowrap inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 rounded-lg transition-all shadow-sm"
+              className="whitespace-nowrap inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all shadow-sm"
             >
               Get Downloadable Sheet
               <CircleStar className="ml-2 w-4 h-4" />

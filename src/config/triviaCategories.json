@@ -2,166 +2,292 @@
   "literature": {
     "title": "Literature",
     "description": "Explore questions about famous books, renowned authors, classic novels, and literary works spanning centuries, from Shakespeare to modern bestsellers.",
-    "related": ["famous-quotes"],
-    "keywords": ["books", "authors", "novels"],
+    "longDescription": "Our literature trivia database spans from the epic poems of Homer to the contemporary masterpieces of the 21st century. Whether you are a fan of Victorian-era prose, Shakespearean drama, or modern psychological thrillers, these questions are designed to test your deep understanding of plot, character development, and literary movements.",
+    "learningPoints": [
+      "Identify key themes in Renaissance and Romantic literature.",
+      "Recognize the stylistic differences between Prose and Poetry.",
+      "Master the chronology of Nobel Prize-winning authors."
+    ],
+    "related": ["famous-quotes", "arts", "history"],
+    "keywords": ["books", "authors", "novels", "literary quiz"],
     "ogImage": "/imgs/categories/literature.webp",
     "displayName": "Literature"
   },
   "arts": {
     "title": "Arts",
     "description": "Test your knowledge of visual arts, including painting, sculpture, and architecture, from Renaissance masterpieces to contemporary art movements.",
-    "related": ["literature", "fashion", "arts"],
-    "keywords": ["art", "painting", "sculpture"],
+    "longDescription": "Journey through the history of human creativity. This art trivia challenge covers everything from the technical precision of the High Renaissance to the boundary-pushing concepts of Modernism and Pop Art. You will explore the lives of iconic artists and the architectural wonders that define global cities.",
+    "learningPoints": [
+      "Distinguish between major art movements like Impressionism and Surrealism.",
+      "Identify famous masterpieces and the techniques used to create them.",
+      "Understand the historical context of world-renowned architecture."
+    ],
+    "related": ["literature", "fashion", "history","cartoons-anime"],
+    "keywords": ["art", "painting", "sculpture", "art history"],
     "ogImage": "/imgs/categories/arts.webp",
     "displayName": "Arts"
   },
   "animals": {
     "title": "Animals",
     "description": "Challenge yourself with questions about wildlife, including mammals, birds, reptiles, and marine life, covering habitats, behaviors, and biology.",
+    "longDescription": "From the deepest trenches of the ocean to the highest mountain peaks, our animal trivia explores the incredible diversity of Earth's fauna. Dive into questions about complex ecosystems, fascinating animal behaviors, and the biological traits that allow species to survive in the wild.",
+    "learningPoints": [
+      "Classify different species based on biological traits and habitats.",
+      "Learn about unique animal survival strategies and migrations.",
+      "Understand the importance of biodiversity and conservation efforts."
+    ],
     "related": ["science", "geography"],
-    "keywords": ["animals", "wildlife", "biology"],
+    "keywords": ["animals", "wildlife", "biology", "zoology"],
     "ogImage": "/imgs/categories/animals.webp",
     "displayName": "Animals"
   },
   "science": {
     "title": "Science",
     "description": "Dive into questions on physics, chemistry, biology, and astronomy, exploring scientific discoveries, theories, and breakthroughs that shape our world.",
+    "longDescription": "Science is the engine of human progress. This comprehensive trivia set challenges your knowledge of the laws of physics, the building blocks of chemistry, and the mysteries of the cosmos. Discover the stories behind the world's most famous experiments and the scientists who changed history.",
+    "learningPoints": [
+      "Master fundamental concepts in Physics, Chemistry, and Biology.",
+      "Identify major scientific breakthroughs and their global impact.",
+      "Explore the latest discoveries in Astronomy and Space Exploration."
+    ],
     "related": ["animals", "technology", "geography"],
-    "keywords": ["science", "physics", "chemistry"],
+    "keywords": ["science", "physics", "chemistry", "astronomy"],
     "ogImage": "/imgs/categories/science.webp",
     "displayName": "Science"
   },
   "history": {
     "title": "History",
     "description": "Answer questions about historical events, influential figures, ancient civilizations, and pivotal moments that have shaped human history across eras.",
+    "longDescription": "Unlock the secrets of the past. Our history trivia spans ancient empires, the Middle Ages, and the modern political revolutions that define our current world. Test your memory on dates, treaties, and the influential leaders who navigated the tides of time.",
+    "learningPoints": [
+      "Recall pivotal dates and events from ancient and modern history.",
+      "Understand the rise and fall of major world civilizations.",
+      "Analyze the impact of historical figures on contemporary society."
+    ],
     "related": ["famous-quotes", "literature", "arts"],
-    "keywords": ["history", "historical events", "ancient"],
+    "keywords": ["history", "historical events", "ancient", "world history"],
     "ogImage": "/imgs/categories/history.webp",
     "displayName": "History"
   },
   "geography": {
     "title": "Geography",
     "description": "Test your knowledge of countries, capitals, landmarks, and physical geography, from towering mountains to vast oceans and cultural heritage sites.",
+    "longDescription": "Become a world traveler from your screen. This geography challenge tests your knowledge of international borders, tectonic plates, and the diverse cultures that inhabit our planet. Whether it's identifying flags or naming remote mountain ranges, this quiz covers it all.",
+    "learningPoints": [
+      "Locate countries, capitals, and major landmarks on a global scale.",
+      "Understand physical geography features like climates and biomes.",
+      "Explore cultural geography and global demographic trends."
+    ],
     "related": ["science", "animals"],
-    "keywords": ["geography", "countries", "maps"],
+    "keywords": ["geography", "countries", "maps", "capitals"],
     "ogImage": "/imgs/categories/geography.webp",
     "displayName": "Geography"
   },
   "movies": {
     "title": "Movies",
     "description": "Challenge yourself with questions about iconic films, famous actors, directors, and cinema history, from Hollywood blockbusters to indie gems.",
+    "longDescription": "Step into the spotlight with our cinema trivia. Covering the Golden Age of Hollywood to the latest streaming hits, these questions test your knowledge of Oscar-winning performances, legendary directors, and the behind-the-scenes magic that makes movies unforgettable.",
+    "learningPoints": [
+      "Identify iconic films and the directors who created them.",
+      "Recall famous movie quotes and award-winning performances.",
+      "Explore the evolution of film technology and genres."
+    ],
     "related": ["tv", "celebrities"],
-    "keywords": ["movies", "films", "hollywood"],
+    "keywords": ["movies", "films", "hollywood", "cinema"],
     "ogImage": "/imgs/categories/movies.webp",
     "displayName": "Movies"
   },
   "tv": {
     "title": "TV/Web Series",
     "description": "Explore questions about popular television shows, web series, streaming hits, and TV culture, from classic sitcoms to modern binge-worthy dramas.",
+    "longDescription": "From the era of black-and-white broadcasting to the current 'Peak TV' streaming revolution, our television trivia celebrates the small screen. Test your knowledge of cult classics, reality TV phenomena, and the complex plots of modern binge-worthy dramas.",
+    "learningPoints": [
+      "Master the history of television from its inception to streaming.",
+      "Identify key characters and plot twists in popular series.",
+      "Understand the cultural impact of major TV events and sitcoms."
+    ],
     "related": ["movies", "celebrities"],
-    "keywords": ["tv", "television", "series"],
+    "keywords": ["tv", "television", "series", "streaming"],
     "ogImage": "/imgs/categories/tv.webp",
     "displayName": "TV/Web Series"
   },
   "music": {
     "title": "Music",
     "description": "Test your knowledge of songs, artists, genres, and music history, from classical compositions to modern pop, rock, and hip-hop chart-toppers.",
+    "longDescription": "Find your rhythm with our extensive music trivia. We dive deep into music theory, the lives of legendary composers, and the chart-topping hits of every decade. Whether you love Rock, Jazz, Classical, or Hip-Hop, there is a challenge here for every ear.",
+    "learningPoints": [
+      "Recognize major musical genres and their influential artists.",
+      "Learn about music history and the evolution of instruments.",
+      "Identify famous lyrics, albums, and legendary composers."
+    ],
     "related": ["celebrities"],
-    "keywords": ["music", "songs", "artists"],
+    "keywords": ["music", "songs", "artists", "music history"],
     "ogImage": "/imgs/categories/music.webp",
     "displayName": "Music"
   },
   "celebrities": {
     "title": "Celebrities",
     "description": "Answer questions about famous personalities, including actors, musicians, and influencers, exploring their careers, lives, and cultural impact.",
+    "longDescription": "Get the inside scoop on the world's most famous faces. Our celebrity trivia explores the careers, philanthropic efforts, and public lives of icons in film, music, and digital media. See how well you know the stars who define modern pop culture.",
+    "learningPoints": [
+      "Track the career milestones of global icons and stars.",
+      "Learn about the cultural influence of modern celebrities.",
+      "Test your knowledge of famous partnerships and achievements."
+    ],
     "related": ["movies", "music", "tv"],
-    "keywords": ["celebrities", "movies", "tv"],
+    "keywords": ["celebrities", "pop culture", "famous people"],
     "ogImage": "/imgs/categories/celebrities.webp",
     "displayName": "Celebrities"
   },
   "philosophy": {
     "title": "Philosophy",
     "description": "Challenge yourself with questions about philosophers, schools of thought, ethical dilemmas, and rational ideas that shape human understanding.",
+    "longDescription": "Engage with the greatest minds in history. This philosophy trivia set poses questions about ethics, metaphysics, and the existential inquiries that have puzzled humanity for millennia. From Socrates to modern thinkers, test your grasp on the theories of existence.",
+    "learningPoints": [
+      "Understand major philosophical schools like Stoicism and Existentialism.",
+      "Identify famous philosophers and their core arguments.",
+      "Explore ethical dilemmas and the foundations of logic."
+    ],
     "related": ["history"],
-    "keywords": ["philosophy", "thought", "history"],
+    "keywords": ["philosophy", "thought", "ethics", "logic"],
     "ogImage": "/imgs/categories/philosophy.webp",
     "displayName": "Philosophy"
   },
   "food": {
     "title": "Food",
     "description": "Explore questions about global cuisines, traditional dishes, culinary techniques, and food culture, from street food to fine dining experiences.",
+    "longDescription": "Take a bite out of our global food trivia. We explore the origins of classic dishes, the science of cooking techniques, and the unique spices that define regional cuisines. Perfect for foodies and aspiring chefs who want to test their culinary IQ.",
+    "learningPoints": [
+      "Identify ingredients and traditional dishes from around the world.",
+      "Learn about culinary history and famous chefs.",
+      "Master knowledge of cooking methods and food safety."
+    ],
     "related": [],
-    "keywords": ["food", "cuisine", "cooking"],
+    "keywords": ["food", "cuisine", "cooking", "culinary"],
     "ogImage": "/imgs/categories/food.webp",
     "displayName": "Food"
   },
   "sports": {
     "title": "Sports",
     "description": "Test your knowledge of athletes, teams, major sporting events, and sports history, from Olympic records to iconic moments in global competitions.",
+    "longDescription": "Are you a trivia MVP? Our sports section covers the adrenaline-pumping world of global athletics. From the strategy of the World Cup to the records set at the Olympics, test your knowledge of the teams and legends that make sports history.",
+    "learningPoints": [
+      "Recall major sports records and championship histories.",
+      "Identify legendary athletes and their career achievements.",
+      "Understand the rules and origins of various global sports."
+    ],
     "related": ["celebrities", "board-games", "video-games"],
-    "keywords": ["sports", "athletes", "games"],
+    "keywords": ["sports", "athletes", "olympics", "teams"],
     "ogImage": "/imgs/categories/sports.webp",
     "displayName": "Sports"
   },
   "fashion": {
     "title": "Fashion",
     "description": "Answer questions about fashion trends, iconic designers, clothing styles, and the history of fashion, from haute couture to streetwear culture.",
+    "longDescription": "Walk the virtual runway with our fashion trivia. This category explores the evolution of style, from the structured garments of the Victorian era to the disruptive streetwear of today. Learn about the visionary designers and iconic labels that have defined beauty across generations.",
+    "learningPoints": [
+      "Identify influential fashion designers and their signature styles.",
+      "Trace the history of fashion trends across different decades.",
+      "Understand the impact of cultural movements on clothing and style."
+    ],
     "related": ["celebrities"],
-    "keywords": ["fashion", "designers", "style"],
+    "keywords": ["fashion", "designers", "style", "haute couture"],
     "ogImage": "/imgs/categories/fashion.webp",
     "displayName": "Fashion"
   },
   "festivals": {
     "title": "Festivals",
     "description": "Explore questions about cultural, religious, and seasonal festivals worldwide, celebrating traditions, holidays, and vibrant global festivities.",
+    "longDescription": "Celebrate the diversity of human tradition. Our festivals trivia covers the colors of Holi, the lights of Diwali, the lanterns of the Lunar New Year, and the history of Carnival. Discover the origins, foods, and rituals that bring communities together around the globe.",
+    "learningPoints": [
+      "Identify major cultural and religious festivals and their meanings.",
+      "Learn about unique traditions, foods, and rituals across the world.",
+      "Understand the seasonal and historical significance of celebrations."
+    ],
     "related": ["geography"],
-    "keywords": ["festivals", "celebrations", "holidays"],
+    "keywords": ["festivals", "celebrations", "holidays", "traditions"],
     "ogImage": "/imgs/categories/festivals.webp",
     "displayName": "Festivals"
   },
   "business": {
     "title": "Business",
     "description": "Challenge yourself with questions about major companies, global brands, economic principles, and business leaders shaping the corporate world.",
+    "longDescription": "Step into the boardroom with our business and economics trivia. We examine the rise of tech giants, the strategies of legendary CEOs, and the fundamental economic theories that drive global markets. Test your knowledge of branding, finance, and corporate history.",
+    "learningPoints": [
+      "Understand key economic principles and market dynamics.",
+      "Identify global brands and the leaders who built them.",
+      "Explore the history of industrial revolutions and corporate growth."
+    ],
     "related": [],
-    "keywords": ["business", "companies", "economics"],
+    "keywords": ["business", "companies", "economics", "finance"],
     "ogImage": "/imgs/categories/business.webp",
     "displayName": "Business"
   },
   "acronyms": {
     "title": "Acronyms",
     "description": "Test your knowledge of common and specialized acronyms used in various fields, from technology and business to everyday language.",
+    "longDescription": "Shorthand is everywhere, but do you know what the letters actually stand for? Our acronyms trivia covers everything from tech jargon and medical terminology to international organizations and slang. Master the language of efficiency across multiple industries.",
+    "learningPoints": [
+      "Decode common and specialized acronyms from various industries.",
+      "Learn the origins and full names of famous organizations.",
+      "Understand the difference between acronyms and initialisms."
+    ],
     "related": [],
-    "keywords": ["acronyms", "abbreviations", "initialisms"],
+    "keywords": ["acronyms", "abbreviations", "initialisms", "jargon"],
     "ogImage": "/imgs/categories/acronyms.webp",
     "displayName": "Acronyms"
   },
   "languages": {
     "title": "Languages",
     "description": "Explore questions about world languages, linguistic features, language families, and common phrases, from widely spoken tongues to endangered dialects.",
+    "longDescription": "Linguistics is the study of what makes us human. This trivia category dives into the world's language families, the history of writing systems, and the curious idioms that make each tongue unique. From the roots of Latin to the complexity of Mandarin, explore how we communicate.",
+    "learningPoints": [
+      "Classify major language families and their geographical roots.",
+      "Identify common phrases and idioms from different cultures.",
+      "Learn about the history and evolution of writing and alphabets."
+    ],
     "related": ["geography"],
-    "keywords": ["languages", "linguistics", "phrases"],
+    "keywords": ["languages", "linguistics", "phrases", "etymology"],
     "ogImage": "/imgs/categories/language.webp",
     "displayName": "Languages"
   },
   "transportation": {
     "title": "Transportation",
     "description": "Answer questions about various modes of transportation, including cars, trains, airplanes, and ships, exploring their history, technology, and impact on society.",
+    "longDescription": "From the invention of the wheel to the dawn of space travel, our transportation trivia tracks the movement of humanity. Explore the engineering marvels of locomotives, the history of aviation, and the automotive innovations that have shrunk the world and transformed society.",
+    "learningPoints": [
+      "Trace the history and evolution of various modes of transport.",
+      "Identify key engineering milestones in aviation and automotive tech.",
+      "Understand the social and economic impact of global connectivity."
+    ],
     "related": ["geography", "science"],
-    "keywords": ["transportation", "vehicles", "travel"],
+    "keywords": ["transportation", "vehicles", "travel", "aviation"],
     "ogImage": "/imgs/categories/transports.webp",
     "displayName": "Transportation"
   },
   "famous-firsts": {
     "title": "Famous Firsts",
     "description": "Challenge yourself with questions about groundbreaking achievements and historic 'firsts' in various fields, from exploration to technology and culture.",
+    "longDescription": "Celebrate the pioneers who broke the mold. Our 'Famous Firsts' trivia highlights the individuals and moments that redefined what was possible. From the first person in space to the first woman to win a Nobel Prize, test your knowledge of humanity's greatest milestones.",
+    "learningPoints": [
+      "Identify historic achievements and the pioneers behind them.",
+      "Understand the cultural and scientific context of major 'firsts'.",
+      "Trace the timeline of groundbreaking discoveries and records."
+    ],
     "related": ["history", "science"],
-    "keywords": ["famous firsts", "historic achievements", "milestones"],
+    "keywords": ["famous firsts", "milestones", "pioneers", "achievements"],
     "ogImage": "/imgs/categories/famous-firsts.webp",
     "displayName": "Famous Firsts"
   },
   "religion-spirituality": {
     "title": "Religion & Spirituality",
     "description": "Test your knowledge of world religions, spiritual practices, sacred texts, and religious history, exploring diverse faith traditions from ancient to modern times.",
+    "longDescription": "Explore the diverse ways humanity seeks meaning. This trivia set covers the sacred texts, holy sites, and core beliefs of major world religions and spiritual paths. Learn about the history of faith, the lives of spiritual leaders, and the rituals that define global cultures.",
+    "learningPoints": [
+      "Identify core beliefs and sacred texts of major world religions.",
+      "Learn about the historical development of faith traditions.",
+      "Understand the cultural significance of religious rituals and sites."
+    ],
     "related": ["history", "philosophy", "festivals"],
     "keywords": ["religion", "spirituality", "faith", "beliefs"],
     "ogImage": "/imgs/categories/religion.webp",
@@ -170,14 +296,26 @@
   "mythology": {
     "title": "Mythology",
     "description": "Explore questions about myths, legends, and folklore from ancient cultures, diving into gods, heroes, and epic tales from global traditions.",
+    "longDescription": "Enter a world of gods, monsters, and epic heroes. Our mythology trivia dives into the foundational stories of the Greeks, Norse, Egyptians, and beyond. Explore the symbolism and timeless lessons found in the folklore and legends that continue to inspire modern storytelling.",
+    "learningPoints": [
+      "Identify gods, heroes, and creatures from various mythologies.",
+      "Understand the symbolism and themes in ancient folk tales.",
+      "Explore how mythology has influenced art and modern culture."
+    ],
     "related": ["history"],
-    "keywords": ["mythology", "legends", "folklore"],
+    "keywords": ["mythology", "legends", "folklore", "gods"],
     "ogImage": "/imgs/categories/mythology.webp",
     "displayName": "Mythology"
   },
-   "law-politics-government": {
+  "law-politics-government": {
     "title": "Law, Politics & Government",
     "description": "Explore questions about legal systems, political ideologies, government structures, and historical political events that shape nations and societies worldwide.",
+    "longDescription": "How are societies organized and ruled? This category examines the development of legal systems, the clash of political ideologies, and the structure of global governments. Test your knowledge of constitutions, landmark court cases, and the history of diplomacy.",
+    "learningPoints": [
+      "Differentiate between various political ideologies and systems.",
+      "Understand the structure and functions of global governments.",
+      "Identify landmark legal cases and historical political events."
+    ],
     "related": ["history", "business", "famous-quotes"],
     "keywords": ["law", "politics", "government", "constitution"],
     "ogImage": "/imgs/categories/law.webp",
@@ -186,22 +324,40 @@
   "famous-quotes": {
     "title": "Famous Quotes",
     "description": "Challenge yourself with questions about iconic quotes from history, movies, and literature, testing your recall of famous lines and their origins.",
+    "longDescription": "Words have the power to change the world. Our famous quotes trivia tests your memory of the most influential lines ever spoken or written. From political speeches and literary prose to iconic movie dialogue, see if you can identify the authors and the context of these timeless words.",
+    "learningPoints": [
+      "Recall iconic quotes from history, film, and literature.",
+      "Identify the authors and speakers of famous lines.",
+      "Understand the historical or narrative context of key phrases."
+    ],
     "related": ["movies", "literature", "history", "celebrities"],
-    "keywords": ["famous quotes", "movie lines", "literary quotes"],
+    "keywords": ["famous quotes", "movie lines", "quotes"],
     "ogImage": "/imgs/categories/famous-quotes.webp",
     "displayName": "Famous Quotes"
   },
-   "inventions-everyday-objects": {
+  "inventions-everyday-objects": {
     "title": "Inventions & Everyday Objects",
     "description": "Test your knowledge of groundbreaking inventions, everyday items, and the stories behind common objects that shape our daily lives and modern society.",
+    "longDescription": "Discover the genius behind the mundane. This trivia set explores the origins of inventions we take for granted, from the zipper and the lightbulb to the complex technology of the smartphone. Learn about the 'accidental' discoveries and determined inventors who revolutionized daily life.",
+    "learningPoints": [
+      "Identify key inventors and their groundbreaking discoveries.",
+      "Understand the history and evolution of everyday objects.",
+      "Explore how innovation has transformed modern daily life."
+    ],
     "related": ["science", "history", "famous-firsts"],
-    "keywords": ["inventions", "everyday objects", "technology", "innovation"],
+    "keywords": ["inventions", "technology", "innovation", "objects"],
     "ogImage": "/imgs/categories/inventions.webp",
     "displayName": "Inventions & Everyday Objects"
   },
   "cartoons-anime": {
     "title": "Cartoons & Anime",
     "description": "Challenge yourself with questions about animated shows, anime series, iconic characters, and animation history, from classic cartoons to modern anime masterpieces.",
+    "longDescription": "From Saturday morning classics to high-stakes anime epics, our animation trivia celebrates the art of the draw. Explore the history of legendary studios, the evolution of animation techniques, and the iconic characters that have become global cultural symbols.",
+    "learningPoints": [
+      "Identify iconic characters and shows from cartoons and anime.",
+      "Trace the history and evolution of animation techniques.",
+      "Learn about influential animation studios and creators."
+    ],
     "related": ["movies", "tv", "video-games"],
     "keywords": ["cartoons", "anime", "animation", "animated shows"],
     "ogImage": "/imgs/categories/cartoons.webp",
@@ -210,16 +366,28 @@
   "board-games": {
     "title": "Board Games",
     "description": "Test your knowledge of classic and modern board games, from strategy-based tabletop titles to family-friendly games enjoyed worldwide.",
+    "longDescription": "Tabletop gaming has a history as old as civilization itself. Our board games trivia covers everything from the ancient strategies of Chess and Go to the modern complexity of Eurogames and deck-builders. Test your knowledge of game mechanics, history, and the rules of the world's favorites.",
+    "learningPoints": [
+      "Recall the history and origins of classic board games.",
+      "Identify modern tabletop titles and their mechanics.",
+      "Understand the evolution of gaming culture and strategy."
+    ],
     "related": ["video-games", "sports"],
-    "keywords": ["board games", "tabletop games"],
+    "keywords": ["board games", "tabletop", "games", "strategy"],
     "ogImage": "/imgs/categories/board-games.webp",
     "displayName": "Board Games"
   },
   "video-games": {
     "title": "Video Games",
     "description": "Answer questions about video games, gaming culture, iconic titles, and esports, from retro classics to cutting-edge modern gaming experiences.",
+    "longDescription": "Level up your knowledge with our video games trivia. We track the industry from the pixelated beginnings of arcade machines and home consoles to the massive open-world epics and competitive esports of today. Test your memory on iconic characters, groundbreaking developers, and gaming history.",
+    "learningPoints": [
+      "Identify iconic video game characters and developers.",
+      "Trace the evolution of gaming hardware and software.",
+      "Understand the rise of esports and global gaming culture."
+    ],
     "related": ["board-games", "sports"],
-    "keywords": ["video games", "gaming", "esports"],
+    "keywords": ["video games", "gaming", "esports", "retro gaming"],
     "ogImage": "/imgs/categories/video-games.webp",
     "displayName": "Video Games"
   }
