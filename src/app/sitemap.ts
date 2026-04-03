@@ -261,7 +261,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ── Dynamic content (Contentful) ──────────────────────────────────────────
   // Trivia bank is commented out — good, it was generating 404s likely.
   // Re-enable only once you confirm every slug returns 200.
-  // const triviaBankPages = await fetchTriviaBankPages(baseUrl)
+  const triviaBankPages = await fetchTriviaBankPages(baseUrl)
 
   const blogPages = await fetchBlogPages(baseUrl)
 
@@ -273,7 +273,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...triviaCategoryPages,
     ...triviaQuizPages,
     // ...subcategoryPages, // Only re-enable with real path-based routes
-    // ...triviaBankPages,  // Only re-enable after confirming all slugs are live
+    ...triviaBankPages,  // Only re-enable after confirming all slugs are live
     ...blogPages,
   ]
 

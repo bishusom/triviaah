@@ -328,7 +328,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               </p>
             </div>
             <Link 
-              href={`/trivia-bank`}
+              href={`/trivia-bank/${category}-top-50-trivias`}
               className="whitespace-nowrap inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all shadow-sm"
             >
               Get Downloadable Sheet

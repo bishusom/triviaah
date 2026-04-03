@@ -12,7 +12,6 @@ interface TriviaCategory {
 
 // Generate metadata
 export async function generateMetadata(): Promise<Metadata> {
-  const triviaCategories = await getAllTriviaPreviews();
   
   return {
     title: 'Free Trivia Question Bank | Create Online Quiz Games For Free',
@@ -118,6 +117,9 @@ function addTriviaBankJsonLd() {
 
 export default async function TriviaBankPage() {
   const triviaCategories: TriviaCategory[] = await getAllTriviaPreviews();
+  const sortedCategories = [...triviaCategories].sort((a, b) => 
+    a.header.localeCompare(b.header)
+  );
 
   return (
     <>
@@ -157,7 +159,7 @@ export default async function TriviaBankPage() {
           </div>
 
           {/* Client-side filter component */}
-          <TriviaFilter categories={triviaCategories} />
+          <TriviaFilter categories={sortedCategories} />
 
           {/* SEO Content Section */}
           <section className="mt-20 bg-gray-800/50 rounded-2xl p-8 border border-gray-700">

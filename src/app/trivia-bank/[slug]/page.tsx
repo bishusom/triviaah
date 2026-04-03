@@ -3,7 +3,7 @@ import TriviaContent from '@/components/trivia-bank/TriviaContent';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 interface Params {
   slug: string;
@@ -101,15 +101,6 @@ export default async function TriviaPage({ params }: TriviaPageProps) {
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white">
-      {/* 1. SEO BREADCRUMBS */}
-      <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-2 text-sm text-gray-400">
-        <Link href="/" className="hover:text-purple-400">Home</Link>
-        <ChevronRight size={14} />
-        <Link href="/trivia-bank" className="hover:text-purple-400">Trivia Bank</Link>
-        <ChevronRight size={14} />
-        <span className="text-purple-400 font-medium">{trivia.title}</span>
-      </nav>
-
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto mb-12">
           <Link href="/trivia-bank" className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 mb-8 group">
