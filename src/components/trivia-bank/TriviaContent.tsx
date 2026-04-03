@@ -1,8 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, Eye, EyeOff, Copy, Check } from 'lucide-react';
+import { Eye, EyeOff, Copy, Download } from 'lucide-react';
+import { exportToPdfDirect } from '@/lib/pdf-utils';
+
+// Define the Question interface locally to fix the 'unknown' and 'any' errors
+interface TriviaQuestion {
+  question: string;
+  answer: string;
+}
 
 interface TriviaData {
   slug: string;
@@ -11,10 +17,7 @@ interface TriviaData {
   excerpt: string;
   tags: string[] | string;
   levels: {
-    [key: string]: Array<{
-      question: string;
-      answer: string;
-    }>;
+    [key: string]: TriviaQuestion[]; // Explicitly define that values are arrays of TriviaQuestion
   };
 }
 
@@ -22,139 +25,145 @@ interface TriviaContentProps {
   trivia: TriviaData;
 }
 
+<style jsx global>{`
+  /* --- WEB VIEW STYLES --- */
+  /* (Keep your existing dark mode transitions here if any) */
+
+  /* --- PDF GENERATION STYLES (Triggered by .pdf-print-mode) --- */
+  .pdf-print-mode {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 30px !important;
+    width: 800px !important; /* Fixed width for consistent scaling */
+  }
+
+  /* Force white background on all nested cards */
+  .pdf-print-mode .bg-gray-800\/30,
+  .pdf-print-mode .bg-gray-900\/40,
+  .pdf-print-mode .bg-black\/30,
+  .pdf-print-mode .bg-gray-700\/50 {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 1px solid #000000 !important;
+    box-shadow: none !important;
+  }
+
+  /* Force level header gradients to white in PDF */
+  .pdf-print-mode .bg-gradient-to-r {
+    background: #ffffff !important;
+    border-bottom: 1px solid #000000 !important;
+  }
+
+  /* Force text to be black */
+  .pdf-print-mode h2, 
+  .pdf-print-mode h3, 
+  .pdf-print-mode p, 
+  .pdf-print-mode span,
+  .pdf-print-mode .text-white,
+  .pdf-print-mode .text-gray-400 {
+    color: #000000 !important;
+    text-shadow: none !important;
+  }
+
+  /* THE FIX: Unblur answers and force black color ONLY in PDF */
+  .pdf-print-mode .pdf-answer-force-show {
+    filter: none !important;
+    color: #000000 !important;
+    background: #f3f4f6 !important; /* Light gray background for answer box in PDF */
+    border: 1px solid #000000 !important;
+    opacity: 1 !important;
+    display: block !important;
+  }
+
+  /* Hide elements from the PDF */
+  .pdf-print-mode .pdf-exclude,
+  .pdf-print-mode .lucide {
+    display: none !important;
+  }
+`}</style>
+
+
 export default function TriviaContent({ trivia }: TriviaContentProps) {
   const [showAnswers, setShowAnswers] = useState(false);
-  const [copiedLevel, setCopiedLevel] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const copyToClipboard = async (level: string, questions: Array<{ question: string; answer: string }>) => {
-    const text = questions.map(q => 
-      `Q: ${q.question}\nA: ${q.answer}`
-    ).join('\n\n');
-    
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedLevel(level);
-      setTimeout(() => setCopiedLevel(null), 2000);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-    }
-  };
+  const levelOrder = ['easy', 'medium', 'hard'];
 
   const difficultyColors: { [key: string]: string } = {
     easy: 'from-green-500 to-green-600',
     medium: 'from-yellow-500 to-yellow-600',
     hard: 'from-red-500 to-red-600',
-    expert: 'from-purple-500 to-purple-600'
+    default: 'from-purple-500 to-purple-600'
   };
 
-  // Define the order of difficulty levels
-  const difficultyOrder = ['easy', 'medium', 'hard', 'expert'];
+  const handleDownload = () => {
+    exportToPdfDirect(trivia, `${trivia.slug}-questions`);
+  };
 
-  // Sort the levels according to the defined order
-  const sortedLevels = Object.entries(trivia.levels).sort(([levelA], [levelB]) => {
-    return difficultyOrder.indexOf(levelA) - difficultyOrder.indexOf(levelB);
-  });
+  // We cast the entries to ensure 'questions' is recognized as TriviaQuestion[]
+  const sortedLevels = Object.entries(trivia.levels).sort(([a], [b]) => {
+    return levelOrder.indexOf(a.toLowerCase()) - levelOrder.indexOf(b.toLowerCase());
+  }) as [string, TriviaQuestion[]][];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-      {/* Navigation */}
-      <nav className="border-b border-gray-800">
-        <div className="container mx-auto px-4 py-4">
-          <Link 
-            href="/trivia-bank" 
-            className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
+    <div className="space-y-8">
+      {/* Control Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-gray-800/80 p-4 rounded-2xl border border-gray-700 sticky top-20 z-30 backdrop-blur-md pdf-exclude">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowAnswers(!showAnswers)}
+            className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl transition-all font-medium"
           >
-            <ArrowLeft size={20} />
-            Back to Question Bank
-          </Link>
+            {showAnswers ? <EyeOff size={18} /> : <Eye size={18} />}
+            {showAnswers ? 'Hide Answers' : 'Show All Answers'}
+          </button>
+          
+          <button
+            onClick={handleDownload}
+            disabled={isGenerating}
+            className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-xl transition-all font-medium"
+          >
+            {isGenerating ? <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" /> : <Download size={18} />}
+            Download PDF
+          </button>
         </div>
-      </nav>
+      </div>
 
-      {/* Header */}
-      <div className="container mx-auto px-4 py-12">
-        <header className="text-center mb-12">
-          <div className="inline-block bg-gradient-to-r from-purple-600 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
-            TRIVIAAH QUESTION BANK
-          </div>
-          
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            {trivia.header}
-          </h1>
-          
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-            {trivia.excerpt}
-          </p>
-
-          {/* Show Answers Toggle */}
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <button
-              onClick={() => setShowAnswers(!showAnswers)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 font-semibold transition-all duration-300 ${
-                showAnswers
-                  ? 'bg-green-600 border-green-500 text-white'
-                  : 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700'
-              }`}
-            >
-              {showAnswers ? <EyeOff size={20} /> : <Eye size={20} />}
-              {showAnswers ? 'Hide Answers' : 'Show Answers'}
-            </button>
-          </div>
-        </header>
-
-        {/* Difficulty Levels */}
-        <div className="grid gap-8 max-w-6xl mx-auto">
-          {sortedLevels.map(([level, questions]) => (
-            <div key={level} className="bg-gray-800 rounded-2xl border-2 border-gray-700 overflow-hidden">
-              {/* Level Header */}
-              <div className={`bg-gradient-to-r ${difficultyColors[level] || 'from-gray-600 to-gray-700'} px-6 py-4`}>
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white capitalize">
-                    {level} Level
-                  </h2>
-                  <button
-                    onClick={() => copyToClipboard(level, questions)}
-                    className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-colors"
-                  >
-                    {copiedLevel === level ? (
-                      <Check size={18} />
-                    ) : (
-                      <Copy size={18} />
-                    )}
-                    {copiedLevel === level ? 'Copied!' : 'Copy All'}
-                  </button>
-                </div>
-                <p className="text-white/80 mt-2">
-                  {questions.length} questions
-                </p>
+      <div id="trivia-content-area" className="space-y-12">
+        {sortedLevels.map(([level, questions]) => (
+          <div key={level} className="overflow-hidden rounded-3xl border border-gray-800 bg-gray-900/40">
+            <div className={`bg-gradient-to-r ${difficultyColors[level.toLowerCase()] || difficultyColors.default} px-8 py-6 flex justify-between items-center`}>
+              <div>
+                <h2 className="text-2xl font-bold text-white capitalize">{level} Level</h2>
+                <p className="text-white/80 text-sm">{questions.length} Questions</p>
               </div>
+            </div>
 
-              {/* Questions */}
-              <div className="p-6 space-y-6">
-                {questions.map((item, index) => (
-                  <div key={index} className="bg-gray-700/50 rounded-xl p-6 border border-gray-600">
-                    <div className="flex items-start gap-4">
-                      <span className="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
-                        {index + 1}
-                      </span>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-white mb-3">
-                          {item.question}
-                        </h3>
-                        {showAnswers && (
-                          <div className="bg-green-900/30 border border-green-800 rounded-lg p-4">
-                            <p className="text-green-300 font-medium">
-                              <span className="text-green-400">Answer:</span> {item.answer}
-                            </p>
-                          </div>
-                        )}
+            <div className="p-6 md:p-8 grid gap-6">
+              {questions.map((item: TriviaQuestion, index: number) => (
+                <div key={index} className="bg-gray-800/30 rounded-2xl p-6 border border-gray-700">
+                  <div className="flex items-start gap-4">
+                    <span className="text-purple-400 font-bold text-lg">{index + 1}.</span>
+                    <div className="flex-1">
+                      <h3 className="text-white font-medium text-lg mb-4">{item.question}</h3>
+                      
+                      <div className="mt-2">
+                        <p className={`
+                          font-semibold p-3 rounded-xl border inline-block min-w-[200px] transition-all duration-300
+                          ${showAnswers ? 'text-green-400 bg-black/30 border-white/10' : 'text-gray-600 blur-sm select-none bg-black/30 border-white/5'}
+                          pdf-answer-force-show
+                        `}>
+                          <span className="text-purple-500 mr-2 text-xs uppercase tracking-widest pdf-exclude-label">Answer:</span>
+                          {item.answer}
+                        </p>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -1,9 +1,41 @@
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getPostData } from '@/lib/markdown';
 import { Twitter, Linkedin, Facebook, Share2 } from 'lucide-react';
 import CopyLinkButton from '@/components/blog/CopyLinkButton';
 import Ads from '@/components/common/Ads';
+
+// src/app/blog/[slug]/page.tsx
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostData(slug);
+
+  if (!post) return { title: 'Post Not Found' };
+
+  return {
+    title: `${post.title} | Triviaah Blog`,
+    description: post.excerpt || `Read our latest deep dive into ${post.title}. Professional trivia insights and educational content.`,
+    alternates: {
+      canonical: `https://triviaah.com/blog/${slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `https://triviaah.com/blog/${slug}`,
+      type: 'article',
+      publishedTime: post.date,
+      images: [
+        {
+          url: post.image || '/default-blog-og.jpg',
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+  };
+}
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
