@@ -26,16 +26,16 @@ export function generateSnakeMetadata(): Metadata {
       'browser snake'
     ],
     alternates: {
-      canonical: 'https://triviaah.com/brainwave/snake',
+      canonical: 'https://triviaah.com/retro-games/snake',
     },
     openGraph: {
       title: 'Snake - Classic Arcade Game | Triviaah',
       description: 'Play the classic Snake game online. Control a growing snake, eat food, and avoid collisions in this timeless arcade puzzle game.',
-      url: 'https://triviaah.com/brainwave/snake',
+      url: 'https://triviaah.com/retro-games/snake',
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/brainwave/snake.webp',
+          url: '/imgs/retro-games/snake.webp',
           width: 1200,
           height: 630,
           alt: 'Snake - Classic Arcade Game'
@@ -48,7 +48,7 @@ export function generateSnakeMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Snake - Classic Arcade Game | Triviaah',
       description: 'Play the classic Snake game online.',
-      images: ['/imgs/brainwave/snake.webp'],
+      images: ['/imgs/retro-games/snake.webp'],
       site: '@elitetrivias',
     }
   };

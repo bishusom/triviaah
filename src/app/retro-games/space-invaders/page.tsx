@@ -1,7 +1,7 @@
 // src/app/brainwave/space-invaders/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Script from 'next/script';
 import { Gamepad2, Clock, Trophy, Zap, Target, Shield, Rocket, Crosshair, Award } from 'lucide-react';
 // import an alternative icon for Alien, or use a placeholder
@@ -21,13 +21,13 @@ export default function SpaceInvadersPage() {
     '@type': 'WebPage',
     name: 'Space Invaders - Classic Arcade Game | Triviaah',
     description: 'Play the classic Space Invaders arcade game online. Defend Earth from alien invaders in this iconic 1978 shooter game with increasing difficulty waves.',
-    url: 'https://triviaah.com/brainwave/space-invaders',
+    url: 'https://triviaah.com/retro-games/space-invaders',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'Game',
       name: 'Space Invaders',
       description: 'Classic arcade shooter game where players defend Earth from descending alien invaders while using shields for protection.',
-      gameLocation: 'https://triviaah.com/brainwave/space-invaders',
+      gameLocation: 'https://triviaah.com/retro-games/space-invaders',
       characterAttribute: 'Arcade, Shooter, Aliens, Spaceship, Defense, Classic, Retro'
     }
   };

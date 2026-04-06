@@ -1,7 +1,7 @@
 // src/app/brainwave/pong/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Script from 'next/script';
 import { Gamepad2, Clock, Trophy, Zap, Target, Users, Cpu } from 'lucide-react';
 import MuteButton from '@/components/common/MuteButton';
@@ -19,13 +19,13 @@ export default function PongPage() {
     '@type': 'WebPage',
     name: 'Pong - Classic Arcade Game | Triviaah',
     description: 'Play the classic Pong game online. Battle against AI or challenge a friend in this timeless table tennis arcade game.',
-    url: 'https://triviaah.com/brainwave/pong',
+    url: 'https://triviaah.com/retro-games/pong',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'Game',
       name: 'Pong',
       description: 'Classic table tennis arcade game where players control paddles to hit a ball back and forth.',
-      gameLocation: 'https://triviaah.com/brainwave/pong',
+      gameLocation: 'https://triviaah.com/retro-games/pong',
       characterAttribute: 'Arcade, Sports, Table Tennis, Pong, Retro, Competitive'
     }
   };

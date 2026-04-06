@@ -26,16 +26,16 @@ export function generatePongMetadata(): Metadata {
       'browser pong'
     ],
     alternates: {
-      canonical: 'https://triviaah.com/brainwave/pong',
+      canonical: 'https://triviaah.com/retro-games/pong',
     },
     openGraph: {
       title: 'Pong - Classic Arcade Game | Triviaah',
       description: 'Play the classic Pong game online. Battle against AI or challenge a friend in this timeless table tennis arcade game.',
-      url: 'https://triviaah.com/brainwave/pong',
+      url: 'https://triviaah.com/retro-games/pong',
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/brainwave/pong.webp',
+          url: '/imgs/retro-games/pong.webp',
           width: 1200,
           height: 630,
           alt: 'Pong - Classic Arcade Game'
@@ -48,7 +48,7 @@ export function generatePongMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Pong - Classic Arcade Game | Triviaah',
       description: 'Play the classic Pong game online.',
-      images: ['/imgs/brainwave/pong.webp'],
+      images: ['/imgs/retro-games/pong.webp'],
       site: '@elitetrivias',
     }
   };

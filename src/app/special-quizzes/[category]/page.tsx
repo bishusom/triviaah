@@ -6,33 +6,20 @@ import Script from 'next/script';
 
 interface QuizPageProps {
   params: Promise<{ category: string }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({
   params,
-  searchParams,
 }: QuizPageProps): Promise<Metadata> {
   const { category } = await params;
-  const searchParamsObj = await searchParams;
-  const subcategory = searchParamsObj?.subcategory as string | undefined;
+  const canonicalUrl = `https://triviaah.com/special-quizzes/${category}`;
   
   const formattedCategory = category
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
-
-  const formattedSubcategory = subcategory 
-    ? subcategory.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-    : null;
-
-  const title = formattedSubcategory 
-    ? `${formattedSubcategory} ${formattedCategory} Quiz | Triviaah`
-    : `${formattedCategory} Quiz | Triviaah`;
-
-  const description = formattedSubcategory
-    ? `Test your ${formattedSubcategory.toLowerCase()} knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 multi-choice questions to beat the highscore. Invite your friends on social media if they can beat your scores!`
-    : `Test your knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 multi-choice questions to beat the highscore. Invite your friends on social media if they can beat your scores!`;
+  const title = `${formattedCategory} Special Quiz | Triviaah`;
+  const description = `Play our ${formattedCategory.toLowerCase()} special quiz and test your knowledge with 10 multiple-choice questions. Challenge yourself and compare your score with friends.`;
 
   return {
     title,
@@ -49,20 +36,18 @@ export async function generateMetadata({
       },
     },
     keywords: [
-      formattedSubcategory ? `${formattedSubcategory.toLowerCase()} quiz` : `${formattedCategory.toLowerCase()} quiz`,
+      `${formattedCategory.toLowerCase()} special quiz`,
+      `${formattedCategory.toLowerCase()} quiz`,
       'trivia questions',
       'knowledge test',
       'free online quiz',
       'multiple choice questions',
       formattedCategory.toLowerCase(),
-      ...(formattedSubcategory ? [formattedSubcategory.toLowerCase()] : [])
     ],
     openGraph: {
       title,
-      description: formattedSubcategory
-        ? `Can you answer these ${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()} questions? Take the challenge!`
-        : `Can you answer these ${formattedCategory.toLowerCase()} questions? Take the challenge!`,
-      url: `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
+      description: `Can you answer these ${formattedCategory.toLowerCase()} special quiz questions? Take the challenge!`,
+      url: canonicalUrl,
       siteName: 'Triviaah',
       type: 'website',
       images: [
@@ -76,36 +61,24 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: formattedSubcategory 
-        ? `${formattedSubcategory} ${formattedCategory} Quiz Challenge`
-        : `${formattedCategory} Quiz Challenge`,
-      description: formattedSubcategory
-        ? `How well do you know ${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()}? Test yourself!`
-        : `How well do you know ${formattedCategory.toLowerCase()}? Test yourself!`,
+      title: `${formattedCategory} Special Quiz Challenge`,
+      description: `How well do you know ${formattedCategory.toLowerCase()}? Test yourself!`,
       images: ['/imgs/quiz-og.webp'],
     },
     alternates: {
-      canonical: `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
+      canonical: canonicalUrl,
     }
   };
 }
 
 // Helper function to generate comprehensive structured data
-function generateStructuredData(questions: Question[], category: string, subcategory?: string) {
+function generateStructuredData(questions: Question[], category: string) {
   const formattedCategory = category
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
-
-  const formattedSubcategory = subcategory 
-    ? subcategory.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-    : null;
-
-  const quizName = formattedSubcategory 
-    ? `${formattedSubcategory} ${formattedCategory} Quiz`
-    : `${formattedCategory} Quiz`;
-
-  const quizUrl = `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`;
+  const quizName = `${formattedCategory} Special Quiz`;
+  const quizUrl = `https://triviaah.com/special-quizzes/${category}`;
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -180,12 +153,12 @@ function generateStructuredData(questions: Question[], category: string, subcate
         "url": quizUrl,
         "numberOfQuestions": questions.length,
         "educationalLevel": "Beginner",
-        "assesses": formattedSubcategory ? `${formattedSubcategory} ${formattedCategory}` : formattedCategory,
+        "assesses": formattedCategory,
         "educationalAlignment": {
           "@type": "AlignmentObject",
           "alignmentType": "educationalSubject",
           "educationalFramework": "General Knowledge",
-          "targetName": formattedSubcategory ? `${formattedSubcategory} ${formattedCategory}` : formattedCategory
+          "targetName": formattedCategory
         },
         "hasPart": questions.map((question, index) => ({
           "@type": "Question",
@@ -224,19 +197,13 @@ function generateStructuredData(questions: Question[], category: string, subcate
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "Trivia Categories",
-            "item": "https://triviaah.com/trivias"
+            "name": "Special Quizzes",
+            "item": "https://triviaah.com/special-quizzes"
           },
           {
             "@type": "ListItem",
             "position": 3,
             "name": formattedCategory,
-            "item": `https://triviaah.com/trivias/${category}`
-          },
-          {
-            "@type": "ListItem",
-            "position": 4,
-            "name": "Quiz",
             "item": quizUrl
           }
         ]
@@ -249,7 +216,7 @@ function generateStructuredData(questions: Question[], category: string, subcate
             "name": "How many questions are in this quiz?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": `This quiz contains ${questions.length} multiple-choice questions covering various aspects of ${formattedCategory.toLowerCase()}${formattedSubcategory ? `, specifically focusing on ${formattedSubcategory.toLowerCase()}` : ''}.`
+              "text": `This quiz contains ${questions.length} multiple-choice questions covering various aspects of ${formattedCategory.toLowerCase()}.`
             }
           },
           {
@@ -301,15 +268,11 @@ function generateStructuredData(questions: Question[], category: string, subcate
 }
 
 // Component for FAQ Section
-function QuizFAQ({ category, subcategory, questionCount }: { category: string, subcategory?: string, questionCount: number }) {
+function QuizFAQ({ category, questionCount }: { category: string, questionCount: number }) {
   const formattedCategory = category
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
-
-  const formattedSubcategory = subcategory 
-    ? subcategory.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-    : null;
 
   return (
     <div className="mt-12 bg-transparent rounded-lg p-6 text-gray-10">
@@ -318,7 +281,7 @@ function QuizFAQ({ category, subcategory, questionCount }: { category: string, s
         <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
           <h3 className="font-semibold text-lg mb-2">About This Quiz</h3>
           <p>
-            This {formattedSubcategory ? `${formattedSubcategory} ` : ''}{formattedCategory} quiz contains {questionCount} multiple-choice questions 
+            This {formattedCategory} quiz contains {questionCount} multiple-choice questions 
             designed to test your knowledge across various difficulty levels. Whether you&apos;re a beginner or an expert, 
             you&apos;ll find challenging questions that will help you learn and improve your understanding of {formattedCategory.toLowerCase()}.
           </p>
@@ -345,7 +308,7 @@ function QuizFAQ({ category, subcategory, questionCount }: { category: string, s
         <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
           <h3 className="font-semibold text-lg mb-2">Learning Objectives</h3>
           <p >
-            This quiz is designed to help you expand your knowledge of {formattedCategory.toLowerCase()}{formattedSubcategory ? `, particularly in the area of ${formattedSubcategory.toLowerCase()}` : ''}. 
+            This quiz is designed to help you expand your knowledge of {formattedCategory.toLowerCase()}. 
             Whether you&apos;re studying for academic purposes, preparing for a trivia competition, or just want to 
             learn something new, this quiz provides an engaging way to test and improve your knowledge.
           </p>
@@ -357,12 +320,9 @@ function QuizFAQ({ category, subcategory, questionCount }: { category: string, s
 
 export default async function QuizPage({
   params,
-  searchParams,
 }: QuizPageProps) {
   try {
     const { category } = await params;
-    const searchParamsObj = await searchParams;
-    const subcategory = searchParamsObj?.subcategory as string | undefined;
     
     if (!category || typeof category !== 'string') {
       console.error('Invalid category parameter:', category);
@@ -373,21 +333,18 @@ export default async function QuizPage({
     const questions = await getHolidaySpecialQuiz(category, 10);
 
     if (!questions || questions.length === 0) {
-      console.error(`No questions found for category: ${category}${subcategory ? `, subcategory: ${subcategory}` : ''}`);
+      console.error(`No questions found for category: ${category}`);
       return notFound();
     }
 
     // Generate comprehensive structured data
-    const structuredData = generateStructuredData(questions, category, subcategory);
+    const structuredData = generateStructuredData(questions, category);
 
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-4">
         <div className="max-w-4xl mx-auto px-4">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2 text-center">
-            {subcategory 
-              ? `${subcategory.replace(/-/g, ' ')} ${category.replace(/-/g, ' ')} Questions - Triviaah`.toUpperCase()
-              : `${category.replace(/-/g, ' ')} Questions - Triviaah`.toUpperCase()
-            }
+            {`${category.replace(/-/g, ' ')} Questions - Triviaah`.toUpperCase()}
           </h1>
           
           {/* Inject structured data directly */}
@@ -400,7 +357,6 @@ export default async function QuizPage({
           <QuizGame 
             initialQuestions={questions} 
             category={category}
-            subcategory={subcategory}
             quizConfig={{}}
             quizType="trivias"
           />
@@ -408,7 +364,6 @@ export default async function QuizPage({
           {/* FAQ Section */}
           <QuizFAQ 
             category={category} 
-            subcategory={subcategory} 
             questionCount={questions.length} 
           />
         </div>

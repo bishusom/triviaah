@@ -1,7 +1,7 @@
 // src/app/brainwave/pacman/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Script from 'next/script';
 import { Gamepad2, Clock, Trophy, Zap, Target, Ghost, Cherry, Star, Award } from 'lucide-react';
 import MuteButton from '@/components/common/MuteButton';
@@ -19,13 +19,13 @@ export default function PacManPage() {
     '@type': 'WebPage',
     name: 'Pac-Man - Classic Arcade Game | Triviaah',
     description: 'Play the classic Pac-Man arcade game online. Navigate the maze, eat dots, avoid ghosts, and achieve high scores in this iconic 80s game.',
-    url: 'https://triviaah.com/brainwave/pacman',
+    url: 'https://triviaah.com/retro-games/pacman',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'Game',
       name: 'Pac-Man',
       description: 'Classic arcade game where players control Pac-Man through a maze eating dots while being chased by colorful ghosts.',
-      gameLocation: 'https://triviaah.com/brainwave/pacman',
+      gameLocation: 'https://triviaah.com/retro-games/pacman',
       characterAttribute: 'Arcade, Maze, Ghosts, Dots, Power Pellets, Classic, Retro'
     }
   };

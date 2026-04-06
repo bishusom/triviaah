@@ -31,16 +31,16 @@ export function generatePacManMetadata(): Metadata {
       'nostalgia game'
     ],
     alternates: {
-      canonical: 'https://triviaah.com/brainwave/pacman',
+      canonical: 'https://triviaah.com/retro-games/pacman',
     },
     openGraph: {
       title: 'Pac-Man - Classic Arcade Game | Triviaah',
       description: 'Play the classic Pac-Man arcade game online. Navigate the maze, eat dots, avoid ghosts, and achieve high scores in this iconic 80s game.',
-      url: 'https://triviaah.com/brainwave/pacman',
+      url: 'https://triviaah.com/retro-games/pacman',
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/brainwave/pacman.webp',
+          url: '/imgs/retro-games/pacman.webp',
           width: 1200,
           height: 630,
           alt: 'Pac-Man - Classic Arcade Game'
@@ -53,7 +53,7 @@ export function generatePacManMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Pac-Man - Classic Arcade Game | Triviaah',
       description: 'Play the classic Pac-Man arcade game online.',
-      images: ['/imgs/brainwave/pacman.webp'],
+      images: ['/imgs/retro-games/pacman.webp'],
       site: '@elitetrivias',
     }
   };

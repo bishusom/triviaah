@@ -1,7 +1,7 @@
 // src/app/brainwave/tetris/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Script from 'next/script';
 import { Box, Clock, Trophy, Zap, Target, Gamepad2 } from 'lucide-react';
 import MuteButton from '@/components/common/MuteButton';
@@ -19,13 +19,13 @@ export default function TetrisPage() {
     '@type': 'WebPage',
     name: 'Tetris - Classic Puzzle Game | Triviaah',
     description: 'Play the classic Tetris puzzle game online. Arrange falling blocks to clear lines and achieve high scores in this timeless arcade game.',
-    url: 'https://triviaah.com/brainwave/tetris',
+    url: 'https://triviaah.com/retro-games/tetris',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'Game',
       name: 'Tetris',
       description: 'Classic tile-matching puzzle game where players arrange falling tetrominoes to create and clear horizontal lines.',
-      gameLocation: 'https://triviaah.com/brainwave/tetris',
+      gameLocation: 'https://triviaah.com/retro-games/tetris',
       characterAttribute: 'Puzzle, Strategy, Arcade, Tetris, Blocks, Line Clear'
     }
   };

@@ -9,16 +9,31 @@ export const metadata: Metadata = {
   title: 'Seasonal Special Quizzes - Monthly Trivia Challenges | Triviaah',
   description: 'Play our special monthly trivia quizzes! Each month features a unique themed challenge available only during that month. Test your knowledge with time-limited trivia!',
   keywords: 'seasonal trivia, monthly quiz, special trivia challenges, holiday quizzes, time-limited trivia',
+  alternates: {
+    canonical: 'https://triviaah.com/special-quizzes',
+  },
   openGraph: {
     title: 'Seasonal Special Quizzes - Monthly Challenges | Triviaah',
     description: 'Discover our monthly special trivia quizzes! Each month brings a new themed challenge available for limited time.',
     url: 'https://triviaah.com/special-quizzes',
+    siteName: 'Triviaah',
     images: [
       {
         url: '/imgs/special-quizzes-og.webp',
         alt: 'Seasonal Special Quizzes',
       },
     ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Seasonal Special Quizzes - Monthly Challenges | Triviaah',
+    description: 'Discover our monthly special trivia quizzes! Each month brings a new themed challenge available for limited time.',
+    images: ['/imgs/special-quizzes-og.webp'],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

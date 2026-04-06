@@ -1,7 +1,7 @@
 // src/app/brainwave/breakout/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Script from 'next/script';
 import { Gamepad2, Clock, Trophy, Zap, Target, Square, BrickWall, Circle, Award, Sparkles } from 'lucide-react';
 import MuteButton from '@/components/common/MuteButton';
@@ -19,13 +19,13 @@ export default function BreakoutPage() {
     '@type': 'WebPage',
     name: 'Breakout - Classic Arcade Game | Triviaah',
     description: 'Play the classic Breakout arcade game online. Use the paddle to bounce a ball and break bricks in this iconic 1976 Atari game with multiple levels.',
-    url: 'https://triviaah.com/brainwave/breakout',
+    url: 'https://triviaah.com/retro-games/breakout',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'Game',
       name: 'Breakout',
       description: 'Classic arcade game where players use a paddle to bounce a ball and break a wall of bricks, with the ball speeding up over time.',
-      gameLocation: 'https://triviaah.com/brainwave/breakout',
+      gameLocation: 'https://triviaah.com/retro-games/breakout',
       characterAttribute: 'Arcade, Paddle, Ball, Bricks, Atari, Classic, Retro'
     }
   };

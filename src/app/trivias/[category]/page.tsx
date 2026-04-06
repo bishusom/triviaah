@@ -34,6 +34,7 @@ interface StructuredDataProps {
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
   const { category } = await params;
+  const canonicalUrl = `https://triviaah.com/trivias/${category}`;
 
   const categoryKey = category as CategoryKey;
   const categoryData = triviaCategories[categoryKey] || {
@@ -62,7 +63,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     openGraph: {
       title: `${categoryTitle} Trivia Quiz | Free Online Questions`,
       description: `Play free ${categoryTitle.toLowerCase()} trivia quiz. ${categoryDescription} Test your knowledge with our online trivia questions.`,
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/trivias/${category}`,
+      url: canonicalUrl,
       siteName: 'Triviaah',
       images: categoryData.ogImage ? [{ 
         url: categoryData.ogImage,
@@ -79,7 +80,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
       images: categoryData.ogImage ? [categoryData.ogImage] : [],
     },
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/trivias/${category}`,
+      canonical: canonicalUrl,
     },
     robots: {
       index: true,

@@ -19,7 +19,7 @@ const geist = Geist({
 export const metadata: Metadata = {
   metadataBase: new URL('https://triviaah.com'),
   title: 'Triviaah: Free Daily Trivia & Quiz Games',
-  description: 'Discover fun, free daily trivia challenges across 20+ exciting categories like movies, history, and science at elitetrivias. Test your knowledge with fresh questions every 24 hours!',
+  description: 'Discover free daily trivia challenges across 20+ categories like movies, history, and science on Triviaah. Test your knowledge with fresh questions every 24 hours.',
   keywords: 'daily trivia, daily quiz, free trivia, trivia questions, quiz games, daily challenge, trivia app, quiz app, trivia online, trivia categories, fun quizzes, trivia competition, trivia game, quiz challenge, trivia fun, plotle, songle, capitale',
   openGraph: {
     title: 'Triviaah: Free Daily Trivia & Quiz Games',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/Triviaah-og.webp',
+        url: '/imgs/triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'Triviaah - Free Daily Trivia & Quiz Games'
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Triviaah: Free Daily Trivia & Quiz Games',
     description: 'Play free daily trivia challenges across 20+ categories. New questions every 24 hours!',
-    images: ['/imgs/Triviaah-og.webp'],
+    images: ['/imgs/triviaah-og.webp'],
   },
 };
 

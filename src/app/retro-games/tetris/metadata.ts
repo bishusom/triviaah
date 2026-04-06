@@ -26,16 +26,16 @@ export function generateTetrisMetadata(): Metadata {
       'browser tetris'
     ],
     alternates: {
-      canonical: 'https://triviaah.com/brainwave/tetris',
+      canonical: 'https://triviaah.com/retro-games/tetris',
     },
     openGraph: {
       title: 'Tetris - Classic Puzzle Game | Triviaah',
       description: 'Play the classic Tetris puzzle game online. Arrange falling blocks to clear lines and achieve high scores in this timeless arcade game.',
-      url: 'https://triviaah.com/brainwave/tetris',
+      url: 'https://triviaah.com/retro-games/tetris',
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/brainwave/tetris.webp',
+          url: '/imgs/retro-games/tetris.webp',
           width: 1200,
           height: 630,
           alt: 'Tetris - Classic Puzzle Game'
@@ -48,7 +48,7 @@ export function generateTetrisMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Tetris - Classic Puzzle Game | Triviaah',
       description: 'Play the classic Tetris puzzle game online.',
-      images: ['/imgs/brainwave/tetris.webp'],
+      images: ['/imgs/retro-games/tetris.webp'],
       site: '@elitetrivias',
     }
   };

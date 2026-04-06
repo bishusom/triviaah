@@ -1,7 +1,7 @@
 // src/app/brainwave/minesweeper/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Script from 'next/script';
 import { Bomb, Clock, Trophy, Zap, Target } from 'lucide-react';
 import MuteButton from '@/components/common/MuteButton';
@@ -19,13 +19,13 @@ export default function MinesweeperPage() {
     '@type': 'WebPage',
     name: 'Minesweeper - Classic Puzzle Game | Triviaah',
     description: 'Play the classic Minesweeper puzzle game with modern features. Clear minefields using logic, strategy, and careful planning with multiple difficulty levels.',
-    url: 'https://triviaah.com/brainwave/minesweeper',
+    url: 'https://triviaah.com/retro-games/minesweeper',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'Game',
       name: 'Minesweeper',
       description: 'Classic logic-based puzzle game where players clear a rectangular board containing hidden mines without detonating any.',
-      gameLocation: 'https://triviaah.com/brainwave/minesweeper',
+      gameLocation: 'https://triviaah.com/retro-games/minesweeper',
       characterAttribute: 'Logic, Strategy, Puzzle, Minesweeper, Brain Teaser, Number Game'
     }
   };

@@ -33,16 +33,16 @@ export function generateBreakoutMetadata(): Metadata {
       'multi-level game'
     ],
     alternates: {
-      canonical: 'https://triviaah.com/brainwave/breakout',
+      canonical: 'https://triviaah.com/retro-games/breakout',
     },
     openGraph: {
       title: 'Breakout - Classic Arcade Game | Triviaah',
       description: 'Play the classic Breakout arcade game online. Use the paddle to bounce a ball and break bricks in this iconic 1976 Atari game with multiple levels.',
-      url: 'https://triviaah.com/brainwave/breakout',
+      url: 'https://triviaah.com/retro-games/breakout',
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/brainwave/breakout.webp',
+          url: '/imgs/retro-games/breakout.webp',
           width: 1200,
           height: 630,
           alt: 'Breakout - Classic Arcade Game'
@@ -55,7 +55,7 @@ export function generateBreakoutMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Breakout - Classic Arcade Game | Triviaah',
       description: 'Play the classic Breakout arcade game online.',
-      images: ['/imgs/brainwave/breakout.webp'],
+      images: ['/imgs/retro-games/breakout.webp'],
       site: '@elitetrivias',
     }
   };

@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
+import { getCurrentMonthQuiz } from '@/config/special-quizzes'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -152,7 +153,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/about`,                   lastModified: new Date('2025-11-28'),  changeFrequency: 'yearly', priority: PRIORITY.LOW },
     { url: `${baseUrl}/contact`,                 lastModified: new Date('2025-11-28'),  changeFrequency: 'yearly', priority: PRIORITY.LOW },
     { url: `${baseUrl}/privacy`,                 lastModified: new Date('2025-11-28'),  changeFrequency: 'yearly', priority: PRIORITY.MINIMAL },
+    { url: `${baseUrl}/special-quizzes`,         lastModified: new Date(),              changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
   ]
+
+  const currentMonthQuiz = getCurrentMonthQuiz()
+  const specialQuizPages: MetadataRoute.Sitemap = currentMonthQuiz
+    ? [
+        {
+          url: `${baseUrl}/special-quizzes/${currentMonthQuiz.category}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly',
+          priority: PRIORITY.MEDIUM,
+        },
+      ]
+    : []
 
   // ── Daily trivias ─────────────────────────────────────────────────────────
   const dailyTriviaCategories = [
@@ -284,6 +298,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...mainPages,
     ...dailyTriviaPages,
     ...brainwavePages,
+    ...specialQuizPages,
     ...dynamicPages,       // swap with verifiedDynamicPages once enabled
     ...retroGamePages,
     ...iqTestPages,
