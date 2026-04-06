@@ -82,18 +82,24 @@ function CardPopup({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className="relative aspect-video w-full">
-        <img
-          src={item.image || item.image_url || '/api/placeholder/400/225'}
-          className="w-full h-full object-cover"
-          alt={item.title || item.name}
-          draggable={false}
-        />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-          <Play className="w-10 h-10 text-white fill-white drop-shadow-lg" />
-        </div>
+      <div className="relative aspect-video w-full group/popup-img">
+        <Link href={item.path || '#'} className="block w-full h-full">
+          <img
+            src={item.image || item.image_url || '/api/placeholder/400/225'}
+            className="w-full h-full object-cover transition-filter duration-300 group-hover/popup-img:brightness-75"
+            alt={item.title || item.name}
+            draggable={false}
+          />
+          {/* Large Play Button Overlay */}
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover/popup-img:bg-black/40 transition-colors">
+            <div className="p-3 rounded-full border-2 border-white/40 group-hover/popup-img:border-white group-hover/popup-img:scale-110 transition-all duration-300">
+                <Play className="w-10 h-10 text-white fill-white drop-shadow-lg" />
+            </div>
+          </div>
+        </Link>
+        
         {item.isNew && (
-          <div className="absolute top-2 left-2">
+          <div className="absolute top-2 left-2 pointer-events-none">
             <span className="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wider">
               NEW
             </span>

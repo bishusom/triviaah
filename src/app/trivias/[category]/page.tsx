@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import triviaCategories from '@/config/triviaCategories.json';
 import { getSubcategoriesWithMinQuestions } from '@/lib/supabase';
+import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
 import { Play, Timer, Info, ShieldQuestionMark, BookOpen, Trophy, CircleStar } from 'lucide-react';
 
 
@@ -177,7 +178,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               {subcategories.map((subcat) => (
                 <Link
                   key={subcat.subcategory}
-                  href={`/trivias/${category}/quiz?subcategory=${encodeURIComponent(subcat.subcategory)}`}
+                  href={`/trivias/${category}/${slugifyTriviaSegment(subcat.subcategory)}`}
                   className="group relative bg-gradient-to-br from-gray-800 to-gray-900 hover:from-cyan-900/30 hover:to-blue-900/30 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/40 transition-all duration-300 hover:shadow-glow"
                 >
                   <div className="flex items-center justify-between">
@@ -483,7 +484,7 @@ function StructuredData({
             "@type": "Game",
             "name": `${subcat.subcategory} - ${categoryData.title} Trivia`,
             "description": `Test your knowledge of ${subcat.subcategory} with our trivia quiz`,
-            "url": `${categoryUrl}/quiz?subcategory=${encodeURIComponent(subcat.subcategory)}`,
+            "url": `${categoryUrl}/${slugifyTriviaSegment(subcat.subcategory)}`,
             "gameType": "TriviaGame"
           }
         }))

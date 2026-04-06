@@ -8,6 +8,7 @@ declare module '@/config/triviaCategories.json' {
       keywords?: string[];
       ogImage?: string;
       related?: string[];
+      displayName?: string;
     };
   };
   export default value;

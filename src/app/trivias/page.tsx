@@ -6,6 +6,7 @@ import Ads from '@/components/common/Ads';
 import triviaCategories from '@/config/triviaCategories.json';
 import ScrollButtons from '@/components/common/ScrollButtons';
 import { Play, Boxes, ShieldQuestionMark } from 'lucide-react';
+import TriviaCategoriesExplorer from '@/components/trivias/TriviaCategoriesExplorer';
 
 // Define proper TypeScript interface for category
 interface TriviaCategory {
@@ -15,12 +16,6 @@ interface TriviaCategory {
   keywords?: string[];
   related?: string[];
   displayName?: string;
-}
-
-interface CategoryCardProps {
-  categoryKey: string;
-  category: TriviaCategory;
-  index: number;
 }
 
 interface StructuredDataProps {
@@ -70,70 +65,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Gaming-style category card
-function CategoryCard({ categoryKey, category, index }: CategoryCardProps) {
-  return (
-    <Link
-      key={categoryKey}
-      href={`/trivias/${categoryKey}`}
-      className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
-    >
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
-      {/* Glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-      
-      {/* Category Image */}
-      <div className="relative h-48 w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">
-        {category.ogImage ? (
-          <Image
-            src={category.ogImage}
-            alt={category.title}
-            fill
-            className="object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-2"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-            loading={index < 8 ? "eager" : "lazy"}
-            priority={index < 4}
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-cyan-700 to-purple-800">
-            <span className="text-white text-2xl font-bold drop-shadow-lg">
-              {category.title.charAt(0).toUpperCase()}
-            </span>
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-        
-        {/* Play button overlay */}
-        <div className="absolute bottom-4 right-4 w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-          <Play className="w-5 h-5 text-white" />
-        </div>
-      </div>
-      
-      {/* Category Content */}
-      <div className="p-6 relative z-10">
-        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-cyan-300 transition-colors">
-          {category.title}
-        </h3>
-        <p className="text-sm text-gray-300 line-clamp-2">
-          {category.description}
-        </p>
-        
-        {/* Progress bar effect */}
-        <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 w-0 group-hover:w-full transition-all duration-700" />
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 export default function TriviasPage() {
   // Get all category keys and sort them alphabetically
   const categories = Object.entries(triviaCategories);
+  const categoriesForExplorer = categories.map(([key, category]) => ({
+    key,
+    category: category as TriviaCategory,
+  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
@@ -185,17 +123,7 @@ export default function TriviasPage() {
           <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-16">
-          {categories.map(([key, category], index) => (
-            <CategoryCard 
-              key={key} 
-              categoryKey={key}
-              category={category as TriviaCategory} 
-              index={index}
-            />
-          ))}
-        </div>
+        <TriviaCategoriesExplorer categories={categoriesForExplorer} />
 
         {/* CTA Section for Trivia Bank */}
         <section className="mt-16 p-8 rounded-2xl border border-cyan-500/20 text-center">

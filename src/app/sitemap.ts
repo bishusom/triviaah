@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
+import { slugifyTriviaSegment } from '@/lib/trivia-slugs'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -40,10 +41,7 @@ async function fetchSubcategoryPages(baseUrl: string): Promise<MetadataRoute.Sit
         // /trivias/science/evolution is indexable.
         // /trivias/science/quiz?subcategory=evolution is not — Google treats it
         // as a duplicate of /trivias/science/quiz and ignores it.
-        const slug = subcat.subcategory
-          .toLowerCase()
-          .replace(/\s+/g, '-')
-          .replace(/[^a-z0-9-]/g, '')
+        const slug = slugifyTriviaSegment(subcat.subcategory)
 
         pages.push({
           url: `${baseUrl}/trivias/${category}/${slug}`,
@@ -208,7 +206,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // ✅ Subcategory pages: only enable once you have real routes (not query params)
-  // const subcategoryPages = await fetchSubcategoryPages(baseUrl)
+  const subcategoryPages = await fetchSubcategoryPages(baseUrl)
 
   // ── Retro games ───────────────────────────────────────────────────────────
   const retroGames = ['snake', 'tic-tac-toe', 'pong', 'minesweeper', 'tetris', 'pacman', 'space-invaders', 'breakout']
@@ -272,7 +270,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const dynamicPages = [
     ...triviaCategoryPages,
     ...triviaQuizPages,
-    // ...subcategoryPages, // Only re-enable with real path-based routes
+    ...subcategoryPages,
     ...triviaBankPages,  // Only re-enable after confirming all slugs are live
     ...blogPages,
   ]

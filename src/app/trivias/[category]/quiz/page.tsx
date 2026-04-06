@@ -1,4 +1,5 @@
 // src/app/trivias/[category]/quiz/page.tsx
+import Link from 'next/link';
 import QuizGame from '@/components/trivias/QuizGame';
 import { getCategoryQuestions, getSubcategoryQuestions, Question } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
@@ -10,6 +11,14 @@ import triviaCategories from '@/config/triviaCategories.json';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type CategoryKey = keyof typeof triviaCategories;
+
+interface TriviaCategoryConfig {
+  title: string;
+  description: string;
+  keywords?: string[];
+  related?: string[];
+  displayName?: string;
+}
 
 interface QuizPageProps {
   params: Promise<{ category: string }>;
@@ -34,11 +43,7 @@ export async function generateMetadata({ params, searchParams }: QuizPageProps):
 
   // Use category config if available for richer context
   const categoryKey = category as CategoryKey;
-  const categoryConfig = triviaCategories[categoryKey] as {
-    title: string;
-    description: string;
-    keywords?: string[];
-  } | undefined;
+  const categoryConfig = triviaCategories[categoryKey] as TriviaCategoryConfig | undefined;
 
   const formattedCategory = categoryConfig?.title
     ?? category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -335,7 +340,7 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
     }
 
     const categoryKey = category as CategoryKey;
-    const categoryConfig = triviaCategories[categoryKey] as { title: string } | undefined;
+    const categoryConfig = triviaCategories[categoryKey] as TriviaCategoryConfig | undefined;
 
     const formattedCategory = categoryConfig?.title
       ?? category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -351,6 +356,15 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
       formattedCategory,
       formattedSubcategory,
     );
+    const relatedCategories = (categoryConfig?.related ?? [])
+      .map((relatedKey) => ({
+        key: relatedKey,
+        config: triviaCategories[relatedKey as CategoryKey] as TriviaCategoryConfig | undefined,
+      }))
+      .filter(
+        (item): item is { key: string; config: TriviaCategoryConfig } => Boolean(item.config)
+      )
+      .slice(0, 6);
 
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-4">
@@ -410,20 +424,45 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
           <div className="mt-10 pt-8 border-t border-gray-700">
             <p className="text-gray-400 text-sm text-center mb-4">
               Explore more in{' '}
-              <a
+              <Link
                 href={`/trivias/${category}`}
                 className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2"
               >
                 {formattedCategory} trivia
-              </a>
+              </Link>
               {' '}or browse all{' '}
-              <a
+              <Link
                 href="/trivias"
                 className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2"
               >
                 trivia categories
-              </a>.
+              </Link>.
             </p>
+
+            {relatedCategories.length > 0 && (
+              <div className="mt-6 rounded-2xl border border-gray-700 bg-gray-800/60 p-6">
+                <h2 className="text-xl font-bold text-white text-center">Related Trivia Categories</h2>
+                <p className="mt-2 text-center text-sm text-gray-400">
+                  Explore adjacent topics to discover more quizzes and strengthen topical paths across the site.
+                </p>
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {relatedCategories.map(({ key, config }) => (
+                    <Link
+                      key={key}
+                      href={`/trivias/${key}`}
+                      className="rounded-xl border border-gray-700 bg-gray-900/60 p-4 transition-colors hover:border-cyan-500/40 hover:bg-gray-900"
+                    >
+                      <p className="font-semibold text-white">
+                        {config.displayName || config.title}
+                      </p>
+                      <p className="mt-1 text-sm text-gray-400 line-clamp-2">
+                        {config.description}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 // lib/supabase.ts
 import { createClient } from '@supabase/supabase-js';
+import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -797,6 +798,7 @@ export interface SearchResult {
   type: 'category' | 'subcategory';
   slug: string;
   count: number;
+  parentCategory?: string;
 }
 
 export async function getSearchableItems(): Promise<SearchResult[]> {
@@ -804,7 +806,10 @@ export async function getSearchableItems(): Promise<SearchResult[]> {
     // Fetch from both views in parallel
     const [categories, subcategories] = await Promise.all([
       supabase.from('trivia_categories_view').select('category, question_count'),
-      supabase.from('trivia_subcategories_view').select('category, subcategory, question_count')
+      supabase
+        .from('trivia_subcategories_view')
+        .select('category, subcategory, question_count')
+        .gte('question_count', 10)
     ]);
 
     const results: SearchResult[] = [];
@@ -815,7 +820,7 @@ export async function getSearchableItems(): Promise<SearchResult[]> {
         results.push({
           name: c.category,
           type: 'category',
-          slug: `/trivias/${c.category.toLowerCase().replace(/\s+/g, '-')}`,
+          slug: `/trivias/${slugifyTriviaSegment(c.category)}`,
           count: c.question_count
         });
       });
@@ -827,9 +832,9 @@ export async function getSearchableItems(): Promise<SearchResult[]> {
         results.push({
           name: s.subcategory,
           type: 'subcategory',
-          // Link format: /trivias/[category]/[subcategory]
-          slug: `/trivias/${s.category.toLowerCase().replace(/\s+/g, '-')}/${s.subcategory.toLowerCase().replace(/\s+/g, '-')}`,
-          count: s.question_count
+          slug: `/trivias/${slugifyTriviaSegment(s.category)}/${slugifyTriviaSegment(s.subcategory)}`,
+          count: s.question_count,
+          parentCategory: s.category,
         });
       });
     }
