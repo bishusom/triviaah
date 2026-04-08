@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Pause, Play, RotateCcw } from 'lucide-react';
 import {
   createGame, updateGame, changeDirection, startGame, pauseGame,
   resetGame, nextLevel, type PacmanGame, type Direction,
@@ -24,6 +25,23 @@ export default function PacmanGame() {
       localStorage.setItem('pacman-highscore', game.score.toString());
     }
   }, [game.score, highScore]);
+
+  const handleAction = useCallback(() => {
+    setGame(g => {
+      if (g.gameState === 'ready') return startGame(g);
+      if (g.gameState === 'levelComplete') return nextLevel(g);
+      if (g.gameState === 'gameover') return resetGame(g);
+      return pauseGame(g);
+    });
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setGame(g => resetGame(g));
+  }, []);
+
+  const handleDirection = useCallback((dir: Direction) => {
+    setGame(g => changeDirection(g, dir));
+  }, []);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -159,13 +177,79 @@ export default function PacmanGame() {
         </div>
       </div>
       
-      <div className="relative border-4 border-blue-800">
-        <canvas ref={canvasRef} width={MAZE_WIDTH * TILE_SIZE} height={MAZE_HEIGHT * TILE_SIZE} />
+      <div className="relative w-full max-w-[560px] overflow-hidden rounded-xl border-4 border-blue-800">
+        <canvas
+          ref={canvasRef}
+          width={MAZE_WIDTH * TILE_SIZE}
+          height={MAZE_HEIGHT * TILE_SIZE}
+          className="h-auto w-full touch-none"
+        />
         {game.gameState !== 'playing' && (
           <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-yellow-400 text-2xl">
             {game.gameState.toUpperCase()}! PRESS ENTER
           </div>
         )}
+      </div>
+
+      <div className="mt-5 w-full max-w-[560px] rounded-2xl border border-blue-900/60 bg-blue-950/40 p-4 md:hidden">
+        <div className="mb-4 flex justify-center">
+          <button
+            type="button"
+            aria-label="Move up"
+            onClick={() => handleDirection('up')}
+            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-900/80 text-white active:scale-95 active:bg-blue-700"
+          >
+            <ArrowUp className="h-6 w-6" />
+          </button>
+        </div>
+        <div className="flex items-center justify-center gap-4">
+          <button
+            type="button"
+            aria-label="Move left"
+            onClick={() => handleDirection('left')}
+            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-900/80 text-white active:scale-95 active:bg-blue-700"
+          >
+            <ArrowLeft className="h-6 w-6" />
+          </button>
+          <button
+            type="button"
+            aria-label={game.gameState === 'playing' ? 'Pause game' : 'Start or continue'}
+            onClick={handleAction}
+            className="flex h-14 min-w-[5.5rem] items-center justify-center gap-2 rounded-2xl bg-yellow-500 px-4 text-black active:scale-95 active:bg-yellow-400"
+          >
+            {game.gameState === 'playing' ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+            <span className="text-sm font-bold">
+              {game.gameState === 'levelComplete' ? 'Next' : game.gameState === 'gameover' ? 'Retry' : game.gameState === 'playing' ? 'Pause' : 'Play'}
+            </span>
+          </button>
+          <button
+            type="button"
+            aria-label="Move right"
+            onClick={() => handleDirection('right')}
+            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-900/80 text-white active:scale-95 active:bg-blue-700"
+          >
+            <ArrowRight className="h-6 w-6" />
+          </button>
+        </div>
+        <div className="mt-4 flex items-center justify-center gap-4">
+          <button
+            type="button"
+            aria-label="Reset game"
+            onClick={handleReset}
+            className="flex h-12 min-w-[5.5rem] items-center justify-center gap-2 rounded-2xl bg-slate-700 px-4 text-white active:scale-95 active:bg-slate-600"
+          >
+            <RotateCcw className="h-4 w-4" />
+            <span className="text-sm font-semibold">Reset</span>
+          </button>
+          <button
+            type="button"
+            aria-label="Move down"
+            onClick={() => handleDirection('down')}
+            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-900/80 text-white active:scale-95 active:bg-blue-700"
+          >
+            <ArrowDown className="h-6 w-6" />
+          </button>
+        </div>
       </div>
     </div>
   );

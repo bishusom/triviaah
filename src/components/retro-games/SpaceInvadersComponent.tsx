@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { ArrowLeft, ArrowRight, Play, Rocket } from 'lucide-react';
 import {
   createGame, updateGame, fireBullet, type SpaceInvadersGame,
   CANVAS_WIDTH, CANVAS_HEIGHT
@@ -12,6 +13,26 @@ export default function SpaceInvaders() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const keysPressed = useRef<Record<string, boolean>>({});
   const requestRef = useRef<number | null>(null);
+
+  const handleStart = useCallback(() => {
+    setGame(prev => {
+      if (prev.gameState === 'ready' || prev.gameState === 'gameover') {
+        return { ...createGame(), gameState: 'playing' };
+      }
+      if (prev.gameState === 'levelComplete') {
+        return { ...createGame(), score: prev.score, level: prev.level + 1, gameState: 'playing' };
+      }
+      return prev;
+    });
+  }, []);
+
+  const handleTouchControl = useCallback((key: 'ArrowLeft' | 'ArrowRight', pressed: boolean) => {
+    keysPressed.current[key] = pressed;
+  }, []);
+
+  const handleFire = useCallback(() => {
+    setGame(prev => fireBullet(prev));
+  }, []);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     // Define the keys that should not trigger browser scrolling
@@ -104,12 +125,12 @@ export default function SpaceInvaders() {
         <div>LIVES: {'❤'.repeat(game.lives)}</div>
       </div>
 
-      <div className="relative">
+      <div className="relative w-full max-w-[560px]">
         <canvas 
           ref={canvasRef} 
           width={CANVAS_WIDTH} 
           height={CANVAS_HEIGHT} 
-          className="border-2 border-green-900 bg-black shadow-[0_0_20px_rgba(0,255,0,0.1)]"
+          className="h-auto w-full touch-none border-2 border-green-900 bg-black shadow-[0_0_20px_rgba(0,255,0,0.1)]"
         />
         
         {game.gameState !== 'playing' && (
@@ -124,6 +145,55 @@ export default function SpaceInvaders() {
             </button>
           </div>
         )}
+      </div>
+
+      <div className="mt-5 flex w-full max-w-[560px] items-center justify-center gap-3 md:hidden">
+        <button
+          type="button"
+          aria-label="Move left"
+          onTouchStart={() => handleTouchControl('ArrowLeft', true)}
+          onTouchEnd={() => handleTouchControl('ArrowLeft', false)}
+          onTouchCancel={() => handleTouchControl('ArrowLeft', false)}
+          onMouseDown={() => handleTouchControl('ArrowLeft', true)}
+          onMouseUp={() => handleTouchControl('ArrowLeft', false)}
+          onMouseLeave={() => handleTouchControl('ArrowLeft', false)}
+          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-700 text-white active:scale-95 active:bg-green-600"
+        >
+          <ArrowLeft className="h-6 w-6" />
+        </button>
+        <button
+          type="button"
+          aria-label="Shoot"
+          onClick={handleFire}
+          className="flex h-14 min-w-[6rem] items-center justify-center gap-2 rounded-2xl bg-pink-600 px-4 text-white active:scale-95 active:bg-pink-500"
+        >
+          <Rocket className="h-5 w-5" />
+          <span className="text-sm font-semibold">Fire</span>
+        </button>
+        <button
+          type="button"
+          aria-label="Move right"
+          onTouchStart={() => handleTouchControl('ArrowRight', true)}
+          onTouchEnd={() => handleTouchControl('ArrowRight', false)}
+          onTouchCancel={() => handleTouchControl('ArrowRight', false)}
+          onMouseDown={() => handleTouchControl('ArrowRight', true)}
+          onMouseUp={() => handleTouchControl('ArrowRight', false)}
+          onMouseLeave={() => handleTouchControl('ArrowRight', false)}
+          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-700 text-white active:scale-95 active:bg-green-600"
+        >
+          <ArrowRight className="h-6 w-6" />
+        </button>
+        <button
+          type="button"
+          aria-label="Start or restart game"
+          onClick={handleStart}
+          className="flex h-14 min-w-[6rem] items-center justify-center gap-2 rounded-2xl border border-green-400 bg-black px-4 text-green-300 active:scale-95 active:bg-green-950"
+        >
+          <Play className="h-5 w-5" />
+          <span className="text-sm font-semibold">
+            {game.gameState === 'playing' ? 'Live' : game.gameState === 'levelComplete' ? 'Next' : 'Start'}
+          </span>
+        </button>
       </div>
     </div>
   );

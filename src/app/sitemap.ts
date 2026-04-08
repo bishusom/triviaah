@@ -26,6 +26,8 @@ const PRIORITY = {
   MINIMAL: 0.3,
 } as const
 
+const VIRTUAL_TRIVIA_CATEGORIES = ['picture-clues'] as const
+
 // ─── Helpers (module-level — not nested inside sitemap()) ─────────────────────
 // Previously these were nested inside sitemap(), which caused scoping issues
 // and made them harder to test. Move them to the top level.
@@ -188,7 +190,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ✅ FIX: Category pages (/trivias/science) and quiz pages (/trivias/science/quiz)
   // are included, but NOT subcategory query-string URLs.
   // Subcategory routes are only included if you've created actual page routes for them.
-  const triviaCategories = await getCategoriesWithMinQuestions(10)
+  const triviaCategories = Array.from(
+    new Set([...(await getCategoriesWithMinQuestions(10)), ...VIRTUAL_TRIVIA_CATEGORIES])
+  )
 
   const triviaCategoryPages: MetadataRoute.Sitemap = triviaCategories.map(category => ({
     url: `${baseUrl}/trivias/${category}`,

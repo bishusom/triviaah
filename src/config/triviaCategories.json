@@ -390,5 +390,61 @@
     "keywords": ["video games", "gaming", "esports", "retro gaming"],
     "ogImage": "/imgs/categories/video-games.webp",
     "displayName": "Video Games"
+  },
+  "computers": {
+    "title": "Computers",
+    "description": "Test your knowledge of computer history, hardware, software, programming, and internet culture, from early machines to modern computing breakthroughs.",
+    "longDescription": "Our computers trivia category spans the evolution of computing from room-sized mainframes to cloud-native platforms, smartphones, and AI tools. Expect questions on operating systems, famous pioneers, core hardware concepts, and the software that transformed everyday life.",
+    "learningPoints": [
+      "Identify major milestones in computer and internet history.",
+      "Understand the basics of hardware, software, and programming concepts.",
+      "Recognize influential companies, products, and computing pioneers."
+    ],
+    "related": ["science", "business", "video-games"],
+    "keywords": ["computers", "technology", "programming", "hardware", "software"],
+    "ogImage": "/imgs/categories/computers.webp",
+    "displayName": "Computers"
+  },
+  "economics": {
+    "title": "Economics",
+    "description": "Challenge yourself with questions about economic theory, markets, trade, money, and the thinkers and institutions that shape the global economy.",
+    "longDescription": "Economics trivia explores how people, firms, and governments make decisions under scarcity. From inflation and recessions to trade policy, famous economists, and market behavior, this category is built for players who want to test both textbook knowledge and real-world economic intuition.",
+    "learningPoints": [
+      "Understand core economic ideas such as supply and demand, inflation, and trade.",
+      "Recognize major economists, institutions, and turning points in economic history.",
+      "Connect economic principles to business, finance, and public policy."
+    ],
+    "related": ["business", "law-politics-government", "history"],
+    "keywords": ["economics", "markets", "finance", "trade", "macroeconomics"],
+    "ogImage": "/imgs/categories/economics.webp",
+    "displayName": "Economics"
+  },
+  "architecture": {
+    "title": "Architecture",
+    "description": "Explore questions about famous buildings, architectural styles, iconic architects, urban design, and landmark structures from around the world.",
+    "longDescription": "Architecture trivia covers the structures and design movements that define civilizations and skylines. From classical temples and Gothic cathedrals to modernist icons and contemporary skyscrapers, this category blends design history, engineering, and cultural context.",
+    "learningPoints": [
+      "Identify major architectural styles, movements, and signature features.",
+      "Recognize landmark buildings, cities, and the architects behind them.",
+      "Understand how architecture reflects culture, technology, and historical change."
+    ],
+    "related": ["arts", "geography", "history"],
+    "keywords": ["architecture", "buildings", "architects", "design", "landmarks"],
+    "ogImage": "/imgs/categories/architecture.webp",
+    "displayName": "Architecture"
+  },
+  "picture-clues": {
+    "title": "Picture Clues",
+    "description": "Play a visual trivia challenge powered by image-based questions drawn from across the trivia bank. Every round serves 10 random questions that already include pictures.",
+    "longDescription": "Picture Clues is a cross-category visual mode rather than a standalone database category. Instead of drawing from one topic, it assembles a fresh set of image-backed trivia questions from across the site, making it ideal for players who want a more visual and unpredictable challenge.",
+    "learningPoints": [
+      "Interpret visual hints and connect them to the right answer quickly.",
+      "Test your knowledge across multiple categories in one mixed-image round.",
+      "Build recall using landmarks, people, objects, and scenes as clues."
+    ],
+    "related": ["geography", "arts", "movies", "celebrities"],
+    "keywords": ["picture clues", "image trivia", "visual quiz", "photo quiz"],
+    "ogImage": "/imgs/categories/picture-clues.webp",
+    "displayName": "Picture Clues"
   }
 }

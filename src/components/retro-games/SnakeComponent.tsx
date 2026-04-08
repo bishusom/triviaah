@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Pause, Play, RotateCcw } from 'lucide-react';
 
 type Direction = 'up' | 'down' | 'left' | 'right';
 type GameState = 'playing' | 'paused' | 'gameover';
@@ -27,6 +28,27 @@ export default function SnakeComponent() {
   const [game, setGame] = useState<SnakeGame>(() => createGame());
   const [gameOver, setGameOver] = useState(false);
 
+  const handleDirection = useCallback((direction: Direction) => {
+    setGame(prev => changeDirection(prev, direction));
+  }, []);
+
+  const handleRestart = useCallback(() => {
+    setGame(createGame());
+    setGameOver(false);
+  }, []);
+
+  const handleTogglePlay = useCallback(() => {
+    if (game.gameState === 'gameover') {
+      handleRestart();
+      return;
+    }
+
+    setGame(prev => ({
+      ...prev,
+      gameState: prev.gameState === 'playing' ? 'paused' : 'playing',
+    }));
+  }, [game.gameState, handleRestart]);
+
   // Keyboard controls - FIXED
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -44,8 +66,7 @@ export default function SnakeComponent() {
       // Enter to restart (any state)
       if (e.key === 'Enter') {
         e.preventDefault();
-        setGame(createGame());
-        setGameOver(false);
+        handleRestart();
         return;
       }
 
@@ -82,13 +103,13 @@ export default function SnakeComponent() {
       }
       
       if (newDirection) {
-        setGame(prev => changeDirection(prev, newDirection!));
+        setGame(prev => changeDirection(prev, newDirection));
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [game.gameState]);
+  }, [game.gameState, handleRestart]);
 
   // Game loop
   useEffect(() => {
@@ -221,13 +242,13 @@ export default function SnakeComponent() {
         {game.gameState === 'paused' && (
           <div className="mb-4">
             <button
-              onClick={() => setGame(prev => ({ ...prev, gameState: 'playing' }))}
+              onClick={handleTogglePlay}
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold"
             >
-              Press SPACE to Start
+              Tap to Start
             </button>
             <div className="text-gray-400 text-sm mt-2">
-              Use arrow keys or WASD to move
+              Use arrows, WASD, or the mobile controls below
             </div>
           </div>
         )}
@@ -236,16 +257,74 @@ export default function SnakeComponent() {
           <div className="mb-4">
             <div className="text-red-500 text-xl font-bold mb-2">Game Over!</div>
             <button
-              onClick={() => {
-                setGame(createGame());
-                setGameOver(false);
-              }}
+              onClick={handleRestart}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold"
             >
-              Press ENTER to Restart
+              Restart
             </button>
           </div>
         )}
+
+        <div className="mt-6 rounded-2xl border border-gray-700 bg-gray-800/70 p-4 md:hidden">
+          <div className="mb-4 flex justify-center">
+            <button
+              type="button"
+              aria-label="Move up"
+              onClick={() => handleDirection('up')}
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-700 text-white active:scale-95 active:bg-green-600"
+            >
+              <ArrowUp className="h-6 w-6" />
+            </button>
+          </div>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              type="button"
+              aria-label="Move left"
+              onClick={() => handleDirection('left')}
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-700 text-white active:scale-95 active:bg-green-600"
+            >
+              <ArrowLeft className="h-6 w-6" />
+            </button>
+            <button
+              type="button"
+              aria-label={game.gameState === 'playing' ? 'Pause game' : 'Start game'}
+              onClick={handleTogglePlay}
+              className="flex h-14 min-w-[5rem] items-center justify-center gap-2 rounded-2xl bg-green-600 px-4 text-white active:scale-95 active:bg-green-500"
+            >
+              {game.gameState === 'playing' ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+              <span className="text-sm font-semibold">
+                {game.gameState === 'gameover' ? 'Retry' : game.gameState === 'playing' ? 'Pause' : 'Play'}
+              </span>
+            </button>
+            <button
+              type="button"
+              aria-label="Move right"
+              onClick={() => handleDirection('right')}
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-700 text-white active:scale-95 active:bg-green-600"
+            >
+              <ArrowRight className="h-6 w-6" />
+            </button>
+          </div>
+          <div className="mt-4 flex items-center justify-center gap-4">
+            <button
+              type="button"
+              aria-label="Restart game"
+              onClick={handleRestart}
+              className="flex h-12 min-w-[5rem] items-center justify-center gap-2 rounded-2xl bg-blue-600 px-4 text-white active:scale-95 active:bg-blue-500"
+            >
+              <RotateCcw className="h-4 w-4" />
+              <span className="text-sm font-semibold">Reset</span>
+            </button>
+            <button
+              type="button"
+              aria-label="Move down"
+              onClick={() => handleDirection('down')}
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-700 text-white active:scale-95 active:bg-green-600"
+            >
+              <ArrowDown className="h-6 w-6" />
+            </button>
+          </div>
+        </div>
         
         <div className="text-gray-400 text-sm mt-4">
           <div>SPACE: {game.gameState === 'playing' ? 'Pause' : 'Start'}</div>

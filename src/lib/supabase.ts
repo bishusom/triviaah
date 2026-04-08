@@ -20,6 +20,8 @@ export type Question = {
   year?: string; // For "today-in-history" questions
 };
 
+const PICTURE_CLUES_CATEGORY = 'picture-clues';
+
 // Define database question type
 interface DbQuestion {
   id: string;
@@ -56,6 +58,91 @@ function getClientDateString(customDate?: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+function isPictureCluesCategory(category: string): boolean {
+  return category === PICTURE_CLUES_CATEGORY;
+}
+
+function applyTriviaQuestionFilters(
+  query: any,
+  {
+    category,
+    subcategory,
+    requireImage = false,
+    excludeIds = [],
+  }: {
+    category?: string;
+    subcategory?: string;
+    requireImage?: boolean;
+    excludeIds?: string[];
+  }
+) {
+  let nextQuery = query;
+
+  if (category && !isPictureCluesCategory(category)) {
+    nextQuery = nextQuery.eq('category', category);
+  }
+
+  if (subcategory) {
+    nextQuery = nextQuery.eq('subcategory', subcategory);
+  }
+
+  if (requireImage || (category && isPictureCluesCategory(category))) {
+    nextQuery = nextQuery.not('image_url', 'is', null);
+  }
+
+  if (excludeIds.length > 0) {
+    nextQuery = nextQuery.not('id', 'in', `(${excludeIds.map((id) => `"${id}"`).join(',')})`);
+  }
+
+  return nextQuery;
+}
+
+async function getRandomizedTriviaQuestionPool(
+  count: number,
+  filters: {
+    category?: string;
+    subcategory?: string;
+    requireImage?: boolean;
+  }
+): Promise<DbQuestion[]> {
+  const randomSeed = Math.random();
+  const poolLimit = Math.max(count * 3, count);
+
+  const firstPassQuery = applyTriviaQuestionFilters(
+    supabase.from('trivia_questions').select('*'),
+    filters
+  )
+    .gt('random_index', randomSeed)
+    .order('random_index', { ascending: true })
+    .limit(poolLimit);
+
+  const { data: firstPass, error: firstPassError } = await firstPassQuery;
+
+  if (firstPassError) throw firstPassError;
+
+  const initialQuestions = firstPass || [];
+  if (initialQuestions.length >= poolLimit) {
+    return initialQuestions;
+  }
+
+  const secondPassQuery = applyTriviaQuestionFilters(
+    supabase.from('trivia_questions').select('*'),
+    {
+      ...filters,
+      excludeIds: initialQuestions.map((question: DbQuestion) => question.id),
+    }
+  )
+    .lte('random_index', randomSeed)
+    .order('random_index', { ascending: true })
+    .limit(Math.max(poolLimit - initialQuestions.length, 0));
+
+  const { data: secondPass, error: secondPassError } = await secondPassQuery;
+
+  if (secondPassError) throw secondPassError;
+
+  return [...initialQuestions, ...(secondPass || [])];
+}
+
 export async function getCategoriesWithMinQuestions(minQuestions: number = 50): Promise<string[]> {
   try {
     const { data, error } = await supabase
@@ -75,17 +162,7 @@ export async function getCategoriesWithMinQuestions(minQuestions: number = 50): 
 
 export async function getCategoryQuestions(category: string, count: number): Promise<Question[]> {
   try {
-    const randomSeed = Math.random();
-    // Use the random_index to get a random set
-    const { data: questions, error } = await supabase
-      .from('trivia_questions')
-      .select('*')
-      .eq('category', category)
-      .gt('random_index', randomSeed)
-      .order('random_index', { ascending: true })
-      .limit(count * 3); // Get more for distribution
-      
-    if (error) throw error;
+    const questions = await getRandomizedTriviaQuestionPool(count, { category });
     if (!questions || questions.length === 0) return [];
 
     // Categorize questions by difficulty
@@ -157,12 +234,14 @@ export async function getMoreQuestions(
   limitCount: number = 10
 ): Promise<{ questions: Question[], nextOffset: number }> {
   try {
-    const { data: questions, error } = await supabase
-      .from('trivia_questions')
-      .select('*')
-      .eq('category', category)
+    const query = applyTriviaQuestionFilters(
+      supabase.from('trivia_questions').select('*'),
+      { category }
+    )
       .order('random_index', { ascending: true })
       .range(offset, offset + limitCount - 1);
+
+    const { data: questions, error } = await query;
 
     if (error) throw error;
 
@@ -200,6 +279,10 @@ export async function getSubcategoriesWithMinQuestions(
   minQuestions: number = 30
 ): Promise<Subcategory[]> {
   try {
+    if (isPictureCluesCategory(category)) {
+      return [];
+    }
+
     const { data, error } = await supabase
       .from('trivia_subcategories_view')
       .select('subcategory, question_count')
@@ -222,19 +305,7 @@ export async function getSubcategoryQuestions(
   count: number
 ): Promise<Question[]> {
   try {
-    const randomSeed = Math.random();
-    
-    const { data: questions, error } = await supabase
-      .from('trivia_questions')
-      .select('*')
-      .eq('category', category)
-      .eq('subcategory', subcategory)
-      // Use the random_index to get a random set
-      .gt('random_index', randomSeed)
-      .order('random_index', { ascending: true })
-      .limit(count * 3); // Get more for distribution
-
-    if (error) throw error;
+    const questions = await getRandomizedTriviaQuestionPool(count, { category, subcategory });
     if (!questions || questions.length === 0) return [];
 
     // Apply the same difficulty distribution logic as getCategoryQuestions

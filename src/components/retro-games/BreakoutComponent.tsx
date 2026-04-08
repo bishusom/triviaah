@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { ArrowLeft, ArrowRight, Play, RotateCcw } from 'lucide-react';
 import {
   createGame, updateGame, serveBall, type BreakoutGame,
   CANVAS_WIDTH, CANVAS_HEIGHT
@@ -12,23 +13,16 @@ export default function Breakout() {
   const keysPressed = useRef<Record<string, boolean>>({});
   const requestRef = useRef<number | undefined>(undefined);
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if ([' ', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-      e.preventDefault(); // Stop page scrolling
-    }
-    keysPressed.current[e.key] = true;
-
-    if (e.key === ' ' || e.key === 'Enter') {
-      setGame(current => {
-        if (current.gameState === 'ready') return serveBall(current);
-        if (current.gameState === 'gameover' || current.gameState === 'win') return createGame();
-        return current;
-      });
-    }
+  const handleAction = useCallback(() => {
+    setGame(current => {
+      if (current.gameState === 'ready') return serveBall(current);
+      if (current.gameState === 'gameover' || current.gameState === 'win') return createGame();
+      return current;
+    });
   }, []);
 
-  const handleKeyUp = useCallback((e: KeyboardEvent) => {
-    keysPressed.current[e.key] = false;
+  const handleTouchControl = useCallback((key: 'ArrowLeft' | 'ArrowRight', pressed: boolean) => {
+    keysPressed.current[key] = pressed;
   }, []);
 
   // HOOK 1: Keyboard Listeners
@@ -103,8 +97,8 @@ export default function Breakout() {
         <span className="text-red-400">{'❤'.repeat(game.lives)}</span>
       </div>
 
-      <div className="relative border-4 border-gray-700 rounded-lg shadow-2xl overflow-hidden">
-        <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} className="bg-black" />
+      <div className="relative w-full max-w-[480px] overflow-hidden rounded-lg border-4 border-gray-700 shadow-2xl">
+        <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} className="h-auto w-full touch-none bg-black" />
         
         {game.gameState !== 'playing' && (
           <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center p-6">
@@ -117,6 +111,46 @@ export default function Breakout() {
             </p>
           </div>
         )}
+      </div>
+
+      <div className="mt-5 flex w-full max-w-[480px] items-center justify-center gap-3 md:hidden">
+        <button
+          type="button"
+          aria-label="Move paddle left"
+          onTouchStart={() => handleTouchControl('ArrowLeft', true)}
+          onTouchEnd={() => handleTouchControl('ArrowLeft', false)}
+          onTouchCancel={() => handleTouchControl('ArrowLeft', false)}
+          onMouseDown={() => handleTouchControl('ArrowLeft', true)}
+          onMouseUp={() => handleTouchControl('ArrowLeft', false)}
+          onMouseLeave={() => handleTouchControl('ArrowLeft', false)}
+          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-700 text-white active:scale-95 active:bg-sky-600"
+        >
+          <ArrowLeft className="h-6 w-6" />
+        </button>
+        <button
+          type="button"
+          aria-label={game.gameState === 'ready' ? 'Launch ball' : 'Restart game'}
+          onClick={handleAction}
+          className="flex h-14 min-w-[7rem] items-center justify-center gap-2 rounded-2xl bg-orange-600 px-4 text-white active:scale-95 active:bg-orange-500"
+        >
+          {game.gameState === 'ready' ? <Play className="h-5 w-5" /> : <RotateCcw className="h-5 w-5" />}
+          <span className="text-sm font-semibold">
+            {game.gameState === 'ready' ? 'Launch' : game.gameState === 'playing' ? 'Playing' : 'Restart'}
+          </span>
+        </button>
+        <button
+          type="button"
+          aria-label="Move paddle right"
+          onTouchStart={() => handleTouchControl('ArrowRight', true)}
+          onTouchEnd={() => handleTouchControl('ArrowRight', false)}
+          onTouchCancel={() => handleTouchControl('ArrowRight', false)}
+          onMouseDown={() => handleTouchControl('ArrowRight', true)}
+          onMouseUp={() => handleTouchControl('ArrowRight', false)}
+          onMouseLeave={() => handleTouchControl('ArrowRight', false)}
+          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-700 text-white active:scale-95 active:bg-sky-600"
+        >
+          <ArrowRight className="h-6 w-6" />
+        </button>
       </div>
     </div>
   );
