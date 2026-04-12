@@ -41,7 +41,7 @@ export function generateSudokuMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/sudoku.webp',
+          url: '/imgs/number-puzzles/sudoku.webp',
           width: 1200,
           height: 630,
           alt: 'Free Sudoku Puzzles Online - Daily Sudoku Games & Challenges'
@@ -54,7 +54,7 @@ export function generateSudokuMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Free Sudoku Puzzles Online | Daily Sudoku Games & Challenges | Triviaah',
       description: 'Play free Sudoku puzzles online with daily challenges. Enjoy classic 9x9 Sudoku games with multiple difficulty levels. One of the best free Sudoku websites with no registration required.',
-      images: ['/imgs/sudoku.webp'],
+      images: ['/imgs/number-puzzles/sudoku.webp'],
       site: '@elitetrivias',
     },
     robots: {

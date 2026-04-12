@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import Script from 'next/script';
 import { getPostData } from '@/lib/markdown';
 import { Twitter, Linkedin, Facebook, Share2 } from 'lucide-react';
 import CopyLinkButton from '@/components/blog/CopyLinkButton';
@@ -14,25 +15,43 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!post) return { title: 'Post Not Found' };
 
+  const postUrl = `https://triviaah.com/blog/${slug}`;
+  const imageUrl = post.image || '/imgs/blog-card.webp';
+  const description =
+    post.excerpt || `Read our latest deep dive into ${post.title}. Professional trivia insights and educational content.`;
+
   return {
     title: `${post.title} | Triviaah Blog`,
-    description: post.excerpt || `Read our latest deep dive into ${post.title}. Professional trivia insights and educational content.`,
+    description,
     alternates: {
-      canonical: `https://triviaah.com/blog/${slug}`,
+      canonical: postUrl,
     },
+    authors: [{ name: 'Triviaah' }],
     openGraph: {
       title: post.title,
-      description: post.excerpt,
-      url: `https://triviaah.com/blog/${slug}`,
+      description,
+      url: postUrl,
+      siteName: 'Triviaah',
       type: 'article',
-      publishedTime: post.date,
+      publishedTime: post.isoDate || post.date,
       images: [
         {
-          url: post.image || '/default-blog-og.jpg',
+          url: imageUrl,
           width: 1200,
           height: 630,
+          alt: post.header || post.title,
         },
       ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description,
+      images: [imageUrl],
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }
@@ -40,6 +59,33 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await getPostData(slug);
+  const postUrl = `https://triviaah.com/blog/${post.slug}`;
+  const imageUrl = post.image || 'https://triviaah.com/imgs/blog-card.webp';
+  const articleStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.header || post.title,
+    name: post.title,
+    description:
+      post.excerpt || `Read our latest deep dive into ${post.title}. Professional trivia insights and educational content.`,
+    url: postUrl,
+    mainEntityOfPage: postUrl,
+    image: [imageUrl],
+    datePublished: post.isoDate || post.date,
+    dateModified: post.isoDate || post.date,
+    author: {
+      '@type': 'Organization',
+      name: 'Triviaah',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Triviaah',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://triviaah.com/imgs/logo.webp',
+      },
+    },
+  };
 
   // Split HTML content at paragraph tags to inject an ad
   const contentParts = post.contentHtml.split('</p>');
@@ -50,6 +96,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white">
+      <Script
+        id="blog-post-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
+      />
+
       <nav className="border-b border-gray-800">
         <div className="container mx-auto px-4 py-4">
           <Link href="/blog" className="text-purple-400 hover:text-purple-300">← Back to Blog</Link>
@@ -111,7 +163,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <div className="flex items-center gap-2">
                 {/* Twitter Share */}
                 <a
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.header)}&url=${encodeURIComponent(`https://yourdomain.com/blog/${post.slug}`)}`}
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.header)}&url=${encodeURIComponent(postUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-gray-800 hover:bg-blue-500 text-white px-4 py-2 rounded-lg border border-gray-700 hover:border-blue-400 transition-all duration-300 group"
@@ -123,7 +175,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
                 {/* LinkedIn Share */}
                 <a
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://yourdomain.com/blog/${post.slug}`)}`}
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-gray-800 hover:bg-blue-700 text-white px-4 py-2 rounded-lg border border-gray-700 hover:border-blue-600 transition-all duration-300 group"
@@ -135,7 +187,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
                 {/* Facebook Share */}
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://yourdomain.com/blog/${post.slug}`)}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-gray-800 hover:bg-blue-600 text-white px-4 py-2 rounded-lg border border-gray-700 hover:border-blue-500 transition-all duration-300 group"

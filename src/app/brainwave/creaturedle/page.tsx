@@ -42,13 +42,13 @@ function CreaturedleContent() {
       '@type': 'WebPage',
       name: 'Creaturedle - Daily Animal Guessing Game | Triviaah',
       description: 'Guess the animal from its 6 attributes: class, habitat, diet, size, activity, and body covering. Wordle-style animal guessing game for nature lovers.',
-      url: 'https://triviaah.com/creaturedle',
+      url: 'https://triviaah.com/brainwave/creaturedle',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Creaturedle',
         description: 'Daily animal guessing game where players identify animals based on 6 key attributes: class, habitat, diet, size, activity, and body covering.',
-        gameLocation: 'https://triviaah.com/creaturedle',
+        gameLocation: 'https://triviaah.com/brainwave/creaturedle',
         characterAttribute: 'Animals, Wildlife, Biology, Nature, Science Education'
       }
     },

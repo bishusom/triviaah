@@ -1,5 +1,41 @@
-import Link from 'next/link';
-import { ArrowLeft, Target, Users, Star, Heart } from 'lucide-react';
+import type { Metadata } from 'next';
+import { Target, Users, Star, Heart } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'About Triviaah | Free Trivia and Quiz Games',
+  description:
+    'Learn about Triviaah, our mission, and how we build free trivia games, daily quizzes, and knowledge challenges for players worldwide.',
+  alternates: {
+    canonical: 'https://triviaah.com/about',
+  },
+  openGraph: {
+    title: 'About Triviaah | Free Trivia and Quiz Games',
+    description:
+      'Learn about Triviaah, our mission, and how we build free trivia games, daily quizzes, and knowledge challenges for players worldwide.',
+    url: 'https://triviaah.com/about',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/Triviaah-og.webp',
+        width: 1200,
+        height: 630,
+        alt: 'About Triviaah',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Triviaah | Free Trivia and Quiz Games',
+    description:
+      'Learn about Triviaah, our mission, and how we build free trivia games, daily quizzes, and knowledge challenges for players worldwide.',
+    images: ['/imgs/Triviaah-og.webp'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function AboutPage() {
   return (

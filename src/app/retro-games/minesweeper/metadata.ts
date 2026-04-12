@@ -1,4 +1,4 @@
-// src/app/brainwave/minesweeper/metadata.ts
+// src/app/retro-games/minesweeper/metadata.ts
 import { Metadata } from 'next';
 
 export function generateMinesweeperMetadata(): Metadata {
@@ -26,16 +26,16 @@ export function generateMinesweeperMetadata(): Metadata {
       'thinking game'
     ],
     alternates: {
-      canonical: 'https://triviaah.com/brainwave/minesweeper',
+      canonical: 'https://triviaah.com/retro-games/minesweeper',
     },
     openGraph: {
       title: 'Minesweeper - Classic Logic Puzzle | Triviaah',
       description: 'Play the classic Minesweeper game with modern features. Clear minefields using logic, strategy, and careful planning with multiple difficulty levels.',
-      url: 'https://triviaah.com/brainwave/minesweeper',
+      url: 'https://triviaah.com/retro-games/minesweeper',
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/brainwave/minesweeper.webp',
+          url: '/imgs/retro-games/minesweeper.webp',
           width: 1200,
           height: 630,
           alt: 'Minesweeper - Classic Logic Puzzle Game'
@@ -48,7 +48,7 @@ export function generateMinesweeperMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Minesweeper - Classic Logic Puzzle | Triviaah',
       description: 'Play the classic Minesweeper game with modern features.',
-      images: ['/imgs/brainwave/minesweeper.webp'],
+      images: ['/imgs/retro-games/minesweeper.webp'],
       site: '@elitetrivias',
     }
   };

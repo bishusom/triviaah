@@ -43,13 +43,13 @@ function CapitaleContent() {
       '@type': 'WebPage',
       name: 'Capitale - Daily Capital City Guessing Game | Triviaah',
       description: 'Guess the world capital city in 6 tries! Daily geography puzzle game similar to Wordle but with capital cities.',
-      url: 'https://triviaah.com/capitale',
+      url: 'https://triviaah.com/brainwave/capitale',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Capitale',
         description: 'Daily capital city guessing game where players have 6 attempts to guess the target capital city.',
-        gameLocation: 'https://triviaah.com/capitale',
+        gameLocation: 'https://triviaah.com/brainwave/capitale',
         characterAttribute: 'Geography, Capital Cities, World Knowledge'
       }
     },

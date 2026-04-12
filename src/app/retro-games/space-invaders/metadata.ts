@@ -1,4 +1,4 @@
-// src/app/brainwave/space-invaders/metadata.ts
+// src/app/retro-games/space-invaders/metadata.ts
 import { Metadata } from 'next';
 
 export function generateSpaceInvadersMetadata(): Metadata {
@@ -31,16 +31,16 @@ export function generateSpaceInvadersMetadata(): Metadata {
       'shield defense'
     ],
     alternates: {
-      canonical: 'https://triviaah.com/brainwave/space-invaders',
+      canonical: 'https://triviaah.com/retro-games/space-invaders',
     },
     openGraph: {
       title: 'Space Invaders - Classic Arcade Game | Triviaah',
       description: 'Play the classic Space Invaders arcade game online. Defend Earth from alien invaders in this iconic 1978 shooter game with increasing difficulty waves.',
-      url: 'https://triviaah.com/brainwave/space-invaders',
+      url: 'https://triviaah.com/retro-games/space-invaders',
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/brainwave/space-invaders.webp',
+          url: '/imgs/retro-games/space-invaders.webp',
           width: 1200,
           height: 630,
           alt: 'Space Invaders - Classic Arcade Game'
@@ -53,7 +53,7 @@ export function generateSpaceInvadersMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Space Invaders - Classic Arcade Game | Triviaah',
       description: 'Play the classic Space Invaders arcade game online.',
-      images: ['/imgs/brainwave/space-invaders.webp'],
+      images: ['/imgs/retro-games/space-invaders.webp'],
       site: '@elitetrivias',
     }
   };

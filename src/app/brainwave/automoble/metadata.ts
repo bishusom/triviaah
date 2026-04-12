@@ -37,7 +37,7 @@ export function generateAutomobileMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs//brainwave/automoble-og.webp',
+          url: '/imgs/brainwave/automoble.webp',
           width: 1200,
           height: 630,
           alt: 'Automobile - Daily Vehicle Guessing Game'
@@ -50,7 +50,7 @@ export function generateAutomobileMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Automobile - Daily Vehicle Guessing Game | Triviaah',
       description: 'Guess the vehicle from progressive clues in 6 tries! Wordle-style letter feedback. Unlock more hints with each wrong guess.',
-      images: ['/imgs//brainwave/automoble.webp'],
+      images: ['/imgs/brainwave/automoble.webp'],
       site: '@elitetrivias',
     },
     robots: {

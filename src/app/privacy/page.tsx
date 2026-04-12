@@ -1,5 +1,41 @@
-import Link from 'next/link';
-import { ArrowLeft, Shield, Eye, Lock, RefreshCw } from 'lucide-react';
+import type { Metadata } from 'next';
+import { Shield, Eye, Lock, RefreshCw } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy | Triviaah',
+  description:
+    'Read the Triviaah privacy policy to understand what information we collect, how we use it, and how we protect player data.',
+  alternates: {
+    canonical: 'https://triviaah.com/privacy',
+  },
+  openGraph: {
+    title: 'Privacy Policy | Triviaah',
+    description:
+      'Read the Triviaah privacy policy to understand what information we collect, how we use it, and how we protect player data.',
+    url: 'https://triviaah.com/privacy',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/Triviaah-og.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Triviaah Privacy Policy',
+      },
+    ],
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Privacy Policy | Triviaah',
+    description:
+      'Read the Triviaah privacy policy to understand what information we collect, how we use it, and how we protect player data.',
+    images: ['/imgs/Triviaah-og.webp'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function PrivacyPage() {
   return (

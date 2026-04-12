@@ -43,13 +43,13 @@ function CelebrileContent() {
       '@type': 'WebPage',
       name: 'Celebrile - Daily Celebrity Guessing Game | Triviaah',
       description: 'Guess the celebrity from progressive clues with limited attempts! Wordle-style feedback on name letters. Unlock more hints with each wrong guess.',
-      url: 'https://triviaah.com/celebrile',
+      url: 'https://triviaah.com/brainwave/celebrile',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
         name: 'Celebrile',
         description: 'Daily celebrity guessing game where players have 6 attempts to guess the target celebrity using progressive clues and letter feedback.',
-        gameLocation: 'https://triviaah.com/celebrile',
+        gameLocation: 'https://triviaah.com/brainwave/celebrile',
         characterAttribute: 'Celebrities, Pop Culture, Entertainment, Famous People'
       }
     },

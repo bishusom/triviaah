@@ -19,13 +19,13 @@ export default function SnakePage() {
     '@type': 'WebPage',
     name: 'Snake - Classic Arcade Game | Triviaah',
     description: 'Play the classic Snake game online. Control a growing snake, eat food, and avoid collisions in this timeless arcade puzzle game.',
-    url: 'https://triviaah.com/brainwave/snake',
+    url: 'https://triviaah.com/retro-games/snake',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'Game',
       name: 'Snake',
       description: 'Classic arcade game where players control a growing snake to eat food while avoiding collisions with walls and itself.',
-      gameLocation: 'https://triviaah.com/brainwave/snake',
+      gameLocation: 'https://triviaah.com/retro-games/snake',
       characterAttribute: 'Arcade, Puzzle, Snake, Retro, Growing, Food, Strategy'
     }
   };

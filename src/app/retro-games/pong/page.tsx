@@ -19,13 +19,13 @@ export default function PongPage() {
     '@type': 'WebPage',
     name: 'Pong - Classic Arcade Game | Triviaah',
     description: 'Play the classic Pong game online. Battle against AI or challenge a friend in this timeless table tennis arcade game.',
-    url: 'https://triviaah.com/brainwave/pong',
+    url: 'https://triviaah.com/retro-games/pong',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'Game',
       name: 'Pong',
       description: 'Classic table tennis arcade game where players control paddles to hit a ball back and forth.',
-      gameLocation: 'https://triviaah.com/brainwave/pong',
+      gameLocation: 'https://triviaah.com/retro-games/pong',
       characterAttribute: 'Arcade, Sports, Table Tennis, Pong, Retro, Competitive'
     }
   };

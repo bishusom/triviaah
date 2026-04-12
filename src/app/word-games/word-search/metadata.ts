@@ -40,7 +40,7 @@ export function generateWordSearchMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/word-search.webp',
+          url: '/imgs/word-games/word-search.webp',
           width: 1200,
           height: 630,
           alt: 'Free Word Search Puzzles Online | Printable Word Find Games | Triviaah'
@@ -53,7 +53,7 @@ export function generateWordSearchMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Free Word Search Puzzles Online | Printable Word Find Games | Triviaah',
       description: 'Play free word search puzzles online. Find hidden words in our themed word find games. Perfect for vocabulary practice, relaxation, and educational fun for all ages.',
-      images: ['/imgs/word-search.webp'],
+      images: ['/imgs/word-games/word-search.webp'],
       site: '@elitetrivias',
     },
     robots: {

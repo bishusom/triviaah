@@ -1,5 +1,42 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, FileText, Scale, GamepadIcon, Users, Shield } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service | Triviaah',
+  description:
+    'Review the Triviaah terms of service covering fair play, user responsibilities, intellectual property, and platform usage.',
+  alternates: {
+    canonical: 'https://triviaah.com/terms',
+  },
+  openGraph: {
+    title: 'Terms of Service | Triviaah',
+    description:
+      'Review the Triviaah terms of service covering fair play, user responsibilities, intellectual property, and platform usage.',
+    url: 'https://triviaah.com/terms',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/Triviaah-og.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Triviaah Terms of Service',
+      },
+    ],
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Terms of Service | Triviaah',
+    description:
+      'Review the Triviaah terms of service covering fair play, user responsibilities, intellectual property, and platform usage.',
+    images: ['/imgs/Triviaah-og.webp'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function TermsPage() {
   return (

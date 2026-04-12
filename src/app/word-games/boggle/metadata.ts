@@ -40,7 +40,7 @@ export function generateBoggleMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/boggle.webp',
+          url: '/imgs/word-games/boggle.webp',
           width: 1200,
           height: 630,
           alt: 'Free Boggle Game Online'
@@ -53,7 +53,7 @@ export function generateBoggleMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Free Boggle Game Online | Word Search Challenge | Triviaah',
       description: 'Play free Boggle game online. Find words in a 4x4 or 5x5 letter grid with our daily puzzle challenge. Boost your vocabulary, word-finding skills, and uncover all possible words.',
-      images: ['/imgs/boggle.webp'],
+      images: ['/imgs/word-games/boggle.webp'],
       site: '@elitetrivias',
     },
     robots: {

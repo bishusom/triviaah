@@ -180,7 +180,7 @@ export default function NumberScramblePage() {
         <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold text-white">Number Sequence Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">Number Scramble Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -195,56 +195,50 @@ export default function NumberScramblePage() {
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Number Sequence?</h3>
+                <h3 className="font-semibold" itemProp="name">What is Number Scramble?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Number Sequence is a math puzzle game where players identify patterns in number sequences 
-                  and predict the next numbers. It challenges logical thinking, pattern recognition skills, 
-                  and mathematical reasoning in an engaging, game-based format that makes learning math fun 
-                  and interactive.
+                  Number Scramble is a math puzzle game where players rearrange given digits to match a
+                  target number or solve a numeric challenge. It tests number sense, logical thinking,
+                  pattern recognition, and flexible problem-solving in a fast, game-based format.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do you play Number Sequence?</h3>
+                <h3 className="font-semibold" itemProp="name">How do you play Number Scramble?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Players are shown a sequence of numbers with a hidden pattern, and they must identify the 
-                  next numbers in the sequence using logical reasoning and mathematical thinking. The game 
-                  provides limited attempts and may include hints to help players understand the patterns 
-                  and improve their problem-solving strategies.
+                  Players are shown scrambled digits and must rearrange them into the correct order or
+                  configuration to solve the puzzle. You analyze the available numbers, test different
+                  arrangements, and use reasoning to reach the target before running out of attempts.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What types of number patterns are used?</h3>
+                <h3 className="font-semibold" itemProp="name">What skills does Number Scramble develop?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  The game includes various mathematical patterns such as arithmetic sequences (constant 
-                  difference), geometric sequences (constant ratio), Fibonacci patterns, prime numbers, 
-                  square numbers, cube numbers, and combinations of mathematical operations. Each pattern 
-                  type challenges different aspects of mathematical thinking and logical reasoning.
+                  Number Scramble develops mental math, numerical reasoning, logical thinking, digit
+                  recognition, and problem-solving speed. Regular play helps improve confidence with
+                  numbers while training attention to detail and strategic trial-and-error.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Number Sequence educational?</h3>
+                <h3 className="font-semibold" itemProp="name">Is Number Scramble educational?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! Number Sequence is excellent for developing mathematical thinking, pattern recognition, 
-                  logical reasoning, and problem-solving skills. It helps build foundational math skills, 
-                  improves mental math abilities, and enhances cognitive functions related to numerical 
-                  processing and analytical thinking in an engaging game format.
+                  Yes. Number Scramble reinforces core math skills by making players work actively with
+                  digits, order, and numeric relationships. It is useful for students, puzzle fans, and
+                  anyone who wants a quick way to practice number fluency and reasoning.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What skills does this game develop?</h3>
+                <h3 className="font-semibold" itemProp="name">Are there different difficulty levels?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Number Sequence develops mathematical reasoning, pattern recognition, logical thinking, 
-                  problem-solving abilities, mental math skills, analytical thinking, and cognitive 
-                  flexibility. Regular play can significantly improve numerical literacy and mathematical 
-                  confidence across various age groups and skill levels.
+                  Yes. Number Scramble puzzles can vary from simple digit reordering challenges to harder
+                  puzzles that require multi-step thinking, tighter constraints, or more abstract numeric
+                  goals. That range makes it suitable for both casual players and stronger puzzle solvers.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is this game free to play?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes! Our Number Sequence game is completely free to play with no registration required. 
-                  You can enjoy daily new puzzles, multiple difficulty levels, and comprehensive learning 
-                  features without any cost or subscription.
+                  Yes. Number Scramble is completely free to play with no registration required, so you
+                  can jump straight into new puzzle challenges and practice your math skills anytime.
                 </p>
               </div>
             </div>
@@ -253,76 +247,77 @@ export default function NumberScramblePage() {
 
         {/* Game Information Section */}
         <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">About Number Sequence Puzzles</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">About Number Scramble Puzzles</h2>
           <div className="space-y-6 text-gray-10">
             <div>
               <h3 className="text-lg font-semibold mb-2">How to Play:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li>Analyze the given number sequence to identify the pattern</li>
-                <li>Use logical reasoning to predict the next numbers</li>
-                <li>Submit your answer to check if it follows the pattern</li>
-                <li>Use hints when you need assistance understanding the pattern</li>
-                <li>Progress through multiple difficulty levels</li>
+                <li>Review the available digits and the puzzle goal</li>
+                <li>Rearrange numbers into the correct order or target value</li>
+                <li>Test combinations strategically within the allowed attempts</li>
+                <li>Use hints when you need help narrowing the possibilities</li>
+                <li>Progress through increasingly difficult numeric challenges</li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold mb-2">Common Pattern Types:</h3>
+              <h3 className="text-lg font-semibold mb-2">Common Puzzle Skills:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong className="text-green-300">Arithmetic:</strong> Constant difference between terms (2, 4, 6, 8...)</li>
-                <li><strong className="text-green-300">Geometric:</strong> Constant ratio between terms (2, 4, 8, 16...)</li>
-                <li><strong className="text-green-300">Fibonacci:</strong> Each term is sum of two previous terms (1, 1, 2, 3, 5...)</li>
-                <li><strong className="text-green-300">Prime Numbers:</strong> Sequence of prime numbers (2, 3, 5, 7, 11...)</li>
-                <li><strong className="text-green-300">Squares/Cubes:</strong> Square or cube numbers (1, 4, 9, 16... or 1, 8, 27, 64...)</li>
-                <li><strong className="text-green-300">Combination:</strong> Mix of mathematical operations</li>
+                <li><strong className="text-green-300">Digit Ordering:</strong> Finding the correct arrangement of the given numbers</li>
+                <li><strong className="text-green-300">Target Matching:</strong> Building the exact required value from limited digits</li>
+                <li><strong className="text-green-300">Pattern Recognition:</strong> Spotting useful numeric relationships quickly</li>
+                <li><strong className="text-green-300">Mental Math:</strong> Estimating, comparing, and adjusting values efficiently</li>
+                <li><strong className="text-green-300">Constraint Solving:</strong> Working within attempt limits or puzzle rules</li>
+                <li><strong className="text-green-300">Strategy:</strong> Eliminating weak combinations and refining strong ones</li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Difficulty Levels:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong className="text-green-300">Beginner:</strong> Simple arithmetic and basic patterns</li>
-                <li><strong className="text-green-300">Intermediate:</strong> Geometric sequences and combined operations</li>
-                <li><strong className="text-green-300">Advanced:</strong> Complex patterns and multiple mathematical concepts</li>
-                <li><strong className="text-green-300">Expert:</strong> Challenging sequences requiring deep mathematical insight</li>
+                <li><strong className="text-green-300">Beginner:</strong> Simple digit arrangements and obvious targets</li>
+                <li><strong className="text-green-300">Intermediate:</strong> More possible combinations and tighter constraints</li>
+                <li><strong className="text-green-300">Advanced:</strong> Multi-step reasoning and less obvious numeric solutions</li>
+                <li><strong className="text-green-300">Expert:</strong> High-complexity puzzles requiring fast, accurate strategy</li>
               </ul>
             </div>
 
             <div className="p-4 bg-green-500/10 border border-green-500/20 text-white">
               <h4 className="font-bold text-white mb-2">Solving Strategies:</h4>
               <ul className="list-disc pl-5 space-y-1">
-                <li>Look for constant differences between consecutive terms</li>
-                <li>Check if numbers are doubling, tripling, or following other multiplicative patterns</li>
-                <li>Consider if the sequence involves squares, cubes, or other powers</li>
-                <li>Look for prime numbers or other special number sequences</li>
-                <li>Try adding or subtracting position numbers from the terms</li>
-                <li>Check for alternating patterns or combinations of operations</li>
-                <li>Use the process of elimination with the available answer choices</li>
+                <li>Start by identifying the largest and smallest digits available</li>
+                <li>Try obvious high-value and low-value arrangements first</li>
+                <li>Use failed attempts to eliminate impossible placements</li>
+                <li>Group digits in ways that create meaningful number patterns</li>
+                <li>Work backward from the target when possible</li>
+                <li>Use hints to refine your search instead of guessing randomly</li>
+                <li>Balance speed with accuracy on harder rounds</li>
               </ul>
             </div>
           </div>
           
           {/* Educational Benefits Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Educational Benefits of Number Sequence Games</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Educational Benefits of Number Scramble Games</h3>
             <div className="prose prose-invert max-w-none text-gray-10">
               <p className="mb-4">
-                Number Sequence puzzles are more than just entertaining games—they&apos;re powerful educational 
-                tools that develop essential mathematical and cognitive skills. As one of the most engaging 
-                <strong> free math brain teasers</strong> available, our Number Sequence game offers:
+                Number Scramble puzzles are more than just entertaining games. They help strengthen number
+                fluency, flexible thinking, and quick reasoning in a format that feels playful rather than
+                academic. As one of our most accessible <strong>free math brain teasers</strong>, Number
+                Scramble offers:
               </p>
               <ul className="list-disc pl-5 space-y-2 mb-4">
-                <li>Improved pattern recognition and logical reasoning abilities</li>
-                <li>Enhanced mathematical thinking and problem-solving skills</li>
-                <li>Development of mental math and numerical processing speed</li>
-                <li>Strengthened analytical thinking and cognitive flexibility</li>
-                <li>Building confidence in mathematical abilities</li>
-                <li>Fun, stress-free way to practice and learn math concepts</li>
+                <li>Improved number sense and digit recognition</li>
+                <li>Stronger logical reasoning and puzzle-solving skills</li>
+                <li>Better mental math speed and accuracy</li>
+                <li>More confidence working with numeric constraints</li>
+                <li>Practice with strategic thinking under limited attempts</li>
+                <li>A low-pressure way to build everyday math fluency</li>
               </ul>
               <p>
-                Whether you&apos;re a student looking to improve math skills, an educator seeking engaging 
-                teaching tools, or someone who enjoys challenging puzzles, our <strong>free number sequence 
-                game</strong> provides the perfect combination of entertainment and educational value.
+                Whether you&apos;re a student building core skills, a teacher looking for engaging number
+                practice, or a puzzle fan who enjoys quick logic challenges, our <strong>free Number
+                Scramble game</strong> offers a strong mix of entertainment and educational value.
               </p>
             </div>
           </div>
@@ -332,29 +327,28 @@ export default function NumberScramblePage() {
         <div className="sr-only" aria-hidden="false">
           <div itemScope itemType="https://schema.org/Game">
             <meta itemProp="dateModified" content={lastUpdated} />
-            <h2>Number Sequence - Free Online Math Puzzle Game</h2>
+            <h2>Number Scramble - Free Online Math Puzzle Game</h2>
             <p itemProp="description">
-              Challenge your mathematical mind with Number Sequence puzzles! Identify patterns in number 
-              sequences and predict the next numbers in this engaging brain game. Perfect for students, 
-              math enthusiasts, puzzle lovers, and anyone looking to improve their logical reasoning and 
-              pattern recognition skills through fun, educational gameplay.
+              Challenge your mathematical mind with Number Scramble puzzles. Rearrange digits, solve
+              numeric goals, and sharpen logical reasoning in this fast-paced brain game. Ideal for
+              students, puzzle fans, and anyone who wants to build stronger number fluency through play.
             </p>
-            <h3>How to Play Number Sequence:</h3>
+            <h3>How to Play Number Scramble:</h3>
             <ul>
-              <li>Analyze number sequences to identify hidden patterns</li>
-              <li>Use logical reasoning to predict the next numbers</li>
-              <li>Submit answers to check pattern understanding</li>
-              <li>Use hints when you need pattern recognition assistance</li>
-              <li>Progress through multiple difficulty levels</li>
-              <li>Daily new puzzles with fresh mathematical challenges</li>
+              <li>Review the provided digits and puzzle objective</li>
+              <li>Rearrange numbers to create the correct target or solution</li>
+              <li>Use logical reasoning to eliminate weak combinations</li>
+              <li>Submit answers and refine your approach using feedback</li>
+              <li>Use hints when you need help narrowing possibilities</li>
+              <li>Play fresh math challenges that test flexible thinking</li>
               <li>Completely free with no registration required</li>
             </ul>
             <h3>Game Features:</h3>
             <ul>
-              <li>Multiple pattern types (arithmetic, geometric, Fibonacci, etc.)</li>
-              <li>Various difficulty levels from beginner to expert</li>
-              <li>Daily new number sequence challenges</li>
-              <li>Mathematical reasoning and pattern recognition training</li>
+              <li>Digit-reordering and target-matching challenges</li>
+              <li>Difficulty progression from beginner to expert</li>
+              <li>Fast, replayable number puzzle rounds</li>
+              <li>Mental math and numeric reasoning practice</li>
               <li>Cognitive skill development</li>
               <li>Hint system for learning assistance</li>
               <li>Progress tracking and achievement system</li>

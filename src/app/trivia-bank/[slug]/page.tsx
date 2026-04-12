@@ -41,19 +41,40 @@ export async function generateMetadata({ params }: TriviaPageProps): Promise<Met
   const tagsArray = typeof trivia.tags === 'string' 
     ? trivia.tags.split(',').map(tag => tag.trim())
     : trivia.tags;
+  const pageUrl = `https://triviaah.com/trivia-bank/${trivia.slug}`;
+  const description = `${trivia.excerpt} Browse our ${trivia.title.toLowerCase()} trivia questions with answers for all difficulty levels.`;
 
   return {
     title: `${trivia.title} Questions with Answers | Triviaah`,
-    description: `${trivia.excerpt} Browse our ${trivia.title.toLowerCase()} trivia questions with answers for all difficulty levels.`,
+    description,
     keywords: `${trivia.title.toLowerCase()} trivia, ${trivia.title.toLowerCase()} quiz, ${trivia.title.toLowerCase()} questions and answers, ${tagsArray.join(', ')}`,
     alternates: {
-      canonical: `https://triviaah.com/trivia-bank/${trivia.slug}`,
+      canonical: pageUrl,
     },
     openGraph: {
       title: `${trivia.title} Questions | Triviaah`,
-      description: trivia.excerpt,
-      type: 'article',
-      tags: tagsArray,
+      description,
+      url: pageUrl,
+      siteName: 'Triviaah',
+      type: 'website',
+      images: [
+        {
+          url: '/imgs/trivia-bank-card.webp',
+          width: 1200,
+          height: 630,
+          alt: `${trivia.title} trivia questions and answers`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${trivia.title} Questions | Triviaah`,
+      description,
+      images: ['/imgs/trivia-bank-card.webp'],
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }
@@ -134,6 +155,8 @@ export default async function TriviaPage({ params }: TriviaPageProps) {
 function TriviaSchema({ trivia }: { trivia: TriviaData }) {
   // Combine all questions from all levels into one array for the schema
   const allQuestions = Object.values(trivia.levels).flat().slice(0, 20); // Limit to top 20 for speed
+  const pageUrl = `https://triviaah.com/trivia-bank/${trivia.slug}`;
+  const description = `${trivia.excerpt} Browse our ${trivia.title.toLowerCase()} trivia questions with answers for all difficulty levels.`;
 
   const schema = {
     "@context": "https://schema.org",
@@ -143,8 +166,27 @@ function TriviaSchema({ trivia }: { trivia: TriviaData }) {
         "itemListElement": [
           { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://triviaah.com" },
           { "@type": "ListItem", "position": 2, "name": "Trivia Bank", "item": "https://triviaah.com/trivia-bank" },
-          { "@type": "ListItem", "position": 3, "name": trivia.title }
+          { "@type": "ListItem", "position": 3, "name": trivia.title, "item": pageUrl }
         ]
+      },
+      {
+        "@type": "WebPage",
+        "name": trivia.header || `${trivia.title} Questions & Answers`,
+        "url": pageUrl,
+        "description": description,
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Triviaah",
+          "url": "https://triviaah.com"
+        },
+        "about": {
+          "@type": "Thing",
+          "name": trivia.title
+        },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": "https://triviaah.com/imgs/trivia-bank-card.webp"
+        }
       },
       {
         "@type": "FAQPage",

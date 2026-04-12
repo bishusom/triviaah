@@ -19,13 +19,13 @@ export default function TicTacToePage() {
     '@type': 'WebPage',
     name: 'Tic Tac Toe - Classic Strategy Game | Triviaah',
     description: 'Play the classic Tic Tac Toe game online. Challenge friends or play against AI with multiple difficulty levels in this timeless strategy game.',
-    url: 'https://triviaah.com/brainwave/tic-tac-toe',
+    url: 'https://triviaah.com/retro-games/tic-tac-toe',
     dateModified: lastUpdated,
     mainEntity: {
       '@type': 'Game',
       name: 'Tic Tac Toe',
       description: 'Classic strategy game where two players take turns marking spaces in a 3×3 grid, trying to get three in a row.',
-      gameLocation: 'https://triviaah.com/brainwave/tic-tac-toe',
+      gameLocation: 'https://triviaah.com/retro-games/tic-tac-toe',
       characterAttribute: 'Strategy, Puzzle, Two Player, Board Game, Classic, AI'
     }
   };
