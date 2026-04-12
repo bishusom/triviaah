@@ -237,7 +237,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // ── Word games ────────────────────────────────────────────────────────────
-  const wordGames = ['boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder']
+  const wordGames = ['boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder', 'crossgrid']
   const wordGamePages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/word-games`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
     ...wordGames.map(game => ({
@@ -249,7 +249,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // ── Number puzzles ────────────────────────────────────────────────────────
-  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku']
+  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku', 'kakuro']
   const numberPuzzlePages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/number-puzzles`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
     ...numberPuzzles.map(puzzle => ({

@@ -1,6 +1,5 @@
 // data/homeContent.ts
 import { ReadonlyQuizItems, ReadonlySectionItems } from '@/types/home';
-import { e } from 'mathjs';
 
 export const DAILY_QUIZZES: ReadonlyQuizItems = [
   {
@@ -300,7 +299,7 @@ export const WORD_GAMES: ReadonlySectionItems = [
   {
     category: 'word-scramble',
     name: 'Word Scramble',
-    path: '/word-games/word-scramble',
+    path: '/word-games/scramble',
     image: '/imgs/word-games/word-scramble.webp',
     tagline: 'Unscramble words to solve challenging puzzles',
     keywords: 'word game, puzzle, vocabulary challenge',
@@ -354,6 +353,18 @@ export const WORD_GAMES: ReadonlySectionItems = [
     keywords: 'word game, puzzle, vocabulary challenge',
     playCount: 9400,
     isNew: false,
+    duration: 'Daily',
+    difficulty: 'Medium'
+  },
+  {
+    category: 'crossgrid',
+    name: 'Crossgrid',
+    path: '/word-games/crossgrid',
+    image: '/imgs/word-games/word-crossgrid.webp',
+    tagline: 'Solve clue-based word squares where rows and columns both have to work',
+    keywords: 'crossgrid puzzle, mini crossword game, word square challenge',
+    playCount: 8700,
+    isNew: true,
     duration: 'Daily',
     difficulty: 'Medium'
   }
@@ -417,6 +428,18 @@ export const NUMBER_PUZZLES: ReadonlySectionItems = [
     keywords: 'number game, puzzle, math challenge',
     playCount: 11600,
     isNew: false,
+    duration: 'Daily',
+    difficulty: 'Medium'
+  },
+  {
+    category: 'kakuro',
+    name: 'Kakuro',
+    path: '/number-puzzles/kakuro',
+    image: '/imgs/number-puzzles/kakuro.webp',
+    tagline: 'Use clue totals and logic to complete each run without repeating digits',
+    keywords: 'kakuro puzzle, cross sums game, number crossword, arithmetic logic puzzle',
+    playCount: 8400,
+    isNew: true,
     duration: 'Daily',
     difficulty: 'Medium'
   }

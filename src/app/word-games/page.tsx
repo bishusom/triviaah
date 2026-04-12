@@ -58,6 +58,16 @@ const wordGames = [
     color: 'purple',
     keywords: 'word ladder game, word transformation puzzle, vocabulary builder'
   },
+  {
+    slug: 'crossgrid',
+    name: 'Crossgrid',
+    image: '/imgs/word-games/word-crossgrid.webp',
+    description: 'Solve a compact clue-based word square where rows and columns must both form words',
+    tagline: 'Mini crossword energy packed into a fast word-square grid',
+    features: ['Across and down clues', 'Word square logic', 'Quick daily puzzles'],
+    color: 'cyan',
+    keywords: 'crossgrid puzzle, mini crossword game, word square challenge'
+  },
 ];
 
 // Gaming-style game card matching the brainwave page design
@@ -147,7 +157,7 @@ export default function WordGamesClientPage() {
         "@id": "https://triviaah.com/word-games/#webpage",
         "url": "https://triviaah.com/word-games",
         "name": "Word Games Collection - Free Vocabulary & Spelling Games | Triviaah",
-        "description": "Challenge your vocabulary with our collection of free word games including Word Scramble, Spelling Bee, Boggle, Word Search, and Word Ladder.",
+        "description": "Challenge your vocabulary with our collection of free word games including Word Scramble, Spelling Bee, Boggle, Word Search, Word Ladder, and Crossgrid.",
         "isPartOf": {
           "@id": "https://triviaah.com/#website"
         },
@@ -244,7 +254,7 @@ export default function WordGamesClientPage() {
             "name": "What types of word games are available?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "We offer five main word games: Word Scramble (letter unscrambling), Spelling Bee (word formation), Boggle (word search in grid), Word Search (hidden word finding), and Word Ladder (word transformation). Each game focuses on different language skills and provides unique challenges for vocabulary building."
+              "text": "We offer six main word games: Word Scramble (letter unscrambling), Spelling Bee (word formation), Boggle (grid word search), Word Search (hidden word finding), Word Ladder (word transformation), and Crossgrid (mini clue-based word squares). Each game focuses on different language skills and provides unique challenges for vocabulary building."
             }
           },
           {
@@ -350,7 +360,7 @@ export default function WordGamesClientPage() {
           </div>
 
           {/* Games Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 max-w-6xl mx-auto">
             {wordGames.map((game, index) => (
               <GameCard key={game.slug} game={game} index={index} />
             ))}
@@ -404,7 +414,7 @@ export default function WordGamesClientPage() {
               {[
                 {
                   question: "What types of word games are available?",
-                  answer: "We offer five main word games: Word Scramble for letter unscrambling, Spelling Bee for word formation, Boggle for grid word searches, Word Search for hidden word finding, and Word Ladder for word transformation puzzles."
+                  answer: "We offer six main word games: Word Scramble for letter unscrambling, Spelling Bee for word formation, Boggle for grid word searches, Word Search for hidden word finding, Word Ladder for word transformation puzzles, and Crossgrid for clue-based word-square solving."
                 },
                 {
                   question: "Are these word games educational?",

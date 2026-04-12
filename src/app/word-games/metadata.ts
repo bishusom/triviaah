@@ -7,7 +7,7 @@ export function generateWordGamesMetadata(): Metadata {
 
   return {
     title: 'Free Word Games Collection | Vocabulary & Spelling Games | Triviaah',
-    description: 'Challenge your vocabulary with our collection of free word games including Boggle, Scramble, Spelling Bee, Word Search, and Word Ladder. Improve spelling, vocabulary, and cognitive skills.',
+    description: 'Challenge your vocabulary with our collection of free word games including Boggle, Scramble, Spelling Bee, Word Search, Word Ladder, and Crossgrid. Improve spelling, vocabulary, and cognitive skills.',
     keywords: [
       'word games',
       'vocabulary games',
@@ -19,6 +19,9 @@ export function generateWordGamesMetadata(): Metadata {
       'spelling bee',
       'word search',
       'word ladder',
+      'crossgrid',
+      'mini crossword',
+      'word square',
       'educational games',
       'vocabulary builder',
       'spelling practice',
@@ -35,7 +38,7 @@ export function generateWordGamesMetadata(): Metadata {
     },
     openGraph: {
       title: 'Free Word Games Collection | Vocabulary & Spelling Games | Triviaah',
-      description: 'Challenge your vocabulary with our collection of free word games including Boggle, Scramble, Spelling Bee, Word Search, and Word Ladder. Improve spelling, vocabulary, and cognitive skills.',
+      description: 'Challenge your vocabulary with our collection of free word games including Boggle, Scramble, Spelling Bee, Word Search, Word Ladder, and Crossgrid. Improve spelling, vocabulary, and cognitive skills.',
       url: 'https://triviaah.com/word-games',
       siteName: 'Triviaah',
       images: [
@@ -52,7 +55,7 @@ export function generateWordGamesMetadata(): Metadata {
     twitter: {
       card: 'summary_large_image',
       title: 'Free Word Games Collection | Vocabulary & Spelling Games | Triviaah',
-      description: 'Challenge your vocabulary with our collection of free word games including Boggle, Scramble, Spelling Bee, Word Search, and Word Ladder. Improve spelling, vocabulary, and cognitive skills.',
+      description: 'Challenge your vocabulary with our collection of free word games including Boggle, Scramble, Spelling Bee, Word Search, Word Ladder, and Crossgrid. Improve spelling, vocabulary, and cognitive skills.',
       images: ['/imgs/word-games.webp'],
       site: '@elitetrivias',
     },

@@ -69,6 +69,18 @@ const numberPuzzles = [
     skills: ['Logical Thinking', 'Concentration', 'Problem Solving'],
     color: 'red'
   },
+  {
+    slug: 'kakuro',
+    name: 'Kakuro',
+    image: '/imgs/number-puzzles/kakuro.webp',
+    description: 'Match clue totals without repeating digits in each run',
+    tagline: 'Cross sums logic puzzle blending arithmetic with deduction',
+    fullDescription: 'Cross sums puzzle where each row and column run must match its clue total using distinct digits. Great for arithmetic fluency and logic.',
+    keywords: 'kakuro puzzle, cross sums game, number crossword, arithmetic logic puzzle, free kakuro',
+    difficulty: 'Medium',
+    skills: ['Arithmetic', 'Logical Deduction', 'Constraint Solving'],
+    color: 'cyan'
+  },
 ];
 
 // Gaming-style puzzle card matching the brainwave page design
@@ -172,7 +184,7 @@ export default function NumberPuzzlesPage() {
         "@id": "https://triviaah.com/number-puzzles/#webpage",
         "url": "https://triviaah.com/number-puzzles",
         "name": "Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah",
-        "description": "Challenge your math skills with our collection of free number puzzles including Number Scramble, Number Tower, Prime Hunter, Number Sequence, and Sudoku.",
+        "description": "Challenge your math skills with our collection of free number puzzles including Number Scramble, Number Tower, Prime Hunter, Number Sequence, Sudoku, and Kakuro.",
         "isPartOf": {
           "@id": "https://triviaah.com/#website"
         },
@@ -293,7 +305,7 @@ export default function NumberPuzzlesPage() {
             "name": "Which number puzzle should I start with?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Beginners should start with Number Sequence or Prime Hunter, which have easier difficulty levels. Intermediate players can try Number Scramble or Number Tower, while Sudoku offers challenges for all skill levels."
+              "text": "Beginners should start with Number Sequence or Prime Hunter, which have easier difficulty levels. Intermediate players can try Number Scramble, Number Tower, or Kakuro, while Sudoku offers challenges for all skill levels."
             }
           }
         ]
@@ -372,7 +384,7 @@ export default function NumberPuzzlesPage() {
           </div>
             
           {/* Puzzles Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 max-w-6xl mx-auto">
             {numberPuzzles.map((puzzle, index) => (
               <PuzzleCard key={puzzle.slug} puzzle={puzzle} index={index} />
             ))}
