@@ -3,6 +3,7 @@ import { event } from '@/lib/gtag';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/context/SoundContext';
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { Eraser } from 'lucide-react';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 type Board = number[][];
@@ -321,49 +322,49 @@ export default function SudokuPuzzle() {
 
   const getFeedbackClasses = (type: string) => {
     switch (type) {
-      case 'success': return 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border border-green-500/30';
-      case 'error': return 'bg-gradient-to-r from-red-500/20 to-pink-500/20 text-red-400 border border-red-500/30';
-      case 'info': return 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-400 border border-blue-500/30';
-      default: return 'bg-gray-800 text-gray-400';
+      case 'success': return 'bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-300 border border-emerald-400/30';
+      case 'error': return 'bg-gradient-to-r from-red-500/20 to-rose-500/20 text-red-300 border border-red-400/30';
+      case 'info': return 'bg-gradient-to-r from-blue-500/20 to-sky-500/20 text-blue-200 border border-blue-400/30';
+      default: return 'bg-slate-800 text-slate-300';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-slate-900 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#08111f] via-[#0d1b30] to-[#12243d] py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-3">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-sky-200 via-blue-300 to-cyan-300 bg-clip-text text-transparent mb-3">
             Sudoku Puzzle
           </h1>
-          <p className="text-gray-400 text-lg">Fill the grid so every row, column and 3×3 box contains 1-9</p>
+          <p className="text-blue-100/70 text-lg">Fill the grid so every row, column and 3×3 box contains 1-9</p>
         </div>
 
         {/* Stats Bar */}
-        <div className="grid grid-cols-3 gap-4 mb-8 p-6 bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl">
+        <div className="grid grid-cols-3 gap-4 mb-8 p-6 bg-[#0f1d31]/80 backdrop-blur-sm rounded-2xl border border-[#27476d] shadow-2xl">
           <div className="text-center">
-            <div className="text-sm text-gray-400 font-medium mb-2">Difficulty</div>
+            <div className="text-sm text-blue-100/60 font-medium mb-2">Difficulty</div>
             <select 
               value={gameState.difficulty}
               onChange={(e) => changeDifficulty(e.target.value as Difficulty)}
-              className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="bg-[#142742] border border-[#355a87] rounded-lg px-3 py-2 text-blue-50 font-semibold focus:outline-none focus:ring-2 focus:ring-sky-400"
             >
-              <option value="easy" className="bg-gray-700">Easy</option>
-              <option value="medium" className="bg-gray-700">Medium</option>
-              <option value="hard" className="bg-gray-700">Hard</option>
+              <option value="easy" className="bg-[#142742]">Easy</option>
+              <option value="medium" className="bg-[#142742]">Medium</option>
+              <option value="hard" className="bg-[#142742]">Hard</option>
             </select>
           </div>
           <div className="text-center">
-            <div className="text-sm text-gray-400 font-medium mb-2">Time</div>
+            <div className="text-sm text-blue-100/60 font-medium mb-2">Time</div>
             <div className={`text-2xl font-bold ${
-              gameState.timeElapsed >= 600 ? 'text-red-400 animate-pulse' : 'text-cyan-400'
+              gameState.timeElapsed >= 600 ? 'text-amber-300 animate-pulse' : 'text-sky-300'
             }`}>
               {formatTime(gameState.timeElapsed)}
             </div>
           </div>
           <div className="text-center">
-            <div className="text-sm text-gray-400 font-medium mb-2">Hints</div>
-            <div className="text-2xl font-bold text-yellow-400">
+            <div className="text-sm text-blue-100/60 font-medium mb-2">Hints</div>
+            <div className="text-2xl font-bold text-cyan-300">
               {gameState.maxHints - gameState.hintsUsed}
             </div>
           </div>
@@ -378,7 +379,7 @@ export default function SudokuPuzzle() {
 
         {/* Sudoku Grid - FIXED GRID LAYOUT */}
         <div className="flex justify-center mb-8">
-          <div className="grid grid-cols-9 grid-rows-9 gap-0 bg-gray-600 p-3 rounded-xl shadow-2xl border border-gray-600">
+          <div className="grid grid-cols-9 grid-rows-9 gap-0 bg-[#11243c] p-3 rounded-2xl shadow-2xl border border-[#2f5a87]">
             {gameState.board.map((row, rowIndex) => (
               row.map((cell, colIndex) => {
                 const isSelected = gameState.selectedCell?.row === rowIndex && 
@@ -394,14 +395,14 @@ export default function SudokuPuzzle() {
                     onClick={() => selectCell(rowIndex, colIndex)}
                     className={`
                       w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-lg sm:text-xl font-bold transition-all duration-200
-                      ${rowIndex % 3 === 2 && rowIndex !== 8 ? 'border-b-2 border-gray-500' : 'border-b border-gray-600'}
-                      ${colIndex % 3 === 2 && colIndex !== 8 ? 'border-r-2 border-gray-500' : 'border-r border-gray-600'}
-                      ${rowIndex === 0 ? 'border-t-2 border-gray-500' : ''}
-                      ${colIndex === 0 ? 'border-l-2 border-gray-500' : ''}
-                      ${isSelected ? 'bg-gradient-to-br from-purple-500/40 to-blue-500/40 ring-2 ring-purple-400' : ''}
-                      ${isFixed ? 'text-gray-300 bg-gray-700/50' : ''}
-                      ${!isFixed && !isSelected && !isError ? 'text-cyan-300 bg-gray-800/80 hover:bg-gray-700/80' : ''}
-                      ${isError ? 'text-red-400 bg-red-500/20' : ''}
+                      ${rowIndex % 3 === 2 && rowIndex !== 8 ? 'border-b-[3px] border-[#23486c]' : 'border-b border-[#31567f]'}
+                      ${colIndex % 3 === 2 && colIndex !== 8 ? 'border-r-[3px] border-[#23486c]' : 'border-r border-[#31567f]'}
+                      ${rowIndex === 0 ? 'border-t-[3px] border-[#23486c]' : ''}
+                      ${colIndex === 0 ? 'border-l-[3px] border-[#23486c]' : ''}
+                      ${isSelected ? 'bg-[#8ec5ff] text-[#0a1a2d] ring-2 ring-inset ring-[#d8efff]' : ''}
+                      ${isFixed ? 'text-[#eef6ff] bg-[#1e3a5b]' : ''}
+                      ${!isFixed && !isSelected && !isError ? 'text-[#0f2741] bg-[#e6f2ff] hover:bg-[#d8ebff]' : ''}
+                      ${isError ? 'text-[#a12626] bg-[#ffd7d7]' : ''}
                       cursor-pointer select-none
                     `}
                   >
@@ -419,7 +420,7 @@ export default function SudokuPuzzle() {
             <button
               key={num}
               onClick={() => fillCell(num)}
-              className="px-4 py-3 sm:px-6 sm:py-4 text-lg sm:text-xl font-bold bg-gradient-to-br from-gray-700 to-gray-800 text-white rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl border border-gray-600"
+              className="px-4 py-3 sm:px-6 sm:py-4 text-lg sm:text-xl font-bold bg-gradient-to-br from-[#17304f] to-[#21456e] text-blue-50 rounded-xl hover:from-[#21456e] hover:to-[#2b5a8e] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl border border-[#3d6a98]"
             >
               {num}
             </button>
@@ -441,9 +442,10 @@ export default function SudokuPuzzle() {
                 }
               }
             }}
-            className="px-4 py-3 sm:px-6 sm:py-4 text-lg sm:text-xl font-bold justify-center bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+            className="flex items-center justify-center gap-2 px-4 py-3 sm:px-6 sm:py-4 text-base sm:text-lg font-bold bg-gradient-to-br from-[#7d1d39] to-[#a12745] text-white rounded-xl hover:from-[#922243] hover:to-[#ba3153] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
           >
-            Clear
+            <Eraser className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span>Clear</span>
           </button>
         </div>
 
@@ -452,41 +454,41 @@ export default function SudokuPuzzle() {
           <button
             onClick={provideHint}
             disabled={gameState.hintsUsed >= gameState.maxHints}
-            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-yellow-500 to-amber-500 text-white rounded-2xl hover:from-yellow-600 hover:to-amber-600 disabled:from-gray-600 disabled:to-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
+            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-[#2f5b89] to-[#4a88c7] text-white rounded-2xl hover:from-[#3970a7] hover:to-[#5d9cde] disabled:from-gray-600 disabled:to-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
           >
             💡 Hint
           </button>
           <button
             onClick={checkBoard}
-            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
+            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-[#1f6fb2] to-[#35a6d6] text-white rounded-2xl hover:from-[#2783ca] hover:to-[#46b7e8] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
           >
             🔍 Check
           </button>
           <button
             onClick={generateNewPuzzle}
-            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-2xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
+            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-[#10345b] to-[#1e5b9a] text-white rounded-2xl hover:from-[#15416f] hover:to-[#2871bc] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
           >
             🎮 New Game
           </button>
         </div>
 
         {/* Stats */}
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 shadow-2xl">
-          <h3 className="text-xl font-bold text-center mb-6 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+        <div className="bg-[#0f1d31]/80 backdrop-blur-sm rounded-2xl p-6 border border-[#27476d] shadow-2xl">
+          <h3 className="text-xl font-bold text-center mb-6 bg-gradient-to-r from-sky-200 to-cyan-300 bg-clip-text text-transparent">
             Game Statistics
           </h3>
           <div className="grid grid-cols-3 gap-4 sm:gap-6">
-            <div className="text-center p-4 bg-gray-700/30 rounded-xl border border-gray-600/50">
-              <div className="text-sm text-gray-400 font-medium mb-1">Games Played</div>
-              <div className="text-2xl font-bold text-purple-400">{gameState.stats.gamesPlayed}</div>
+            <div className="text-center p-4 bg-[#132844] rounded-xl border border-[#2f5a87]">
+              <div className="text-sm text-blue-100/60 font-medium mb-1">Games Played</div>
+              <div className="text-2xl font-bold text-sky-300">{gameState.stats.gamesPlayed}</div>
             </div>
-            <div className="text-center p-4 bg-gray-700/30 rounded-xl border border-gray-600/50">
-              <div className="text-sm text-gray-400 font-medium mb-1">Games Won</div>
-              <div className="text-2xl font-bold text-green-400">{gameState.stats.gamesWon}</div>
+            <div className="text-center p-4 bg-[#132844] rounded-xl border border-[#2f5a87]">
+              <div className="text-sm text-blue-100/60 font-medium mb-1">Games Won</div>
+              <div className="text-2xl font-bold text-cyan-300">{gameState.stats.gamesWon}</div>
             </div>
-            <div className="text-center p-4 bg-gray-700/30 rounded-xl border border-gray-600/50">
-              <div className="text-sm text-gray-400 font-medium mb-1">Best Time</div>
-              <div className="text-2xl font-bold text-cyan-400">
+            <div className="text-center p-4 bg-[#132844] rounded-xl border border-[#2f5a87]">
+              <div className="text-sm text-blue-100/60 font-medium mb-1">Best Time</div>
+              <div className="text-2xl font-bold text-blue-200">
                 {gameState.stats.bestTime === Infinity ? '--:--' : formatTime(gameState.stats.bestTime)}
               </div>
             </div>

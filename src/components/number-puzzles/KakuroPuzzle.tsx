@@ -3,58 +3,250 @@
 import confetti from 'canvas-confetti';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSound } from '@/context/SoundContext';
-import { getDailyKakuro, type KakuroPuzzleData } from '@/lib/number-puzzles/kakuro-sb';
 
-type Grid = string[][];
-type Solution = number[][];
+type Position = { row: number; col: number };
+type Grid = Record<string, string>;
+type TemplateBlockCell = { kind: 'block' };
+type TemplateClueCell = { kind: 'clue' };
+type TemplatePlayCell = { kind: 'play'; value: number };
+type TemplateCell = TemplateBlockCell | TemplateClueCell | TemplatePlayCell;
+type BlockCell = { kind: 'block' };
+type ClueCell = { kind: 'clue'; right?: number; down?: number };
+type PlayCell = { kind: 'play'; solution: number };
+type KakuroCell = BlockCell | ClueCell | PlayCell;
+type KakuroRun = { id: string; clue: number; cells: Position[] };
+type DifficultyKey = 'easy' | 'intermediate' | 'advanced';
+type DifficultyConfig = {
+  key: DifficultyKey;
+  label: string;
+  badge: string;
+  playableSize: number;
+  boardWidthClass: string;
+  hintLimit: number;
+  breaks: Position[];
+};
+type PuzzleData = {
+  id: string;
+  title: string;
+  cells: KakuroCell[][];
+  runs: KakuroRun[];
+  playableCells: Position[];
+  firstCell: Position | null;
+  boardSize: number;
+  difficulty: DifficultyKey;
+};
 
-const emptyGrid = (): Grid =>
-  Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => ''));
+const DIFFICULTIES: DifficultyConfig[] = [
+  {
+    key: 'easy',
+    label: 'Easy',
+    badge: 'Easy 4x4',
+    playableSize: 4,
+    boardWidthClass: 'w-[280px] sm:w-[320px] md:w-[360px]',
+    hintLimit: 2,
+    breaks: [],
+  },
+  {
+    key: 'intermediate',
+    label: 'Intermediate',
+    badge: 'Intermediate 6x6',
+    playableSize: 6,
+    boardWidthClass: 'w-[294px] sm:w-[336px] md:w-[392px]',
+    hintLimit: 3,
+    breaks: [
+      { row: 2, col: 3 },
+      { row: 2, col: 4 },
+      { row: 3, col: 3 },
+      { row: 4, col: 4 },
+    ],
+  },
+  {
+    key: 'advanced',
+    label: 'Advanced',
+    badge: 'Advanced 8x8',
+    playableSize: 8,
+    boardWidthClass: 'w-[306px] sm:w-[378px] md:w-[450px]',
+    hintLimit: 4,
+    breaks: [
+      { row: 3, col: 4 },
+      { row: 3, col: 6 },
+      { row: 4, col: 5 },
+      { row: 5, col: 3 },
+      { row: 5, col: 6 },
+      { row: 6, col: 4 },
+    ],
+  },
+];
+
+function cellKey(row: number, col: number) {
+  return `${row}-${col}`;
+}
+
+function isPlayCell(cell: KakuroCell): cell is PlayCell {
+  return cell.kind === 'play';
+}
+
+function shuffle<T>(items: T[]) {
+  const next = [...items];
+
+  for (let index = next.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [next[index], next[swapIndex]] = [next[swapIndex], next[index]];
+  }
+
+  return next;
+}
+
+function createDigitMap() {
+  const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const shuffledDigits = shuffle(digits);
+
+  return Object.fromEntries(digits.map((digit, index) => [digit, shuffledDigits[index]])) as Record<number, number>;
+}
+
+function createTemplate(config: DifficultyConfig): TemplateCell[][] {
+  const boardSize = config.playableSize + 1;
+  const breakKeys = new Set(config.breaks.map(({ row, col }) => cellKey(row, col)));
+
+  return Array.from({ length: boardSize }, (_, rowIndex) =>
+    Array.from({ length: boardSize }, (_, colIndex) => {
+      if (rowIndex === 0 && colIndex === 0) {
+        return { kind: 'block' } satisfies TemplateBlockCell;
+      }
+
+      if (rowIndex === 0 || colIndex === 0 || breakKeys.has(cellKey(rowIndex, colIndex))) {
+        return { kind: 'clue' } satisfies TemplateClueCell;
+      }
+
+      return {
+        kind: 'play',
+        value: ((rowIndex + colIndex - 2) % config.playableSize) + 1,
+      } satisfies TemplatePlayCell;
+    })
+  );
+}
+
+function createPuzzle(seed: number, variant: number, config: DifficultyConfig): PuzzleData {
+  const digitMap = createDigitMap();
+  const template = createTemplate(config);
+  const cells: KakuroCell[][] = template.map((row) =>
+    row.map((cell) => {
+      if (cell.kind === 'block') return { kind: 'block' };
+      if (cell.kind === 'clue') return { kind: 'clue' };
+      return { kind: 'play', solution: digitMap[cell.value] };
+    })
+  );
+
+  const runs: KakuroRun[] = [];
+  const playableCells: Position[] = [];
+
+  for (let row = 0; row < cells.length; row += 1) {
+    for (let col = 0; col < cells[row].length; col += 1) {
+      const cell = cells[row][col];
+
+      if (isPlayCell(cell)) {
+        playableCells.push({ row, col });
+      }
+
+      if (cell.kind !== 'clue') {
+        continue;
+      }
+
+      const rightCells: Position[] = [];
+      for (let nextCol = col + 1; nextCol < cells[row].length; nextCol += 1) {
+        const nextCell = cells[row][nextCol];
+        if (!isPlayCell(nextCell)) break;
+        rightCells.push({ row, col: nextCol });
+      }
+
+      if (rightCells.length > 0) {
+        const rightTotal = rightCells.reduce((sum, position) => {
+          const runCell = cells[position.row][position.col];
+          return sum + (isPlayCell(runCell) ? runCell.solution : 0);
+        }, 0);
+
+        cell.right = rightTotal;
+        runs.push({ id: `row-${row}-${col}`, clue: rightTotal, cells: rightCells });
+      }
+
+      const downCells: Position[] = [];
+      for (let nextRow = row + 1; nextRow < cells.length; nextRow += 1) {
+        const nextCell = cells[nextRow][col];
+        if (!isPlayCell(nextCell)) break;
+        downCells.push({ row: nextRow, col });
+      }
+
+      if (downCells.length > 0) {
+        const downTotal = downCells.reduce((sum, position) => {
+          const runCell = cells[position.row][position.col];
+          return sum + (isPlayCell(runCell) ? runCell.solution : 0);
+        }, 0);
+
+        cell.down = downTotal;
+        runs.push({ id: `col-${row}-${col}`, clue: downTotal, cells: downCells });
+      }
+    }
+  }
+
+  return {
+    id: `generated-${config.key}-${variant}-${seed}`,
+    title: `${config.label} ${config.playableSize}x${config.playableSize} #${variant + 1}`,
+    cells,
+    runs,
+    playableCells,
+    firstCell: playableCells[0] ?? null,
+    boardSize: cells.length,
+    difficulty: config.key,
+  };
+}
+
+function createEmptyGrid(puzzle: PuzzleData): Grid {
+  return Object.fromEntries(puzzle.playableCells.map(({ row, col }) => [cellKey(row, col), '']));
+}
+
+function formatTimer(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
 
 export default function KakuroPuzzle() {
-  const [puzzle, setPuzzle] = useState<KakuroPuzzleData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState('');
-  const [grid, setGrid] = useState<Grid>(emptyGrid);
-  const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
+  const [difficulty, setDifficulty] = useState<DifficultyKey>('intermediate');
+  const [puzzleIndex, setPuzzleIndex] = useState(() => Math.floor(Math.random() * 9));
+  const [puzzleSeed, setPuzzleSeed] = useState(() => Date.now());
+  const [grid, setGrid] = useState<Grid>({});
+  const [selectedCell, setSelectedCell] = useState<Position | null>(null);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
-  const [feedback, setFeedback] = useState('Fill the grid so each row and column matches its clue sum with no repeated digits.');
+  const [feedback, setFeedback] = useState('Fill every white cell so each run hits its clue total without repeating digits.');
   const [isComplete, setIsComplete] = useState(false);
   const [stats, setStats] = useState({ played: 0, won: 0 });
   const { isMuted } = useSound();
-  const inputRefs = useRef<Array<Array<HTMLInputElement | null>>>([]);
+  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const activeDifficulty = DIFFICULTIES.find((entry) => entry.key === difficulty) ?? DIFFICULTIES[1];
+
+  const puzzle = useMemo(
+    () => createPuzzle(puzzleSeed, puzzleIndex, activeDifficulty),
+    [activeDifficulty, puzzleIndex, puzzleSeed]
+  );
 
   useEffect(() => {
-    const loadPuzzle = async () => {
-      setIsLoading(true);
-      setLoadError('');
-
-      const dailyPuzzle = await getDailyKakuro();
-      if (!dailyPuzzle) {
-        setLoadError('Today’s Kakuro puzzle is unavailable right now. Please try again shortly.');
-        setIsLoading(false);
-        return;
-      }
-
-      setPuzzle(dailyPuzzle);
-      setIsLoading(false);
-    };
-
-    loadPuzzle();
-  }, []);
-
-  const solution = useMemo(() => puzzle?.solution ?? [[0, 0, 0], [0, 0, 0], [0, 0, 0]], [puzzle]);
-
-  useEffect(() => {
-    if (!puzzle) return;
-    setGrid(emptyGrid());
-    setSelectedCell({ row: 0, col: 0 });
+    setGrid(createEmptyGrid(puzzle));
+    setSelectedCell(puzzle.firstCell);
     setHintsUsed(0);
     setTimeElapsed(0);
     setIsComplete(false);
-    setFeedback('Fill the grid so each row and column matches its clue sum with no repeated digits.');
+    setFeedback(`Fill every white cell so each run hits its clue total without repeating digits on this ${activeDifficulty.badge.toLowerCase()} board.`);
     setStats((prev) => ({ ...prev, played: prev.played + 1 }));
+  }, [activeDifficulty.badge, puzzle]);
+
+  useEffect(() => {
+    if (!puzzle.firstCell) return;
+    const firstCell = puzzle.firstCell;
+    window.setTimeout(() => {
+      const key = cellKey(firstCell.row, firstCell.col);
+      inputRefs.current[key]?.focus();
+    }, 0);
   }, [puzzle]);
 
   useEffect(() => {
@@ -75,205 +267,303 @@ export default function KakuroPuzzle() {
     }
   };
 
-  const moveSelection = (row: number, col: number) => {
-    const nextRow = Math.min(2, Math.max(0, row));
-    const nextCol = Math.min(2, Math.max(0, col));
-    setSelectedCell({ row: nextRow, col: nextCol });
-    inputRefs.current[nextRow]?.[nextCol]?.focus();
+  const focusCell = ({ row, col }: Position) => {
+    const key = cellKey(row, col);
+    setSelectedCell({ row, col });
+    inputRefs.current[key]?.focus();
   };
 
-  const getRowValues = (board: Grid, row: number) =>
-    board[row].filter(Boolean).map((value) => Number(value));
-  const getColValues = (board: Grid, col: number) =>
-    board.map((row) => row[col]).filter(Boolean).map((value) => Number(value));
+  const moveDirection = (row: number, col: number, rowDelta: number, colDelta: number) => {
+    let nextRow = row + rowDelta;
+    let nextCol = col + colDelta;
 
-  const isRunValid = (values: number[]) => new Set(values).size === values.length;
-  const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
+    while (
+      nextRow >= 0 &&
+      nextRow < puzzle.cells.length &&
+      nextCol >= 0 &&
+      nextCol < puzzle.cells[nextRow].length
+    ) {
+      if (isPlayCell(puzzle.cells[nextRow][nextCol])) {
+        focusCell({ row: nextRow, col: nextCol });
+        return;
+      }
 
-  const checkCompletion = (nextGrid: Grid) => {
-    if (!puzzle) return;
+      nextRow += rowDelta;
+      nextCol += colDelta;
+    }
+  };
 
-    const filled = nextGrid.every((row) => row.every(Boolean));
-    if (!filled) return;
+  const moveLinear = (row: number, col: number, offset: number) => {
+    const currentIndex = puzzle.playableCells.findIndex((cell) => cell.row === row && cell.col === col);
+    if (currentIndex === -1) return;
 
-    const rowsValid = puzzle.rowSums.every((target, rowIndex) => {
-      const values = getRowValues(nextGrid, rowIndex);
-      return isRunValid(values) && sum(values) === target;
+    const nextCell = puzzle.playableCells[currentIndex + offset];
+    if (nextCell) {
+      focusCell(nextCell);
+    }
+  };
+
+  const getRunValues = (run: KakuroRun, board: Grid) =>
+    run.cells
+      .map(({ row, col }) => board[cellKey(row, col)])
+      .filter(Boolean)
+      .map((value) => Number(value));
+
+  const hasUniqueDigits = (values: number[]) => new Set(values).size === values.length;
+  const sumValues = (values: number[]) => values.reduce((total, value) => total + value, 0);
+
+  const getConflictedKeys = (board: Grid) => {
+    const conflicted = new Set<string>();
+
+    puzzle.runs.forEach((run) => {
+      const values = run.cells.map(({ row, col }) => ({
+        key: cellKey(row, col),
+        value: board[cellKey(row, col)],
+      }));
+
+      const filled = values.filter((entry) => entry.value !== '');
+      const digits = filled.map((entry) => Number(entry.value));
+      const duplicateExists = new Set(digits).size !== digits.length;
+      const runIsFull = filled.length === run.cells.length;
+      const sumMismatch = runIsFull && sumValues(digits) !== run.clue;
+
+      if (!duplicateExists && !sumMismatch) return;
+      filled.forEach((entry) => conflicted.add(entry.key));
     });
 
-    const colsValid = puzzle.colSums.every((target, colIndex) => {
-      const values = getColValues(nextGrid, colIndex);
-      return isRunValid(values) && sum(values) === target;
+    return conflicted;
+  };
+
+  const checkCompletion = (board: Grid) => {
+    const allFilled = puzzle.playableCells.every(({ row, col }) => board[cellKey(row, col)]);
+    if (!allFilled) {
+      setFeedback('The board still has empty cells.');
+      return;
+    }
+
+    const runsValid = puzzle.runs.every((run) => {
+      const values = getRunValues(run, board);
+      return values.length === run.cells.length && hasUniqueDigits(values) && sumValues(values) === run.clue;
     });
 
-    const matchesSolution = nextGrid.every((row, rowIndex) =>
-      row.every((value, colIndex) => Number(value) === solution[rowIndex][colIndex])
-    );
+    const matchesSolution = puzzle.playableCells.every(({ row, col }) => {
+      const value = board[cellKey(row, col)];
+      const cell = puzzle.cells[row][col];
+      return isPlayCell(cell) && Number(value) === cell.solution;
+    });
 
-    if (rowsValid && colsValid && matchesSolution) {
+    if (runsValid && matchesSolution) {
       setIsComplete(true);
       setStats((prev) => ({ ...prev, won: prev.won + 1 }));
       setFeedback('Kakuro solved. Every run matches its clue total.');
       playSound('/sounds/win.mp3');
-      confetti({ particleCount: 120, spread: 75, origin: { y: 0.7 } });
-    } else {
-      setFeedback('The sums look close, but at least one row or column still needs correction.');
+      confetti({ particleCount: 110, spread: 70, origin: { y: 0.7 } });
+      return;
     }
+
+    setFeedback('At least one run has a duplicate digit or the wrong total.');
   };
 
   const updateCell = (row: number, col: number, value: string) => {
     const digit = value.slice(-1).replace(/[^1-9]/g, '');
-    const nextGrid = grid.map((gridRow, rowIndex) =>
-      gridRow.map((cell, colIndex) => {
-        if (rowIndex === row && colIndex === col) return digit;
-        return cell;
-      })
-    );
+    const key = cellKey(row, col);
+    const nextGrid = { ...grid, [key]: digit };
 
     setGrid(nextGrid);
     if (digit) {
       playSound('/sounds/click.mp3');
-      if (col < 2) moveSelection(row, col + 1);
-      else if (row < 2) moveSelection(row + 1, 0);
+      moveLinear(row, col, 1);
     }
-    if (nextGrid.every((gridRow) => gridRow.every(Boolean))) {
+
+    const allFilled = puzzle.playableCells.every(({ row: playRow, col: playCol }) => nextGrid[cellKey(playRow, playCol)]);
+    if (allFilled) {
       checkCompletion(nextGrid);
     }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>, row: number, col: number) => {
-    if (event.key === 'Backspace' && !grid[row][col]) {
-      if (col > 0) moveSelection(row, col - 1);
-      else if (row > 0) moveSelection(row - 1, 2);
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      moveDirection(row, col, -1, 0);
       return;
     }
 
-    if (event.key === 'ArrowUp') moveSelection(row - 1, col);
-    if (event.key === 'ArrowDown') moveSelection(row + 1, col);
-    if (event.key === 'ArrowLeft') moveSelection(row, col - 1);
-    if (event.key === 'ArrowRight') moveSelection(row, col + 1);
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      moveDirection(row, col, 1, 0);
+      return;
+    }
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      moveDirection(row, col, 0, -1);
+      return;
+    }
+
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      moveDirection(row, col, 0, 1);
+      return;
+    }
+
+    if (event.key === 'Backspace' && !grid[cellKey(row, col)]) {
+      event.preventDefault();
+      moveLinear(row, col, -1);
+    }
   };
 
   const revealHint = () => {
-    if (hintsUsed >= 2 || isComplete) {
-      setFeedback('No hints remaining for this Kakuro board.');
+    if (hintsUsed >= activeDifficulty.hintLimit || isComplete) {
+      setFeedback('No hints remaining for this board.');
       return;
     }
 
-    const emptyCells = [];
-    for (let row = 0; row < 3; row += 1) {
-      for (let col = 0; col < 3; col += 1) {
-        if (!grid[row][col]) emptyCells.push({ row, col });
-      }
-    }
-
+    const emptyCells = puzzle.playableCells.filter(({ row, col }) => !grid[cellKey(row, col)]);
     if (emptyCells.length === 0) return;
-    const target = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-    const nextGrid = grid.map((gridRow, rowIndex) =>
-      gridRow.map((cell, colIndex) => {
-        if (rowIndex === target.row && colIndex === target.col) {
-          return String(solution[rowIndex][colIndex]);
-        }
-        return cell;
-      })
-    );
 
+    const target = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    const cell = puzzle.cells[target.row][target.col];
+    if (!isPlayCell(cell)) return;
+
+    const nextGrid = { ...grid, [cellKey(target.row, target.col)]: String(cell.solution) };
     setGrid(nextGrid);
     setHintsUsed((prev) => prev + 1);
-    setFeedback(`Hint revealed at row ${target.row + 1}, column ${target.col + 1}.`);
+    setFeedback(`Hint revealed at row ${target.row}, column ${target.col}.`);
     playSound('/sounds/correct.mp3');
-    if (nextGrid.every((row) => row.every(Boolean))) {
+
+    const allFilled = puzzle.playableCells.every(({ row, col }) => nextGrid[cellKey(row, col)]);
+    if (allFilled) {
       checkCompletion(nextGrid);
     }
   };
 
-  const resetPuzzle = () => {
-    setGrid(emptyGrid());
-    setSelectedCell({ row: 0, col: 0 });
+  const clearBoard = () => {
+    setGrid(createEmptyGrid(puzzle));
+    setSelectedCell(puzzle.firstCell);
     setHintsUsed(0);
     setTimeElapsed(0);
     setIsComplete(false);
-    setFeedback('Board reset. Try again with fresh eyes.');
-    setStats((prev) => ({ ...prev, played: prev.played + 1 }));
+    setFeedback('Board cleared. Try again.');
+    if (puzzle.firstCell) {
+      const firstCell = puzzle.firstCell;
+      window.setTimeout(() => focusCell(firstCell), 0);
+    }
   };
 
-  if (isLoading) {
-    return (
-      <section className="bg-gray-900/80 border border-gray-700 rounded-3xl p-6 md:p-8 shadow-2xl">
-        <div className="text-center py-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">Kakuro</h1>
-          <p className="text-gray-300">Loading today&apos;s puzzle...</p>
-        </div>
-      </section>
-    );
-  }
+  const generatePuzzle = () => {
+    setPuzzleIndex(Math.floor(Math.random() * 9));
+    setPuzzleSeed(Date.now());
+  };
 
-  if (!puzzle) {
-    return (
-      <section className="bg-gray-900/80 border border-gray-700 rounded-3xl p-6 md:p-8 shadow-2xl">
-        <div className="text-center py-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">Kakuro</h1>
-          <p className="text-red-300">{loadError}</p>
-        </div>
-      </section>
-    );
-  }
+  const changeDifficulty = (nextDifficulty: DifficultyKey) => {
+    setDifficulty(nextDifficulty);
+    setPuzzleIndex(Math.floor(Math.random() * 9));
+    setPuzzleSeed(Date.now());
+  };
+
+  const conflictedKeys = getConflictedKeys(grid);
 
   return (
-    <section className="bg-gray-900/80 border border-gray-700 rounded-3xl p-6 md:p-8 shadow-2xl">
+    <section className="bg-gray-900/80 border border-gray-700 rounded-3xl p-5 md:p-7 shadow-2xl">
       <div className="text-center mb-8">
-        <span className="inline-flex items-center bg-purple-500/15 text-purple-300 px-4 py-2 rounded-full text-sm font-medium mb-4">
-          Daily Mini Kakuro
-        </span>
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">Kakuro</h1>
         <p className="text-gray-300 max-w-2xl mx-auto">
-          Fill each run with unique digits so every row and column matches its target sum.
+          Choose between easy `4x4`, intermediate `6x6`, and advanced `8x8` puzzles generated in the browser.
         </p>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-        <div className="space-y-6">
-          <div className="w-fit mx-auto rounded-3xl bg-gray-950 border border-gray-700 p-4">
-            <div className="grid grid-cols-4 gap-2">
-              <div className="h-16 w-16 rounded-2xl bg-gray-800 border border-gray-700" />
-              {puzzle.colSums.map((clue) => (
-                <div
-                  key={`col-${clue}`}
-                  className="h-16 w-16 rounded-2xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-lg font-bold text-purple-200"
-                >
-                  {clue}
-                </div>
-              ))}
+      <div className="space-y-8">
+        <div className="space-y-5">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {DIFFICULTIES.map((option) => (
+              <button
+                key={option.key}
+                onClick={() => changeDifficulty(option.key)}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                  option.key === difficulty
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-800 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {option.badge}
+              </button>
+            ))}
+          </div>
 
-              {grid.map((row, rowIndex) => (
-                <div key={`row-${rowIndex}`} className="contents">
-                  <div className="h-16 w-16 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-lg font-bold text-cyan-200">
-                    {puzzle.rowSums[rowIndex]}
-                  </div>
-                  {row.map((value, colIndex) => {
-                    const rowValues = getRowValues(grid, rowIndex);
-                    const colValues = getColValues(grid, colIndex);
-                    const hasConflict =
-                      (rowValues.length !== new Set(rowValues).size && value !== '') ||
-                      (colValues.length !== new Set(colValues).size && value !== '');
+          <div className="overflow-x-auto">
+            <div className={`mx-auto ${activeDifficulty.boardWidthClass}`}>
+              <div
+                className="grid aspect-square border-[2px] border-[#12243a] bg-[#12243a] shadow-[0_12px_28px_rgba(0,0,0,0.28)]"
+                style={{
+                  gridTemplateColumns: `repeat(${puzzle.boardSize}, minmax(0, 1fr))`,
+                  gridTemplateRows: `repeat(${puzzle.boardSize}, minmax(0, 1fr))`,
+                  gap: '2px',
+                }}
+              >
+                {puzzle.cells.flatMap((boardRow, rowIndex) =>
+                  boardRow.map((cell, colIndex) => {
+                    const key = cellKey(rowIndex, colIndex);
+                    const cellBaseClass = 'box-border block aspect-square h-full w-full min-h-0 min-w-0';
+
+                    if (cell.kind === 'block') {
+                      return (
+                        <div
+                          key={key}
+                          className={`${cellBaseClass} bg-[#4a6787]`}
+                        />
+                      );
+                    }
+
+                    if (cell.kind === 'clue') {
+                      return (
+                        <div
+                          key={key}
+                          className={`relative ${cellBaseClass} overflow-hidden bg-[#9fb9d4]`}
+                        >
+                          <div className="absolute inset-0 bg-[#9fb9d4]" />
+                          <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_48.4%,#12243a_48.5%,#12243a_51.5%,transparent_51.6%)]" />
+                          <div
+                            className="absolute inset-0 bg-[#bdd2e8]"
+                            style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%)' }}
+                          />
+                          <div
+                            className="absolute inset-0 bg-[#7fa1c4]"
+                            style={{ clipPath: 'polygon(0 0, 0 100%, 100% 100%)' }}
+                          />
+                          {cell.right ? (
+                            <span className="absolute top-[18%] left-[58%] -translate-x-1/2 text-sm font-bold leading-none text-[#0d1b2d] sm:text-base">
+                              {cell.right}
+                            </span>
+                          ) : null}
+                          {cell.down ? (
+                            <span className="absolute left-[22%] top-[68%] -translate-y-1/2 text-sm font-bold leading-none text-[#0d1b2d] sm:text-base">
+                              {cell.down}
+                            </span>
+                          ) : null}
+                        </div>
+                      );
+                    }
+
+                    const value = grid[key] ?? '';
+                    const isSelected = selectedCell?.row === rowIndex && selectedCell?.col === colIndex;
+                    const hasConflict = conflictedKeys.has(key);
 
                     return (
                       <input
-                        key={`${rowIndex}-${colIndex}`}
+                        key={key}
                         ref={(element) => {
-                          if (!inputRefs.current[rowIndex]) inputRefs.current[rowIndex] = [];
-                          inputRefs.current[rowIndex][colIndex] = element;
+                          inputRefs.current[key] = element;
                         }}
                         value={value}
                         onChange={(event) => updateCell(rowIndex, colIndex, event.target.value)}
                         onKeyDown={(event) => handleKeyDown(event, rowIndex, colIndex)}
                         onFocus={() => setSelectedCell({ row: rowIndex, col: colIndex })}
-                        className={`h-16 w-16 rounded-2xl border text-center text-2xl font-bold outline-none transition ${
+                        className={`${cellBaseClass} appearance-none rounded-none border-0 p-0 bg-[#eef6ff] text-center align-middle text-xl font-semibold leading-none text-[#0d1b2d] outline-none transition sm:text-2xl ${
                           hasConflict
-                            ? 'border-red-400 bg-red-500/10 text-red-100'
-                            : selectedCell?.row === rowIndex && selectedCell?.col === colIndex
-                              ? 'border-purple-400 bg-purple-500/15 text-white shadow-lg shadow-purple-500/20'
-                              : 'border-gray-600 bg-gray-800 text-white hover:border-purple-500/60'
+                            ? 'bg-[#ffd7d1] text-[#9f2f1f]'
+                            : isSelected
+                              ? 'bg-[#cfe7ff] ring-2 ring-inset ring-[#2d5f91]'
+                              : 'hover:bg-[#deefff]'
                         }`}
                         maxLength={1}
                         inputMode="numeric"
@@ -281,45 +571,51 @@ export default function KakuroPuzzle() {
                         spellCheck={false}
                       />
                     );
-                  })}
-                </div>
-              ))}
+                  })
+                )}
+              </div>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button
+              onClick={generatePuzzle}
+              className="rounded-lg bg-white text-gray-900 px-4 py-2 font-semibold transition-colors hover:bg-gray-200"
+            >
+              New Puzzle
+            </button>
+            <button
               onClick={revealHint}
-              className="rounded-xl bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 font-medium transition-colors"
+              className="rounded-lg bg-slate-600 text-white px-4 py-2 font-medium transition-colors hover:bg-slate-500"
             >
               Reveal Digit
             </button>
             <button
               onClick={() => checkCompletion(grid)}
-              className="rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 font-medium transition-colors"
+              className="rounded-lg bg-cyan-700 text-white px-4 py-2 font-medium transition-colors hover:bg-cyan-600"
             >
               Check Board
             </button>
             <button
-              onClick={resetPuzzle}
-              className="rounded-xl bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 font-medium transition-colors"
+              onClick={clearBoard}
+              className="rounded-lg bg-gray-700 text-white px-4 py-2 font-medium transition-colors hover:bg-gray-600"
             >
-              Reset Board
+              Clear Board
             </button>
           </div>
 
-          <div className="grid grid-cols-4 gap-3 text-center">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 text-center">
             <div className="rounded-2xl bg-gray-800 border border-gray-700 p-4">
               <div className="text-sm text-gray-400">Board</div>
               <div className="text-lg font-semibold text-white">{puzzle.title}</div>
             </div>
             <div className="rounded-2xl bg-gray-800 border border-gray-700 p-4">
               <div className="text-sm text-gray-400">Hints Used</div>
-              <div className="text-lg font-semibold text-white">{hintsUsed}/2</div>
+              <div className="text-lg font-semibold text-white">{hintsUsed}/{activeDifficulty.hintLimit}</div>
             </div>
             <div className="rounded-2xl bg-gray-800 border border-gray-700 p-4">
               <div className="text-sm text-gray-400">Time</div>
-              <div className="text-lg font-semibold text-white">{timeElapsed}s</div>
+              <div className="text-lg font-semibold text-white">{formatTimer(timeElapsed)}</div>
             </div>
             <div className="rounded-2xl bg-gray-800 border border-gray-700 p-4">
               <div className="text-sm text-gray-400">Solved</div>
@@ -332,30 +628,30 @@ export default function KakuroPuzzle() {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="grid gap-5 lg:grid-cols-3">
           <div className="rounded-2xl bg-gray-800 border border-gray-700 p-5">
-            <h2 className="text-xl font-bold text-white mb-4">Kakuro Rules</h2>
+            <h2 className="text-xl font-bold text-white mb-4">Rules</h2>
             <ul className="space-y-2 text-gray-300">
-              <li>Each row must add up to the clue shown on the left.</li>
-              <li>Each column must add up to the clue shown on the top.</li>
-              <li>You cannot repeat a digit within the same row or column run.</li>
+              <li>Each clue cell controls the white run to its right, below, or both.</li>
+              <li>The digits in that run must add up to the clue.</li>
+              <li>A digit cannot repeat inside the same run.</li>
             </ul>
           </div>
 
           <div className="rounded-2xl bg-gray-800 border border-gray-700 p-5">
-            <h2 className="text-xl font-bold text-white mb-4">Solving Tips</h2>
+            <h2 className="text-xl font-bold text-white mb-4">What Changed</h2>
             <ul className="space-y-2 text-gray-300">
-              <li>Low sums usually force smaller digits.</li>
-              <li>Check both the row clue and the column clue before placing a number.</li>
-              <li>If a run already contains a digit, it cannot be used again in that run.</li>
+              <li>The board is generated locally instead of being read from Supabase.</li>
+              <li>You can now switch between easy `4x4`, intermediate `6x6`, and advanced `8x8` puzzles.</li>
+              <li>The board keeps the blue site palette and clue-cell split styling across all three sizes.</li>
             </ul>
           </div>
 
           <div className="rounded-2xl bg-gray-800 border border-gray-700 p-5">
-            <h2 className="text-xl font-bold text-white mb-4">Why Kakuro Works</h2>
+            <h2 className="text-xl font-bold text-white mb-4">Notes</h2>
             <p className="text-gray-300">
-              Kakuro blends arithmetic with logic. You are not just adding numbers, you are narrowing
-              valid combinations while watching for duplicates across intersecting runs.
+              Each difficulty uses its own board size and clue layout, then randomizes the digits to produce
+              a fresh valid puzzle while preserving a consistent Kakuro structure.
             </p>
           </div>
         </div>

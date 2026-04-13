@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import Ads from '@/components/common/Ads';
 
 interface Params {
   slug: string;
@@ -138,6 +139,10 @@ export default async function TriviaPage({ params }: TriviaPageProps) {
             <p className="text-xl text-gray-300 leading-relaxed italic">
               {trivia.excerpt}
             </p>
+          </div>
+
+          <div className="py-2">
+            <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
         </div>
 

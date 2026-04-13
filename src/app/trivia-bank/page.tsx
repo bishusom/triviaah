@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { getAllTriviaPreviews } from '@/lib/tbank';
 import TriviaFilter from '@/components/trivia-bank/TriviaFilter';
+import Ads from '@/components/common/Ads';
 
 interface TriviaCategory {
   slug: string;
@@ -156,6 +157,10 @@ export default async function TriviaBankPage() {
                 BROWSE CATEGORIES
               </span>
             </div>
+          </div>
+
+          <div className="py-4">
+            <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
 
           {/* Client-side filter component */}

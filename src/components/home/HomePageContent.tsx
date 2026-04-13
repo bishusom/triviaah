@@ -1,6 +1,7 @@
 'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight, Sparkles } from 'lucide-react';
 import NavBar from './NavBar';
 import Billboard from './sections/Billboard';
 import { NetflixRow } from './sections/NetflixRow';
@@ -9,11 +10,22 @@ import Ads from '@/components/common/Ads';
 import DailyTriviaFact from './sections/DailyTriviaFact';
 import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, WORD_GAMES, NUMBER_PUZZLES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
 import triviaCategories from '@/config/triviaCategories.json';
+import { GuestSessionManager } from '@/hooks/guestSession';
+import { getGuestStats } from '@/lib/guestStats';
+import { getPersistentGuestId } from '@/lib/guestId';
 
 interface HomeTriviaCategory {
   title: string;
   description?: string;
   displayName?: string;
+}
+
+interface WelcomeState {
+  username: string;
+  gamesPlayed: number;
+  lastPlayed: string;
+  recentHref?: string;
+  recentTitle?: string;
 }
 
 const getIconForCategory = (categoryName: string) => {
@@ -55,6 +67,33 @@ const getColorForCategory = (categoryName: string) => {
 };
 
 export default function HomePageContent() {
+  const [welcomeState, setWelcomeState] = useState<WelcomeState | null>(null);
+
+  useEffect(() => {
+    const session = new GuestSessionManager().getSession();
+    const stats = getGuestStats();
+    const guestAlias = getPersistentGuestId();
+
+    if (!stats.gamesPlayed && !stats.lastPlayed && stats.recentQuizzes.length === 0) {
+      return;
+    }
+
+    const recentQuiz = stats.recentQuizzes[0];
+    const sessionName = session.username || '';
+    const preferredName =
+      sessionName && !/^Guest[a-z0-9]+$/i.test(sessionName)
+        ? sessionName
+        : guestAlias;
+
+    setWelcomeState({
+      username: preferredName || 'there',
+      gamesPlayed: stats.gamesPlayed || 0,
+      lastPlayed: stats.lastPlayed || '',
+      recentHref: recentQuiz?.href,
+      recentTitle: recentQuiz?.title,
+    });
+  }, []);
+
   const featuredTriviaCategories = [
     'science',
     'history',
@@ -99,6 +138,41 @@ export default function HomePageContent() {
             Added pt-10 to give the first row some breathing room.
         */}
         <div className="relative z-20 -mt-24 md:-mt-32 pt-10 space-y-12 pb-24 bg-gradient-to-t from-[#141414] via-[#141414]/95 to-transparent">
+          {welcomeState ? (
+            <section className="px-4 md:px-12">
+              <div className="rounded-3xl border border-cyan-500/20 bg-[linear-gradient(135deg,rgba(14,31,52,0.95),rgba(9,19,33,0.92))] p-5 md:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Welcome Back
+                    </div>
+                    <h2 className="mt-3 text-2xl md:text-3xl font-black tracking-tight text-white">
+                      Welcome back, {welcomeState.username}
+                    </h2>
+                    <p className="mt-2 text-sm md:text-base text-gray-300">
+                      {welcomeState.gamesPlayed > 0
+                        ? `You’ve played ${welcomeState.gamesPlayed} game${welcomeState.gamesPlayed === 1 ? '' : 's'} so far`
+                        : 'Ready for another round?'}
+                      {welcomeState.lastPlayed
+                        ? ` • Last played ${new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric' }).format(new Date(welcomeState.lastPlayed))}`
+                        : ''}
+                    </p>
+                  </div>
+
+                  {welcomeState.recentHref && welcomeState.recentTitle ? (
+                    <Link
+                      href={welcomeState.recentHref}
+                      className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-cyan-900/30 transition-transform hover:scale-[1.02]"
+                    >
+                      Continue {welcomeState.recentTitle}
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  ) : null}
+                </div>
+              </div>
+            </section>
+          ) : null}
           
           <NetflixRow title="Daily Quizzes - Updated 24 hours" items={DAILY_QUIZZES} sectionHref="/daily-trivias" />
 

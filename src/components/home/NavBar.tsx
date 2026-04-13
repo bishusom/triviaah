@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Search, Bell } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
 import SearchBar from './SearchBar';
 import UserStatsPopover from './UserStatsPopover';
 
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isGamesMenuOpen, setIsGamesMenuOpen] = useState(false);
+  const [isMobileGamesOpen, setIsMobileGamesOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -21,10 +23,14 @@ export default function NavBar() {
     { name: 'Brain Waves', href: '/brainwave' },
     { name: 'All Trivias', href: '/trivias' },
     { name: 'Leaderboard', href: '/leaderboard' },
-    { name: 'Word Games', href: '/word-games' },
-    { name: 'Number Puzzles', href: '/number-puzzles' },
     { name: 'Blog', href: '/blog' },
     { name: 'Trivia Bank', href: '/trivia-bank' },
+  ];
+
+  const gameLinks = [
+    { name: 'Retro Games', href: '/retro-games' },
+    { name: 'Word Games', href: '/word-games' },
+    { name: 'Number Puzzles', href: '/number-puzzles' },
   ];
 
   return (
@@ -52,9 +58,9 @@ export default function NavBar() {
             </div>
 
             {/* The Text - Matches Footer's blue-400 and font-bold */}
-            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent transition-all duration-300">
+            <span className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent transition-all duration-300">
               Triviaah
-            </h1>
+            </span>
           </Link>
 
           {/* Desktop Links (Visible only on LG+) */}
@@ -68,6 +74,36 @@ export default function NavBar() {
                 {link.name}
               </Link>
             ))}
+
+            <div
+              className="relative pt-3 -mt-3"
+              onMouseEnter={() => setIsGamesMenuOpen(true)}
+              onMouseLeave={() => setIsGamesMenuOpen(false)}
+            >
+              <button
+                className="flex items-center gap-1 hover:text-cyan-400 transition-colors duration-300"
+                aria-haspopup="menu"
+                aria-expanded={isGamesMenuOpen}
+              >
+                Games
+                <ChevronDown className={`h-4 w-4 transition-transform ${isGamesMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isGamesMenuOpen ? (
+                <div className="absolute left-0 top-full w-52 rounded-2xl border border-[#28486f] bg-[#141414] p-2 shadow-2xl">
+                  {gameLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm text-gray-200 transition-colors hover:bg-[#1b2b3f] hover:text-cyan-400"
+                    >
+                      {link.name}
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
 
@@ -110,6 +146,36 @@ export default function NavBar() {
                 <span className="text-gray-600 text-xs group-hover:text-cyan-400">›</span>
               </Link>
             ))}
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => setIsMobileGamesOpen((prev) => !prev)}
+                className="flex items-center justify-between text-gray-300 text-lg font-semibold hover:text-cyan-400 transition-colors"
+                aria-expanded={isMobileGamesOpen}
+              >
+                <span>Games</span>
+                <ChevronDown className={`h-5 w-5 transition-transform ${isMobileGamesOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isMobileGamesOpen ? (
+                <div className="ml-3 flex flex-col gap-3 border-l border-white/10 pl-4">
+                  {gameLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={() => {
+                        setIsMobileGamesOpen(false);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="text-gray-400 text-base font-medium hover:text-cyan-400 transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
             <div className="h-[1px] w-full bg-white/10 my-2" />
             <Link 
               href="/trivias" 

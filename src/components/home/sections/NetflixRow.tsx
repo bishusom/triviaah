@@ -390,7 +390,7 @@ export const NetflixRow = ({ title, items, sectionHref = '#' }: NetflixRowProps)
         {/* Cards */}
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-auto px-8 md:px-12 no-scrollbar scroll-smooth py-2"
+          className="flex gap-3.5 overflow-x-auto px-4 sm:px-6 md:px-12 no-scrollbar scroll-smooth py-2"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {items.map((item, i) => {
@@ -400,7 +400,7 @@ export const NetflixRow = ({ title, items, sectionHref = '#' }: NetflixRowProps)
             return (
               <div
                 key={key}
-                className="flex-none relative w-44 md:w-72 group/item"
+                className="flex-none relative w-[80vw] max-w-[300px] sm:w-56 md:w-72 group/item"
                 onMouseEnter={(e) => handleMouseEnter(key, item, e.currentTarget)}
                 onMouseLeave={handleMouseLeave}
               >

@@ -450,6 +450,10 @@ export default function RetroGamesClientPage() {
             </div>
           </div>
 
+          <div className="py-4">
+            <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
+          </div>
+
           {/* Games Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {retroGames.map((game, index) => (

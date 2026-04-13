@@ -141,12 +141,6 @@ export default function CrossgridGame() {
             <Timer className="w-4 h-4 text-cyan-400" />
             <span className="text-white font-mono">{formatTime(timeElapsed)}</span>
           </div>
-          <button 
-            onClick={toggleMute}
-            className="p-2 bg-gray-800 rounded-full border border-gray-700 text-gray-400 hover:text-white transition-colors"
-          >
-            {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-          </button>
         </div>
       </div>
 

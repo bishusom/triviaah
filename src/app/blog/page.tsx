@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAllPosts } from '@/lib/markdown';
+import Ads from '@/components/common/Ads';
 
 export const dynamic = 'force-dynamic';
 
@@ -112,6 +113,10 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
               LATEST POSTS
             </span>
           </div>
+        </div>
+
+        <div className="py-4">
+          <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
         </div>
 
         {/* Blog Grid */}
