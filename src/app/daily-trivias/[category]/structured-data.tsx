@@ -13,7 +13,6 @@
 // ✅ FIX: timeRequired uses correct ISO 8601 duration format.
 //    PT${n}S is correct (e.g. PT150S for 150 seconds total).
 
-import type { UserLocationInfo } from '@/types/location';
 import type { Question } from '@/lib/supabase';
 
 // Static per-category data used in schema descriptions
@@ -31,7 +30,7 @@ const CATEGORY_SUBJECTS: Record<string, string> = {
 interface StructuredDataProps {
   category: string;
   formattedCategory: string;
-  locationInfo: UserLocationInfo;
+  dateKey: string;
   lastUpdated: string;
   questions: Question[];
 }
@@ -39,7 +38,7 @@ interface StructuredDataProps {
 export function StructuredData({
   category,
   formattedCategory,
-  locationInfo,
+  dateKey,
   lastUpdated,
   questions,
 }: StructuredDataProps) {
@@ -49,7 +48,6 @@ export function StructuredData({
   const timePerQuestion = isQuickfire ? 15 : 30;
   const pageUrl = `https://triviaah.com/daily-trivias/${category}`;
   const subject = CATEGORY_SUBJECTS[category] ?? formattedCategory.toLowerCase();
-  const dateLabel = locationInfo.userLocalDate.toISOString().split('T')[0];
 
   const graph = {
     '@context': 'https://schema.org',
@@ -110,10 +108,10 @@ export function StructuredData({
       {
         '@type': 'Quiz',
         '@id': `${pageUrl}/#quiz`,
-        name: `${formattedCategory} Daily Quiz — ${dateLabel}`,
+        name: `${formattedCategory} Daily Quiz — ${dateKey}`,
         description: `Daily ${subject} trivia quiz with ${questions.length} multiple-choice questions. ${timePerQuestion} seconds per question. Refreshes every 24 hours.`,
         url: pageUrl,
-        dateCreated: dateLabel,
+        dateCreated: dateKey,
         dateModified: lastUpdated,
         numberOfQuestions: questions.length,
         // ISO 8601 duration: total time = timePerQuestion × questions.length seconds
@@ -155,47 +153,6 @@ export function StructuredData({
         ],
       },
 
-      // ── FAQPage ──────────────────────────────────────────────────────────
-      // ✅ FAQ schema text matches exactly what FAQSection renders visibly.
-      // Google cross-references JSON-LD against visible text — mismatches
-      // disqualify pages from FAQ rich results.
-      {
-        '@type': 'FAQPage',
-        mainEntity: [
-          {
-            '@type': 'Question',
-            name: `How often are new ${formattedCategory.toLowerCase()} quiz questions available?`,
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: `New ${formattedCategory.toLowerCase()} trivia questions are available every day. The quiz refreshes at midnight — come back daily for a fresh challenge.`,
-            },
-          },
-          {
-            '@type': 'Question',
-            name: `Is the ${formattedCategory.toLowerCase()} daily quiz free?`,
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: `Yes. The ${formattedCategory.toLowerCase()} daily trivia quiz is completely free to play — no registration, no subscription, no hidden fees.`,
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'How many questions are in the daily quiz?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: `Today's quiz has ${questions.length} multiple-choice questions. Each question has a ${timePerQuestion}-second timer.`,
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'Can I retake the quiz?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'Yes — you can retake today\'s quiz as many times as you like. Your best score is recorded for the daily leaderboard.',
-            },
-          },
-        ],
-      },
     ],
   };
 

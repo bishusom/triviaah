@@ -55,7 +55,7 @@ export function FAQSection({
     {
       icon: '🎯',
       title: 'About This Quiz',
-      answer: `This daily ${formattedCategory.toLowerCase()} quiz refreshes every 24 hours with fresh questions. Last updated: ${new Date(lastUpdated).toLocaleDateString()}.`,
+      answer: `This daily ${formattedCategory.toLowerCase()} quiz refreshes every 24 hours with fresh questions. Last updated: ${new Date(lastUpdated).toLocaleDateString('en-US', { timeZone: 'UTC' })}.`,
     },
     {
       icon: '⚡',

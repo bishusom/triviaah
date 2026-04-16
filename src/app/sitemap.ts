@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs'
+import triviaCategoriesConfig from '@/config/triviaCategories.json'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -191,7 +192,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // are included, but NOT subcategory query-string URLs.
   // Subcategory routes are only included if you've created actual page routes for them.
   const triviaCategories = Array.from(
-    new Set([...(await getCategoriesWithMinQuestions(10)), ...VIRTUAL_TRIVIA_CATEGORIES])
+    new Set([
+      ...Object.keys(triviaCategoriesConfig),
+      ...(await getCategoriesWithMinQuestions(10)),
+      ...VIRTUAL_TRIVIA_CATEGORIES,
+    ])
   )
 
   const triviaCategoryPages: MetadataRoute.Sitemap = triviaCategories.map(category => ({

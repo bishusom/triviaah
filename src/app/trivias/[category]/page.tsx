@@ -10,6 +10,12 @@ import { Play, Timer, Info, ShieldQuestionMark, BookOpen, Trophy, CircleStar } f
 
 type CategoryKey = keyof typeof triviaCategories;
 
+export async function generateStaticParams() {
+  return Object.keys(triviaCategories).map((category) => ({
+    category,
+  }));
+}
+
 // Define proper interfaces for the data structures
 interface TriviaCategory {
   title: string;
@@ -391,7 +397,6 @@ function StructuredData({
           "@id": `${categoryUrl}/#game`
         },
         "datePublished": "2025-10-22T00:00:00+00:00",
-        "dateModified": new Date().toISOString(),
         "breadcrumb": {
           "@id": `${categoryUrl}/#breadcrumb`
         },

@@ -50,7 +50,10 @@ interface HistoryQuestionRow {
 }
 
 // Helper function to get client-side date string
-function getClientDateString(customDate?: Date): string {
+function getClientDateString(customDate?: Date | string): string {
+  if (typeof customDate === 'string') {
+    return customDate;
+  }
   const date = customDate || new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -371,7 +374,7 @@ export async function getSubcategoryQuestions(
   }
 }
 
-export async function getDailyQuizQuestions(category: string, customDate?: Date): Promise<Question[]> {
+export async function getDailyQuizQuestions(category: string, customDate?: Date | string): Promise<Question[]> {
   try {
     const dateString = getClientDateString(customDate);
     
@@ -472,12 +475,16 @@ export async function getRandomQuestions(
   }
 }
 
-export async function getTodaysHistoryQuestions(count: number, userDate?: Date): Promise<Question[]> {
+export async function getTodaysHistoryQuestions(count: number, userDate?: Date | string): Promise<Question[]> {
   try {
-    const targetDate = userDate || new Date();
-    const month = String(targetDate.getMonth() + 1).padStart(2, '0');
-    const day = String(targetDate.getDate()).padStart(2, '0');
-    const monthDay = `${month}-${day}`;
+    const monthDay = typeof userDate === 'string'
+      ? userDate.slice(5, 10)
+      : (() => {
+          const targetDate = userDate || new Date();
+          const month = String(targetDate.getMonth() + 1).padStart(2, '0');
+          const day = String(targetDate.getDate()).padStart(2, '0');
+          return `${month}-${day}`;
+        })();
     
     console.log('Fetching today in history for date:', monthDay);
 

@@ -2,6 +2,7 @@
 import { headers } from 'next/headers';
 
 export interface UserLocationInfo {
+  dateKey: string;
   userLocalDate: Date;
   timezone: string;
   country: string;
@@ -15,37 +16,35 @@ export interface UserLocationInfo {
 export async function getUserLocalDate(): Promise<UserLocationInfo> {
   try {
     const headersList = await headers();
-    let timezone = headersList.get('x-vercel-ip-timezone') || 'UTC';
+    const timezone = headersList.get('x-vercel-ip-timezone') || 'UTC';
     const country = headersList.get('x-vercel-ip-country') || 'Unknown';
 
-    // If in development and no timezone header, use environment variable or UTC
-    if (process.env.NODE_ENV === 'development' && !timezone) {
-      timezone = process.env.DEV_TIMEZONE || 'UTC';
-      console.log(`Development mode: using timezone from DEV_TIMEZONE: ${timezone}`);
-    }
-    
-    // Create date in user's timezone
     const now = new Date();
-    const userLocalDateString = now.toLocaleDateString('en-CA', { 
-      timeZone: timezone 
-    });
-    
-    // Parse back to Date object (en-CA format: YYYY-MM-DD)
-    const [year, month, day] = userLocalDateString.split('-').map(Number);
-    const userLocalDate = new Date(year, month - 1, day);
-    
-    // Format for display
-    const displayDate = userLocalDate.toLocaleDateString('en-US', {
+    const dateParts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(now);
+
+    const year = dateParts.find(part => part.type === 'year')?.value ?? '1970';
+    const month = dateParts.find(part => part.type === 'month')?.value ?? '01';
+    const day = dateParts.find(part => part.type === 'day')?.value ?? '01';
+    const dateKey = `${year}-${month}-${day}`;
+    const userLocalDate = new Date(`${dateKey}T00:00:00Z`);
+
+    const displayDate = new Intl.DateTimeFormat('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       timeZone: timezone
-    });
-
-    console.log(`User timezone: ${timezone}, Country: ${country}, Local date: ${userLocalDateString}`);
+    }).format(now);
+    
+    console.log(`User timezone: ${timezone}, Country: ${country}, Local date: ${dateKey}`);
     
     return {
+      dateKey,
       userLocalDate,
       timezone: timezone.replace('_', ' '),
       country,
@@ -56,20 +55,18 @@ export async function getUserLocalDate(): Promise<UserLocationInfo> {
     
     // Fallback: UTC date without time component
     const utcDate = new Date();
-    const userLocalDate = new Date(Date.UTC(
-      utcDate.getUTCFullYear(), 
-      utcDate.getUTCMonth(), 
-      utcDate.getUTCDate()
-    ));
+    const dateKey = utcDate.toISOString().split('T')[0];
+    const userLocalDate = new Date(`${dateKey}T00:00:00Z`);
     
-    const displayDate = userLocalDate.toLocaleDateString('en-US', {
+    const displayDate = new Intl.DateTimeFormat('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric'
-    });
+    }).format(utcDate);
 
     return {
+      dateKey,
       userLocalDate,
       timezone: 'UTC',
       country: 'Unknown',

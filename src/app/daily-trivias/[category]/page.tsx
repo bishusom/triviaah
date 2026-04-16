@@ -231,16 +231,15 @@ interface DailyQuizContentProps {
 
 async function DailyQuizContent({ category, locationInfo }: DailyQuizContentProps) {
   try {
-    const activeDate = locationInfo.userLocalDate;
-    const dateKey = activeDate.toISOString().split('T')[0];
+    const dateKey = locationInfo.dateKey;
 
     let questions: Question[];
     if (category === 'quick-fire') {
       questions = await getRandomQuestions(7, ['easy', 'medium', 'hard']);
     } else if (category === 'today-in-history') {
-      questions = await getTodaysHistoryQuestions(10, activeDate);
+      questions = await getTodaysHistoryQuestions(10, dateKey);
     } else {
-      questions = await getDailyQuizQuestions(category, activeDate);
+      questions = await getDailyQuizQuestions(category, dateKey);
     }
 
     if (!questions || questions.length === 0) {
@@ -256,7 +255,7 @@ async function DailyQuizContent({ category, locationInfo }: DailyQuizContentProp
     };
 
     const isQuickfire = category === 'quick-fire';
-    const lastUpdated = new Date().toISOString();
+    const lastUpdated = `${dateKey}T00:00:00Z`;
 
     const quizConfig = {
       isQuickfire,
@@ -277,7 +276,7 @@ async function DailyQuizContent({ category, locationInfo }: DailyQuizContentProp
         <StructuredData
           category={category}
           formattedCategory={cfg.name}
-          locationInfo={locationInfo}
+          dateKey={dateKey}
           lastUpdated={lastUpdated}
           questions={questions}
         />
@@ -387,7 +386,7 @@ async function DailyQuizContent({ category, locationInfo }: DailyQuizContentProp
             {/* Dynamic Evergreen Links */}
             {cfg.triviaSlugs && cfg.triviaSlugs.length > 0 && (
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-400">
-                <span>Want more {cfg.name.toLowerCase()} trvias? Browse:&nbsp;</span>
+                <span>Want more {cfg.name.toLowerCase()} trivias? Browse:&nbsp;</span>
                 {cfg.triviaSlugs.map((slug, idx) => (
                   <span key={slug} className="flex items-center">
                     <Link 
@@ -430,14 +429,26 @@ export default async function DailyQuizPage({ params, searchParams }: PageProps)
   return (
     <WithTimezone>
       {(locationInfo) => {
-        const displayDate = resolvedSearch.date
-          ? new Date(resolvedSearch.date)
+        const dateKey = resolvedSearch.date
+          ? resolvedSearch.date
+          : locationInfo.dateKey;
+        const userLocalDate = resolvedSearch.date
+          ? new Date(`${resolvedSearch.date}T00:00:00Z`)
           : locationInfo.userLocalDate;
+        const displayDate = resolvedSearch.date
+          ? new Date(`${resolvedSearch.date}T00:00:00Z`).toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              timeZone: 'UTC',
+            })
+          : locationInfo.displayDate;
 
         return (
           <DailyQuizContent
             category={resolvedParams.category}
-            locationInfo={{ ...locationInfo, userLocalDate: displayDate }}
+            locationInfo={{ ...locationInfo, dateKey, userLocalDate, displayDate }}
           />
         );
       }}
