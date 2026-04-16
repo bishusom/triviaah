@@ -70,7 +70,7 @@ async function getDailyQuizzes() {
       category: 'today-in-history',
       name: 'Today in History',
       path: '/daily-trivias/today-in-history',
-      image: '/imgs/daily-trivias/today-history.webp',
+      image: '/imgs/daily-trivias/today-in-history.webp',
       tagline: 'Discover historical events from this date in free online trivia',
       keywords: 'historical trivia quiz, on this day trivia, history facts game',
     },

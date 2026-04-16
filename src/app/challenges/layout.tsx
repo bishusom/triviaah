@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/Triviaah-og.webp',
+        url: '/imgs/triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'Triviaah Challenges',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: 'Trivia Challenges | Upcoming Daily, Weekly, and Monthly Events',
     description:
       'See what is coming next on Triviaah, including daily challenges, weekly quests, monthly tournaments, and achievement-based competition features.',
-    images: ['/imgs/Triviaah-og.webp'],
+    images: ['/imgs/triviaah-og.webp'],
   },
   robots: {
     index: true,

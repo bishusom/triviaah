@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/Triviaah-og.webp',
+        url: '/imgs/triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'Triviaah Terms of Service',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     title: 'Terms of Service | Triviaah',
     description:
       'Review the Triviaah terms of service covering fair play, user responsibilities, intellectual property, and platform usage.',
-    images: ['/imgs/Triviaah-og.webp'],
+    images: ['/imgs/triviaah-og.webp'],
   },
   robots: {
     index: true,

@@ -43,7 +43,7 @@ export function generateWordGamesMetadata(): Metadata {
       siteName: 'Triviaah',
       images: [
         {
-          url: '/imgs/word-games.webp',
+          url: '/imgs/word-games/word-games.webp',
           width: 1200,
           height: 630,
           alt: 'Word Games Collection - Vocabulary and Spelling Challenges'
@@ -56,7 +56,7 @@ export function generateWordGamesMetadata(): Metadata {
       card: 'summary_large_image',
       title: 'Free Word Games Collection | Vocabulary & Spelling Games | Triviaah',
       description: 'Challenge your vocabulary with our collection of free word games including Boggle, Scramble, Spelling Bee, Word Search, Word Ladder, and Crossgrid. Improve spelling, vocabulary, and cognitive skills.',
-      images: ['/imgs/word-games.webp'],
+      images: ['/imgs/word-games/word-games.webp'],
       site: '@elitetrivias',
     },
     robots: {

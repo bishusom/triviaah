@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/Triviaah-og.webp',
+        url: '/imgs/triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'About Triviaah',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     title: 'About Triviaah | Free Trivia and Quiz Games',
     description:
       'Learn about Triviaah, our mission, and how we build free trivia games, daily quizzes, and knowledge challenges for players worldwide.',
-    images: ['/imgs/Triviaah-og.webp'],
+    images: ['/imgs/triviaah-og.webp'],
   },
   robots: {
     index: true,

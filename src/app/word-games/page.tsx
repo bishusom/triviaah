@@ -171,7 +171,7 @@ export default function WordGamesClientPage() {
         },
         "primaryImageOfPage": {
           "@type": "ImageObject",
-          "url": "https://triviaah.com/imgs/word-games/word-games-og.webp",
+          "url": "https://triviaah.com/imgs/word-games/word-games.webp",
           "width": 1200,
           "height": 630
         }

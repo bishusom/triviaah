@@ -30,7 +30,7 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
     category: 'today-in-history',
     name: 'Today in History',
     path: '/daily-trivias/today-in-history',
-    image: '/imgs/thumbnails/today-history-160x160.webp',
+    image: '/imgs/thumbnails/today-in-history-160x160.webp',
     tagline: 'Discover historical events from this date in free online trivia',
     keywords: 'historical trivia quiz, on this day trivia, history facts game',
     playCount: 25234,

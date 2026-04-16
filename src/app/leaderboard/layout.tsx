@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/Triviaah-og.webp',
+        url: '/imgs/triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'Triviaah Leaderboard',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: 'Trivia Leaderboard | Compare Scores and Track Progress',
     description:
       'View the Triviaah leaderboard to compare scores, track trivia performance, and see how you rank across weekly, monthly, and all-time results.',
-    images: ['/imgs/Triviaah-og.webp'],
+    images: ['/imgs/triviaah-og.webp'],
   },
   robots: {
     index: true,

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/Triviaah-og.webp',
+        url: '/imgs/triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'Contact Triviaah',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: 'Contact Triviaah | Support, Feedback, and Questions',
     description:
       'Contact Triviaah for support, feedback, partnership inquiries, or questions about our trivia games, quizzes, and puzzle experiences.',
-    images: ['/imgs/Triviaah-og.webp'],
+    images: ['/imgs/triviaah-og.webp'],
   },
   robots: {
     index: true,

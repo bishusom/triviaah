@@ -20,7 +20,7 @@ export default function Home() {
         '@type': 'Organization',
         name: 'Triviaah',
         url: 'https://triviaah.com',
-        logo: 'https://triviaah.com/imgs/Triviaah-og.webp',
+        logo: 'https://triviaah.com/imgs/triviaah-og.webp',
       },
       {
         '@type': 'WebPage',

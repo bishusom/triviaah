@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/Triviaah-og.webp',
+        url: '/imgs/triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'Triviaah Privacy Policy',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     title: 'Privacy Policy | Triviaah',
     description:
       'Read the Triviaah privacy policy to understand what information we collect, how we use it, and how we protect player data.',
-    images: ['/imgs/Triviaah-og.webp'],
+    images: ['/imgs/triviaah-og.webp'],
   },
   robots: {
     index: true,
