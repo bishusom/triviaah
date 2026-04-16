@@ -107,6 +107,11 @@ function createDigitMap() {
 function createTemplate(config: DifficultyConfig): TemplateCell[][] {
   const boardSize = config.playableSize + 1;
   const breakKeys = new Set(config.breaks.map(({ row, col }) => cellKey(row, col)));
+  
+  // Create a randomized sequence for each row to avoid diagonal repetition
+  const rowSequences = Array.from({ length: boardSize }, () => 
+    shuffle(Array.from({ length: config.playableSize }, (_, i) => i + 1))
+  );
 
   return Array.from({ length: boardSize }, (_, rowIndex) =>
     Array.from({ length: boardSize }, (_, colIndex) => {
@@ -118,9 +123,13 @@ function createTemplate(config: DifficultyConfig): TemplateCell[][] {
         return { kind: 'clue' } satisfies TemplateClueCell;
       }
 
+      // Use the shuffled sequence for this specific row
+      // We use (colIndex - 1) to map the playable column to the shuffled array
+      const val = rowSequences[rowIndex][colIndex - 1];
+
       return {
         kind: 'play',
-        value: ((rowIndex + colIndex - 2) % config.playableSize) + 1,
+        value: val,
       } satisfies TemplatePlayCell;
     })
   );
@@ -468,7 +477,7 @@ export default function KakuroPuzzle() {
       <div className="text-center mb-8">
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">Kakuro</h1>
         <p className="text-gray-300 max-w-2xl mx-auto">
-          Choose between easy `4x4`, intermediate `6x6`, and advanced `8x8` puzzles generated in the browser.
+          Choose between easy `4x4`, intermediate `6x6`, and advanced `8x8` puzzles.
         </p>
       </div>
 
