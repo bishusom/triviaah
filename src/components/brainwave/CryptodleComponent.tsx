@@ -440,7 +440,7 @@ export default function CryptodleComponent({ initialData }: CryptodleComponentPr
             </div>
             {puzzleData.author && (
               <p className="mt-2 text-amber-400 font-semibold text-center">
-                — This puzzle is attributed to {puzzleData.author}
+                — Decrypt this quote by {puzzleData.author}
               </p>
             )}
           </div>
