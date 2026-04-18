@@ -1,5 +1,5 @@
 // src/components/brainwave/inventionle/InventionleComponent.tsx
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';

@@ -1,19 +1,19 @@
-// src/app/number-puzzles/number-scramble/page.tsx
+// src/app/number-puzzles/2048/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import MuteButton from '@/components/common/MuteButton';
-import ScramblePuzzle from '@/components/number-puzzles/ScramblePuzzle';
+import Puzzle2048 from '@/components/number-puzzles/2048Puzzle';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
 
-export default function NumberScramblePage() {
+export default function Number2048Page() {
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
   const [showDesktopAds, setShowDesktopAds] = useState(true);
   const [showMobileAd, setShowMobileAd] = useState(true);
   const showAds = process.env.NEXT_PUBLIC_SHOW_ADS === 'true';
 
-  // Structured data for Number Scramble
+  // Structured data for 2048
   const [structuredData, setStructuredData] = useState({
     organization: {
       '@context': 'https://schema.org',
@@ -29,16 +29,16 @@ export default function NumberScramblePage() {
     webpage: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Number Sequence Puzzle Game | Free Math Brain Teaser | Triviaah',
-      description: 'Play Number Sequence, a free online number puzzle game. Identify the next numbers in a sequence with limited attempts. Improve your math skills with this fun and challenging brain game.',
-      url: 'https://triviaah.com/number-puzzles/number-scramble',
+      name: '2048 Puzzle Game | Free Number Brain Teaser | Triviaah',
+      description: 'Play 2048, a free online tile-merging puzzle game. Swipe to combine matching tiles and reach 2048 while improving strategy and planning skills.',
+      url: 'https://triviaah.com/number-puzzles/2048',
       dateModified: lastUpdated,
       mainEntity: {
         '@type': 'Game',
-        name: 'Number Sequence',
-        description: 'Math puzzle game where players identify patterns and predict the next numbers in sequences. Features arithmetic, geometric, and complex number patterns with multiple difficulty levels.',
-        gameLocation: 'https://triviaah.com/number-puzzles/number-scramble',
-        characterAttribute: 'Math Skills, Pattern Recognition, Logical Thinking, Problem Solving, Cognitive Skills, Mental Math'
+        name: '2048',
+        description: 'Tile-merging puzzle game where players combine matching numbers to reach the 2048 tile and beyond. Features strategic planning, pattern recognition, and spatial reasoning.',
+        gameLocation: 'https://triviaah.com/number-puzzles/2048',
+        characterAttribute: 'Strategy, Pattern Recognition, Logical Thinking, Problem Solving, Spatial Reasoning, Mental Math'
       }
     },
     breadcrumb: {
@@ -60,8 +60,8 @@ export default function NumberScramblePage() {
         {
           '@type': 'ListItem',
           position: 3,
-          name: 'Number Sequence',
-          item: 'https://triviaah.com/number-puzzles/number-scramble'
+            name: '2048',
+            item: 'https://triviaah.com/number-puzzles/2048'
         }
       ]
     },
@@ -71,34 +71,34 @@ export default function NumberScramblePage() {
       mainEntity: [
         {
           '@type': 'Question',
-          name: 'What is Number Sequence?',
+          name: 'What is 2048?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Number Sequence is a math puzzle game where players identify patterns in number sequences and predict the next numbers. It challenges logical thinking and pattern recognition skills.'
+            text: '2048 is a classic tile-merging puzzle game where players slide numbered tiles on a grid and combine matching values to reach the 2048 tile.'
           }
         },
         {
           '@type': 'Question',
-          name: 'How do you play Number Sequence?',
+          name: 'How do you play 2048?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Players are shown a sequence of numbers with a pattern, and they must identify the next numbers in the sequence using logical reasoning and mathematical thinking.'
+            text: 'Swipe or use the arrow keys to move all tiles. Matching tiles merge into one tile with double the value, and a new tile appears after each move.'
           }
         },
         {
           '@type': 'Question',
-          name: 'What types of number patterns are used?',
+          name: 'What are the rules of 2048?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'The game includes arithmetic sequences, geometric sequences, Fibonacci patterns, prime numbers, squares, cubes, and various mathematical operations and combinations.'
+            text: 'You can merge tiles with the same number, new tiles appear after every move, and the game ends when no legal moves remain.'
           }
         },
         {
           '@type': 'Question',
-          name: 'Is Number Sequence educational?',
+          name: 'Is 2048 educational?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes! Number Sequence is excellent for developing mathematical thinking, pattern recognition, logical reasoning, and problem-solving skills in an engaging game format.'
+            text: 'Yes! 2048 helps build spatial reasoning, strategic planning, pattern recognition, and quick decision-making in an engaging format.'
           }
         }
       ]
@@ -114,22 +114,22 @@ export default function NumberScramblePage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Structured Data */}
       <Script
-        id="number-scramble-organization-schema"
+        id="2048-organization-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.organization) }}
       />
       <Script
-        id="number-scramble-webpage-schema"
+        id="2048-webpage-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.webpage) }}
       />
       <Script
-        id="number-scramble-breadcrumb-schema"
+        id="2048-breadcrumb-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.breadcrumb) }}
       />
       <Script
-        id="number-scramble-faq-schema"
+        id="2048-faq-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.faq) }}
       />
@@ -174,13 +174,13 @@ export default function NumberScramblePage() {
           <MuteButton />
         </div>
         
-        <ScramblePuzzle />
+        <Puzzle2048 />
 
         {/* Enhanced FAQ Section */}
         <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
           <details className="group">
             <summary className="flex justify-between items-center cursor-pointer list-none">
-              <h2 className="text-xl font-bold text-white">Number Scramble Game Information & FAQ</h2>
+              <h2 className="text-xl font-bold text-white">2048 Game Information & FAQ</h2>
               <span className="text-gray-500 transition-transform duration-200 group-open:rotate-180">
                 ▼
               </span>
@@ -195,50 +195,45 @@ export default function NumberScramblePage() {
               </div>
 
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What is Number Scramble?</h3>
+                <h3 className="font-semibold" itemProp="name">What is 2048?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Number Scramble is a math puzzle game where players rearrange given digits to match a
-                  target number or solve a numeric challenge. It tests number sense, logical thinking,
-                  pattern recognition, and flexible problem-solving in a fast, game-based format.
+                  2048 is a tile-merging puzzle game where players slide numbered tiles on a 4x4 grid.
+                  Matching tiles combine into larger values, and the goal is to reach the 2048 tile.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">How do you play Number Scramble?</h3>
+                <h3 className="font-semibold" itemProp="name">How do you play 2048?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Players are shown scrambled digits and must rearrange them into the correct order or
-                  configuration to solve the puzzle. You analyze the available numbers, test different
-                  arrangements, and use reasoning to reach the target before running out of attempts.
+                  Use the arrow keys or swipe gestures to move tiles. When two tiles with the same number
+                  touch, they merge into a single tile with double the value. A new tile appears after each move.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">What skills does Number Scramble develop?</h3>
+                <h3 className="font-semibold" itemProp="name">What skills does 2048 develop?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Number Scramble develops mental math, numerical reasoning, logical thinking, digit
-                  recognition, and problem-solving speed. Regular play helps improve confidence with
-                  numbers while training attention to detail and strategic trial-and-error.
+                  2048 develops spatial reasoning, strategic planning, pattern recognition, and decision-making
+                  under pressure. It is a simple game with a surprisingly deep strategy layer.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
-                <h3 className="font-semibold" itemProp="name">Is Number Scramble educational?</h3>
+                <h3 className="font-semibold" itemProp="name">Is 2048 educational?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes. Number Scramble reinforces core math skills by making players work actively with
-                  digits, order, and numeric relationships. It is useful for students, puzzle fans, and
-                  anyone who wants a quick way to practice number fluency and reasoning.
+                  Yes. 2048 reinforces spatial awareness, planning, and logical thinking while keeping the
+                  gameplay fast and approachable for casual players.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Are there different difficulty levels?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes. Number Scramble puzzles can vary from simple digit reordering challenges to harder
-                  puzzles that require multi-step thinking, tighter constraints, or more abstract numeric
-                  goals. That range makes it suitable for both casual players and stronger puzzle solvers.
+                  The core 2048 rules stay the same, but difficulty comes from board randomness and how
+                  well you manage the grid. Playing for a higher tile value is the real challenge.
                 </p>
               </div>
               <div itemScope itemType="https://schema.org/Question">
                 <h3 className="font-semibold" itemProp="name">Is this game free to play?</h3>
                 <p className="text-gray-10" itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-                  Yes. Number Scramble is completely free to play with no registration required, so you
-                  can jump straight into new puzzle challenges and practice your math skills anytime.
+                  Yes. 2048 is completely free to play with no registration required, so you can jump
+                  straight into the game and practice your strategic thinking anytime.
                 </p>
               </div>
             </div>
@@ -247,16 +242,16 @@ export default function NumberScramblePage() {
 
         {/* Game Information Section */}
         <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 text-gray-300">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">About Number Scramble Puzzles</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">About 2048</h2>
           <div className="space-y-6 text-gray-10">
             <div>
               <h3 className="text-lg font-semibold mb-2">How to Play:</h3>
               <ul className="list-disc pl-5 space-y-2">
-                <li>Review the available digits and the puzzle goal</li>
-                <li>Rearrange numbers into the correct order or target value</li>
-                <li>Test combinations strategically within the allowed attempts</li>
-                <li>Use hints when you need help narrowing the possibilities</li>
-                <li>Progress through increasingly difficult numeric challenges</li>
+                <li>Swipe or use the arrow keys to move all tiles on the board</li>
+                <li>Merge matching tiles to create larger numbers</li>
+                <li>Plan ahead so you do not trap the board too early</li>
+                <li>Reach 2048, then keep going for a bigger score if you want</li>
+                <li>The game ends when no legal moves remain</li>
               </ul>
             </div>
 
@@ -298,26 +293,25 @@ export default function NumberScramblePage() {
           
           {/* Educational Benefits Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Educational Benefits of Number Scramble Games</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Educational Benefits of 2048</h3>
             <div className="prose prose-invert max-w-none text-gray-10">
               <p className="mb-4">
-                Number Scramble puzzles are more than just entertaining games. They help strengthen number
-                fluency, flexible thinking, and quick reasoning in a format that feels playful rather than
-                academic. As one of our most accessible <strong>free math brain teasers</strong>, Number
-                Scramble offers:
+                2048 is more than just an entertaining game. It helps strengthen spatial awareness,
+                flexible thinking, and quick reasoning in a format that feels playful rather than
+                academic. As one of our most accessible <strong>free number puzzles</strong>, 2048 offers:
               </p>
               <ul className="list-disc pl-5 space-y-2 mb-4">
-                <li>Improved number sense and digit recognition</li>
+                <li>Improved spatial reasoning and board awareness</li>
                 <li>Stronger logical reasoning and puzzle-solving skills</li>
-                <li>Better mental math speed and accuracy</li>
-                <li>More confidence working with numeric constraints</li>
-                <li>Practice with strategic thinking under limited attempts</li>
-                <li>A low-pressure way to build everyday math fluency</li>
+                <li>Better decision-making speed and accuracy</li>
+                <li>More confidence planning several moves ahead</li>
+                <li>Practice with strategic thinking under pressure</li>
+                <li>A low-pressure way to build everyday problem-solving skills</li>
               </ul>
               <p>
                 Whether you&apos;re a student building core skills, a teacher looking for engaging number
-                practice, or a puzzle fan who enjoys quick logic challenges, our <strong>free Number
-                Scramble game</strong> offers a strong mix of entertainment and educational value.
+                practice, or a puzzle fan who enjoys quick logic challenges, our <strong>free 2048 game</strong>
+                offers a strong mix of entertainment and educational value.
               </p>
             </div>
           </div>
@@ -327,47 +321,40 @@ export default function NumberScramblePage() {
         <div className="sr-only" aria-hidden="false">
           <div itemScope itemType="https://schema.org/Game">
             <meta itemProp="dateModified" content={lastUpdated} />
-            <h2>Number Scramble - Free Online Math Puzzle Game</h2>
+            <h2>2048 - Free Online Tile Puzzle Game</h2>
             <p itemProp="description">
-              Challenge your mathematical mind with Number Scramble puzzles. Rearrange digits, solve
-              numeric goals, and sharpen logical reasoning in this fast-paced brain game. Ideal for
-              students, puzzle fans, and anyone who wants to build stronger number fluency through play.
+              Challenge your strategic mind with 2048. Merge tiles, plan your moves, and sharpen spatial
+              reasoning in this fast-paced brain game. Ideal for players who enjoy quick logic puzzles.
             </p>
-            <h3>How to Play Number Scramble:</h3>
+            <h3>How to Play 2048:</h3>
             <ul>
-              <li>Review the provided digits and puzzle objective</li>
-              <li>Rearrange numbers to create the correct target or solution</li>
-              <li>Use logical reasoning to eliminate weak combinations</li>
-              <li>Submit answers and refine your approach using feedback</li>
-              <li>Use hints when you need help narrowing possibilities</li>
-              <li>Play fresh math challenges that test flexible thinking</li>
+              <li>Swipe or use the arrow keys to move the tiles</li>
+              <li>Merge matching tiles to create bigger numbers</li>
+              <li>Keep the board open so you have room for new tiles</li>
+              <li>Try to reach 2048 and then push for higher scores</li>
               <li>Completely free with no registration required</li>
             </ul>
             <h3>Game Features:</h3>
             <ul>
-              <li>Digit-reordering and target-matching challenges</li>
-              <li>Difficulty progression from beginner to expert</li>
-              <li>Fast, replayable number puzzle rounds</li>
-              <li>Mental math and numeric reasoning practice</li>
-              <li>Cognitive skill development</li>
-              <li>Hint system for learning assistance</li>
-              <li>Progress tracking and achievement system</li>
-              <li>Mobile-friendly design</li>
+              <li>Classic 4x4 tile-merging board</li>
+              <li>Simple controls with deep strategy</li>
+              <li>Fast, replayable puzzle rounds</li>
+              <li>Score tracking and best-score persistence</li>
+              <li>Mobile swipe support and keyboard controls</li>
+              <li>Win state at 2048 and beyond</li>
             </ul>
             <h3>Educational Benefits:</h3>
             <ul>
-              <li>Improves mathematical thinking and logical reasoning</li>
-              <li>Enhances pattern recognition and analytical skills</li>
-              <li>Develops problem-solving abilities and mental math</li>
-              <li>Builds confidence in mathematical capabilities</li>
-              <li>Strengthens cognitive functions and numerical processing</li>
-              <li>Provides foundation for advanced mathematical concepts</li>
-              <li>Makes learning math fun and engaging</li>
+              <li>Improves spatial reasoning and board awareness</li>
+              <li>Enhances pattern recognition and strategic planning</li>
+              <li>Develops problem-solving abilities under pressure</li>
+              <li>Builds confidence in multi-step decision-making</li>
+              <li>Strengthens attention to detail and foresight</li>
+              <li>Makes learning problem-solving fun and engaging</li>
             </ul>
             <p><strong>Perfect for:</strong> Students learning mathematics, educators seeking classroom 
                activities, puzzle enthusiasts wanting new challenges, seniors maintaining cognitive health, 
-               and anyone looking to improve their logical thinking and mathematical skills through 
-               entertaining daily puzzles.</p>
+               and anyone looking to improve their strategic thinking through entertaining puzzle play.</p>
           </div>
         </div>
       </div>

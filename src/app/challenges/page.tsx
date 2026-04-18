@@ -95,7 +95,7 @@ export default function ChallengesPage() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { name: "Number Scramble", href: "/number-scramble", emoji: "🔢" },
+              { name: "2048", href: "/number-puzzles/2048", emoji: "🔢" },
               { name: "Number Tower", href: "/number-tower", emoji: "🏗️" },
               { name: "Number Sequence", href: "/number-sequence", emoji: "🔍" },
               { name: "Prime Hunter", href: "/prime-hunter", emoji: "🎯" },

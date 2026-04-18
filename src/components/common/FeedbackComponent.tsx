@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { SmilePlus, Smile, Annoyed, Frown, Angry, MessageCircle } from 'lucide-react';
 
 interface FeedbackProps {
-  gameType: 'automoble' | 'botanle' | 'capitale' | 'celebrile' | 'countridle' | 'citadle'| 'creaturedle' |  
+  gameType: 'automoble' | 'botanle' | 'capitale' | 'celebrile' | 'countridle' | 'citadle'| 'creaturedle' | 'cryptodle' |
             'foodle' | 'inventionle' | 'historidle' | 'landmarkdle' | 'literale' | 'plotle' | 'songle' | 
             'synonymle' | 'trordle' | 'trivia';
   category?: string;

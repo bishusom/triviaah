@@ -174,7 +174,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const brainwaveCategories = [
     'capitale', 'plotle', 'celebrile', 'literale',
     'creaturedle', 'foodle', 'inventionle', 'landmarkdle',
-    'songle', 'historidle', 'synonymle', 'trordle',
+    'songle', 'historidle', 'synonymle', 'cryptodle',
     'automoble', 'botanle', 'citadle', 'countridle',
   ]
   const brainwavePages: MetadataRoute.Sitemap = [
@@ -242,7 +242,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // ── Word games ────────────────────────────────────────────────────────────
-  const wordGames = ['boggle', 'scramble', 'spelling-bee', 'word-search', 'word-ladder', 'crossgrid']
+  const wordGames = ['boggle', 'cryptogram', 'spelling-bee', 'word-search', 'word-ladder', 'crossgrid']
   const wordGamePages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/word-games`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
     ...wordGames.map(game => ({
@@ -254,7 +254,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // ── Number puzzles ────────────────────────────────────────────────────────
-  const numberPuzzles = ['number-scramble', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku', 'kakuro']
+  const numberPuzzles = ['2048', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku', 'kakuro']
   const numberPuzzlePages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/number-puzzles`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
     ...numberPuzzles.map(puzzle => ({

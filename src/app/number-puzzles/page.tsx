@@ -10,15 +10,15 @@ import Script from 'next/script';
 
 const numberPuzzles = [
   {
-    slug: 'number-scramble',
-    name: 'Number Scramble',
-    image: '/imgs/number-puzzles/number-scramble.webp',
-    description: 'Combine numbers and operators to reach the target value',
-    tagline: 'Strategic math puzzle combining numbers and arithmetic operators',
-    fullDescription: 'Strategic math puzzle where you combine numbers and arithmetic operators to reach specific target values. Develops mental math and strategic thinking.',
-    keywords: 'math scramble, number challenge, arithmetic game, mental math, strategic thinking',
+    slug: '2048',
+    name: '2048',
+    image: '/imgs/number-puzzles/2048.webp',
+    description: 'Swipe tiles and merge matching numbers to reach 2048',
+    tagline: 'Classic tile-merging strategy puzzle with simple controls and deep planning',
+    fullDescription: 'Classic 2048 tile-merging puzzle where you swipe numbers together to reach the 2048 tile and beyond. Develops spatial reasoning and strategic thinking.',
+    keywords: '2048 game, tile merge puzzle, number puzzle, strategy game, spatial reasoning',
     difficulty: 'Medium',
-    skills: ['Mental Math', 'Strategic Planning', 'Arithmetic Operations'],
+    skills: ['Spatial Reasoning', 'Strategic Planning', 'Pattern Recognition'],
     color: 'blue'
   },
   {
@@ -184,7 +184,7 @@ export default function NumberPuzzlesPage() {
         "@id": "https://triviaah.com/number-puzzles/#webpage",
         "url": "https://triviaah.com/number-puzzles",
         "name": "Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah",
-        "description": "Challenge your math skills with our collection of free number puzzles including Number Scramble, Number Tower, Prime Hunter, Number Sequence, Sudoku, and Kakuro.",
+        "description": "Challenge your math skills with our collection of free number puzzles including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, and Kakuro.",
         "isPartOf": {
           "@id": "https://triviaah.com/#website"
         },
@@ -305,7 +305,7 @@ export default function NumberPuzzlesPage() {
             "name": "Which number puzzle should I start with?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Beginners should start with Number Sequence or Prime Hunter, which have easier difficulty levels. Intermediate players can try Number Scramble, Number Tower, or Kakuro, while Sudoku offers challenges for all skill levels."
+              "text": "Beginners should start with Number Sequence or Prime Hunter, which have easier difficulty levels. Intermediate players can try 2048, Number Tower, or Kakuro, while Sudoku offers challenges for all skill levels."
             }
           }
         ]
@@ -453,7 +453,7 @@ export default function NumberPuzzlesPage() {
                 },
                 {
                   question: "Which number puzzle should I start with?",
-                  answer: "Beginners should start with Number Sequence or Prime Hunter, which have easier difficulty levels. Intermediate players can try Number Scramble or Number Tower, while Sudoku offers classic puzzle challenges suitable for all skill levels."
+                  answer: "Beginners should start with Number Sequence or Prime Hunter, which have easier difficulty levels. Intermediate players can try 2048 or Number Tower, while Sudoku offers classic puzzle challenges suitable for all skill levels."
                 },
                 {
                   question: "Are these puzzles suitable for children?",
@@ -488,7 +488,7 @@ export default function NumberPuzzlesPage() {
                   <ul className="space-y-3 text-gray-300">
                     <li className="flex items-start">
                       <span className="text-blue-400 font-bold mr-2">•</span>
-                      <span><strong>Number Scramble</strong>: Combine numbers and operators to reach target values</span>
+                      <span><strong>2048</strong>: Swipe tiles to merge matching numbers and reach 2048</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-green-400 font-bold mr-2">•</span>

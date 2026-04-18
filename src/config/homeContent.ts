@@ -198,6 +198,18 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     difficulty: 'Hard'
   },
   {
+    category: 'cryptodle',
+    name: 'Cryptodle',
+    path: '/brainwave/cryptodle',
+    image: '/imgs/brainwave/cryptodle-rect.webp',
+    tagline: 'Decode encrypted quotes with logic and pattern recognition',
+    keywords: 'cryptodle game, substitution cipher, logic puzzle, brain teaser',
+    playCount: 960,
+    isNew: true,
+    duration: 'Daily',
+    difficulty: 'Casual'
+  },
+  {
     category: 'landmarkdle',
     name: 'Landmarkdle',
     path: '/brainwave/landmarkdle',
@@ -281,30 +293,18 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     duration: 'Daily',
     difficulty: 'Hard'
   },
-  {
-    category: 'trordle',
-    name: 'Trordle',
-    path: '/brainwave/trordle',
-    image: '/imgs/brainwave/trordle-rect.webp',
-    tagline: 'Wordle-inspired trivia challenges for curious minds',
-    keywords: 'wordle game, word puzzle, daily word challenge',
-    playCount: 960,
-    isNew: false,
-    duration: 'Daily',
-    difficulty: 'Casual'
-  },
 ] as const;
 
 export const WORD_GAMES: ReadonlySectionItems = [
   {
-    category: 'word-scramble',
-    name: 'Word Scramble',
-    path: '/word-games/scramble',
-    image: '/imgs/word-games/word-scramble.webp',
-    tagline: 'Unscramble words to solve challenging puzzles',
-    keywords: 'word game, puzzle, vocabulary challenge',
+    category: 'cryptogram',
+    name: 'Cryptogram',
+    path: '/word-games/cryptogram',
+    image: '/imgs/word-games/cryptogram.webp',
+    tagline: 'Decode encrypted texts in this classic puzzle',
+    keywords: 'cryptogram, substitution cipher, decode quotes, word puzzle',
     playCount: 90000,
-    isNew: false,
+    isNew: true,
     duration: 'Daily',
     difficulty: 'Medium'
   },
@@ -372,12 +372,12 @@ export const WORD_GAMES: ReadonlySectionItems = [
 
 export const NUMBER_PUZZLES: ReadonlySectionItems = [
   {
-    category: 'number-scramble',
-    name: 'Number Scramble',
-    path: '/number-puzzles/number-scramble',
-    image: '/imgs/number-puzzles/number-scramble.webp',
-    tagline: 'Rearrange digits to solve mathematical puzzles',
-    keywords: 'number game, puzzle, math challenge',
+    category: '2048',
+    name: '2048',
+    path: '/number-puzzles/2048',
+    image: '/imgs/number-puzzles/2048.webp',
+    tagline: 'Slide and merge tiles to reach 2048',
+    keywords: '2048 game, tile merging, number puzzle, math challenge',
     playCount: 9000,
     isNew: false,
     duration: 'Daily',

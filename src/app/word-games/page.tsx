@@ -9,14 +9,14 @@ import Script from 'next/script';
 
 const wordGames = [
   {
-    slug: 'scramble',
-    name: 'Word Scramble',
-    image: '/imgs/word-games/word-scramble.webp',
-    description: 'Unscramble letters to form valid words against the clock',
-    tagline: 'Rearrange letters to discover hidden words in this vocabulary challenge',
+    slug: 'cryptogram',
+    name: 'Cryptogram',
+    image: '/imgs/word-games/cryptogram.webp',
+    description: 'Decode encrypted texts in this classic puzzle',
+    tagline: 'Decrypt letters to reveal hidden quotes, books and movies in this classic word puzzle',
     features: ['Letter rearrangement', 'Vocabulary building', 'Multiple difficulty levels'],
     color: 'green',
-    keywords: 'word scramble game, vocabulary puzzle, letter unscrambling challenge'
+    keywords: 'cryptogram, substitution cipher, decode quotes, word puzzle'
   },
   {
     slug: 'spelling-bee',
@@ -157,7 +157,7 @@ export default function WordGamesClientPage() {
         "@id": "https://triviaah.com/word-games/#webpage",
         "url": "https://triviaah.com/word-games",
         "name": "Word Games Collection - Free Vocabulary & Spelling Games | Triviaah",
-        "description": "Challenge your vocabulary with our collection of free word games including Word Scramble, Spelling Bee, Boggle, Word Search, Word Ladder, and Crossgrid.",
+        "description": "Challenge your vocabulary with our collection of free word games including Cryptogram, Spelling Bee, Boggle, Word Search, Word Ladder, and Crossgrid.",
         "isPartOf": {
           "@id": "https://triviaah.com/#website"
         },
@@ -254,7 +254,7 @@ export default function WordGamesClientPage() {
             "name": "What types of word games are available?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "We offer six main word games: Word Scramble (letter unscrambling), Spelling Bee (word formation), Boggle (grid word search), Word Search (hidden word finding), Word Ladder (word transformation), and Crossgrid (mini clue-based word squares). Each game focuses on different language skills and provides unique challenges for vocabulary building."
+              "text": "We offer six main word games: Cryptogram (decoding quotes), Spelling Bee (word formation), Boggle (grid word search), Word Search (hidden word finding), Word Ladder (word transformation), and Crossgrid (mini clue-based word squares). Each game focuses on different language skills and provides unique challenges for vocabulary building."
             }
           },
           {
@@ -278,7 +278,7 @@ export default function WordGamesClientPage() {
             "name": "Which word game is best for beginners?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Word Search is great for beginners as it's relaxing and helps with word recognition. For more challenge, try Word Scramble or Spelling Bee to build vocabulary and spelling skills. Boggle offers a good balance of challenge and accessibility."
+              "text": "Word Search is great for beginners as it's relaxing and helps with word recognition. For more challenge, try Cryptogram or Spelling Bee to build vocabulary and spelling skills. Boggle offers a good balance of challenge and accessibility."
             }
           }
         ]
@@ -414,7 +414,7 @@ export default function WordGamesClientPage() {
               {[
                 {
                   question: "What types of word games are available?",
-                  answer: "We offer six main word games: Word Scramble for letter unscrambling, Spelling Bee for word formation, Boggle for grid word searches, Word Search for hidden word finding, Word Ladder for word transformation puzzles, and Crossgrid for clue-based word-square solving."
+                  answer: "We offer six main word games: Cryptogram for decoding quotes, Spelling Bee for word formation, Boggle for grid word searches, Word Search for hidden word finding, Word Ladder for word transformation puzzles, and Crossgrid for clue-based word-square solving."
                 },
                 {
                   question: "Are these word games educational?",
@@ -426,7 +426,7 @@ export default function WordGamesClientPage() {
                 },
                 {
                   question: "Which word game is best for beginners?",
-                  answer: "Word Search is perfect for beginners as it's relaxing and helps with word recognition. For more challenge, try Word Scramble or Spelling Bee to build vocabulary and spelling skills progressively."
+                  answer: "Word Search is perfect for beginners as it's relaxing and helps with word recognition. For more challenge, try Cryptogram or Spelling Bee to build vocabulary and spelling skills progressively."
                 },
                 {
                   question: "Can I play on mobile devices?",
@@ -460,7 +460,7 @@ export default function WordGamesClientPage() {
                   <ul className="space-y-3 text-gray-300">
                     <li className="flex items-start">
                       <span className="text-green-400 font-bold mr-2">•</span>
-                      <span><strong>Word Scramble</strong>: Unscramble letters to form valid words and build vocabulary</span>
+                      <span><strong>Cryptogram</strong>: Decode encrypted quotes in this classic puzzle</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-yellow-400 font-bold mr-2">•</span>

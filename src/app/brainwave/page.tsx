@@ -107,6 +107,14 @@ async function getDailyPuzzles() {
       keywords: 'book opening game, literature trivia, book guessing puzzle'
       },    
       {
+      category: 'cryptodle',
+      name: 'Cryptodle',
+      path: '/brainwave/cryptodle',
+      image: '/imgs/brainwave/cryptodle.webp',
+      tagline: 'Decode encrypted quotes with logic and pattern recognition',
+      keywords: 'cryptodle game, substitution cipher, logic puzzle, brain teaser'
+      },
+      {
       category: 'creaturedle',
       name: 'Creaturedle',
       path: '/brainwave/creaturedle',
@@ -177,15 +185,8 @@ async function getDailyPuzzles() {
       image: '/imgs/brainwave/synonymle.webp',
       tagline: 'Guess the word based on semantic similarity and synonyms',
       keywords: 'synonymle, word puzzle, daily word, wordle vocabulary, synonym game, semantic game'
-      },
-      {
-      category: 'trordle',
-      name: 'Trordle',
-      path: '/brainwave/trordle',
-      image: '/imgs/brainwave/trordle.webp',
-      tagline: 'Wordle-inspired trivia challenges for curious minds',
-      keywords: 'trivia wordle, daily trivia game, quiz puzzle, general knowledge quiz, movie trivia, book trivia, geography quiz, history trivia, sports trivia'
       }
+      
  ];
 }
 
@@ -440,7 +441,7 @@ export default async function DailyQuizzesPage() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-yellow-400 font-bold mr-2">•</span>
-                    <span><strong>Trordle</strong>: Wordle-inspired trivia with multiple categories</span>
+                    <span><strong>Cryptodle</strong>: Decode encrypted quotes with substitution logic</span>
                   </li>
                 </ul>
               </div>
@@ -653,7 +654,7 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
           "answerCount": 4,
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Our brainwave section includes geography puzzles with Capitale, movie guessing with Plotle, music challenges with Songle, celebrity trivia with Celebrile, historical puzzles with Historidle, animal trivia with Creaturedle, food puzzles with Foodle, literature challenges with Literale, landmark identification with Landmarkdle, invention guessing with Inventionle, word similarity games with Synonymle, and Wordle-inspired trivia with Trordle."
+            "text": "Our brainwave section includes geography puzzles with Capitale, movie guessing with Plotle, music challenges with Songle, celebrity trivia with Celebrile, historical puzzles with Historidle, animal trivia with Creaturedle, food puzzles with Foodle, literature challenges with Literale, landmark identification with Landmarkdle, invention guessing with Inventionle, word similarity games with Synonymle, and Cryptodle for encrypted quote decoding."
           },
           "dateCreated": currentDate.toISOString()
         }
