@@ -375,7 +375,7 @@ export default function MinesweeperComponent() {
               <Bomb className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">MINESWEEPER</h1>
+              <h2 className="text-2xl font-bold text-white">MINESWEEPER</h2>
               <p className="text-gray-300 text-sm">Classic Retro Game</p>
             </div>
           </div>

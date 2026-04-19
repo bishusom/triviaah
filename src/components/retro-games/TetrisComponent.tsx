@@ -450,7 +450,7 @@ export default function TetrisComponent() {
               <Box className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">TETRIS</h1>
+              <h2 className="text-2xl font-bold text-white">TETRIS</h2>
               <p className="text-gray-300 text-sm">Classic Puzzle Game</p>
             </div>
           </div>

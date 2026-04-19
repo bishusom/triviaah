@@ -940,9 +940,9 @@ export default function BoggleGame() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 p-4 bg-gray-800/50 rounded-xl backdrop-blur-sm border border-gray-700">
           <div className="text-center md:text-left mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               Boggle Game
-            </h1>
+            </h2>
             <div className="text-sm md:text-base text-gray-300 mt-1">
               <span ref={levelElement}>
                 Level {currentLevel}: {getCurrentLevelConfig()?.description || 'Loading...'}

@@ -126,9 +126,13 @@ export default function HomePageContent() {
     <div className="bg-[#141414] min-h-screen text-white overflow-x-hidden">
       <NavBar />
       
-      <main className="flex flex-col">
+      <main className="flex flex-col pt-24 md:pt-28">
+        <h1 className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden whitespace-nowrap">
+          Free Daily Trivia, Word Games, Retro Games, and Brain Puzzles
+        </h1>
+
         {/* Top Ad Slot */}
-        <div className="w-full pt-24 pb-4 bg-black/20 flex justify-center">
+        <div className="w-full pt-8 md:pt-10 pb-4 bg-black/20 flex justify-center">
           <Ads format="fluid" style={{ width: '100%', maxWidth: '1200px', height: '90px' }} />
         </div>
 

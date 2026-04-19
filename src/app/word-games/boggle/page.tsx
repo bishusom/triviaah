@@ -169,6 +169,15 @@ export default function BogglePage() {
         </div>
       )}
 
+      <header className="max-w-3xl mx-auto px-4 pt-6">
+        <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          Free Boggle Game Online
+        </h1>
+        <p className="mt-2 text-sm md:text-base text-gray-300">
+          Find words in a 4x4 or 5x5 letter grid and build your vocabulary.
+        </p>
+      </header>
+
       <div className="max-w-3xl mx-auto p-4">
         {/* Mute Button - Fixed Position */}
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>

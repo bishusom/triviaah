@@ -101,9 +101,9 @@ export default function Billboard() {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-3 leading-none tracking-tighter italic">
+            <h2 className="text-5xl md:text-7xl font-black text-white mb-3 leading-none tracking-tighter italic">
               {current.title}
-            </h1>
+            </h2>
             
             <p className="text-lg md:text-xl text-gray-200 mb-8 drop-shadow-lg max-w-lg leading-relaxed">
               {current.description}

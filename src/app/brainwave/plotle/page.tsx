@@ -214,9 +214,9 @@ function PlotleContent() {
               <div className="bg-gradient-to-r from-red-500 to-pink-600 p-3 rounded-2xl">
                 <Film className="w-8 h-8 text-white" />
               </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">
                 PLOTLE
-              </h1>
+              </h2>
             </div>
             <p className="text-gray-300 text-lg">Daily Movie Guessing Challenge</p>
           </div>
@@ -292,9 +292,9 @@ function PlotleContent() {
               <div className="bg-gradient-to-r from-red-500 to-pink-600 p-3 rounded-2xl">
                 <Film className="w-8 h-8 text-white" />
               </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">
                 PLOTLE
-              </h1>
+              </h2>
             </div>
             <p className="text-gray-300 text-lg">Daily Movie Guessing Challenge</p>
           </div>
@@ -389,9 +389,9 @@ function PlotleContent() {
               <div className="bg-gradient-to-r from-red-500 to-pink-600 p-3 rounded-2xl shadow-lg">
                 <Film className="w-8 h-8 text-white" />
               </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">
                 PLOTLE
-              </h1>
+              </h2>
             </div>
             
             <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-lg px-4 py-2 rounded-2xl border border-gray-700">
@@ -482,12 +482,22 @@ function PlotleContent() {
 
 export default function PlotlePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
-      </div>
-    }>
-      <PlotleContent />
-    </Suspense>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <header className="max-w-4xl mx-auto px-4 pt-6">
+        <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">
+          Plotle - Daily Movie Plot Puzzle
+        </h1>
+        <p className="mt-2 text-sm md:text-base text-gray-300">
+          Guess the movie from its 6-word plot summary.
+        </p>
+      </header>
+      <Suspense fallback={
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+        </div>
+      }>
+        <PlotleContent />
+      </Suspense>
+    </div>
   );
 }

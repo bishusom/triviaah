@@ -495,7 +495,7 @@ export default function PongComponent() {
               <Gamepad2 className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">PONG</h1>
+              <h2 className="text-2xl font-bold text-white">PONG</h2>
               <p className="text-gray-300 text-sm">Classic Arcade Game</p>
             </div>
           </div>
