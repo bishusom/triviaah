@@ -136,7 +136,7 @@ function AutomobleContent() {
   // Loading State
   if (isLoading || !currentDate) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-700 to-red-900">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
         {/* Structured Data */}
         <Script
           id="automoble-organization-schema"
@@ -172,19 +172,6 @@ function AutomobleContent() {
         )}
         
         <div className="max-w-4xl mx-auto p-6">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex justify-center items-center gap-3 mb-4">
-              <div className="bg-gradient-to-r from-red-500 to-red-600 p-3 rounded-2xl">
-                <Car className="w-8 h-8 text-white" />
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
-                AUTOMOBLE
-              </h1>
-            </div>
-            <p className="text-gray-200 text-lg">Daily Vehicle Guessing Challenge</p>
-          </div>
-
           {/* Loading Card */}
           <div className="bg-red-800/50 backdrop-blur-lg rounded-3xl border border-red-700 p-8 text-center">
             <div className="flex justify-center mb-6">
@@ -250,19 +237,6 @@ function AutomobleContent() {
         )}
         
         <div className="max-w-4xl mx-auto p-6">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex justify-center items-center gap-3 mb-4">
-              <div className="bg-gradient-to-r from-red-500 to-red-600 p-3 rounded-2xl">
-                <Car className="w-8 h-8 text-white" />
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
-                AUTOMOBLE
-              </h1>
-            </div>
-            <p className="text-gray-300 text-lg">Daily Vehicle Guessing Challenge</p>
-          </div>
-
           {/* Error Card */}
           <div className="bg-red-500/10 backdrop-blur-lg rounded-3xl border border-red-500/30 p-8 text-center">
             <div className="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -346,60 +320,6 @@ function AutomobleContent() {
       )}
 
       <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 relative z-30">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r from-red-500 to-red-600 p-3 rounded-2xl shadow-lg">
-                <Car className="w-8 h-8 text-white" />
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
-                AUTOMOBLE
-              </h1>
-            </div>
-            
-            <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-lg px-4 py-2 rounded-2xl border border-gray-700">
-              <Clock className="w-4 h-4 text-red-400" />
-              <time 
-                dateTime={lastUpdated} 
-                className="text-red-400 text-sm font-medium"
-              >
-                Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </time>
-            </div>
-          </div>
-          
-          <p className="text-gray-300 text-lg mb-2">Guess the car from pixelated image and progressive clues in 6 attempts</p>
-          
-          {/* Stats Bar */}
-          <div className="flex justify-center gap-6 mb-8">
-            <div className="flex items-center gap-2 text-gray-400">
-              <Trophy className="w-5 h-5 text-yellow-500" />
-              <span className="text-sm">Daily Challenge</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Users className="w-5 h-5 text-blue-500" />
-              <span className="text-sm">Global Car Enthusiasts</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Target className="w-5 h-5 text-red-500" />
-              <span className="text-sm">6 Attempts</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Wrench className="w-5 h-5 text-orange-500" />
-              <span className="text-sm">Progressive Hints</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Zap className="w-5 h-5 text-emerald-500" />
-              <span className="text-sm">Letter Feedback</span>
-            </div>
-          </div>
-        </div>
 
         {/* Mute Button */}
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
@@ -516,12 +436,25 @@ function AutomobleContent() {
 
 export default function AutomoblePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
-      </div>
-    }>
-      <AutomobleContent />
-    </Suspense>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <header className="max-w-4xl mx-auto px-4 pt-6 text-center">
+        <div className="flex justify-center items-center gap-3 mb-4">
+          <div className="bg-gradient-to-r from-red-500 to-red-600 p-3 rounded-2xl shadow-lg">
+            <Car className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
+            AUTOMOBLE
+          </h1>
+        </div>
+        <p className="text-gray-300 text-lg">Daily Vehicle Guessing Challenge</p>
+      </header>
+      <Suspense fallback={
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+        </div>
+      }>
+        <AutomobleContent />
+      </Suspense>
+    </div>
   );
 }

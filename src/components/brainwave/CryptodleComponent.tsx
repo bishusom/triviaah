@@ -435,10 +435,7 @@ export default function CryptodleComponent({ initialData }: CryptodleComponentPr
         {/* Header with Attempts Counter */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-r from-amber-500 to-orange-600 p-2 rounded-xl">
-              <BookOpen className="w-5 h-5 text-white" />
-            </div>
-            <h2 className="text-xl font-bold text-white">Cryptodle Puzzle</h2>
+            <h2 className="text-xl font-bold text-white">Today's Puzzle to Decrypt</h2>
           </div>
           <div className="flex flex-col items-end gap-1 text-right">
             <div className="flex items-center gap-2 text-sm font-bold text-cyan-300">

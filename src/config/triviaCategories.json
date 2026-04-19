@@ -308,7 +308,7 @@
     "displayName": "Mythology"
   },
   "law-politics-government": {
-    "title": "Law, Politics & Government",
+    "title": "Law & Politics",
     "description": "Explore questions about legal systems, political ideologies, government structures, and historical political events that shape nations and societies worldwide.",
     "longDescription": "How are societies organized and ruled? This category examines the development of legal systems, the clash of political ideologies, and the structure of global governments. Test your knowledge of constitutions, landmark court cases, and the history of diplomacy.",
     "learningPoints": [
@@ -319,7 +319,7 @@
     "related": ["history", "business", "famous-quotes"],
     "keywords": ["law", "politics", "government", "constitution"],
     "ogImage": "/imgs/categories/law.webp",
-    "displayName": "Law, Politics & Government"
+    "displayName": "Law & Politics"
   },
   "famous-quotes": {
     "title": "Famous Quotes",
@@ -336,7 +336,7 @@
     "displayName": "Famous Quotes"
   },
   "inventions-everyday-objects": {
-    "title": "Inventions & Everyday Objects",
+    "title": "Inventions",
     "description": "Test your knowledge of groundbreaking inventions, everyday items, and the stories behind common objects that shape our daily lives and modern society.",
     "longDescription": "Discover the genius behind the mundane. This trivia set explores the origins of inventions we take for granted, from the zipper and the lightbulb to the complex technology of the smartphone. Learn about the 'accidental' discoveries and determined inventors who revolutionized daily life.",
     "learningPoints": [
@@ -347,7 +347,7 @@
     "related": ["science", "history", "famous-firsts"],
     "keywords": ["inventions", "technology", "innovation", "objects"],
     "ogImage": "/imgs/categories/inventions.webp",
-    "displayName": "Inventions & Everyday Objects"
+    "displayName": "Inventions"
   },
   "cartoons-anime": {
     "title": "Cartoons & Anime",

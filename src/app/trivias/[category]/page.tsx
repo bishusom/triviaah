@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import triviaCategories from '@/config/triviaCategories.json';
 import { getSubcategoriesWithMinQuestions } from '@/lib/supabase';
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
+import { buildMetaDescription } from '@/lib/seo';
 import { Play, Timer, Info, ShieldQuestionMark, BookOpen, Trophy, CircleStar } from 'lucide-react';
 
 
@@ -50,10 +51,14 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
 
   const categoryTitle = categoryData.title;
   const categoryDescription = categoryData.description;
+  const description = buildMetaDescription([
+    `Play free ${categoryTitle.toLowerCase()} trivia quiz.`,
+    categoryDescription,
+  ]);
 
   return {
     title: `${categoryTitle} Trivia Quiz | Free Online Questions`,
-    description: `Play free ${categoryTitle.toLowerCase()} trivia quiz. ${categoryDescription} Test your knowledge with our online trivia questions.`,
+    description,
     keywords: [
       `${categoryTitle.toLowerCase()} trivia`,
       `${categoryTitle.toLowerCase()} quiz`,
@@ -68,7 +73,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     ],
     openGraph: {
       title: `${categoryTitle} Trivia Quiz | Free Online Questions`,
-      description: `Play free ${categoryTitle.toLowerCase()} trivia quiz. ${categoryDescription} Test your knowledge with our online trivia questions.`,
+      description,
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/trivias/${category}`,
       siteName: 'Triviaah',
       images: categoryData.ogImage ? [{ 
@@ -82,7 +87,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     twitter: {
       card: 'summary_large_image',
       title: `${categoryTitle} Trivia Quiz | Free Online Questions`,
-      description: `Play free ${categoryTitle.toLowerCase()} trivia quiz. ${categoryDescription} Test your knowledge with our online trivia questions.`,
+      description,
       images: categoryData.ogImage ? [categoryData.ogImage] : [],
     },
     alternates: {

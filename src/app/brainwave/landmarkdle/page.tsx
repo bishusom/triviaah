@@ -145,7 +145,7 @@ function LandmarkdleContent() {
   // Loading State
   if (isLoading || !currentDate) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
         {/* Structured Data */}
         <Script
           id="landmarkdle-organization-schema"
@@ -181,19 +181,6 @@ function LandmarkdleContent() {
         )}
         
         <div className="max-w-4xl mx-auto p-6">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex justify-center items-center gap-3 mb-4">
-              <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-3 rounded-2xl">
-                <Building className="w-8 h-8 text-white" />
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">
-                LANDMARKDLE
-              </h1>
-            </div>
-            <p className="text-gray-200 text-lg">Daily Architecture Guessing Challenge</p>
-          </div>
-
           {/* Loading Card */}
           <div className="bg-blue-800/50 backdrop-blur-lg rounded-3xl border border-blue-700 p-8 text-center">
             <div className="flex justify-center mb-6">
@@ -224,7 +211,7 @@ function LandmarkdleContent() {
   // Error State
   if (error || !landmarkData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 to-black text-white">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
         {/* Structured Data */}
         <Script
           id="landmarkdle-organization-schema"
@@ -259,19 +246,6 @@ function LandmarkdleContent() {
         )}
         
         <div className="max-w-4xl mx-auto p-6">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex justify-center items-center gap-3 mb-4">
-              <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-3 rounded-2xl">
-                <Building className="w-8 h-8 text-white" />
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">
-                LANDMARKDLE
-              </h1>
-            </div>
-            <p className="text-gray-300 text-lg">Daily Architecture Guessing Challenge</p>
-          </div>
-
           {/* Error Card */}
           <div className="bg-blue-500/10 backdrop-blur-lg rounded-3xl border border-blue-500/30 p-8 text-center">
             <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -301,7 +275,7 @@ function LandmarkdleContent() {
 
   // Main Game State
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Structured Data */}
       <Script
         id="landmarkdle-organization-schema"
@@ -355,56 +329,6 @@ function LandmarkdleContent() {
       )}
 
       <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 relative z-30">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-3 rounded-2xl shadow-lg">
-                <Building className="w-8 h-8 text-white" />
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">
-                LANDMARKDLE
-              </h1>
-            </div>
-            
-            <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-lg px-4 py-2 rounded-2xl border border-gray-700">
-              <Clock className="w-4 h-4 text-blue-400" />
-              <time 
-                dateTime={lastUpdated} 
-                className="text-blue-400 text-sm font-medium"
-              >
-                Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </time>
-            </div>
-          </div>
-          
-          <p className="text-gray-300 text-lg mb-2">Guess the landmark from 6 attributes in 6 attempts</p>
-          
-          {/* Stats Bar */}
-          <div className="flex justify-center gap-6 mb-8">
-            <div className="flex items-center gap-2 text-gray-400">
-              <Trophy className="w-5 h-5 text-yellow-500" />
-              <span className="text-sm">Daily Challenge</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Users className="w-5 h-5 text-cyan-500" />
-              <span className="text-sm">Global Explorers</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Target className="w-5 h-5 text-blue-500" />
-              <span className="text-sm">6 Attempts</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <MapPin className="w-5 h-5 text-cyan-500" />
-              <span className="text-sm">6 Attributes</span>
-            </div>
-          </div>
-        </div>
 
         {/* Mute Button */}
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
@@ -512,12 +436,25 @@ function LandmarkdleContent() {
 
 export default function LandmarkdlePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
-      </div>
-    }>
-      <LandmarkdleContent />
-    </Suspense>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <header className="max-w-4xl mx-auto px-4 pt-6 text-center">
+        <div className="flex justify-center items-center gap-3 mb-4">
+          <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-3 rounded-2xl shadow-lg">
+            <Building className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">
+            LANDMARKDLE
+          </h1>
+        </div>
+        <p className="text-gray-300 text-lg">Daily Architecture Guessing Challenge</p>
+      </header>
+      <Suspense fallback={
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+        </div>
+      }>
+        <LandmarkdleContent />
+      </Suspense>
+    </div>
   );
 }

@@ -23,16 +23,18 @@ interface StructuredDataProps {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
+  const description = 'Browse free trivia categories across history, science, entertainment, sports, and more.';
+
   return {
     title: 'Free Online Trivia Categories | Quiz Games Online Free',
-    description: 'Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.',
+    description,
     keywords: 'free online trivia, trivia categories, quiz games online free, free trivia quizzes, online quiz games, free trivia games, trivia quizzes by category',
     alternates: {
       canonical: 'https://triviaah.com/trivias',
     },
     openGraph: {
       title: 'Free Online Trivia Categories | Quiz Games Online Free',
-      description: 'Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.',
+      description,
       url: 'https://triviaah.com/trivias',
       siteName: 'Triviaah',
       images: [
@@ -48,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: 'summary_large_image',
       title: 'Free Online Trivia Categories | Quiz Games Online Free',
-      description: 'Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.',
+      description,
       images: ['/imgs/triviaah-og.webp'],
     },
     robots: {

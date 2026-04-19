@@ -145,7 +145,7 @@ function SongleContent() {
   // Loading State
   if (isLoading || !targetDate || !songleData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-600 via-gray-700 to-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
         {/* Structured Data */}
         <Script
           id="songle-organization-schema"
@@ -181,19 +181,6 @@ function SongleContent() {
         )}
         
         <div className="max-w-4xl mx-auto p-6">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex justify-center items-center gap-3 mb-4">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-2xl">
-                <Music className="w-8 h-8 text-white" />
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                SONGLE
-              </h1>
-            </div>
-            <p className="text-gray-300 text-lg">Daily Song Guessing Challenge</p>
-          </div>
-
           {/* Loading Card */}
           <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-8 text-center">
             <div className="flex justify-center mb-6">
@@ -355,56 +342,6 @@ function SongleContent() {
       )}
 
       <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 relative z-30">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-2xl shadow-lg">
-                <Music className="w-8 h-8 text-white" />
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                SONGLE
-              </h1>
-            </div>
-            
-            <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-lg px-4 py-2 rounded-2xl border border-gray-700">
-              <Clock className="w-4 h-4 text-blue-400" />
-              <time 
-                dateTime={lastUpdated} 
-                className="text-blue-400 text-sm font-medium"
-              >
-                Updated: {new Date(lastUpdated).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </time>
-            </div>
-          </div>
-          
-          <p className="text-gray-300 text-lg mb-2">Guess the song from lyrics and attributes in 6 attempts</p>
-          
-          {/* Stats Bar */}
-          <div className="flex justify-center gap-6 mb-8">
-            <div className="flex items-center gap-2 text-gray-400">
-              <Trophy className="w-5 h-5 text-yellow-500" />
-              <span className="text-sm">Daily Challenge</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Users className="w-5 h-5 text-green-500" />
-              <span className="text-sm">Music Lovers</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Target className="w-5 h-5 text-red-500" />
-              <span className="text-sm">6 Attempts</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Mic className="w-5 h-5 text-purple-500" />
-              <span className="text-sm">5 Attributes</span>
-            </div>
-          </div>
-        </div>
 
         {/* Mute Button */}
         <div className="fixed right-4 z-50" style={{ top: '6rem' }}>
@@ -459,12 +396,25 @@ function SongleContent() {
 
 export default function SonglePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-blue-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
-      </div>
-    }>
-      <SongleContent />
-    </Suspense>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <header className="max-w-4xl mx-auto px-4 pt-6 text-center">
+        <div className="flex justify-center items-center gap-3 mb-4">
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-2xl shadow-lg">
+            <Music className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            SONGLE
+          </h1>
+        </div>
+        <p className="text-gray-300 text-lg">Daily Song Guessing Challenge</p>
+      </header>
+      <Suspense fallback={
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+        </div>
+      }>
+        <SongleContent />
+      </Suspense>
+    </div>
   );
 }

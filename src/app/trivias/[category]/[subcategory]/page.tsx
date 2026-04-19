@@ -6,6 +6,7 @@ import { ArrowRight, CircleStar, Play, Trophy } from 'lucide-react';
 import triviaCategories from '@/config/triviaCategories.json';
 import { getSubcategoriesWithMinQuestions } from '@/lib/supabase';
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
+import { buildMetaDescription } from '@/lib/seo';
 
 type CategoryKey = keyof typeof triviaCategories;
 
@@ -63,10 +64,14 @@ export async function generateMetadata({
 
   const subcategoryName = context.activeSubcategory.subcategory;
   const canonical = `https://triviaah.com/trivias/${category}/${subcategory}`;
+  const description = buildMetaDescription([
+    `Explore ${context.activeSubcategory.question_count}+ ${subcategoryName.toLowerCase()} questions in our ${categoryData.title.toLowerCase()} trivia collection.`,
+    'Play the quiz now.',
+  ]);
 
   return {
     title: `${subcategoryName} ${categoryData.title} Trivia | Free Questions & Answers`,
-    description: `Explore ${context.activeSubcategory.question_count}+ ${subcategoryName.toLowerCase()} questions in our ${categoryData.title.toLowerCase()} trivia collection. Start with the topic page, then play the quiz.`,
+    description,
     alternates: {
       canonical,
     },

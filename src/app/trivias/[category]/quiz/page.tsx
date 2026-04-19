@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import Script from 'next/script';
 import { Play } from 'lucide-react';
 import triviaCategories from '@/config/triviaCategories.json';
+import { buildMetaDescription } from '@/lib/seo';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -68,8 +69,16 @@ export async function generateMetadata({ params, searchParams }: QuizPageProps):
     : '';
 
   const description = formattedSubcategory
-    ? `Test your ${formattedSubcategory.toLowerCase()} knowledge with our free ${formattedCategory.toLowerCase()} quiz.${categoryContext} Multiple-choice questions with instant results.`
-    : `Play our free ${formattedCategory.toLowerCase()} trivia quiz — multiple-choice questions with instant scoring.${categoryContext} No sign-up required.`;
+    ? buildMetaDescription([
+      `Test your ${formattedSubcategory.toLowerCase()} knowledge with our free ${formattedCategory.toLowerCase()} quiz.`,
+      categoryContext,
+      'Multiple-choice questions with instant results.',
+    ])
+    : buildMetaDescription([
+      `Play our free ${formattedCategory.toLowerCase()} trivia quiz.`,
+      categoryContext,
+      'Multiple-choice questions with instant scoring.',
+    ]);
 
   // ✅ FIX: OG URL is always the canonical base URL, never the ?subcategory= variant.
   // Facebook/Twitter use og:url as the canonical link when content is shared.
