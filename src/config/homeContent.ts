@@ -234,54 +234,6 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     difficulty: 'Logic'
   },
   {
-    category: 'automoble',
-    name: 'Automoble',
-    path: '/brainwave/automoble',
-    image: '/imgs/brainwave/automoble-rect.webp',
-    tagline: 'Guess the car from its unique characteristics',
-    keywords: 'car trivia, auto quiz, car guessing',
-    playCount: 910,
-    isNew: false,
-    duration: 'Daily',
-    difficulty: 'Casual'
-  },
-  {
-    category: 'botanle',
-    name: 'Botanle',
-    path: '/brainwave/botanle',
-    image: '/imgs/brainwave/botanle-rect.webp',
-    tagline: 'Guess the plant from its unique characteristics',
-    keywords: 'plant trivia, botany quiz, nature puzzle',
-    playCount: 860,
-    isNew: false,
-    duration: 'Daily',
-    difficulty: 'Nature'
-  },
-  {
-    category: 'citadle',
-    name: 'Citadle',
-    path: '/brainwave/citadle',
-    image: '/imgs/brainwave/citadle-rect.webp',
-    tagline: 'Guess the city from its unique characteristics',
-    keywords: 'city trivia, urban geography, city quiz',
-    playCount: 900,
-    isNew: true,
-    duration: 'Daily',
-    difficulty: 'Medium'
-  },
-  {
-    category: 'countridle',
-    name: 'Countridle',
-    path: '/brainwave/countridle',
-    image: '/imgs/brainwave/countridle-rect.webp',
-    tagline: 'Guess the country from its unique characteristics',
-    keywords: 'country trivia, world geography, country quiz',
-    playCount: 9600,
-    isNew: false,
-    duration: 'Daily',
-    difficulty: 'Medium'
-  },
-  {
     category: 'synonymle',
     name: 'Synonymle',
     path: '/brainwave/synonymle',

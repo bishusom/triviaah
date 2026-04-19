@@ -144,6 +144,7 @@ export default function CryptodleComponent({ initialData }: CryptodleComponentPr
   const [isGuessLoading, setIsGuessLoading] = useState(false);
   const [authorImageUrl, setAuthorImageUrl] = useState<string | null>(puzzleData.authorImageUrl || null);
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
+  const feedbackSectionRef = useRef<HTMLDivElement>(null);
   const [timeToNext, setTimeToNext] = useState<{ hours: number; minutes: number } | null>(null);
 
   // Sound effects
@@ -247,6 +248,19 @@ export default function CryptodleComponent({ initialData }: CryptodleComponentPr
     }
   }, [currentDecryption, puzzleData.targetQuote, gameState, attempts.length]);
 
+  useEffect(() => {
+    if (gameState !== 'won' && gameState !== 'lost') return;
+
+    const timer = window.setTimeout(() => {
+      feedbackSectionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 250);
+
+    return () => window.clearTimeout(timer);
+  }, [gameState]);
+
   const triggerConfetti = () => {
     if (confettiCanvasRef.current) {
       const myConfetti = confetti.create(confettiCanvasRef.current, {
@@ -349,10 +363,21 @@ export default function CryptodleComponent({ initialData }: CryptodleComponentPr
     playSound('click');
   };
 
-  const attemptsLeft = MAX_ATTEMPTS - attempts.length;
-  const attemptsLeftColor =
-    attemptsLeft >= 10 ? 'text-green-400' :
-      attemptsLeft >= 5 ? 'text-yellow-400' :
+  const totalCipherSymbols = useMemo(() => {
+    const symbols = new Set<string>();
+    for (const char of puzzleData.encryptedQuote.toLowerCase()) {
+      if (/[a-z0-9]/.test(char)) {
+        symbols.add(char);
+      }
+    }
+    return symbols.size;
+  }, [puzzleData.encryptedQuote]);
+
+  const mappingsMade = Object.keys(userMapping).length;
+  const attemptsRemaining = MAX_ATTEMPTS - attempts.length;
+  const attemptsRemainingColor =
+    attemptsRemaining >= 10 ? 'text-green-400' :
+      attemptsRemaining >= 5 ? 'text-yellow-400' :
         'text-red-400';
 
   // Render encrypted text with interactive pills
@@ -415,9 +440,14 @@ export default function CryptodleComponent({ initialData }: CryptodleComponentPr
             </div>
             <h2 className="text-xl font-bold text-white">Cryptodle Puzzle</h2>
           </div>
-          <div className={`flex items-center gap-2 text-lg font-bold ${attemptsLeftColor}`}>
-            <Target className="w-5 h-5" />
-            <span>{attemptsLeft} {attemptsLeft === 1 ? 'ATTEMPT' : 'ATTEMPTS'}</span>
+          <div className="flex flex-col items-end gap-1 text-right">
+            <div className="flex items-center gap-2 text-sm font-bold text-cyan-300">
+              <span>{mappingsMade}/{totalCipherSymbols} MAPPINGS</span>
+            </div>
+            <div className={`flex items-center gap-2 text-lg font-bold ${attemptsRemainingColor}`}>
+              <Target className="w-5 h-5" />
+              <span>{attemptsRemaining} {attemptsRemaining === 1 ? 'ATTEMPT LEFT' : 'ATTEMPTS LEFT'}</span>
+            </div>
           </div>
         </div>
 
@@ -595,9 +625,9 @@ export default function CryptodleComponent({ initialData }: CryptodleComponentPr
           </div>
         )}
 
-        {/* Submit Button */}
-        {gameState === 'playing' && (
-          <div className="sticky bottom-0 bg-gray-800/80 backdrop-blur-lg rounded-xl border border-gray-700 p-4 z-[100] -mx-2 md:-mx-4 -mb-2 md:-mb-6">
+      {/* Submit Button */}
+      {gameState === 'playing' && (
+        <div className="sticky bottom-20 md:bottom-0 bg-gray-800/80 backdrop-blur-lg rounded-xl border border-gray-700 p-4 z-[100] -mx-2 md:-mx-4 -mb-2 md:-mb-6">
             <button
               onClick={handleCheckWin}
               disabled={isGuessLoading}
@@ -610,7 +640,10 @@ export default function CryptodleComponent({ initialData }: CryptodleComponentPr
 
         {/* Share & Feedback Section (after win/loss) */}
         {(gameState === 'won' || gameState === 'lost') && (
-          <div className="flex flex-col items-center gap-4 mt-6">
+          <div
+            ref={feedbackSectionRef}
+            className="flex flex-col items-center gap-4 mt-6 scroll-mt-24 pb-28 md:pb-0"
+          >
             <button
               onClick={copyToClipboard}
               className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl hover:from-amber-600 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 font-semibold"

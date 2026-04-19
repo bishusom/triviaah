@@ -1013,7 +1013,7 @@ export default function AutomobleComponent({ initialData }: AutomobleComponentPr
         
         {/* Share button */}
         {(gameState === 'won' || gameState === 'lost') && (
-          <div className="flex flex-col items-center mt-4">
+          <div className="flex flex-col items-center mt-4 scroll-mt-24 pb-28 md:pb-0">
             <button
               onClick={copyToClipboard}
               className="flex items-center gap-2 px-4 py-2 bg-red-700 text-white rounded-md hover:bg-red-600 transition-colors"

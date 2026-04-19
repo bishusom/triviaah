@@ -14,9 +14,9 @@ export function generateDeterministicCipher(plainText: string, seed: string): {
   const digits = '0123456789';
   const seedHash = simpleHash(seed);
   
-  // Create deterministic shuffles for letters and digits using the same seed hash.
-  const shuffled = shuffleAlphabet(alphabet, seedHash);
-  const shuffledDigits = shuffleAlphabet(digits, seedHash ^ 0x9e3779b9);
+  // Create deterministic derangements for letters and digits so a symbol never maps to itself.
+  const shuffled = generateDerangement(alphabet, seedHash);
+  const shuffledDigits = generateDerangement(digits, seedHash ^ 0x9e3779b9);
   
   const cipherMapping: Record<string, string> = {};
   for (let i = 0; i < alphabet.length; i++) {
@@ -44,19 +44,30 @@ function simpleHash(str: string): number {
   return Math.abs(hash);
 }
 
-function shuffleAlphabet(alphabet: string, seed: number): string {
-  const arr = alphabet.split('');
-  // Seeded random using mulberry32
+function generateDerangement(symbols: string, seed: number): string {
+  const arr = symbols.split('');
+  if (arr.length < 2) return symbols;
+
+  // Sattolo's algorithm creates a single-cycle permutation with no fixed points.
   let rng = () => {
     seed = (seed + 0x6D2B79F5) | 0;
     let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
     t = (t + Math.imul(t ^ t >>> 7, 61 | t)) ^ t;
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
   };
-  
+
   for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
+    const j = Math.floor(rng() * i);
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
+
+  // Safety pass: if any fixed points remain due to edge cases, rotate them away.
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === symbols[i]) {
+      const swapIndex = (i + 1) % arr.length;
+      [arr[i], arr[swapIndex]] = [arr[swapIndex], arr[i]];
+    }
+  }
+
   return arr.join('');
 }

@@ -151,7 +151,7 @@ function CryptodleContent() {
         </div>
       )}
 
-      <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 relative z-30">
+      <div className="max-w-4xl lg:max-w-2xl mx-auto p-4 pb-28 md:pb-8 relative z-30">
         <div className="text-center mb-8">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
             <div className="flex items-center gap-3">

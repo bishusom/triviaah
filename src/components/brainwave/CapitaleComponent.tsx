@@ -792,7 +792,7 @@ export default function CapitaleComponent({ initialData, allCapitals }: Capitale
 
         {/* Share button & feedback */}
         {(gameState === 'won' || gameState === 'lost') && (
-          <div className="flex flex-col items-center mt-4">
+          <div className="flex flex-col items-center mt-4 scroll-mt-24 pb-28 md:pb-0">
             <button
               onClick={copyToClipboard}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"

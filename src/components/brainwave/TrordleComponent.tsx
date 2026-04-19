@@ -791,7 +791,7 @@ export default function TrordleComponent({ initialData }: TrordleComponentProps)
       
       {/* Share results */}
       {(gameState === 'won' || gameState === 'lost') && (
-        <div className="flex flex-col items-center gap-4 mt-6 bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-6">
+        <div className="flex flex-col items-center gap-4 mt-6 scroll-mt-24 pb-28 md:pb-0 bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-6">
           <button
             onClick={copyToClipboard}
             className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-700 transition-all duration-300 transform hover:scale-105 font-semibold"

@@ -1030,7 +1030,7 @@ export default function BotanleComponent({ initialData }: BotanleComponentProps)
         
         {/* Share & Feedback Section */}
         {(gameState === 'won' || gameState === 'lost') && (
-          <div className="flex flex-col items-center gap-4 mt-6">
+          <div className="flex flex-col items-center gap-4 mt-6 scroll-mt-24 pb-28 md:pb-0">
             <button
               onClick={copyToClipboard}
               className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-2xl hover:from-emerald-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 font-semibold"

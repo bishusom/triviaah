@@ -258,6 +258,27 @@ export default function QuizSummary({
         )}
       </AnimatePresence>
 
+      {/* ── Feedback ──────────────────────────────────────────────────────── */}
+      <div className="mt-8 w-full max-w-4xl">
+        <FeedbackComponent
+          gameType="trivia"
+          category={result.category}
+          metadata={{
+            score: result.score,
+            correctCount: result.correctCount,
+            totalQuestions: result.totalQuestions,
+            timeUsed: result.timeUsed,
+            performance:
+              result.correctCount / result.totalQuestions >= 0.9 ? 'gold' :
+              result.correctCount / result.totalQuestions >= 0.7 ? 'silver' :
+              result.correctCount / result.totalQuestions >= 0.5 ? 'bronze' : 'default',
+            subcategory: result.subcategory,
+            difficulty: 'mixed',
+            completedAt: new Date().toISOString(),
+          }}
+        />
+      </div>
+
       {/* ── Previous daily quizzes (daily-trivias only) ───────────────────── */}
       {context === 'daily-trivias' && result.category !== 'quick-fire' && (
         <div className="mt-12 w-full max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -288,9 +309,9 @@ export default function QuizSummary({
         </div>
       )}
 
-      {/* ── Ad 2: after review / previous days, before feedback ───────────
-          In-article style. User has finished reviewing — natural pause
-          before the feedback widget and action buttons.                  */}
+      {/* ── Ad 2: after feedback, before action buttons ────────────────────
+          Keeps the feedback widget high enough to notice, while preserving
+          the existing ad break before the final actions.                  */}
       <div className="w-full max-w-4xl mt-10">
         <Ads
           slot="9040722315"
@@ -298,27 +319,6 @@ export default function QuizSummary({
           isInArticle={true}
           isMobileFooter={false}
           className="rounded-xl overflow-hidden"
-        />
-      </div>
-
-      {/* ── Feedback ──────────────────────────────────────────────────────── */}
-      <div className="mt-6 w-full max-w-4xl">
-        <FeedbackComponent
-          gameType="trivia"
-          category={result.category}
-          metadata={{
-            score: result.score,
-            correctCount: result.correctCount,
-            totalQuestions: result.totalQuestions,
-            timeUsed: result.timeUsed,
-            performance:
-              result.correctCount / result.totalQuestions >= 0.9 ? 'gold' :
-              result.correctCount / result.totalQuestions >= 0.7 ? 'silver' :
-              result.correctCount / result.totalQuestions >= 0.5 ? 'bronze' : 'default',
-            subcategory: result.subcategory,
-            difficulty: 'mixed',
-            completedAt: new Date().toISOString(),
-          }}
         />
       </div>
 
