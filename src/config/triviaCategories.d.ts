@@ -9,6 +9,7 @@ declare module '@/config/triviaCategories.json' {
       ogImage?: string;
       related?: string[];
       displayName?: string;
+      showPrintableQuizCTA?: boolean;
     };
   };
   export default value;

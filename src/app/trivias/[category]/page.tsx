@@ -27,6 +27,7 @@ interface TriviaCategory {
   ogImage?: string;
   related?: string[];
   displayName?: string;
+  showPrintableQuizCTA?: boolean;
 }
 
 interface Subcategory {
@@ -114,6 +115,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     title: category.replace(/-/g, ' '),
     description: 'Test your knowledge with our quiz'
   };
+  const showPrintableQuizCTA = categoryData.showPrintableQuizCTA !== false;
 
   // Fetch subcategories with at least 30 questions
   const subcategories = await getSubcategoriesWithMinQuestions(category, 30);
@@ -325,29 +327,31 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         </div>
 
         {/* CTA for Specific Trivia Bank Content */}
-        <section className="mt-12 p-6 bg-gray-800 rounded-xl border border-gray-200">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <Trophy className="w-6 h-6 text-white" />
-                <h3 className="text-xl font-bold text-white">
-                  Need a Printable Quiz?
-                </h3>
+        {showPrintableQuizCTA && (
+          <section className="mt-12 p-6 bg-gray-800 rounded-xl border border-gray-200">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <Trophy className="w-6 h-6 text-white" />
+                  <h3 className="text-xl font-bold text-white">
+                    Need a Printable Quiz?
+                  </h3>
+                </div>
+                <p className="text-white">
+                  Download our curated quiz sheets. 
+                  Perfect for hosting your own trivia night or classroom activity.
+                </p>
               </div>
-              <p className="text-white">
-                Download our curated quiz sheets. 
-                Perfect for hosting your own trivia night or classroom activity.
-              </p>
+              <Link 
+                href={`/trivia-bank/${category}-top-50-trivias`}
+                className="whitespace-nowrap inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all shadow-sm"
+              >
+                Get Downloadable Sheet
+                <CircleStar className="ml-2 w-4 h-4" />
+              </Link>
             </div>
-            <Link 
-              href={`/trivia-bank/${category}-top-50-trivias`}
-              className="whitespace-nowrap inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all shadow-sm"
-            >
-              Get Downloadable Sheet
-              <CircleStar className="ml-2 w-4 h-4" />
-            </Link>
-          </div>
-        </section>
+          </section>
+        )}
       </div>
       {/* JSON-LD Structured Data */}
       <StructuredData 

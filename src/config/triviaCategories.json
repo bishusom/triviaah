@@ -445,6 +445,7 @@
     "related": ["geography", "arts", "movies", "celebrities"],
     "keywords": ["picture clues", "image trivia", "visual quiz", "photo quiz"],
     "ogImage": "/imgs/categories/picture-clues.webp",
-    "displayName": "Picture Clues"
+    "displayName": "Picture Clues",
+    "showPrintableQuizCTA": false
   }
 }
