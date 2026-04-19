@@ -307,7 +307,7 @@
     "ogImage": "/imgs/categories/mythology.webp",
     "displayName": "Mythology"
   },
-  "law-politics-government": {
+  "law-politics": {
     "title": "Law & Politics",
     "description": "Explore questions about legal systems, political ideologies, government structures, and historical political events that shape nations and societies worldwide.",
     "longDescription": "How are societies organized and ruled? This category examines the development of legal systems, the clash of political ideologies, and the structure of global governments. Test your knowledge of constitutions, landmark court cases, and the history of diplomacy.",
@@ -335,7 +335,7 @@
     "ogImage": "/imgs/categories/famous-quotes.webp",
     "displayName": "Famous Quotes"
   },
-  "inventions-everyday-objects": {
+  "inventions": {
     "title": "Inventions",
     "description": "Test your knowledge of groundbreaking inventions, everyday items, and the stories behind common objects that shape our daily lives and modern society.",
     "longDescription": "Discover the genius behind the mundane. This trivia set explores the origins of inventions we take for granted, from the zipper and the lightbulb to the complex technology of the smartphone. Learn about the 'accidental' discoveries and determined inventors who revolutionized daily life.",
