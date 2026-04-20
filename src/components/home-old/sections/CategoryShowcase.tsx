@@ -4,7 +4,6 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import triviaCategories from '@/config/triviaCategories.json';
 
 // Helper function to get icon for each category
 const getIconForCategory = (categoryName: string) => {
@@ -129,19 +128,18 @@ const getQuizCountForCategory = (categoryName: string) => {
 export default function CategoryShowcase() {
   const [showAll, setShowAll] = useState(false);
   
-  // Transform the JSON data into display format
-  const categories = Object.entries(triviaCategories).map(([key, category]) => ({
-    id: key,
-    name: key,
-    title: category.title,
-    description: category.description,
-    icon: getIconForCategory(key),
-    color: getColorForCategory(key),
-    quizzes: getQuizCountForCategory(key),
-    keywords: category.keywords || [],
-    ogImage: category.ogImage,
-    related: category.related || []
-  }));
+  const categories: Array<{
+    id: string;
+    name: string;
+    title: string;
+    description: string;
+    icon: string;
+    color: string;
+    quizzes: number;
+    keywords: string[];
+    ogImage?: string;
+    related: string[];
+  }> = [];
 
   // Show 12 categories by default (2 rows of 6), all when expanded
   const initialCount = 12;

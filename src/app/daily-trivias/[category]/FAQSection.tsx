@@ -11,27 +11,26 @@
 //    smaller grid below. Duplicate visible content is a minor quality signal
 //    issue and creates confusion about which version the schema maps to.
 //
-// ✅ FIX: The JSON-LD schema is now static (no userTimezone interpolation).
-//    The original embedded `userTimezone` in schema text, but userTimezone comes
-//    from the client (WithTimezone reads Intl.DateTimeFormat). During SSR,
-//    the server renders with its own timezone — so the schema Google sees says
-//    e.g. "UTC" while the hydrated page might say "Asia/Kolkata". Removing the
-//    timezone string from structured data avoids this mismatch entirely.
-//    Timezone info still appears in the visible TimezoneInfo component.
+// ✅ FIX: The JSON-LD schema is static and does not depend on visitor locale.
+//    That keeps the FAQ content consistent across crawls and avoids
+//    unnecessary variance in the server-rendered HTML.
 
 export function FAQSection({
   formattedCategory,
   hasBonusQuestion,
   lastUpdated,
+  faqItems = [],
 }: {
   formattedCategory: string;
   hasBonusQuestion: boolean;
-  userTimezone: string;  // kept in props signature for compatibility, not used in schema
   lastUpdated: string;
+  faqItems?: Array<{
+    icon: string;
+    title: string;
+    answer: string;
+  }>;
 }) {
-  // ✅ Schema text = visible text below, verbatim.
-  // Matching ensures Google can grant FAQ rich result eligibility.
-  const faqItems = [
+  const defaultFaqItems = [
     {
       icon: '🔄',
       title: 'How often are new questions available?',
@@ -74,10 +73,12 @@ export function FAQSection({
     },
   ];
 
+  const items = faqItems.length > 0 ? faqItems : defaultFaqItems;
+
   const faqStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqItems.slice(0, 4).map(item => ({
+    mainEntity: items.slice(0, 4).map(item => ({
       '@type': 'Question',
       name: item.title,
       acceptedAnswer: {
@@ -96,7 +97,7 @@ export function FAQSection({
 
       <h2 className="text-3xl font-bold text-white text-center mb-8">Quiz Information</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {faqItems.map((item, index) => (
+        {items.map((item, index) => (
           <div
             key={index}
             className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300"

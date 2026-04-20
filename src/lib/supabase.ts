@@ -65,6 +65,10 @@ function isPictureCluesCategory(category: string): boolean {
   return category === PICTURE_CLUES_CATEGORY;
 }
 
+function isMissingSubcategorySchemaField(error: { code?: string }) {
+  return error.code === 'PGRST205' || error.code === '42703';
+}
+
 function applyTriviaQuestionFilters(
   query: any,
   {
@@ -273,11 +277,18 @@ export async function getMoreQuestions(
 // Add to lib/supabase.ts
 
 export interface Subcategory {
+  category?: string;
+  category_slug?: string;
   subcategory: string;
+  slug?: string;
+  description?: string | null;
   question_count: number;
+  category_type?: string;
+  sort_order?: number;
+  is_active?: boolean;
 }
 
-export async function getSubcategoriesWithMinQuestions(
+export async function getEnrichedSubcategoriesWithMinQuestions(
   category: string, 
   minQuestions: number = 30
 ): Promise<Subcategory[]> {
@@ -285,21 +296,27 @@ export async function getSubcategoriesWithMinQuestions(
     if (isPictureCluesCategory(category)) {
       return [];
     }
-
     const { data, error } = await supabase
       .from('trivia_subcategories_view')
-      .select('subcategory, question_count')
+      .select('category, subcategory, slug, description, question_count, category_type, sort_order, is_active')
       .eq('category', category)
       .gte('question_count', minQuestions)
       .order('question_count', { ascending: false });
-
+    console.log('Fetched subcategories for category:', category, 'data:', data);
     if (error) throw error;
-
+    console.log('Fetched enriched subcategories for category:', category, 'count:', data?.length);
     return data || [];
   } catch (error) {
-    console.error('Error in getSubcategoriesWithMinQuestions:', error);
+    console.error('Error in getEnrichedSubcategoriesWithMinQuestions:', error);
     return [];
   }
+}
+
+export async function getSubcategoriesWithMinQuestions(
+  category: string,
+  minQuestions: number = 30
+): Promise<Subcategory[]> {
+  return getEnrichedSubcategoriesWithMinQuestions(category, minQuestions);
 }
 
 export async function getSubcategoryQuestions(

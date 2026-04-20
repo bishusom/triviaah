@@ -6,20 +6,10 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import { Play } from 'lucide-react';
-import triviaCategories from '@/config/triviaCategories.json';
 import { buildMetaDescription } from '@/lib/seo';
+import { getTriviaCategoryBySlug, type TriviaCategoryRecord } from '@/lib/trivia-categories';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
-type CategoryKey = keyof typeof triviaCategories;
-
-interface TriviaCategoryConfig {
-  title: string;
-  description: string;
-  keywords?: string[];
-  related?: string[];
-  displayName?: string;
-}
 
 interface QuizPageProps {
   params: Promise<{ category: string }>;
@@ -43,8 +33,7 @@ export async function generateMetadata({ params, searchParams }: QuizPageProps):
   const subcategory = searchParamsObj?.subcategory as string | undefined;
 
   // Use category config if available for richer context
-  const categoryKey = category as CategoryKey;
-  const categoryConfig = triviaCategories[categoryKey] as TriviaCategoryConfig | undefined;
+  const categoryConfig = await getTriviaCategoryBySlug(category);
 
   const formattedCategory = categoryConfig?.title
     ?? category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -63,7 +52,6 @@ export async function generateMetadata({ params, searchParams }: QuizPageProps):
 
   // ✅ FIX: Unique description per category, not a generic template shared across
   // all quiz pages. Google flags near-identical descriptions as thin content.
-  // The category description from triviaCategories.json gives us unique copy for free.
   const categoryContext = categoryConfig?.description
     ? ` ${categoryConfig.description}`
     : '';
@@ -348,8 +336,7 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
       return notFound();
     }
 
-    const categoryKey = category as CategoryKey;
-    const categoryConfig = triviaCategories[categoryKey] as TriviaCategoryConfig | undefined;
+    const categoryConfig = await getTriviaCategoryBySlug(category);
 
     const formattedCategory = categoryConfig?.title
       ?? category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -365,14 +352,12 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
       formattedCategory,
       formattedSubcategory,
     );
-    const relatedCategories = (categoryConfig?.related ?? [])
-      .map((relatedKey) => ({
-        key: relatedKey,
-        config: triviaCategories[relatedKey as CategoryKey] as TriviaCategoryConfig | undefined,
-      }))
-      .filter(
-        (item): item is { key: string; config: TriviaCategoryConfig } => Boolean(item.config)
-      )
+    const relatedCategories = (await Promise.all((categoryConfig?.related ?? [])
+      .map(async (relatedKey) => {
+        const config = await getTriviaCategoryBySlug(relatedKey);
+        return config ? { key: relatedKey, config } : null;
+      })))
+      .filter((item): item is { key: string; config: TriviaCategoryRecord } => Boolean(item))
       .slice(0, 6);
 
     return (

@@ -3,23 +3,13 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Ads from '@/components/common/Ads';
-import triviaCategories from '@/config/triviaCategories.json';
 import ScrollButtons from '@/components/common/ScrollButtons';
 import { Play, Boxes, ShieldQuestionMark } from 'lucide-react';
 import TriviaCategoriesExplorer from '@/components/trivias/TriviaCategoriesExplorer';
-
-// Define proper TypeScript interface for category
-interface TriviaCategory {
-  title: string;
-  description: string;
-  ogImage?: string;
-  keywords?: string[];
-  related?: string[];
-  displayName?: string;
-}
+import { getTriviaCategories, getTriviaExplorerCards, type TriviaCategoryRecord } from '@/lib/trivia-categories';
 
 interface StructuredDataProps {
-  categories: [string, TriviaCategory][];
+  categories: TriviaCategoryRecord[];
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -67,13 +57,9 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function TriviasPage() {
-  // Get all category keys and sort them alphabetically
-  const categories = Object.entries(triviaCategories);
-  const categoriesForExplorer = categories.map(([key, category]) => ({
-    key,
-    category: category as TriviaCategory,
-  }));
+export default async function TriviasPage() {
+  const categories = await getTriviaCategories('trivias');
+  const categoriesForExplorer = await getTriviaExplorerCards('trivias');
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
@@ -295,14 +281,14 @@ function StructuredData({ categories }: StructuredDataProps) {
         "name": "Trivia Categories",
         "description": "List of all available trivia categories on Triviaah",
         "numberOfItems": categories.length,
-        "itemListElement": categories.map(([key, category], index) => ({
+        "itemListElement": categories.map((category, index) => ({
           "@type": "ListItem",
           "position": index + 1,
           "item": {
             "@type": "Game",
             "name": category.title,
             "description": category.description,
-            "url": `https://triviaah.com/trivias/${key}`,
+            "url": `https://triviaah.com/trivias/${category.slug}`,
             "gameType": "TriviaGame",
             "genre": "trivia",
             "numberOfPlayers": {

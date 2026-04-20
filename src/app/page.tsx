@@ -1,7 +1,10 @@
 import Script from 'next/script';
 import HomePageContent from '@/components/home/HomePageContent';
+import { getTriviaExplorerCards } from '@/lib/trivia-categories';
 
-export default function Home() {
+export default async function Home() {
+  const featuredTriviaCategories = await getTriviaExplorerCards('trivias');
+
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -44,7 +47,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <HomePageContent />
+      <HomePageContent featuredTriviaCategories={featuredTriviaCategories} />
     </>
   );
 }

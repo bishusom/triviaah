@@ -4,8 +4,9 @@ import Script from 'next/script';
 import Link from 'next/link';
 import Image from 'next/image';
 import Ads from '@/components/common/Ads';
-import { Play, Boxes, Clock, Users, Trophy, Calendar } from 'lucide-react';
+import { Play, Boxes, Clock, Users, Calendar } from 'lucide-react';
 import Timer from '@/components/daily/dailyQuizTimer';
+import { getTriviaCategories, type TriviaCategoryRecord } from '@/lib/trivia-categories';
 
 export const metadata: Metadata = {
   title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Triviaah',
@@ -48,77 +49,29 @@ export const metadata: Metadata = {
   },
 };
 
-async function getDailyQuizzes() {
-  return [
-    {
-      category: 'quick-fire',
-      name: 'Quick Fire',
-      path: '/daily-trivias/quick-fire',
-      image: '/imgs/daily-trivias/quick-fire.webp',
-      tagline: 'Test your reaction time and knowledge with our 60-second challenge!',
-      keywords: 'rapid fire trivia, quick fire triva, general knowledge quiz, daily trivia, daily quiz with answers',
-    },
-    {
-      category: 'general-knowledge',
-      name: 'General Knowledge',
-      path: '/daily-trivias/general-knowledge',
-      image: '/imgs/daily-trivias/general-knowledge.webp',
-      tagline: 'Test your worldly wisdom with diverse topics',
-      keywords: 'facts, trivia, knowledge quiz',
-    },
-    {
-      category: 'today-in-history',
-      name: 'Today in History',
-      path: '/daily-trivias/today-in-history',
-      image: '/imgs/daily-trivias/today-in-history.webp',
-      tagline: 'Discover historical events from this date in free online trivia',
-      keywords: 'historical trivia quiz, on this day trivia, history facts game',
-    },
-    {
-      category: 'entertainment',
-      name: 'Entertainment',
-      path: '/daily-trivias/entertainment',
-      image: '/imgs/daily-trivias/entertainment.webp',
-      tagline: 'Movies, music & pop culture challenges',
-      keywords: 'film quiz, music trivia, celebrity questions',
-    },
-    {
-      category: 'geography',
-      name: 'Geography',
-      path: '/daily-trivias/geography',
-      image: '/imgs/daily-trivias/geography.webp',
-      tagline: 'Explore the world without leaving home',
-      keywords: 'countries, capitals, landmarks, maps',
-    },
-    {
-      category: 'science',
-      name: 'Science & Nature',
-      path: '/daily-trivias/science',
-      image: '/imgs/daily-trivias/science.webp',
-      tagline: 'Discover the wonders of science and the animal kingdom',
-      keywords: 'biology, physics, chemistry, space',
-    },
-    {
-      category: "arts-literature",
-      name: "Arts & Literature",
-      path: "/daily-trivias/arts-literature",
-      image: "/imgs/daily-trivias/arts-literature.webp",
-      tagline: "Explore the world of great authors, artists, and literary masterpieces",
-      keywords: "literature trivia quiz, famous authors quiz, art history questions, classic books quiz, painting trivia, poetry quiz questions"
-    },
-    {
-      category: 'sports',
-      name: 'Sports',
-      path: '/daily-trivias/sports',
-      image: '/imgs/daily-trivias/sports.webp',
-      tagline: 'Test your knowledge of sports history, athletes, and events',
-      keywords: 'sports trivia quiz, athlete trivia, sports history game, sports quiz with answers',
-    },
-  ];
+type DailyQuizCard = {
+  category: string;
+  name: string;
+  path: string;
+  image: string;
+  tagline: string;
+  keywords: string;
+};
+
+function categoryToDailyQuizCard(category: TriviaCategoryRecord): DailyQuizCard {
+  const name = category.displayName || category.title;
+  return {
+    category: category.slug,
+    name,
+    path: `/daily-trivias/${category.slug}`,
+    image: category.ogImage || `/imgs/daily-trivias/${category.slug}.webp`,
+    tagline: category.description || category.longDescription || `Play ${name} daily trivia.`,
+    keywords: category.keywords.join(', '),
+  };
 }
 
 // Gaming-style quiz card
-function QuizCard({ quiz, index }: { quiz: any; index: number }) {
+function QuizCard({ quiz, index }: { quiz: DailyQuizCard; index: number }) {
   return (
     <Link
       key={quiz.category}
@@ -177,7 +130,8 @@ function QuizCard({ quiz, index }: { quiz: any; index: number }) {
 }
 
 export default async function DailyQuizzesPage() {
-  const dailyQuizzes = await getDailyQuizzes();
+  const dailyCategories = await getTriviaCategories('daily-trivias');
+  const dailyQuizzes = dailyCategories.map(categoryToDailyQuizCard);
   const lastUpdated = new Date();
 
   return (
@@ -317,7 +271,7 @@ export default async function DailyQuizzesPage() {
               },
               {
                 question: "What categories of daily trivia are available?",
-                answer: `We offer ${dailyQuizzes.length} different trivia categories including ${dailyQuizzes.map(q => q.name).join(', ')}. Each category has unique questions updated daily.`
+                answer: `We offer ${dailyQuizzes.length} different trivia categories including ${dailyQuizzes.map((q) => q.name).join(', ')}. Each category has unique questions updated daily.`
               },
               {
                 question: "Do I need to create an account to play daily trivia?",
@@ -353,22 +307,23 @@ export default async function DailyQuizzesPage() {
               <div>
                 <h3 className="text-xl font-bold text-white mb-4">Available Categories</h3>
                 <ul className="space-y-3 text-gray-300">
-                  <li className="flex items-start">
-                    <span className="text-cyan-400 font-bold mr-2">•</span>
-                    <span><strong>History</strong>: Famous events, leaders, and discoveries</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-purple-400 font-bold mr-2">•</span>
-                    <span><strong>Entertainment</strong>: Movies, music, and celebrity trivia</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-400 font-bold mr-2">•</span>
-                    <span><strong>Sports</strong>: Athletes, records, and iconic moments</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-yellow-400 font-bold mr-2">•</span>
-                    <span><strong>Science & Geography</strong>: Space, inventions, and world landmarks</span>
-                  </li>
+                  {dailyQuizzes.slice(0, 4).map((quiz, index) => {
+                    const accentClass = [
+                      'text-cyan-400',
+                      'text-purple-400',
+                      'text-green-400',
+                      'text-yellow-400',
+                    ][index] || 'text-cyan-400';
+
+                    return (
+                      <li key={quiz.category} className="flex items-start">
+                        <span className={`${accentClass} font-bold mr-2`}>•</span>
+                        <span>
+                          <strong>{quiz.name}</strong>: {quiz.tagline}
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
               

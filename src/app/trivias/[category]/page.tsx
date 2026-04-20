@@ -1,18 +1,20 @@
 // src/app/trivias/[category]/page.tsx
 import Link from 'next/link';
 import { Metadata } from 'next';
-import triviaCategories from '@/config/triviaCategories.json';
-import { getSubcategoriesWithMinQuestions } from '@/lib/supabase';
+import { getEnrichedSubcategoriesWithMinQuestions } from '@/lib/supabase';
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
 import { buildMetaDescription } from '@/lib/seo';
+import {
+  getTriviaCategoryBySlug,
+  getTriviaCategorySlugs,
+} from '@/lib/trivia-categories';
 import { Play, Timer, Info, ShieldQuestionMark, BookOpen, Trophy, CircleStar } from 'lucide-react';
 
-
-
-type CategoryKey = keyof typeof triviaCategories;
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  return Object.keys(triviaCategories).map((category) => ({
+  const categories = await getTriviaCategorySlugs('trivias');
+  return categories.map((category) => ({
     category,
   }));
 }
@@ -27,12 +29,60 @@ interface TriviaCategory {
   ogImage?: string;
   related?: string[];
   displayName?: string;
+  icon?: string;
   showPrintableQuizCTA?: boolean;
 }
 
 interface Subcategory {
   subcategory: string;
+  description?: string | null;
   question_count: number;
+}
+
+interface SubcategoryCardVariant {
+  shell: string;
+  glow: string;
+  topBar: string;
+  icon: string;
+}
+
+function getSubcategoryDescription(subcategory: Subcategory, categoryTitle: string) {
+  if (subcategory.description && subcategory.description.trim().length > 0) {
+    return subcategory.description;
+  }
+
+  return `Explore ${subcategory.subcategory.toLowerCase()} trivia inside ${categoryTitle.toLowerCase()} trivia.`;
+}
+
+function getSubcategoryCardVariant(index: number): SubcategoryCardVariant {
+  const variants: SubcategoryCardVariant[] = [
+    {
+      shell: 'from-slate-900/95 via-slate-900 to-cyan-950/60',
+      glow: 'rgba(34, 211, 238, 0.18)',
+      topBar: 'from-cyan-400 via-sky-400 to-blue-500',
+      icon: 'border-cyan-400/30 bg-cyan-400/12 text-cyan-200 shadow-cyan-500/15',
+    },
+    {
+      shell: 'from-slate-900/95 via-slate-900 to-indigo-950/60',
+      glow: 'rgba(59, 130, 246, 0.18)',
+      topBar: 'from-sky-400 via-blue-400 to-indigo-500',
+      icon: 'border-sky-400/30 bg-sky-400/12 text-sky-200 shadow-sky-500/15',
+    },
+    {
+      shell: 'from-slate-900/95 via-slate-900 to-violet-950/60',
+      glow: 'rgba(168, 85, 247, 0.18)',
+      topBar: 'from-violet-400 via-fuchsia-400 to-purple-500',
+      icon: 'border-violet-400/30 bg-violet-400/12 text-violet-200 shadow-violet-500/15',
+    },
+    {
+      shell: 'from-slate-900/95 via-slate-900 to-emerald-950/60',
+      glow: 'rgba(16, 185, 129, 0.18)',
+      topBar: 'from-emerald-400 via-teal-400 to-cyan-500',
+      icon: 'border-emerald-400/30 bg-emerald-400/12 text-emerald-200 shadow-emerald-500/15',
+    },
+  ];
+
+  return variants[index % variants.length];
 }
 
 interface StructuredDataProps {
@@ -43,12 +93,18 @@ interface StructuredDataProps {
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
   const { category } = await params;
-
-  const categoryKey = category as CategoryKey;
-  const categoryData = triviaCategories[categoryKey] || {
+  const categoryRecord = await getTriviaCategoryBySlug(category);
+  const categoryData: TriviaCategory = categoryRecord || {
     title: category.replace(/-/g, ' '),
-    description: 'Test your knowledge with our quiz'
+    description: 'Test your knowledge with our quiz',
+    longDescription: '',
+    learningPoints: [],
+    keywords: [],
+    related: [],
+    ogImage: undefined,
+    icon: undefined,
   };
+  const categoryIcon = categoryData.icon || '❓';
 
   const categoryTitle = categoryData.title;
   const categoryDescription = categoryData.description;
@@ -110,15 +166,22 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
-  const categoryKey = category as CategoryKey;
-  const categoryData = triviaCategories[categoryKey] || {
+  const categoryRecord = await getTriviaCategoryBySlug(category);
+  const categoryData: TriviaCategory = categoryRecord || {
     title: category.replace(/-/g, ' '),
-    description: 'Test your knowledge with our quiz'
+    description: 'Test your knowledge with our quiz',
+    longDescription: '',
+    learningPoints: [],
+    keywords: [],
+    related: [],
+    ogImage: undefined,
   };
-  const showPrintableQuizCTA = categoryData.showPrintableQuizCTA !== false;
+  const categoryIcon = categoryData.icon || '❓';
+  const showPrintableQuizCTA = categoryRecord?.showPrintableQuizCTA !== false;
 
-  // Fetch subcategories with at least 30 questions
-  const subcategories = await getSubcategoriesWithMinQuestions(category, 30);
+  // Prefer larger subcategories, but fall back to any live subcategory so the
+  // page does not disappear when a category has fewer high-count rows.
+  let subcategories = await getEnrichedSubcategoriesWithMinQuestions(category, 30);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
@@ -175,7 +238,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             className="group relative inline-flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-4 px-12 rounded-2xl text-lg shadow-2xl hover:shadow-glow transition-all duration-300 transform hover:scale-105"
           >
             <Play className="mr-2 text-xl group-hover:scale-110 transition-transform" />
-            Play Full Category Quiz
+            Play Quiz
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Link>
           <p className="text-gray-400 text-sm mt-3">
@@ -187,38 +250,57 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         {subcategories.length > 0 && (
           <div className="mb-16">
             <h2 className="text-3xl font-bold text-white text-center mb-8">Or Choose Your Challenge</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {subcategories.map((subcat) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {subcategories.map((subcat, index) => {
+                const variant = getSubcategoryCardVariant(index);
+                return (
                 <Link
                   key={subcat.subcategory}
                   href={`/trivias/${category}/${slugifyTriviaSegment(subcat.subcategory)}`}
-                  className="group relative bg-gradient-to-br from-gray-800 to-gray-900 hover:from-cyan-900/30 hover:to-blue-900/30 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/40 transition-all duration-300 hover:shadow-glow"
+                  className={`group relative overflow-hidden rounded-3xl border border-slate-700/80 bg-gradient-to-br ${variant.shell} p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/15 hover:shadow-[0_24px_60px_rgba(8,145,178,0.18)]`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold text-lg text-white group-hover:text-cyan-300 transition-colors">
+                  <div
+                    className="absolute inset-0 opacity-80"
+                    style={{
+                      background: `radial-gradient(circle at top right, ${variant.glow}, transparent 34%), radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.10), transparent 30%)`,
+                    }}
+                  />
+                  <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${variant.topBar}`} />
+
+                  <div className="relative z-10 flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-4 flex items-center gap-3">
+                        <div className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border text-lg shadow-lg ${variant.icon}`}>
+                          <span aria-hidden="true">{categoryIcon}</span>
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+                            Topic
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.65)]">
+                            {subcat.question_count} questions
+                          </p>
+                        </div>
+                      </div>
+
+                      <h3 className="text-xl font-bold text-white transition-colors group-hover:text-cyan-300">
                         {subcat.subcategory}
                       </h3>
-                      <p className="text-cyan-400 text-sm mt-1">
-                        {subcat.question_count}+ questions
+
+                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-300">
+                        {getSubcategoryDescription(subcat, categoryData.title)}
                       </p>
                     </div>
-                    <div className="w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center transform translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
-                      <Play className="w-5 h-5 text-white" />
+
+                    <div className="flex-shrink-0">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300 shadow-lg shadow-cyan-500/10 transition-transform duration-300 group-hover:scale-105 group-hover:bg-cyan-400/15">
+                        <Play className="h-5 w-5 translate-x-[1px]" />
+                      </div>
                     </div>
                   </div>
-                  
-                  {/* Progress bar */}
-                  <div className="mt-4 h-1 bg-gray-700 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-1000"
-                      style={{ 
-                        width: `${Math.min((subcat.question_count / 50) * 100, 100)}%` 
-                      }}
-                    />
-                  </div>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -270,10 +352,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             <h2 className="text-3xl font-bold text-white text-center mb-8">Explore More Categories</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {categoryData.related.map((relatedCategory) => {
-                const relatedKey = relatedCategory as CategoryKey;
-                const relatedData = triviaCategories[relatedKey];
-                if (!relatedData) return null;
-                
                 return (
                   <Link
                     key={relatedCategory}
@@ -281,10 +359,10 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                     className="group bg-gradient-to-br from-gray-800 to-gray-900 hover:from-purple-900/30 hover:to-pink-900/30 rounded-2xl p-6 border border-gray-700 hover:border-purple-500/40 transition-all duration-300 text-center"
                   >
                     <h3 className="font-semibold text-lg text-white group-hover:text-purple-300 transition-colors mb-2">
-                      {relatedData.title}
+                      {relatedCategory}
                     </h3>
                     <p className="text-gray-300 text-sm line-clamp-2">
-                      {relatedData.description}
+                      Explore this related topic
                     </p>
                     <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
                       <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-0 group-hover:w-full transition-all duration-700" />

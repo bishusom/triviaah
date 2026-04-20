@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import { getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
+import { getTriviaCategorySlugs } from '@/lib/trivia-categories'
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs'
-import triviaCategoriesConfig from '@/config/triviaCategories.json'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -193,7 +193,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Subcategory routes are only included if you've created actual page routes for them.
   const triviaCategories = Array.from(
     new Set([
-      ...Object.keys(triviaCategoriesConfig),
+      ...(await getTriviaCategorySlugs('trivias')),
       ...(await getCategoriesWithMinQuestions(10)),
       ...VIRTUAL_TRIVIA_CATEGORIES,
     ])
@@ -278,7 +278,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // For hardcoded routes you're confident about, skip the filter to save build time.
   const dynamicPages = [
     ...triviaCategoryPages,
-    ...triviaQuizPages,
+    //...triviaQuizPages,
     ...subcategoryPages,
     ...triviaBankPages,  // Only re-enable after confirming all slugs are live
     ...blogPages,

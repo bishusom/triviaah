@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, Medal, RotateCcw, Share2, Trophy,
-  BookOpen, XCircle, CheckCircle2, User
+  BookOpen, XCircle, CheckCircle2, User, CalendarDays, ArrowRight
 } from 'lucide-react';
 import FeedbackComponent from '@/components/common/FeedbackComponent';
 import Ads from '@/components/common/Ads';
@@ -283,11 +283,14 @@ export default function QuizSummary({
       {context === 'daily-trivias' && result.category !== 'quick-fire' && (
         <div className="mt-12 w-full max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="flex items-center justify-between mb-4 px-2">
-            <h3 className="text-sm font-black italic uppercase tracking-tighter flex items-center gap-2 text-yellow-500">
-              <RotateCcw size={18} className="text-yellow-600" />
+            <h3 className="text-sm font-black italic uppercase tracking-tighter flex items-center gap-2 text-cyan-300">
+              <RotateCcw size={18} className="text-cyan-400" />
               Missed a Day?
             </h3>
-            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Previous 7 Sessions</span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-cyan-200">
+              <CalendarDays size={12} />
+              Previous 7 Sessions
+            </span>
           </div>
 
           <div className="grid grid-cols-4 md:grid-cols-7 gap-2 sm:gap-3">
@@ -295,14 +298,23 @@ export default function QuizSummary({
               <Link
                 key={day.dateParam}
                 href={`/daily-trivias/${result.category}?date=${day.dateParam}`}
-                className="group relative flex flex-col items-center justify-center bg-gray-800/40 hover:bg-gray-700/60 border border-white/5 hover:border-yellow-500/50 p-2 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-300 shadow-lg hover:shadow-yellow-500/10"
+                className="group relative flex min-h-[92px] flex-col items-center justify-between overflow-hidden rounded-2xl border border-cyan-400/15 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 p-3 sm:p-4 text-center shadow-lg shadow-cyan-950/20 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-[0_18px_40px_rgba(34,211,238,0.18)]"
               >
-                <p className="text-[9px] sm:text-[10px] font-black text-gray-500 group-hover:text-yellow-400 uppercase mb-1 transition-colors">
-                  {day.label}
-                </p>
-                <p className="text-[10px] sm:text-xs font-black text-white group-hover:scale-110 transition-transform">
-                  PLAY
-                </p>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.16),transparent_50%)] opacity-80 transition-opacity group-hover:opacity-100" />
+                <div className="relative z-10 flex w-full items-center justify-between gap-2">
+                  <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.22em] text-cyan-200/80">
+                    Replay
+                  </span>
+                  <ArrowRight size={12} className="text-cyan-300 transition-transform group-hover:translate-x-0.5" />
+                </div>
+                <div className="relative z-10 flex flex-1 flex-col items-center justify-center py-2">
+                  <p className="text-[11px] sm:text-xs font-black text-white transition-colors group-hover:text-cyan-200">
+                    {day.label}
+                  </p>
+                  <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.24em] text-cyan-300/90">
+                    Play Again
+                  </p>
+                </div>
               </Link>
             ))}
           </div>

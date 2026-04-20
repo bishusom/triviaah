@@ -3,12 +3,10 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import { ArrowRight, CircleStar, Play, Trophy } from 'lucide-react';
-import triviaCategories from '@/config/triviaCategories.json';
-import { getSubcategoriesWithMinQuestions } from '@/lib/supabase';
+import { getEnrichedSubcategoriesWithMinQuestions } from '@/lib/supabase';
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
 import { buildMetaDescription } from '@/lib/seo';
-
-type CategoryKey = keyof typeof triviaCategories;
+import { getTriviaCategoryBySlug } from '@/lib/trivia-categories';
 
 interface TriviaCategory {
   title: string;
@@ -23,11 +21,20 @@ interface TriviaCategory {
 
 interface SubcategoryInfo {
   subcategory: string;
+  description?: string | null;
   question_count: number;
 }
 
+function getSubcategoryDescription(subcategory: SubcategoryInfo, categoryTitle: string) {
+  if (subcategory.description && subcategory.description.trim().length > 0) {
+    return subcategory.description;
+  }
+
+  return `Explore ${subcategory.subcategory.toLowerCase()} trivia inside ${categoryTitle.toLowerCase()} trivia.`;
+}
+
 async function getSubcategoryContext(category: string, subcategorySlug: string) {
-  const subcategories = await getSubcategoriesWithMinQuestions(category, 1);
+  const subcategories = await getEnrichedSubcategoriesWithMinQuestions(category, 1);
   const activeSubcategory = subcategories.find(
     (item) => slugifyTriviaSegment(item.subcategory) === subcategorySlug
   );
@@ -50,9 +57,12 @@ export async function generateMetadata({
   params: Promise<{ category: string; subcategory: string }>;
 }): Promise<Metadata> {
   const { category, subcategory } = await params;
-  const categoryData = (triviaCategories[category as CategoryKey] as TriviaCategory | undefined) || {
+  const categoryRecord = await getTriviaCategoryBySlug(category);
+  const categoryData: TriviaCategory = categoryRecord || {
     title: category.replace(/-/g, ' '),
     description: 'Test your knowledge with our quiz',
+    ogImage: undefined,
+    related: [],
   };
 
   const context = await getSubcategoryContext(category, subcategory);
@@ -68,26 +78,27 @@ export async function generateMetadata({
     `Explore ${context.activeSubcategory.question_count}+ ${subcategoryName.toLowerCase()} questions in our ${categoryData.title.toLowerCase()} trivia collection.`,
     'Play the quiz now.',
   ]);
+  const pageTitle = `${subcategoryName} in ${categoryData.title} Trivia`;
 
   return {
-    title: `${subcategoryName} ${categoryData.title} Trivia | Free Questions & Answers`,
+    title: `${pageTitle} | Free Questions & Answers`,
     description,
     alternates: {
       canonical,
     },
     openGraph: {
-      title: `${subcategoryName} ${categoryData.title} Trivia | Triviaah`,
+      title: `${pageTitle} | Triviaah`,
       description: `Play ${subcategoryName.toLowerCase()} trivia inside our ${categoryData.title.toLowerCase()} category.`,
       url: canonical,
       siteName: 'Triviaah',
       images: categoryData.ogImage
-        ? [{ url: categoryData.ogImage, width: 1200, height: 630, alt: `${subcategoryName} ${categoryData.title} Trivia` }]
+        ? [{ url: categoryData.ogImage, width: 1200, height: 630, alt: pageTitle }]
         : [],
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${subcategoryName} ${categoryData.title} Trivia | Triviaah`,
+      title: `${pageTitle} | Triviaah`,
       description: `Explore ${subcategoryName.toLowerCase()} questions and play the quiz.`,
       images: categoryData.ogImage ? [categoryData.ogImage] : [],
     },
@@ -104,9 +115,12 @@ export default async function SubcategoryPage({
   params: Promise<{ category: string; subcategory: string }>;
 }) {
   const { category, subcategory } = await params;
-  const categoryData = (triviaCategories[category as CategoryKey] as TriviaCategory | undefined) || {
+  const categoryRecord = await getTriviaCategoryBySlug(category);
+  const categoryData: TriviaCategory = categoryRecord || {
     title: category.replace(/-/g, ' '),
     description: 'Test your knowledge with our quiz',
+    ogImage: undefined,
+    related: [],
   };
 
   const context = await getSubcategoryContext(category, subcategory);
@@ -115,15 +129,15 @@ export default async function SubcategoryPage({
   }
 
   const { activeSubcategory, siblingSubcategories } = context;
-  const relatedCategories = (categoryData.related || [])
-    .map((relatedKey) => ({
-      key: relatedKey,
-      data: triviaCategories[relatedKey as CategoryKey] as TriviaCategory | undefined,
+  const activeSubcategoryDescription = getSubcategoryDescription(activeSubcategory, categoryData.title);
+  const pageTitle = `${activeSubcategory.subcategory} in ${categoryData.title} Trivia`;
+  const relatedCategories = await Promise.all((categoryData.related || [])
+    .slice(0, 6)
+    .map(async (relatedKey) => {
+      const data = await getTriviaCategoryBySlug(relatedKey);
+      return data ? { key: relatedKey, data } : null;
     }))
-    .filter(
-      (item): item is { key: string; data: TriviaCategory } => Boolean(item.data)
-    )
-    .slice(0, 6);
+    .then((items) => items.filter((item): item is { key: string; data: NonNullable<typeof item> extends { data: infer T } ? T : never } => item !== null));
 
   const quizHref = `/trivias/${category}/quiz?subcategory=${encodeURIComponent(activeSubcategory.subcategory)}`;
   const canonical = `https://triviaah.com/trivias/${category}/${subcategory}`;
@@ -135,8 +149,8 @@ export default async function SubcategoryPage({
         '@type': 'WebPage',
         '@id': `${canonical}/#webpage`,
         url: canonical,
-        name: `${activeSubcategory.subcategory} ${categoryData.title} Trivia`,
-        description: `Explore ${activeSubcategory.question_count}+ ${activeSubcategory.subcategory.toLowerCase()} questions in ${categoryData.title.toLowerCase()} trivia.`,
+        name: pageTitle,
+        description: activeSubcategoryDescription,
       },
       {
         '@type': 'BreadcrumbList',
@@ -145,7 +159,7 @@ export default async function SubcategoryPage({
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://triviaah.com' },
           { '@type': 'ListItem', position: 2, name: 'Trivia Categories', item: 'https://triviaah.com/trivias' },
           { '@type': 'ListItem', position: 3, name: categoryData.title, item: `https://triviaah.com/trivias/${category}` },
-          { '@type': 'ListItem', position: 4, name: activeSubcategory.subcategory, item: canonical },
+          { '@type': 'ListItem', position: 4, name: pageTitle, item: canonical },
         ],
       },
     ],
@@ -166,7 +180,7 @@ export default async function SubcategoryPage({
             <span>/</span>
             <Link href={`/trivias/${category}`} className="hover:text-cyan-400 transition-colors">{categoryData.title}</Link>
             <span>/</span>
-            <span className="text-white">{activeSubcategory.subcategory}</span>
+            <span className="text-white">{pageTitle}</span>
           </div>
 
           <div className="mt-6 max-w-3xl">
@@ -174,13 +188,10 @@ export default async function SubcategoryPage({
               Topic Page
             </p>
             <h1 className="mt-3 text-4xl md:text-5xl font-black text-white">
-              {activeSubcategory.subcategory}
-              <span className="block mt-2 text-xl md:text-2xl bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                {categoryData.title} Trivia
-              </span>
+              {pageTitle}
             </h1>
             <p className="mt-5 text-lg text-gray-300">
-              Start with this subtopic hub, then jump into a focused quiz with {activeSubcategory.question_count}+ questions from the {categoryData.title.toLowerCase()} category.
+              {activeSubcategoryDescription} Start with this subtopic hub, then jump into a focused quiz with {activeSubcategory.question_count}+ questions from the {categoryData.title.toLowerCase()} category.
             </p>
           </div>
 
@@ -230,6 +241,7 @@ export default async function SubcategoryPage({
             <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {siblingSubcategories.slice(0, 9).map((item: SubcategoryInfo) => {
                 const href = `/trivias/${category}/${slugifyTriviaSegment(item.subcategory)}`;
+                const itemDescription = getSubcategoryDescription(item, categoryData.title);
                 return (
                   <Link
                     key={item.subcategory}
@@ -237,7 +249,8 @@ export default async function SubcategoryPage({
                     className="rounded-2xl border border-gray-700 bg-gray-800/70 p-5 transition-colors hover:border-cyan-500/40 hover:bg-gray-800"
                   >
                     <p className="font-semibold text-white">{item.subcategory}</p>
-                    <p className="mt-1 text-sm text-gray-400">{item.question_count}+ questions</p>
+                    <p className="mt-1 text-sm text-gray-400">{itemDescription}</p>
+                    <p className="mt-2 text-xs text-cyan-400">{item.question_count}+ questions</p>
                   </Link>
                 );
               })}

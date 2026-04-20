@@ -9,7 +9,6 @@ import Footer from './Footer';
 import Ads from '@/components/common/Ads';
 import DailyTriviaFact from './sections/DailyTriviaFact';
 import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, WORD_GAMES, NUMBER_PUZZLES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
-import triviaCategories from '@/config/triviaCategories.json';
 import { GuestSessionManager } from '@/hooks/guestSession';
 import { getGuestStats } from '@/lib/guestStats';
 import { getPersistentGuestId } from '@/lib/guestId';
@@ -18,6 +17,16 @@ interface HomeTriviaCategory {
   title: string;
   description?: string;
   displayName?: string;
+  keywords?: string[];
+  ogImage?: string;
+  related?: string[];
+}
+
+interface HomePageContentProps {
+  featuredTriviaCategories: Array<{
+    key: string;
+    category: HomeTriviaCategory;
+  }>;
 }
 
 interface WelcomeState {
@@ -66,7 +75,7 @@ const getColorForCategory = (categoryName: string) => {
   return colorMap[categoryName] || 'text-gray-400';
 };
 
-export default function HomePageContent() {
+export default function HomePageContent({ featuredTriviaCategories }: HomePageContentProps) {
   const [welcomeState, setWelcomeState] = useState<WelcomeState | null>(null);
 
   useEffect(() => {
@@ -94,33 +103,12 @@ export default function HomePageContent() {
     });
   }, []);
 
-  const featuredTriviaCategories = [
-    'science',
-    'history',
-    'geography',
-    'movies',
-    'music',
-    'sports',
-    'literature',
-    'food',
-    'business',
-    'video-games',
-    'animals',
-    'famous-quotes',
-  ]
-    .map((key) => ({
-      key,
-      category: triviaCategories[key as keyof typeof triviaCategories] as HomeTriviaCategory | undefined,
-    }))
-    .filter(
-      (item): item is { key: string; category: HomeTriviaCategory } => Boolean(item.category)
-    )
-    .map(({ key, category }) => ({
-      key,
-      category,
-      icon: getIconForCategory(key),
-      color: getColorForCategory(key),
-    }));
+  const displayCategories = featuredTriviaCategories.map(({ key, category }) => ({
+    key,
+    category,
+    icon: getIconForCategory(key),
+    color: getColorForCategory(key),
+  }));
 
   return (
     <div className="bg-[#141414] min-h-screen text-white overflow-x-hidden">
@@ -222,7 +210,7 @@ export default function HomePageContent() {
                 className="mt-6 flex gap-3 overflow-x-auto pb-2 no-scrollbar"
                 style={{ WebkitOverflowScrolling: 'touch' }}
               >
-                {featuredTriviaCategories.map(({ key, category, icon, color }) => (
+                {displayCategories.map(({ key, category, icon, color }) => (
                   <Link
                     key={key}
                     href={`/trivias/${key}`}
