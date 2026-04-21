@@ -377,6 +377,11 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
                   <Play className="w-3 h-3 text-white" />
                 </div>
                 <div className="text-left">
+                  {formattedSubcategory ? (
+                    <div className="mb-2 inline-flex items-center rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300 shadow-[0_0_18px_rgba(34,211,238,0.12)]">
+                      {formattedCategory}
+                    </div>
+                  ) : null}
                   <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
                     {formattedSubcategory ? formattedSubcategory : formattedCategory} Quiz Challenge
                   </h1>

@@ -8,7 +8,7 @@ import {
   getTriviaCategoryBySlug,
   getTriviaCategorySlugs,
 } from '@/lib/trivia-categories';
-import { Play, Timer, Info, ShieldQuestionMark, BookOpen, Trophy, CircleStar } from 'lucide-react';
+import { Play, Timer, Info, ShieldQuestionMark, BookOpen, Trophy, CircleStar, Sparkles } from 'lucide-react';
 
 export const revalidate = 3600;
 
@@ -176,12 +176,18 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     related: [],
     ogImage: undefined,
   };
-  const categoryIcon = categoryData.icon || '❓';
   const showPrintableQuizCTA = categoryRecord?.showPrintableQuizCTA !== false;
 
   // Prefer larger subcategories, but fall back to any live subcategory so the
   // page does not disappear when a category has fewer high-count rows.
   let subcategories = await getEnrichedSubcategoriesWithMinQuestions(category, 30);
+  const relatedCategories = await Promise.all((categoryData.related || [])
+    .slice(0, 6)
+    .map(async (relatedKey) => {
+      const data = await getTriviaCategoryBySlug(relatedKey);
+      return data ? { key: relatedKey, data } : null;
+    }))
+    .then((items) => items.filter((item): item is { key: string; data: NonNullable<typeof item> extends { data: infer T } ? T : never } => item !== null));
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
@@ -257,45 +263,59 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                 <Link
                   key={subcat.subcategory}
                   href={`/trivias/${category}/${slugifyTriviaSegment(subcat.subcategory)}`}
-                  className={`group relative overflow-hidden rounded-3xl border border-slate-700/80 bg-gradient-to-br ${variant.shell} p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/15 hover:shadow-[0_24px_60px_rgba(8,145,178,0.18)]`}
+                  className={`group relative overflow-hidden rounded-3xl border border-slate-700/80 bg-gradient-to-br ${variant.shell} p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-300/30 hover:shadow-[0_28px_70px_rgba(8,145,178,0.24)]`}
                 >
                   <div
-                    className="absolute inset-0 opacity-80"
+                    className="absolute inset-0 opacity-90 transition-opacity duration-300 group-hover:opacity-100"
                     style={{
-                      background: `radial-gradient(circle at top right, ${variant.glow}, transparent 34%), radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.10), transparent 30%)`,
+                      background: `radial-gradient(circle at top right, ${variant.glow}, transparent 32%), radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.14), transparent 28%), linear-gradient(180deg, rgba(255,255,255,0.03), transparent 45%)`,
                     }}
                   />
                   <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${variant.topBar}`} />
+                  <div className="absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                  <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-cyan-400/10 blur-3xl transition-all duration-300 group-hover:bg-cyan-400/20" />
 
-                  <div className="relative z-10 flex items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                      <div className="mb-4 flex items-center gap-3">
-                        <div className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border text-lg shadow-lg ${variant.icon}`}>
-                          <span aria-hidden="true">{categoryIcon}</span>
+                  <div className="relative z-10 flex h-full flex-col justify-between gap-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-4 flex items-center gap-3">
+                          <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border text-lg shadow-[0_0_26px_rgba(34,211,238,0.22)] ring-1 ring-white/10 ${variant.icon}`}>
+                            <Sparkles className="h-5 w-5 text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.95)] transition-transform duration-300 group-hover:scale-110 group-hover:text-white" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+                              Topic
+                            </p>
+                            <p className="mt-1 text-sm font-semibold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.65)]">
+                              {subcat.question_count} questions
+                            </p>
+                          </div>
                         </div>
-                        <div className="min-w-0">
-                          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
-                            Topic
-                          </p>
-                          <p className="mt-1 text-sm font-semibold text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.65)]">
-                            {subcat.question_count} questions
-                          </p>
-                        </div>
+
+                        <h3 className="text-xl font-bold text-white transition-colors group-hover:text-cyan-300">
+                          {subcat.subcategory}
+                        </h3>
+
+                        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-300">
+                          {getSubcategoryDescription(subcat, categoryData.title)}
+                        </p>
                       </div>
 
-                      <h3 className="text-xl font-bold text-white transition-colors group-hover:text-cyan-300">
-                        {subcat.subcategory}
-                      </h3>
-
-                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-300">
-                        {getSubcategoryDescription(subcat, categoryData.title)}
-                      </p>
+                      <div className="flex-shrink-0">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/30 bg-gradient-to-br from-cyan-400/15 to-blue-500/10 text-cyan-200 shadow-[0_0_30px_rgba(34,211,238,0.18)] transition-transform duration-300 group-hover:scale-105 group-hover:border-cyan-300/50 group-hover:text-white">
+                          <Play className="h-5 w-5 translate-x-[1px]" />
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="flex-shrink-0">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300 shadow-lg shadow-cyan-500/10 transition-transform duration-300 group-hover:scale-105 group-hover:bg-cyan-400/15">
-                        <Play className="h-5 w-5 translate-x-[1px]" />
+                    <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                        <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.9)]" />
+                        Explore topic
                       </div>
+                      <span className="text-xs font-semibold text-cyan-300 transition-colors group-hover:text-cyan-200">
+                        Start quiz
+                      </span>
                     </div>
                   </div>
                 </Link>
@@ -347,19 +367,19 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         </section>
 
         {/* Related Categories */}
-        {categoryData.related && categoryData.related.length > 0 && (
+        {relatedCategories.length > 0 && (
           <div className="mb-16">
             <h2 className="text-3xl font-bold text-white text-center mb-8">Explore More Categories</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {categoryData.related.map((relatedCategory) => {
+              {relatedCategories.map(({ key, data }) => {
                 return (
                   <Link
-                    key={relatedCategory}
-                    href={`/trivias/${relatedCategory}`}
+                    key={key}
+                    href={`/trivias/${key}`}
                     className="group bg-gradient-to-br from-gray-800 to-gray-900 hover:from-purple-900/30 hover:to-pink-900/30 rounded-2xl p-6 border border-gray-700 hover:border-purple-500/40 transition-all duration-300 text-center"
                   >
                     <h3 className="font-semibold text-lg text-white group-hover:text-purple-300 transition-colors mb-2">
-                      {relatedCategory}
+                      {data.displayName || data.title}
                     </h3>
                     <p className="text-gray-300 text-sm line-clamp-2">
                       Explore this related topic
