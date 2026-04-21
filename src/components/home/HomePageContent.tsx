@@ -39,11 +39,13 @@ interface WelcomeState {
 
 const getIconForCategory = (categoryName: string) => {
   const iconMap: Record<string, string> = {
+    arts: '🎨',
     science: '🔬',
     history: '📜',
     geography: '🌍',
     movies: '🎬',
     music: '🎷',
+    tv: '📺',
     sports: '⚽',
     literature: '📖',
     food: '🍔',
@@ -210,7 +212,7 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
                 className="mt-6 flex gap-3 overflow-x-auto pb-2 no-scrollbar"
                 style={{ WebkitOverflowScrolling: 'touch' }}
               >
-                {displayCategories.map(({ key, category, icon, color }) => (
+                {displayCategories.slice(0, 8).map(({ key, category, icon, color }) => (
                   <Link
                     key={key}
                     href={`/trivias/${key}`}
