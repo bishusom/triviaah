@@ -100,10 +100,6 @@ export default function Footer() {
               © {new Date().getFullYear()} Triviaah. Play free daily trivia challenges with answers and online quiz games.
             </div>
             <div className="flex items-center gap-6 text-sm">
-              <span className="text-gray-400 flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                Online: 2.4K Players
-              </span>
               <span className="text-gray-400">Made with ❤️ for trivia lovers</span>
             </div>
           </div>

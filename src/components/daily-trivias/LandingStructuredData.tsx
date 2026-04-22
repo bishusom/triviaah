@@ -14,6 +14,7 @@ export function LandingStructuredData({
   faqItems,
 }: LandingStructuredDataProps) {
   const pageUrl = `https://triviaah.com/daily-trivias/${category}`;
+  void faqItems;
   const graph = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -24,20 +25,6 @@ export function LandingStructuredData({
         name: `${title} Daily Quiz | Triviaah`,
         description,
       },
-      ...(faqItems.length > 0
-        ? [{
-            '@type': 'FAQPage',
-            '@id': `${pageUrl}/#faq`,
-            mainEntity: faqItems.slice(0, 6).map((item) => ({
-              '@type': 'Question',
-              name: item.title,
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: item.answer,
-              },
-            })),
-          }]
-        : []),
     ],
   };
 
