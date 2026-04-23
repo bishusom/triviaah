@@ -76,6 +76,7 @@ function QuizCard({ quiz, index }: { quiz: DailyQuizCard; index: number }) {
     <Link
       key={quiz.category}
       href={quiz.path}
+      title={`Play ${quiz.name} Daily Quiz - ${quiz.tagline}`}
       className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
     >
       {/* Animated background gradient */}
@@ -88,7 +89,7 @@ function QuizCard({ quiz, index }: { quiz: DailyQuizCard; index: number }) {
       <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">
         <Image
           src={quiz.image}
-          alt={quiz.name}
+          alt={`${quiz.name} Daily Trivia Quiz`}
           fill
           className="object-contain transition-all duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -141,59 +142,54 @@ export default async function DailyQuizzesPage() {
         <StructuredData quizzes={dailyQuizzes} currentDate={lastUpdated} />
         
         
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center items-center gap-3 mb-4">
-            <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-2xl">
-              <Calendar className="text-4xl text-white" />
+        {/* ── Compact Hero Section ────────────────────────────────────────── */}
+        <div className="mb-8 lg:mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Title & Description */}
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <Calendar className="text-2xl text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
+                    Daily <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Trivias</span>
+                  </h1>
+                </div>
+              </div>
+              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                Fresh challenges every 24 hours. Play our free daily trivia challenges across history, sports, science, and pop culture.
+              </p>
+              <div className="mt-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5 inline-block">
+                  Last Updated: {lastUpdated.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </p>
+              </div>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Daily Trivia Games
-            </h1>
-          </div>
-          
-          <div className="max-w-3xl mx-auto">  
-            <span className="block text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-xl md:text-2xl mt-2">
-                Fresh Challenges Every 24 Hours
-              </span>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              Play our free daily trivia challenge with 10 fresh questions about <strong>history, sports, science, and pop culture</strong>.
-            </p>            
-          </div>
-        
-          {/* Timer Component */}
-          <div className="max-w-2xl mx-auto mb-8">
-            <Timer />
-          </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-2 max-w-3xl mx-auto mb-8">
-            <div className="bg-gray-800 rounded-xl p-2 border border-gray-700 text-center">
-              <Boxes className="text-2xl text-cyan-400 mx-auto mb-2" />
-              <div className="text-white font-bold text-xl">{dailyQuizzes.length}</div>
-              <div className="text-gray-400 text-sm">Categories</div>
+            {/* Timer & Stats Column */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="bg-slate-800/40 rounded-2xl p-4 border border-white/5 backdrop-blur-sm">
+                <Timer />
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-slate-800/50 rounded-xl p-2 border border-white/5 text-center">
+                  <Boxes className="text-lg text-cyan-400 mx-auto mb-1" />
+                  <div className="text-white font-black text-base">{dailyQuizzes.length}</div>
+                  <div className="text-[9px] uppercase tracking-widest text-gray-500">Topics</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-xl p-2 border border-white/5 text-center">
+                  <Clock className="text-lg text-yellow-400 mx-auto mb-1" />
+                  <div className="text-white font-black text-base">24h</div>
+                  <div className="text-[9px] uppercase tracking-widest text-gray-500">Reset</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-xl p-2 border border-white/5 text-center">
+                  <Users className="text-lg text-green-400 mx-auto mb-1" />
+                  <div className="text-white font-black text-base">Free</div>
+                  <div className="text-[9px] uppercase tracking-widest text-gray-500">Access</div>
+                </div>
+              </div>
             </div>
-            <div className="bg-gray-800 rounded-xl p-2 border border-gray-700 text-center">
-              <Clock className="text-2xl text-yellow-400 mx-auto mb-2" />
-              <div className="text-white font-bold text-xl">24h</div>
-              <div className="text-gray-400 text-sm">Reset Timer</div>
-            </div>
-            <div className="bg-gray-800 rounded-xl p-2 border border-gray-700 text-center">
-              <Users className="text-2xl text-green-400 mx-auto mb-2" />
-              <div className="text-white font-bold text-xl">Free</div>
-              <div className="text-gray-400 text-sm">To Play</div>
-            </div>
-          </div>
-
-          {/* Last Updated Date */}
-          <div className="text-center">
-            <p className="text-sm text-gray-500 bg-gray-800/50 rounded-lg px-4 py-2 inline-block border border-gray-700">
-              Last updated: {lastUpdated.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
-            </p>
           </div>
         </div>
         
@@ -201,19 +197,21 @@ export default async function DailyQuizzesPage() {
           <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
         </div>
 
-        {/* Mobile: Vertical Scroll Layout (Single Column) */}
-        <div className="lg:hidden mb-16">
+        {/* Mobile: Horizontal Scroll Layout */}
+        <div className="lg:hidden mb-16 overflow-hidden">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">All Daily Trivia Categories</h2>
-          <div className="grid grid-cols-1 gap-6">
+          <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory scrollbar-hide px-4 -mx-4">
             {dailyQuizzes.map((quiz, index) => (
-              <QuizCard key={quiz.category} quiz={quiz} index={index} />
+              <div key={quiz.category} className="w-[260px] shrink-0 snap-start">
+                <QuizCard quiz={quiz} index={index} />
+              </div>
             ))}
           </div>
         </div>
 
         {/* Desktop: Grid Layout */}
         <div className="hidden lg:block mb-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {dailyQuizzes.map((quiz, index) => (
               <QuizCard key={quiz.category} quiz={quiz} index={index} />
             ))}

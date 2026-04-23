@@ -5,14 +5,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Ads from '@/components/common/Ads';
 import { Play, Boxes, Star, Clock, Users } from 'lucide-react';
+import { getGamePagesBySection } from '@/lib/game-pages';
+import { getBrainwaveRouteDefinitions } from '@/lib/brainwave/brainwave-route-registry';
 
 interface Puzzle {
+  route_path: string;
   category: string;
   name: string;
   path: string;
   image: string;
+  og_image?: string | null;
   tagline: string;
   keywords: string;
+  intro_text: string;
+  supporting_copy: string;
+  is_daily_refresh: boolean;
 }
 
 export const metadata: Metadata = {
@@ -56,106 +63,28 @@ export const metadata: Metadata = {
   },
 };
 
+const BRAINWAVE_IMAGE_MAP = Object.fromEntries(
+  getBrainwaveRouteDefinitions().map((definition) => [definition.routePath, definition.ogImage]),
+);
+
 async function getDailyPuzzles() {
-  return [  
-      {
-      category: 'plotle',
-      name: 'Plotle',
-      path: '/brainwave/plotle',
-      image: '/imgs/brainwave/plotle.webp',
-      tagline: 'Guess the movie from its plot description in emojis',
-      keywords: 'movie plot game, film trivia, movie guessing game'
-      },
-      {
-      category: 'capitale',
-      name: 'Capitale',
-      path: '/brainwave/capitale',
-      image: '/imgs/brainwave/capitale.webp',
-      tagline: 'Guess world capitals in this challenging geography puzzle',
-      keywords: 'capital cities game, geography puzzle, world capitals quiz'
-      },
-      {
-      category: 'historidle',
-      name: 'Historidle',
-      path: '/brainwave/historidle',
-      image: '/imgs/brainwave/historidle.webp',
-      tagline: 'Guess the historical event from dates and other intriguing clues',
-      keywords: 'history trivia game, historical events quiz, history guessing game'
-      },
-      {
-      category: 'celebrile',
-      name: 'Celebrile',
-      path: '/brainwave/celebrile',
-      image: '/imgs/brainwave/celebrile.webp',
-      tagline: 'Guess the celebrity from fun facts in this star-studded quiz',
-      keywords: 'celebrity trivia game, famous people quiz, celebrity guessing game'    
-      },
-      {
-      category: 'songle',
-      name: 'Songle',
-      path: '/brainwave/songle',
-      image: '/imgs/brainwave/songle.webp',
-      tagline: 'Identify songs from lyrics snippets in this music challenge',
-      keywords: 'music lyrics game, song trivia, music guessing challenge'
-      },
-      {
-      category: 'literale',
-      name: 'Literale',
-      path: '/brainwave/literale',
-      image: '/imgs/brainwave/literale.webp',
-      tagline: 'Guess the book from its opening line in this literary puzzle',
-      keywords: 'book opening game, literature trivia, book guessing puzzle'
-      },    
-      {
-      category: 'cryptodle',
-      name: 'Cryptodle',
-      path: '/brainwave/cryptodle',
-      image: '/imgs/brainwave/cryptodle.webp',
-      tagline: 'Decode encrypted quotes with logic and pattern recognition',
-      keywords: 'cryptodle game, substitution cipher, logic puzzle, brain teaser'
-      },
-      {
-      category: 'creaturedle',
-      name: 'Creaturedle',
-      path: '/brainwave/creaturedle',
-      image: '/imgs/brainwave/creaturedle.webp',
-      tagline: 'Identify animals and mystery creatures from interesting clues',
-      keywords: 'animal trivia game, mystery creatures quiz, creature guessing challenge'
-      },
-      {
-      category: 'foodle',
-      name: 'Foodle',
-      path: '/brainwave/foodle',
-      image: '/imgs/brainwave/foodle.webp',
-      tagline: 'Guess the food from its 6 attributes in this tasty puzzle',
-      keywords: 'food trivia game, dish guessing quiz, cuisine puzzle challenge'
-      },
-      {
-      category: 'landmarkdle',
-      name: 'Landmarkdle',
-      path: '/brainwave/landmarkdle',
-      image: '/imgs/brainwave/landmarkdle.webp',
-      tagline: 'Identify famous landmarks from clues in this geography challenge',
-      keywords: 'landmark trivia game, famous places quiz, landmark guessing challenge'
-      },
-      {
-      category: 'inventionle',
-      name: 'Inventionle',
-      path: '/brainwave/inventionle',
-      image: '/imgs/brainwave/inventionle.webp',
-      tagline: 'Guess the invention from historical clues and fun facts',
-      keywords: 'invention trivia game, invention guessing quiz, historical inventions challenge'
-      },
-      {
-      category: 'synonymle',
-      name: 'Synonymle',
-      path: '/brainwave/synonymle',
-      image: '/imgs/brainwave/synonymle.webp',
-      tagline: 'Guess the word based on semantic similarity and synonyms',
-      keywords: 'synonymle, word puzzle, daily word, wordle vocabulary, synonym game, semantic game'
-      }
-      
- ];
+  const rows = await getGamePagesBySection('brainwave');
+
+  return rows
+    .filter((row) => row.route_path !== '/brainwave')
+    .map((row) => ({
+      route_path: row.route_path,
+      category: row.route_path.split('/').pop() || row.route_path,
+      name: row.title,
+      path: row.cta_href || row.route_path,
+      image: row.og_image || BRAINWAVE_IMAGE_MAP[row.route_path] || '/imgs/brainwave/brainwave-trivia-og.webp',
+      og_image: row.og_image,
+      tagline: row.supporting_copy || row.intro_text,
+      keywords: Array.isArray(row.keywords) ? row.keywords.join(', ') : '',
+      intro_text: row.intro_text,
+      supporting_copy: row.supporting_copy,
+      is_daily_refresh: row.is_daily_refresh,
+    }));
 }
 
 // Gaming-style puzzle card matching the trivias page design
@@ -164,6 +93,7 @@ function PuzzleCard({ puzzle, index }: { puzzle: Puzzle; index: number }) {
     <Link
       key={puzzle.category}
       href={puzzle.path}
+      title={`Play ${puzzle.name} - ${puzzle.tagline}`}
       className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
     >
       {/* Animated background gradient */}
@@ -176,7 +106,7 @@ function PuzzleCard({ puzzle, index }: { puzzle: Puzzle; index: number }) {
       <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">  
         <Image
           src={puzzle.image}
-          alt={puzzle.name}
+          alt={`${puzzle.name} Puzzle Game`}
           fill
           className="object-contain transition-all duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -224,56 +154,52 @@ export default async function DailyQuizzesPage() {
         {/* Structured Data for SEO */}
         <StructuredData puzzles={dailyPuzzles} currentDate={currentDate} />
         
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center items-center gap-3 mb-4">
-            <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-2xl">
-              <Star className="text-4xl text-white" />
+        {/* ── Compact Hero Section ────────────────────────────────────────── */}
+        <div className="mb-8 lg:mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Title & Description */}
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <Star className="text-2xl text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
+                    Brainwave <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Puzzles</span>
+                  </h1>
+                </div>
+              </div>
+              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                Challenge your mind with our collection of creative trivia puzzles. 
+                From word games to geography, every challenge is fresh and free to play.
+              </p>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Brainwave Games
-            </h1>
-          </div>
-          
-          <div className="max-w-3xl mx-auto">  
-            <span className="block text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-xl md:text-2xl mt-2">
-                Creative Daily Puzzle Challenges
-              </span>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              Challenge your mind with our collection of creative trivia puzzles. 
-              From word games to geography challenges, each game offers a unique twist on traditional trivia.
-            </p>
-            
-          </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto mb-8 py-4">
-            <div className="bg-gray-800 rounded-xl p-2 border border-gray-700 text-center">
-              <Boxes className="text-2xl text-cyan-400 mx-auto mb-2" />
-              <div className="text-white font-bold text-xl">{dailyPuzzles.length}</div>
-              <div className="text-gray-400 text-sm">Games</div>
+            {/* Stats & Metadata Cards */}
+            <div className="lg:col-span-5">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Boxes className="text-xl text-cyan-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">{dailyPuzzles.length}</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Games</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Clock className="text-xl text-yellow-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">Daily</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Puzzles</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Users className="text-xl text-green-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">Free</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Access</div>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-end">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5">
+                  Last Updated: {currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </p>
+              </div>
             </div>
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-              <Clock className="text-2xl text-yellow-400 mx-auto mb-2" />
-              <div className="text-white font-bold text-xl">Daily</div>
-              <div className="text-gray-400 text-sm">Challenges</div>
-            </div>
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-              <Users className="text-2xl text-green-400 mx-auto mb-2" />
-              <div className="text-white font-bold text-xl">Free</div>
-              <div className="text-gray-400 text-sm">To Play</div>
-            </div>
-          </div>
-
-          {/* Last Updated Date */}
-          <div className="text-center">
-            <p className="text-sm text-gray-500 bg-gray-800/50 rounded-lg px-4 py-2 inline-block border border-gray-700">
-              Last updated: {currentDate.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
-            </p>
           </div>
         </div>
        
@@ -281,19 +207,21 @@ export default async function DailyQuizzesPage() {
           <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
         </div>
 
-        {/* Mobile: Vertical Scroll Layout (Single Column) */}
-        <div className="lg:hidden mb-16">
+        {/* Mobile: Horizontal Scroll Layout */}
+        <div className="lg:hidden mb-16 overflow-hidden">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">All Brainwave Games</h2>
-          <div className="grid grid-cols-1 gap-6">
+          <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory scrollbar-hide px-4 -mx-4">
             {dailyPuzzles.map((puzzle, index) => (
-              <PuzzleCard key={puzzle.category} puzzle={puzzle} index={index} />
+              <div key={puzzle.category} className="w-[260px] shrink-0 snap-start">
+                <PuzzleCard puzzle={puzzle} index={index} />
+              </div>
             ))}
           </div>
         </div>
 
         {/* Desktop: Grid Layout */}
         <div className="hidden lg:block mb-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {dailyPuzzles.map((puzzle, index) => (
               <PuzzleCard key={puzzle.category} puzzle={puzzle} index={index} />
             ))}

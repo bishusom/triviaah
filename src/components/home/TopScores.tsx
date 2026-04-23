@@ -92,7 +92,10 @@ export default function TopScores() {
       ) : (
         <ul className="flex-1 space-y-2">
           {scores.map((player) => (
-            <li key={`${player.username}-${player.rank}`} className="flex items-center gap-3">
+            <li 
+              key={`${player.username}-${player.rank}`} 
+              className="flex items-center gap-3 flex"
+            >
               <span
                 className="w-5 text-center text-xs font-black"
                 style={{ color: player.rank === 1 ? '#38bdf8' : '#64748b' }}
@@ -119,6 +122,24 @@ export default function TopScores() {
             </li>
           ))}
         </ul>
+      )}
+
+      {/* ── Community Hub Fill ────────────────────────────────────────── */}
+      {!loading && scores.length > 0 && (
+        <div className="mt-4 pt-4 border-t border-white/5">
+          <div className="flex items-center justify-between text-[10px] font-bold">
+            <span className="text-gray-500 uppercase tracking-widest">Weekly Reset</span>
+            <div className="flex items-center gap-1.5 text-blue-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+              <span>Updating Live</span>
+            </div>
+          </div>
+          <div className="mt-3 rounded-xl bg-blue-500/5 border border-blue-500/10 p-3">
+            <p className="text-[10px] text-blue-300/80 leading-relaxed font-medium italic">
+              "Competitive play is active! Jump into a game now to secure your spot for the week."
+            </p>
+          </div>
+        </div>
       )}
     </div>
   );

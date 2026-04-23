@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Play, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Play, CheckCircle2, Sparkles } from 'lucide-react';
 
 import QuizGame from '@/components/trivias/QuizGame';
 import { FAQSection } from '@/app/daily-trivias/[category]/FAQSection';
@@ -185,19 +185,22 @@ export function DailyTriviaPageContent({
         )}
 
         {showQuiz && !showIntro && (
-          <section className="mb-6 rounded-3xl border border-slate-800/60 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-slate-950/80 px-5 py-5 backdrop-blur-sm sm:px-6">
-            <div className="mb-3 flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-blue-400" />
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-300/90">
-                Daily trivia quiz
-              </p>
+          <section className="text-center mb-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-5">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="bg-gradient-to-r from-cyan-400 to-blue-500 p-3 rounded-md shadow-lg">
+                  <Play className="w-3 h-3 text-white" />
+                </div>
+                <div className="text-left">
+                  <h1 className="mb-0.5 text-xl font-bold leading-tight text-white sm:mb-1 sm:text-3xl md:text-4xl">
+                    {title} Quiz Challenge
+                  </h1>
+                  <p className="max-w-[90vw] overflow-hidden whitespace-nowrap text-ellipsis text-sm leading-none text-gray-300 sm:max-w-xl sm:text-base">
+                    {cfg.description}
+                  </p>
+                </div>
+              </div>
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl lg:text-4xl">
-              {title} Daily Quiz
-            </h1>
-            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-gray-300 sm:text-base">
-              {cfg.description}
-            </p>
           </section>
         )}
 
@@ -227,7 +230,7 @@ export function DailyTriviaPageContent({
             {learningPoints.map((point, index) => (
               <div
                 key={index}
-                className="group relative rounded-2xl border border-slate-800/60 bg-gradient-to-br from-slate-800/30 to-slate-900/20 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-slate-700/80 hover:shadow-xl"
+                className="group relative rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-blue-900/40 to-cyan-900/30 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-[0_8px_30px_rgb(6,182,212,0.15)]"
               >
                 <div className="absolute -top-3 left-6">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 shadow-lg">
@@ -243,20 +246,53 @@ export function DailyTriviaPageContent({
         </section>
 
         {/* Navigation & Sibling Categories */}
-        <nav className="mt-12 space-y-8 border-t border-slate-800/60 pt-8">
+        <nav className="mt-20 space-y-12 border-t border-slate-800/60 pt-16">
           <div>
-            <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
-              More Daily Challenges
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {siblingCategories.map(({ slug, name, icon }) => (
+            <div className="mb-8 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">
+                  Daily Discovery
+                </p>
+                <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">More Daily Challenges</h2>
+              </div>
+              <Link 
+                href="/daily-trivias"
+                className="hidden sm:flex items-center gap-2 text-sm font-bold text-blue-400 hover:text-blue-300 transition-colors group"
+              >
+                View All <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-8 sm:gap-3">
+              {siblingCategories.slice(0, 16).map(({ slug, name, icon }) => (
                 <Link
                   key={slug}
                   href={`/daily-trivias/${slug}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/30 px-3 py-2 text-sm text-gray-200 transition-all duration-200 hover:border-slate-600 hover:bg-slate-800/60 hover:text-white"
+                  className="group relative flex flex-col overflow-hidden rounded-lg border border-white/5 bg-slate-900/40 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/30 hover:shadow-lg"
                 >
-                  <span>{icon}</span>
-                  {name}
+                  {/* Image Container */}
+                  <div className="relative aspect-square w-full overflow-hidden bg-slate-800">
+                    <Image
+                      src={`/imgs/daily-trivias/${slug}.webp`}
+                      alt={name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110 opacity-50 group-hover:opacity-100"
+                      sizes="(max-width: 640px) 25vw, (max-width: 1024px) 15vw, 12vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+                    
+                    {/* Icon Overlay */}
+                    <div className="absolute top-1.5 left-1.5 flex h-5 w-5 items-center justify-center rounded-md bg-black/60 text-[10px] backdrop-blur-sm">
+                      {icon}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-2">
+                    <h3 className="text-[10px] font-bold text-white transition-colors group-hover:text-blue-400 line-clamp-1 text-center">
+                      {name}
+                    </h3>
+                  </div>
                 </Link>
               ))}
             </div>

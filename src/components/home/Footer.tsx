@@ -95,12 +95,13 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-gray-800">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-gray-400 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="md:col-span-2 text-gray-400 text-sm">
               © {new Date().getFullYear()} Triviaah. Play free daily trivia challenges with answers and online quiz games.
             </div>
-            <div className="flex items-center gap-6 text-sm">
-              <span className="text-gray-400">Made with ❤️ for trivia lovers</span>
+            <div className="hidden md:block"></div>
+            <div className="text-sm text-gray-400">
+              Made with ❤️ for trivia lovers
             </div>
           </div>
         </div>

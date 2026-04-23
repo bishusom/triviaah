@@ -7,7 +7,7 @@ export function generateNumberPuzzlesMetadata(): Metadata {
 
   return {
     title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah',
-    description: 'Challenge your math skills with our collection of free number puzzles including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, and Kakuro. Improve logical thinking and problem-solving skills.',
+    description: 'Challenge your math skills with our collection of free number puzzles including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, Kakuro, KenKen, and Number Bonds. Improve logical thinking and problem-solving skills.',
     keywords: [
       'number puzzles',
       'math games',
@@ -17,6 +17,8 @@ export function generateNumberPuzzlesMetadata(): Metadata {
       '2048',
       '2048 game',
       'number tower',
+      'kenken',
+      'number bonds',
       'prime hunter',
       'number sequence',
       'sudoku',
@@ -38,7 +40,7 @@ export function generateNumberPuzzlesMetadata(): Metadata {
     },
     openGraph: {
       title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah',
-      description: 'Challenge your math skills with our collection of free number puzzles including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, and Kakuro. Improve logical thinking and problem-solving skills.',
+      description: 'Challenge your math skills with our collection of free number puzzles including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, Kakuro, KenKen, and Number Bonds. Improve logical thinking and problem-solving skills.',
       url: 'https://triviaah.com/number-puzzles',
       siteName: 'Triviaah',
       images: [
@@ -55,7 +57,7 @@ export function generateNumberPuzzlesMetadata(): Metadata {
     twitter: {
       card: 'summary_large_image',
       title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah',
-      description: 'Challenge your math skills with our collection of free number puzzles including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, and Kakuro. Improve logical thinking and problem-solving skills.',
+      description: 'Challenge your math skills with our collection of free number puzzles including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, Kakuro, KenKen, and Number Bonds. Improve logical thinking and problem-solving skills.',
       images: ['/imgs/number-puzzles.webp'],
       site: '@elitetrivias',
     },

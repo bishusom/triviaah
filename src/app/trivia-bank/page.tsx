@@ -13,107 +13,89 @@ interface TriviaCategory {
 
 // Generate metadata
 export async function generateMetadata(): Promise<Metadata> {
+  const canonicalUrl = 'https://triviaah.com/trivia-bank';
   
   return {
-    title: 'Free Trivia Question Bank | Create Online Quiz Games For Free',
-    description: 'Create your own online quiz for free with our extensive trivia question bank. Perfect for virtual trivia games, team building, and fun quiz games with friends. No cost involved!',
+    title: 'Trivia Question Bank | Create Free Online Quiz Games | Triviaah',
+    description: 'Explore our extensive trivia question bank. Create your own online quiz for free, perfect for virtual trivia games, team building, and classroom fun. Thousands of questions across 50+ categories.',
     keywords: [
+      'trivia question bank',
       'free trivia questions',
       'create online quiz free',
-      'trivia question bank',
       'virtual trivia games',
       'team building trivia',
-      'free quiz website',
-      'online trivia games',
-      'trivia for adults',
-      'quiz game creator',
-      'free quiz hosting'
-    ].join(', '),
-    authors: [{ name: 'Triviaah' }],
-    creator: 'Triviaah',
-    publisher: 'Triviaah',
-    formatDetection: {
-      email: false,
-      address: false,
-      telephone: false,
-    },
-    metadataBase: new URL('https://triviaah.com'), // Replace with your actual domain
+      'educational quiz bank',
+      'trivia for classroom',
+      'online quiz maker free',
+      'history trivia bank',
+      'science trivia bank'
+    ],
     alternates: {
-      canonical: 'https://triviaah.com/trivia-bank',
+      canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Free Trivia Question Bank | Create Online Quiz Games For Free',
-      description: 'Create your own online quiz for free with our extensive trivia question bank. Perfect for virtual trivia games and team building activities.',
-      url: '/trivia-bank',
-      siteName: 'Triviaah',
-      images: [
-        {
-          url: '/imgs/trivia-bank-card.jpg', // Create this OG image
-          width: 1200,
-          height: 630,
-          alt: 'Triviaah Question Bank - Create Free Online Quiz Games',
-        },
-      ],
-      locale: 'en_US',
+      title: 'Trivia Question Bank | Create Free Online Quiz Games | Triviaah',
+      description: 'Create your own online quiz for free with our extensive trivia question bank. Perfect for virtual trivia games and team building.',
+      url: canonicalUrl,
+      images: [{ url: '/imgs/trivia-bank-card.jpg' }],
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Free Trivia Question Bank | Create Online Quiz Games For Free',
-      description: 'Create your own online quiz for free with our extensive trivia question bank.',
-      images: ['/imgs/trivia-bank-card.jpg'], // Same as OG image
-      creator: '@triviaah', // Replace with your Twitter handle
+      title: 'Trivia Question Bank | Create Free Online Quiz Games',
+      images: ['/imgs/trivia-bank-card.jpg'],
     },
     robots: {
       index: true,
       follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
-    },
+    }
   };
 }
 
 // JSON-LD Structured Data
-function addTriviaBankJsonLd() {
-  return {
-    __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      "name": "Trivia Question Bank",
-      "description": "Free online trivia question bank for creating quiz games and virtual trivia events",
-      "url": "https://triviaah.com/trivia-bank", // Replace with your domain
-      "publisher": {
-        "@type": "Organization",
-        "name": "Triviaah",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://triviaah.com/logo.png" // Replace with your logo
-        }
+function TriviaBankJsonLd({ count }: { count: number }) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": "https://triviaah.com/trivia-bank/#webpage",
+        "url": "https://triviaah.com/trivia-bank",
+        "name": "Trivia Question Bank",
+        "description": "Free online trivia question bank for creating quiz games and virtual trivia events",
+        "publisher": { "@id": "https://triviaah.com/#organization" }
       },
-      "mainEntity": {
+      {
         "@type": "ItemList",
-        "numberOfItems": 20, // Update with actual count
+        "name": "Trivia Categories",
+        "numberOfItems": count,
         "itemListElement": [
           {
             "@type": "ListItem",
             "position": 1,
             "item": {
               "@type": "CreativeWork",
-              "name": "Free Trivia Questions",
-              "description": "Collection of free trivia questions for online quizzes"
+              "name": "Free Trivia Questions Collection"
             }
           }
         ]
       },
-      "isAccessibleForFree": true,
-      "license": "https://creativecommons.org/licenses/by/4.0/"
-    })
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://triviaah.com" },
+          { "@type": "ListItem", "position": 2, "name": "Trivia Bank", "item": "https://triviaah.com/trivia-bank" }
+        ]
+      }
+    ]
   };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
+  );
 }
 
 export default async function TriviaBankPage() {
@@ -123,48 +105,56 @@ export default async function TriviaBankPage() {
   );
 
   return (
-    <>
-      {/* JSON-LD Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={addTriviaBankJsonLd()}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <TriviaBankJsonLd count={triviaCategories.length} />
       
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-        <div className="container mx-auto px-4 py-12">
-          {/* Gaming Header */}
-          <div className="relative bg-gradient-to-r from-purple-600 to-blue-500 py-20 rounded-2xl border-2 border-purple-400/30 mb-16 overflow-hidden">
-            <div className="absolute inset-0 bg-black/20"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse-slow"></div>
-            
-            <div className="relative container mx-auto px-4 text-center">
-              <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white drop-shadow-lg">
-                TRIVIAAH QUESTION BANK
-              </h1>
-              <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-                Level up your quizzes with our extensive collection of trivia questions
+      <div className="container mx-auto px-4 py-8">
+        {/* ── Compact Hero Section ────────────────────────────────────────── */}
+        <div className="mb-8 lg:mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Title & Description */}
+            <div className="lg:col-span-8">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-2xl text-white">📚</span>
+                </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
+                    Trivia <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Bank</span>
+                  </h1>
+                </div>
+              </div>
+              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                Unlock thousands of high-quality trivia questions across 50+ categories. 
+                Perfect for creating custom quizzes, hosting game nights, or boosting your knowledge bank.
               </p>
             </div>
-          </div>
 
-          {/* Separator */}
-          <div className="relative mb-16">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-700"></div>
+            {/* Stats Column */}
+            <div className="lg:col-span-4 hidden lg:block">
+              <div className="bg-slate-800/30 rounded-2xl p-6 border border-white/5 backdrop-blur-sm">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-white font-black text-3xl leading-none">{triviaCategories.length}</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Categories</div>
+                  </div>
+                  <div className="w-px h-10 bg-white/10 mx-6"></div>
+                  <div>
+                    <div className="text-white font-black text-3xl leading-none">FREE</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Access</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="relative flex justify-center">
-              <span className="bg-gray-900 px-6 py-2 text-sm text-purple-400 font-semibold border border-purple-500/30 rounded-full">
-                BROWSE CATEGORIES
-              </span>
-            </div>
           </div>
+        </div>
 
-          <div className="py-4">
-            <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
-          </div>
+        <div className="py-4">
+          <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
+        </div>
 
-          {/* Client-side filter component */}
-          <TriviaFilter categories={sortedCategories} />
+        {/* Client-side filter component */}
+        <TriviaFilter categories={sortedCategories} />
 
           {/* SEO Content Section */}
           <section className="mt-20 bg-gray-800/50 rounded-2xl p-8 border border-gray-700">
@@ -240,6 +230,5 @@ export default async function TriviaBankPage() {
           </section>
         </div>
       </div>
-    </>
   );
 }

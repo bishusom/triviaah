@@ -1,124 +1,60 @@
-// src/app/retro-games/RetroGamesClientPage.tsx
-'use client';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
 import { Play, Boxes, Star, Clock, Users, Gamepad2, Zap, Target, Trophy, History } from 'lucide-react';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
-import { slu } from 'mathjs';
+import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
 
-const retroGames = [
-  {
-    slug: 'tic-tac-toe',
-    name: 'Tic Tac Toe',
-    image: '/imgs/retro-games/tictactoe.webp',
-    description: 'Classic two-player game of Xs and Os on a 3x3 grid',
-    tagline: 'Challenge a friend or the AI in this timeless game of strategy and skill',
-    features: ['Two-player mode', 'AI opponent', 'Score tracking'],
-    color: 'orange',
-    keywords: 'tic tac toe, noughts and crosses, two-player game, classic strategy game',
-    year: '1952',
-    difficulty: 'Easy'
+export const metadata: Metadata = {
+  title: 'Retro Games Collection - Free Classic Arcade Games | Triviaah',
+  description: 'Play classic retro games including Minesweeper, Tetris, Pong, and Snake. Enjoy timeless arcade games that test your logic, strategy, and reflexes.',
+  alternates: {
+    canonical: 'https://triviaah.com/retro-games',
   },
-   {
-    slug: 'snake',
-    name: 'Snake',
-    image: '/imgs/retro-games/snake.webp',
-    description: 'Control a growing snake to eat food while avoiding collisions',
-    tagline: 'Navigate a hungry snake through obstacles to grow as long as possible',
-    features: ['Growing mechanic', 'Multiple modes', 'Special food types'],
-    color: 'emerald',
-    keywords: 'snake, arcade game, growing snake, classic mobile game',
-    year: '1997',
-    difficulty: 'Easy to Medium'
+  openGraph: {
+    title: 'Retro Games Collection - Free Classic Arcade Games | Triviaah',
+    description: 'Play classic retro games including Minesweeper, Tetris, Pong, and Snake.',
+    url: 'https://triviaah.com/retro-games',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/retro-games/retro-games-og.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Retro Games Collection',
+      },
+    ],
+    type: 'website',
   },
-  {
-    slug: 'pong',
-    name: 'Pong',
-    image: '/imgs/retro-games/pong.webp',
-    description: 'The original table tennis arcade game that started it all',
-    tagline: 'Battle against AI or friends in this classic competitive arcade game',
-    features: ['Two-player mode', 'AI opponent', 'Difficulty settings'],
-    color: 'green',
-    keywords: 'pong, table tennis, arcade game, competitive game',
-    year: '1972',
-    difficulty: 'Easy'
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Retro Games Collection | Triviaah',
+    description: 'Play classic retro games including Minesweeper, Tetris, Pong, and Snake.',
+    images: ['/imgs/retro-games/retro-games-og.webp'],
   },
-  {
-    slug: 'minesweeper',
-    name: 'Minesweeper',
-    image: '/imgs/retro-games/minesweeper.webp',
-    description: 'Classic logic puzzle where you clear mines without detonating them',
-    tagline: 'Uncover safe cells while avoiding hidden mines in this strategic challenge',
-    features: ['Logic puzzle', 'Multiple difficulties', 'Flag marking'],
-    color: 'blue',
-    keywords: 'minesweeper, logic puzzle, mine detection game, strategy game',
-    year: '1990',
-    difficulty: 'Medium'
+  robots: {
+    index: true,
+    follow: true,
   },
-  {
-    slug: 'tetris',
-    name: 'Tetris',
-    image: '/imgs/retro-games/tetris.webp',
-    description: 'Arrange falling blocks to complete lines in this iconic puzzle game',
-    tagline: 'Master falling tetrominoes to clear lines and achieve high scores',
-    features: ['Block puzzle', 'Increasing speed', 'Hold piece mechanic'],
-    color: 'purple',
-    keywords: 'tetris, block puzzle, falling blocks, line clear game',
-    year: '1984',
-    difficulty: 'Easy to Hard'
-  },
-  {
-    slug: 'space-invaders',
-    name: 'Space Invaders',
-    image: '/imgs/retro-games/space-invaders.webp',
-    description: 'Defend Earth from waves of descending alien invaders',
-    tagline: 'Pilot your spaceship to shoot down alien invaders and protect humanity',
-    features: ['Classic shooter', 'Multiple levels', 'Power-ups'],
-    color: 'red',
-    keywords: 'space invaders, alien shooter, classic arcade game, spaceship defense',
-    year: '1978',
-    difficulty: 'Medium'
-  },
-  {
-    slug: 'pacman',
-    name: 'PacMan',
-    image: '/imgs/retro-games/pacman.webp',
-    description: 'Navigate the maze collecting dots while avoiding ghosts',
-    tagline: 'Eat dots and avoid ghosts in this classic arcade game',
-    features: ['Maze navigation', 'Ghost AI', 'Power pellets'],
-    color: 'yellow',
-    keywords: 'pac-man, maze game, ghost avoidance, classic arcade game',
-    year: '1980',
-    difficulty: 'Medium'
-  },
-  {  
-    slug: 'breakout',
-    name: 'Breakout',
-    image: '/imgs/retro-games/breakout.webp',
-    description: 'Bounce a ball to break bricks and clear levels',
-    tagline: 'Control the paddle to bounce the ball and break all the bricks',
-    features: ['Brick breaking', 'Power-ups', 'Multiple levels'],
-    color: 'teal',
-    keywords: 'arkanoid, breakout, brick breaker, paddle game, classic arcade game',
-    year: '1976',
-    difficulty: 'Easy to Medium'
-  },
-];
+};
 
-// Gaming-style game card matching the brainwave page design
-function GameCard({ game, index }: { game: typeof retroGames[0]; index: number }) {
+function GameCard({ game, index }: { game: GamePageContent; index: number }) {
+  const imageSrc = game.og_image || `/imgs/retro-games/${game.route_path.split('/').pop()}.webp`;
+  const route = game.cta_href || game.route_path;
+  const tagline = game.supporting_copy || game.intro_text;
+  const year = 'Classic'; // generic if no year
+  const difficulty = 'Medium'; // generic difficulty
+
   return (
     <Link
-      key={game.slug}
-      href={`/retro-games/${game.slug}`}
+      key={game.route_path}
+      href={route}
+      title={`Play ${game.title} - ${tagline}`}
       className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-gray-800 to-gray-900 border border-amber-500/20 hover:border-amber-400/40"
     >
-      {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
-      {/* Retro scanline effect */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none">
         <div className="absolute inset-0" style={{
           backgroundImage: 'linear-gradient(0deg, transparent 50%, rgba(255,255,255,.05) 50%)',
@@ -126,14 +62,12 @@ function GameCard({ game, index }: { game: typeof retroGames[0]; index: number }
         }} />
       </div>
       
-      {/* Glow effect */}
       <div className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-400/10 to-amber-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
       
-      {/* Game Image */}
       <div className="relative aspect-square w-full bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">  
         <Image
-          src={game.image}
-          alt={game.name}
+          src={imageSrc}
+          alt={`${game.title} Retro Game`}
           fill
           className="object-contain transition-all duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -142,32 +76,27 @@ function GameCard({ game, index }: { game: typeof retroGames[0]; index: number }
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         
-        {/* Play button overlay */}
         <div className="absolute bottom-4 right-4 w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
           <Play className="w-5 h-5 text-white" />
         </div>
 
-        {/* Game number badge */}
         <div className="absolute top-4 left-4 bg-black/70 text-white text-sm font-semibold px-3 py-1 rounded-full">
           #{index + 1}
         </div>
         
-        {/* Year badge */}
         <div className="absolute top-4 right-4 bg-amber-600/80 text-white text-xs font-bold px-2 py-1 rounded">
-          {game.year}
+          {year}
         </div>
       </div>
       
-      {/* Game Content */}
       <div className="p-6 relative z-10">
         <h3 className="font-bold text-lg text-white mb-2 group-hover:text-amber-300 transition-colors">
-          {game.name}
+          {game.title}
         </h3>
         <p className="text-sm text-gray-300 line-clamp-2 mb-3">
-          {game.tagline}
+          {game.supporting_copy || game.intro_text}
         </p>
         
-        {/* Difficulty indicator */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs text-gray-400">Difficulty:</span>
           <div className="flex gap-1">
@@ -175,18 +104,13 @@ function GameCard({ game, index }: { game: typeof retroGames[0]; index: number }
               <div 
                 key={i}
                 className={`w-2 h-2 rounded-full ${
-                  (game.difficulty === 'Easy' && i < 1) ||
-                  (game.difficulty === 'Medium' && i < 2) ||
-                  (game.difficulty === 'Easy to Hard' && i < 3) ||
-                  (game.difficulty === 'Easy to Medium' && i < 2)
-                    ? 'bg-green-500' : 'bg-gray-700'
+                  i < 2 ? 'bg-green-500' : 'bg-gray-700'
                 }`}
               />
             ))}
           </div>
         </div>
         
-        {/* Progress bar effect */}
         <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
           <div className="h-full bg-gradient-to-r from-amber-500 to-red-500 w-0 group-hover:w-full transition-all duration-700" />
         </div>
@@ -195,12 +119,8 @@ function GameCard({ game, index }: { game: typeof retroGames[0]; index: number }
   );
 }
 
-export default function RetroGamesClientPage() {
-  const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
-  const showAds = process.env.NEXT_PUBLIC_SHOW_ADS === 'true';
-
-  // Structured data for Retro Games Collection
-  const [structuredData, setStructuredData] = useState({
+function StructuredData({ games, currentDate }: { games: GamePageContent[], currentDate: Date }) {
+  const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -234,7 +154,7 @@ export default function RetroGamesClientPage() {
           "@id": "https://triviaah.com/retro-games/#itemlist"
         },
         "datePublished": "2024-01-01T00:00:00+00:00",
-        "dateModified": lastUpdated,
+        "dateModified": currentDate.toISOString(),
         "breadcrumb": {
           "@id": "https://triviaah.com/retro-games/#breadcrumb"
         },
@@ -270,23 +190,21 @@ export default function RetroGamesClientPage() {
         "@id": "https://triviaah.com/retro-games/#itemlist",
         "name": "Retro Games Collection",
         "description": "Collection of classic retro games from different decades, featuring timeless gameplay and nostalgic experiences",
-        "numberOfItems": retroGames.length,
-        "itemListElement": retroGames.map((game, index) => ({
+        "numberOfItems": games.length,
+        "itemListElement": games.map((game, index) => ({
           "@type": "ListItem",
           "position": index + 1,
           "item": {
             "@type": "Game",
-            "name": game.name,
-            "description": game.tagline,
-            "url": `https://triviaah.com/brainwave/${game.slug}`,
+            "name": game.title,
+            "description": game.intro_text || game.supporting_copy,
+            "url": `https://triviaah.com${game.cta_href || game.route_path}`,
             "gameType": "RetroGame",
             "genre": ["arcade", "puzzle", "strategy", "retro"],
             "applicationCategory": "Game",
-            "releaseDate": game.year,
             "numberOfPlayers": {
               "@type": "QuantitativeValue",
-              "minValue": 1,
-              "maxValue": game.slug === 'pong' ? 2 : 1
+              "minValue": 1
             },
             "publisher": {
               "@id": "https://triviaah.com/#organization"
@@ -325,7 +243,7 @@ export default function RetroGamesClientPage() {
             "name": "What types of retro games are available?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "We offer four classic retro games: Minesweeper (logic puzzle), Tetris (block puzzle), Pong (arcade sports), and Snake (arcade action). Each game represents a different era of gaming history and provides unique gameplay challenges."
+              "text": "We offer classic retro games including Minesweeper (logic puzzle), Tetris (block puzzle), Pong (arcade sports), and Snake (arcade action). Each game represents a different era of gaming history and provides unique gameplay challenges."
             }
           },
           {
@@ -355,110 +273,105 @@ export default function RetroGamesClientPage() {
         ]
       }
     ]
-  });
+  };
 
-  useEffect(() => {
-    setLastUpdated(new Date().toISOString());
-  }, []);
+  return (
+    <Script
+      id="retro-games-structured-data"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
+  );
+}
+
+export default async function RetroGamesPage() {
+  const allRows = await getGamePagesBySection('retro-games');
+  const retroGames = allRows.filter((r) => r.route_path !== '/retro-games');
+  const currentDate = new Date();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Structured Data */}
-        <Script
-          id="retro-games-structured-data"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
+        <StructuredData games={retroGames} currentDate={currentDate} />
         
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Hero Section */}
-          <div className="text-center mb-12">
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-r from-amber-500 to-red-500 rounded-xl flex items-center justify-center shadow-2xl">
-                <History className="text-4xl text-white" />
+        {/* ── Compact Hero Section ────────────────────────────────────────── */}
+        <div className="mb-8 lg:mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Title & Description */}
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-amber-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <History className="text-2xl text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
+                    Retro <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">Games</span>
+                  </h1>
+                </div>
               </div>
-              <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-                  Retro Games Collection
-                </h1>
-                <span className="block text-transparent bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-xl md:text-2xl">
-                  Classic Arcade & Puzzle Games
-                </span>
-              </div>
-            </div>
-            <div className="max-w-3xl mx-auto">
-              <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-6">
+              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
                 Relive the golden age of gaming with our collection of classic retro games. 
-                Experience timeless gameplay that defined generations, now optimized for modern devices.
+                Experience timeless gameplay optimized for modern devices.
               </p>
-            </div>
-            
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-8">
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-                <Gamepad2 className="text-2xl text-amber-400 mx-auto mb-2" />
-                <div className="text-white font-bold text-xl">{retroGames.length}</div>
-                <div className="text-gray-400 text-sm">Classic Games</div>
-              </div>
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-                <Clock className="text-2xl text-green-400 mx-auto mb-2" />
-                <div className="text-white font-bold text-xl">40+</div>
-                <div className="text-gray-400 text-sm">Years of History</div>
-              </div>
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-                <Users className="text-2xl text-blue-400 mx-auto mb-2" />
-                <div className="text-white font-bold text-xl">Free</div>
-                <div className="text-gray-400 text-sm">To Play</div>
-              </div>
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-                <Trophy className="text-2xl text-purple-400 mx-auto mb-2" />
-                <div className="text-white font-bold text-xl">High Scores</div>
-                <div className="text-gray-400 text-sm">Tracked</div>
+              <div className="mt-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5 inline-block">
+                  Last Updated: {currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </p>
               </div>
             </div>
 
-            {/* Decade Timeline */}
-            <div className="max-w-4xl mx-auto mb-8">
-              <div className="text-gray-400 text-sm mb-2">Game Release Timeline</div>
-              <div className="flex items-center justify-between relative h-12">
-                {/* Timeline line */}
-                <div className="absolute left-0 right-0 top-1/2 h-1 bg-gradient-to-r from-amber-500 to-red-500 transform -translate-y-1/2" />
-                
-                {retroGames.map((game, index) => (
-                  <div key={game.slug} className="relative z-10">
-                    <div className="w-8 h-8 bg-gradient-to-br from-amber-600 to-red-600 rounded-full flex items-center justify-center">
-                      <div className="w-4 h-4 bg-white rounded-full" />
-                    </div>
-                    <div className="absolute top-full mt-2 text-xs text-gray-400 whitespace-nowrap">
-                      {game.year}
-                    </div>
-                  </div>
-                ))}
+            {/* Stats Column */}
+            <div className="lg:col-span-5">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-slate-800/50 rounded-xl p-3 border border-white/5 text-center">
+                  <Gamepad2 className="text-xl text-amber-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">{retroGames.length}</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Games</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-xl p-3 border border-white/5 text-center">
+                  <Clock className="text-xl text-green-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">40+</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Years</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-xl p-3 border border-white/5 text-center">
+                  <Users className="text-xl text-blue-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">Free</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Access</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-xl p-3 border border-white/5 text-center">
+                  <Trophy className="text-xl text-purple-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">Global</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Scores</div>
+                </div>
               </div>
-            </div>
-
-            {/* Last Updated Date */}
-            <div className="text-center">
-              <p className="text-sm text-gray-500 bg-gray-800/50 rounded-lg px-4 py-2 inline-block border border-gray-700">
-                Last updated: {new Date(lastUpdated).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
-              </p>
             </div>
           </div>
+        </div>
 
           <div className="py-4">
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
 
-          {/* Games Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {retroGames.map((game, index) => (
-              <GameCard key={game.slug} game={game} index={index} />
-            ))}
+          {/* Mobile: Horizontal Scroll Layout */}
+          <div className="lg:hidden mb-16 overflow-hidden">
+            <h2 className="text-2xl font-bold text-white mb-6 text-center">All Retro Games</h2>
+            <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory scrollbar-hide px-4 -mx-4">
+              {retroGames.map((game, index) => (
+                <div key={game.route_path} className="w-[260px] shrink-0 snap-start">
+                  <GameCard game={game} index={index} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop: Grid Layout */}
+          <div className="hidden lg:block mb-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {retroGames.map((game, index) => (
+                <GameCard key={game.route_path} game={game} index={index} />
+              ))}
+            </div>
           </div>
 
           {/* Gaming Features Section */}
@@ -557,19 +470,19 @@ export default function RetroGamesClientPage() {
                   <ul className="space-y-3 text-gray-300">
                     <li className="flex items-start">
                       <span className="text-blue-400 font-bold mr-2">•</span>
-                      <span><strong>Minesweeper</strong> (1990): The ultimate logic puzzle that challenges deductive reasoning and careful planning</span>
+                      <span><strong>Minesweeper</strong>: The ultimate logic puzzle that challenges deductive reasoning and careful planning</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-purple-400 font-bold mr-2">•</span>
-                      <span><strong>Tetris</strong> (1984): The iconic block-stacking puzzle that tests spatial awareness and quick thinking</span>
+                      <span><strong>Tetris</strong>: The iconic block-stacking puzzle that tests spatial awareness and quick thinking</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-green-400 font-bold mr-2">•</span>
-                      <span><strong>Pong</strong> (1972): The game that started it all - simple, competitive table tennis action</span>
+                      <span><strong>Pong</strong>: The game that started it all - simple, competitive table tennis action</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-emerald-400 font-bold mr-2">•</span>
-                      <span><strong>Snake</strong> (1997): The mobile classic that challenges navigation and growth management</span>
+                      <span><strong>Snake</strong>: The mobile classic that challenges navigation and growth management</span>
                     </li>
                   </ul>
                 </div>
@@ -651,16 +564,15 @@ export default function RetroGamesClientPage() {
               <div className="flex flex-wrap justify-center gap-4">
                 {retroGames.slice(0, 3).map(game => (
                   <Link
-                    key={game.slug}
-                    href={`/brainwave/${game.slug}`}
+                    key={game.route_path}
+                    href={game.cta_href || game.route_path}
                     className="px-6 py-3 bg-gradient-to-r from-amber-600 to-red-600 text-white font-semibold rounded-lg hover:from-amber-700 hover:to-red-700 transition-all duration-300 flex items-center gap-2"
                   >
                     <Play className="w-4 h-4" />
-                    Play {game.name}
+                    Play {game.title}
                   </Link>
                 ))}
               </div>
-            </div>
           </div>
         </div>
       </div>

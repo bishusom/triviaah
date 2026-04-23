@@ -1,107 +1,68 @@
-// src/app/number-puzzles/page.tsx
-'use client';
-
-import { useState, useEffect } from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Play, Boxes, Star, Clock, Users } from 'lucide-react';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
 
-const numberPuzzles = [
-  {
-    slug: '2048',
-    name: '2048',
-    image: '/imgs/number-puzzles/2048.webp',
-    description: 'Swipe tiles and merge matching numbers to reach 2048',
-    tagline: 'Classic tile-merging strategy puzzle with simple controls and deep planning',
-    fullDescription: 'Classic 2048 tile-merging puzzle where you swipe numbers together to reach the 2048 tile and beyond. Develops spatial reasoning and strategic thinking.',
-    keywords: '2048 game, tile merge puzzle, number puzzle, strategy game, spatial reasoning',
-    difficulty: 'Medium',
-    skills: ['Spatial Reasoning', 'Strategic Planning', 'Pattern Recognition'],
-    color: 'blue'
+export const metadata: Metadata = {
+  title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah',
+  description: 'Challenge your math skills with our collection of free number puzzles including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, Kakuro, KenKen, and Number Bonds.',
+  alternates: {
+    canonical: 'https://triviaah.com/number-puzzles',
   },
-  {
-    slug: 'prime-hunter',
-    name: 'Prime Hunter',
-    image: '/imgs/number-puzzles/prime-hunter.webp',
-    description: 'Identify all prime numbers in the given grid',
-    tagline: 'Challenge your number theory knowledge by identifying prime numbers',
-    fullDescription: 'Challenge your number theory knowledge by identifying prime numbers in various grid configurations with limited attempts.',
-    keywords: 'prime numbers game, math challenge, number theory, prime identification, cognitive skills',
-    difficulty: 'Easy to Hard',
-    skills: ['Number Theory', 'Pattern Recognition', 'Logical Reasoning'],
-    color: 'green'
+  openGraph: {
+    title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah',
+    description: 'Challenge your math skills with our collection of free number puzzles.',
+    url: 'https://triviaah.com/number-puzzles',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/number-puzzles/number-puzzles-og.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Number Puzzles Collection',
+      },
+    ],
+    type: 'website',
   },
-  {
-    slug: 'number-sequence',
-    name: 'Number Sequence',
-    image: '/imgs/number-puzzles/number-sequence.webp',
-    description: 'Find the pattern and complete the number sequence',
-    tagline: 'Identify mathematical patterns in challenging number sequences',
-    fullDescription: 'Identify mathematical patterns in number sequences and predict the next numbers. Develops pattern recognition and logical reasoning.',
-    keywords: 'number patterns, sequence puzzle, math logic, pattern recognition, analytical thinking',
-    difficulty: 'Easy to Expert',
-    skills: ['Pattern Recognition', 'Logical Reasoning', 'Mathematical Thinking'],
-    color: 'purple'
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Number Puzzles Collection | Triviaah',
+    description: 'Challenge your math skills with our collection of free number puzzles.',
+    images: ['/imgs/number-puzzles/number-puzzles-og.webp'],
   },
-  {
-    slug: 'number-tower',
-    name: 'Number Tower',
-    image: '/imgs/number-puzzles/number-tower.webp',
-    description: 'Stack numbers to reach the target sum in this tower challenge',
-    tagline: 'Strategic number arrangement with spatial tower challenges',
-    fullDescription: 'Strategic number arrangement game where you build towers to achieve target sums with limited moves and spatial constraints.',
-    keywords: 'addition game, math towers, number stacking, spatial reasoning, strategic planning',
-    difficulty: 'Medium to Hard',
-    skills: ['Spatial Reasoning', 'Strategic Planning', 'Addition Skills'],
-    color: 'orange'
+  robots: {
+    index: true,
+    follow: true,
   },
-  {
-    slug: 'sudoku',
-    name: 'Sudoku',
-    image: '/imgs/number-puzzles/sudoku.webp',
-    description: 'Classic 9x9 grid puzzle with numbers 1-9',
-    tagline: 'World-famous logic puzzle for concentration and logical thinking',
-    fullDescription: 'World-famous logic puzzle where you fill a 9x9 grid following specific rules. Perfect for developing concentration and logical thinking.',
-    keywords: 'sudoku puzzle, number grid, logic game, concentration, problem solving',
-    difficulty: 'Easy to Expert',
-    skills: ['Logical Thinking', 'Concentration', 'Problem Solving'],
-    color: 'red'
-  },
-  {
-    slug: 'kakuro',
-    name: 'Kakuro',
-    image: '/imgs/number-puzzles/kakuro.webp',
-    description: 'Match clue totals without repeating digits in each run',
-    tagline: 'Cross sums logic puzzle blending arithmetic with deduction',
-    fullDescription: 'Cross sums puzzle where each row and column run must match its clue total using distinct digits. Great for arithmetic fluency and logic.',
-    keywords: 'kakuro puzzle, cross sums game, number crossword, arithmetic logic puzzle, free kakuro',
-    difficulty: 'Medium',
-    skills: ['Arithmetic', 'Logical Deduction', 'Constraint Solving'],
-    color: 'cyan'
-  },
-];
+};
 
-// Gaming-style puzzle card matching the brainwave page design
-function PuzzleCard({ puzzle, index }: { puzzle: typeof numberPuzzles[0]; index: number }) {
+function PuzzleCard({ puzzle, index }: { puzzle: GamePageContent; index: number }) {
+  const imageSrc = puzzle.og_image || `/imgs/number-puzzles/${puzzle.route_path.split('/').pop()}.webp`;
+  const route = puzzle.cta_href || puzzle.route_path;
+  const tagline = puzzle.supporting_copy || puzzle.intro_text;
+
+  // Since we don't have explicit arrays of skills/difficulties in DB anymore (or maybe we do in tags?),
+  // we can use keywords or just leave the badges out if not provided. We'll default to some generic ones.
+  const difficulty = 'Medium';
+  const skills = puzzle.keywords?.slice(0, 2) || ['Math', 'Logic'];
+
   return (
     <Link
-      key={puzzle.slug}
-      href={`/number-puzzles/${puzzle.slug}`}
+      key={puzzle.route_path}
+      href={route}
+      title={`Play ${puzzle.title} - ${tagline}`}
       className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
     >
-      {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
-      {/* Glow effect */}
       <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
       
-      {/* Puzzle Image */}
       <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">  
         <Image
-          src={puzzle.image}
-          alt={puzzle.name}
+          src={imageSrc}
+          alt={`${puzzle.title} Number Puzzle`}
           fill
           className="object-contain transition-all duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -110,41 +71,35 @@ function PuzzleCard({ puzzle, index }: { puzzle: typeof numberPuzzles[0]; index:
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         
-        {/* Play button overlay */}
         <div className="absolute bottom-4 right-4 w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
           <Play className="w-5 h-5 text-white" />
         </div>
 
-        {/* Puzzle number badge */}
         <div className="absolute top-4 left-4 bg-black/70 text-white text-sm font-semibold px-3 py-1 rounded-full">
           #{index + 1}
         </div>
 
-        {/* Difficulty badge */}
         <div className="absolute top-4 right-4 bg-black/70 text-white text-xs font-medium px-2 py-1 rounded-full">
-          {puzzle.difficulty}
+          {difficulty}
         </div>
       </div>
       
-      {/* Puzzle Content */}
       <div className="p-6 relative z-10">
         <h3 className="font-bold text-lg text-white mb-2 group-hover:text-cyan-300 transition-colors">
-          {puzzle.name}
+          {puzzle.title}
         </h3>
         <p className="text-sm text-gray-300 line-clamp-2">
-          {puzzle.tagline}
+          {puzzle.supporting_copy || puzzle.intro_text}
         </p>
         
-        {/* Skills tags */}
         <div className="mt-3 flex flex-wrap gap-1">
-          {puzzle.skills.slice(0, 2).map((skill, index) => (
-            <span key={index} className="bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded text-xs">
+          {skills.map((skill, idx) => (
+            <span key={idx} className="bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded text-xs truncate max-w-full">
               {skill}
             </span>
           ))}
         </div>
         
-        {/* Progress bar effect */}
         <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
           <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 w-0 group-hover:w-full transition-all duration-700" />
         </div>
@@ -153,12 +108,8 @@ function PuzzleCard({ puzzle, index }: { puzzle: typeof numberPuzzles[0]; index:
   );
 }
 
-export default function NumberPuzzlesPage() {
-  const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
-  const showAds = process.env.NEXT_PUBLIC_SHOW_ADS === 'true';
-
-  // Structured data for Number Puzzles Collection
-  const [structuredData, setStructuredData] = useState({
+function StructuredData({ puzzles, currentDate }: { puzzles: GamePageContent[], currentDate: Date }) {
+  const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -184,7 +135,7 @@ export default function NumberPuzzlesPage() {
         "@id": "https://triviaah.com/number-puzzles/#webpage",
         "url": "https://triviaah.com/number-puzzles",
         "name": "Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah",
-        "description": "Challenge your math skills with our collection of free number puzzles including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, and Kakuro.",
+        "description": "Challenge your math skills with our collection of free number puzzles including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, Kakuro, KenKen, and Number Bonds.",
         "isPartOf": {
           "@id": "https://triviaah.com/#website"
         },
@@ -192,7 +143,7 @@ export default function NumberPuzzlesPage() {
           "@id": "https://triviaah.com/number-puzzles/#itemlist"
         },
         "datePublished": "2024-01-01T00:00:00+00:00",
-        "dateModified": lastUpdated,
+        "dateModified": currentDate.toISOString(),
         "breadcrumb": {
           "@id": "https://triviaah.com/number-puzzles/#breadcrumb"
         },
@@ -228,15 +179,15 @@ export default function NumberPuzzlesPage() {
         "@id": "https://triviaah.com/number-puzzles/#itemlist",
         "name": "Number Puzzles Collection",
         "description": "Comprehensive collection of mathematical puzzle games designed to improve cognitive skills and mathematical thinking",
-        "numberOfItems": numberPuzzles.length,
-        "itemListElement": numberPuzzles.map((puzzle, index) => ({
+        "numberOfItems": puzzles.length,
+        "itemListElement": puzzles.map((puzzle, index) => ({
           "@type": "ListItem",
           "position": index + 1,
           "item": {
             "@type": "Game",
-            "name": puzzle.name,
-            "description": puzzle.tagline,
-            "url": `https://triviaah.com/number-puzzles/${puzzle.slug}`,
+            "name": puzzle.title,
+            "description": puzzle.supporting_copy || puzzle.intro_text,
+            "url": `https://triviaah.com${puzzle.cta_href || puzzle.route_path}`,
             "gameType": "PuzzleGame",
             "genre": ["math", "puzzle", "educational"],
             "applicationCategory": "Game",
@@ -305,96 +256,107 @@ export default function NumberPuzzlesPage() {
             "name": "Which number puzzle should I start with?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Beginners should start with Number Sequence or Prime Hunter, which have easier difficulty levels. Intermediate players can try 2048, Number Tower, or Kakuro, while Sudoku offers challenges for all skill levels."
+              "text": "Beginners should start with Number Sequence, Number Pyramid, or Prime Hunter, which have easier difficulty levels. Intermediate players can try 2048, KenKen, Number Tower, or Kakuro, while Sudoku offers challenges for all skill levels."
             }
           }
         ]
       }
     ]
-  });
+  };
 
-  useEffect(() => {
-    setLastUpdated(new Date().toISOString());
-  }, []);
+  return (
+    <Script
+      id="number-puzzles-structured-data"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
+  );
+}
+
+export default async function NumberPuzzlesPage() {
+  const allRows = await getGamePagesBySection('number-puzzles');
+  const numberPuzzles = allRows.filter((r) => r.route_path !== '/number-puzzles');
+  const currentDate = new Date();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Structured Data */}
-        <Script
-          id="number-puzzles-structured-data"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
+        <StructuredData puzzles={numberPuzzles} currentDate={currentDate} />
         
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Hero Section */}
-          <div className="text-center mb-12">
-            <div className="flex justify-center items-center gap-3 mb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-2xl">
-                <Star className="text-4xl text-white" />
-              </div>           
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Number Puzzles
-                <span className="block text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-xl md:text-2xl mt-2">
-                  Math Games & Brain Teasers
-                </span>
-              </h1>
-            </div>
-            <div className="max-w-3xl mx-auto">  
-              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-                Challenge your math skills with our exciting collection of free number puzzles 
-                designed to improve logical thinking and problem-solving abilities.
+        {/* ── Compact Hero Section ────────────────────────────────────────── */}
+        <div className="mb-8 lg:mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Title & Description */}
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <Star className="text-2xl text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
+                    Number <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Puzzles</span>
+                  </h1>
+                </div>
+              </div>
+              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                Challenge your math skills with our exciting collection of free number puzzles
+                designed to improve logical thinking, arithmetic, and problem-solving abilities.
               </p>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto mb-8">
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-                <Boxes className="text-2xl text-purple-400 mx-auto mb-2" />
-                <div className="text-white font-bold text-xl">{numberPuzzles.length}</div>
-                <div className="text-gray-400 text-sm">Puzzles</div>
-              </div>
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-                <Clock className="text-2xl text-yellow-400 mx-auto mb-2" />
-                <div className="text-white font-bold text-xl">Daily</div>
-                <div className="text-gray-400 text-sm">Challenges</div>
-              </div>
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-                <Users className="text-2xl text-cyan-400 mx-auto mb-2" />
-                <div className="text-white font-bold text-xl">Free</div>
-                <div className="text-gray-400 text-sm">To Play</div>
+              <div className="mt-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5 inline-block">
+                  Last Updated: {currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </p>
               </div>
             </div>
 
-            {/* Last Updated Date */}
-            <div className="text-center">
-              <p className="text-sm text-gray-500 bg-gray-800/50 rounded-lg px-4 py-2 inline-block border border-gray-700">
-                Last updated: {new Date(lastUpdated).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
-              </p>
+            {/* Stats Column */}
+            <div className="lg:col-span-5">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Boxes className="text-xl text-purple-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">{numberPuzzles.length}</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Puzzles</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Clock className="text-xl text-yellow-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">Daily</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Updates</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Users className="text-xl text-cyan-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">Free</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Access</div>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
           <div className="py-4">
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
             
-          {/* Puzzles Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 max-w-6xl mx-auto">
-            {numberPuzzles.map((puzzle, index) => (
-              <PuzzleCard key={puzzle.slug} puzzle={puzzle} index={index} />
-            ))}
+          {/* Mobile: Horizontal Scroll Layout */}
+          <div className="lg:hidden mb-16 overflow-hidden">
+            <h2 className="text-2xl font-bold text-white mb-6 text-center">All Number Puzzles</h2>
+            <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory scrollbar-hide px-4 -mx-4">
+              {numberPuzzles.map((puzzle, index) => (
+                <div key={puzzle.route_path} className="w-[260px] shrink-0 snap-start">
+                  <PuzzleCard puzzle={puzzle} index={index} />
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Only one ad allowed per page
-          <div className="py-4">
-            <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
+          {/* Desktop: Grid Layout */}
+          <div className="hidden lg:block mb-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {numberPuzzles.map((puzzle, index) => (
+                <PuzzleCard key={puzzle.route_path} puzzle={puzzle} index={index} />
+              ))}
+            </div>
           </div>
-          */}
 
           {/* Gaming Features Section */}
           <div className="mb-16">
@@ -453,7 +415,7 @@ export default function NumberPuzzlesPage() {
                 },
                 {
                   question: "Which number puzzle should I start with?",
-                  answer: "Beginners should start with Number Sequence or Prime Hunter, which have easier difficulty levels. Intermediate players can try 2048 or Number Tower, while Sudoku offers classic puzzle challenges suitable for all skill levels."
+                  answer: "Beginners should start with Number Sequence, Number Pyramid, or Prime Hunter, which have easier difficulty levels. Intermediate players can try 2048, KenKen, Number Tower, or Kakuro, while Sudoku offers classic puzzle challenges suitable for all skill levels."
                 },
                 {
                   question: "Are these puzzles suitable for children?",
@@ -501,6 +463,14 @@ export default function NumberPuzzlesPage() {
                     <li className="flex items-start">
                       <span className="text-orange-400 font-bold mr-2">•</span>
                       <span><strong>Number Tower</strong>: Strategically arrange numbers in tower structures</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-cyan-400 font-bold mr-2">•</span>
+                      <span><strong>KenKen</strong>: Fill rows, columns, and cages using arithmetic logic</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-emerald-400 font-bold mr-2">•</span>
+                      <span><strong>Number Pyramid</strong>: Mathematical puzzle using sums and differences</span>
                     </li>
                   </ul>
                 </div>
@@ -552,9 +522,8 @@ export default function NumberPuzzlesPage() {
                 </div>
               </div>
             </div>
-          </section>
-        </div>
-      </div>  
+        </section>
+      </div>
     </div>
   );
 }

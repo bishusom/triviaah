@@ -1,3 +1,5 @@
+ 'use client';
+
 // src/components/brainwave/landmarkdle/LandmarkdleComponent.tsx
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';

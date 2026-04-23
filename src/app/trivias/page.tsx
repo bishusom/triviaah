@@ -13,47 +13,40 @@ interface StructuredDataProps {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const description = 'Browse free trivia categories across history, science, entertainment, sports, and more.';
+  const description = 'Explore 30+ free trivia categories including History, Science, Entertainment, and Sports. Master 10,000+ questions and become a trivia champion on Triviaah.';
 
   return {
-    title: 'Free Online Trivia Categories | Quiz Games Online Free',
+    title: 'Free Online Trivia Categories | Quiz Games & Challenges | Triviaah',
     description,
-    keywords: 'free online trivia, trivia categories, quiz games online free, free trivia quizzes, online quiz games, free trivia games, trivia quizzes by category',
+    keywords: [
+      'free online trivia',
+      'trivia categories',
+      'quiz games online free',
+      'history trivia',
+      'science trivia',
+      'entertainment trivia',
+      'sports trivia',
+      'geography trivia'
+    ],
     alternates: {
       canonical: 'https://triviaah.com/trivias',
     },
     openGraph: {
-      title: 'Free Online Trivia Categories | Quiz Games Online Free',
+      title: 'Free Online Trivia Categories | Quiz Games & Challenges',
       description,
       url: 'https://triviaah.com/trivias',
-      siteName: 'Triviaah',
-      images: [
-        {
-          url: '/imgs/triviaah-og.webp',
-          width: 1200,
-          height: 630,
-          alt: 'Trivia Categories - Free Online Quiz Games'
-        }
-      ],
+      images: [{ url: '/imgs/triviaah-og.webp' }],
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Free Online Trivia Categories | Quiz Games Online Free',
-      description,
+      title: 'Trivia Categories | Free Online Quiz Games',
       images: ['/imgs/triviaah-og.webp'],
     },
     robots: {
       index: true,
       follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
-    },
+    }
   };
 }
 
@@ -62,47 +55,50 @@ export default async function TriviasPage() {
   const categoriesForExplorer = await getTriviaExplorerCards('trivias');
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+    <div className="min-h-screen bg-[#0f172a] text-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Structured Data for SEO */}
         <StructuredData categories={categories} />
         
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="flex flex-col items-center gap-4 mb-6">
-            <div className="w-24 h-24 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl flex items-center justify-center shadow-2xl">
-              <Boxes className="text-4xl text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Trivia Categories
-                <span className="block text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-xl md:text-2xl mt-2">
-                  Unlimited Challenges Await
-                </span>
-              </h1>
-              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-                Choose a category to test your knowledge with our free online trivia games. 
-                Master each topic and become a trivia champion!
+        {/* ── Compact Hero Section ────────────────────────────────────────── */}
+        <div className="mb-10 lg:mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Title & Description */}
+            <div className="lg:col-span-8 text-left">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <Boxes className="text-2xl text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight leading-tight">
+                    Trivia <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Categories</span>
+                  </h1>
+                </div>
+              </div>
+              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                Test your knowledge across {categories.length} high-octane categories. 
+                From history buffs to pop-culture fans, we have the ultimate challenge waiting for you.
               </p>
             </div>
-          </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto mb-8">
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-              <Boxes className="text-2xl text-cyan-400 mx-auto mb-2" />
-              <div className="text-white font-bold text-xl">{categories.length}</div>
-              <div className="text-gray-400 text-sm">Categories</div>
-            </div>
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-              <ShieldQuestionMark className="text-2xl text-yellow-400 mx-auto mb-2" />
-              <div className="text-white font-bold text-xl">10,000+</div>
-              <div className="text-gray-400 text-sm">Questions</div>
-            </div>
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-              <span className="text-2xl">🎮</span>
-              <div className="text-white font-bold text-xl">Free</div>
-              <div className="text-gray-400 text-sm">To Play</div>
+            {/* Integrated Stats */}
+            <div className="lg:col-span-4 hidden lg:block">
+              <div className="bg-slate-800/40 rounded-2xl p-6 border border-white/5 backdrop-blur-sm text-center">
+                <div className="flex items-center justify-center divide-x divide-white/10">
+                  <div className="px-6">
+                    <div className="text-white font-black text-3xl leading-none">{categories.length}</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Topics</div>
+                  </div>
+                  <div className="px-6">
+                    <div className="text-white font-black text-3xl leading-none">10K+</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Questions</div>
+                  </div>
+                  <div className="px-6">
+                    <div className="text-white font-black text-3xl leading-none">FREE</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Play</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -113,27 +109,29 @@ export default async function TriviasPage() {
 
         <TriviaCategoriesExplorer categories={categoriesForExplorer} />
 
-        {/* CTA Section for Trivia Bank */}
-        <section className="mt-16 p-8 rounded-2xl border border-cyan-500/20 text-center">
-          <div className="max-w-2xl mx-auto">
-            <div className="flex justify-center mb-4">
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Boxes className="w-8 h-8 text-blue-600" />
+        {/* ── Compact Trivia Bank CTA ─────────────────────────────────────── */}
+        <section className="mt-16 p-6 md:p-8 rounded-3xl border border-cyan-500/10 bg-cyan-900/5 backdrop-blur-sm">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 max-w-5xl mx-auto">
+            <div className="flex items-center gap-5 text-left">
+              <div className="w-14 h-14 shrink-0 bg-blue-500/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                <Boxes className="w-7 h-7 text-blue-400" />
+              </div>
+              <div>
+                <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight mb-1">
+                  Looking for Printables?
+                </h2>
+                <p className="text-gray-400 text-sm md:text-base max-w-md leading-tight">
+                  Access downloadable quiz sheets and "Top 50" lists in our comprehensive <strong>Trivia Bank</strong>.
+                </p>
               </div>
             </div>
-            <h2 className="text-2xl text-white font-bold text-slate-900 mb-2">
-              Looking for Printables?
-            </h2>
-            <p className="text-white mb-6">
-              Access our comprehensive <strong>Trivia Bank</strong> featuring downloadable quiz sheets 
-              and curated "Top 50" lists perfect for pub nights, classrooms, or family gatherings.
-            </p>
             <Link 
               href="/trivia-bank"
-              className="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 shadow-sm"
+              title="Explore our downloadable trivia sheets"
+              className="group flex items-center gap-3 px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl transition-all duration-300 shadow-lg shadow-cyan-600/20 font-black uppercase tracking-widest text-xs shrink-0"
             >
-              Browse Downloadable Quiz Sheets
-              <Play className="ml-2 w-4 h-4" />
+              Browse Bank
+              <Play className="w-3 h-3 fill-current group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </section>
@@ -143,65 +141,118 @@ export default async function TriviasPage() {
           <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
         </div>
                 
-        {/* Gaming Features Section */}
+        {/* Gaming Features Section - Blue Themed */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-white text-center mb-8">Why Players Love Triviaah</h2>
+          <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">
+            The <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Triviaah</span> Advantage
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-2xl p-6 border border-cyan-500/20 text-center">
-              <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">⚡</span>
+            <div className="bg-gradient-to-br from-cyan-500/5 to-blue-500/5 rounded-2xl p-6 border border-white/5 text-center group hover:border-cyan-500/20 transition-colors">
+              <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                <span className="text-xl">⚡</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Instant Play</h3>
-              <p className="text-gray-300">No registration needed. Start playing immediately and challenge your friends!</p>
+              <h3 className="text-lg font-black text-white mb-2 uppercase tracking-tight">Instant Play</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">No registration needed. Start playing immediately and challenge your knowledge bank!</p>
             </div>
             
-            <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-6 border border-purple-500/20 text-center">
-              <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📚</span>
+            <div className="bg-gradient-to-br from-cyan-500/5 to-blue-500/5 rounded-2xl p-6 border border-white/5 text-center group hover:border-cyan-500/20 transition-colors">
+              <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                <span className="text-xl">📚</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Learn & Grow</h3>
-              <p className="text-gray-300">Detailed explanations help you learn from every question you answer.</p>
+              <h3 className="text-lg font-black text-white mb-2 uppercase tracking-tight">Learn & Grow</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">Detailed explanations help you learn from every question you answer. Knowledge is power.</p>
             </div>
             
-            <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20 text-center">
-              <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🏆</span>
+            <div className="bg-gradient-to-br from-cyan-500/5 to-blue-500/5 rounded-2xl p-6 border border-white/5 text-center group hover:border-cyan-500/20 transition-colors">
+              <div className="w-12 h-12 bg-cyan-400 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-400/20 group-hover:scale-110 transition-transform">
+                <span className="text-xl">🏆</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Track Progress</h3>
-              <p className="text-gray-300">Monitor your improvement and compete for high scores across all categories.</p>
+              <h3 className="text-lg font-black text-white mb-2 uppercase tracking-tight">Track Progress</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">Monitor your improvement and compete for high scores across all gaming categories.</p>
             </div>
           </div>
         </div>
 
         {/* FAQ Section - Gaming Style */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
+          <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">
+            Frequently Asked <span className="text-cyan-400">Questions</span>
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
                 question: "Are these trivia games completely free to play?",
-                answer: "Yes! All our trivia games and quizzes are completely free to play. No subscriptions, no hidden fees, and no registration required."
+                answer: "Yes! All our trivia games and quizzes are 100% free. No subscriptions, hidden fees, or registration required."
               },
               {
                 question: "How many trivia categories are available?",
-                answer: `We offer ${categories.length} different trivia categories covering topics like history, science, entertainment, sports, and more. New categories are added regularly!`
+                answer: `We offer over ${categories.length} diverse trivia categories covering everything from History and Science to modern Pop Culture and Sports.`
               },
               {
                 question: "Do I need to create an account to play?",
-                answer: "No account creation is required! You can start playing any of our trivia games immediately without signing up."
+                answer: "No account creation is required. You can jump straight into any category and start challenging your knowledge immediately."
               },
               {
-                question: "Can I play on mobile devices?",
-                answer: "Absolutely! Our trivia games are fully responsive and work perfectly on all devices including smartphones, tablets, and desktop computers."
+                question: "Is Triviaah mobile-friendly?",
+                answer: "Absolutely! Our platform is fully responsive, optimized for seamless play on smartphones, tablets, and desktop computers."
               }
             ].map((faq, index) => (
-              <div key={index} className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
-                <h3 className="font-semibold text-lg text-white mb-3">{faq.question}</h3>
-                <p className="text-gray-300">{faq.answer}</p>
+              <div key={index} className="bg-slate-800/40 rounded-2xl p-6 border border-white/5 hover:border-cyan-500/20 transition-all duration-300">
+                <h3 className="font-black text-white mb-3 uppercase tracking-tight text-sm">{faq.question}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{faq.answer}</p>
               </div>
             ))}
           </div>
         </div>
+
+        {/* ── SEO Informational Content Section ────────────────────────────── */}
+        <section className="mb-16 border-t border-white/5 pt-16">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-black text-white mb-8 uppercase tracking-tighter text-center lg:text-left">
+              The Ultimate Hub for <span className="text-blue-400">Free Online Trivia</span>
+            </h2>
+            
+            <div className="grid gap-10">
+              <div className="space-y-4">
+                <h3 className="text-lg font-black text-cyan-400 uppercase tracking-widest">A Category for Every Curious Mind</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  At <strong>Triviaah</strong>, we believe knowledge should be accessible and entertaining. Our vast library of 
+                  <strong> trivia categories</strong> is curated to challenge both casual players and hard-core quiz enthusiasts. 
+                  Whether you're looking for <strong>History trivia</strong> to test your timeline knowledge, <strong>Science quizzes</strong> 
+                  to explore the universe, or <strong>Entertainment trivia</strong> to prove your pop-culture prowess, we have it all.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
+                  <h4 className="text-white font-black uppercase tracking-tight mb-3">Educational Benefits</h4>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    Playing trivia isn't just fun—it's a workout for your brain. Regular quiz gaming has been shown to improve 
+                    <strong> memory retention</strong>, increase <strong>general knowledge</strong>, and enhance 
+                    <strong> problem-solving skills</strong> across all age groups.
+                  </p>
+                </div>
+                <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
+                  <h4 className="text-white font-black uppercase tracking-tight mb-3">No Registration Required</h4>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    Unlike other platforms, Triviaah offers <strong>instant access</strong>. We don't ask for your email or 
+                    personal details. Just pick a topic and start your <strong>free quiz game</strong> journey in seconds.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-black text-blue-400 uppercase tracking-widest">How to Play & Win</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Simply select one of the categories above to launch a dedicated trivia session. Each topic features multiple 
+                  difficulty levels, from <strong>Easy</strong> introductions to <strong>Hard</strong> challenges that will 
+                  test even the most seasoned experts. Perfect for <strong>classroom activities</strong>, <strong>family game nights</strong>, 
+                  or a quick mental break during the day.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <ScrollButtons />
       </div>

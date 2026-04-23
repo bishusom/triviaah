@@ -29,56 +29,67 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const page: number = parseInt(pageParam || '1') || 1;
   
   const allPosts: PostData[] = await getAllPosts();
-  const totalPosts = allPosts.length;
-  
   const pageSuffix = page > 1 ? ` - Page ${page}` : '';
   
   return {
-    title: `TRIVIAAH Blog${pageSuffix} | Gaming Insights & Tips`,
-    description: 'Level up your knowledge with the latest gaming insights, tips, and trivia. Explore our collection of gaming articles and tutorials.',
-    keywords: 'gaming, blog, trivia, game tips, gaming news, video games, gaming insights',
-    authors: [{ name: 'TRIVIAAH' }],
+    title: `Gaming Insights & Trivia Blog${pageSuffix} | Triviaah`,
+    description: 'Level up your knowledge with our gaming blog. Explore expert tips, trivia facts, and deep dives into history, science, and pop culture through the lens of gaming.',
+    keywords: 'gaming blog, trivia insights, game tips, educational gaming, triviaah news',
     alternates: {
       canonical: 'https://triviaah.com/blog'
     },
     openGraph: {
-      title: `TRIVIAAH Blog${pageSuffix} | Gaming Insights & Tips`,
-      description: 'Level up your knowledge with the latest gaming insights, tips, and trivia.',
+      title: `Gaming Insights & Trivia Blog${pageSuffix} | Triviaah`,
+      description: 'Explore the latest gaming insights and trivia challenges on the Triviaah blog.',
+      images: [{ url: '/imgs/blog-card.webp' }],
       type: 'website',
-      url: `https://triviaah.com/blog${page > 1 ? `?page=${page}` : ''}`,
-      siteName: 'TRIVIAAH',
-      images: [
-        {
-          url: '/imgs/blog-card.webp', // or your blog's default OG image
-          width: 1200,
-          height: 630,
-          alt: 'TRIVIAAH Blog - Gaming Insights',
-        },
-      ],
+      siteName: 'Triviaah'
     },
     twitter: {
       card: 'summary_large_image',
-      title: `TRIVIAAH Blog${pageSuffix} | Gaming Insights & Tips`,
-      description: 'Level up your knowledge with the latest gaming insights, tips, and trivia.',
-      images: ['/imgs/blog-card.webp'], // or your blog's default Twitter image
+      title: `Gaming Insights & Trivia Blog${pageSuffix} | Triviaah`,
+      description: 'Explore the latest gaming insights and trivia challenges on the Triviaah blog.',
+      images: ['/imgs/blog-card.webp'],
     },
     robots: {
       index: true,
       follow: true,
-    },
+    }
   };
+}
+
+function StructuredData({ posts }: { posts: PostData[] }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Blog",
+          "name": "Triviaah Blog",
+          "description": "Gaming insights, tips, and trivia challenges.",
+          "url": "https://triviaah.com/blog",
+          "blogPost": posts.map(post => ({
+            "@type": "BlogPosting",
+            "headline": post.header,
+            "url": `https://triviaah.com/blog/${post.slug}`,
+            "datePublished": post.isoDate,
+            "image": `https://triviaah.com${post.image || '/imgs/blog-card.webp'}`,
+            "author": { "@type": "Organization", "name": "Triviaah" }
+          }))
+        })
+      }}
+    />
+  );
 }
 
 export default async function BlogListPage({ searchParams }: BlogListPageProps) {
   const { page: pageParam } = await searchParams;
   const page: number = parseInt(pageParam || '1') || 1;
-  const postsPerPage: number = 6; // Better for grid layouts
+  const postsPerPage: number = 8; // Better for 4-column grid
   
   const allPosts: PostData[] = await getAllPosts();
-  
-  const sortedPosts = allPosts.sort((a, b) => {
-    return new Date(b.isoDate).getTime() - new Date(a.isoDate).getTime();
-  });
+  const sortedPosts = allPosts.sort((a, b) => new Date(b.isoDate).getTime() - new Date(a.isoDate).getTime());
   
   const totalPages: number = Math.ceil(sortedPosts.length / postsPerPage);
   const startIndex: number = (page - 1) * postsPerPage;
@@ -86,88 +97,108 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-      <div className="container mx-auto px-4 py-12">
-        {/* Gaming Header */}
-        <div className="relative bg-gradient-to-r from-purple-600 to-blue-500 py-20 rounded-2xl border-2 border-purple-400/30 mb-16 overflow-hidden">
-          <div className="absolute inset-0 bg-black/20"></div>
-          {/* Animated gradient overlay for extra gaming feel */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse-slow"></div>
-          
-          <div className="relative container mx-auto px-4 text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white drop-shadow-lg">
-              TRIVIAAH BLOG
-            </h1>
-            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              Level up your knowledge with the latest gaming insights, tips, and trivia
-            </p>
+      <StructuredData posts={paginatedPosts} />
+      
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* ── Compact Hero Section ────────────────────────────────────────── */}
+        <div className="mb-8 lg:mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Title & Description */}
+            <div className="lg:col-span-8">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-2xl text-white">✍️</span>
+                </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
+                    Triviaah <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Blog</span>
+                  </h1>
+                </div>
+              </div>
+              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                Expert insights, gaming tips, and fascinating trivia deep-dives. 
+                Stay updated with the latest challenges and knowledge boosters.
+              </p>
+            </div>
+
+            {/* Stats Column */}
+            <div className="lg:col-span-4 hidden lg:block">
+              <div className="bg-slate-800/30 rounded-2xl p-6 border border-white/5 backdrop-blur-sm">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-white font-black text-3xl leading-none">{allPosts.length}</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Articles</div>
+                  </div>
+                  <div className="w-px h-10 bg-white/10 mx-6"></div>
+                  <div>
+                    <div className="text-white font-black text-3xl leading-none">{page}</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Current Page</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Separator with gaming style */}
-        <div className="relative mb-16">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-700"></div>
-          </div>
-          <div className="relative flex justify-center">
-            <span className="bg-gray-900 px-6 py-2 text-sm text-purple-400 font-semibold border border-purple-500/30 rounded-full">
-              LATEST POSTS
-            </span>
-          </div>
-        </div>
-
-        <div className="py-4">
+        <div className="mb-8">
           <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
         </div>
 
-        {/* Blog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Blog Grid - Compact 4-column layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {paginatedPosts.map((post, index) => (
-            <div 
+            <Link 
               key={post.slug}
-              className="group bg-gray-800 rounded-xl overflow-hidden border-2 border-gray-700 hover:border-purple-500 transition-all duration-300 hover:transform hover:-translate-y-2"
+              href={`/blog/${post.slug}`}
+              title={`Read full article: ${post.header}`}
+              className="group bg-slate-900/50 rounded-xl overflow-hidden border border-white/10 hover:border-cyan-500/50 transition-all duration-300 flex flex-col hover:shadow-glow-blue"
             >
-              {/* Post Image */}
-              <div className="relative h-48 overflow-hidden">
+              {/* Post Image - Smaller aspect ratio */}
+              <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
                   src={post.image || '/imgs/blog-card.webp'}
-                  alt={post.header}
+                  alt={`${post.header} - Triviaah Blog Article`}
                   fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent"></div>
-                <div className="absolute bottom-4 left-4">
-                  <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60"></div>
+                <div className="absolute top-2 left-2">
+                  <span className="bg-cyan-600/90 backdrop-blur-sm text-white px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider">
                     #{index + 1 + startIndex}
                   </span>
                 </div>
               </div>
 
-              {/* Post Content */}
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <time className="text-gray-400 text-sm">
-                    {post.date}
-                  </time>
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              {/* Post Content - Tighter padding */}
+              <div className="p-4 flex flex-col flex-grow">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <time className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">
+                      {post.date}
+                    </time>
+                    <div className="w-1 h-1 bg-cyan-500 rounded-full"></div>
+                    <span className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">
+                      5 min read
+                    </span>
+                  </div>
                 </div>
                 
-                <h2 className="text-xl font-bold mb-3 text-white group-hover:text-purple-400 transition-colors line-clamp-2">
+                <h2 className="text-base font-black mb-2 text-white group-hover:text-cyan-400 transition-colors line-clamp-2 leading-snug">
                   {post.header}
                 </h2>
                 
-                <p className="text-gray-300 mb-4 line-clamp-3">
+                <p className="text-gray-400 text-xs mb-4 line-clamp-3 leading-relaxed">
                   {post.excerpt}
                 </p>
 
-                <Link 
-                  href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 font-semibold group/link"
-                >
-                  Read More
-                  <span className="group-hover/link:translate-x-1 transition-transform">→</span>
-                </Link>
+                <div className="mt-auto">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-cyan-500/10 border border-cyan-500/20 rounded-lg text-cyan-400 text-[10px] font-black uppercase tracking-widest group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300">
+                    Read Article
+                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -177,7 +208,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
             {page > 1 && (
               <Link
                 href={`/blog?page=${page - 1}`}
-                className="bg-gray-800 hover:bg-purple-600 text-white px-6 py-3 rounded-lg border-2 border-gray-700 hover:border-purple-500 transition-all duration-300 font-semibold"
+                className="bg-gray-800 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg border-2 border-gray-700 hover:border-cyan-500 transition-all duration-300 font-semibold"
               >
                 ← Previous
               </Link>
@@ -190,7 +221,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                   href={`/blog?page=${pageNum}`}
                   className={`w-10 h-10 flex items-center justify-center rounded-lg border-2 font-semibold transition-all duration-300 ${
                     pageNum === page
-                      ? 'bg-purple-600 border-purple-500 text-white'
+                      ? 'bg-cyan-600 border-cyan-500 text-white'
                       : 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700'
                   }`}
                 >
@@ -202,7 +233,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
             {page < totalPages && (
               <Link
                 href={`/blog?page=${page + 1}`}
-                className="bg-gray-800 hover:bg-purple-600 text-white px-6 py-3 rounded-lg border-2 border-gray-700 hover:border-purple-500 transition-all duration-300 font-semibold"
+                className="bg-gray-800 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg border-2 border-gray-700 hover:border-cyan-500 transition-all duration-300 font-semibold"
               >
                 Next →
               </Link>

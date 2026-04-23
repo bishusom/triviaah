@@ -371,8 +371,8 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
 
           {/* Quiz header */}
           <div className="text-center mb-8">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-6">
-              <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-5">
+              <div className="flex items-center gap-3 sm:gap-4">
                 <div className="bg-gradient-to-r from-cyan-400 to-blue-500 p-3 rounded-md shadow-lg">
                   <Play className="w-3 h-3 text-white" />
                 </div>
@@ -382,12 +382,12 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
                       {formattedCategory}
                     </div>
                   ) : null}
-                  <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
+                  <h1 className="mb-0.5 text-xl font-bold leading-tight text-white sm:mb-1 sm:text-3xl md:text-4xl">
                     {formattedSubcategory ? formattedSubcategory : formattedCategory} Quiz Challenge
                   </h1>
                   {/* ✅ Visible description text — helps Google understand page content
                       beyond just the quiz UI. Previously this was commented out. */}
-                  <p className="text-gray-300 text-sm sm:text-base max-w-xl">
+                  <p className="max-w-[90vw] overflow-hidden whitespace-nowrap text-ellipsis text-sm leading-none text-gray-300 sm:max-w-xl sm:text-base">
                     {formattedSubcategory
                       ? `${questions.length} ${formattedSubcategory.toLowerCase()} trivia questions — see how you score!`
                       : `${questions.length} free ${formattedCategory.toLowerCase()} trivia questions with instant results.`

@@ -293,7 +293,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...brainwavePages,
     ...dynamicPages,       // swap with verifiedDynamicPages once enabled
     ...retroGamePages,
-    ...iqTestPages,
+    //...iqTestPages,
     ...wordGamePages,
     ...numberPuzzlePages,
   ]

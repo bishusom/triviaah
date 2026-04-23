@@ -1,81 +1,55 @@
-// src/app/word-games/WordGamesClientPage.tsx
-'use client';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
 import { Play, Boxes, Star, Clock, Users } from 'lucide-react';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
+import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
 
-const wordGames = [
-  {
-    slug: 'cryptogram',
-    name: 'Cryptogram',
-    image: '/imgs/word-games/cryptogram.webp',
-    description: 'Decode encrypted texts in this classic puzzle',
-    tagline: 'Decrypt letters to reveal hidden quotes, books and movies in this classic word puzzle',
-    features: ['Letter rearrangement', 'Vocabulary building', 'Multiple difficulty levels'],
-    color: 'green',
-    keywords: 'cryptogram, substitution cipher, decode quotes, word puzzle'
+export const metadata: Metadata = {
+  title: 'Word Games Collection - Free Vocabulary & Spelling Games | Triviaah',
+  description: 'Challenge your vocabulary with our collection of free word games including Cryptogram, Spelling Bee, Boggle, Word Search, Word Ladder, Crossgrid, Word Connect, and Anagram Scramble.',
+  alternates: {
+    canonical: 'https://triviaah.com/word-games',
   },
-  {
-    slug: 'spelling-bee',
-    name: 'Spelling Bee',
-    image: '/imgs/word-games/spelling-bee.webp',
-    description: 'Spell words correctly using given letters with a center requirement',
-    tagline: 'Create words from letter honeycombs in this spelling challenge',
-    features: ['Honeycomb letter grid', 'Pangram bonuses', 'Genius ranking system'],
-    color: 'yellow',
-    keywords: 'spelling bee game, word formation puzzle, vocabulary challenge'
+  openGraph: {
+    title: 'Word Games Collection - Free Vocabulary & Spelling Games | Triviaah',
+    description: 'Challenge your vocabulary with our collection of free word games including Cryptogram, Spelling Bee, Boggle, Word Search, Word Ladder, Crossgrid, Word Connect, and Anagram Scramble.',
+    url: 'https://triviaah.com/word-games',
+    siteName: 'Triviaah',
+    images: [
+      {
+        url: '/imgs/word-games/word-games.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Word Games Collection',
+      },
+    ],
+    type: 'website',
   },
-  {
-    slug: 'boggle',
-    name: 'Boggle',
-    image: '/imgs/word-games/boggle.webp',
-    description: 'Find as many words as possible in a 4x4 letter grid',
-    tagline: 'Discover hidden words in timed letter grid challenges',
-    features: ['Timed word search', 'Letter connections', 'Word length scoring'],
-    color: 'blue',
-    keywords: 'boggle word game, letter grid puzzle, word search challenge'
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Word Games Collection | Triviaah',
+    description: 'Challenge your vocabulary with our collection of free word games.',
+    images: ['/imgs/word-games/word-games.webp'],
   },
-  {
-    slug: 'word-search',
-    name: 'Word Search',
-    image: '/imgs/word-games/word-search.webp',
-    description: 'Find hidden words in a letter matrix horizontally, vertically or diagonally',
-    tagline: 'Locate hidden words across multiple directions in letter grids',
-    features: ['Multiple grid sizes', 'Themed puzzles', 'Printable options'],
-    color: 'orange',
-    keywords: 'word search puzzle, hidden word game, letter matrix challenge'
+  robots: {
+    index: true,
+    follow: true,
   },
-  {
-    slug: 'word-ladder',
-    name: 'Word Ladder',
-    image: '/imgs/word-games/word-ladder.webp',
-    description: 'Change one letter at a time to transform start word into end word',
-    tagline: 'Transform words step by step through single letter changes',
-    features: ['Word transformation', 'Logical thinking', 'Step-by-step puzzles'],
-    color: 'purple',
-    keywords: 'word ladder game, word transformation puzzle, vocabulary builder'
-  },
-  {
-    slug: 'crossgrid',
-    name: 'Crossgrid',
-    image: '/imgs/word-games/word-crossgrid.webp',
-    description: 'Solve a compact clue-based word square where rows and columns must both form words',
-    tagline: 'Mini crossword energy packed into a fast word-square grid',
-    features: ['Across and down clues', 'Word square logic', 'Quick daily puzzles'],
-    color: 'cyan',
-    keywords: 'crossgrid puzzle, mini crossword game, word square challenge'
-  },
-];
+};
 
 // Gaming-style game card matching the brainwave page design
-function GameCard({ game, index }: { game: typeof wordGames[0]; index: number }) {
+function GameCard({ game, index }: { game: GamePageContent; index: number }) {
+  const imageSrc = game.og_image || `/imgs/word-games/${game.route_path.split('/').pop()}.webp`;
+  const route = game.cta_href || game.route_path;
+  const tagline = game.supporting_copy || game.intro_text;
+
   return (
     <Link
-      key={game.slug}
-      href={`/word-games/${game.slug}`}
+      key={game.route_path}
+      href={route}
+      title={`Play ${game.title} - ${tagline}`}
       className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
     >
       {/* Animated background gradient */}
@@ -87,8 +61,8 @@ function GameCard({ game, index }: { game: typeof wordGames[0]; index: number })
       {/* Game Image */}
       <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">  
         <Image
-          src={game.image}
-          alt={game.name}
+          src={imageSrc}
+          alt={`${game.title} Word Game`}
           fill
           className="object-contain transition-all duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -111,10 +85,10 @@ function GameCard({ game, index }: { game: typeof wordGames[0]; index: number })
       {/* Game Content */}
       <div className="p-6 relative z-10">
         <h3 className="font-bold text-lg text-white mb-2 group-hover:text-cyan-300 transition-colors">
-          {game.name}
+          {game.title}
         </h3>
         <p className="text-sm text-gray-300 line-clamp-2">
-          {game.tagline}
+          {game.supporting_copy || game.intro_text}
         </p>
         
         {/* Progress bar effect */}
@@ -126,12 +100,8 @@ function GameCard({ game, index }: { game: typeof wordGames[0]; index: number })
   );
 }
 
-export default function WordGamesClientPage() {
-  const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
-  const showAds = process.env.NEXT_PUBLIC_SHOW_ADS === 'true';
-
-  // Structured data for Word Games Collection
-  const [structuredData, setStructuredData] = useState({
+function StructuredData({ games, currentDate }: { games: GamePageContent[], currentDate: Date }) {
+  const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -157,7 +127,7 @@ export default function WordGamesClientPage() {
         "@id": "https://triviaah.com/word-games/#webpage",
         "url": "https://triviaah.com/word-games",
         "name": "Word Games Collection - Free Vocabulary & Spelling Games | Triviaah",
-        "description": "Challenge your vocabulary with our collection of free word games including Cryptogram, Spelling Bee, Boggle, Word Search, Word Ladder, and Crossgrid.",
+        "description": "Challenge your vocabulary with our collection of free word games including Cryptogram, Spelling Bee, Boggle, Word Search, Word Ladder, Crossgrid, Word Connect, and Anagram Scramble.",
         "isPartOf": {
           "@id": "https://triviaah.com/#website"
         },
@@ -165,7 +135,7 @@ export default function WordGamesClientPage() {
           "@id": "https://triviaah.com/word-games/#itemlist"
         },
         "datePublished": "2024-01-01T00:00:00+00:00",
-        "dateModified": lastUpdated,
+        "dateModified": currentDate.toISOString(),
         "breadcrumb": {
           "@id": "https://triviaah.com/word-games/#breadcrumb"
         },
@@ -201,15 +171,15 @@ export default function WordGamesClientPage() {
         "@id": "https://triviaah.com/word-games/#itemlist",
         "name": "Word Games Collection",
         "description": "Collection of educational word games designed to improve vocabulary, spelling, and cognitive skills",
-        "numberOfItems": wordGames.length,
-        "itemListElement": wordGames.map((game, index) => ({
+        "numberOfItems": games.length,
+        "itemListElement": games.map((game, index) => ({
           "@type": "ListItem",
           "position": index + 1,
           "item": {
             "@type": "Game",
-            "name": game.name,
-            "description": game.tagline,
-            "url": `https://triviaah.com/word-games/${game.slug}`,
+            "name": game.title,
+            "description": game.supporting_copy || game.intro_text,
+            "url": `https://triviaah.com${game.cta_href || game.route_path}`,
             "gameType": "WordGame",
             "genre": ["word", "puzzle", "educational"],
             "applicationCategory": "Game",
@@ -254,7 +224,7 @@ export default function WordGamesClientPage() {
             "name": "What types of word games are available?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "We offer six main word games: Cryptogram (decoding quotes), Spelling Bee (word formation), Boggle (grid word search), Word Search (hidden word finding), Word Ladder (word transformation), and Crossgrid (mini clue-based word squares). Each game focuses on different language skills and provides unique challenges for vocabulary building."
+              "text": "We offer eight main word games: Cryptogram (decoding quotes), Spelling Bee (word formation), Boggle (grid word search), Word Search (hidden word finding), Word Ladder (word transformation), Crossgrid (mini clue-based word squares), Word Connect (letter-bank word building), and Anagram Scramble (letter building). Each game focuses on different language skills and provides unique challenges for vocabulary building."
             }
           },
           {
@@ -284,93 +254,104 @@ export default function WordGamesClientPage() {
         ]
       }
     ]
-  });
+  };
 
-  useEffect(() => {
-    setLastUpdated(new Date().toISOString());
-  }, []);
+  return (
+    <Script
+      id="word-games-structured-data"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
+  );
+}
+
+export default async function WordGamesPage() {
+  const allRows = await getGamePagesBySection('word-games');
+  const wordGames = allRows.filter((r) => r.route_path !== '/word-games');
+  const currentDate = new Date();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Structured Data */}
-        <Script
-          id="word-games-structured-data"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
+        <StructuredData games={wordGames} currentDate={currentDate} />
         
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Hero Section */}
-          <div className="text-center mb-12">
-            <div className="flex justify-center items-center gap-3 mb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-2xl">
-                <Star className="text-4xl text-white" />
+        {/* ── Compact Hero Section ────────────────────────────────────────── */}
+        <div className="mb-8 lg:mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Title & Description */}
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <Star className="text-2xl text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
+                    Word <span className="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">Games</span>
+                  </h1>
+                </div>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Word Games Collection
-                <span className="block text-transparent bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-xl md:text-2xl mt-2">
-                  Vocabulary & Spelling Challenges
-                </span>
-              </h1>
-            </div>
-            <div className="max-w-3xl mx-auto">
-                <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-                  Challenge your vocabulary with our exciting collection of word games designed to improve spelling, 
-                  vocabulary, and cognitive skills through engaging gameplay.
-                </p>
-            </div>
-          
-
-            
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto mb-8">
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-                <Boxes className="text-2xl text-green-400 mx-auto mb-2" />
-                <div className="text-white font-bold text-xl">{wordGames.length}</div>
-                <div className="text-gray-400 text-sm">Games</div>
-              </div>
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-                <Clock className="text-2xl text-yellow-400 mx-auto mb-2" />
-                <div className="text-white font-bold text-xl">Daily</div>
-                <div className="text-gray-400 text-sm">Puzzles</div>
-              </div>
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 text-center">
-                <Users className="text-2xl text-cyan-400 mx-auto mb-2" />
-                <div className="text-white font-bold text-xl">Free</div>
-                <div className="text-gray-400 text-sm">To Play</div>
-              </div>
-            </div>
-
-            {/* Last Updated Date */}
-            <div className="text-center">
-              <p className="text-sm text-gray-500 bg-gray-800/50 rounded-lg px-4 py-2 inline-block border border-gray-700">
-                Last updated: {new Date(lastUpdated).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
+              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                Challenge your vocabulary with our exciting collection of word games. 
+                From cipher decoding to spelling and scramble puzzles, every game is free to play.
               </p>
+              <div className="mt-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5 inline-block">
+                  Last Updated: {currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </p>
+              </div>
             </div>
-          </div>       
 
+            {/* Stats Column */}
+            <div className="lg:col-span-5">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Boxes className="text-xl text-green-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">{wordGames.length}</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Games</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Clock className="text-xl text-yellow-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">Daily</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Updates</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Users className="text-xl text-cyan-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">Free</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Access</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>       
 
           <div className="py-4">
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
 
-          {/* Games Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 max-w-6xl mx-auto">
-            {wordGames.map((game, index) => (
-              <GameCard key={game.slug} game={game} index={index} />
-            ))}
+          {/* Mobile: Horizontal Scroll Layout */}
+          <div className="lg:hidden mb-16 overflow-hidden">
+            <h2 className="text-2xl font-bold text-white mb-6 text-center">All Word Games</h2>
+            <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory scrollbar-hide px-4 -mx-4">
+              {wordGames.map((game, index) => (
+                <div key={game.route_path} className="w-[260px] shrink-0 snap-start">
+                  <GameCard game={game} index={index} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop: Grid Layout */}
+          <div className="hidden lg:block mb-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {wordGames.map((game, index) => (
+                <GameCard key={game.route_path} game={game} index={index} />
+              ))}
+            </div>
           </div>
 
           {/* Gaming Features Section */}
           <div className="mb-16">
-            {/* Only one ad allowed per page
-            <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
-            */}
             <h2 className="text-3xl font-bold text-white text-center mb-8">Why Players Love Word Games</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20 text-center">
@@ -414,7 +395,7 @@ export default function WordGamesClientPage() {
               {[
                 {
                   question: "What types of word games are available?",
-                  answer: "We offer six main word games: Cryptogram for decoding quotes, Spelling Bee for word formation, Boggle for grid word searches, Word Search for hidden word finding, Word Ladder for word transformation puzzles, and Crossgrid for clue-based word-square solving."
+                  answer: "We offer eight main word games: Cryptogram for decoding quotes, Spelling Bee for word formation, Boggle for grid word searches, Word Search for hidden word finding, Word Ladder for word transformation puzzles, Crossgrid for clue-based word-square solving, Word Connect for letter-bank word building, and Anagram Scramble for letter building."
                 },
                 {
                   question: "Are these word games educational?",
@@ -434,7 +415,7 @@ export default function WordGamesClientPage() {
                 },
                 {
                   question: "How often are new puzzles available?",
-                  answer: "Each word game features new daily puzzles that reset every 24 hours. We also offer additional puzzle packs and themed challenges regularly to keep the gameplay fresh and exciting."
+                  answer: "Some word games refresh daily, while evergreen games like Word Connect and Anagram Scramble can be replayed anytime. We also add new puzzle packs and themed challenges regularly to keep the gameplay fresh and exciting."
                 }
               ].map((faq, index) => (
                 <div key={index} className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-green-500/30 transition-all duration-300">
@@ -473,6 +454,14 @@ export default function WordGamesClientPage() {
                     <li className="flex items-start">
                       <span className="text-orange-400 font-bold mr-2">•</span>
                       <span><strong>Word Search</strong>: Locate hidden words across multiple directions in letter grids</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-cyan-400 font-bold mr-2">•</span>
+                      <span><strong>Word Connect</strong>: Connect letters to build valid words from a letter bank</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-purple-400 font-bold mr-2">•</span>
+                      <span><strong>Anagram Scramble</strong>: Build words from a scrambled letter bank</span>
                     </li>
                   </ul>
                 </div>
@@ -524,9 +513,8 @@ export default function WordGamesClientPage() {
                 </div>
               </div>
             </div>
-          </section>
-        </div>
+        </section>
+      </div>
     </div>
-  </div>
   );
 }

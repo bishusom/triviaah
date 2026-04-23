@@ -1,3 +1,5 @@
+ 'use client';
+
 // src/components/brainwave/inventionle/InventionleComponent.tsx
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Image from 'next/image';

@@ -34,12 +34,12 @@ function CategoryCard({
   return (
     <Link
       href={`/trivias/${categoryKey}`}
-      className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
+      className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow-blue transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-white/5 hover:border-cyan-400/40"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
 
-      <div className="relative h-48 w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">
+      <div className="relative h-40 w-full bg-slate-900 overflow-hidden">
         {category.ogImage ? (
           <Image
             src={category.ogImage}
@@ -53,7 +53,7 @@ function CategoryCard({
             priority={index < 4}
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-cyan-700 to-purple-800">
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-cyan-700 to-blue-800">
             <span className="text-white text-2xl font-bold drop-shadow-lg">
               {category.title.charAt(0).toUpperCase()}
             </span>
@@ -66,11 +66,11 @@ function CategoryCard({
         </div>
       </div>
 
-      <div className="p-6 relative z-10">
-        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-cyan-300 transition-colors">
+      <div className="p-4 relative z-10">
+        <h3 className="font-black text-base text-white mb-1 uppercase tracking-tight group-hover:text-cyan-300 transition-colors">
           {category.title}
         </h3>
-        <p className="text-sm text-gray-300 line-clamp-2">
+        <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
           {category.description}
         </p>
 
@@ -161,15 +161,33 @@ export default function TriviaCategoriesExplorer({ categories }: TriviaCategorie
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-16">
-        {filteredCategories.map(({ key, category }, index) => (
-          <CategoryCard
-            key={key}
-            categoryKey={key}
-            category={category}
-            index={index}
-          />
-        ))}
+      {/* Mobile: Horizontal Scroll Layout */}
+      <div className="lg:hidden mb-16 overflow-hidden">
+        <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory scrollbar-hide px-4 -mx-4">
+          {filteredCategories.map(({ key, category }, index) => (
+            <div key={key} className="w-[260px] shrink-0 snap-start">
+              <CategoryCard
+                categoryKey={key}
+                category={category}
+                index={index}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: Grid Layout */}
+      <div className="hidden lg:block mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredCategories.map(({ key, category }, index) => (
+            <CategoryCard
+              key={key}
+              categoryKey={key}
+              category={category}
+              index={index}
+            />
+          ))}
+        </div>
       </div>
 
       {matchingSubcategories.length > 0 && (

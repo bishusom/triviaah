@@ -11,13 +11,10 @@ type SoundContextType = {
 const SoundContext = createContext<SoundContextType | undefined>(undefined);
 
 export function SoundProvider({ children }: { children: React.ReactNode }) {
-  const [isMuted, setIsMuted] = useState(false);
-
-  // Load mute state from localStorage on mount
-  useEffect(() => {
-    const savedMute = localStorage.getItem('triviaahMuted');
-    setIsMuted(savedMute === 'true');
-  }, []);
+  const [isMuted, setIsMuted] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('triviaahMuted') === 'true';
+  });
 
   // Save mute state to localStorage when it changes
   useEffect(() => {

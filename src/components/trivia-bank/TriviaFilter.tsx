@@ -113,7 +113,7 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
               placeholder="Search trivia categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
+              className="w-full pl-10 pr-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 transition-colors"
             />
           </div>
         </div>
@@ -128,47 +128,46 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
         </div>
 
         {/* Render categories without filtering during SSR */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map(category => {
             const tagsArray = getTagsArray(category.tags);
             return (
-              <div key={category.slug} className="group bg-gray-800 rounded-xl overflow-hidden border-2 border-gray-700 hover:border-purple-500 transition-all duration-300 hover:transform hover:-translate-y-2">
-                <div className="p-6">
-                  <h2 className="text-xl font-bold mb-3 text-white group-hover:text-purple-400 transition-colors line-clamp-2">
-                    <Link href={`/trivia-bank/${category.slug}`}>
-                      {category.header}
-                    </Link>
+              <Link 
+                key={category.slug} 
+                href={`/trivia-bank/${category.slug}`}
+                title={`Explore ${category.header} Trivia Questions`}
+                className="group bg-slate-900/50 rounded-xl overflow-hidden border border-white/10 hover:border-cyan-500/50 transition-all duration-300 flex flex-col hover:shadow-glow-blue"
+              >
+                <div className="p-4 flex flex-col h-full">
+                  <h2 className="text-base font-black mb-2 text-white group-hover:text-cyan-400 transition-colors line-clamp-2 leading-snug">
+                    {category.header}
                   </h2>
-                  <p className="text-gray-300 mb-4 line-clamp-3">{category.excerpt}</p>
+                  <p className="text-gray-400 text-xs mb-4 line-clamp-3 leading-relaxed flex-grow">
+                    {category.excerpt}
+                  </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {tagsArray.length > 0 ? (
                       <>
-                        {tagsArray.slice(0, 5).map(tag => (
-                          <span key={tag} className="bg-purple-600/20 text-purple-300 px-2 py-1 rounded text-xs border border-purple-500/30">
+                        {tagsArray.slice(0, 3).map(tag => (
+                          <span key={tag} className="bg-cyan-600/10 text-cyan-300 px-2 py-0.5 rounded text-[10px] font-bold border border-cyan-500/20 uppercase tracking-wider">
                             #{tag}
                           </span>
                         ))}
-                        {tagsArray.length > 5 && (
-                          <span className="bg-gray-700 text-gray-400 px-2 py-1 rounded text-xs">
-                            +{tagsArray.length - 5} more
-                          </span>
-                        )}
                       </>
                     ) : (
-                      <span className="bg-purple-600/20 text-purple-300 px-2 py-1 rounded text-xs border border-purple-500/30">
+                      <span className="bg-cyan-600/10 text-cyan-300 px-2 py-0.5 rounded text-[10px] font-bold border border-cyan-500/20 uppercase tracking-wider">
                         #trivia
                       </span>
                     )}
                   </div>
-                  <Link 
-                    href={`/trivia-bank/${category.slug}`} 
-                    className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 font-semibold group/link"
-                  >
-                    Take the Quiz
-                    <span className="group-hover/link:translate-x-1 transition-transform">→</span>
-                  </Link>
+                  <div className="mt-auto">
+                    <div className="inline-flex items-center gap-1.5 text-cyan-400 text-[10px] font-black uppercase tracking-widest group-hover:text-cyan-300 transition-colors">
+                      Explore Bank
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
@@ -187,7 +186,7 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
             placeholder="Search trivia categories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
+            className="w-full pl-10 pr-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 transition-colors"
           />
           {searchTerm && (
             <button
@@ -206,7 +205,7 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
           key="all"
           className={`px-4 py-2 rounded-lg border-2 font-semibold transition-all duration-300 ${
             activeLetter === 'All' 
-              ? 'bg-purple-600 border-purple-500 text-white' 
+              ? 'bg-cyan-600 border-cyan-500 text-white shadow-lg shadow-cyan-500/20' 
               : 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700'
           }`}
           onClick={() => setActiveLetter('All')}
@@ -218,7 +217,7 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
             key={char} 
             className={`px-4 py-2 rounded-lg border-2 font-semibold transition-all duration-300 ${
               activeLetter === char 
-                ? 'bg-purple-600 border-purple-500 text-white' 
+                ? 'bg-cyan-600 border-cyan-500 text-white shadow-lg shadow-cyan-500/20' 
                 : 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700'
             }`}
             onClick={() => setActiveLetter(char)}
@@ -235,10 +234,10 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
             <span className="text-gray-400">
               Showing results 
               {activeLetter !== 'All' && (
-                <> for: <span className="text-purple-400 font-semibold">{activeLetter}</span></>
+                <> for: <span className="text-cyan-400 font-semibold">{activeLetter}</span></>
               )}
               {searchTerm && (
-                <> matching: <span className="text-purple-400 font-semibold">&quot;{searchTerm}&quot;</span></>
+                <> matching: <span className="text-cyan-400 font-semibold">&quot;{searchTerm}&quot;</span></>
               )}
             </span>
             {filteredCategories.length > 0 && (
@@ -261,48 +260,47 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
       )}
 
       {/* Trivia cards grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {filteredCategories.length > 0 ? (
           filteredCategories.map(category => {
             const tagsArray = getTagsArray(category.tags);
             return (
-              <div key={category.slug} className="group bg-gray-800 rounded-xl overflow-hidden border-2 border-gray-700 hover:border-purple-500 transition-all duration-300 hover:transform hover:-translate-y-2">
-                <div className="p-6">
-                  <h2 className="text-xl font-bold mb-3 text-white group-hover:text-purple-400 transition-colors line-clamp-2">
-                    <Link href={`/trivia-bank/${category.slug}`}>
-                      {category.header}
-                    </Link>
+              <Link 
+                key={category.slug} 
+                href={`/trivia-bank/${category.slug}`}
+                title={`Explore ${category.header} Trivia Questions`}
+                className="group bg-slate-900/50 rounded-xl overflow-hidden border border-white/10 hover:border-cyan-500/50 transition-all duration-300 flex flex-col hover:shadow-glow-blue"
+              >
+                <div className="p-4 flex flex-col h-full">
+                  <h2 className="text-base font-black mb-2 text-white group-hover:text-cyan-400 transition-colors line-clamp-2 leading-snug">
+                    {category.header}
                   </h2>
-                  <p className="text-gray-300 mb-4 line-clamp-3">{category.excerpt}</p>
+                  <p className="text-gray-400 text-xs mb-4 line-clamp-3 leading-relaxed flex-grow">
+                    {category.excerpt}
+                  </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {tagsArray.length > 0 ? (
                       <>
-                        {tagsArray.slice(0, 5).map(tag => (
-                          <span key={tag} className="bg-purple-600/20 text-purple-300 px-2 py-1 rounded text-xs border border-purple-500/30">
+                        {tagsArray.slice(0, 3).map(tag => (
+                          <span key={tag} className="bg-cyan-600/10 text-cyan-300 px-2 py-0.5 rounded text-[10px] font-bold border border-cyan-500/20 uppercase tracking-wider">
                             #{tag}
                           </span>
                         ))}
-                        {tagsArray.length > 5 && (
-                          <span className="bg-gray-700 text-gray-400 px-2 py-1 rounded text-xs">
-                            +{tagsArray.length - 5} more
-                          </span>
-                        )}
                       </>
                     ) : (
-                      <span className="bg-purple-600/20 text-purple-300 px-2 py-1 rounded text-xs border border-purple-500/30">
+                      <span className="bg-cyan-600/10 text-cyan-300 px-2 py-0.5 rounded text-[10px] font-bold border border-cyan-500/20 uppercase tracking-wider">
                         #trivia
                       </span>
                     )}
                   </div>
-                  <Link 
-                    href={`/trivia-bank/${category.slug}`} 
-                    className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 font-semibold group/link"
-                  >
-                    Take the Quiz
-                    <span className="group-hover/link:translate-x-1 transition-transform">→</span>
-                  </Link>
+                  <div className="mt-auto">
+                    <div className="inline-flex items-center gap-1.5 text-cyan-400 text-[10px] font-black uppercase tracking-widest group-hover:text-cyan-300 transition-colors">
+                      Explore Bank
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Link>
             );
           })
         ) : (
@@ -318,7 +316,7 @@ const TriviaFilter: FC<TriviaFilterProps> = ({ categories }) => {
                   setSearchTerm('');
                   setActiveLetter('All');
                 }}
-                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors font-semibold"
+                className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg transition-colors font-semibold shadow-lg shadow-cyan-500/20"
               >
                 Show All Categories
               </button>

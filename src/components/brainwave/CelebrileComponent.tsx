@@ -1,3 +1,5 @@
+ 'use client';
+
 // src/components/brainwave/celebrile/CelebrileComponent.tsx
 import { useState, useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';

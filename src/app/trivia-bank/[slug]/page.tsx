@@ -43,40 +43,38 @@ export async function generateMetadata({ params }: TriviaPageProps): Promise<Met
     ? trivia.tags.split(',').map(tag => tag.trim())
     : trivia.tags;
   const pageUrl = `https://triviaah.com/trivia-bank/${trivia.slug}`;
-  const description = `${trivia.excerpt} Browse our ${trivia.title.toLowerCase()} trivia questions with answers for all difficulty levels.`;
+  const description = `Free ${trivia.title} trivia questions with answers. ${trivia.excerpt} Perfect for quizzes, game nights, and educational fun for all ages.`;
 
   return {
-    title: `${trivia.title} Questions with Answers | Triviaah`,
+    title: `${trivia.title} Trivia Questions & Answers | Free Quiz Bank | Triviaah`,
     description,
-    keywords: `${trivia.title.toLowerCase()} trivia, ${trivia.title.toLowerCase()} quiz, ${trivia.title.toLowerCase()} questions and answers, ${tagsArray.join(', ')}`,
+    keywords: [
+      `${trivia.title} trivia`,
+      `${trivia.title} quiz questions`,
+      'trivia with answers',
+      'free quiz bank',
+      'educational trivia',
+      ...tagsArray
+    ],
     alternates: {
       canonical: pageUrl,
     },
     openGraph: {
-      title: `${trivia.title} Questions | Triviaah`,
+      title: `${trivia.title} Questions with Answers | Triviaah`,
       description,
       url: pageUrl,
-      siteName: 'Triviaah',
+      images: [{ url: '/imgs/trivia-bank-card.webp' }],
       type: 'website',
-      images: [
-        {
-          url: '/imgs/trivia-bank-card.webp',
-          width: 1200,
-          height: 630,
-          alt: `${trivia.title} trivia questions and answers`,
-        },
-      ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${trivia.title} Questions | Triviaah`,
-      description,
+      title: `${trivia.title} Trivia Bank`,
       images: ['/imgs/trivia-bank-card.webp'],
     },
     robots: {
       index: true,
       follow: true,
-    },
+    }
   };
 }
 
@@ -90,9 +88,9 @@ export async function generateStaticParams() {
 
 function LoadingFallback() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center">
+    <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto mb-4"></div>
         <p className="text-gray-400">Loading trivia questions...</p>
       </div>
     </div>
@@ -105,43 +103,50 @@ export default async function TriviaPage({ params }: TriviaPageProps) {
 
   if (!trivia) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <div className="min-h-screen bg-[#0f172a] text-white">
         <div className="container mx-auto px-4 py-12 text-center">
-          <h1 className="text-4xl font-bold mb-4 text-white">Trivia Not Found</h1>
+          <h1 className="text-4xl font-bold mb-4 text-white uppercase tracking-tight">Trivia Not Found</h1>
           <p className="text-gray-400 mb-8">The requested trivia category could not be found.</p>
           <Link 
             href="/trivia-bank" 
-            className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg transition-colors font-black uppercase tracking-widest text-xs"
           >
-            <ArrowLeft size={20} />
-            Back to All Trivia Categories
+            <ArrowLeft size={16} />
+            Back to Bank
           </Link>
         </div>
       </div>
     );
   }
 
+  const questionCount = Object.values(trivia.levels).reduce((acc, curr) => acc + curr.length, 0);
+
   return (
     <div className="min-h-screen bg-[#0f172a] text-white">
       <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto mb-12">
-          <Link href="/trivia-bank" className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 mb-8 group">
-            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-            Back to Trivia Bank
-          </Link>
+        <div className="max-w-4xl mx-auto mb-8">
+          {/* ultra-Compact Header */}
+          <header className="flex items-center flex-wrap justify-between gap-x-4 gap-y-2 mb-6 border-b border-white/10 pb-4">
+            <h1 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight leading-none">
+              {trivia.title} <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Questions</span>
+            </h1>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest bg-white/5 px-2.5 py-1 rounded-md border border-white/5">
+                {questionCount} Qs
+              </span>
+              <span className="text-cyan-400 text-[10px] font-black uppercase tracking-widest bg-cyan-500/10 px-2.5 py-1 rounded-md border border-cyan-500/10">
+                PRO BANK
+              </span>
+            </div>
+          </header>
           
-          {/* 2. SEO RICH HEADER SECTION */}
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            {trivia.header || `${trivia.title} Questions & Answers`}
-          </h1>
-          
-          <div className="bg-purple-900/20 border border-purple-500/20 p-6 rounded-3xl mb-10">
-            <p className="text-xl text-gray-300 leading-relaxed italic">
-              {trivia.excerpt}
+          <div className="bg-cyan-900/10 border border-cyan-500/10 p-4 md:p-6 rounded-xl mb-6">
+            <p className="text-base md:text-lg text-gray-300 leading-relaxed italic">
+              &ldquo;{trivia.excerpt}&rdquo;
             </p>
           </div>
 
-          <div className="py-2">
+          <div className="py-1">
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
         </div>

@@ -336,6 +336,30 @@ export const NUMBER_PUZZLES: ReadonlySectionItems = [
     difficulty: 'Medium'
   },
   {
+    category: 'sudoku',
+    name: 'Sudoku Challenge',
+    path: '/number-puzzles/sudoku',
+    image: '/imgs/number-puzzles/sudoku.webp',
+    tagline: 'Solve classic Sudoku puzzles with varying difficulty levels',
+    keywords: 'number game, puzzle, math challenge',
+    playCount: 11600,
+    isNew: false,
+    duration: 'Daily',
+    difficulty: 'Medium'
+  },
+  {
+    category: 'kakuro',
+    name: 'Kakuro',
+    path: '/number-puzzles/kakuro',
+    image: '/imgs/number-puzzles/kakuro.webp',
+    tagline: 'Use clue totals and logic to complete each run without repeating digits',
+    keywords: 'kakuro puzzle, cross sums game, number crossword, arithmetic logic puzzle',
+    playCount: 8400,
+    isNew: true,
+    duration: 'Daily',
+    difficulty: 'Medium'
+  },
+  {
     category: 'prime-hunter',
     name: 'Prime Hunter',
     path: '/number-puzzles/prime-hunter',
@@ -368,30 +392,6 @@ export const NUMBER_PUZZLES: ReadonlySectionItems = [
     keywords: 'number game, puzzle, math challenge',
     playCount: 9400,
     isNew: false,
-    duration: 'Daily',
-    difficulty: 'Medium'
-  },
-  {
-    category: 'sudoku',
-    name: 'Sudoku Challenge',
-    path: '/number-puzzles/sudoku',
-    image: '/imgs/number-puzzles/sudoku.webp',
-    tagline: 'Solve classic Sudoku puzzles with varying difficulty levels',
-    keywords: 'number game, puzzle, math challenge',
-    playCount: 11600,
-    isNew: false,
-    duration: 'Daily',
-    difficulty: 'Medium'
-  },
-  {
-    category: 'kakuro',
-    name: 'Kakuro',
-    path: '/number-puzzles/kakuro',
-    image: '/imgs/number-puzzles/kakuro.webp',
-    tagline: 'Use clue totals and logic to complete each run without repeating digits',
-    keywords: 'kakuro puzzle, cross sums game, number crossword, arithmetic logic puzzle',
-    playCount: 8400,
-    isNew: true,
     duration: 'Daily',
     difficulty: 'Medium'
   }

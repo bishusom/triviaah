@@ -93,7 +93,7 @@ export default function TriviaContent({ trivia }: TriviaContentProps) {
     easy: 'from-green-500 to-green-600',
     medium: 'from-yellow-500 to-yellow-600',
     hard: 'from-red-500 to-red-600',
-    default: 'from-purple-500 to-purple-600'
+    default: 'from-cyan-500 to-cyan-600'
   };
 
   const handleDownload = () => {
@@ -112,7 +112,8 @@ export default function TriviaContent({ trivia }: TriviaContentProps) {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowAnswers(!showAnswers)}
-            className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl transition-all font-medium"
+            title={showAnswers ? 'Hide all trivia answers' : 'Reveal all trivia answers'}
+            className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-xl transition-all font-medium"
           >
             {showAnswers ? <EyeOff size={18} /> : <Eye size={18} />}
             {showAnswers ? 'Hide Answers' : 'Show All Answers'}
@@ -121,6 +122,7 @@ export default function TriviaContent({ trivia }: TriviaContentProps) {
           <button
             onClick={handleDownload}
             disabled={isGenerating}
+            title="Download these trivia questions as a PDF"
             className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-xl transition-all font-medium"
           >
             {isGenerating ? <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" /> : <Download size={18} />}
@@ -143,7 +145,7 @@ export default function TriviaContent({ trivia }: TriviaContentProps) {
               {questions.map((item: TriviaQuestion, index: number) => (
                 <div key={index} className="bg-gray-800/30 rounded-2xl p-6 border border-gray-700">
                   <div className="flex items-start gap-4">
-                    <span className="text-purple-400 font-bold text-lg">{index + 1}.</span>
+                    <span className="text-cyan-400 font-bold text-lg">{index + 1}.</span>
                     <div className="flex-1">
                       <h3 className="text-white font-medium text-lg mb-4">{item.question}</h3>
                       
@@ -153,7 +155,7 @@ export default function TriviaContent({ trivia }: TriviaContentProps) {
                           ${showAnswers ? 'text-green-400 bg-black/30 border-white/10' : 'text-gray-600 blur-sm select-none bg-black/30 border-white/5'}
                           pdf-answer-force-show
                         `}>
-                          <span className="text-purple-500 mr-2 text-xs uppercase tracking-widest pdf-exclude-label">Answer:</span>
+                          <span className="text-cyan-500 mr-2 text-xs uppercase tracking-widest pdf-exclude-label">Answer:</span>
                           {item.answer}
                         </p>
                       </div>

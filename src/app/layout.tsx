@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { SpeedInsights } from '@vercel/speed-insights/next'; // Add this import
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
+import NavBar from '@/components/home/NavBar';
 import { SoundProvider } from '@/context/SoundContext';;
 import { Metadata } from 'next';
 import './globals.css';
@@ -123,9 +124,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
       <body className={`${geist.variable} font-[Geist,Geist-fallback] overflow-x-hidden`}>
         <SoundProvider>
-          <Breadcrumbs />
-          <div className="w-full overflow-x-hidden">
-            {children}
+          <NavBar />
+          <div className="pt-20 bg-[var(--background)] min-h-screen"> {/* Add padding top to account for fixed navbar */}
+            <Breadcrumbs />
+            <div className="w-full overflow-x-hidden">
+              {children}
+            </div>
           </div>
           <SeoBreadcrumbs />
           

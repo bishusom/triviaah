@@ -1,3 +1,5 @@
+ 'use client';
+
 import { useState, useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { event } from '@/lib/gtag';
@@ -930,39 +932,6 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
         )}
       </div>
 
-      {/* How to Play Section */}
-      <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5">
-        <h3 className="font-bold text-white mb-3 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-400" />
-          How to Play:
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-          <div className="flex items-start gap-2 text-gray-300">
-            <span className="text-purple-400">🎬</span>
-            <span>Guess the movie from emoji clues</span>
-          </div>
-          <div className="flex items-start gap-2 text-gray-300">
-            <span className="text-green-400">🟩</span>
-            <span>Green: Letter in correct position</span>
-          </div>
-          <div className="flex items-start gap-2 text-gray-300">
-            <span className="text-yellow-400">🟨</span>
-            <span>Yellow: Letter in title but wrong position</span>
-          </div>
-          <div className="flex items-start gap-2 text-gray-300">
-            <span className="text-gray-400">⬜</span>
-            <span>Gray: Letter not in the title</span>
-          </div>
-          <div className="flex items-start gap-2 text-gray-300">
-            <span className="text-cyan-400">💡</span>
-            <span>Hints unlock after each attempt</span>
-          </div>
-          <div className="flex items-start gap-2 text-gray-300">
-            <span className="text-red-400">🎯</span>
-            <span>6 attempts to guess correctly</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

@@ -102,16 +102,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
       />
 
-      <nav className="border-b border-gray-800">
-        <div className="container mx-auto px-4 py-4">
-          <Link href="/blog" className="text-purple-400 hover:text-purple-300">← Back to Blog</Link>
-        </div>
-      </nav>
-
-      <article className="container mx-auto px-4 py-12 max-w-4xl">
-        <header className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-4">{post.header}</h1>
-          <time className="text-gray-400">{post.date}</time>
+      <article className="container mx-auto px-4 py-8 max-w-4xl">
+        <header className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 mb-8 border-b border-white/10 pb-6">
+          <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight leading-tight">
+            {post.header}
+          </h1>
+          <time className="text-gray-400 text-xs font-black uppercase tracking-widest shrink-0 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+            {post.date}
+          </time>
         </header>
 
         {/* Grayish readability container */}
@@ -146,15 +144,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </div>
 
         <footer className="mt-16 pt-8 border-t border-gray-800">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <Link 
-              href="/blog"
-              className="inline-flex items-center gap-2 bg-gray-800 hover:bg-purple-600 text-white px-6 py-3 rounded-lg border-2 border-gray-700 hover:border-purple-500 transition-all duration-300 font-semibold group"
-            >
-              <span className="group-hover:-translate-x-0.5 transition-transform">←</span>
-              Back to All Posts
-            </Link>
-            
+          <div className="flex flex-col sm:flex-row items-center justify-end gap-4">
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <span className="text-gray-400 text-sm font-medium flex items-center gap-2">
                 <Share2 size={16} />

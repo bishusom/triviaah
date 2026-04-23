@@ -11,12 +11,34 @@ export default function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isGamesMenuOpen, setIsGamesMenuOpen] = useState(false);
   const [isMobileGamesOpen, setIsMobileGamesOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Determine background transparency/shadow
+      setIsScrolled(currentScrollY > 50);
+
+      // Hide on scroll logic
+      if (currentScrollY < 10) {
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down and not at the top
+        setIsVisible(false);
+        setIsGamesMenuOpen(false); // Close dropdowns if moving
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   const navLinks = [
     { name: 'Daily Trivias', href: '/daily-trivias' },
@@ -36,8 +58,12 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 px-4 md:px-12 py-3 flex items-center justify-between ${
-        isScrolled || isMobileMenuOpen ? 'bg-[#141414] shadow-2xl' : 'bg-gradient-to-b from-black/80 to-transparent'
+      <nav className={`fixed top-0 w-full z-[100] transition-all duration-300 px-4 md:px-12 py-3 flex items-center justify-between ${
+        isVisible || isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
+      } ${
+        isScrolled || isMobileMenuOpen 
+          ? 'bg-[#0a0a0a] shadow-2xl border-b border-white/5' 
+          : 'bg-black/60 backdrop-blur-md border-b border-white/5'
       }`}>
         
         {/* LEFT SIDE: Hamburger + Brand */}
@@ -135,9 +161,24 @@ export default function NavBar() {
         />
         
         {/* Sidebar Content */}
-        <div className={`absolute top-0 left-0 h-full w-[280px] bg-[#141414] shadow-2xl transform transition-transform duration-300 ease-in-out pt-20 px-6 ${
+        <div className={`absolute top-0 left-0 h-full w-[280px] bg-[#141414] shadow-2xl transform transition-transform duration-300 ease-in-out pt-6 px-6 ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
+          {/* Mobile User Profile Section */}
+          <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
+            <Link href="/" className="flex items-center gap-2 group" onClick={() => setIsMobileMenuOpen(false)}>
+              <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <span className="text-white text-sm">🧠</span>
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                Triviaah
+              </span>
+            </Link>
+            <div className="scale-90 origin-right">
+              <UserStatsPopover />
+            </div>
+          </div>
+
           <div className="flex flex-col gap-6">
             {navLinks.map((link) => (
               link.name === 'Puzzles' ? (
