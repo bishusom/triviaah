@@ -146,7 +146,7 @@ export default async function TriviaPage({ params }: TriviaPageProps) {
             </p>
           </div>
 
-          <div className="py-1">
+          <div className="py-1" aria-label="Top advertisement">
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
         </div>
@@ -154,6 +154,10 @@ export default async function TriviaPage({ params }: TriviaPageProps) {
         <Suspense fallback={<LoadingFallback />}>
           <TriviaContent trivia={trivia} />
         </Suspense>
+
+        <div className="max-w-4xl mx-auto mt-10" aria-label="Bottom advertisement">
+          <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
+        </div>
 
         {/* 3. DYNAMIC Q&A SCHEMA */}
         <TriviaSchema trivia={trivia} />
