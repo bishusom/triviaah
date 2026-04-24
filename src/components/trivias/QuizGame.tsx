@@ -14,6 +14,8 @@ import { updateGuestStats } from '@/lib/guestStats';
 import QuizSummary from '@/components/trivias/QuizSummary';
 import { Maximize2, Minimize2, Flame, Zap } from 'lucide-react';
 
+const FALLBACK_QUESTION_IMAGE = '/imgs/default-question-img.png';
+
 interface QuizConfig {
   isQuickfire?: boolean;
   timePerQuestion?: number;
@@ -80,6 +82,7 @@ export default function QuizGame({
   const [showSummary, setShowSummary] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [wrongAnswers, setWrongAnswers] = useState<{ question: string; correct: string; userSelected: string }[]>([]);
+  const [questionImageSource, setQuestionImageSource] = useState<'provided' | 'pixabay' | 'fallback' | null>(null);
 
   const { isMuted } = useSound();
   const { width, height } = useWindowSize();
@@ -247,13 +250,26 @@ export default function QuizGame({
     if (!currentQuestion) return;
     const fetchImage = async () => {
       setQuestionImage(null);
+      setQuestionImageSource(null);
       try {
-        if (currentQuestion.image_url) setQuestionImage(currentQuestion.image_url);
+        if (currentQuestion.image_url) {
+          setQuestionImage(currentQuestion.image_url);
+          setQuestionImageSource('provided');
+        }
         else {
           const img = await fetchPixabayImage(extractKeywords(currentQuestion.question)[0] || '', category);
-          setQuestionImage(img || null);
+          if (img) {
+            setQuestionImage(img);
+            setQuestionImageSource('pixabay');
+          } else {
+            setQuestionImage(FALLBACK_QUESTION_IMAGE);
+            setQuestionImageSource('fallback');
+          }
         }
-      } catch { } finally { setIsLoading(false); }
+      } catch {
+        setQuestionImage(FALLBACK_QUESTION_IMAGE);
+        setQuestionImageSource('fallback');
+      } finally { setIsLoading(false); }
     };
     fetchImage();
   }, [currentQuestion, category]);
@@ -314,7 +330,26 @@ export default function QuizGame({
             <div className={`flex flex-col gap-4 sm:flex-row ${questionImage ? 'items-start' : 'items-center justify-center text-center'}`}>
               {questionImage && (
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 mx-auto sm:mx-0">
-                  <Image src={questionImage} alt="Quiz" fill className="object-cover rounded-lg border-2 border-cyan-500/20" unoptimized onClick={() => setShowImageModal(true)} />
+                  <Image
+                    src={questionImage}
+                    alt="Quiz"
+                    fill
+                    className="object-cover rounded-lg border-2 border-cyan-500/20"
+                    unoptimized
+                    onClick={() => setShowImageModal(true)}
+                    onError={() => {
+                      if (questionImageSource === 'provided') {
+                        setQuestionImage(null);
+                        setQuestionImageSource(null);
+                        return;
+                      }
+
+                      if (questionImageSource !== 'fallback') {
+                        setQuestionImage(FALLBACK_QUESTION_IMAGE);
+                        setQuestionImageSource('fallback');
+                      }
+                    }}
+                  />
                 </div>
               )}
               <h2 className="flex-1 text-base font-bold leading-snug text-white sm:text-lg md:text-xl">
@@ -360,7 +395,18 @@ export default function QuizGame({
 
       {showImageModal && questionImage && (
         <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4" onClick={() => setShowImageModal(false)}>
-          <div className="relative w-full h-[70vh]"><Image src={questionImage} alt="Zoom" fill className="object-contain" unoptimized /></div>
+          <div className="relative w-full h-[70vh]"><Image src={questionImage} alt="Zoom" fill className="object-contain" unoptimized onError={() => {
+            if (questionImageSource === 'provided') {
+              setQuestionImage(null);
+              setQuestionImageSource(null);
+              return;
+            }
+
+            if (questionImageSource !== 'fallback') {
+              setQuestionImage(FALLBACK_QUESTION_IMAGE);
+              setQuestionImageSource('fallback');
+            }
+          }} /></div>
         </div>
       )}
     </div>

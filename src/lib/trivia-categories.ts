@@ -86,6 +86,21 @@ function isMissingTriviaSchemaField(error: { code?: string }) {
   return error.code === 'PGRST205' || error.code === '42703';
 }
 
+const TRIVIA_CATEGORY_IMAGE_ALIASES: Record<string, string> = {
+  transportation: 'transports',
+  'picture-clues': 'picture-clues',
+};
+
+function resolveTriviaCategoryImage(category: TriviaCategoryRecord) {
+  if (category.ogImage) {
+    return category.ogImage;
+  }
+
+  const alias = TRIVIA_CATEGORY_IMAGE_ALIASES[category.slug] || category.slug;
+
+  return `/imgs/categories/${alias}.webp`;
+}
+
 export const getTriviaCategories = cache(async (
   categoryType?: TriviaCategoryType
 ): Promise<TriviaCategoryRecord[]> => {
@@ -195,7 +210,7 @@ export async function getTriviaExplorerCards(categoryType: TriviaCategoryType = 
       longDescription: category.longDescription,
       learningPoints: category.learningPoints,
       keywords: category.keywords,
-      ogImage: category.ogImage,
+      ogImage: resolveTriviaCategoryImage(category),
       related: category.related,
       displayName: category.displayName,
     },
@@ -209,7 +224,7 @@ export function toTriviaCategoryDisplay(category: TriviaCategoryRecord) {
     longDescription: category.longDescription,
     learningPoints: category.learningPoints,
     keywords: category.keywords,
-    ogImage: category.ogImage,
+    ogImage: resolveTriviaCategoryImage(category),
     related: category.related,
     displayName: category.displayName,
     showPrintableQuizCTA: category.showPrintableQuizCTA,
