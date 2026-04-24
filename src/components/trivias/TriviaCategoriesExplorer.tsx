@@ -161,24 +161,9 @@ export default function TriviaCategoriesExplorer({ categories }: TriviaCategorie
         </p>
       </div>
 
-      {/* Mobile: Horizontal Scroll Layout */}
-      <div className="lg:hidden mb-16 overflow-hidden">
-        <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory scrollbar-hide px-4 -mx-4">
-          {filteredCategories.map(({ key, category }, index) => (
-            <div key={key} className="w-[260px] shrink-0 snap-start">
-              <CategoryCard
-                categoryKey={key}
-                category={category}
-                index={index}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Desktop: Grid Layout */}
-      <div className="hidden lg:block mb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Category Grid */}
+      <div className="mb-16">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
           {filteredCategories.map(({ key, category }, index) => (
             <CategoryCard
               key={key}

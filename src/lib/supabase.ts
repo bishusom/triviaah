@@ -904,7 +904,7 @@ export async function getSearchableItems(): Promise<SearchResult[]> {
       supabase
         .from('trivia_subcategories_view')
         .select('category, subcategory, question_count')
-        .gte('question_count', 10)
+        .gte('question_count', 30)
     ]);
 
     const results: SearchResult[] = [];

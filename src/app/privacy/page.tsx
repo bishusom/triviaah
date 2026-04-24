@@ -63,7 +63,9 @@ export default function PrivacyPage() {
                   <Eye className="text-purple-400" size={24} />
                   <h2 className="text-2xl font-bold text-white">1. Information We Collect</h2>
                 </div>
-                <p className="text-gray-300 mb-4">When you play Triviaah, we may collect:</p>
+                <p className="text-gray-300 mb-4">
+                  Triviaah does not require you to create an account or sign up to play. When you use the site, we may collect:
+                </p>
                 <ul className="list-none space-y-3">
                   <li className="flex items-center gap-3 text-gray-300">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -75,11 +77,11 @@ export default function PrivacyPage() {
                   </li>
                   <li className="flex items-center gap-3 text-gray-300">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    High score information including player names (if provided)
+                    High score or leaderboard information, including player names if you choose to submit one
                   </li>
                   <li className="flex items-center gap-3 text-gray-300">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    Analytics data via Google Analytics
+                    Analytics data via Google Analytics or similar tools
                   </li>
                 </ul>
               </section>
@@ -107,6 +109,10 @@ export default function PrivacyPage() {
                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     Ensure fair play and prevent cheating
                   </li>
+                  <li className="flex items-center gap-3 text-gray-300">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    Respond to messages or requests you send through our contact form
+                  </li>
                 </ul>
               </section>
 
@@ -116,8 +122,8 @@ export default function PrivacyPage() {
                   <h2 className="text-2xl font-bold text-white">3. Data Security</h2>
                 </div>
                 <p className="text-gray-300">
-                  We implement appropriate security measures to protect your personal information 
-                  and ensure your gaming experience remains secure and private.
+                  We implement appropriate security measures to protect the information we collect and help keep your gaming experience
+                  secure and private.
                 </p>
               </section>
 

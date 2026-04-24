@@ -64,6 +64,9 @@ export default function QuizSummary({
   const [scoreSaved, setScoreSaved] = useState(false);
   const [playerMoniker] = useState(getPersistentGuestId());
 
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const reviewRef = useRef<HTMLDivElement>(null);
+  const hasMountedRef = useRef(false);
   const saveAttemptedRef = useRef(false);
 
   const fetchHighScores = useCallback(async () => {
@@ -104,6 +107,34 @@ export default function QuizSummary({
     saveScore();
   }, [result, fetchHighScores, playerMoniker]);
 
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+
+    if (showReview) {
+      requestAnimationFrame(() => {
+        reviewRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      });
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+  }, [showReview]);
+
+  const handleReviewToggle = () => {
+    setShowReview((current) => !current);
+  };
+
   const percentage = Math.round((result.correctCount / result.totalQuestions) * 100);
   const tier =
     percentage >= 90 ? 'gold' :
@@ -114,8 +145,8 @@ export default function QuizSummary({
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8 flex flex-col items-center">
 
-      {/* ── Row 1: Results + Leaderboard ──────────────────────────────────── */}
-      <div className="w-full max-w-4xl grid lg:grid-cols-2 gap-6">
+      {/* Row 1: Results + Leaderboard */}
+      <div ref={resultsRef} className="w-full max-w-4xl grid lg:grid-cols-2 gap-6">
 
         {/* Results card */}
         <motion.div
@@ -152,10 +183,16 @@ export default function QuizSummary({
           <div className="flex flex-col gap-3 w-full">
             <div className="grid grid-cols-2 gap-3">
               <button
-                onClick={() => setShowReview(!showReview)}
+                onClick={handleReviewToggle}
                 className="bg-gray-700 py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-gray-600 transition-colors"
               >
-                <BookOpen size={20} /> {showReview ? 'GOT IT!' : 'SEE WHAT I MISSED'}
+                <BookOpen size={20} />
+                {showReview ? 'GOT IT!' : (
+                  <>
+                    <span className="sm:hidden">REVIEW</span>
+                    <span className="hidden sm:inline">REVIEW MISSED</span>
+                  </>
+                )}
               </button>
               <button className="bg-indigo-600 py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-indigo-500">
                 <Share2 size={20} /> SHARE
@@ -205,8 +242,8 @@ export default function QuizSummary({
         </motion.div>
       </div>
 
-      {/* ── Ad 1: after score reveal, before review ────────────────────────
-          Horizontal banner. High-attention position — user just saw their
+      {/* Ad 1: after score reveal, before review
+          Horizontal banner. High-attention position - user just saw their
           score and is deciding what to do next. Uses the leaderboard slot
           (you can swap to a dedicated slot once you have one).           */}
       <div className="w-full max-w-4xl mt-6">
@@ -218,10 +255,11 @@ export default function QuizSummary({
         />
       </div>
 
-      {/* ── Review section ────────────────────────────────────────────────── */}
+      {/* Review section */}
       <AnimatePresence>
         {showReview && (
           <motion.div
+            ref={reviewRef}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -229,14 +267,26 @@ export default function QuizSummary({
           >
             {result.wrongAnswers.length > 0 ? (
               result.wrongAnswers.map((item, idx) => (
-                <div key={idx} className="bg-gray-800 border border-gray-700 p-4 rounded-2xl shadow-xl">
-                  <p className="text-sm font-bold text-gray-200 mb-3">{item.question}</p>
-                  <div className="flex flex-wrap gap-3">
-                    <div className="text-xs font-bold text-red-400 bg-red-400/10 px-4 py-2 rounded-xl border border-red-400/20 flex items-center gap-2">
-                      <XCircle size={14} /> {item.userSelected}
+                <div key={idx} className="bg-slate-800/90 border border-slate-700 p-4 rounded-2xl shadow-xl">
+                  <p className="text-sm font-bold text-white mb-4 leading-relaxed">{item.question}</p>
+                  <div className="space-y-3">
+                    <div className="rounded-xl border border-rose-400/20 bg-rose-400/8 px-4 py-3">
+                      <div className="mb-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-rose-300">
+                        <XCircle size={14} />
+                        Your answer
+                      </div>
+                      <p className="text-sm font-semibold text-slate-100 leading-relaxed break-words">
+                        {item.userSelected}
+                      </p>
                     </div>
-                    <div className="text-xs font-bold text-green-400 bg-green-400/10 px-4 py-2 rounded-xl border border-green-400/20 flex items-center gap-2">
-                      <CheckCircle2 size={14} /> {item.correct}
+                    <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/8 px-4 py-3">
+                      <div className="mb-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-300">
+                        <CheckCircle2 size={14} />
+                        Correct answer
+                      </div>
+                      <p className="text-sm font-semibold text-slate-100 leading-relaxed break-words">
+                        {item.correct}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -258,7 +308,7 @@ export default function QuizSummary({
         )}
       </AnimatePresence>
 
-      {/* ── Feedback ──────────────────────────────────────────────────────── */}
+      {/* Feedback */}
       <div className="mt-8 w-full max-w-4xl">
         <FeedbackComponent
           gameType="trivia"
@@ -279,7 +329,7 @@ export default function QuizSummary({
         />
       </div>
 
-      {/* ── Previous daily quizzes (daily-trivias only) ───────────────────── */}
+      {/* Previous daily quizzes (daily-trivias only) */}
       {context === 'daily-trivias' && result.category !== 'quick-fire' && (
         <div className="mt-12 w-full max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="flex items-center justify-between mb-4 px-2">
@@ -321,7 +371,7 @@ export default function QuizSummary({
         </div>
       )}
 
-      {/* ── Ad 2: after feedback, before action buttons ────────────────────
+      {/* Ad 2: after feedback, before action buttons
           Keeps the feedback widget high enough to notice, while preserving
           the existing ad break before the final actions.                  */}
       <div className="w-full max-w-4xl mt-10">
@@ -334,7 +384,7 @@ export default function QuizSummary({
         />
       </div>
 
-      {/* ── Ad 3: above action buttons ────────────────────────────────────
+      {/* Ad 3: above action buttons
           Mobile footer style on small screens, inline on desktop.
           Last impression before the user navigates away.                */}
       <div className="w-full max-w-4xl mt-10">
@@ -346,7 +396,7 @@ export default function QuizSummary({
         />
       </div>
 
-      {/* ── Action buttons ────────────────────────────────────────────────── */}
+      {/* Action buttons */}
       <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
         {context === 'trivias' &&
           result.category !== 'quick-fire' &&

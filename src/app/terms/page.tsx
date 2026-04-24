@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, FileText, Scale, GamepadIcon, Users, Shield } from 'lucide-react';
+import { FileText, Scale, GamepadIcon, Users, Shield } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Terms of Service | Triviaah',
@@ -42,17 +42,6 @@ export default function TermsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <div className="container mx-auto px-4 py-12">
-        {/* Navigation */}
-        <nav className="mb-8">
-          <Link 
-            href="/" 
-            className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
-          >
-            <ArrowLeft size={20} />
-            Back to Home
-          </Link>
-        </nav>
-
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
@@ -83,31 +72,17 @@ export default function TermsPage() {
                 </p>
               </section>
 
-              {/* User Accounts */}
+              {/* No Account Required */}
               <section className="mb-8 p-6 bg-gray-700/30 rounded-xl border border-gray-600">
                 <div className="flex items-center gap-3 mb-4">
                   <Users className="text-blue-400" size={24} />
-                  <h2 className="text-2xl font-bold text-white">2. User Accounts</h2>
+                  <h2 className="text-2xl font-bold text-white">2. No Account Required</h2>
                 </div>
-                <p className="text-gray-300 mb-4">When creating an account with Triviaah, you agree to:</p>
-                <ul className="list-none space-y-3">
-                  <li className="flex items-center gap-3 text-gray-300">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    Provide accurate and complete information
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    Maintain the security of your password
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    Accept responsibility for all activities under your account
-                  </li>
-                  <li className="flex items-center gap-3 text-gray-300">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    Not share accounts or use others&apos; accounts without permission
-                  </li>
-                </ul>
+                <p className="text-gray-300">
+                  Triviaah is free to play and does not require you to create an account or sign up to access the game experience.
+                  If we ever offer optional account-based features in the future, any additional terms for those features will apply only
+                  to the users who choose to use them.
+                </p>
               </section>
 
               {/* Game Rules */}
@@ -128,7 +103,7 @@ export default function TermsPage() {
                   </li>
                   <li className="flex items-center gap-3 text-gray-300">
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    Create multiple accounts to manipulate leaderboards
+                    Manipulate scores, rankings, or results through unfair means
                   </li>
                   <li className="flex items-center gap-3 text-gray-300">
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
@@ -175,9 +150,8 @@ export default function TermsPage() {
               <section className="mb-8 p-6 bg-gray-700/30 rounded-xl border border-gray-600">
                 <h2 className="text-2xl font-bold text-white mb-4">6. Termination</h2>
                 <p className="text-gray-300">
-                  We reserve the right to terminate or suspend your account and access to our services 
-                  at our sole discretion, without notice, for conduct that we believe violates these 
-                  Terms of Service or is harmful to other users, us, or third parties.
+                  We reserve the right to restrict or suspend access to our services at our sole discretion, without notice, for conduct
+                  that we believe violates these Terms of Service or is harmful to other users, us, or third parties.
                 </p>
               </section>
 
@@ -195,9 +169,8 @@ export default function TermsPage() {
               <section className="p-6 bg-gray-700/30 rounded-xl border border-gray-600">
                 <h2 className="text-2xl font-bold text-white mb-4">8. Changes to Terms</h2>
                 <p className="text-gray-300">
-                  We reserve the right to modify these terms at any time. We will notify users of 
-                  significant changes through our platform or via email. Continued use of our 
-                  services after changes constitutes acceptance of the new terms.
+                  We reserve the right to modify these terms at any time. We will notify users of significant changes through our
+                  platform. Continued use of our services after changes constitutes acceptance of the new terms.
                 </p>
               </section>
 

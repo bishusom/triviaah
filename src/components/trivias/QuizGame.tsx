@@ -285,36 +285,39 @@ export default function QuizGame({
         )}
       </AnimatePresence>
 
-      <div className="flex justify-between items-center mb-2">
-        <button onClick={toggleFullScreen} className="p-2 bg-gray-700 rounded-lg text-white hover:bg-gray-600">
+      <div className="mb-2 flex items-start justify-between gap-2 sm:items-center">
+        <button
+          onClick={toggleFullScreen}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-700 text-white hover:bg-gray-600 sm:h-auto sm:w-auto sm:p-2"
+        >
           {isFullScreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
         </button>
       </div>
 
       {gameStarted && currentQuestion && (
         <>
-          <div className="flex justify-between items-center mb-3 p-2 bg-blue-600 rounded-lg text-white font-bold text-xs sm:text-sm">
-            <span className="flex items-center gap-1">
+          <div className="mb-3 flex flex-col gap-2 rounded-lg bg-blue-600 p-3 text-white font-bold text-xs sm:flex-row sm:items-center sm:justify-between sm:p-2 sm:text-sm">
+            <span className="flex items-center gap-1 text-[11px] sm:text-xs">
               {showBonusQuestion ? 'BONUS ⚡' : `Q${currentIndex + 1}/${regularQuestions.length + (bonusQuestion ? 1 : 0)}`}
-              {streak > 1 && <span className="ml-2 px-2 bg-orange-500 rounded-full flex items-center gap-1 animate-bounce text-[10px]"><Flame size={10} /> {streak}</span>}
+              {streak > 1 && <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-orange-500 px-2 py-0.5 text-[10px] animate-bounce"><Flame size={10} /> {streak}</span>}
             </span>
-            <div className="flex gap-3 items-center">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 sm:justify-end">
               <span className={timeLeft <= 5 ? "text-red-300 animate-pulse" : ""}>⏱ {timeLeft}s</span>
-              <div className="flex items-center gap-1 bg-black/20 px-2 py-0.5 rounded border border-white/10">
+              <div className="inline-flex items-center gap-1 rounded border border-white/10 bg-black/20 px-2 py-0.5">
                 <span>Score: <CountUp end={score} /></span>
                 {streak > 1 && <span className="text-yellow-400 text-[10px]"><Zap size={10} className="inline" /> {(1 + streak * 0.1).toFixed(1)}x</span>}
               </div>
             </div>
           </div>
 
-          <motion.div key={currentQuestion.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-gray-800 border border-gray-600 p-3 sm:p-4 rounded-xl mb-3">
-            <div className={`flex flex-col sm:flex-row gap-4 ${questionImage ? 'items-start' : 'items-center justify-center text-center'}`}>
+          <motion.div key={currentQuestion.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-3 rounded-xl border border-gray-600 bg-gray-800 p-3 sm:p-4">
+            <div className={`flex flex-col gap-4 sm:flex-row ${questionImage ? 'items-start' : 'items-center justify-center text-center'}`}>
               {questionImage && (
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 mx-auto sm:mx-0">
                   <Image src={questionImage} alt="Quiz" fill className="object-cover rounded-lg border-2 border-cyan-500/20" unoptimized onClick={() => setShowImageModal(true)} />
                 </div>
               )}
-              <h2 className="text-base sm:text-lg md:text-xl font-bold text-white leading-tight flex-1">
+              <h2 className="flex-1 text-base font-bold leading-snug text-white sm:text-lg md:text-xl">
                 {currentQuestion.question}
               </h2>
             </div>

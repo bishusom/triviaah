@@ -7,7 +7,7 @@ import Ads from '@/components/common/Ads';
 import DailyTriviaFact from './sections/DailyTriviaFact';
 import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, WORD_GAMES, NUMBER_PUZZLES } from '@/config/homeContent';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// Types
 interface HomeTriviaCategory {
   title: string;
   description?: string;
@@ -154,11 +154,11 @@ function GameGallerySection({
   );
 }
 
-// ─── Main export ──────────────────────────────────────────────────────────────
+// Main export
 export default function HomePageContent({ featuredTriviaCategories }: HomePageContentProps) {
-  // Daily Trivia items — pull first 3 from config
+  // Daily Trivia items - pull first 3 from config
   const dailyItems = DAILY_QUIZZES.slice(0, 3);
-  // Daily Puzzle items — pull first 3 from config
+  // Daily Puzzle items - pull first 3 from config
   const brainItems = BRAIN_WAVES.slice(0, 3);
   const displayCategories = featuredTriviaCategories.map(({ key, category }) => ({
     key,
@@ -172,13 +172,13 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
       className="min-h-screen text-white overflow-x-hidden"
       style={{ background: '#000' }}
     >
-      {/* ── Page body ────────────────────────────────────────────────────── */}
+        {/* Page body */}
       <main className="pb-16 px-4 md:px-6 lg:px-8 max-w-[1400px] mx-auto">
-        <div className="mb-4 hidden md:flex w-full justify-center">
-          <Ads format="fluid" style={{ width: '100%', maxWidth: '1200px', height: '60px' }} />
+        <div className="mb-4 flex w-full justify-center">
+          <Ads format="fluid" style={{ width: '100%', maxWidth: '1200px', height: '90px' }} />
         </div>
 
-        {/* ── High-Density Bento Hero Hub ────────────────────────────────── */}
+        {/* High-Density Bento Hero Hub */}
         <div className="grid w-full gap-4 mt-2 md:grid-cols-12 md:grid-rows-2 md:h-[600px]">
           
           {/* Main Hero Panel - Span 8 columns, 2 rows on desktop */}
@@ -244,7 +244,7 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
           </div>
         </div>
 
-        {/* ── Main Content Grid ─────────────────────────────────────────── */}
+        {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
           
           {/* TOP ROW: Content Cards + Top Scores */}
@@ -277,9 +277,9 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
           </div>
         </div>
 
-        {/* ── Center Column: Ads + Daily Insight ─────────────────────────── */}
+        {/* Center Column: Ads + Daily Insight */}
         <div className="mt-8 space-y-8">
-          <div className="hidden lg:block w-full">
+          <div className="w-full">
             <Ads format="fluid" style={{ width: '100%', height: '120px' }} />
           </div>
           
@@ -300,11 +300,11 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
         </div>
 
         {/* Ad Break before Categories */}
-        <div className="mt-12 hidden lg:block w-full">
+        <div className="mt-12 w-full">
           <Ads format="fluid" style={{ width: '100%', height: '120px' }} />
         </div>
 
-        {/* ── Featured Categories strip ─────────────────────────────────── */}
+        {/* Featured Categories strip */}
         <section className="mt-12">
           <div 
             className="rounded-3xl p-6 md:p-8"
@@ -346,7 +346,7 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
         </section>
       </main>
 
-      {/* ── Footer (unchanged from original) ─────────────────────────────── */}
+      {/* Footer (unchanged from original) */}
       <Footer />
 
       <style jsx global>{`
@@ -357,7 +357,7 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
   );
 }
 
-// ─── Mini Content Card (for Bento Hero) ──────────────────────────────────
+// Mini Content Card (for Bento Hero)
 function MiniContentCard({
   title,
   items,
@@ -435,7 +435,7 @@ function MiniContentCard({
   );
 }
 
-// ─── Reusable content card (Trivia / Puzzles) ─────────────────────────────────
+// Reusable content card (Trivia / Puzzles)
 interface TriviaItem {
   id?: string | number;
   title?: string;

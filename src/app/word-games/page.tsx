@@ -329,21 +329,9 @@ export default async function WordGamesPage() {
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
 
-          {/* Mobile: Horizontal Scroll Layout */}
-          <div className="lg:hidden mb-16 overflow-hidden">
+          <div className="mb-16">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">All Word Games</h2>
-            <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory scrollbar-hide px-4 -mx-4">
-              {wordGames.map((game, index) => (
-                <div key={game.route_path} className="w-[260px] shrink-0 snap-start">
-                  <GameCard game={game} index={index} />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Desktop: Grid Layout */}
-          <div className="hidden lg:block mb-16">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
               {wordGames.map((game, index) => (
                 <GameCard key={game.route_path} game={game} index={index} />
               ))}

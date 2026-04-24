@@ -128,10 +128,10 @@ function PuzzleCard({ puzzle, index }: { puzzle: Puzzle; index: number }) {
       
       {/* Puzzle Content */}
       <div className="p-6 relative z-10">
-        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-cyan-300 transition-colors">
+        <h3 className="min-h-[4.5rem] text-lg font-bold leading-tight text-white mb-2 line-clamp-3 group-hover:text-cyan-300 transition-colors sm:min-h-[5.5rem]">
           {puzzle.name}
         </h3>
-        <p className="text-sm text-gray-300 line-clamp-2">
+        <p className="min-h-[3rem] text-sm leading-relaxed text-gray-300 line-clamp-2 sm:min-h-[3.5rem]">
           {puzzle.tagline}
         </p>
         
@@ -207,21 +207,10 @@ export default async function DailyQuizzesPage() {
           <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
         </div>
 
-        {/* Mobile: Horizontal Scroll Layout */}
-        <div className="lg:hidden mb-16 overflow-hidden">
+        {/* Puzzle Grid */}
+        <div className="mb-16">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">All Brainwave Games</h2>
-          <div className="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory scrollbar-hide px-4 -mx-4">
-            {dailyPuzzles.map((puzzle, index) => (
-              <div key={puzzle.category} className="w-[260px] shrink-0 snap-start">
-                <PuzzleCard puzzle={puzzle} index={index} />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Desktop: Grid Layout */}
-        <div className="hidden lg:block mb-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
             {dailyPuzzles.map((puzzle, index) => (
               <PuzzleCard key={puzzle.category} puzzle={puzzle} index={index} />
             ))}
