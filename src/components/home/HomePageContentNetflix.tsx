@@ -1,5 +1,4 @@
 'use client';
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import NavBar from './NavBar';
@@ -8,10 +7,7 @@ import { NetflixRow } from './sections/NetflixRow';
 import Footer from './Footer';
 import Ads from '@/components/common/Ads';
 import DailyTriviaFact from './sections/DailyTriviaFact';
-import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, WORD_GAMES, NUMBER_PUZZLES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
-import { GuestSessionManager } from '@/hooks/guestSession';
-import { getGuestStats } from '@/lib/guestStats';
-import { getPersistentGuestId } from '@/lib/guestId';
+import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, WORD_GAMES, NUMBER_PUZZLES } from '@/config/homeContent';
 
 interface HomeTriviaCategory {
   title: string;
@@ -29,14 +25,6 @@ interface HomePageContentProps {
   }>;
 }
 
-interface WelcomeState {
-  username: string;
-  gamesPlayed: number;
-  lastPlayed: string;
-  recentHref?: string;
-  recentTitle?: string;
-}
-
 const getIconForCategory = (categoryName: string) => {
   const iconMap: Record<string, string> = {
     arts: '🎨',
@@ -51,7 +39,7 @@ const getIconForCategory = (categoryName: string) => {
     food: '🍔',
     business: '💵',
     'video-games': '🎮',
-    animals: '🐾',
+    animals: '🐅',
     'famous-quotes': '✏️',
   };
 
@@ -78,33 +66,6 @@ const getColorForCategory = (categoryName: string) => {
 };
 
 export default function HomePageContent({ featuredTriviaCategories }: HomePageContentProps) {
-  const [welcomeState, setWelcomeState] = useState<WelcomeState | null>(null);
-
-  useEffect(() => {
-    const session = new GuestSessionManager().getSession();
-    const stats = getGuestStats();
-    const guestAlias = getPersistentGuestId();
-
-    if (!stats.gamesPlayed && !stats.lastPlayed && stats.recentQuizzes.length === 0) {
-      return;
-    }
-
-    const recentQuiz = stats.recentQuizzes[0];
-    const sessionName = session.username || '';
-    const preferredName =
-      sessionName && !/^Guest[a-z0-9]+$/i.test(sessionName)
-        ? sessionName
-        : guestAlias;
-
-    setWelcomeState({
-      username: preferredName || 'there',
-      gamesPlayed: stats.gamesPlayed || 0,
-      lastPlayed: stats.lastPlayed || '',
-      recentHref: recentQuiz?.href,
-      recentTitle: recentQuiz?.title,
-    });
-  }, []);
-
   const displayCategories = featuredTriviaCategories.map(({ key, category }) => ({
     key,
     category,
@@ -118,16 +79,13 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
       
       <main className="flex flex-col">
         {/* Top Ad Slot */}
-        <div className="w-full pt-24 pb-4 bg-black/20 flex justify-center">
+        <div className="mt-[65px] flex w-full justify-center bg-black/20 pb-1 md:mt-[73px] md:pb-4">
           <Ads format="fluid" style={{ width: '100%', maxWidth: '1200px', height: '90px' }} />
         </div>
 
         <Billboard />
 
-        {/* FIX: Changed -mt-48 to -mt-24 to prevent overlap with Billboard text/buttons.
-            Added pt-10 to give the first row some breathing room.
-        */}
-        <div className="relative z-20 -mt-24 md:-mt-32 pt-10 space-y-12 pb-24 bg-gradient-to-t from-[#141414] via-[#141414]/95 to-transparent">
+        <div className="relative z-20 -mt-14 pt-4 space-y-6 pb-16 bg-gradient-to-t from-[#141414] via-[#141414]/95 to-transparent md:-mt-32 md:pt-10 md:space-y-12 md:pb-24">
           
           <NetflixRow title="Daily Quizzes - Updated 24 hours" items={DAILY_QUIZZES} sectionHref="/daily-trivias" />
 
@@ -198,16 +156,16 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
             </div>
           </section>
 
-          <NetflixRow title="Retro Classics" items={RETRO_GAMES} sectionHref="/retro-games" />
-
           <NetflixRow title="Word Games" items={WORD_GAMES} sectionHref="/word-games" />
 
           <NetflixRow title="Number Puzzles" items={NUMBER_PUZZLES} sectionHref="/number-puzzles" />
 
-          <NetflixRow title="IQ & Personality Tests" items={IQ_PERSONALITY_TESTS} sectionHref="/iq-and-personality-tests" />
+          <NetflixRow title="Retro Classics" items={RETRO_GAMES} sectionHref="/retro-games" />
         </div>
       </main>
-
+      <div className="px-4 md:px-12">
+        <Ads format="fluid" style={{ width: '100%', height: '120px' }} />
+      </div>            
       <Footer />
     </div>
   );

@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/Triviaah-og.webp',
+        url: '/imgs/triviaah-og.webp',
         width: 1200,
         height: 630,
         alt: 'Triviaah - Free Daily Trivia & Quiz Games'
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Triviaah: Free Daily Trivia & Quiz Games',
     description: 'Play free daily trivia challenges across 20+ categories. New questions every 24 hours!',
-    images: ['/imgs/Triviaah-og.webp'],
+    images: ['/imgs/triviaah-og.webp'],
   },
 };
 

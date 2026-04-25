@@ -342,9 +342,9 @@ export const NetflixRow = ({ title, items, sectionHref = '#' }: NetflixRowProps)
         }
       `}</style>
       {/* Row Header */}
-      <div className="flex items-center mb-2 px-8 md:px-12">
+      <div className="mb-1 flex items-center px-4 md:mb-2 md:px-12">
         <Link href={sectionHref} className="group/title flex items-center gap-2">
-          <h2 className="text-lg md:text-2xl font-black tracking-tight bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent group-hover/title:opacity-80 transition-opacity">
+          <h2 className="text-base font-black tracking-tight bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent transition-opacity group-hover/title:opacity-80 md:text-2xl">
             {title}
           </h2>
           <ChevronRight className="w-5 h-5 text-cyan-500 opacity-0 -translate-x-2 group-hover/title:opacity-100 group-hover/title:translate-x-0 transition-all" />
@@ -390,7 +390,7 @@ export const NetflixRow = ({ title, items, sectionHref = '#' }: NetflixRowProps)
         {/* Cards */}
         <div
           ref={scrollRef}
-          className="flex gap-3.5 overflow-x-auto px-4 sm:px-6 md:px-12 no-scrollbar scroll-smooth py-2"
+          className="no-scrollbar flex gap-2 overflow-x-auto px-4 py-1 scroll-smooth sm:gap-3 sm:px-6 md:gap-3.5 md:px-12 md:py-2"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {items.map((item, i) => {
@@ -400,7 +400,7 @@ export const NetflixRow = ({ title, items, sectionHref = '#' }: NetflixRowProps)
             return (
               <div
                 key={key}
-                className="flex-none relative w-[80vw] max-w-[300px] sm:w-56 md:w-72 group/item"
+                className="group/item relative w-[44vw] max-w-[180px] flex-none sm:w-48 sm:max-w-none md:w-72"
                 onMouseEnter={(e) => handleMouseEnter(key, item, e.currentTarget)}
                 onMouseLeave={handleMouseLeave}
               >
@@ -415,8 +415,8 @@ export const NetflixRow = ({ title, items, sectionHref = '#' }: NetflixRowProps)
                       className="w-full h-full object-cover brightness-90"
                       draggable={false}
                     />
-                    <div className="absolute inset-0 p-3 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent">
-                      <p className="text-white font-bold text-xs md:text-sm line-clamp-1">
+                    <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent p-2 md:p-3">
+                      <p className="line-clamp-1 text-[11px] font-bold text-white md:text-sm">
                         {item.title || item.name}
                       </p>
                     </div>

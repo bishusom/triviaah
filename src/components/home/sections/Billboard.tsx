@@ -63,7 +63,7 @@ export default function Billboard() {
   const current = BILLBOARD_DATA[index];
 
   return (
-    <div className="relative h-[75vh] md:h-[85vh] w-full overflow-hidden bg-black">
+    <div className="relative h-[52vh] min-h-[390px] w-full overflow-hidden bg-black sm:h-[58vh] md:h-[85vh]">
       {/* Background Layer with Cross-Fade */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -86,7 +86,7 @@ export default function Billboard() {
       </AnimatePresence>
 
       {/* Content Overlay */}
-      <div className="absolute top-[35%] left-8 md:left-16 max-w-2xl z-10">
+      <div className="absolute bottom-14 left-4 right-4 z-10 max-w-xl md:top-[35%] md:bottom-auto md:left-16 md:right-auto md:max-w-2xl">
         <AnimatePresence mode="wait">
           <motion.div
             key={current.id}
@@ -95,30 +95,30 @@ export default function Billboard() {
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex items-center gap-2 mb-4">
+            <div className="mb-2 flex items-center gap-2 md:mb-4">
               <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">
                 Featured
               </span>
             </div>
 
-            <h2 className="text-5xl md:text-7xl font-black text-white mb-3 leading-none tracking-tighter italic">
+            <h2 className="mb-2 text-3xl font-black leading-none tracking-tighter text-white italic sm:text-4xl md:mb-3 md:text-7xl">
               {current.title}
             </h2>
             
-            <p className="text-lg md:text-xl text-gray-200 mb-8 drop-shadow-lg max-w-lg leading-relaxed">
+            <p className="mb-4 line-clamp-2 max-w-lg text-sm leading-snug text-gray-200 drop-shadow-lg md:mb-8 md:text-xl md:leading-relaxed">
               {current.description}
             </p>
 
-            <div className="flex gap-4">
+            <div className="flex gap-2 sm:gap-3 md:gap-4">
               <Link 
                 href={current.link}
-                className="bg-white text-black px-8 py-2.5 rounded-md font-bold hover:bg-white/80 flex items-center gap-2 transition-transform active:scale-95"
+                className="flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-bold text-black transition-transform hover:bg-white/80 active:scale-95 md:px-8 md:py-2.5 md:text-base"
               >
                 <span>▶</span> Play Now
               </Link>
               <Link 
                 href="/trivias"
-                className="bg-gray-500/40 text-white px-8 py-2.5 rounded-md font-bold backdrop-blur-md hover:bg-gray-500/60"
+                className="rounded-md bg-gray-500/40 px-4 py-2 text-sm font-bold text-white backdrop-blur-md hover:bg-gray-500/60 md:px-8 md:py-2.5 md:text-base"
               >
                 Browse Categories
               </Link>
@@ -128,7 +128,7 @@ export default function Billboard() {
       </div>
 
       {/* Slide Indicators (Small bars at bottom-right) */}
-      <div className="absolute bottom-24 right-8 md:right-16 flex gap-2 z-30">
+      <div className="absolute bottom-6 right-4 z-30 flex gap-2 md:bottom-24 md:right-16">
         {BILLBOARD_DATA.map((_, i) => (
           <div 
             key={i}

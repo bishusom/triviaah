@@ -216,7 +216,7 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
                   className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] text-white transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-blue-600/30"
                   style={{ background: 'linear-gradient(90deg, #2563eb 0%, #3b82f6 100%)' }}
                 >
-                  Play Daily Challenges
+                  Play Daily Challenge
                   <Zap className="w-4 h-4" />
                 </Link>
               </div>

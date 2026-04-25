@@ -302,10 +302,10 @@ function StructuredData({ categories }: StructuredDataProps) {
         },
         "primaryImageOfPage": {
           "@type": "ImageObject",
-          "url": "https://triviaah.com/imgs/trivia-categories-og.webp",
+          "url": "https://triviaah.com/imgs/triviaah-og.webp",
           "width": 1200,
           "height": 630
-        }
+        } 
       },
       {
         "@type": "WebSite",
