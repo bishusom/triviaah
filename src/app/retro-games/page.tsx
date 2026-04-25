@@ -5,6 +5,8 @@ import { Play, Boxes, Star, Clock, Users, Gamepad2, Zap, Target, Trophy, History
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
 import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
+import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
+import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
 
 export const metadata: Metadata = {
   title: 'Retro Games Collection - Free Classic Arcade Games | Triviaah',
@@ -288,6 +290,7 @@ export default async function RetroGamesPage() {
   const allRows = await getGamePagesBySection('retro-games');
   const retroGames = allRows.filter((r) => r.route_path !== '/retro-games');
   const currentDate = new Date();
+  const heroDescription = 'Relive the golden age of gaming with free classic retro games including Minesweeper, Tetris, Pong, Snake, Breakout, Pac-Man, Space Invaders, and Tic Tac Toe. Enjoy timeless arcade, puzzle, strategy, and reflex challenges optimized for modern mobile and desktop play.';
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
@@ -310,11 +313,17 @@ export default async function RetroGamesPage() {
                   </h1>
                 </div>
               </div>
-              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
-                Relive the golden age of gaming with our collection of classic retro games. 
-                Experience timeless gameplay optimized for modern devices.
-              </p>
-              <div className="mt-4">
+              <MobileExpandableDescription className="max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
+                {heroDescription}
+              </MobileExpandableDescription>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <ScrollToSectionButton
+                  targetId="retro-games-grid"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-red-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-amber-900/20 transition-all hover:-translate-y-0.5 hover:shadow-amber-900/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:w-auto"
+                >
+                  <Play className="h-4 w-4" />
+                  Browse Retro Games
+                </ScrollToSectionButton>
                 <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5 inline-block">
                   Last Updated: {currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </p>
@@ -353,7 +362,7 @@ export default async function RetroGamesPage() {
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
 
-          <div className="mb-16">
+          <div id="retro-games-grid" className="mb-16 scroll-mt-6">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">All Retro Games</h2>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
               {retroGames.map((game, index) => (

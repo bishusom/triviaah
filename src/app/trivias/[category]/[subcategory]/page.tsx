@@ -7,6 +7,7 @@ import { getEnrichedSubcategoriesWithMinQuestions } from '@/lib/supabase';
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
 import { buildMetaDescription } from '@/lib/seo';
 import { getTriviaCategoryBySlug } from '@/lib/trivia-categories';
+import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
 
 const MIN_SUBCATEGORY_QUESTIONS = 30;
 
@@ -134,6 +135,7 @@ export default async function SubcategoryPage({
 
   const { activeSubcategory, siblingSubcategories } = context;
   const activeSubcategoryDescription = getSubcategoryDescription(activeSubcategory, categoryData.title);
+  const heroDescription = `${activeSubcategoryDescription} Start with this subtopic hub, then jump into a focused quiz with ${activeSubcategory.question_count}+ questions from the ${categoryData.title.toLowerCase()} category.`;
   const pageTitle = `${activeSubcategory.subcategory} in ${categoryData.title} Trivia`;
   const relatedCategories = await Promise.all((categoryData.related || [])
     .slice(0, 6)
@@ -178,7 +180,7 @@ export default async function SubcategoryPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
 
-        <div className="rounded-3xl border border-cyan-500/20 bg-gray-900/60 p-8 md:p-12">
+        <div className="rounded-3xl border border-cyan-500/20 bg-gray-900/60 p-5 md:p-12">
           <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400">
             <Link href="/trivias" className="hover:text-cyan-400 transition-colors">Trivia Categories</Link>
             <span>/</span>
@@ -191,15 +193,31 @@ export default async function SubcategoryPage({
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-400">
               Topic Page
             </p>
-            <h1 className="mt-3 text-4xl md:text-5xl font-black text-white">
+            <h1 className="mt-3 text-3xl font-black text-white md:text-5xl">
               {pageTitle}
             </h1>
-            <p className="mt-5 text-lg text-gray-300">
-              {activeSubcategoryDescription} Start with this subtopic hub, then jump into a focused quiz with {activeSubcategory.question_count}+ questions from the {categoryData.title.toLowerCase()} category.
-            </p>
+            <MobileExpandableDescription className="mt-5 text-base leading-relaxed text-gray-300 md:text-lg">
+              {heroDescription}
+            </MobileExpandableDescription>
           </div>
 
-          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row md:mt-10">
+            <Link
+              href={quizHref}
+              className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 px-8 py-4 text-base font-bold text-white transition-transform hover:scale-[1.02]"
+            >
+              Play {activeSubcategory.subcategory} Quiz
+              <Play className="ml-2 h-4 w-4" />
+            </Link>
+            <Link
+              href={`/trivias/${category}`}
+              className="inline-flex items-center justify-center rounded-2xl border border-gray-600 bg-gray-800 px-8 py-4 text-base font-semibold text-white transition-colors hover:border-cyan-500/40 hover:text-cyan-300"
+            >
+              Back to {categoryData.title}
+            </Link>
+          </div>
+
+          <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
             <div className="rounded-2xl border border-gray-700 bg-gray-800/80 p-4 text-center">
               <Trophy className="mx-auto mb-2 text-cyan-400" />
               <div className="text-xl font-bold text-white">{activeSubcategory.question_count}+</div>
@@ -220,22 +238,6 @@ export default async function SubcategoryPage({
               <div className="text-xl font-bold text-white">Direct</div>
               <div className="text-sm text-gray-400">Quiz Access</div>
             </div>
-          </div>
-
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <Link
-              href={quizHref}
-              className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 px-8 py-4 text-base font-bold text-white transition-transform hover:scale-[1.02]"
-            >
-              Play {activeSubcategory.subcategory} Quiz
-              <Play className="ml-2 h-4 w-4" />
-            </Link>
-            <Link
-              href={`/trivias/${category}`}
-              className="inline-flex items-center justify-center rounded-2xl border border-gray-600 bg-gray-800 px-8 py-4 text-base font-semibold text-white transition-colors hover:border-cyan-500/40 hover:text-cyan-300"
-            >
-              Back to {categoryData.title}
-            </Link>
           </div>
         </div>
 

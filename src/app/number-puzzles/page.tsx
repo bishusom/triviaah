@@ -5,6 +5,8 @@ import { Play, Boxes, Star, Clock, Users } from 'lucide-react';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
 import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
+import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
+import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
 
 export const metadata: Metadata = {
   title: 'Number Puzzles Collection | Free Math Games & Brain Teasers | Triviaah',
@@ -277,6 +279,7 @@ export default async function NumberPuzzlesPage() {
   const allRows = await getGamePagesBySection('number-puzzles');
   const numberPuzzles = allRows.filter((r) => r.route_path !== '/number-puzzles');
   const currentDate = new Date();
+  const heroDescription = 'Challenge your math skills with our free number puzzles, including 2048, Number Tower, Prime Hunter, Number Sequence, Sudoku, Kakuro, KenKen, and Number Bonds. Practice arithmetic, pattern recognition, logic, and problem-solving through quick puzzles designed for mobile and desktop play.';
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
@@ -299,11 +302,17 @@ export default async function NumberPuzzlesPage() {
                   </h1>
                 </div>
               </div>
-              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
-                Challenge your math skills with our exciting collection of free number puzzles
-                designed to improve logical thinking, arithmetic, and problem-solving abilities.
-              </p>
-              <div className="mt-4">
+              <MobileExpandableDescription className="max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
+                {heroDescription}
+              </MobileExpandableDescription>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <ScrollToSectionButton
+                  targetId="number-puzzles-grid"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-purple-900/20 transition-all hover:-translate-y-0.5 hover:shadow-purple-900/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-300 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 sm:w-auto"
+                >
+                  <Play className="h-4 w-4" />
+                  Browse Number Puzzles
+                </ScrollToSectionButton>
                 <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5 inline-block">
                   Last Updated: {currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </p>
@@ -337,7 +346,7 @@ export default async function NumberPuzzlesPage() {
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
             
-          <div className="mb-16">
+          <div id="number-puzzles-grid" className="mb-16 scroll-mt-6">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">All Number Puzzles</h2>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
               {numberPuzzles.map((puzzle, index) => (

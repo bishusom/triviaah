@@ -225,7 +225,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         {/* Subcategories Section */}
         {subcategories.length > 0 && (
           <div className="mb-16">
-            <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">Choose Your <span className="text-cyan-400">Challenge</span></h2>
+            <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter"><span className="text-cyan-400">Or</span> Choose Your <span className="text-cyan-400">Challenge</span></h2>
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 auto-rows-fr">
               {subcategories.map((subcat, index) => {
                 const variant = getSubcategoryCardVariant(index);

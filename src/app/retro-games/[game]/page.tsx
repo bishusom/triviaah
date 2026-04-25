@@ -119,6 +119,7 @@ export default async function RetroGamePage({
           introText={page.intro_text}
           landingImage={page.og_image || routeDefinition.ogImage || DEFAULT_OG_IMAGE}
           playLabel={page.cta_label}
+          mobilePlayLabel="Play"
           playNotes={page.play_notes}
           readyLabel={page.hero_label ?? 'Ready when you are'}
           supportingCopy={page.supporting_copy}

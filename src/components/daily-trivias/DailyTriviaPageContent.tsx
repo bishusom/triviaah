@@ -8,6 +8,7 @@ import { StructuredData } from '@/app/daily-trivias/[category]/structured-data';
 import type { Question } from '@/lib/supabase';
 import type { TriviaCategoryFaqItem, TriviaCategoryRecord } from '@/lib/trivia-categories';
 import { LandingStructuredData } from './LandingStructuredData';
+import { MobileExpandableDescription } from './MobileExpandableDescription';
 
 type QuizConfig = {
   isQuickfire: boolean;
@@ -108,10 +109,10 @@ export function DailyTriviaPageContent({
 
         {showIntro && (
           <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-800/60 bg-gradient-to-br from-slate-900/90 via-slate-900/50 to-black/90 backdrop-blur-sm shadow-2xl">
-            <div className="relative grid gap-8 p-6 sm:p-8 lg:grid-cols-[0.82fr_1.18fr] lg:p-10">
-              <div className="relative flex flex-col items-center justify-start">
+            <div className="relative grid gap-6 p-5 sm:p-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-8 lg:p-10">
+              <div className="relative order-2 flex flex-col items-center justify-start lg:order-1">
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/18 via-cyan-500/10 to-transparent blur-3xl" />
-                <div className="relative w-full max-w-[240px] overflow-hidden rounded-[1.5rem] border border-cyan-400/20 bg-gradient-to-br from-slate-800 to-slate-950 p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
+                <div className="relative w-full max-w-[180px] overflow-hidden rounded-[1.5rem] border border-cyan-400/20 bg-gradient-to-br from-slate-800 to-slate-950 p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.4)] sm:max-w-[240px]">
                   <div className="relative aspect-square overflow-hidden rounded-[1.2rem] border border-white/10 bg-slate-950/80">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_25%,rgba(96,165,250,0.18),transparent_34%),radial-gradient(circle_at_70%_30%,rgba(34,211,238,0.16),transparent_30%),radial-gradient(circle_at_50%_75%,rgba(139,92,246,0.12),transparent_36%)]" />
                     <Image
@@ -140,8 +141,8 @@ export function DailyTriviaPageContent({
                 </div>
               </div>
 
-              <div className="relative z-10 flex flex-col justify-center">
-                <div className="mb-4 flex items-center gap-2">
+              <div className="relative z-10 order-1 flex flex-col justify-center lg:order-2">
+                <div className="mb-3 flex items-center gap-2 sm:mb-4">
                   <Sparkles className="h-4 w-4 text-blue-400" />
                   <p className="text-xs font-medium uppercase tracking-wider text-blue-300/90">
                     Daily Challenge
@@ -153,14 +154,14 @@ export function DailyTriviaPageContent({
                     Daily Quiz
                   </span>
                 </h1>
-                <p className="mt-4 max-w-2xl text-base leading-relaxed text-gray-300 sm:text-lg">
+                <MobileExpandableDescription className="mt-4 max-w-2xl text-base leading-relaxed text-gray-300 sm:text-lg">
                   {cfg.longDescription}
-                </p>
+                </MobileExpandableDescription>
                 <p className="mt-3 max-w-2xl text-sm leading-relaxed text-gray-400/80">
                   Fresh questions every day. Play instantly - no signup required.
                 </p>
 
-                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <div className="mt-5 flex flex-col gap-3 sm:mt-8 sm:flex-row">
                   <Link
                     href={playHref}
                     className="group inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-600/30 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"

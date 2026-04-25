@@ -6,6 +6,8 @@ import Image from 'next/image';
 import Ads from '@/components/common/Ads';
 import { Play, Boxes, Clock, Users, Calendar } from 'lucide-react';
 import Timer from '@/components/daily/dailyQuizTimer';
+import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
+import { ScrollToDailyCategoriesButton } from '@/components/daily-trivias/ScrollToDailyCategoriesButton';
 import { getTriviaCategories, type TriviaCategoryRecord } from '@/lib/trivia-categories';
 
 export const metadata: Metadata = {
@@ -134,6 +136,7 @@ export default async function DailyQuizzesPage() {
   const dailyCategories = await getTriviaCategories('daily-trivias');
   const dailyQuizzes = dailyCategories.map(categoryToDailyQuizCard);
   const lastUpdated = new Date();
+  const heroDescription = 'Fresh challenges every 24 hours. Play our free daily trivia quizzes across history, sports, science, geography, entertainment, arts, literature, and pop culture. Pick a category, answer 10 new questions, and come back each day for a refreshed set designed for quick learning and casual competition.';
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
@@ -157,10 +160,11 @@ export default async function DailyQuizzesPage() {
                   </h1>
                 </div>
               </div>
-              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
-                Fresh challenges every 24 hours. Play our free daily trivia challenges across history, sports, science, and pop culture.
-              </p>
-              <div className="mt-4">
+              <MobileExpandableDescription className="max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
+                {heroDescription}
+              </MobileExpandableDescription>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <ScrollToDailyCategoriesButton targetId="daily-trivia-categories" />
                 <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5 inline-block">
                   Last Updated: {lastUpdated.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </p>
@@ -197,7 +201,7 @@ export default async function DailyQuizzesPage() {
           <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
         </div>
 
-        <div className="mb-16">
+        <div id="daily-trivia-categories" className="mb-16 scroll-mt-6">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">All Daily Trivia Categories</h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
             {dailyQuizzes.map((quiz, index) => (

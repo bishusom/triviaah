@@ -1,7 +1,7 @@
 'use client';
 
 import confetti from 'canvas-confetti';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { type MouseEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useSound } from '@/context/SoundContext';
 import {
   canUseLetters,
@@ -66,6 +66,23 @@ const ROUND_POOLS: Record<number, Omit<WordConnectRound, 'levelNumber'>[]> = {
 };
 
 const LEVEL_COUNT = Object.keys(ROUND_POOLS).length;
+
+type ActionHandler = () => void;
+
+function getTouchButtonProps(action: ActionHandler) {
+  return {
+    type: 'button' as const,
+    onPointerUp: (event: PointerEvent<HTMLButtonElement>) => {
+      if (event.pointerType === 'mouse') return;
+      event.preventDefault();
+      action();
+    },
+    onClick: (event: MouseEvent<HTMLButtonElement>) => {
+      if ('pointerType' in event.nativeEvent && event.nativeEvent.pointerType !== 'mouse') return;
+      action();
+    },
+  };
+}
 
 function shuffle<T>(values: T[]) {
   const next = [...values];
@@ -452,7 +469,8 @@ export default function WordConnectGame() {
       display: 'flex', flexDirection: 'column', alignItems: 'center',
       maxWidth: 360, margin: '0 auto',
       userSelect: 'none', WebkitUserSelect: 'none',
-      position: 'relative', overflow: 'hidden',
+      position: 'relative', overflowX: 'hidden', overflowY: 'auto',
+      touchAction: 'manipulation',
       paddingBottom: 6,
     }}>
       {/* Stars bg */}
@@ -484,12 +502,13 @@ export default function WordConnectGame() {
       }}>
         <div style={{ display: 'flex', gap: 8 }}>
           {(['↻', '→'] as const).map((icon, i) => (
-            <button key={i} onClick={i === 0 ? () => void loadRound(currentLevel) : advanceRound}
+            <button key={i} {...getTouchButtonProps(i === 0 ? () => void loadRound(currentLevel) : advanceRound)}
               style={{
                 width: 34, height: 34, borderRadius: '50%',
                 background: 'rgba(15,23,42,0.9)',
                 border: '1px solid rgba(34,211,238,0.22)',
                 color: '#7dd3fc', cursor: 'pointer', fontSize: 15,
+                touchAction: 'manipulation',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
               }}>{icon}</button>
@@ -668,7 +687,7 @@ export default function WordConnectGame() {
           const pos = getCirclePos(idx, letterBank.length, 36);
           const isSelected = selectedIndices.includes(idx);
           return (
-            <button key={idx} onClick={() => addLetterAtIndex(idx)} style={{
+            <button key={idx} {...getTouchButtonProps(() => addLetterAtIndex(idx))} style={{
               position: 'absolute', ...pos,
               width: 48, height: 48, borderRadius: '50%',
               background: isSelected
@@ -679,6 +698,7 @@ export default function WordConnectGame() {
                 : '1.5px solid rgba(125,211,252,0.45)',
               color: 'white', fontWeight: 900, fontSize: 22,
               cursor: 'pointer',
+              touchAction: 'manipulation',
               boxShadow: isSelected
                 ? '0 0 18px rgba(34,211,238,0.35), 0 5px 14px rgba(0,0,0,0.3)'
                 : '0 6px 18px rgba(2,132,199,0.28), 0 2px 6px rgba(0,0,0,0.25)',
@@ -704,9 +724,10 @@ export default function WordConnectGame() {
             action: currentWord.length >= 3 ? () => void submitWord() : clearWord },
           { icon: '↻', label: 'Reset', action: () => void loadRound(currentLevel) },
         ].map(({ icon, label, action, badge }, i) => (
-          <button key={i} onClick={action} style={{
+          <button key={i} {...getTouchButtonProps(action)} style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
             background: 'transparent', border: 'none', cursor: 'pointer',
+            touchAction: 'manipulation',
           }}>
             <div style={{
               width: 40, height: 40, borderRadius: '50%',
@@ -767,11 +788,12 @@ export default function WordConnectGame() {
             {bonusWords.length} Extra Words
           </span>
         </div>
-        <button onClick={shuffleLetters} style={{
+        <button {...getTouchButtonProps(shuffleLetters)} style={{
           width: 34, height: 34, borderRadius: '50%',
           background: 'rgba(15,23,42,0.86)',
           border: '1px solid rgba(34,211,238,0.18)',
           color: '#7dd3fc', cursor: 'pointer', fontSize: 16,
+          touchAction: 'manipulation',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>↻</button>
       </div>

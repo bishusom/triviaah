@@ -5,6 +5,8 @@ import { Play, Boxes, Star, Clock, Users } from 'lucide-react';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
 import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
+import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
+import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
 
 export const metadata: Metadata = {
   title: 'Word Games Collection - Free Vocabulary & Spelling Games | Triviaah',
@@ -269,6 +271,7 @@ export default async function WordGamesPage() {
   const allRows = await getGamePagesBySection('word-games');
   const wordGames = allRows.filter((r) => r.route_path !== '/word-games');
   const currentDate = new Date();
+  const heroDescription = 'Challenge your vocabulary with our exciting collection of free word games, including Cryptogram, Spelling Bee, Boggle, Word Search, Word Ladder, Crossgrid, Word Connect, and Anagram Scramble. Build spelling, pattern recognition, word recall, and puzzle-solving skills with games designed for quick play on mobile and desktop.';
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
@@ -291,11 +294,17 @@ export default async function WordGamesPage() {
                   </h1>
                 </div>
               </div>
-              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
-                Challenge your vocabulary with our exciting collection of word games. 
-                From cipher decoding to spelling and scramble puzzles, every game is free to play.
-              </p>
-              <div className="mt-4">
+              <MobileExpandableDescription className="max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
+                {heroDescription}
+              </MobileExpandableDescription>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <ScrollToSectionButton
+                  targetId="word-games-grid"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-green-900/20 transition-all hover:-translate-y-0.5 hover:shadow-green-900/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-300 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 sm:w-auto"
+                >
+                  <Play className="h-4 w-4" />
+                  Browse Word Games
+                </ScrollToSectionButton>
                 <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5 inline-block">
                   Last Updated: {currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </p>
@@ -329,7 +338,7 @@ export default async function WordGamesPage() {
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
           </div>
 
-          <div className="mb-16">
+          <div id="word-games-grid" className="mb-16 scroll-mt-6">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">All Word Games</h2>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
               {wordGames.map((game, index) => (

@@ -145,13 +145,13 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
         </div>
 
         {/* Blog Grid - Compact 4-column layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
           {paginatedPosts.map((post, index) => (
             <Link 
               key={post.slug}
               href={`/blog/${post.slug}`}
               title={`Read full article: ${post.header}`}
-              className="group bg-slate-900/50 rounded-xl overflow-hidden border border-white/10 hover:border-cyan-500/50 transition-all duration-300 flex flex-col hover:shadow-glow-blue"
+              className="group flex flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-900/50 transition-all duration-300 hover:border-cyan-500/50 hover:shadow-glow-blue"
             >
               {/* Post Image - Smaller aspect ratio */}
               <div className="relative aspect-[16/10] overflow-hidden">
@@ -163,36 +163,36 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60"></div>
                 <div className="absolute top-2 left-2">
-                  <span className="bg-cyan-600/90 backdrop-blur-sm text-white px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider">
+                  <span className="bg-cyan-600/90 backdrop-blur-sm text-white px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-black uppercase tracking-wider">
                     #{index + 1 + startIndex}
                   </span>
                 </div>
               </div>
 
               {/* Post Content - Tighter padding */}
-              <div className="p-4 flex flex-col flex-grow">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <time className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">
+              <div className="flex flex-grow flex-col p-3 sm:p-4">
+                <div className="mb-2 flex items-center justify-between">
+                  <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 sm:gap-2">
+                    <time className="text-[9px] font-bold uppercase tracking-wider text-gray-500 sm:text-[10px]">
                       {post.date}
                     </time>
-                    <div className="w-1 h-1 bg-cyan-500 rounded-full"></div>
-                    <span className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">
+                    <div className="h-1 w-1 rounded-full bg-cyan-500"></div>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-gray-500 sm:text-[10px]">
                       5 min read
                     </span>
                   </div>
                 </div>
                 
-                <h2 className="text-base font-black mb-2 text-white group-hover:text-cyan-400 transition-colors line-clamp-2 leading-snug">
+                <h2 className="mb-2 line-clamp-3 text-sm font-black leading-snug text-white transition-colors group-hover:text-cyan-400 sm:line-clamp-2 sm:text-base">
                   {post.header}
                 </h2>
                 
-                <p className="text-gray-400 text-xs mb-4 line-clamp-3 leading-relaxed">
+                <p className="mb-4 line-clamp-2 text-[11px] leading-relaxed text-gray-400 sm:line-clamp-3 sm:text-xs">
                   {post.excerpt}
                 </p>
 
                 <div className="mt-auto">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-cyan-500/10 border border-cyan-500/20 rounded-lg text-cyan-400 text-[10px] font-black uppercase tracking-widest group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300">
+                  <div className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-500/20 bg-cyan-500/10 px-2 py-1.5 text-[9px] font-black uppercase tracking-wider text-cyan-400 transition-all duration-300 group-hover:bg-cyan-500 group-hover:text-white sm:gap-2 sm:px-3 sm:text-[10px] sm:tracking-widest">
                     Read Article
                     <span className="group-hover:translate-x-1 transition-transform">→</span>
                   </div>
