@@ -24,7 +24,13 @@ export default function GameRouteShell({
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <div className="mx-auto w-full max-w-3xl px-4 py-6 md:py-8">
-        <div className="mt-8">{children}</div>
+        <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 md:p-6 shadow-2xl">
+          <h1 className="text-2xl md:text-4xl font-black tracking-tight text-white">
+            {page.title}
+          </h1>
+        </div>
+
+        <div className="mt-6">{children}</div>
 
         <div className="mt-6 flex flex-wrap gap-2">
           {page.featured ? (
