@@ -1,6 +1,7 @@
 // src/app/trivias/[category]/page.tsx
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { getEnrichedSubcategoriesWithMinQuestions } from '@/lib/supabase';
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
 import { buildMetaDescription } from '@/lib/seo';
@@ -95,10 +96,17 @@ interface StructuredDataProps {
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
   const { category } = await params;
   const categoryRecord = await getTriviaCategoryBySlug(category);
-  const categoryData: TriviaCategory = categoryRecord || {
-    title: category.replace(/-/g, ' '),
-    description: 'Test your knowledge with our quiz',
-  };
+  if (!categoryRecord) {
+    return {
+      title: 'Category Not Found | Triviaah',
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const categoryData: TriviaCategory = categoryRecord;
 
   const categoryTitle = categoryData.title;
   const categoryDescription = categoryData.description;
@@ -140,10 +148,11 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
   const categoryRecord = await getTriviaCategoryBySlug(category);
-  const categoryData: TriviaCategory = categoryRecord || {
-    title: category.replace(/-/g, ' '),
-    description: 'Test your knowledge with our quiz',
-  };
+  if (!categoryRecord) {
+    notFound();
+  }
+
+  const categoryData: TriviaCategory = categoryRecord;
   const showPrintableQuizCTA = categoryRecord?.showPrintableQuizCTA !== false;
 
   let subcategories = await getEnrichedSubcategoriesWithMinQuestions(category, 30);
