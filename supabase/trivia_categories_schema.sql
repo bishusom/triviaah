@@ -38,6 +38,8 @@ create table if not exists public.trivia_subcategories (
   subcategory text not null,
   slug text not null,
   description text,
+  meta_description text,
+  keywords jsonb not null default '[]'::jsonb,
   sort_order integer not null default 0,
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
@@ -57,23 +59,42 @@ create index if not exists trivia_subcategories_category_active_sort_idx
 create index if not exists trivia_subcategories_category_slug_idx
   on public.trivia_subcategories (category_slug, slug);
 
-create or replace view public.trivia_subcategories_enriched_view as
-select
-  s.category_type,
-  s.category_slug as category,
-  s.category_slug,
-  s.subcategory,
-  s.slug,
-  s.description,
-  v.question_count,
-  s.sort_order,
-  s.is_active,
-  s.created_at,
-  s.updated_at
-from public.trivia_subcategories s
-left join public.trivia_subcategories_view v
-  on s.category_slug = v.category
-  and s.subcategory = v.subcategory;
+DROP MATERIALIZED VIEW if exists trivia_subcategories_view;
+
+CREATE MATERIALIZED VIEW public.trivia_subcategories_view AS
+SELECT
+  a.id,
+  a.category_type,  
+  a.category_slug AS category,
+  a.subcategory,
+  a.slug,
+  a.description,
+  a.meta_description,
+  a.keywords,
+  a.sort_order,
+  a.is_active,
+  COUNT(b.id) AS question_count
+FROM trivia_subcategories a
+INNER JOIN trivia_questions b 
+    ON a.category_slug = b.category 
+   AND a.subcategory = b.subcategory
+GROUP BY
+  a.id,
+  a.category_type,
+  a.category_slug,
+  a.subcategory,
+  a.slug,
+  a.description,
+  a.meta_description,
+  a.keywords,
+  a.sort_order,
+  a.is_active
+HAVING COUNT(b.id) >= 30
+ORDER BY a.category_slug, a.sort_order;
+CREATE INDEX idx_trivia_questions_cat_subcat ON trivia_questions(category, subcategory);
+CREATE INDEX idx_trivia_subcategories_cat_subcat ON trivia_subcategories(category_slug, subcategory);
+CREATE UNIQUE INDEX idx_trivia_subcategories_view_id ON public.trivia_subcategories_view(id);
+REFRESH MATERIALIZED VIEW CONCURRENTLY public.trivia_subcategories_view;
 
 alter table public.trivia_categories enable row level security;
 alter table public.trivia_subcategories enable row level security;

@@ -25,6 +25,8 @@ interface TriviaCategory {
 interface SubcategoryInfo {
   subcategory: string;
   description?: string | null;
+  meta_description?: string | null;
+  keywords?: string[];
   question_count: number;
 }
 
@@ -34,6 +36,40 @@ function getSubcategoryDescription(subcategory: SubcategoryInfo, categoryTitle: 
   }
 
   return `Explore ${subcategory.subcategory.toLowerCase()} trivia inside ${categoryTitle.toLowerCase()} trivia.`;
+}
+
+function getSubcategoryMetaDescription(
+  subcategory: SubcategoryInfo,
+  categoryTitle: string,
+) {
+  if (subcategory.meta_description && subcategory.meta_description.trim().length > 0) {
+    return buildMetaDescription([subcategory.meta_description]);
+  }
+
+  return buildMetaDescription([
+    `Explore ${subcategory.question_count}+ ${subcategory.subcategory.toLowerCase()} questions in our ${categoryTitle.toLowerCase()} trivia collection.`,
+    'Play the quiz now.',
+  ]);
+}
+
+function getSubcategoryKeywords(
+  subcategory: SubcategoryInfo,
+  categoryData: TriviaCategory,
+) {
+  if (subcategory.keywords && subcategory.keywords.length > 0) {
+    return subcategory.keywords;
+  }
+
+  const categoryTitle = categoryData.title.toLowerCase();
+  const subcategoryName = subcategory.subcategory.toLowerCase();
+
+  return [
+    `${subcategoryName} trivia`,
+    `${subcategoryName} quiz questions`,
+    `${categoryTitle} trivia`,
+    `${categoryTitle} quiz questions`,
+    ...(categoryData.keywords ?? []),
+  ];
 }
 
 async function getSubcategoryContext(category: string, subcategorySlug: string) {
@@ -79,21 +115,20 @@ export async function generateMetadata({
 
   const subcategoryName = context.activeSubcategory.subcategory;
   const canonical = `https://triviaah.com/trivias/${category}/${subcategory}`;
-  const description = buildMetaDescription([
-    `Explore ${context.activeSubcategory.question_count}+ ${subcategoryName.toLowerCase()} questions in our ${categoryData.title.toLowerCase()} trivia collection.`,
-    'Play the quiz now.',
-  ]);
+  const description = getSubcategoryMetaDescription(context.activeSubcategory, categoryData.title);
+  const keywords = getSubcategoryKeywords(context.activeSubcategory, categoryData);
   const pageTitle = `${subcategoryName} in ${categoryData.title} Trivia`;
 
   return {
     title: `${pageTitle} | Free Questions & Answers`,
     description,
+    keywords,
     alternates: {
       canonical,
     },
     openGraph: {
       title: `${pageTitle} | Triviaah`,
-      description: `Play ${subcategoryName.toLowerCase()} trivia inside our ${categoryData.title.toLowerCase()} category.`,
+      description,
       url: canonical,
       siteName: 'Triviaah',
       images: categoryData.ogImage
@@ -104,7 +139,7 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       title: `${pageTitle} | Triviaah`,
-      description: `Explore ${subcategoryName.toLowerCase()} questions and play the quiz.`,
+      description,
       images: categoryData.ogImage ? [categoryData.ogImage] : [],
     },
     robots: {

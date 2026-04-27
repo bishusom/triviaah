@@ -282,10 +282,20 @@ export interface Subcategory {
   subcategory: string;
   slug?: string;
   description?: string | null;
+  meta_description?: string | null;
+  keywords?: string[];
   question_count: number;
   category_type?: string;
   sort_order?: number;
   is_active?: boolean;
+}
+
+type SubcategoryRow = Omit<Subcategory, 'keywords'> & {
+  keywords?: unknown;
+};
+
+function toStringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
 }
 
 export async function getEnrichedSubcategoriesWithMinQuestions(
@@ -296,16 +306,33 @@ export async function getEnrichedSubcategoriesWithMinQuestions(
     if (isPictureCluesCategory(category)) {
       return [];
     }
-    const { data, error } = await supabase
+    const enrichedResponse = await supabase
       .from('trivia_subcategories_view')
-      .select('category, subcategory, slug, description, question_count, category_type, sort_order, is_active')
+      .select('category, subcategory, slug, description, meta_description, keywords, question_count, category_type, sort_order, is_active')
       .eq('category', category)
       .gte('question_count', minQuestions)
       .order('question_count', { ascending: false });
-    console.log('Fetched subcategories for category:', category, 'data:', data);
+    let data: SubcategoryRow[] | null = enrichedResponse.data;
+    let error = enrichedResponse.error;
+
+    if (error && isMissingSubcategorySchemaField(error)) {
+      const fallback = await supabase
+        .from('trivia_subcategories_view')
+        .select('category, subcategory, slug, description, question_count, category_type, sort_order, is_active')
+        .eq('category', category)
+        .gte('question_count', minQuestions)
+        .order('question_count', { ascending: false });
+
+      data = fallback.data;
+      error = fallback.error;
+    }
+
     if (error) throw error;
     console.log('Fetched enriched subcategories for category:', category, 'count:', data?.length);
-    return data || [];
+    return (data || []).map((item) => ({
+      ...item,
+      keywords: toStringArray(item.keywords),
+    }));
   } catch (error) {
     console.error('Error in getEnrichedSubcategoriesWithMinQuestions:', error);
     return [];

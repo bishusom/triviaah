@@ -1,6 +1,6 @@
 export function buildMetaDescription(
   parts: Array<string | null | undefined>,
-  maxLength = 155,
+  maxLength = 160,
 ): string {
   const text = parts
     .filter((part): part is string => Boolean(part && part.trim()))
