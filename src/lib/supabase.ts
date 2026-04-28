@@ -344,6 +344,39 @@ export async function getSubcategoriesWithMinQuestions(
   return getEnrichedSubcategoriesWithMinQuestions(category, minQuestions);
 }
 
+export async function getAllSubcategories(): Promise<Subcategory[]> {
+  try {
+    const enrichedResponse = await supabase
+      .from('trivia_subcategories_view')
+      .select('category, subcategory, slug, description, meta_description, keywords, question_count, category_type, sort_order, is_active')
+      .neq('category', PICTURE_CLUES_CATEGORY)
+      .order('category', { ascending: true });
+    let data: SubcategoryRow[] | null = enrichedResponse.data;
+    let error = enrichedResponse.error;
+
+    if (error && isMissingSubcategorySchemaField(error)) {
+      const fallback = await supabase
+        .from('trivia_subcategories_view')
+        .select('category, subcategory, slug, description, question_count, category_type, sort_order, is_active')
+        .neq('category', PICTURE_CLUES_CATEGORY)
+        .order('category', { ascending: true });
+
+      data = fallback.data;
+      error = fallback.error;
+    }
+
+    if (error) throw error;
+    console.log('Fetched all subcategories, count:', data?.length);
+    return (data || []).map((item) => ({
+      ...item,
+      keywords: toStringArray(item.keywords),
+    }));
+  } catch (error) {
+    console.error('Error in getAllSubcategories:', error);
+    return [];
+  }
+}
+
 export async function getSubcategoryQuestions(
   category: string,
   subcategory: string,

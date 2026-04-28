@@ -1,7 +1,6 @@
-export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 import { MetadataRoute } from 'next'
-import { getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
+import { getCategoriesWithMinQuestions, getAllSubcategories } from '@/lib/supabase'
 import { getTriviaCategorySlugs } from '@/lib/trivia-categories'
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs'
 
@@ -35,29 +34,26 @@ const VIRTUAL_TRIVIA_CATEGORIES = ['picture-clues'] as const
 // Previously these were nested inside sitemap(), which caused scoping issues
 // and made them harder to test. Move them to the top level.
 
-async function fetchSubcategoryPages(baseUrl: string, categories: string[]): Promise<MetadataRoute.Sitemap> {
+async function fetchSubcategoryPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   const pages: MetadataRoute.Sitemap = []
   try {
-    const subcategoriesResults = await Promise.all(
-      categories.map(category => getSubcategoriesWithMinQuestions(category, 30))
-    )
-    for (let i = 0; i < categories.length; i++) {
-      const category = categories[i]
-      const subcategories = subcategoriesResults[i]
-      for (const subcat of subcategories) {
-        // ✅ FIX: Use a real URL path, NOT a query string.
-        // /trivias/science/evolution is indexable.
-        // /trivias/science/quiz?subcategory=evolution is not — Google treats it
-        // as a duplicate of /trivias/science/quiz and ignores it.
-        const slug = slugifyTriviaSegment(subcat.subcategory)
+    const subcategories = await getAllSubcategories()
+    
+    for (const subcat of subcategories) {
+      if (!subcat.category) continue;
 
-        pages.push({
-          url: `${baseUrl}/trivias/${category}/${slug}`,
-          lastModified: new Date(),
-          changeFrequency: 'weekly',
-          priority: 0.5,
-        })
-      }
+      // ✅ FIX: Use a real URL path, NOT a query string.
+      // /trivias/science/evolution is indexable.
+      // /trivias/science/quiz?subcategory=evolution is not — Google treats it
+      // as a duplicate of /trivias/science/quiz and ignores it.
+      const slug = slugifyTriviaSegment(subcat.subcategory)
+
+      pages.push({
+        url: `${baseUrl}/trivias/${subcat.category}/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.5,
+      })
     }
   } catch (error) {
     console.error('Error fetching subcategory pages:', error)
@@ -200,11 +196,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [
     triviaCategorySlugs,
     dbCategoriesWithMinQuestions,
+    subcategoryPages,
     triviaBankPages,
     blogPages
   ] = await Promise.all([
     getTriviaCategorySlugs('trivias'),
     getCategoriesWithMinQuestions(10),
+    fetchSubcategoryPages(baseUrl),
     fetchTriviaBankPages(baseUrl),
     fetchBlogPages(baseUrl)
   ])
@@ -233,7 +231,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // ✅ Subcategory pages: only enable once you have real routes (not query params)
-  const subcategoryPages = await fetchSubcategoryPages(baseUrl, dbCategoriesWithMinQuestions)
+  // (subcategoryPages fetched concurrently above)
 
   // ── Retro games ───────────────────────────────────────────────────────────
   const retroGames = ['snake', 'tic-tac-toe', 'pong', 'minesweeper', 'tetris', 'pacman', 'space-invaders', 'breakout']
