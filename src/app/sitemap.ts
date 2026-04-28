@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import { MetadataRoute } from 'next'
 import { getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
 import { getTriviaCategorySlugs } from '@/lib/trivia-categories'
@@ -10,7 +12,7 @@ interface ContentfulSys {
 }
 
 interface ContentfulItem {
-  fields: { slug: string; [key: string]: unknown }
+  fields: { slug: string;[key: string]: unknown }
   sys: ContentfulSys
 }
 
@@ -21,9 +23,9 @@ interface ContentfulResponse {
 // ─── Priority tiers ───────────────────────────────────────────────────────────
 
 const PRIORITY = {
-  HIGH:    0.8,
-  MEDIUM:  0.6,
-  LOW:     0.4,
+  HIGH: 0.8,
+  MEDIUM: 0.6,
+  LOW: 0.4,
   MINIMAL: 0.3,
 } as const
 
@@ -148,11 +150,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // ── Static pages ──────────────────────────────────────────────────────────
   const mainPages: MetadataRoute.Sitemap = [
-    { url: baseUrl,                              lastModified: new Date(),              changeFrequency: 'daily',  priority: 1.0 },
-    { url: `${baseUrl}/leaderboard`,             lastModified: new Date('2025-11-28'),  changeFrequency: 'daily',  priority: 0.9 },
-    { url: `${baseUrl}/about`,                   lastModified: new Date('2025-11-28'),  changeFrequency: 'yearly', priority: PRIORITY.LOW },
-    { url: `${baseUrl}/contact`,                 lastModified: new Date('2025-11-28'),  changeFrequency: 'yearly', priority: PRIORITY.LOW },
-    { url: `${baseUrl}/privacy`,                 lastModified: new Date('2025-11-28'),  changeFrequency: 'yearly', priority: PRIORITY.MINIMAL },
+    { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
+    { url: `${baseUrl}/leaderboard`, lastModified: new Date('2025-11-28'), changeFrequency: 'daily', priority: 0.9 },
+    { url: `${baseUrl}/about`, lastModified: new Date('2025-11-28'), changeFrequency: 'yearly', priority: PRIORITY.LOW },
+    { url: `${baseUrl}/contact`, lastModified: new Date('2025-11-28'), changeFrequency: 'yearly', priority: PRIORITY.LOW },
+    { url: `${baseUrl}/privacy`, lastModified: new Date('2025-11-28'), changeFrequency: 'yearly', priority: PRIORITY.MINIMAL },
   ]
 
   // ── Daily trivias ─────────────────────────────────────────────────────────
