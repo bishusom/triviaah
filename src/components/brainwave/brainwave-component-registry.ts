@@ -13,6 +13,11 @@ import FoodleComponent from '@/components/brainwave/FoodleComponent';
 import LandmarkdleComponent from '@/components/brainwave/LandmarkdleComponent';
 import InventionleComponent from '@/components/brainwave/InventionleComponent';
 import SynonymleComponent from '@/components/brainwave/SynonymleComponent';
+import AutomobleComponent from '@/components/brainwave/AutomobleComponent';
+import BotanleComponent from '@/components/brainwave/BotanleComponent';
+import CitadleComponent from '@/components/brainwave/CitadleComponent';
+import CountridleComponent from '@/components/brainwave/CountridleComponent';
+import TrordleComponent from '@/components/brainwave/TrordleComponent';
 import type { BrainwaveSlug } from '@/lib/brainwave/brainwave-route-registry';
 
 const COMPONENT_REGISTRY: Record<BrainwaveSlug, ComponentType<any>> = {
@@ -28,6 +33,11 @@ const COMPONENT_REGISTRY: Record<BrainwaveSlug, ComponentType<any>> = {
   landmarkdle: LandmarkdleComponent,
   inventionle: InventionleComponent,
   synonymle: SynonymleComponent,
+  automoble: AutomobleComponent,
+  botanle: BotanleComponent,
+  citadle: CitadleComponent,
+  countridle: CountridleComponent,
+  trordle: TrordleComponent,
 };
 
 export function resolveBrainwaveComponent(slug: BrainwaveSlug): ComponentType<any> {

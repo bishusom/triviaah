@@ -10,7 +10,12 @@ export type BrainwaveSlug =
   | 'foodle'
   | 'landmarkdle'
   | 'inventionle'
-  | 'synonymle';
+  | 'synonymle'
+  | 'automoble'
+  | 'botanle'
+  | 'citadle'
+  | 'countridle'
+  | 'trordle';
 
 export interface BrainwaveRouteDefinition {
   slug: BrainwaveSlug;
@@ -117,6 +122,46 @@ const BRAINWAVE_ROUTE_REGISTRY: Record<BrainwaveSlug, BrainwaveRouteDefinition> 
     ogImage: '/imgs/brainwave/synonymle-og.webp',
     isDailyRefresh: true,
     componentKey: 'SynonymleComponent',
+  },
+  automoble: {
+    slug: 'automoble',
+    routePath: '/brainwave/automoble',
+    title: 'Automoble',
+    ogImage: '/imgs/brainwave/automoble.webp',
+    isDailyRefresh: true,
+    componentKey: 'AutomobleComponent',
+  },
+  botanle: {
+    slug: 'botanle',
+    routePath: '/brainwave/botanle',
+    title: 'Botanle',
+    ogImage: '/imgs/brainwave/botanle.webp',
+    isDailyRefresh: true,
+    componentKey: 'BotanleComponent',
+  },
+  citadle: {
+    slug: 'citadle',
+    routePath: '/brainwave/citadle',
+    title: 'Citadle',
+    ogImage: '/imgs/brainwave/citadle.webp',
+    isDailyRefresh: true,
+    componentKey: 'CitadleComponent',
+  },
+  countridle: {
+    slug: 'countridle',
+    routePath: '/brainwave/countridle',
+    title: 'Countridle',
+    ogImage: '/imgs/brainwave/countridle.webp',
+    isDailyRefresh: true,
+    componentKey: 'CountridleComponent',
+  },
+  trordle: {
+    slug: 'trordle',
+    routePath: '/brainwave/trordle',
+    title: 'Trordle',
+    ogImage: '/imgs/brainwave/trordle-og.webp',
+    isDailyRefresh: true,
+    componentKey: 'TrordleComponent',
   },
 };
 

@@ -670,7 +670,7 @@ export default function CountridleComponent({ initialData, allCountries }: count
         className="fixed top-0 left-0 w-full h-full pointer-events-none z-50"
       />
       
-      <div className="bg-green-800 rounded-lg shadow-lg p-4 md:p-6 mb-6 flex-grow border border-gray-700">
+      <div className="bg-gray-800 rounded-lg shadow-lg p-4 md:p-6 mb-6 flex-grow border border-gray-700">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg md:text-xl font-semibold text-gray-100">

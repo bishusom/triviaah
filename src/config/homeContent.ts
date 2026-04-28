@@ -198,18 +198,6 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     difficulty: 'Hard'
   },
   {
-    category: 'cryptodle',
-    name: 'Cryptodle',
-    path: '/brainwave/cryptodle',
-    image: '/imgs/brainwave/cryptodle-rect.webp',
-    tagline: 'Decode encrypted quotes with logic and pattern recognition',
-    keywords: 'cryptodle game, substitution cipher, logic puzzle, brain teaser',
-    playCount: 960,
-    isNew: true,
-    duration: 'Daily',
-    difficulty: 'Casual'
-  },
-  {
     category: 'landmarkdle',
     name: 'Landmarkdle',
     path: '/brainwave/landmarkdle',
@@ -244,6 +232,66 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
     isNew: true,
     duration: 'Daily',
     difficulty: 'Hard'
+  },
+  {
+    category: 'automoble',
+    name: 'Automoble',
+    path: '/brainwave/automoble',
+    image: '/imgs/brainwave/automoble-rect.webp',
+    tagline: 'Guess the car from design, era, and performance clues',
+    keywords: 'car trivia, automobile puzzle, vehicle guessing game',
+    playCount: 7600,
+    isNew: true,
+    duration: 'Daily',
+    difficulty: 'Medium'
+  },
+  {
+    category: 'botanle',
+    name: 'Botanle',
+    path: '/brainwave/botanle',
+    image: '/imgs/brainwave/botanle-rect.webp',
+    tagline: 'Guess the plant from botanical traits and growing clues',
+    keywords: 'plant trivia, botany puzzle, flower guessing game',
+    playCount: 7300,
+    isNew: true,
+    duration: 'Daily',
+    difficulty: 'Nature'
+  },
+  {
+    category: 'citadle',
+    name: 'Citadle',
+    path: '/brainwave/citadle',
+    image: '/imgs/brainwave/citadle-rect.webp',
+    tagline: 'Guess the city from geography, population, and landmark clues',
+    keywords: 'city trivia, geography puzzle, city guessing game',
+    playCount: 7900,
+    isNew: true,
+    duration: 'Daily',
+    difficulty: 'Medium'
+  },
+  {
+    category: 'countridle',
+    name: 'Countridle',
+    path: '/brainwave/countridle',
+    image: '/imgs/brainwave/countridle-rect.webp',
+    tagline: 'Guess the country from flags, maps, and geography clues',
+    keywords: 'country trivia, flags quiz, geography guessing game',
+    playCount: 8200,
+    isNew: true,
+    duration: 'Daily',
+    difficulty: 'Medium'
+  },
+  {
+    category: 'trordle',
+    name: 'Trordle',
+    path: '/brainwave/trordle',
+    image: '/imgs/brainwave/trordle-rect.webp',
+    tagline: 'Solve attribute-based trivia with Wordle-style deduction',
+    keywords: 'trivia puzzle, deduction game, daily guessing game',
+    playCount: 7000,
+    isNew: true,
+    duration: 'Daily',
+    difficulty: 'Logic'
   },
 ] as const;
 

@@ -17,6 +17,11 @@ import FoodleComponent from '@/components/brainwave/FoodleComponent';
 import LandmarkdleComponent from '@/components/brainwave/LandmarkdleComponent';
 import InventionleComponent from '@/components/brainwave/InventionleComponent';
 import SynonymleComponent from '@/components/brainwave/SynonymleComponent';
+import AutomobleComponent from '@/components/brainwave/AutomobleComponent';
+import BotanleComponent from '@/components/brainwave/BotanleComponent';
+import CitadleComponent from '@/components/brainwave/CitadleComponent';
+import CountridleComponent from '@/components/brainwave/CountridleComponent';
+import TrordleComponent from '@/components/brainwave/TrordleComponent';
 import { getDailyPlotle } from '@/lib/brainwave/plotle/plotle-sb';
 import { getDailyCapitale } from '@/lib/brainwave/capitale/capitale-sb';
 import { getDailyHistoridle } from '@/lib/brainwave/historidle/historidle-sb';
@@ -29,6 +34,11 @@ import { getDailyFood } from '@/lib/brainwave/foodle/foodle-sb';
 import { getDailyLandmark } from '@/lib/brainwave/landmarkdle/landmarkdle-sb';
 import { getDailyInvention } from '@/lib/brainwave/inventionle/inventionle-sb';
 import { getDailySynonymle } from '@/lib/brainwave/synonymle/synonymle-sb';
+import { getDailyCar } from '@/lib/brainwave/automoble/automoble-sb';
+import { getDailyPlant } from '@/lib/brainwave/botanle/botanle-sb';
+import { getDailyCityPuzzle } from '@/lib/brainwave/citadle/citadle-sb';
+import { getDailyCountry } from '@/lib/brainwave/countridle/countridle-sb';
+import { getDailyTrordle } from '@/lib/brainwave/trordle/trordle-sb';
 
 type PageParams = {
   puzzle: string;
@@ -211,6 +221,36 @@ export default async function BrainwavePuzzlePage({
       const initialData = await getDailySynonymle(targetDate);
       if (!initialData) notFound();
       game = <SynonymleComponent initialData={initialData} />;
+      break;
+    }
+    case 'automoble': {
+      const initialData = await getDailyCar(targetDate);
+      if (!initialData?.puzzle) notFound();
+      game = <AutomobleComponent initialData={initialData.puzzle} />;
+      break;
+    }
+    case 'botanle': {
+      const initialData = await getDailyPlant(targetDate);
+      if (!initialData?.puzzle) notFound();
+      game = <BotanleComponent initialData={{ puzzle: initialData.puzzle }} />;
+      break;
+    }
+    case 'citadle': {
+      const initialData = await getDailyCityPuzzle(targetDate);
+      if (!initialData) notFound();
+      game = <CitadleComponent initialData={initialData} />;
+      break;
+    }
+    case 'countridle': {
+      const initialData = await getDailyCountry(targetDate);
+      if (!initialData?.puzzle) notFound();
+      game = <CountridleComponent initialData={initialData.puzzle} allCountries={initialData.allCountries} />;
+      break;
+    }
+    case 'trordle': {
+      const initialData = await getDailyTrordle(targetDate);
+      if (!initialData) notFound();
+      game = <TrordleComponent initialData={initialData} />;
       break;
     }
     default:
