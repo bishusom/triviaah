@@ -310,7 +310,6 @@ export async function getEnrichedSubcategoriesWithMinQuestions(
       .from('trivia_subcategories_view')
       .select('category, subcategory, slug, description, meta_description, keywords, question_count, category_type, sort_order, is_active')
       .eq('category', category)
-      .gte('question_count', minQuestions)
       .order('question_count', { ascending: false });
     let data: SubcategoryRow[] | null = enrichedResponse.data;
     let error = enrichedResponse.error;
@@ -320,7 +319,6 @@ export async function getEnrichedSubcategoriesWithMinQuestions(
         .from('trivia_subcategories_view')
         .select('category, subcategory, slug, description, question_count, category_type, sort_order, is_active')
         .eq('category', category)
-        .gte('question_count', minQuestions)
         .order('question_count', { ascending: false });
 
       data = fallback.data;

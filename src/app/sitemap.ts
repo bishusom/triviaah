@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 3600;
 import { MetadataRoute } from 'next'
 import { getCategoriesWithMinQuestions, getSubcategoriesWithMinQuestions } from '@/lib/supabase'
 import { getTriviaCategorySlugs } from '@/lib/trivia-categories'
@@ -35,12 +35,15 @@ const VIRTUAL_TRIVIA_CATEGORIES = ['picture-clues'] as const
 // Previously these were nested inside sitemap(), which caused scoping issues
 // and made them harder to test. Move them to the top level.
 
-async function fetchSubcategoryPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+async function fetchSubcategoryPages(baseUrl: string, categories: string[]): Promise<MetadataRoute.Sitemap> {
   const pages: MetadataRoute.Sitemap = []
   try {
-    const categories = await getCategoriesWithMinQuestions(10)
-    for (const category of categories) {
-      const subcategories = await getSubcategoriesWithMinQuestions(category, 30)
+    const subcategoriesResults = await Promise.all(
+      categories.map(category => getSubcategoriesWithMinQuestions(category, 30))
+    )
+    for (let i = 0; i < categories.length; i++) {
+      const category = categories[i]
+      const subcategories = subcategoriesResults[i]
       for (const subcat of subcategories) {
         // ✅ FIX: Use a real URL path, NOT a query string.
         // /trivias/science/evolution is indexable.
@@ -193,10 +196,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ✅ FIX: Category pages (/trivias/science) and quiz pages (/trivias/science/quiz)
   // are included, but NOT subcategory query-string URLs.
   // Subcategory routes are only included if you've created actual page routes for them.
+  // Fetch data concurrently to reduce sitemap load time
+  const [
+    triviaCategorySlugs,
+    dbCategoriesWithMinQuestions,
+    triviaBankPages,
+    blogPages
+  ] = await Promise.all([
+    getTriviaCategorySlugs('trivias'),
+    getCategoriesWithMinQuestions(10),
+    fetchTriviaBankPages(baseUrl),
+    fetchBlogPages(baseUrl)
+  ])
+
   const triviaCategories = Array.from(
     new Set([
-      ...(await getTriviaCategorySlugs('trivias')),
-      ...(await getCategoriesWithMinQuestions(10)),
+      ...triviaCategorySlugs,
+      ...dbCategoriesWithMinQuestions,
       ...VIRTUAL_TRIVIA_CATEGORIES,
     ])
   )
@@ -217,7 +233,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // ✅ Subcategory pages: only enable once you have real routes (not query params)
-  const subcategoryPages = await fetchSubcategoryPages(baseUrl)
+  const subcategoryPages = await fetchSubcategoryPages(baseUrl, dbCategoriesWithMinQuestions)
 
   // ── Retro games ───────────────────────────────────────────────────────────
   const retroGames = ['snake', 'tic-tac-toe', 'pong', 'minesweeper', 'tetris', 'pacman', 'space-invaders', 'breakout']
@@ -270,9 +286,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ── Dynamic content (Contentful) ──────────────────────────────────────────
   // Trivia bank is commented out — good, it was generating 404s likely.
   // Re-enable only once you confirm every slug returns 200.
-  const triviaBankPages = await fetchTriviaBankPages(baseUrl)
-
-  const blogPages = await fetchBlogPages(baseUrl)
+  // (triviaBankPages and blogPages are now fetched concurrently above)
 
   // ─── Final assembly ────────────────────────────────────────────────────────
   // ✅ FIX: Only include URLs that actually exist and return 200.
