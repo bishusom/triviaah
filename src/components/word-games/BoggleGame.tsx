@@ -59,10 +59,17 @@ interface LevelConfig {
   level: number;
   difficulty: 'easy' | 'medium' | 'hard' | 'expert';
   minWordLength: number;
+  minSolvableWords: number;
   winThreshold: number;
   timeLimit: number;
   scoreMultiplier: number;
   description: string;
+}
+
+interface BoardWord {
+  word: string;
+  path: number[];
+  score: number;
 }
 
 export default function BoggleGame() {
@@ -87,6 +94,7 @@ export default function BoggleGame() {
   const [wordCache, setWordCache] = useState<Map<string, boolean>>(new Map());
   const [levels, setLevels] = useState<LevelConfig[]>([]);
   const [isLevelsLoaded, setIsLevelsLoaded] = useState(false);
+  const [solvableWords, setSolvableWords] = useState<BoardWord[]>([]);
 
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
@@ -151,7 +159,17 @@ export default function BoggleGame() {
     'ADVENTURE', 'BEAUTIFUL', 'CELEBRATE', 'DISCOVER', 'ELEPHANT', 'FANTASY', 'GRACEFUL',
     'HARMONY', 'IMAGINE', 'JOURNEY', 'KINDNESS', 'LIBERTY', 'MYSTERY', 'NOVEMBER',
     'OBSERVER', 'PARADISE', 'QUIETLY', 'RAINBOW', 'SUNSHINE', 'TREASURE', 'UMBRELLA',
-    'VIBRANT', 'WHISPER', 'XENON', 'YELLOW', 'ZEALOUS'
+    'VIBRANT', 'WHISPER', 'XENON', 'YELLOW', 'ZEALOUS', 'BALANCE', 'CAPTURE',
+    'CRYSTAL', 'DELIGHT', 'EXPLORE', 'FREEDOM', 'GLIMMER', 'HORIZON', 'KINGDOM',
+    'LANTERN', 'MEADOWS', 'NETWORK', 'ORCHARD', 'PIONEER', 'QUESTER', 'RADIANT',
+    'SAILING', 'THUNDER', 'UPGRADE', 'VALIANT', 'WILDCAT', 'YEARING', 'BRIGHTER',
+    'CLARITY', 'DREAMER', 'ELEVATE', 'FORTUNE', 'GALLERY', 'HARVEST', 'INSIGHT',
+    'JUSTICE', 'KITCHEN', 'LIBRARY', 'MACHINE', 'NOTEBOOK', 'ORIGAMI', 'PASSAGE',
+    'QUARTER', 'ROCKETS', 'STATION', 'TEACHER', 'UNLOCKS', 'VOYAGER', 'WEATHER',
+    'ANCIENT', 'BRAVERY', 'CIRCLES', 'DIAMOND', 'ELEMENT', 'FIREFLY', 'GRANITE',
+    'HARBORS', 'IMPACTS', 'JASMINE', 'KEYNOTE', 'LEGENDS', 'MIRRORS', 'NUMBERS',
+    'OCTAGON', 'PHOENIX', 'QUICKEN', 'RESCUE', 'SHELTER', 'TRIUMPH', 'UTILITY',
+    'VILLAGE', 'WELCOME', 'ZEALOTS'
   ].map(word => word.toUpperCase()), []);
 
   const { isMuted } = useSound();
@@ -167,6 +185,7 @@ export default function BoggleGame() {
         level: i,
         difficulty: 'easy',
         minWordLength: 3,
+        minSolvableWords: 5 + i,
         winThreshold: 80 + (i * 20),
         timeLimit: 180,
         scoreMultiplier: 1.0,
@@ -180,6 +199,7 @@ export default function BoggleGame() {
         level: i,
         difficulty: 'medium',
         minWordLength: 4,
+        minSolvableWords: 6 + (i - 4),
         winThreshold: 200 + ((i - 4) * 50),
         timeLimit: 180,
         scoreMultiplier: 1.2 + ((i - 4) * 0.1),
@@ -193,6 +213,7 @@ export default function BoggleGame() {
         level: i,
         difficulty: 'hard',
         minWordLength: 5,
+        minSolvableWords: 7 + (i - 8),
         winThreshold: 420 + ((i - 8) * 80),
         timeLimit: 180,
         scoreMultiplier: 1.6 + ((i - 8) * 0.1),
@@ -206,6 +227,7 @@ export default function BoggleGame() {
         level: i,
         difficulty: 'expert',
         minWordLength: 6,
+        minSolvableWords: 8 + (i - 12),
         winThreshold: 780 + ((i - 12) * 120),
         timeLimit: 210,
         scoreMultiplier: 2.0 + ((i - 12) * 0.2),
@@ -219,6 +241,7 @@ export default function BoggleGame() {
         level: i,
         difficulty: 'expert',
         minWordLength: 7,
+        minSolvableWords: 9 + (i - 16),
         winThreshold: 1320 + ((i - 16) * 180),
         timeLimit: 200,
         scoreMultiplier: 2.8 + ((i - 16) * 0.25),
@@ -329,87 +352,6 @@ export default function BoggleGame() {
     localStorage.setItem('boggleGameState', JSON.stringify(gameState));
   }, [currentLevel]);
 
-  // Generate game grid
-  const generateGrid = useCallback(() => {
-    const difficulty = getCurrentDifficulty();
-    const size = config.gridSize[difficulty];
-    const vowels = 'AEIOU';
-    const vowelPercent = config.vowelPercentage[difficulty];
-    const minVowels = Math.ceil(size * size * vowelPercent);
-    let vowelCount = 0;
-
-    // Create letter pool
-    const letterPool: string[] = [];
-    
-    // Add letters from common words
-    commonWords.forEach(word => {
-      word.split('').forEach(letter => letterPool.push(letter));
-    });
-
-    // Add extra vowels
-    const extraVowels = difficulty === 'expert' ? 50 : 30;
-    for (let i = 0; i < extraVowels; i++) {
-      letterPool.push(vowels[Math.floor(Math.random() * vowels.length)]);
-    }
-
-    // Add common consonants
-    const commonConsonants = 'BCDFGHJKLMNPQRSTVWXYZ';
-    const extraConsonants = difficulty === 'expert' ? 50 : 40;
-    for (let i = 0; i < extraConsonants; i++) {
-      letterPool.push(commonConsonants[Math.floor(Math.random() * commonConsonants.length)]);
-    }
-
-    // Generate initial grid
-    const newGrid: GridCell[] = [];
-    for (let i = 0; i < size * size; i++) {
-      const randomIndex = Math.floor(Math.random() * letterPool.length);
-      const letter = letterPool[randomIndex];
-      newGrid.push({ 
-        letter,
-        found: false 
-      });
-      
-      // Count vowels
-      if (vowels.includes(letter)) {
-        vowelCount++;
-      }
-    }
-
-    // Ensure minimum vowels are met by replacing consonants
-    let attempts = 0;
-    const maxAttempts = size * size * 2;
-    while (vowelCount < minVowels && attempts < maxAttempts) {
-      const consonantIndices = newGrid
-        .map((cell, idx) => (!vowels.includes(cell.letter) ? idx : -1))
-        .filter(idx => idx !== -1);
-      
-      if (consonantIndices.length > 0) {
-        const randomIndex = consonantIndices[Math.floor(Math.random() * consonantIndices.length)];
-        newGrid[randomIndex].letter = vowels[Math.floor(Math.random() * vowels.length)];
-        vowelCount++;
-      }
-      attempts++;
-    }
-
-    // For expert levels, add more common letter combinations
-    if (difficulty === 'expert') {
-      const suffixes = ['ING', 'ED', 'ER', 'EST', 'LY', 'MENT', 'NESS', 'TION'];
-      const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
-      
-      const availablePositions = newGrid
-        .map((cell, idx) => idx)
-        .sort(() => Math.random() - 0.5);
-      
-      for (let i = 0; i < Math.min(suffix.length, 3); i++) {
-        if (availablePositions.length > i) {
-          newGrid[availablePositions[i]].letter = suffix[i];
-        }
-      }
-    }
-
-    setGrid(newGrid);
-  }, [getCurrentDifficulty, config, commonWords]);
-
   // Show feedback
   const showFeedback = useCallback(({ message, type }: { message: string; type: 'success' | 'error' | 'info' }) => {
     setFeedback({ message, type });
@@ -464,6 +406,199 @@ export default function BoggleGame() {
     levelElement.current.textContent = `Level ${levelConfig.level}: ${levelConfig.description}`;
     updateTargetScore();
   }, [getCurrentLevelConfig, updateTargetScore]);
+
+  const getWordScore = useCallback((word: string, levelConfig: LevelConfig) => {
+    const difficulty = levelConfig.difficulty;
+    return Math.floor(word.length * config.scorePerLetter[difficulty] * levelConfig.scoreMultiplier);
+  }, [config]);
+
+  const getNeighbors = useCallback((index: number, size: number) => {
+    const row = Math.floor(index / size);
+    const col = index % size;
+    const neighbors: number[] = [];
+
+    for (let rowOffset = -1; rowOffset <= 1; rowOffset++) {
+      for (let colOffset = -1; colOffset <= 1; colOffset++) {
+        if (rowOffset === 0 && colOffset === 0) continue;
+        const nextRow = row + rowOffset;
+        const nextCol = col + colOffset;
+
+        if (nextRow >= 0 && nextRow < size && nextCol >= 0 && nextCol < size) {
+          neighbors.push(nextRow * size + nextCol);
+        }
+      }
+    }
+
+    return neighbors;
+  }, []);
+
+  const findWordPath = useCallback((letters: string[], size: number, word: string): number[] | null => {
+    const search = (index: number, wordIndex: number, used: Set<number>, path: number[]): number[] | null => {
+      if (letters[index] !== word[wordIndex]) return null;
+
+      const nextPath = [...path, index];
+      if (wordIndex === word.length - 1) {
+        return nextPath;
+      }
+
+      const nextUsed = new Set(used).add(index);
+      const shuffledNeighbors = getNeighbors(index, size).sort(() => Math.random() - 0.5);
+
+      for (const neighbor of shuffledNeighbors) {
+        if (!nextUsed.has(neighbor)) {
+          const result = search(neighbor, wordIndex + 1, nextUsed, nextPath);
+          if (result) return result;
+        }
+      }
+
+      return null;
+    };
+
+    for (let index = 0; index < letters.length; index++) {
+      if (letters[index] === word[0]) {
+        const result = search(index, 0, new Set(), []);
+        if (result) return result;
+      }
+    }
+
+    return null;
+  }, [getNeighbors]);
+
+  const findBoardWords = useCallback((letters: string[], size: number, levelConfig: LevelConfig): BoardWord[] => {
+    const maxLen = config.maxWordLength[levelConfig.difficulty];
+    const seen = new Set<string>();
+
+    return commonWords
+      .filter((word) => word.length >= levelConfig.minWordLength && word.length <= maxLen)
+      .map((word) => {
+        const path = findWordPath(letters, size, word);
+        return path ? { word, path, score: getWordScore(word, levelConfig) } : null;
+      })
+      .filter((word): word is BoardWord => {
+        if (!word || seen.has(word.word)) return false;
+        seen.add(word.word);
+        return true;
+      })
+      .sort((a, b) => b.score - a.score || b.word.length - a.word.length);
+  }, [commonWords, config.maxWordLength, findWordPath, getWordScore]);
+
+  const createRandomLetters = useCallback((size: number, difficulty: LevelConfig['difficulty']) => {
+    const vowels = 'AEIOU';
+    const commonConsonants = 'BCDFGHJKLMNPQRSTVWXYZ';
+    const vowelPercent = config.vowelPercentage[difficulty];
+    const minVowels = Math.ceil(size * size * vowelPercent);
+    const letters: string[] = [];
+
+    for (let i = 0; i < size * size; i++) {
+      const useVowel = i < minVowels || Math.random() < vowelPercent;
+      letters.push(
+        useVowel
+          ? vowels[Math.floor(Math.random() * vowels.length)]
+          : commonConsonants[Math.floor(Math.random() * commonConsonants.length)],
+      );
+    }
+
+    return letters.sort(() => Math.random() - 0.5);
+  }, [config.vowelPercentage]);
+
+  const createPathForWord = useCallback((size: number, word: string, lockedLetters: string[]) => {
+    const search = (index: number, wordIndex: number, used: Set<number>, path: number[]): number[] | null => {
+      if (lockedLetters[index] && lockedLetters[index] !== word[wordIndex]) return null;
+
+      const nextPath = [...path, index];
+      if (wordIndex === word.length - 1) return nextPath;
+
+      const nextUsed = new Set(used).add(index);
+      const candidates = getNeighbors(index, size)
+        .filter((neighbor) => !nextUsed.has(neighbor) && (!lockedLetters[neighbor] || lockedLetters[neighbor] === word[wordIndex + 1]))
+        .sort(() => Math.random() - 0.5);
+
+      for (const candidate of candidates) {
+        const result = search(candidate, wordIndex + 1, nextUsed, nextPath);
+        if (result) return result;
+      }
+
+      return null;
+    };
+
+    const starts = Array.from({ length: size * size }, (_, index) => index)
+      .filter((index) => !lockedLetters[index] || lockedLetters[index] === word[0])
+      .sort(() => Math.random() - 0.5);
+
+    for (const start of starts) {
+      const result = search(start, 0, new Set(), []);
+      if (result) return result;
+    }
+
+    return null;
+  }, [getNeighbors]);
+
+  const buildPlayableGrid = useCallback((levelConfig: LevelConfig) => {
+    const size = config.gridSize[levelConfig.difficulty];
+    const maxLen = config.maxWordLength[levelConfig.difficulty];
+    const targetScore = levelConfig.winThreshold;
+    const wordCandidates = commonWords
+      .filter((word) => word.length >= levelConfig.minWordLength && word.length <= maxLen)
+      .sort(() => Math.random() - 0.5);
+
+    const maxAttempts = 80;
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      const letters = createRandomLetters(size, levelConfig.difficulty);
+      const lockedLetters = Array(size * size).fill('');
+      let plannedScore = 0;
+      let plantedCount = 0;
+
+      for (const word of wordCandidates) {
+        if (plannedScore >= targetScore && plantedCount >= levelConfig.minSolvableWords) break;
+
+        const path = createPathForWord(size, word, lockedLetters);
+        if (!path) continue;
+
+        path.forEach((cellIndex, letterIndex) => {
+          letters[cellIndex] = word[letterIndex];
+          lockedLetters[cellIndex] = word[letterIndex];
+        });
+
+        plannedScore += getWordScore(word, levelConfig);
+        plantedCount++;
+      }
+
+      const boardWords = findBoardWords(letters, size, levelConfig);
+      const reachableScore = boardWords.reduce((sum, boardWord) => sum + boardWord.score, 0);
+
+      if (boardWords.length >= levelConfig.minSolvableWords && reachableScore >= targetScore) {
+        return {
+          grid: letters.map((letter) => ({ letter, found: false })),
+          words: boardWords,
+        };
+      }
+    }
+
+    const fallbackLetters = createRandomLetters(size, levelConfig.difficulty);
+    return {
+      grid: fallbackLetters.map((letter) => ({ letter, found: false })),
+      words: findBoardWords(fallbackLetters, size, levelConfig),
+    };
+  }, [
+    commonWords,
+    config.gridSize,
+    config.maxWordLength,
+    createPathForWord,
+    createRandomLetters,
+    findBoardWords,
+    getWordScore,
+  ]);
+
+  // Generate game grid after proving it has enough locally valid word paths.
+  const generateGrid = useCallback(() => {
+    const levelConfig = getCurrentLevelConfig();
+    if (!levelConfig) return;
+
+    const playableGrid = buildPlayableGrid(levelConfig);
+    setGrid(playableGrid.grid);
+    setSolvableWords(playableGrid.words);
+  }, [buildPlayableGrid, getCurrentLevelConfig]);
 
   // Start timer
   const startTimer = useCallback(() => {
@@ -889,16 +1024,16 @@ export default function BoggleGame() {
 
   // Handle hint
   const handleHint = () => {
-    if (foundWords.size > 0) {
-      showFeedback({ message: "Try finding more words first!", type: 'info' });
-      return;
-    }
+    const remainingWords = solvableWords.filter(({ word }) => !foundWords.has(word));
+    const hint = remainingWords[Math.floor(Math.random() * remainingWords.length)];
 
-    const hint = commonWords[Math.floor(Math.random() * commonWords.length)];
     if (hint) {
-      showFeedback({ message: `Hint: Try finding a word starting with "${hint[0]}"`, type: 'success' });
+      showFeedback({
+        message: `Hint: There is a ${hint.word.length}-letter word starting with "${hint.word[0]}".`,
+        type: 'success'
+      });
     } else {
-      showFeedback({ message: "No hints available", type: 'error' });
+      showFeedback({ message: "No guaranteed hints left on this board.", type: 'info' });
     }
   };
 
@@ -985,6 +1120,9 @@ export default function BoggleGame() {
           <div className="mt-3 flex flex-wrap gap-2 items-center">
             <span className="text-sm text-gray-300">
               <strong>Level Progress:</strong> {currentLevel}/{levels.length}
+            </span>
+            <span className="text-sm text-gray-300">
+              <strong>Board Check:</strong> {solvableWords.length} guaranteed words
             </span>
             {levels.length > 0 && (
               <select 
