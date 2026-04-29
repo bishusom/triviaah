@@ -94,7 +94,7 @@ export function DailyTriviaPageContent({
           category={category}
           title={title}
           description={cfg.description}
-          faqItems={faqItems}
+          lastUpdated={lastUpdated}
         />
 
         {showQuiz && dateKey && questions.length > 0 ? (

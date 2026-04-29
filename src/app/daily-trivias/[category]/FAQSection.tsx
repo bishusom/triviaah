@@ -78,7 +78,8 @@ export function FAQSection({
   const faqStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: items.slice(0, 4).map(item => ({
+    dateModified: lastUpdated,
+    mainEntity: items.map(item => ({
       '@type': 'Question',
       name: item.title,
       acceptedAnswer: {

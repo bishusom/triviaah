@@ -1,20 +1,17 @@
-import type { TriviaCategoryFaqItem } from '@/lib/trivia-categories';
-
 type LandingStructuredDataProps = {
   category: string;
   title: string;
   description: string;
-  faqItems: TriviaCategoryFaqItem[];
+  lastUpdated: string;
 };
 
 export function LandingStructuredData({
   category,
   title,
   description,
-  faqItems,
+  lastUpdated,
 }: LandingStructuredDataProps) {
   const pageUrl = `https://triviaah.com/daily-trivias/${category}`;
-  void faqItems;
   const graph = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -24,6 +21,8 @@ export function LandingStructuredData({
         url: pageUrl,
         name: `${title} Daily Quiz | Triviaah`,
         description,
+        datePublished: '2024-01-01T00:00:00+00:00',
+        dateModified: lastUpdated,
       },
     ],
   };
