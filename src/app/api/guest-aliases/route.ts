@@ -40,14 +40,12 @@ export async function POST(request: Request) {
   ].filter(Boolean);
 
   for (const alias of candidates) {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('guest_aliases')
-      .insert({ alias })
-      .select('alias')
-      .single();
+      .insert({ alias });
 
-    if (!error && data?.alias) {
-      return NextResponse.json({ alias: data.alias });
+    if (!error) {
+      return NextResponse.json({ alias });
     }
 
     if (!isUniqueViolation(error)) {

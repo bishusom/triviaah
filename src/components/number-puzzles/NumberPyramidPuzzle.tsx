@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RefreshCw, CheckCircle2, Trophy, HelpCircle, Delete, XCircle } from 'lucide-react';
+import { RefreshCw, CheckCircle2, Trophy, HelpCircle, Delete, XCircle, Timer } from 'lucide-react';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -15,15 +15,17 @@ interface Cell {
 }
 
 const DIFFICULTY_CONFIG = {
-  easy: { size: 3, range: 10, hideCount: 3 },
-  medium: { size: 4, range: 15, hideCount: 6 },
-  hard: { size: 5, range: 20, hideCount: 10 },
+  easy: { size: 3, range: 10, hideCount: 3, timeLimit: 45 },
+  medium: { size: 4, range: 15, hideCount: 6, timeLimit: 60 },
+  hard: { size: 5, range: 20, hideCount: 10, timeLimit: 90 },
 };
 
 export default function NumberPyramidPuzzle() {
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
   const [pyramid, setPyramid] = useState<Cell[][]>([]);
   const [isWon, setIsWon] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(DIFFICULTY_CONFIG[difficulty].timeLimit);
   const [showHelp, setShowHelp] = useState(false);
   const [activeCell, setActiveCell] = useState<{ r: number; c: number } | null>(null);
 
@@ -72,6 +74,8 @@ export default function NumberPyramidPuzzle() {
 
     setPyramid(newPyramid);
     setIsWon(false);
+    setIsGameOver(false);
+    setTimeLeft(DIFFICULTY_CONFIG[diff].timeLimit);
     setActiveCell(null);
   }, [difficulty]);
 
@@ -79,8 +83,25 @@ export default function NumberPyramidPuzzle() {
     generatePyramid();
   }, [generatePyramid]);
 
+  useEffect(() => {
+    if (isWon || isGameOver || timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          setIsGameOver(true);
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isWon, isGameOver, timeLeft]);
+
   const handleInputChange = (r: number, c: number, val: string) => {
-    if (isWon) return;
+    if (isWon || isGameOver) return;
     const newPyramid = [...pyramid];
     const numVal = parseInt(val, 10);
     
@@ -95,7 +116,7 @@ export default function NumberPyramidPuzzle() {
   };
 
   const handleKeyPress = (key: string) => {
-    if (!activeCell || isWon) return;
+    if (!activeCell || isWon || isGameOver) return;
     const { r, c } = activeCell;
     const currentVal = pyramid[r][c].userInput;
 
@@ -144,21 +165,35 @@ export default function NumberPyramidPuzzle() {
               <p className="text-slate-400 text-sm">Fill in the missing numbers!</p>
             </div>
           </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setShowHelp(!showHelp)}
-              className="p-2.5 rounded-xl bg-slate-800/50 hover:bg-slate-800 text-slate-300 border border-white/5 transition-colors"
-              title="How to play"
-            >
-              <HelpCircle className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => generatePyramid()}
-              className="p-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 transition-colors"
-              title="New Puzzle"
-            >
-              <RefreshCw className="w-5 h-5" />
-            </button>
+          
+          <div className="flex flex-col items-center sm:items-end gap-3">
+            <div className={`flex items-center gap-3 px-4 py-2 rounded-2xl border transition-all duration-300 ${
+              timeLeft < 10 
+                ? 'bg-rose-500/20 border-rose-500/40 text-rose-400 animate-pulse' 
+                : 'bg-blue-500/10 border-blue-500/20 text-blue-400'
+            }`}>
+              <Timer className={`w-5 h-5 ${timeLeft < 10 ? 'animate-bounce' : ''}`} />
+              <span className="text-2xl font-black tabular-nums">
+                {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+              </span>
+            </div>
+            
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowHelp(!showHelp)}
+                className="p-2.5 rounded-xl bg-slate-800/50 hover:bg-slate-800 text-slate-300 border border-white/5 transition-colors"
+                title="How to play"
+              >
+                <HelpCircle className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => generatePyramid()}
+                className="p-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 transition-colors"
+                title="New Puzzle"
+              >
+                <RefreshCw className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -198,7 +233,7 @@ export default function NumberPyramidPuzzle() {
                   <div key={cell.id} className="relative">
                     {cell.isHidden ? (
                       <button
-                        onClick={() => !isWon && setActiveCell({ r: rIndex, c: cIndex })}
+                        onClick={() => !isWon && !isGameOver && setActiveCell({ r: rIndex, c: cIndex })}
                         className={`w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-base sm:text-xl font-bold rounded-xl border-2 transition-all outline-none ${
                           isActive
                             ? 'bg-blue-600/20 border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.3)]'
@@ -234,7 +269,7 @@ export default function NumberPyramidPuzzle() {
 
         {/* Custom Number Pad */}
         <AnimatePresence>
-          {!isWon && (
+          {!isWon && !isGameOver && (
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -293,6 +328,28 @@ export default function NumberPyramidPuzzle() {
               className="mt-4 px-10 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-[0.2em] text-xs rounded-xl transition-all shadow-xl shadow-blue-600/30 active:scale-95"
             >
               New Challenge
+            </button>
+          </motion.div>
+        )}
+
+        {isGameOver && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-8 bg-rose-950/20 border border-rose-500/20 rounded-3xl flex flex-col items-center justify-center gap-4 mt-8"
+          >
+            <div className="w-20 h-20 bg-rose-500/20 rounded-full flex items-center justify-center text-rose-400 mb-2 shadow-[0_0_30px_rgba(244,63,94,0.2)]">
+              <XCircle className="w-10 h-10" />
+            </div>
+            <div className="text-center">
+              <h3 className="text-3xl font-black text-white mb-2 tracking-tight">Time's Up!</h3>
+              <p className="text-rose-400/80 font-medium tracking-wide uppercase text-xs">The pyramid remains a mystery</p>
+            </div>
+            <button
+              onClick={() => generatePyramid()}
+              className="mt-4 px-10 py-3.5 bg-rose-600 hover:bg-rose-700 text-white font-black uppercase tracking-[0.2em] text-xs rounded-xl transition-all shadow-xl shadow-rose-600/30 active:scale-95"
+            >
+              Try Again
             </button>
           </motion.div>
         )}
