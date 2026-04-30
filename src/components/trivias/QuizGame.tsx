@@ -16,6 +16,21 @@ import { Maximize2, Minimize2, Flame, Zap } from 'lucide-react';
 
 const FALLBACK_QUESTION_IMAGE = '/imgs/default-question-img.png';
 
+const difficultyPillStyles: Record<string, string> = {
+  easy: 'border-emerald-400/30 bg-emerald-500/15 text-emerald-200',
+  medium: 'border-amber-400/30 bg-amber-500/15 text-amber-200',
+  hard: 'border-rose-400/30 bg-rose-500/15 text-rose-200',
+};
+
+function getDifficultyLabel(difficulty?: string) {
+  if (!difficulty) return 'Easy';
+  return difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+}
+
+function getDifficultyPillClass(difficulty?: string) {
+  return difficultyPillStyles[difficulty?.toLowerCase() || 'easy'] || 'border-cyan-400/30 bg-cyan-500/15 text-cyan-200';
+}
+
 interface QuizConfig {
   isQuickfire?: boolean;
   timePerQuestion?: number;
@@ -352,9 +367,14 @@ export default function QuizGame({
                   />
                 </div>
               )}
-              <h2 className="flex-1 text-base font-bold leading-snug text-white sm:text-lg md:text-xl">
-                {currentQuestion.question}
-              </h2>
+              <div className="flex flex-1 flex-col items-center gap-2 sm:items-start">
+                <span className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wide ${getDifficultyPillClass(currentQuestion.difficulty)}`}>
+                  {getDifficultyLabel(currentQuestion.difficulty)}
+                </span>
+                <h2 className="text-base font-bold leading-snug text-white sm:text-lg md:text-xl">
+                  {currentQuestion.question}
+                </h2>
+              </div>
             </div>
 
             <AnimatePresence>

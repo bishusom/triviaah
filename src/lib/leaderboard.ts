@@ -15,11 +15,11 @@ interface TriviaScoreRecord {
   id?: string;
   name: string | null;
   score: number | null;
-  category: string | null;
+  category?: string | null;
   correct_answers?: number | null;
   total_questions?: number | null;
   time_used?: number | null;
-  created_at: string;
+  created_at?: string;
 }
 
 interface AggregatedUser {
@@ -41,7 +41,7 @@ export async function getLeaderboard(
     // Fetch all scores for the timeframe
     const { data: scoresData, error: scoresError } = await supabase
       .from('trivia_scores')
-      .select('*')
+      .select('name, score, created_at')
       .gte('created_at', dateFilter.toISOString());
 
     if (scoresError) {
@@ -204,11 +204,11 @@ export async function getUserStats(
   try {
     const dateFilter = getDateFilter(timeframe);
 
-    // Get scores for this guest (case-insensitive)
+    // Guest aliases are reserved and stored exactly, so use an indexed equality lookup.
     const { data, error } = await supabase
       .from('trivia_scores')
-      .select('*')
-      .ilike('name', guestName) // Case-insensitive match
+      .select('name, score, category, correct_answers, total_questions, time_used, created_at')
+      .eq('name', guestName)
       .gte('created_at', dateFilter.toISOString())
       .order('created_at', { ascending: false });
 
@@ -267,7 +267,7 @@ export async function getDailyTopScores(
 
     const { data, error } = await supabase
       .from('trivia_scores')
-      .select('*')
+      .select('name, score')
       .eq('category', category)
       .gte('created_at', today.toISOString())
       .order('score', { ascending: false })

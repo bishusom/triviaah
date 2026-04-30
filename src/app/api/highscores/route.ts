@@ -2,7 +2,6 @@
 import { NextResponse } from 'next/server';
 import {
   getHighScores,
-  getGlobalHighScore,
   addHighScore,
 } from '@/lib/supabase';
 
@@ -25,10 +24,8 @@ export async function GET(request: Request) {
   try {
     console.log('API: Fetching scores for category:', category);
 
-    const [localHighScores, globalHigh] = await Promise.all([
-      getHighScores(category),
-      getGlobalHighScore(category),
-    ]);
+    const localHighScores = await getHighScores(category);
+    const globalHigh = localHighScores[0] || null;
 
     console.log('API: Found scores:', localHighScores.length);
 

@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import FeedbackComponent from '@/components/common/FeedbackComponent';
 import Ads from '@/components/common/Ads';
-import { getPersistentGuestId } from '@/lib/guestId';
+import { getPersistentGuestId, getUniquePersistentGuestId } from '@/lib/guestId';
 
 type QuizResult = {
   score: number;
@@ -62,7 +62,7 @@ export default function QuizSummary({
   const [highScores, setHighScores] = useState<HighScore[]>([]);
   const [isLoadingScores, setIsLoadingScores] = useState(true);
   const [scoreSaved, setScoreSaved] = useState(false);
-  const [playerMoniker] = useState(getPersistentGuestId());
+  const [playerMoniker, setPlayerMoniker] = useState(getPersistentGuestId());
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const reviewRef = useRef<HTMLDivElement>(null);
@@ -86,11 +86,13 @@ export default function QuizSummary({
       if (saveAttemptedRef.current) return;
       saveAttemptedRef.current = true;
       try {
+        const uniquePlayerMoniker = await getUniquePersistentGuestId();
+        setPlayerMoniker(uniquePlayerMoniker);
         await fetch('/api/highscores', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: playerMoniker,
+            name: uniquePlayerMoniker,
             score: result.score,
             category: result.category,
             correct_answers: result.correctCount,
