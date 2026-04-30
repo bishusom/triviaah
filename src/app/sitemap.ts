@@ -3,6 +3,10 @@ import { MetadataRoute } from 'next'
 import { getCategoriesWithMinQuestions, getAllSubcategories } from '@/lib/supabase'
 import { getTriviaCategorySlugs } from '@/lib/trivia-categories'
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs'
+import { getBrainwaveRouteDefinitions } from '@/lib/brainwave/brainwave-route-registry'
+import { getNumberPuzzlesRouteDefinitions } from '@/lib/number-puzzles/number-puzzles-route-registry'
+import { getRetroGamesRouteDefinitions } from '@/lib/retro-games/retro-games-route-registry'
+import { getWordGamesRouteDefinitions } from '@/lib/word-games/word-games-route-registry'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -150,10 +154,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ── Static pages ──────────────────────────────────────────────────────────
   const mainPages: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
+    { url: `${baseUrl}/trivias`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.HIGH },
     { url: `${baseUrl}/leaderboard`, lastModified: new Date('2025-11-28'), changeFrequency: 'daily', priority: 0.9 },
     { url: `${baseUrl}/about`, lastModified: new Date('2025-11-28'), changeFrequency: 'yearly', priority: PRIORITY.LOW },
     { url: `${baseUrl}/contact`, lastModified: new Date('2025-11-28'), changeFrequency: 'yearly', priority: PRIORITY.LOW },
     { url: `${baseUrl}/privacy`, lastModified: new Date('2025-11-28'), changeFrequency: 'yearly', priority: PRIORITY.MINIMAL },
+    { url: `${baseUrl}/terms`, lastModified: new Date('2025-11-28'), changeFrequency: 'yearly', priority: PRIORITY.MINIMAL },
   ]
 
   // ── Daily trivias ─────────────────────────────────────────────────────────
@@ -172,12 +178,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // ── Brainwave games ───────────────────────────────────────────────────────
-  const brainwaveCategories = [
-    'capitale', 'plotle', 'celebrile', 'literale',
-    'creaturedle', 'foodle', 'inventionle', 'landmarkdle',
-    'songle', 'historidle', 'synonymle', 'automoble',
-    'botanle', 'citadle', 'countridle', 'trordle',
-  ]
+  const brainwaveCategories = getBrainwaveRouteDefinitions().map(page => page.slug)
   const brainwavePages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/brainwave`, lastModified: new Date(), changeFrequency: 'daily', priority: PRIORITY.HIGH },
     ...brainwaveCategories.map(cat => ({
@@ -188,10 +189,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]
 
-  // ── Trivia category + quiz pages (dynamic from Supabase) ─────────────────
-  // ✅ FIX: Category pages (/trivias/science) and quiz pages (/trivias/science/quiz)
-  // are included, but NOT subcategory query-string URLs.
-  // Subcategory routes are only included if you've created actual page routes for them.
+  // ── Trivia category + subcategory pages (dynamic from Supabase) ──────────
+  // Category pages (/trivias/science) and subcategory pages
+  // (/trivias/science/evolution) are included, but NOT subcategory query-string URLs.
+  // Quiz pages remain omitted because their canonicals point at the category routes.
   // Fetch data concurrently to reduce sitemap load time
   const [
     triviaCategorySlugs,
@@ -234,7 +235,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // (subcategoryPages fetched concurrently above)
 
   // ── Retro games ───────────────────────────────────────────────────────────
-  const retroGames = ['snake', 'tic-tac-toe', 'pong', 'minesweeper', 'tetris', 'pacman', 'space-invaders', 'breakout']
+  const retroGames = getRetroGamesRouteDefinitions().map(page => page.slug)
   const retroGamePages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/retro-games`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
     ...retroGames.map(game => ({
@@ -245,20 +246,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]
 
-  // ── IQ & personality tests ────────────────────────────────────────────────
-  const iqTests = ['capa', 'matrixiq', 'mbti', 'big-five', 'enneagram', 'disc', 'love-languages', 'holland-code']
-  const iqTestPages: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}/iq-and-personality-tests`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
-    ...iqTests.map(test => ({
-      url: `${baseUrl}/iq-and-personality-tests/${test}`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: PRIORITY.MEDIUM,
-    })),
-  ]
-
   // ── Word games ────────────────────────────────────────────────────────────
-  const wordGames = ['boggle', 'cryptogram', 'spelling-bee', 'word-search', 'word-ladder', 'crossgrid']
+  const wordGames = getWordGamesRouteDefinitions().map(page => page.slug)
   const wordGamePages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/word-games`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
     ...wordGames.map(game => ({
@@ -270,7 +259,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // ── Number puzzles ────────────────────────────────────────────────────────
-  const numberPuzzles = ['2048', 'number-sequence', 'number-tower', 'prime-hunter', 'sudoku', 'kakuro']
+  const numberPuzzles = getNumberPuzzlesRouteDefinitions().map(page => page.slug)
   const numberPuzzlePages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/number-puzzles`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
     ...numberPuzzles.map(puzzle => ({
@@ -282,9 +271,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // ── Dynamic content (Contentful) ──────────────────────────────────────────
-  // Trivia bank is commented out — good, it was generating 404s likely.
-  // Re-enable only once you confirm every slug returns 200.
-  // (triviaBankPages and blogPages are now fetched concurrently above)
+  // (triviaBankPages and blogPages are fetched concurrently above)
 
   // ─── Final assembly ────────────────────────────────────────────────────────
   // ✅ FIX: Only include URLs that actually exist and return 200.
@@ -307,7 +294,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...brainwavePages,
     ...dynamicPages,       // swap with verifiedDynamicPages once enabled
     ...retroGamePages,
-    //...iqTestPages,
     ...wordGamePages,
     ...numberPuzzlePages,
   ]
