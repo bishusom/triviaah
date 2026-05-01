@@ -5,7 +5,6 @@ export type BrainwaveSlug =
   | 'celebrile'
   | 'songle'
   | 'literale'
-  | 'cryptodle'
   | 'creaturedle'
   | 'foodle'
   | 'landmarkdle'
@@ -74,14 +73,6 @@ const BRAINWAVE_ROUTE_REGISTRY: Record<BrainwaveSlug, BrainwaveRouteDefinition> 
     ogImage: '/imgs/brainwave/literale-og.webp',
     isDailyRefresh: true,
     componentKey: 'LiteraleComponent',
-  },
-  cryptodle: {
-    slug: 'cryptodle',
-    routePath: '/brainwave/cryptodle',
-    title: 'Cryptodle',
-    ogImage: '/imgs/word-games/cryptogram.svg',
-    isDailyRefresh: true,
-    componentKey: 'CryptodleComponent',
   },
   creaturedle: {
     slug: 'creaturedle',

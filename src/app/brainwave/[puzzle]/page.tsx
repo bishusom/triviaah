@@ -11,7 +11,6 @@ import HistoridleComponent from '@/components/brainwave/HistoridleComponent';
 import CelebrileComponent from '@/components/brainwave/CelebrileComponent';
 import SongleComponent from '@/components/brainwave/SongleComponent';
 import LiteraleComponent from '@/components/brainwave/LiteraleComponent';
-import CryptodleComponent from '@/components/brainwave/CryptodleComponent';
 import CreaturedleComponent from '@/components/brainwave/CreaturedleComponent';
 import FoodleComponent from '@/components/brainwave/FoodleComponent';
 import LandmarkdleComponent from '@/components/brainwave/LandmarkdleComponent';
@@ -185,12 +184,6 @@ export default async function BrainwavePuzzlePage({
       const initialData = await getDailyLiterale(targetDate);
       if (!initialData) notFound();
       game = <LiteraleComponent initialData={initialData} />;
-      break;
-    }
-    case 'cryptodle': {
-      const initialData = await getDailyCryptodle(targetDate);
-      if (!initialData) notFound();
-      game = <CryptodleComponent initialData={initialData} />;
       break;
     }
     case 'creaturedle': {

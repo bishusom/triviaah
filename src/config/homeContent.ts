@@ -297,13 +297,25 @@ export const BRAIN_WAVES: ReadonlySectionItems = [
 
 export const WORD_GAMES: ReadonlySectionItems = [
   {
-    category: 'cryptogram',
-    name: 'Cryptogram',
-    path: '/word-games/cryptogram',
-    image: '/imgs/word-games/cryptogram.webp',
-    tagline: 'Decode encrypted texts in this classic puzzle',
-    keywords: 'cryptogram, substitution cipher, decode quotes, word puzzle',
-    playCount: 90000,
+    category: 'boggle',
+    name: 'Boggle',
+    path: '/word-games/boggle',
+    image: '/imgs/word-games/boggle.webp',
+    tagline: 'Find words in a grid of letters to score points',
+    keywords: 'word game, puzzle, vocabulary challenge',
+    playCount: 9200,
+    isNew: false,
+    duration: 'Daily',
+    difficulty: 'Medium'
+  },
+  {
+    category: 'crossgrid',
+    name: 'Crossgrid',
+    path: '/word-games/crossgrid',
+    image: '/imgs/word-games/word-crossgrid.webp',
+    tagline: 'Solve clue-based word squares where rows and columns both have to work',
+    keywords: 'crossgrid puzzle, mini crossword game, word square challenge',
+    playCount: 8700,
     isNew: true,
     duration: 'Daily',
     difficulty: 'Medium'
@@ -316,18 +328,6 @@ export const WORD_GAMES: ReadonlySectionItems = [
     tagline: 'Test your spelling skills with daily challenges',
     keywords: 'spelling game, vocabulary challenge, word puzzle',
     playCount: 88000,
-    isNew: false,
-    duration: 'Daily',
-    difficulty: 'Medium'
-  },
-  {
-    category: 'boggle',
-    name: 'Boggle',
-    path: '/word-games/boggle',
-    image: '/imgs/word-games/boggle.webp',
-    tagline: 'Find words in a grid of letters to score points',
-    keywords: 'word game, puzzle, vocabulary challenge',
-    playCount: 9200,
     isNew: false,
     duration: 'Daily',
     difficulty: 'Medium'
@@ -357,13 +357,13 @@ export const WORD_GAMES: ReadonlySectionItems = [
     difficulty: 'Medium'
   },
   {
-    category: 'crossgrid',
-    name: 'Crossgrid',
-    path: '/word-games/crossgrid',
-    image: '/imgs/word-games/word-crossgrid.webp',
-    tagline: 'Solve clue-based word squares where rows and columns both have to work',
-    keywords: 'crossgrid puzzle, mini crossword game, word square challenge',
-    playCount: 8700,
+    category: 'cryptogram',
+    name: 'Cryptogram',
+    path: '/word-games/cryptogram',
+    image: '/imgs/word-games/cryptogram.webp',
+    tagline: 'Decode encrypted texts in this classic puzzle',
+    keywords: 'cryptogram, substitution cipher, decode quotes, word puzzle',
+    playCount: 90000,
     isNew: true,
     duration: 'Daily',
     difficulty: 'Medium'
@@ -447,7 +447,7 @@ export const NUMBER_PUZZLES: ReadonlySectionItems = [
 
 
 export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
- {
+  {
     category: 'capa',
     name: 'CAPA Test',
     path: '/iq-and-personality-tests/capa',
@@ -538,7 +538,7 @@ export const IQ_PERSONALITY_TESTS: ReadonlySectionItems = [
 ] as const;
 
 export const RETRO_GAMES: ReadonlySectionItems = [
-  {    
+  {
     category: 'tic-tac-toe',
     name: 'Tic Tac Toe',
     path: '/retro-games/tic-tac-toe',
@@ -550,7 +550,7 @@ export const RETRO_GAMES: ReadonlySectionItems = [
     duration: '1m',
     difficulty: 'Easy'
   },
-  {    
+  {
     category: 'snake',
     name: 'Snake',
     path: '/retro-games/snake',

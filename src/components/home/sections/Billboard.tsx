@@ -63,7 +63,7 @@ export default function Billboard() {
   const current = BILLBOARD_DATA[index];
 
   return (
-    <div className="relative h-[52vh] min-h-[390px] w-full overflow-hidden bg-black sm:h-[58vh] md:h-[85vh]">
+    <div className="relative h-[52vh] min-h-[390px] w-full overflow-hidden bg-black sm:h-[58vh] md:h-[65vh]">
       {/* Background Layer with Cross-Fade */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -86,7 +86,7 @@ export default function Billboard() {
       </AnimatePresence>
 
       {/* Content Overlay */}
-      <div className="absolute bottom-14 left-4 right-4 z-10 max-w-xl md:top-[35%] md:bottom-auto md:left-16 md:right-auto md:max-w-2xl">
+      <div className="absolute bottom-24 left-4 right-4 z-10 max-w-xl md:bottom-48 md:top-auto md:left-16 md:right-auto md:max-w-2xl">
         <AnimatePresence mode="wait">
           <motion.div
             key={current.id}
@@ -128,7 +128,7 @@ export default function Billboard() {
       </div>
 
       {/* Slide Indicators (Small bars at bottom-right) */}
-      <div className="absolute bottom-6 right-4 z-30 flex gap-2 md:bottom-24 md:right-16">
+      <div className="absolute bottom-16 right-4 z-30 flex gap-2 md:bottom-36 md:right-16">
         {BILLBOARD_DATA.map((_, i) => (
           <div 
             key={i}

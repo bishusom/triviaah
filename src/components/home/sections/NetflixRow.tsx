@@ -344,7 +344,7 @@ export const NetflixRow = ({ title, items, sectionHref = '#' }: NetflixRowProps)
       {/* Row Header */}
       <div className="mb-1 flex items-center px-4 md:mb-2 md:px-12">
         <Link href={sectionHref} className="group/title flex items-center gap-2">
-          <h2 className="text-base font-black tracking-tight bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent transition-opacity group-hover/title:opacity-80 md:text-2xl">
+          <h2 className="text-base font-black tracking-tight text-gray-100 transition-colors group-hover/title:text-white md:text-2xl drop-shadow-md">
             {title}
           </h2>
           <ChevronRight className="w-5 h-5 text-cyan-500 opacity-0 -translate-x-2 group-hover/title:opacity-100 group-hover/title:translate-x-0 transition-all" />

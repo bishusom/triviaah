@@ -76,17 +76,17 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
   return (
     <div className="bg-[#141414] min-h-screen text-white overflow-x-hidden">
       <NavBar />
-      
+
       <main className="flex flex-col">
         {/* Top Ad Slot */}
-        <div className="mt-[65px] flex w-full justify-center bg-black/20 pb-1 md:mt-[73px] md:pb-4">
+        <div className="mt-[55px] flex w-full justify-center bg-black/20 pb-1 md:mt-[60px] md:pb-4">
           <Ads format="fluid" style={{ width: '100%', maxWidth: '1200px', height: '90px' }} />
         </div>
 
         <Billboard />
 
         <div className="relative z-20 -mt-14 pt-4 space-y-6 pb-16 bg-gradient-to-t from-[#141414] via-[#141414]/95 to-transparent md:-mt-32 md:pt-10 md:space-y-12 md:pb-24">
-          
+
           <NetflixRow title="Daily Quizzes - Updated 24 hours" items={DAILY_QUIZZES} sectionHref="/daily-trivias" />
 
           <NetflixRow title="Brain Waves - Daily Puzzles" items={BRAIN_WAVES} sectionHref="/brainwave" />
@@ -114,7 +114,7 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
                   href="/trivias"
                   className="group/title flex items-center gap-2"
                 >
-                  <h2 className="text-lg md:text-2xl font-black tracking-tight bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent group-hover/title:opacity-80 transition-opacity">
+                  <h2 className="text-lg md:text-2xl font-black tracking-tight text-gray-100 transition-colors group-hover/title:text-white drop-shadow-md">
                     Popular Trivia Categories
                   </h2>
                   <ChevronRight className="w-5 h-5 text-cyan-500 opacity-0 -translate-x-2 group-hover/title:opacity-100 group-hover/title:translate-x-0 transition-all" />
@@ -160,12 +160,14 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
 
           <NetflixRow title="Number Puzzles" items={NUMBER_PUZZLES} sectionHref="/number-puzzles" />
 
+          {/* No need to show retro games row
           <NetflixRow title="Retro Classics" items={RETRO_GAMES} sectionHref="/retro-games" />
+          */}
         </div>
       </main>
       <div className="px-4 md:px-12">
         <Ads format="fluid" style={{ width: '100%', height: '120px' }} />
-      </div>            
+      </div>
       <Footer />
     </div>
   );
