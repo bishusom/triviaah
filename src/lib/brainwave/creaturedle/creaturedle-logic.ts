@@ -1,5 +1,5 @@
 // lib/creaturedle-logic.ts
-import { CreaturePuzzle } from '@/lib/brainwave/creaturedle/creaturdle-sb';
+import { CreaturePuzzle } from '@/lib/brainwave/creaturedle/creaturedle-sb';
 export interface CreatureGuessResult {
   guess: string;
   isCorrect: boolean;
@@ -19,22 +19,22 @@ function normalizeText(text: string): string {
 }
 
 export function checkCreatureGuess(
-  guess: string, 
+  guess: string,
   puzzle: CreaturePuzzle
 ): CreatureGuessResult {
   const normalizedGuess = normalizeText(guess);
   const normalizedAnswer = normalizeText(puzzle.answer);
   const isCorrect = normalizedGuess === normalizedAnswer;
-  
+
   // Generate letter-by-letter feedback (Wordle-style)
   const letterStatuses: ('correct' | 'present' | 'absent')[] = [];
   const answerLetters = normalizedAnswer.split('');
   const guessLetters = normalizedGuess.split('');
-  
+
   // First pass: mark correct letters
   const remainingAnswerLetters = [...answerLetters];
   const statuses: ('correct' | 'present' | 'absent')[] = new Array(guessLetters.length).fill('absent');
-  
+
   // Mark correct positions
   for (let i = 0; i < guessLetters.length; i++) {
     if (i < answerLetters.length && guessLetters[i] === answerLetters[i]) {
@@ -42,22 +42,22 @@ export function checkCreatureGuess(
       remainingAnswerLetters[i] = ''; // Mark as used
     }
   }
-  
+
   // Second pass: mark present letters (but not in correct position)
   for (let i = 0; i < guessLetters.length; i++) {
     if (statuses[i] === 'correct') continue;
-    
+
     const letter = guessLetters[i];
     const foundIndex = remainingAnswerLetters.findIndex(
       (answerLetter, index) => answerLetter === letter && index !== i
     );
-    
+
     if (foundIndex !== -1) {
       statuses[i] = 'present';
       remainingAnswerLetters[foundIndex] = ''; // Mark as used
     }
   }
-  
+
   return {
     guess,
     isCorrect,

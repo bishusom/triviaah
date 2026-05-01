@@ -107,9 +107,9 @@ function createDigitMap() {
 function createTemplate(config: DifficultyConfig): TemplateCell[][] {
   const boardSize = config.playableSize + 1;
   const breakKeys = new Set(config.breaks.map(({ row, col }) => cellKey(row, col)));
-  
+
   // Create a randomized sequence for each row to avoid diagonal repetition
-  const rowSequences = Array.from({ length: boardSize }, () => 
+  const rowSequences = Array.from({ length: boardSize }, () =>
     shuffle(Array.from({ length: config.playableSize }, (_, i) => i + 1))
   );
 
@@ -488,11 +488,10 @@ export default function KakuroPuzzle() {
               <button
                 key={option.key}
                 onClick={() => changeDifficulty(option.key)}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                  option.key === difficulty
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-800 text-gray-200 hover:bg-gray-700'
-                }`}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${option.key === difficulty
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-800 text-gray-200 hover:bg-gray-700'
+                  }`}
               >
                 {option.badge}
               </button>
@@ -567,13 +566,12 @@ export default function KakuroPuzzle() {
                         onChange={(event) => updateCell(rowIndex, colIndex, event.target.value)}
                         onKeyDown={(event) => handleKeyDown(event, rowIndex, colIndex)}
                         onFocus={() => setSelectedCell({ row: rowIndex, col: colIndex })}
-                        className={`${cellBaseClass} appearance-none rounded-none border-0 p-0 bg-[#eef6ff] text-center align-middle text-xl font-semibold leading-none text-[#0d1b2d] outline-none transition sm:text-2xl ${
-                          hasConflict
-                            ? 'bg-[#ffd7d1] text-[#9f2f1f]'
-                            : isSelected
-                              ? 'bg-[#cfe7ff] ring-2 ring-inset ring-[#2d5f91]'
-                              : 'hover:bg-[#deefff]'
-                        }`}
+                        className={`${cellBaseClass} appearance-none rounded-none border-0 p-0 bg-[#eef6ff] text-center align-middle text-xl font-semibold leading-none text-[#0d1b2d] outline-none transition sm:text-2xl ${hasConflict
+                          ? 'bg-[#ffd7d1] text-[#9f2f1f]'
+                          : isSelected
+                            ? 'bg-[#cfe7ff] ring-2 ring-inset ring-[#2d5f91]'
+                            : 'hover:bg-[#deefff]'
+                          }`}
                         maxLength={1}
                         inputMode="numeric"
                         autoComplete="off"
@@ -586,30 +584,30 @@ export default function KakuroPuzzle() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center sm:items-stretch gap-4 px-4 sm:px-0">
             <button
               onClick={generatePuzzle}
-              className="rounded-lg bg-white text-gray-900 px-4 py-2 font-semibold transition-colors hover:bg-gray-200"
+              className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
             >
-              New Puzzle
-            </button>
-            <button
-              onClick={revealHint}
-              className="rounded-lg bg-slate-600 text-white px-4 py-2 font-medium transition-colors hover:bg-slate-500"
-            >
-              Reveal Digit
+              🎮 New Puzzle
             </button>
             <button
               onClick={() => checkCompletion(grid)}
-              className="rounded-lg bg-cyan-700 text-white px-4 py-2 font-medium transition-colors hover:bg-cyan-600"
+              className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
             >
-              Check Board
+              ✅ Check Board
+            </button>
+            <button
+              onClick={revealHint}
+              className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
+            >
+              💡 Reveal Digit
             </button>
             <button
               onClick={clearBoard}
-              className="rounded-lg bg-gray-700 text-white px-4 py-2 font-medium transition-colors hover:bg-gray-600"
+              className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-blue-100 to-slate-700 hover:from-slate-500 hover:to-slate-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
             >
-              Clear Board
+              ↩️ Clear Board
             </button>
           </div>
 

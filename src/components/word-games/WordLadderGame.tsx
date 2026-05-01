@@ -684,18 +684,18 @@ export default function WordLadderGame() {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-center gap-4">
+      <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center sm:items-stretch gap-4 px-4 sm:px-0">
         <button 
           onClick={initGame}
-          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200"
+          className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
         >
-          New Game
+          🎮 New Game
         </button>
         <button 
           onClick={provideHint}
-          className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-lg transition-colors duration-200"
+          className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
-          Hint ({config.maxHints - hintsUsed} left)
+          💡 Hint ({config.maxHints - hintsUsed})
         </button>
       </div>
     </div>

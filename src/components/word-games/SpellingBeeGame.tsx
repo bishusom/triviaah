@@ -43,7 +43,7 @@ export default function SpellingBeeGame() {
       win: '/sounds/win.mp3',
       shuffle: '/sounds/click.mp3'
     };
-    
+
     try {
       const audio = new Audio(sounds[type]);
       audio.play().catch(err => console.error(`Error playing ${type} sound:`, err));
@@ -69,7 +69,7 @@ export default function SpellingBeeGame() {
       'BORE', 'CORE', 'FORE', 'GORE', 'MORE', 'PORE', 'SORE', 'TORE', 'WORE', 'TRUE',
       'BLUE', 'CLUE', 'FLUE', 'GLUE', 'WORK', 'YARD', 'YEAR', 'YELL', 'YET', 'YOUR', 'ZONE'
     ];
-    
+
     return examples.filter(word => {
       if (!word.includes(center)) return false;
       for (const letter of word) {
@@ -109,7 +109,7 @@ export default function SpellingBeeGame() {
   const validateWord = useCallback(async (word: string) => {
     const wordUpper = word.toUpperCase();
     const wordLower = word.toLowerCase();
-    
+
     // Basic validation
     if (!wordUpper.split('').every(l => letters.includes(l)) || !wordUpper.includes(centerLetter)) {
       return false;
@@ -123,14 +123,14 @@ export default function SpellingBeeGame() {
       const response = await fetch(
         `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${wordLower}?key=${DICTIONARY_API_KEY}`
       );
-      
+
       if (!response.ok) {
         throw new Error(`API returned ${response.status}`);
       }
 
       const responseText = await response.text();
       let data;
-      
+
       try {
         data = JSON.parse(responseText);
       } catch (parseError) {
@@ -146,13 +146,13 @@ export default function SpellingBeeGame() {
           if (typeof entry === 'string') {
             continue;
           }
-          
+
           if (typeof entry === 'object' && entry !== null) {
-            const wordMatches = 
+            const wordMatches =
               (entry.meta?.id && entry.meta.id.split(':')[0].toUpperCase() === wordUpper) ||
               (entry.hwi?.hw && entry.hwi.hw.replace(/\*/g, '').toUpperCase() === wordUpper) ||
               (entry.meta?.stems && entry.meta.stems.some((stem: string) => stem.toUpperCase() === wordUpper));
-            
+
             if (wordMatches) {
               console.log(`Word "${wordUpper}" validated via Merriam-Webster API.`);
               setAllPossibleWords(prev => [...prev, wordUpper]);
@@ -161,12 +161,12 @@ export default function SpellingBeeGame() {
           }
         }
       }
-      
+
       showFeedback('info', `"${word}" is not in our dictionary.`);
       return false;
     } catch (error) {
       console.error(`Error validating word "${wordUpper}":`, error);
-      
+
       const isInLocalList = allPossibleWords.includes(wordUpper);
       if (!isInLocalList) {
         showFeedback('info', 'Dictionary API unavailable. Using local word list.');
@@ -186,24 +186,24 @@ export default function SpellingBeeGame() {
     do {
       newCenterLetter = getRandomLetter([...vowels, ...consonants]);
       newLetters = [newCenterLetter];
-      
+
       if (newCenterLetter === 'Q') {
         newLetters.push('U');
       } else {
         newLetters.push(getRandomLetter(vowels));
       }
-      
+
       while (newLetters.length < 7) {
         const letter = getRandomLetter([...vowels, ...consonants]);
         if (!newLetters.includes(letter)) {
           newLetters.push(letter);
         }
       }
-      
+
       newLetters = [newLetters[0], ...shuffleArray(newLetters.slice(1))];
       newAllPossibleWords = generateFallbackWords(newCenterLetter, newLetters).slice(0, 50);
     } while (newAllPossibleWords.length < 5);
-    
+
     setLetters(newLetters);
     setCenterLetter(newCenterLetter);
     setCurrentWord([]);
@@ -226,25 +226,25 @@ export default function SpellingBeeGame() {
     if (gameOver) return;
 
     const word = currentWord.join('');
-    
+
     if (word.length < 4) {
       showFeedback('error', 'Word must be at least 4 letters');
       playSound('error');
       return;
     }
-    
+
     if (!word.includes(centerLetter)) {
       showFeedback('error', 'Must use the center letter');
       playSound('error');
       return;
     }
-    
+
     if (foundWords.includes(word)) {
       showFeedback('error', 'You already found this word');
       playSound('error');
       return;
     }
-    
+
     const isValid = await validateWord(word);
     if (isValid) {
       let wordScore = Math.max(1, word.length - 3);
@@ -260,7 +260,7 @@ export default function SpellingBeeGame() {
       } else {
         showFeedback('success', `+${wordScore} points!`);
       }
-      
+
       setScore(prev => prev + wordScore);
       setFoundWords(prev => [...prev, word]);
       updateRank(score + wordScore);
@@ -321,7 +321,7 @@ export default function SpellingBeeGame() {
   useEffect(() => {
     const checkGtag = setInterval(() => {
       if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        event({action: 'spellingbee_started', category: 'spellingbee',label: 'spellingbee'});
+        event({ action: 'spellingbee_started', category: 'spellingbee', label: 'spellingbee' });
         clearInterval(checkGtag);
       }
     }, 100);
@@ -337,20 +337,20 @@ export default function SpellingBeeGame() {
       }
     };
 
-  return (
-    <div className="relative w-16 h-16"> {/* Slightly smaller to accommodate increased spacing */}
-      <button
-        onClick={onClick}
-        className={`w-full h-full flex items-center justify-center font-bold text-xl transition-all duration-200 transform hover:scale-110 ${getColor()}`}
-        style={{
-          clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
-        }}
-      >
-        {letter}
-      </button>
-    </div>
-  );
-};
+    return (
+      <div className="relative w-16 h-16"> {/* Slightly smaller to accommodate increased spacing */}
+        <button
+          onClick={onClick}
+          className={`w-full h-full flex items-center justify-center font-bold text-xl transition-all duration-200 transform hover:scale-110 ${getColor()}`}
+          style={{
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+          }}
+        >
+          {letter}
+        </button>
+      </div>
+    );
+  };
 
   // Feedback style mapping
   const getFeedbackStyle = (type: FeedbackType | '') => {
@@ -371,13 +371,13 @@ export default function SpellingBeeGame() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white p-4 md:p-6 flex flex-col items-center justify-center">
       <h2 className="text-3xl font-bold text-white mb-2 text-center">Spelling Bee</h2>
-      
+
       {/* Score and Rank */}
       <div className="flex justify-center gap-8 mb-6">
         <div className="text-lg font-semibold text-yellow-400">Rank: {rank}</div>
         <div className="text-lg font-semibold text-green-400">Score: {score}</div>
       </div>
-      
+
       {/* Hexagonal letter grid */}
       <div className="flex flex-col items-center justify-center mb-6">
         {/* Top row (2 letters) - increased horizontal gap */}
@@ -392,7 +392,7 @@ export default function SpellingBeeGame() {
             </div>
           ))}
         </div>
-        
+
         {/* Middle row (3 letters) - keep existing spacing */}
         <div className="flex justify-center items-center -mb-4"> {/* Increased negative margin */}
           {letters.slice(3, 4).map((letter, index) => (
@@ -419,7 +419,7 @@ export default function SpellingBeeGame() {
             />
           ))}
         </div>
-        
+
         {/* Bottom row (2 letters) - increased horizontal gap */}
         <div className="flex justify-center">
           {letters.slice(5, 7).map((letter, index) => (
@@ -433,7 +433,7 @@ export default function SpellingBeeGame() {
           ))}
         </div>
       </div>
-      
+
       {/* Feedback message */}
       {feedback.message && (
         <div className={`mb-4 p-4 rounded-lg text-center font-medium ${getFeedbackStyle(feedback.type)}`}>
@@ -448,41 +448,41 @@ export default function SpellingBeeGame() {
           {currentWord.join('') || <span className="text-gray-400">Select letters to form a word</span>}
         </div>
       </div>
-      
+
       {/* Action buttons */}
-      <div className="flex flex-wrap justify-center gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center sm:items-stretch gap-4 px-4 sm:px-0 mb-6">
         <button
           onClick={submitWord}
-          className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200"
+          className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
         >
-          Submit
-        </button>
-        <button
-          onClick={clearCurrentWord}
-          className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors duration-200"
-        >
-          Clear
+          ➡️ Submit
         </button>
         <button
           onClick={shuffleLetters}
-          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200"
+          className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
         >
-          Shuffle
+          🔀 Shuffle
         </button>
         <button
           onClick={showHint}
-          className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-lg transition-colors duration-200"
+          className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
         >
-          Hint
+          💡 Hint
+        </button>
+        <button
+          onClick={clearCurrentWord}
+          className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-blue-100 to-slate-700 hover:from-slate-500 hover:to-slate-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        >
+          ↩️ Clear
         </button>
         <button
           onClick={giveUp}
-          className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors duration-200"
+          className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-red-500 hover:to-rose-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
         >
-          Give Up
+          🏳️ Give Up
         </button>
       </div>
-      
+
       {/* Found words */}
       {foundWords.length > 0 && (
         <div className="bg-gray-700/30 rounded-lg p-4">
@@ -495,11 +495,10 @@ export default function SpellingBeeGame() {
               .map((word, index) => (
                 <span
                   key={index}
-                  className={`px-3 py-1 rounded-full font-medium ${
-                    new Set(word.split('')).size === 7 
-                      ? 'bg-yellow-500 text-gray-900 font-bold' 
-                      : 'bg-blue-500 text-white'
-                  }`}
+                  className={`px-3 py-1 rounded-full font-medium ${new Set(word.split('')).size === 7
+                    ? 'bg-yellow-500 text-gray-900 font-bold'
+                    : 'bg-blue-500 text-white'
+                    }`}
                 >
                   {word}
                 </span>
@@ -507,7 +506,7 @@ export default function SpellingBeeGame() {
           </div>
         </div>
       )}
-      
+
       {/* Game over modal */}
       {showGameOverModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">

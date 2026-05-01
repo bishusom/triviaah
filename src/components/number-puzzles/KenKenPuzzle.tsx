@@ -190,64 +190,58 @@ export default function KenKenPuzzleComponent() {
           <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Cages match target</span>
         </div>
 
-        <div className="mt-5 overflow-x-auto">
-          <div className="mx-auto w-fit rounded-[1.8rem] border-2 border-[#2f6ee5] bg-[#10253f] p-1 shadow-[0_0_0_1px_rgba(59,130,246,0.15),0_18px_40px_rgba(8,15,30,0.45)]">
+        <div className="mt-5">
+          <div className="mx-auto w-full max-w-[22rem] border-2 border-[#2f6ee5] bg-[#10253f] p-1 shadow-[0_0_0_1px_rgba(59,130,246,0.15),0_18px_40px_rgba(8,15,30,0.45)]">
             <div className="grid grid-cols-4 gap-0.5">
-            {board.map((row, rowIndex) =>
-              row.map((value, colIndex) => {
-                const cageIndex = cageMap.get(`${rowIndex}-${colIndex}`) ?? 0;
-                const cage = puzzle.cages[cageIndex];
-                const primary = firstCellForCage(rowIndex, colIndex);
+              {board.map((row, rowIndex) =>
+                row.map((value, colIndex) => {
+                  const cageIndex = cageMap.get(`${rowIndex}-${colIndex}`) ?? 0;
+                  const cage = puzzle.cages[cageIndex];
+                  const primary = firstCellForCage(rowIndex, colIndex);
 
-                return (
-                  <div
-                    key={`${rowIndex}-${colIndex}`}
-                    className={`relative flex h-20 w-20 items-center justify-center rounded-2xl bg-[#bfd4ea] ${borderClasses(rowIndex, colIndex)} ${solved ? 'bg-[#d7efdc]' : ''}`}
-                  >
-                    {primary ? (
-                      <span className="absolute left-2 top-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#0d1b2d] md:text-xs">
-                        {cage.target}
-                        {cage.op}
-                      </span>
-                    ) : null}
-                    <input
-                      value={value}
-                      onChange={(event) => updateCell(rowIndex, colIndex, event.target.value)}
-                      inputMode="numeric"
-                      maxLength={1}
-                      className="h-full w-full rounded-2xl bg-transparent text-center text-2xl font-black text-black outline-none placeholder:text-black/25"
-                      placeholder=""
-                    />
+                  return (
+                    <div
+                      key={`${rowIndex}-${colIndex}`}
+                      className={`relative flex aspect-square w-full items-center justify-center bg-[#bfd4ea] ${borderClasses(rowIndex, colIndex)} ${solved ? 'bg-[#d7efdc]' : ''}`}
+                    >
+                      {primary ? (
+                        <span className="absolute left-2 top-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#0d1b2d] md:text-sm">
+                          {cage.target}
+                          {cage.op}
+                        </span>
+                      ) : null}
+                      <input
+                        value={value}
+                        onChange={(event) => updateCell(rowIndex, colIndex, event.target.value)}
+                        inputMode="numeric"
+                        maxLength={1}
+                        className="absolute inset-0 h-full w-full bg-transparent text-center text-2xl font-black text-black outline-none placeholder:text-black/25"
+                        placeholder=""
+                      />
                     </div>
                   );
                 }),
-            )}
+              )}
             </div>
           </div>
         </div>
 
         <p className="mt-4 text-sm text-white/70">{message}</p>
 
-        <div className="mt-5 flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={checkBoard}
-            className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-black uppercase tracking-[0.16em] text-white transition-all duration-200 hover:scale-[1.02] active:scale-95"
-            style={{
-              background: 'linear-gradient(90deg, #2563eb 0%, #06b6d4 100%)',
-              boxShadow: '0 10px 30px rgba(37,99,235,0.28)',
-            }}
-          >
-            <CheckCircle2 className="h-4 w-4" />
-            Check Board
-          </button>
+        <div className="mt-8 flex flex-col sm:flex-row justify-center items-center sm:items-stretch gap-4 px-4 sm:px-0">
           <button
             type="button"
             onClick={() => setPuzzleIndex((index) => (index + 1) % KENKEN_PUZZLES.length)}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
           >
-            <RefreshCcw className="h-4 w-4" />
-            Next Puzzle
+            🎮 New Puzzle
+          </button>
+          <button
+            type="button"
+            onClick={checkBoard}
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
+          >
+            ✅ Check Board
           </button>
         </div>
       </div>

@@ -45,7 +45,7 @@ const OptionButton: React.FC<OptionProps> = ({ children, onClick, disabled, clas
       `px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 ${
         disabled 
           ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-          : 'bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl'
+          : 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700 shadow-[0_8px_18px_rgba(7,89,133,0.22)] hover:shadow-[0_12px_24px_rgba(7,89,133,0.3)]'
       }`
     }
     onClick={onClick}
@@ -173,7 +173,7 @@ export default function NumberSequenceGame() {
     const options: OptionState[] = [{
       value: correctAnswer,
       disabled: false,
-      className: 'bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105'
+      className: 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700 shadow-[0_8px_18px_rgba(7,89,133,0.22)] hover:shadow-[0_12px_24px_rgba(7,89,133,0.3)] px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105'
     }];
     
     while (options.length < 4) {
@@ -189,7 +189,7 @@ export default function NumberSequenceGame() {
         options.push({
           value: wrongAnswer,
           disabled: false,
-          className: 'bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105'
+          className: 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700 shadow-[0_8px_18px_rgba(7,89,133,0.22)] hover:shadow-[0_12px_24px_rgba(7,89,133,0.3)] px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105'
         });
       }
     }
@@ -238,7 +238,7 @@ export default function NumberSequenceGame() {
 
     const { sequence, answer, description } = generateSequenceData(gameState.level);
     const displayElements = sequence.map((num, index) => (
-      <span key={index} className="px-6 py-3 text-xl text-white font-bold bg-gradient-to-br from-gray-600 to-gray-800 rounded-xl shadow-md border border-gray-300">
+      <span key={index} className="px-6 py-3 text-xl font-black text-white bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl border border-cyan-300/25 shadow-[0_8px_18px_rgba(7,89,133,0.22)]">
         {num}
       </span>
     ));
@@ -357,7 +357,7 @@ export default function NumberSequenceGame() {
             options: prev.options.map(option => ({
               ...option,
               disabled: false,
-              className: 'bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105'
+              className: 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700 shadow-[0_8px_18px_rgba(7,89,133,0.22)] hover:shadow-[0_12px_24px_rgba(7,89,133,0.3)] px-8 py-4 text-xl font-bold rounded-2xl transition-all duration-300 transform hover:scale-105'
             }))
           }));
         }, 1000);
@@ -431,18 +431,18 @@ export default function NumberSequenceGame() {
         {/* Stats Bar */}
         <div className="flex justify-between items-center mb-8 p-6 bg-gray-800/50 rounded-2xl shadow-inner border border-blue-100/50">
           <div className="text-center">
-            <div className="text-sm text-gray-500 font-medium">Level</div>
-            <div className="text-2xl font-bold text-blue-600">{gameState.level}</div>
+            <div className="text-sm text-gray-400 font-medium uppercase tracking-wider">Level</div>
+            <div className="text-2xl font-bold text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]">{gameState.level}</div>
           </div>
           <div className="text-center">
-            <div className="text-sm text-gray-500 font-medium">Time</div>
-            <div className={`text-2xl font-bold ${gameState.timeLeft <= 10 ? 'text-red-600 animate-pulse' : 'text-purple-600'}`}>
+            <div className="text-sm text-gray-400 font-medium uppercase tracking-wider">Time</div>
+            <div className={`text-2xl font-bold ${gameState.timeLeft <= 10 ? 'text-red-500 animate-pulse drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]' : 'text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]'}`}>
               {formatTime(gameState.timeLeft)}
             </div>
           </div>
           <div className="text-center">
-            <div className="text-sm text-gray-500 font-medium">Score</div>
-            <div className="text-2xl font-bold text-green-600">{gameState.score}</div>
+            <div className="text-sm text-gray-400 font-medium uppercase tracking-wider">Score</div>
+            <div className="text-2xl font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]">{gameState.score}</div>
           </div>
         </div>
 
@@ -480,18 +480,18 @@ export default function NumberSequenceGame() {
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-4 mb-8">
-          <button
-            onClick={showHint}
-            className="flex-1 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
-          >
-            💡 Show Hint
-          </button>
+        <div className="flex justify-center gap-4 mb-8 px-4 sm:px-0">
           <button
             onClick={initGame}
-            className="flex-1 px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-2xl hover:from-emerald-600 hover:to-green-600 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
+            className="flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
           >
             🎮 New Game
+          </button>
+          <button
+            onClick={showHint}
+            className="flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
+          >
+            💡 Hint
           </button>
         </div>
 

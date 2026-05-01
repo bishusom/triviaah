@@ -449,7 +449,7 @@ export default function Puzzle2048() {
       return (
         <div
           key={`${rowIndex}-${colIndex}`}
-          className="aspect-square rounded-2xl bg-slate-950/50 border border-slate-800/80"
+          className="aspect-square rounded-xl bg-slate-950/50 border border-slate-800/80"
         />
       );
     }
@@ -458,7 +458,7 @@ export default function Puzzle2048() {
       <div
         key={`${rowIndex}-${colIndex}`}
         className={[
-          'aspect-square rounded-2xl flex items-center justify-center font-extrabold shadow-lg transition-transform duration-200',
+          'aspect-square rounded-xl flex items-center justify-center font-extrabold shadow-lg transition-transform duration-200',
           tileStyles(value),
           tileFontSize(value),
         ].join(' ')}
@@ -491,22 +491,22 @@ export default function Puzzle2048() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 w-full md:w-auto">
-            <div className="px-4 py-3 rounded-2xl bg-slate-800/80 border border-slate-700 text-center min-w-[110px]">
-              <div className="text-xs uppercase tracking-[0.2em] text-slate-400">Score</div>
-              <div className="text-xl md:text-2xl font-black text-white">{gameState.score}</div>
+          <div className="grid grid-cols-2 gap-3 w-full sm:w-auto">
+            <div className="px-3 py-2 rounded-2xl bg-slate-800/80 border border-slate-700 text-center min-w-[80px]">
+              <div className="text-xs uppercase tracking-widest text-slate-400">Score</div>
+              <div className="text-xl font-black text-white">{gameState.score}</div>
             </div>
-            <div className="px-4 py-3 rounded-2xl bg-slate-800/80 border border-slate-700 text-center min-w-[110px]">
-              <div className="text-xs uppercase tracking-[0.2em] text-slate-400">Best</div>
-              <div className="text-xl md:text-2xl font-black text-amber-300">{gameState.bestScore}</div>
+            <div className="px-3 py-2 rounded-2xl bg-slate-800/80 border border-slate-700 text-center min-w-[80px]">
+              <div className="text-xs uppercase tracking-widest text-slate-400">Best</div>
+              <div className="text-xl font-black text-amber-300">{gameState.bestScore}</div>
             </div>
-            <div className="px-4 py-3 rounded-2xl bg-slate-800/80 border border-slate-700 text-center min-w-[110px]">
-              <div className="text-xs uppercase tracking-[0.2em] text-slate-400">Moves</div>
-              <div className="text-xl md:text-2xl font-black text-white">{gameState.moves}</div>
+            <div className="px-3 py-2 rounded-2xl bg-slate-800/80 border border-slate-700 text-center min-w-[80px]">
+              <div className="text-xs uppercase tracking-widest text-slate-400">Moves</div>
+              <div className="text-xl font-black text-white">{gameState.moves}</div>
             </div>
-            <div className="px-4 py-3 rounded-2xl bg-slate-800/80 border border-slate-700 text-center min-w-[110px]">
-              <div className="text-xs uppercase tracking-[0.2em] text-slate-400">Max</div>
-              <div className="text-xl md:text-2xl font-black text-orange-300">{highestTile}</div>
+            <div className="px-3 py-2 rounded-2xl bg-slate-800/80 border border-slate-700 text-center min-w-[80px]">
+              <div className="text-xs uppercase tracking-widest text-slate-400">Max</div>
+              <div className="text-xl font-black text-orange-300">{highestTile}</div>
             </div>
           </div>
         </div>
@@ -548,11 +548,11 @@ export default function Puzzle2048() {
           )}
 
           <div
-            className="mx-auto w-full max-w-[min(92vw,30rem)] select-none touch-none"
+            className="mx-auto w-full max-w-[min(85vw,20rem)] select-none touch-none"
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}
           >
-            <div className="grid grid-cols-4 gap-3 rounded-[2rem] bg-[#142742] p-3 md:p-4 border border-[#355a87] shadow-inner">
+            <div className="grid grid-cols-4 gap-2 rounded-3xl bg-[#142742] p-2.5 border border-[#355a87] shadow-inner">
               {gameState.board.map((row, rowIndex) =>
                 row.map((value, colIndex) => renderTile(value, rowIndex, colIndex))
               )}
@@ -560,7 +560,7 @@ export default function Puzzle2048() {
           </div>
 
           <div className="mt-6 flex flex-col items-center gap-4">
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-3 md:hidden">
               <div />
               <button onClick={() => moveGame('up')} className={controlButtonClass} aria-label="Move up">
                 ↑
@@ -585,9 +585,9 @@ export default function Puzzle2048() {
             <div className="flex flex-wrap gap-3 justify-center">
               <button
                 onClick={restartGame}
-                className="px-6 py-3 rounded-2xl bg-gradient-to-r from-slate-700 to-slate-800 border border-slate-600 text-white font-semibold hover:from-slate-600 hover:to-slate-700 transition-all duration-200"
+                className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-base min-w-[160px] flex items-center justify-center gap-2"
               >
-                New Game
+                🎮 New Game
               </button>
             </div>
           </div>

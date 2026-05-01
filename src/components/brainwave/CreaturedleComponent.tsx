@@ -1,4 +1,4 @@
- 'use client';
+'use client';
 
 // src/components/brainwave/creaturedle/CreaturedleComponent.tsx
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -9,8 +9,8 @@ import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
 import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { fetchWikimediaImage } from '@/lib/wikimedia';
-import { addCreatureResult, type CreaturePuzzle } from '@/lib/brainwave/creaturedle/creaturdle-sb';
-import { checkCreatureGuess, type CreatureGuessResult } from '@/lib/brainwave/creaturedle/creaturdle-logic';
+import { addCreatureResult, type CreaturePuzzle } from '@/lib/brainwave/creaturedle/creaturedle-sb';
+import { checkCreatureGuess, type CreatureGuessResult } from '@/lib/brainwave/creaturedle/creaturedle-logic';
 import { Home, Brain, PawPrint, Target, Users, Search, Sparkles, Eye, EyeOff, Zap, Leaf } from 'lucide-react';
 import Link from 'next/link';
 
@@ -23,7 +23,7 @@ interface CreaturedleComponentProps {
 /* -------------------------------------------------------------------------- */
 const EnhancedProgressiveHint = ({ attempts }: { attempts: CreatureGuessResult[] }) => {
   if (attempts.length === 0) return null;
-  
+
   const latestAttempt = attempts[attempts.length - 1];
   const correctLetters = latestAttempt.letterStatuses?.filter(s => s === 'correct').length || 0;
   const presentLetters = latestAttempt.letterStatuses?.filter(s => s === 'present').length || 0;
@@ -70,10 +70,9 @@ const EnhancedProgressiveHint = ({ attempts }: { attempts: CreatureGuessResult[]
         {latestAttempt.letterStatuses?.map((status, i) => (
           <div
             key={i}
-            className={`h-1 flex-1 rounded ${
-              status === 'correct' ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
+            className={`h-1 flex-1 rounded ${status === 'correct' ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
               status === 'present' ? 'bg-gradient-to-r from-yellow-400 to-amber-500' : 'bg-gray-600'
-            }`}
+              }`}
           />
         ))}
       </div>
@@ -108,7 +107,7 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: CreaturePuzzle;
     const name = puzzleData.answer;
     const wordCount = name.split(' ').length;
     const charCount = name.replace(/\s/g, '').length;
-    
+
     if (wordCount > 1) {
       return `${wordCount} words with ${charCount} total letters`;
     } else {
@@ -119,12 +118,12 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: CreaturePuzzle;
   const getLetterPositionHint = () => {
     const name = puzzleData.answer.toLowerCase();
     const latestAttempt = attempts[attempts.length - 1];
-    
+
     // Find correct letters from the latest attempt
     const correctLetters = latestAttempt.letterStatuses
       ?.map((status, index) => status === 'correct' ? latestAttempt.guess[index].toLowerCase() : null)
       .filter(Boolean) || [];
-    
+
     if (correctLetters.length > 0) {
       return correctLetters.join(', ').toUpperCase();
     } else {
@@ -241,9 +240,8 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: CreaturePuzzle;
               <button
                 key={index}
                 onClick={() => setActiveHintIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === activeHintIndex ? 'bg-cyan-400 scale-125' : 'bg-gray-600'
-                }`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${index === activeHintIndex ? 'bg-cyan-400 scale-125' : 'bg-gray-600'
+                  }`}
                 aria-label={`Go to hint ${index + 1}`}
               />
             ))}
@@ -257,12 +255,12 @@ const ValidationHints = ({ puzzleData, attempts }: { puzzleData: CreaturePuzzle;
   );
 };
 
-const ImageBlock = ({ 
-  x, 
-  y, 
-  gridCols, 
-  gridRows, 
-  isRevealed 
+const ImageBlock = ({
+  x,
+  y,
+  gridCols,
+  gridRows,
+  isRevealed
 }: {
   x: number;
   y: number;
@@ -271,7 +269,7 @@ const ImageBlock = ({
   isRevealed: boolean;
 }) => {
   if (isRevealed) return null;
-  
+
   // Calculate position as percentages (like Celebrile)
   const left = (x / gridCols) * 100;
   const top = (y / gridRows) * 100;
@@ -346,7 +344,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
           groups[groupIdx].push(index);
         }
       }
-      
+
       const shuffledOrder: number[] = [];
       groups.forEach(group => {
         for (let i = group.length - 1; i > 0; i--) {
@@ -355,7 +353,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
         }
         shuffledOrder.push(...group);
       });
-      
+
       blockRevealOrderRef.current = shuffledOrder;
     }
   }, []);
@@ -444,15 +442,15 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
       click: '/sounds/click.mp3'
     };
     const audio = new Audio(sounds[soundType]);
-    audio.play().catch(() => {});
+    audio.play().catch(() => { });
   }, [isMuted]);
 
   const triggerConfetti = () => {
     if (confettiCanvasRef.current) {
       const myConfetti = confetti.create(confettiCanvasRef.current, { resize: true, useWorker: true });
-      myConfetti({ 
-        particleCount: 150, 
-        spread: 100, 
+      myConfetti({
+        particleCount: 150,
+        spread: 100,
         origin: { y: 0.6 },
         colors: ['#00FF00', '#00CC00', '#009900']
       });
@@ -552,7 +550,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
     const startDate = new Date(2024, 0, 1);
     const puzzleNumber = Math.floor((clientDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
     let shareText = `Creaturedle #${puzzleNumber} ${gameState === 'won' ? attempts.length : 'X'}/6\n\n`;
-    
+
     attempts.forEach((attempt, index) => {
       attempt.letterStatuses?.forEach(status => {
         if (status === 'correct') {
@@ -567,7 +565,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
         shareText += '\n';
       }
     });
-    
+
     shareText += '\n\nPlay daily at https://triviaah.com/brainwave/creaturedle';
     return shareText;
   };
@@ -593,11 +591,11 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
 
   /* -------------------------- block grid -------------------------- */
   const blockGrid: { x: number; y: number }[] = [];
-    for (let row = 0; row < GRID_ROWS; row++) {
-      for (let col = 0; col < GRID_COLS; col++) {
-        blockGrid.push({ x: col, y: row });
-      }
+  for (let row = 0; row < GRID_ROWS; row++) {
+    for (let col = 0; col < GRID_COLS; col++) {
+      blockGrid.push({ x: col, y: row });
     }
+  }
   const isBlockRevealed = (index: number) => revealedBlocks.includes(index);
 
   const showImageLoader = imageLoading && !imageError;
@@ -605,88 +603,88 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
   const showImage = animalImage && !imageLoading && !imageError;
 
   const triesLeft = 6 - attempts.length;
-  const triesLeftColor = 
-    triesLeft >= 4 ? 'text-green-400' : 
-    triesLeft >= 2 ? 'text-yellow-400' : 
-    'text-red-400';
+  const triesLeftColor =
+    triesLeft >= 4 ? 'text-green-400' :
+      triesLeft >= 2 ? 'text-yellow-400' :
+        'text-red-400';
 
   return (
     <div className="relative">
       <canvas ref={confettiCanvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-10" />
 
-    {/* Image Modal */}
-    {showImageModal && animalImage && (
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-        onClick={() => setShowImageModal(false)}
-      >
-        <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
-          <div className="relative rounded-2xl overflow-hidden bg-gray-900 border border-gray-600" style={{ width: '512px', height: '768px' }}>
-            {/* Close Button - Now positioned inside the image container */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation(); // Prevent triggering the backdrop click
-                setShowImageModal(false);
-              }}
-              className="absolute top-3 right-3 bg-gray-800/90 backdrop-blur-sm border border-gray-600 rounded-full p-2 shadow-xl hover:bg-gray-700/90 z-20 transition-all duration-300 hover:scale-110"
-            >
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            
-            <Image
-              src={animalImage}
-              alt="Mystery Animal"
-              fill
-              className="object-cover"
-              priority
-            />
-            {/* Same block overlay as main image */}
-            <div className="absolute inset-0">
-              {blockGrid.map((pos, index) => (
-                <ImageBlock
-                  key={index}
-                  x={pos.x}
-                  y={pos.y}
-                  gridCols={GRID_COLS}
-                  gridRows={GRID_ROWS}
-                  isRevealed={isBlockRevealed(index)}
-                />
-              ))}
-            </div>
-            
-            {/* Center "?" overlay for modal too */}
-            {revealPercentage === 0 && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-blue-500/50">
-                    <span className="text-green-400 text-2xl font-bold">?</span>
-                  </div>
-                  <p className="text-blue-400 font-semibold">Mystery Animal</p>
-                </div>
-              </div>
-            )}
-            
-            {/* Progress bar for modal */}
-            <div className="absolute bottom-2 left-2 right-2">
-              <div className="bg-black/70 backdrop-blur-sm rounded-xl p-2">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-blue-400 text-xs font-medium">Image Reveal</span>
-                  <span className="text-white text-xs font-bold">{Math.round(revealPercentage)}%</span>
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div 
-                    className="bg-gradient-to-r from-blue-400 to-cyan-500 h-1.5 rounded-full transition-all duration-500"
-                    style={{ width: `${revealPercentage}%` }}
+      {/* Image Modal */}
+      {showImageModal && animalImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowImageModal(false)}
+        >
+          <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden bg-gray-900 border border-gray-600" style={{ width: '512px', height: '768px' }}>
+              {/* Close Button - Now positioned inside the image container */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the backdrop click
+                  setShowImageModal(false);
+                }}
+                className="absolute top-3 right-3 bg-gray-800/90 backdrop-blur-sm border border-gray-600 rounded-full p-2 shadow-xl hover:bg-gray-700/90 z-20 transition-all duration-300 hover:scale-110"
+              >
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              <Image
+                src={animalImage}
+                alt="Mystery Animal"
+                fill
+                className="object-cover"
+                priority
+              />
+              {/* Same block overlay as main image */}
+              <div className="absolute inset-0">
+                {blockGrid.map((pos, index) => (
+                  <ImageBlock
+                    key={index}
+                    x={pos.x}
+                    y={pos.y}
+                    gridCols={GRID_COLS}
+                    gridRows={GRID_ROWS}
+                    isRevealed={isBlockRevealed(index)}
                   />
+                ))}
+              </div>
+
+              {/* Center "?" overlay for modal too */}
+              {revealPercentage === 0 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-blue-500/50">
+                      <span className="text-green-400 text-2xl font-bold">?</span>
+                    </div>
+                    <p className="text-blue-400 font-semibold">Mystery Animal</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Progress bar for modal */}
+              <div className="absolute bottom-2 left-2 right-2">
+                <div className="bg-black/70 backdrop-blur-sm rounded-xl p-2">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-blue-400 text-xs font-medium">Image Reveal</span>
+                    <span className="text-white text-xs font-bold">{Math.round(revealPercentage)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-full h-1.5">
+                    <div
+                      className="bg-gradient-to-r from-blue-400 to-cyan-500 h-1.5 rounded-full transition-all duration-500"
+                      style={{ width: `${revealPercentage}%` }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
 
       {/* Main Game Card */}
       <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5 mb-5">
@@ -705,13 +703,13 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
         </div>
 
         {/* Animal Image & Category */}
-         <div className="flex flex-col md:flex-row gap-6 mb-6 items-center">
+        <div className="flex flex-col md:flex-row gap-6 mb-6 items-center">
           {/* Celebrity Image Container */}
           <div className="flex-shrink-0 relative">
-            <div 
-              className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-600" 
+            <div
+              className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-600"
               style={{ height: `${containerHeight}px`, width: `${containerWidth}px` }}
-               onClick={() => showImage && setShowImageModal(true)}
+              onClick={() => showImage && setShowImageModal(true)}
             >
               {showImageLoader && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-700/50 to-green-900/50 z-10">
@@ -721,7 +719,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
                   </div>
                 </div>
               )}
-              
+
               {showImageError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-700/50 to-green-900/50 z-10">
                   <div className="text-green-400 flex flex-col items-center text-center p-4">
@@ -730,7 +728,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
                   </div>
                 </div>
               )}
-              
+
               {showImage && (
                 <>
                   <Image
@@ -766,7 +764,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
                       </div>
                     </div>
                   )}
-                  
+
                   {/* Reveal Progress */}
                   <div className="absolute bottom-2 left-2 right-2">
                     <div className="bg-black/70 backdrop-blur-sm rounded-xl p-2">
@@ -775,7 +773,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
                         <span className="text-white text-xs font-bold">{Math.round(revealPercentage)}%</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-1.5">
-                        <div 
+                        <div
                           className="bg-gradient-to-r from-purple-400 to-pink-500 h-1.5 rounded-full transition-all duration-500"
                           style={{ width: `${revealPercentage}%` }}
                         />
@@ -818,16 +816,15 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
         <div className="flex flex-wrap gap-3 mb-5">
           <button
             onClick={toggleHardMode}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
-              hardMode 
-                ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg' 
-                : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${hardMode
+              ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
+              : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+              }`}
           >
             <Zap className="w-4 h-4" />
             {hardMode ? 'Hard Mode ON' : 'Hard Mode'}
           </button>
-          
+
           {hardMode && attempts.length > 0 && !showHint && gameState === 'playing' && (
             <button
               onClick={toggleHint}
@@ -904,11 +901,10 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
                     <Link
                       key={dateParam}
                       href={`/brainwave/creaturedle${isToday ? '' : `?date=${dateParam}`}`}
-                      className={`px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                        isToday
-                          ? 'bg-gradient-to-r from-green-500 to-green-600 text-white'
-                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-                      }`}
+                      className={`px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${isToday
+                        ? 'bg-gradient-to-r from-green-500 to-green-600 text-white'
+                        : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                        }`}
                     >
                       {formatDateDisplay(date)}
                       {isToday && ' (Today)'}
@@ -941,16 +937,16 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
                   <div className="flex flex-wrap justify-center gap-2">
                     {attempt.guess.split('').map((letter, letterIndex) => {
                       const status = attempt.letterStatuses?.[letterIndex] || 'absent';
-                      const bgColor = status === 'correct' 
-                        ? 'bg-gradient-to-br from-green-500 to-emerald-600' 
-                        : status === 'present' 
-                        ? 'bg-gradient-to-br from-yellow-500 to-amber-600'
-                        : 'bg-gray-600 border border-gray-500';
+                      const bgColor = status === 'correct'
+                        ? 'bg-gradient-to-br from-green-500 to-emerald-600'
+                        : status === 'present'
+                          ? 'bg-gradient-to-br from-yellow-500 to-amber-600'
+                          : 'bg-gray-600 border border-gray-500';
                       const textColor = status === 'absent' ? 'text-gray-300' : 'text-white';
-                      
+
                       return (
-                        <div 
-                          key={letterIndex} 
+                        <div
+                          key={letterIndex}
                           className={`w-10 h-10 flex items-center justify-center rounded-xl text-lg font-bold ${bgColor} ${textColor} transition-all duration-300 transform hover:scale-110`}
                         >
                           {letter.toUpperCase()}
@@ -990,7 +986,7 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
             </div>
           </div>
         )}
-        
+
         {/* Share & Feedback Section */}
         {(gameState === 'won' || gameState === 'lost') && (
           <div className="flex flex-col items-center gap-4 mt-6 scroll-mt-24 pb-28 md:pb-0">
@@ -1008,9 +1004,9 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
             <FeedbackComponent
               gameType="creaturedle"
               category="brainwave"
-              metadata={{ 
-                attempts: attempts.length, 
-                won: gameState === 'won', 
+              metadata={{
+                attempts: attempts.length,
+                won: gameState === 'won',
                 correctAnswer: puzzleData.answer,
                 hardMode
               }}
@@ -1026,15 +1022,15 @@ export default function CreaturedleComponent({ initialData }: CreaturedleCompone
               </Link>
 
               <Link href="/brainwave"
-                  className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
-                >
-                  <Brain className="w-4 h-4" />
-                  More Brain Teasers
+                className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
+              >
+                <Brain className="w-4 h-4" />
+                More Brain Teasers
               </Link>
             </div>
           </div>
         )}
-        </div>
+      </div>
 
       {/* How to Play Section */}
       <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl border border-gray-700 p-5">

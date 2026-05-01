@@ -34,7 +34,7 @@ export default function NumberPyramidPuzzle() {
     const { size, range, hideCount } = DIFFICULTY_CONFIG[diff];
 
     const baseRow = Array.from({ length: size }, () => Math.floor(Math.random() * range) + 1);
-    
+
     const pyramidData: number[][] = [baseRow];
     for (let r = 1; r < size; r++) {
       const prevRow = pyramidData[r - 1];
@@ -104,13 +104,13 @@ export default function NumberPyramidPuzzle() {
     if (isWon || isGameOver) return;
     const newPyramid = [...pyramid];
     const numVal = parseInt(val, 10);
-    
+
     newPyramid[r][c] = {
       ...newPyramid[r][c],
       userInput: val,
       isCorrect: isNaN(numVal) ? null : numVal === newPyramid[r][c].value,
     };
-    
+
     setPyramid(newPyramid);
     checkWinCondition(newPyramid);
   };
@@ -152,7 +152,7 @@ export default function NumberPyramidPuzzle() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 font-sans text-slate-200">
       <div className="max-w-2xl w-full bg-[#0a0a0a] p-6 sm:p-8 rounded-3xl shadow-2xl border border-blue-500/20 backdrop-blur-sm relative overflow-hidden">
-        
+
         <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600" />
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -165,19 +165,18 @@ export default function NumberPyramidPuzzle() {
               <p className="text-slate-400 text-sm">Fill in the missing numbers!</p>
             </div>
           </div>
-          
+
           <div className="flex flex-col items-center sm:items-end gap-3">
-            <div className={`flex items-center gap-3 px-4 py-2 rounded-2xl border transition-all duration-300 ${
-              timeLeft < 10 
-                ? 'bg-rose-500/20 border-rose-500/40 text-rose-400 animate-pulse' 
-                : 'bg-blue-500/10 border-blue-500/20 text-blue-400'
-            }`}>
+            <div className={`flex items-center gap-3 px-4 py-2 rounded-md border transition-all duration-300 ${timeLeft < 10
+              ? 'bg-rose-500/20 border-rose-500/40 text-rose-400 animate-pulse'
+              : 'bg-blue-500/10 border-blue-500/20 text-blue-400'
+              }`}>
               <Timer className={`w-5 h-5 ${timeLeft < 10 ? 'animate-bounce' : ''}`} />
               <span className="text-2xl font-black tabular-nums">
                 {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
               </span>
             </div>
-            
+
             <div className="flex gap-2">
               <button
                 onClick={() => setShowHelp(!showHelp)}
@@ -203,11 +202,10 @@ export default function NumberPyramidPuzzle() {
             <button
               key={diff}
               onClick={() => changeDifficulty(diff)}
-              className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
-                difficulty === diff 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25' 
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
+              className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${difficulty === diff
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
+                : 'text-slate-500 hover:text-slate-300'
+                }`}
             >
               {diff}
             </button>
@@ -215,7 +213,7 @@ export default function NumberPyramidPuzzle() {
         </div>
 
         {showHelp && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             className="mb-8 p-5 bg-blue-900/20 rounded-2xl border border-blue-500/20 text-sm leading-relaxed text-blue-100"
@@ -234,25 +232,24 @@ export default function NumberPyramidPuzzle() {
                     {cell.isHidden ? (
                       <button
                         onClick={() => !isWon && !isGameOver && setActiveCell({ r: rIndex, c: cIndex })}
-                        className={`w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-base sm:text-xl font-bold rounded-xl border-2 transition-all outline-none ${
-                          isActive
-                            ? 'bg-blue-600/20 border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.3)]'
-                            : cell.userInput 
-                              ? cell.isCorrect 
-                                ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300' 
-                                : 'bg-rose-500/10 border-rose-500/40 text-rose-300'
-                              : 'bg-black/40 border-white/10 hover:border-white/20'
-                        }`}
+                        className={`w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-base sm:text-xl font-bold rounded-xl border-2 transition-all outline-none ${isActive
+                          ? 'bg-[#cce0ff] border-blue-500 text-black shadow-[0_0_15px_rgba(59,130,246,0.4)]'
+                          : cell.userInput
+                            ? cell.isCorrect
+                              ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
+                              : 'bg-rose-500/10 border-rose-500/40 text-rose-300'
+                            : 'bg-[#e6f2ff] border-[#31567f] text-black hover:bg-[#d8ebff]'
+                          }`}
                       >
                         {cell.userInput}
                       </button>
                     ) : (
-                      <div className={`w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-base sm:text-xl font-bold rounded-xl bg-gradient-to-br from-blue-900/40 to-slate-900/40 border border-white/10 text-blue-100 shadow-lg ${cell.value > 99 ? 'text-xs sm:text-sm' : ''}`}>
+                      <div className={`w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-base sm:text-xl font-black rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 border border-cyan-300/25 text-white shadow-[0_8px_18px_rgba(7,89,133,0.22)] ${cell.value > 99 ? 'text-xs sm:text-sm' : ''}`}>
                         {cell.value}
                       </div>
                     )}
                     {cell.isHidden && cell.userInput && cell.isCorrect && (
-                      <motion.div 
+                      <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         className="absolute -top-1.5 -right-1.5 text-emerald-400 bg-black rounded-full"
@@ -270,7 +267,7 @@ export default function NumberPyramidPuzzle() {
         {/* Custom Number Pad */}
         <AnimatePresence>
           {!isWon && !isGameOver && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="mt-4 max-w-sm mx-auto"
@@ -280,7 +277,7 @@ export default function NumberPyramidPuzzle() {
                   <button
                     key={num}
                     onClick={() => handleKeyPress(num.toString())}
-                    className="h-12 sm:h-14 rounded-xl bg-slate-800/40 border border-white/5 text-xl font-bold text-white hover:bg-blue-600/20 hover:border-blue-500/40 active:scale-95 transition-all"
+                    className="h-12 sm:h-14 rounded-md bg-slate-800/40 border border-white/5 text-xl font-bold text-white hover:bg-blue-600/20 hover:border-blue-500/40 active:scale-95 transition-all"
                   >
                     {num}
                   </button>

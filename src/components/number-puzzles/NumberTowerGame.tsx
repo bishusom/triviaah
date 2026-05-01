@@ -1,7 +1,7 @@
 "use client";
 import { useSound } from '@/context/SoundContext';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import confetti from "canvas-confetti"; 
+import confetti from "canvas-confetti";
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -79,9 +79,9 @@ export default function NumberTowerGame() {
       origin: { y: 0.6 },
       colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
     };
-    
+
     confetti(defaults);
-    
+
     if (Math.random() > 0.5) {
       setTimeout(() => {
         confetti({
@@ -117,7 +117,7 @@ export default function NumberTowerGame() {
 
   const generateRule = useCallback(() => {
     const range = getNumberRange();
-    
+
     const rules = [
       {
         name: "multiples",
@@ -189,14 +189,14 @@ export default function NumberTowerGame() {
     let rule;
     let x;
     let numbers;
-    
+
     for (let i = 0; i < 3; i++) {
       rule = rules[Math.floor(Math.random() * rules.length)];
       x = rule.xGenerator();
       numbers = rule.numberGenerator(x, range);
       if (numbers.length >= gameState.targetHeight) break;
     }
-    
+
     if (!rule || !x || !numbers || numbers.length < gameState.targetHeight) {
       rule = rules[0];
       x = rule.xGenerator();
@@ -216,7 +216,7 @@ export default function NumberTowerGame() {
     const totalCells = gridSize * gridSize;
     const range = getNumberRange();
     let numberPool: number[] = [];
-    
+
     let validSequence: number[] = [];
     const x = rule.xValue;
 
@@ -260,10 +260,10 @@ export default function NumberTowerGame() {
     }
 
     numberPool = [...validSequence];
-    
+
     const validNumbersNeeded = Math.max(gameState.targetHeight + 2, Math.ceil(totalCells * 0.4));
     while (numberPool.length < validNumbersNeeded) {
-      const potentialNumbers = rule.numbers.filter(n => 
+      const potentialNumbers = rule.numbers.filter(n =>
         !numberPool.includes(n)
       );
       if (potentialNumbers.length > 0) {
@@ -272,29 +272,29 @@ export default function NumberTowerGame() {
         break;
       }
     }
-    
+
     while (numberPool.length < totalCells) {
       const randomNum = Math.floor(Math.random() * range) + 1;
       numberPool.push(randomNum);
     }
-    
+
     return shuffleArray(numberPool);
   }, [gameState.targetHeight, getGridSize, getNumberRange, shuffleArray]);
 
   const handleCellClick = useCallback((number: number, index: number) => {
     if (!gameState.gameActive) return;
-    
+
     if (selectedCells.has(index)) return;
-    
+
     playSound('select');
     const isValid = gameState.currentRule?.fn(number, gameState.lastNumber) ?? false;
-    
+
     setSelectedCells(prev => new Set(prev).add(index));
-    
+
     if (isValid) {
       const newHeight = gameState.currentHeight + 1;
       const newScore = gameState.score + gameState.level * 2;
-      
+
       setGameState(prev => ({
         ...prev,
         lastNumber: number,
@@ -305,10 +305,10 @@ export default function NumberTowerGame() {
         feedbackClass: 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border border-green-500/30'
       }));
       playSound('found');
-      
+
       setTimeout(() => {
         setGameState(prev => ({ ...prev, feedbackText: '', feedbackClass: '' }));
-        
+
         if (newHeight >= gameState.targetHeight) {
           levelUp();
         }
@@ -321,7 +321,7 @@ export default function NumberTowerGame() {
         feedbackClass: 'bg-gradient-to-r from-red-500/20 to-pink-500/20 text-red-400 border border-red-500/30'
       }));
       playSound('error');
-      
+
       setTimeout(() => {
         setGameState(prev => ({ ...prev, feedbackText: '', feedbackClass: '' }));
       }, 1000);
@@ -341,16 +341,16 @@ export default function NumberTowerGame() {
       feedbackClass: 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-400 border border-yellow-500/30 font-bold text-xl',
       score: prev.score + prev.level * 15
     }));
-    
+
     playSound('win');
     showConfetti();
-    
+
     setTimeout(() => {
       setGameState(prev => {
         const newLevel = prev.level + 1;
         const newRule = generateRule();
         const newNumbers = generateGrid(newRule);
-        
+
         return {
           ...prev,
           level: newLevel,
@@ -371,13 +371,13 @@ export default function NumberTowerGame() {
 
   const clearLastNumber = useCallback(() => {
     if (!gameState.gameActive || gameState.currentHeight === 0) return;
-    
+
     playSound('select');
-    
+
     setGameState(prev => {
       const newStack = [...prev.towerStack];
       newStack.pop();
-      
+
       return {
         ...prev,
         currentHeight: prev.currentHeight - 1,
@@ -385,7 +385,7 @@ export default function NumberTowerGame() {
         lastNumber: newStack.length > 0 ? newStack[newStack.length - 1] : null
       };
     });
-    
+
     setSelectedCells(prev => {
       const arr = Array.from(prev);
       arr.pop();
@@ -395,16 +395,16 @@ export default function NumberTowerGame() {
 
   const showHint = useCallback(() => {
     if (!gameState.gameActive || !gameState.currentRule) return;
-    
+
     playSound('select');
-    
+
     const validIndices: number[] = [];
     gameState.currentNumbers.forEach((num, idx) => {
       if (!selectedCells.has(idx) && gameState.currentRule!.fn(num, gameState.lastNumber)) {
         validIndices.push(idx);
       }
     });
-    
+
     if (validIndices.length > 0) {
       const randomIndex = validIndices[Math.floor(Math.random() * validIndices.length)];
       setGameState(prev => ({
@@ -412,7 +412,7 @@ export default function NumberTowerGame() {
         feedbackText: `Hint: Try ${prev.currentNumbers[randomIndex]}`,
         feedbackClass: 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-400 border border-blue-500/30'
       }));
-      
+
       setTimeout(() => {
         setGameState(prev => ({ ...prev, feedbackText: '', feedbackClass: '' }));
       }, 2000);
@@ -439,10 +439,10 @@ export default function NumberTowerGame() {
       clearInterval(timerIntervalRef.current);
       timerIntervalRef.current = null;
     }
-    
+
     const rule = generateRule();
     const numbers = generateGrid(rule);
-    
+
     setGameState(prev => ({
       level: 1,
       score: 0,
@@ -458,7 +458,7 @@ export default function NumberTowerGame() {
       feedbackClass: '',
       towerStack: []
     }));
-    
+
     setSelectedCells(new Set());
     playSound('select');
   }, [generateRule, generateGrid, playSound]);
@@ -534,9 +534,8 @@ export default function NumberTowerGame() {
           </div>
           <div className="text-center">
             <div className="text-sm text-gray-400 font-medium mb-2">Time</div>
-            <div className={`text-2xl font-bold ${
-              gameState.timeLeft <= 10 ? 'text-red-400 animate-pulse' : 'text-cyan-400'
-            }`}>
+            <div className={`text-2xl font-bold ${gameState.timeLeft <= 10 ? 'text-red-400 animate-pulse' : 'text-cyan-400'
+              }`}>
               {formatTime(gameState.timeLeft)}
             </div>
           </div>
@@ -549,21 +548,20 @@ export default function NumberTowerGame() {
         {/* Difficulty & Progress */}
         <div className="flex items-center justify-between mb-6 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
           <div className="flex items-center gap-3">
-            <span className={`px-3 py-1 rounded-full text-sm font-semibold text-white ${
-              gameState.difficulty === 'easy' ? 'bg-green-500' :
-              gameState.difficulty === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
-            }`}>
+            <span className={`px-3 py-1 rounded-full text-sm font-semibold text-white ${gameState.difficulty === 'easy' ? 'bg-green-500' :
+                gameState.difficulty === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
+              }`}>
               {gameState.difficulty.toUpperCase()}
             </span>
             <span className="text-gray-300">
               Tower: {gameState.currentHeight} / {gameState.targetHeight}
             </span>
           </div>
-          
+
           {/* Progress Bar */}
           <div className="flex-1 max-w-md">
             <div className="w-full bg-gray-700 rounded-full h-3">
-              <div 
+              <div
                 className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full transition-all duration-300"
                 style={{ width: `${progressPercentage}%` }}
               ></div>
@@ -589,7 +587,7 @@ export default function NumberTowerGame() {
             <h2 className="text-3xl font-bold text-red-400 mb-4">Game Over!</h2>
             <p className="text-xl text-gray-300 mb-2">You reached Level {gameState.level}</p>
             <p className="text-lg text-gray-400 mb-6">Final Score: {gameState.score}</p>
-            <button 
+            <button
               onClick={initGame}
               className="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-lg"
             >
@@ -607,7 +605,7 @@ export default function NumberTowerGame() {
                     <span className="text-gray-500 italic">No blocks yet...</span>
                   ) : (
                     gameState.towerStack.map((num, idx) => (
-                      <div 
+                      <div
                         key={idx}
                         className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
                       >
@@ -620,23 +618,21 @@ export default function NumberTowerGame() {
             </div>
 
             {/* Number Grid */}
-            <div 
+            <div
               className="grid gap-3 mb-8 justify-center"
               style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(60px, 80px))` }}
             >
               {gameState.currentNumbers.map((number, index) => {
                 const isSelected = selectedCells.has(index);
-                
+
                 return (
                   <button
                     key={index}
                     onClick={() => handleCellClick(number, index)}
-                    className={`h-16 rounded-xl font-bold text-lg transition-all duration-200 transform ${
-                      isSelected ? 'bg-gray-700 text-gray-500 cursor-not-allowed scale-95' :
-                      'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-300 hover:from-gray-600 hover:to-gray-700 shadow-lg hover:scale-105'
-                    } border-2 ${
-                      isSelected ? 'border-gray-600' : 'border-gray-600 hover:border-blue-500/50'
-                    }`}
+                    className={`h-16 rounded-xl font-black text-lg transition-all duration-200 transform border ${isSelected
+                        ? 'bg-black/40 border-white/10 text-white/30 cursor-not-allowed scale-95 shadow-none'
+                        : 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white border-cyan-300/25 hover:from-cyan-400 hover:to-blue-500 shadow-[0_8px_18px_rgba(7,89,133,0.22)] hover:scale-105'
+                      }`}
                     disabled={isSelected || !gameState.gameActive}
                   >
                     {number}
@@ -646,23 +642,23 @@ export default function NumberTowerGame() {
             </div>
 
             {/* Control Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
+            <div className="flex flex-col sm:flex-row justify-center items-center sm:items-stretch gap-4 mb-8 px-4 sm:px-0">
               <button
                 onClick={initGame}
-                className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-lg"
+                className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
               >
                 🎮 New Game
               </button>
               <button
                 onClick={clearLastNumber}
-                className="px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-2xl hover:from-gray-700 hover:to-gray-800 transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-lg"
+                className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-blue-100 to-slate-700 hover:from-slate-500 hover:to-slate-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 disabled={gameState.currentHeight === 0}
               >
                 ↩️ Clear Last
               </button>
               <button
                 onClick={showHint}
-                className="px-8 py-4 bg-gradient-to-r from-yellow-500 to-amber-500 text-white rounded-2xl hover:from-yellow-600 hover:to-amber-600 transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-lg"
+                className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
               >
                 💡 Hint
               </button>
@@ -679,11 +675,10 @@ export default function NumberTowerGame() {
                       setDifficulty(diff);
                       initGame();
                     }}
-                    className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
-                      gameState.difficulty === diff
+                    className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${gameState.difficulty === diff
                         ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                    }`}
+                      }`}
                   >
                     {diff.charAt(0).toUpperCase() + diff.slice(1)} ({difficultySettings[diff].targetHeight})
                   </button>

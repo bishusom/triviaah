@@ -23,6 +23,7 @@ const FALLBACK_QUOTES = [
 ];
 
 type DisplayPuzzle = {
+  id?: string;
   text: string;
   sourceLabel: string;
   sourceValue: string;
@@ -47,6 +48,7 @@ export default function CryptogramGame() {
   
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const playedQuoteIdsRef = useRef<string[]>([]);
 
   // Sound utilities
   const playSound = useCallback((soundType: 'correct' | 'incorrect' | 'win' | 'lose' | 'click') => {
@@ -70,13 +72,31 @@ export default function CryptogramGame() {
   const initGame = useCallback(async (useRandomPuzzle = false) => {
     setIsLoadingQuote(true);
     let rawQuote: DisplayPuzzle | null = null;
+    
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    
+    // Scale difficulty based on currentLevel
+    let minLen = 20;
+    let maxLen = 50;
+    
+    if (isMobile) {
+        if (currentLevel <= 3) { minLen = 15; maxLen = 35; }
+        else if (currentLevel <= 6) { minLen = 30; maxLen = 50; }
+        else { minLen = 45; maxLen = 65; }
+    } else {
+        if (currentLevel <= 3) { minLen = 30; maxLen = 60; }
+        else if (currentLevel <= 6) { minLen = 50; maxLen = 90; }
+        else { minLen = 80; maxLen = 130; }
+    }
+
     try {
         const fetched = useRandomPuzzle
-          ? await getRandomCryptogramQuote()
-          : await getDailyCryptogramQuote();
+          ? await getRandomCryptogramQuote(minLen, maxLen, playedQuoteIdsRef.current)
+          : await getDailyCryptogramQuote(undefined, minLen, maxLen, playedQuoteIdsRef.current);
 
         if (fetched && fetched.targetQuote) {
             rawQuote = {
+              id: fetched.id,
               text: fetched.targetQuote.toUpperCase(),
               sourceLabel: fetched.sourceLabel,
               sourceValue: fetched.sourceValue,
@@ -87,18 +107,43 @@ export default function CryptogramGame() {
     }
 
     if (!rawQuote) {
-        rawQuote = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)];
+        let validFallbacks = FALLBACK_QUOTES.filter(q => q.text.length >= minLen && q.text.length <= maxLen);
+        const unseenFallbacks = validFallbacks.filter(q => !playedQuoteIdsRef.current.includes(q.text));
+        
+        if (unseenFallbacks.length > 0) {
+            validFallbacks = unseenFallbacks;
+        } else if (validFallbacks.length === 0) {
+            validFallbacks = FALLBACK_QUOTES; // Last resort fallback
+        }
+        
+        rawQuote = validFallbacks[Math.floor(Math.random() * validFallbacks.length)];
+    }
+    
+    if (rawQuote.id) {
+        playedQuoteIdsRef.current.push(rawQuote.id);
+    } else {
+        playedQuoteIdsRef.current.push(rawQuote.text);
     }
     
     setActiveQuote(rawQuote);
 
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    const shuffled = [...letters].sort(() => Math.random() - 0.5);
+    let shuffled = [...letters];
+    let isDerangement = false;
+    while (!isDerangement) {
+        shuffled.sort(() => Math.random() - 0.5);
+        isDerangement = true;
+        for (let i = 0; i < 26; i++) {
+            if (letters[i] === shuffled[i]) {
+                isDerangement = false;
+                break;
+            }
+        }
+    }
     const newCipherMap: Record<string, string> = {};
     
-    // Ensure no letter maps to itself (optional but good for cryptograms)
+    // Ensure no letter maps to itself
     for (let i = 0; i < 26; i++) {
-        // simple shuffle, could result in self-mapping occasionally, but acceptable for this demo
       newCipherMap[letters[i]] = shuffled[i]; 
     }
     
@@ -149,6 +194,11 @@ export default function CryptogramGame() {
     initGame();
   }, [initGame]);
 
+  const nextLevel = useCallback(() => {
+    setCurrentLevel(prev => prev + 1);
+    initGame(true);
+  }, [initGame]);
+
   // Check win condition
   useEffect(() => {
     if (gameState !== 'playing' || isAnimatingIntro || !activeQuote) return;
@@ -169,8 +219,12 @@ export default function CryptogramGame() {
           origin: { y: 0.6 }
         });
       }
+      
+      setTimeout(() => {
+        nextLevel();
+      }, 4000);
     }
-  }, [userMapping, activeQuote, cipherMap, gameState, isAnimatingIntro, playSound]);
+  }, [userMapping, activeQuote, cipherMap, gameState, isAnimatingIntro, playSound, nextLevel]);
 
   // Handle keypress
   useEffect(() => {
@@ -227,11 +281,6 @@ export default function CryptogramGame() {
     }
   };
 
-  const nextLevel = () => {
-    setCurrentLevel(prev => prev + 1);
-    initGame(true);
-  };
-  
   const resetGame = () => {
     initGame();
   };
@@ -267,9 +316,10 @@ export default function CryptogramGame() {
               Level: {currentLevel} {activeQuote ? <span>| <span className="text-amber-400 font-semibold">{activeQuote.sourceLabel}</span>: <span className="text-amber-300">{activeQuote.sourceValue}</span></span> : ''}
             </div>
           </div>
-          <div className="flex items-center gap-4 md:gap-6">
-            <div className="bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg">
-              Hints: {hintsUsed}
+          <div className="flex items-center gap-3 md:gap-4 mt-4 md:mt-0">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 bg-amber-500/10 border-amber-500/20 text-amber-400">
+              <span className="text-sm font-semibold uppercase tracking-wider hidden sm:inline">Hints</span>
+              <span className="text-2xl font-black tabular-nums">{hintsUsed}</span>
             </div>
           </div>
         </div>
@@ -344,18 +394,18 @@ export default function CryptogramGame() {
 
           {/* Action Buttons */}
           {gameState === 'playing' && !isAnimatingIntro && (
-              <div className="flex justify-center gap-4 mt-10">
+              <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center sm:items-stretch gap-4 px-4 sm:px-0 mt-10">
                  <button 
                   onClick={resetGame}
-                  className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-xl transition-colors"
+                  className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
                 >
-                  Restart
+                  🔄 Restart
                 </button>
                 <button 
                   onClick={useHint}
-                  className="px-6 py-2 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold rounded-xl transition-all shadow-lg"
+                  className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
                 >
-                  Hint
+                  💡 Hint
                 </button>
               </div>
           )}
@@ -383,11 +433,16 @@ export default function CryptogramGame() {
         {/* On-screen Keyboard */}
         {gameState === 'playing' && !isAnimatingIntro && (
           <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl border border-gray-700 p-4">
-            <h3 className="text-gray-400 text-sm mb-3">
-                {selectedCipherLetter 
-                    ? <span>Map letter for cipher <strong className="text-cyan-400 text-lg uppercase">{selectedCipherLetter}</strong>:</span> 
-                    : "Select a cipher letter in the puzzle to map it"}
-            </h3>
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+              <h3 className="text-gray-300 text-sm font-medium">
+                  {selectedCipherLetter 
+                      ? <span>Map letter for cipher <strong className="text-cyan-400 text-lg uppercase">{selectedCipherLetter}</strong>:</span> 
+                      : "Select a cipher letter in the puzzle to map it"}
+              </h3>
+              <p className="text-gray-500 text-xs italic mt-2 sm:mt-0">
+                  💡 Tip: You can type on your physical keyboard
+              </p>
+            </div>
             <div className="space-y-2">
               {keyboardRows.map((row, rowIndex) => (
                 <div key={rowIndex} className="flex justify-center gap-1.5 md:gap-2">

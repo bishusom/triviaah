@@ -641,12 +641,21 @@ export default function WordSearchGame() {
               ) : ' • Max difficulty!'}
             </div>
           </div>
-          <div className="flex items-center gap-4 md:gap-6">
-            <div className="bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg">
-              ⏱️ {formatTime(timer)}
+          <div className="flex items-center gap-3 md:gap-4 mt-4 md:mt-0">
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 ${timer < 30
+              ? 'bg-rose-500/20 border-rose-500/40 text-rose-400 animate-pulse'
+              : 'bg-blue-500/10 border-blue-500/20 text-blue-400'
+              }`}>
+              <span className="text-xl">⏱️</span>
+              <span className="text-2xl font-black tabular-nums">
+                {formatTime(timer)}
+              </span>
             </div>
-            <div className="bg-gray-900/80 px-4 py-2 rounded-lg border border-gray-700 font-mono text-lg">
-              Words: {words.length - foundWords.length}/{words.length}
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 bg-emerald-500/10 border-emerald-500/20 text-emerald-400">
+              <span className="text-sm font-semibold uppercase tracking-wider hidden sm:inline">Words</span>
+              <span className="text-2xl font-black tabular-nums">
+                {words.length - foundWords.length}/{words.length}
+              </span>
             </div>
           </div>
         </div>
@@ -701,13 +710,13 @@ export default function WordSearchGame() {
                   data-index={index}
                   className={`
                     flex items-center justify-center font-bold text-2xl md:text-3xl
-                    transition-all duration-200 select-none rounded-xl
+                    transition-all duration-200 select-none rounded
                     border border-white/20 backdrop-blur-sm
                     ${selectedCells.includes(index)
                       ? 'bg-blue-500 text-white scale-110 shadow-2xl shadow-blue-500/60 z-10 border-blue-300'
                       : foundWords.some(w => grid[index].word === w)
                         ? 'bg-green-600/90 text-white shadow-lg shadow-green-500/50 border-green-400'
-                        : 'bg-gray-700/90 hover:bg-gray-600/90 text-white border-gray-600'
+                        : 'bg-[#e6f2ff] hover:bg-[#d8ebff] text-black border-[#31567f]'
                     }
                   `}
                   style={{
@@ -782,20 +791,20 @@ export default function WordSearchGame() {
         </div>
 
          {/* Action Buttons - Moved up before words list */}
-        <div className="flex justify-center gap-4 md:gap-6 mb-6 md:mb-8">
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center sm:items-stretch gap-4 mb-6 md:mb-8 px-4 sm:px-0">
           <button
             onClick={() => initGame()}
-            className="px-6 md:px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             disabled={isLoading}
           >
-            New Game
+            🎮 New Game
           </button>
           <button
             onClick={giveHint}
-            className="px-6 md:px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             disabled={isLoading}
           >
-            Hint
+            💡 Hint
           </button>
         </div>
 

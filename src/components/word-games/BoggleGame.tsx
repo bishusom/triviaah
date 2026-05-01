@@ -1157,16 +1157,16 @@ export default function BoggleGame() {
                   data-cell-index={index}
                   className={`
                     ${currentGridSize <= 5 ? 'w-12 h-12 md:w-14 md:h-14 text-lg md:text-xl' : 'w-10 h-10 md:w-11 md:h-11 text-base md:text-lg'}
-                    rounded-lg md:rounded-xl font-bold transition-all duration-200
+                    rounded font-bold transition-all duration-200
                     ${selectedCells.includes(index) 
                       ? 'bg-blue-500 text-white scale-105 shadow-lg' 
                       : selectedCells[selectedCells.length - 1] === index 
                         ? 'bg-blue-600 text-white scale-110 shadow-lg'
                         : cell.found 
                           ? 'bg-green-600/80 text-white'
-                          : 'bg-gray-700/80 hover:bg-gray-600/80 text-white'
+                          : 'bg-[#e6f2ff] hover:bg-[#d8ebff] text-black'
                     }
-                    border-2 ${selectedCells.includes(index) ? 'border-blue-300' : cell.found ? 'border-green-400' : 'border-gray-600'}
+                    border-2 ${selectedCells.includes(index) ? 'border-blue-300' : cell.found ? 'border-green-400' : 'border-[#31567f]'}
                     active:scale-95
                   `}
                   onMouseDown={(e) => {
@@ -1221,18 +1221,18 @@ export default function BoggleGame() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-center gap-4 md:gap-6 mb-6 md:mb-8">
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center sm:items-stretch gap-4 px-4 sm:px-0 mb-6 md:mb-8">
           <button 
             onClick={handleNewGame}
-            className="px-6 md:px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
           >
-            Restart Level
+            🔄 Restart Level
           </button>
           <button 
             onClick={handleHint}
-            className="px-6 md:px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
           >
-            Get Hint
+            💡 Get Hint
           </button>
         </div>
 

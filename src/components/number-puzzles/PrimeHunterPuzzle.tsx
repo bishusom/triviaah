@@ -364,12 +364,12 @@ export default function PrimeHunterPuzzle() {
                 <button
                   key={index}
                   onClick={() => !isDisabled && handleCellClick(absoluteNum, index)}
-                  className={`h-16 rounded-xl font-bold text-lg transition-all duration-200 transform ${
-                    isCorrectPrime ? 'bg-gradient-to-br from-green-500/20 to-emerald-500/20 text-green-400 border-2 border-green-500/50' :
-                    isWrongSelection ? 'bg-gradient-to-br from-red-500/20 to-pink-500/20 text-red-400 border-2 border-red-500/50' :
-                    !gameState.gameActive && isPrime(absoluteNum) ? 'bg-gradient-to-br from-blue-500/20 to-cyan-500/20 text-blue-400 border-2 border-blue-500/50' :
-                    'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-300 hover:from-gray-600 hover:to-gray-700 border-2 border-gray-600 hover:border-blue-500/50 hover:scale-105'
-                  } ${isDisabled ? 'cursor-not-allowed scale-95' : 'shadow-lg'}`}
+                  className={`h-16 rounded-xl font-black text-lg transition-all duration-200 transform border ${
+                    isCorrectPrime ? 'bg-gradient-to-br from-green-500/20 to-emerald-500/20 text-green-400 border-green-500/50' :
+                    isWrongSelection ? 'bg-gradient-to-br from-red-500/20 to-pink-500/20 text-red-400 border-red-500/50' :
+                    !gameState.gameActive && isPrime(absoluteNum) ? 'bg-gradient-to-br from-blue-500/20 to-cyan-500/20 text-blue-400 border-blue-500/50' :
+                    'bg-gradient-to-br from-cyan-500 to-blue-600 text-white border-cyan-300/25 hover:from-cyan-400 hover:to-blue-500 shadow-[0_8px_18px_rgba(7,89,133,0.22)] hover:scale-105'
+                  } ${isDisabled ? 'cursor-not-allowed scale-95 shadow-none' : ''}`}
                   disabled={isDisabled}
                   aria-label={`Number ${absoluteNum}`}
                 >
@@ -380,18 +380,18 @@ export default function PrimeHunterPuzzle() {
           </div>
 
           {/* Control Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={showHint}
-              className="px-8 py-4 bg-gradient-to-r from-yellow-500 to-amber-500 text-white rounded-2xl hover:from-yellow-600 hover:to-amber-600 transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-lg"
-            >
-              💡 Hint
-            </button>
+          <div className="flex flex-col sm:flex-row justify-center items-center sm:items-stretch gap-4 px-4 sm:px-0">
             <button
               onClick={initGame}
-              className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-lg"
+              className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
             >
               🎮 New Game
+            </button>
+            <button
+              onClick={showHint}
+              className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
+            >
+              💡 Hint
             </button>
           </div>
         </div>

@@ -450,25 +450,25 @@ export default function SudokuPuzzle() {
         </div>
 
         {/* Game Controls */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center sm:items-stretch gap-4 mb-8 px-4 sm:px-0">
           <button
-            onClick={provideHint}
-            disabled={gameState.hintsUsed >= gameState.maxHints}
-            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-[#2f5b89] to-[#4a88c7] text-white rounded-2xl hover:from-[#3970a7] hover:to-[#5d9cde] disabled:from-gray-600 disabled:to-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
+            onClick={generateNewPuzzle}
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
           >
-            💡 Hint
+            🎮 New Game
           </button>
           <button
             onClick={checkBoard}
-            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-[#1f6fb2] to-[#35a6d6] text-white rounded-2xl hover:from-[#2783ca] hover:to-[#46b7e8] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
           >
-            🔍 Check
+            ✅ Check Board
           </button>
           <button
-            onClick={generateNewPuzzle}
-            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-[#10345b] to-[#1e5b9a] text-white rounded-2xl hover:from-[#15416f] hover:to-[#2871bc] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-bold text-lg"
+            onClick={provideHint}
+            disabled={gameState.hintsUsed >= gameState.maxHints}
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            🎮 New Game
+            💡 Hint
           </button>
         </div>
 

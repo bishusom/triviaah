@@ -372,34 +372,29 @@ export default function AnagramScrambleGame() {
           </button>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={shuffleCurrentLetters}
-            className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
-          >
-            <RefreshCcw className="h-4 w-4" />
-            Shuffle
-          </button>
+        <div className="mt-4 flex flex-col sm:flex-row flex-wrap justify-center items-center sm:items-stretch gap-4">
           <button
             type="button"
             onClick={() => setRoundIndex((index) => (index + 1) % ROUNDS.length)}
-            className="inline-flex items-center gap-2 rounded-lg border border-cyan-400/20 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-500/15 hover:text-cyan-100"
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] font-semibold text-sm sm:text-base whitespace-nowrap"
           >
-            Next Puzzle
+            🎮 Next Puzzle
+          </button>
+          <button
+            type="button"
+            onClick={shuffleCurrentLetters}
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
+          >
+            🔀 Shuffle
           </button>
           <button
             type="button"
             onClick={showHint}
-            className="inline-flex min-w-[7rem] items-center justify-center gap-2 rounded-lg border border-emerald-500/30 px-6 py-2.5 text-sm font-semibold text-emerald-50 transition hover:scale-[1.02] hover:text-white"
-            style={{
-              background: 'linear-gradient(90deg, rgba(6,95,70,0.92) 0%, rgba(4,120,87,0.92) 50%, rgba(5,150,105,0.88) 100%)',
-              boxShadow: '0 10px 24px rgba(6,95,70,0.24)',
-            }}
+            className="w-full sm:w-auto flex-1 max-w-[180px] px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold text-sm sm:text-base whitespace-nowrap"
           >
-            Hint
+            💡 Hint
           </button>
-          <span className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white/70">
+          <span className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white/70">
             <Timer className="h-4 w-4 text-cyan-300" />
             {loading ? 'Loading round' : roundSolved ? 'Round complete' : 'Timed round'}
           </span>

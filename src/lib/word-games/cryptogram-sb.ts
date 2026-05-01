@@ -120,21 +120,40 @@ async function getCryptogramPuzzleById(puzzleId: string): Promise<CryptogramPuzz
   return data ?? null;
 }
 
-async function getRandomCryptogramPuzzleRow(): Promise<CryptogramPuzzleRow | null> {
+async function getRandomCryptogramPuzzleRow(minLength?: number, maxLength?: number, excludeIds?: string[]): Promise<CryptogramPuzzleRow | null> {
   const { data, error } = await supabase
     .from('random_cryptogram_puzzles')
     .select('*')
-    .limit(1);
+    .limit(50);
 
   if (error) {
     console.error('Error fetching random cryptogram puzzle:', error);
     return null;
   }
 
-  return data?.[0] ?? null;
+  if (!data || data.length === 0) return null;
+
+  let candidates = data;
+  
+  if (excludeIds && excludeIds.length > 0) {
+    candidates = candidates.filter(row => !excludeIds.includes(row.id));
+  }
+
+  if (minLength !== undefined && maxLength !== undefined) {
+    candidates = candidates.filter(row => {
+      const text = row.unencrypted_text || '';
+      return text.length >= minLength && text.length <= maxLength;
+    });
+  }
+
+  if (candidates.length > 0) {
+    return candidates[0];
+  }
+
+  return data[0];
 }
 
-export async function getDailyCryptogramQuote(customDate?: Date): Promise<CryptogramQuote | null> {
+export async function getDailyCryptogramQuote(customDate?: Date, minLength?: number, maxLength?: number, excludeIds?: string[]): Promise<CryptogramQuote | null> {
   try {
     const dateString = getClientDateString(customDate);
     const dailyPuzzleId = await getDailyPuzzleId(dateString);
@@ -142,11 +161,18 @@ export async function getDailyCryptogramQuote(customDate?: Date): Promise<Crypto
     if (dailyPuzzleId) {
       const dailyPuzzle = await getCryptogramPuzzleById(dailyPuzzleId);
       if (dailyPuzzle) {
-        return normalizePuzzleRow(dailyPuzzle);
+        if (minLength !== undefined && maxLength !== undefined) {
+          const textLen = (dailyPuzzle.unencrypted_text || '').length;
+          if (textLen >= minLength && textLen <= maxLength) {
+            return normalizePuzzleRow(dailyPuzzle);
+          }
+        } else {
+          return normalizePuzzleRow(dailyPuzzle);
+        }
       }
     }
 
-    const randomPuzzle = await getRandomCryptogramPuzzleRow();
+    const randomPuzzle = await getRandomCryptogramPuzzleRow(minLength, maxLength, excludeIds);
     return randomPuzzle ? normalizePuzzleRow(randomPuzzle) : null;
   } catch (error) {
     console.error('Error fetching daily cryptogram puzzle:', error);
@@ -154,9 +180,9 @@ export async function getDailyCryptogramQuote(customDate?: Date): Promise<Crypto
   }
 }
 
-export async function getRandomCryptogramQuote(): Promise<CryptogramQuote | null> {
+export async function getRandomCryptogramQuote(minLength?: number, maxLength?: number, excludeIds?: string[]): Promise<CryptogramQuote | null> {
   try {
-    const randomPuzzle = await getRandomCryptogramPuzzleRow();
+    const randomPuzzle = await getRandomCryptogramPuzzleRow(minLength, maxLength, excludeIds);
     return randomPuzzle ? normalizePuzzleRow(randomPuzzle) : null;
   } catch (error) {
     console.error('Error fetching random cryptogram puzzle:', error);
@@ -164,10 +190,10 @@ export async function getRandomCryptogramQuote(): Promise<CryptogramQuote | null
   }
 }
 
-export async function getDailyCryptogramPuzzle(customDate?: Date): Promise<CryptogramQuote | null> {
-  return getDailyCryptogramQuote(customDate);
+export async function getDailyCryptogramPuzzle(customDate?: Date, minLength?: number, maxLength?: number, excludeIds?: string[]): Promise<CryptogramQuote | null> {
+  return getDailyCryptogramQuote(customDate, minLength, maxLength, excludeIds);
 }
 
-export async function getRandomCryptogramPuzzle(): Promise<CryptogramQuote | null> {
-  return getRandomCryptogramQuote();
+export async function getRandomCryptogramPuzzle(minLength?: number, maxLength?: number, excludeIds?: string[]): Promise<CryptogramQuote | null> {
+  return getRandomCryptogramQuote(minLength, maxLength, excludeIds);
 }
