@@ -24,8 +24,8 @@ interface Puzzle {
 
 export const metadata: Metadata = {
   title: 'Brainwave Trivia Games - Creative Puzzle Challenges | Triviaah',
-  description: 'Enjoy our collection of creative brainwave trivia games including word puzzles, movie guessing, music challenges and geography quizzes.', 
-  keywords: 'brainwave games, trivia puzzles, word games, movie trivia, music trivia, geography quizzes', 
+  description: 'Enjoy our collection of creative brainwave trivia games including word puzzles, movie guessing, music challenges and geography quizzes.',
+  keywords: 'brainwave games, trivia puzzles, word games, movie trivia, music trivia, geography quizzes',
   alternates: {
     canonical: 'https://triviaah.com/brainwave',
   },
@@ -98,12 +98,12 @@ function PuzzleCard({ puzzle, index }: { puzzle: Puzzle; index: number }) {
     >
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
+
       {/* Glow effect */}
       <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-      
+
       {/* Puzzle Image */}
-      <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">  
+      <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">
         <Image
           src={puzzle.image}
           alt={`${puzzle.name} Puzzle Game`}
@@ -114,7 +114,7 @@ function PuzzleCard({ puzzle, index }: { puzzle: Puzzle; index: number }) {
           priority={index < 4}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-        
+
         {/* Play button overlay */}
         <div className="absolute bottom-4 right-4 w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
           <Play className="w-5 h-5 text-white" />
@@ -125,7 +125,7 @@ function PuzzleCard({ puzzle, index }: { puzzle: Puzzle; index: number }) {
           #{index + 1}
         </div>
       </div>
-      
+
       {/* Puzzle Content */}
       <div className="p-6 relative z-10">
         <h3 className="min-h-[4.5rem] text-lg font-bold leading-tight text-white mb-2 line-clamp-3 group-hover:text-cyan-300 transition-colors sm:min-h-[5.5rem]">
@@ -134,7 +134,7 @@ function PuzzleCard({ puzzle, index }: { puzzle: Puzzle; index: number }) {
         <p className="min-h-[3rem] text-sm leading-relaxed text-gray-300 line-clamp-2 sm:min-h-[3.5rem]">
           {puzzle.tagline}
         </p>
-        
+
         {/* Progress bar effect */}
         <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
           <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 w-0 group-hover:w-full transition-all duration-700" />
@@ -147,13 +147,13 @@ function PuzzleCard({ puzzle, index }: { puzzle: Puzzle; index: number }) {
 export default async function DailyQuizzesPage() {
   const dailyPuzzles = await getDailyPuzzles();
   const currentDate = new Date();
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Structured Data for SEO */}
         <StructuredData puzzles={dailyPuzzles} currentDate={currentDate} />
-        
+
         {/* ── Compact Hero Section ────────────────────────────────────────── */}
         <div className="mb-8 lg:mb-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -170,7 +170,7 @@ export default async function DailyQuizzesPage() {
                 </div>
               </div>
               <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
-                Challenge your mind with our collection of creative trivia puzzles. 
+                Challenge your mind with our collection of creative trivia puzzles.
                 From word games to geography, every challenge is fresh and free to play.
               </p>
             </div>
@@ -202,7 +202,7 @@ export default async function DailyQuizzesPage() {
             </div>
           </div>
         </div>
-       
+
         <div className="py-4">
           <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
         </div>
@@ -222,7 +222,7 @@ export default async function DailyQuizzesPage() {
           <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
         </div>
         */}
-        
+
         {/* Gaming Features Section */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-white text-center mb-8">Why Players Love Brainwave</h2>
@@ -234,7 +234,7 @@ export default async function DailyQuizzesPage() {
               <h3 className="text-xl font-bold text-white mb-2">Creative Challenges</h3>
               <p className="text-gray-300">Unique twists on traditional trivia with innovative puzzle mechanics</p>
             </div>
-            
+
             <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-6 border border-purple-500/20 text-center">
               <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">⚡</span>
@@ -242,7 +242,7 @@ export default async function DailyQuizzesPage() {
               <h3 className="text-xl font-bold text-white mb-2">No Daily Limits</h3>
               <p className="text-gray-300">Play anytime, anywhere - all games are always available!</p>
             </div>
-            
+
             <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20 text-center">
               <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🧠</span>
@@ -250,7 +250,7 @@ export default async function DailyQuizzesPage() {
               <h3 className="text-xl font-bold text-white mb-2">Learn & Grow</h3>
               <p className="text-gray-300">Expand your knowledge across multiple topics while having fun</p>
             </div>
-            
+
             <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl p-6 border border-orange-500/20 text-center">
               <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🏆</span>
@@ -304,10 +304,10 @@ export default async function DailyQuizzesPage() {
           <div className="prose prose-invert max-w-none">
             <h2 className="text-3xl font-bold text-white mb-6">Brainwave Trivia Challenges</h2>
             <p className="text-lg text-gray-300 mb-6">
-              Our <strong className="text-cyan-400">brainwave trivia games</strong> offer creative twists on traditional trivia with puzzle elements 
+              Our <strong className="text-cyan-400">brainwave trivia games</strong> offer creative twists on traditional trivia with puzzle elements
               that challenge different cognitive skills and knowledge domains.
             </p>
-            
+
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-bold text-white mb-4">Popular Game Categories</h3>
@@ -326,11 +326,11 @@ export default async function DailyQuizzesPage() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-yellow-400 font-bold mr-2">•</span>
-                    <span><strong>Cryptodle</strong>: Decode encrypted quotes with substitution logic</span>
+                    <span><strong>Historidle</strong>: Connect events in history from dates</span>
                   </li>
                 </ul>
               </div>
-              
+
               <div>
                 <h3 className="text-xl font-bold text-white mb-4">Why Players Love Brainwave</h3>
                 <ul className="space-y-3 text-gray-300">

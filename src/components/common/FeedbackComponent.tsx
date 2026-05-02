@@ -5,9 +5,9 @@ import { useState } from 'react';
 import { SmilePlus, Smile, Annoyed, Frown, Angry, MessageCircle } from 'lucide-react';
 
 interface FeedbackProps {
-  gameType: 'automoble' | 'botanle' | 'capitale' | 'celebrile' | 'countridle' | 'citadle'| 'creaturedle' | 'cryptodle' |
-            'foodle' | 'inventionle' | 'historidle' | 'landmarkdle' | 'literale' | 'plotle' | 'songle' | 
-            'synonymle' | 'trordle' | 'trivia';
+  gameType: 'automoble' | 'botanle' | 'capitale' | 'celebrile' | 'countridle' | 'citadle' | 'creaturedle' |
+  'foodle' | 'inventionle' | 'historidle' | 'landmarkdle' | 'literale' | 'plotle' | 'songle' |
+  'synonymle' | 'trordle' | 'trivia';
   category?: string;
   metadata?: Record<string, unknown>;
   onSubmitted?: () => void;
@@ -15,46 +15,46 @@ interface FeedbackProps {
 }
 
 const FEEDBACK_OPTIONS = [
-  { 
-    icon: Angry, 
-    label: 'Bad', 
-    value: 1, 
+  {
+    icon: Angry,
+    label: 'Bad',
+    value: 1,
     color: 'text-red-400',
     hoverColor: 'text-red-300',
     bgColor: 'bg-red-500',
     showComment: true // Always show for low ratings
   },
-  { 
-    icon: Frown, 
-    label: 'Poor', 
-    value: 2, 
+  {
+    icon: Frown,
+    label: 'Poor',
+    value: 2,
     color: 'text-pink-400',
     hoverColor: 'text-pink-300',
     bgColor: 'bg-pink-500',
     showComment: true // Always show for low ratings
   },
-  { 
-    icon: Annoyed, 
-    label: 'Average', 
-    value: 3, 
+  {
+    icon: Annoyed,
+    label: 'Average',
+    value: 3,
     color: 'text-amber-400',
     hoverColor: 'text-amber-300',
     bgColor: 'bg-amber-500',
     showComment: true // Show for average ratings
   },
-  { 
-    icon: Smile, 
-    label: 'Good', 
-    value: 4, 
+  {
+    icon: Smile,
+    label: 'Good',
+    value: 4,
     color: 'text-cyan-400',
     hoverColor: 'text-cyan-300',
     bgColor: 'bg-cyan-500',
     showComment: false // Optional for good ratings
   },
-  { 
-    icon: SmilePlus, 
-    label: 'Excellent', 
-    value: 5, 
+  {
+    icon: SmilePlus,
+    label: 'Excellent',
+    value: 5,
     color: 'text-emerald-400',
     hoverColor: 'text-emerald-300',
     bgColor: 'bg-emerald-500',
@@ -62,12 +62,12 @@ const FEEDBACK_OPTIONS = [
   }
 ];
 
-export default function FeedbackComponent({ 
-  gameType, 
-  category = '', 
-  metadata = {}, 
+export default function FeedbackComponent({
+  gameType,
+  category = '',
+  metadata = {},
   onSubmitted,
-  showCommentsForAll = false 
+  showCommentsForAll = false
 }: FeedbackProps) {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
@@ -78,7 +78,7 @@ export default function FeedbackComponent({
   const handleRatingSelect = (rating: number) => {
     setSelectedRating(rating);
     const option = FEEDBACK_OPTIONS.find(opt => opt.value === rating);
-    
+
     // Show comment field based on context
     if (showCommentsForAll) {
       setShowCommentField(true);
@@ -93,7 +93,7 @@ export default function FeedbackComponent({
 
   const handleSubmit = async (rating: number, commentText: string) => {
     if (isSubmitting) return;
-    
+
     setIsSubmitting(true);
     try {
       await fetch('/api/feedback', {
@@ -142,12 +142,12 @@ export default function FeedbackComponent({
   return (
     <div className="text-center">
       <h4 className="text-lg font-bold text-white mb-3">Enjoyed the game?</h4>
-      
+
       {/* Rating Selection */}
       <div className="flex justify-center gap-1 mb-4">
         {FEEDBACK_OPTIONS.map((option) => {
           const isSelected = selectedRating === option.value;
-          
+
           return (
             <button
               key={option.value}
@@ -156,46 +156,45 @@ export default function FeedbackComponent({
               onMouseLeave={() => {
                 if (!showCommentField) setSelectedRating(0);
               }}
-              className={`p-3 transition-all duration-200 transform hover:scale-125 ${
-                isSelected ? 'ring-2 ring-cyan-500 ring-opacity-50 rounded-lg' : ''
-              }`}
+              className={`p-3 transition-all duration-200 transform hover:scale-125 ${isSelected ? 'ring-2 ring-cyan-500 ring-opacity-50 rounded-lg' : ''
+                }`}
               aria-label={`Rate ${option.value} stars - ${option.label}`}
             >
-              <option.icon 
-                size={28} 
+              <option.icon
+                size={28}
                 className={`
                   ${isSelected ? option.hoverColor : option.color} 
                   transition-all duration-200
                   ${isSelected ? 'scale-110' : 'scale-100'}
-                `} 
+                `}
               />
             </button>
           );
         })}
       </div>
-      
+
       {/* Selected Rating Label */}
       {selectedRating > 0 && !showCommentField && (
         <p className="text-cyan-400 font-medium mb-2">
           {selectedOption?.label} - Thank you! ✨
         </p>
       )}
-      
+
       {/* Comment Field (Context-aware) */}
       {showCommentField && selectedRating > 0 && (
         <div className="mt-4 animate-fade-in max-w-md mx-auto">
           <div className="flex items-center gap-2 mb-2">
             <MessageCircle className="w-4 h-4 text-cyan-400" />
             <p className="text-sm text-gray-300">
-              {selectedRating <= 3 
-                ? "What could we improve?" 
+              {selectedRating <= 3
+                ? "What could we improve?"
                 : selectedRating === 4
-                ? "Anything specific you liked?"
-                : "What made it excellent?"}
+                  ? "Anything specific you liked?"
+                  : "What made it excellent?"}
             </p>
           </div>
           <textarea
-            placeholder={selectedRating <= 3 
+            placeholder={selectedRating <= 3
               ? "Optional: Tell us what we can do better..."
               : "Optional: Share what you enjoyed most..."}
             className="w-full p-3 bg-gray-800 border border-cyan-800 rounded-lg text-white text-sm 
@@ -227,11 +226,10 @@ export default function FeedbackComponent({
               <button
                 onClick={handleCommentSubmit}
                 disabled={isSubmitting}
-                className={`px-4 py-2 rounded-lg text-white font-medium transition-all ${
-                  isSubmitting 
-                    ? 'bg-cyan-700 cursor-not-allowed' 
+                className={`px-4 py-2 rounded-lg text-white font-medium transition-all ${isSubmitting
+                    ? 'bg-cyan-700 cursor-not-allowed'
                     : 'bg-cyan-600 hover:bg-cyan-700'
-                }`}
+                  }`}
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
               </button>
@@ -239,7 +237,7 @@ export default function FeedbackComponent({
           </div>
         </div>
       )}
-      
+
       {/* Default prompt */}
       {!selectedRating && (
         <p className="text-gray-400 text-sm">

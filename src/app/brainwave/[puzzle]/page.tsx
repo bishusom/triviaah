@@ -27,7 +27,6 @@ import { getDailyHistoridle } from '@/lib/brainwave/historidle/historidle-sb';
 import { getDailyCelebrile } from '@/lib/brainwave/celebrile/celebrile-sb';
 import { getDailySongle } from '@/lib/brainwave/songle/songle-sb';
 import { getDailyLiterale } from '@/lib/brainwave/literale/literale-sb';
-import { getDailyCryptodle } from '@/lib/brainwave/cryptodle/cryptodle-sb';
 import { getDailyCreature } from '@/lib/brainwave/creaturedle/creaturedle-sb';
 import { getDailyFood } from '@/lib/brainwave/foodle/foodle-sb';
 import { getDailyLandmark } from '@/lib/brainwave/landmarkdle/landmarkdle-sb';
