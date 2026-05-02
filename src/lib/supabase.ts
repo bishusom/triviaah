@@ -704,6 +704,7 @@ export async function getHighScores(
       .from('trivia_scores')
       .select('*')
       .eq('category', category)
+      .eq('platform', 'web')
       .order('score', { ascending: false })
       .limit(limitCount);
 
@@ -748,6 +749,7 @@ export async function getGlobalHighScore(
       .from('trivia_scores')
       .select('*')
       .eq('category', category)
+      .eq('platform', 'web')
       .order('score', { ascending: false })
       .limit(1);
 

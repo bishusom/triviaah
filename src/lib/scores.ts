@@ -94,6 +94,7 @@ export async function getUserQuizHistory(userId: string, limit = 50) {
       .from('trivia_scores')
       .select('*')
       .eq('user_id', userId)
+      .eq('platform', 'web')
       .order('created_at', { ascending: false })
       .limit(limit);
 
@@ -116,6 +117,7 @@ export async function getUserStats(userId: string) {
       .from('trivia_scores')
       .select('score, correct_answers, total_questions, category, created_at')
       .eq('user_id', userId)
+      .eq('platform', 'web')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -174,6 +176,7 @@ export async function testScoresConnection() {
     const { data, error } = await supabase
       .from('trivia_scores')
       .select('count')
+      .eq('platform', 'web')
       .limit(1);
 
     if (error) {

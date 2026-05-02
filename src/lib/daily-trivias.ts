@@ -1,4 +1,4 @@
-import { getDailyQuizQuestions, getRandomQuestions, getTodaysHistoryQuestions, type Question } from '@/lib/supabase';
+import { getDailyQuizQuestions, getTodaysHistoryQuestions, type Question } from '@/lib/supabase';
 
 export type DailyTriviaCategoryConfig = {
   name: string;
@@ -165,10 +165,6 @@ export async function getDailyTriviaQuestions(
   category: string,
   dateKey: string
 ): Promise<Question[]> {
-  if (category === 'quick-fire') {
-    return getRandomQuestions(7, ['easy', 'medium', 'hard']);
-  }
-
   if (category === 'today-in-history') {
     return getTodaysHistoryQuestions(10, dateKey);
   }

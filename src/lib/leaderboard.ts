@@ -155,6 +155,7 @@ export async function getUserRank(
     const { data: allScores, error } = await supabase
       .from('trivia_scores')
       .select('score, name')
+      .eq('platform', 'web')
       .gte('created_at', dateFilter.toISOString());
 
     if (error || !allScores) {
@@ -209,6 +210,8 @@ export async function getUserStats(
       .from('trivia_scores')
       .select('name, score, category, correct_answers, total_questions, time_used, created_at')
       .eq('name', guestName)
+      .eq('platform', 'web')
+      
       .gte('created_at', dateFilter.toISOString())
       .order('created_at', { ascending: false });
 
