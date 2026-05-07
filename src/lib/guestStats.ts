@@ -26,14 +26,48 @@ const defaultStats: Omit<GuestStats, 'recentQuizzes'> = {
   lastPlayed: '',
 };
 
+function parseStoredJson(value: string | null): unknown {
+  if (!value) return null;
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+
+function isRecentQuiz(value: unknown): value is RecentQuiz {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as RecentQuiz).title === 'string' &&
+    typeof (value as RecentQuiz).score === 'number' &&
+    typeof (value as RecentQuiz).date === 'string' &&
+    typeof (value as RecentQuiz).href === 'string'
+  );
+}
+
+function readNumber(value: unknown, fallback: number): number {
+  return typeof value === 'number' ? value : fallback;
+}
+
+function readString(value: unknown, fallback: string): string {
+  return typeof value === 'string' ? value : fallback;
+}
+
 export const getGuestStats = (): GuestStats => {
   if (typeof window === 'undefined') return { ...defaultStats, recentQuizzes: [] };
   
-  const savedStats = localStorage.getItem(STATS_KEY);
-  const savedHistory = localStorage.getItem(HISTORY_KEY);
-  
-  const stats = savedStats ? JSON.parse(savedStats) : defaultStats;
-  const history = savedHistory ? JSON.parse(savedHistory) : [];
+  const savedStats = parseStoredJson(localStorage.getItem(STATS_KEY));
+  const savedHistory = parseStoredJson(localStorage.getItem(HISTORY_KEY));
+  const storedStats = typeof savedStats === 'object' && savedStats !== null ? savedStats as Partial<GuestStats> : {};
+  const stats = {
+    gamesPlayed: readNumber(storedStats.gamesPlayed, defaultStats.gamesPlayed),
+    totalScore: readNumber(storedStats.totalScore, defaultStats.totalScore),
+    streak: readNumber(storedStats.streak, defaultStats.streak),
+    lastPlayed: readString(storedStats.lastPlayed, defaultStats.lastPlayed),
+  };
+  const history = Array.isArray(savedHistory) ? savedHistory.filter(isRecentQuiz) : [];
 
   return { 
     ...stats, 

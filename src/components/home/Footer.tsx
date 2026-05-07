@@ -1,7 +1,12 @@
 // components/home/Footer.tsx - Dark Theme
 import Link from 'next/link';
-import { MdInfo, MdEmail, MdSecurity, MdLeaderboard } from 'react-icons/md';
-import { FaGamepad, FaTwitter, FaDiscord, FaTrophy } from 'react-icons/fa';
+import localFont from 'next/font/local';
+import { MdSecurity, MdLeaderboard } from 'react-icons/md';
+
+const playfairDisplayBlack = localFont({
+  src: '../../../public/fonts/PlayfairDisplay-Black.ttf',
+  display: 'swap',
+});
 
 export default function Footer() {
   return (
@@ -15,7 +20,7 @@ export default function Footer() {
               <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center">
                 <div className="text-white text-xl">🧠</div>
               </div>
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              <h3 className={`${playfairDisplayBlack.className} text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent`}>
                 Triviaah
               </h3>
             </div>

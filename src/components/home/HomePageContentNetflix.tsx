@@ -2,12 +2,12 @@
 import Link from 'next/link';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import NavBar from './NavBar';
-import Billboard from './sections/Billboard';
-import { NetflixRow } from './sections/NetflixRow';
+import Billboard from './sections/netflix/Billboard';
+import { NetflixRow } from './sections/netflix/NetflixRow';
 import Footer from './Footer';
 import Ads from '@/components/common/Ads';
 import DailyTriviaFact from './sections/DailyTriviaFact';
-import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, WORD_GAMES, NUMBER_PUZZLES } from '@/config/homeContent';
+import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, WORD_GAMES, NUMBER_PUZZLES } from '@/config/homeContentNew';
 
 interface HomeTriviaCategory {
   title: string;

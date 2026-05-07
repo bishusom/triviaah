@@ -5,7 +5,7 @@ import Footer from './Footer';
 import TopScores from './TopScores';
 import Ads from '@/components/common/Ads';
 import DailyTriviaFact from './sections/DailyTriviaFact';
-import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, WORD_GAMES, NUMBER_PUZZLES } from '@/config/homeContent';
+import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, WORD_GAMES, NUMBER_PUZZLES } from '@/config/homeContentNew';
 
 // Types
 interface HomeTriviaCategory {
@@ -134,8 +134,8 @@ function GameGallerySection({
                   )}
                 </div>
                 <h3 className="mt-3 text-sm font-semibold leading-snug text-white">
-                    {label}
-                  </h3>
+                  {label}
+                </h3>
                 {item.tagline && (
                   <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-gray-400">
                     {item.tagline}
@@ -172,7 +172,7 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
       className="min-h-screen text-white overflow-x-hidden"
       style={{ background: '#000' }}
     >
-        {/* Page body */}
+      {/* Page body */}
       <main className="pb-16 px-4 md:px-6 lg:px-8 max-w-[1400px] mx-auto">
         <div className="mb-4 flex w-full justify-center">
           <Ads format="fluid" style={{ width: '100%', maxWidth: '1200px', height: '90px' }} />
@@ -180,7 +180,7 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
 
         {/* High-Density Bento Hero Hub */}
         <div className="grid w-full gap-4 mt-2 md:grid-cols-12 md:grid-rows-2 md:h-[600px]">
-          
+
           {/* Main Hero Panel - Span 8 columns, 2 rows on desktop */}
           <section
             className="relative md:col-span-8 md:row-span-2 rounded-3xl overflow-hidden flex items-end p-6 sm:p-8 md:p-10"
@@ -246,7 +246,7 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
-          
+
           {/* TOP ROW: Content Cards + Top Scores */}
           <div className="lg:col-span-9">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
@@ -282,10 +282,10 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
           <div className="w-full">
             <Ads format="fluid" style={{ width: '100%', height: '120px' }} />
           </div>
-          
-          <div 
+
+          <div
             className="w-full rounded-3xl overflow-hidden"
-            style={{ 
+            style={{
               background: 'linear-gradient(180deg, rgba(18,33,58,0.95) 0%, rgba(11,22,38,0.98) 100%)',
               border: '1px solid rgba(255,255,255,0.07)',
               boxShadow: '0 18px 50px rgba(0,0,0,0.22)',
@@ -306,9 +306,9 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
 
         {/* Featured Categories strip */}
         <section className="mt-12">
-          <div 
+          <div
             className="rounded-3xl p-6 md:p-8"
-            style={{ 
+            style={{
               background: 'linear-gradient(180deg, rgba(18,33,58,0.95) 0%, rgba(11,22,38,0.98) 100%)',
               border: '1px solid rgba(255,255,255,0.07)',
               boxShadow: '0 18px 50px rgba(0,0,0,0.22)',
@@ -322,7 +322,7 @@ export default function HomePageContent({ featuredTriviaCategories }: HomePageCo
                 <ChevronRight className="w-5 h-5 text-blue-500 transition-transform group-hover/title:translate-x-1" />
               </Link>
             </div>
-            
+
             <div className="mt-6 flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
               {displayCategories.slice(0, 8).map(({ key, category, icon, color }) => (
                 <Link
@@ -372,7 +372,7 @@ function MiniContentCard({
   return (
     <div
       className="h-full flex flex-col rounded-3xl overflow-hidden border border-white/5"
-      style={{ 
+      style={{
         background: 'linear-gradient(180deg, rgba(18,33,58,0.95) 0%, rgba(11,22,38,0.98) 100%)',
         boxShadow: '0 18px 50px rgba(0,0,0,0.22)',
       }}
@@ -384,8 +384,8 @@ function MiniContentCard({
             {title}
           </h3>
         </div>
-        <Link 
-          href={ctaHref} 
+        <Link
+          href={ctaHref}
           className="px-3 py-1 rounded-lg bg-blue-600 text-[10px] font-black text-white uppercase tracking-wider hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20 active:scale-95"
         >
           View All
@@ -419,7 +419,7 @@ function MiniContentCard({
                 Daily pick
               </p>
             </div>
-            <div 
+            <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-white transition-all group-hover:scale-105"
               style={{
                 background: 'linear-gradient(135deg, #2563eb 0%, #06b6d4 100%)',

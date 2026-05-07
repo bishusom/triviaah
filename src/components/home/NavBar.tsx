@@ -2,9 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import localFont from 'next/font/local';
 import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
 import SearchBar from './SearchBar';
 import UserStatsPopover from './UserStatsPopover';
+
+const playfairDisplayBlack = localFont({
+  src: '../../../public/fonts/PlayfairDisplay-Black.ttf',
+  display: 'swap',
+});
 
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -85,7 +91,7 @@ export default function NavBar() {
             </div>
 
             {/* The Text - Matches Footer's blue-400 and font-bold */}
-            <span className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent transition-all duration-300">
+            <span className={`${playfairDisplayBlack.className} text-2xl md:text-3xl bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent transition-all duration-300`}>
               Triviaah
             </span>
           </Link>
@@ -170,8 +176,8 @@ export default function NavBar() {
               <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center">
                 <span className="text-white text-sm">🧠</span>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                Triviaah
+              <span className={`${playfairDisplayBlack.className} text-xl bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent`}>
+                TRIVIAAH
               </span>
             </Link>
             <div className="scale-90 origin-right">

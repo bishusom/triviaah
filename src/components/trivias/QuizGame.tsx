@@ -172,9 +172,9 @@ export default function QuizGame({
       wrongAnswers: wrongAnswers
     });
     setShowSummary(true);
-    updateGuestStats(score, {
+    updateGuestStats(finalScore, {
       title: subcategory || category || "Daily Trivia",
-      score: score,
+      score: finalScore,
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       href: window.location.pathname
     });

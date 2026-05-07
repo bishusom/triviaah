@@ -42,6 +42,7 @@ export async function getLeaderboard(
     const { data: scoresData, error: scoresError } = await supabase
       .from('trivia_scores')
       .select('name, score, created_at')
+      .eq('platform', 'web')
       .gte('created_at', dateFilter.toISOString());
 
     if (scoresError) {
@@ -86,16 +87,25 @@ function getDateFilter(timeframe: 'weekly' | 'monthly' | 'all-time'): Date {
   
   switch (timeframe) {
     case 'weekly':
-      date.setDate(date.getDate() - 7);
-      break;
+      return getStartOfCurrentWeek(date);
     case 'monthly':
-      date.setMonth(date.getMonth() - 1);
-      break;
+      return new Date(date.getFullYear(), date.getMonth(), 1);
     case 'all-time':
       return new Date(0); // Beginning of time
   }
   
   return date;
+}
+
+function getStartOfCurrentWeek(date: Date): Date {
+  const startOfWeek = new Date(date);
+  const day = startOfWeek.getDay();
+  const daysSinceMonday = (day + 6) % 7;
+
+  startOfWeek.setDate(startOfWeek.getDate() - daysSinceMonday);
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  return startOfWeek;
 }
 
 // Helper function to aggregate scores for guests only
@@ -272,6 +282,7 @@ export async function getDailyTopScores(
       .from('trivia_scores')
       .select('name, score')
       .eq('category', category)
+      .eq('platform', 'web')
       .gte('created_at', today.toISOString())
       .order('score', { ascending: false })
       .limit(limit);
