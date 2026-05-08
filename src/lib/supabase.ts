@@ -74,11 +74,13 @@ function applyTriviaQuestionFilters(
   {
     category,
     subcategory,
+    difficulty,
     requireImage = false,
     excludeIds = [],
   }: {
     category?: string;
     subcategory?: string;
+    difficulty?: string;
     requireImage?: boolean;
     excludeIds?: string[];
   }
@@ -91,6 +93,10 @@ function applyTriviaQuestionFilters(
 
   if (subcategory) {
     nextQuery = nextQuery.eq('subcategory', subcategory);
+  }
+
+  if (difficulty) {
+    nextQuery = nextQuery.ilike('difficulty', difficulty);
   }
 
   if (requireImage || (category && isPictureCluesCategory(category))) {
@@ -109,7 +115,9 @@ async function getRandomizedTriviaQuestionPool(
   filters: {
     category?: string;
     subcategory?: string;
+    difficulty?: string;
     requireImage?: boolean;
+    excludeIds?: string[];
   }
 ): Promise<DbQuestion[]> {
   const randomSeed = Math.random();
@@ -136,7 +144,10 @@ async function getRandomizedTriviaQuestionPool(
     supabase.from('trivia_questions').select('*'),
     {
       ...filters,
-      excludeIds: initialQuestions.map((question: DbQuestion) => question.id),
+      excludeIds: [
+        ...(filters.excludeIds || []),
+        ...initialQuestions.map((question: DbQuestion) => question.id)
+      ],
     }
   )
     .lte('random_index', randomSeed)
@@ -169,65 +180,7 @@ export async function getCategoriesWithMinQuestions(minQuestions: number = 50): 
 
 export async function getCategoryQuestions(category: string, count: number): Promise<Question[]> {
   try {
-    const questions = await getRandomizedTriviaQuestionPool(count, { category });
-    if (!questions || questions.length === 0) return [];
-
-    // Categorize questions by difficulty
-    const questionsByDifficulty = {
-      easy: [] as DbQuestion[],
-      medium: [] as DbQuestion[],
-      hard: [] as DbQuestion[]
-    };
-
-    questions.forEach((question: DbQuestion) => {
-      const difficulty = question.difficulty?.toLowerCase() || 'medium';
-      if (difficulty === 'easy') {
-        questionsByDifficulty.easy.push(question);
-      } else if (difficulty === 'hard') {
-        questionsByDifficulty.hard.push(question);
-      } else {
-        questionsByDifficulty.medium.push(question);
-      }
-    });
-
-    // Calculate how many questions to take from each difficulty
-    const easyCount = Math.min(
-      Math.ceil(count * 0.4), // 40% easy
-      questionsByDifficulty.easy.length
-    );
-    const hardCount = Math.min(
-      Math.ceil(count * 0.3), // 30% hard
-      questionsByDifficulty.hard.length
-    );
-    const mediumCount = Math.min(
-      count - easyCount - hardCount, // Remaining 30%
-      questionsByDifficulty.medium.length
-    );
-
-    // Select random questions from each difficulty
-    const getRandomQuestions = (pool: DbQuestion[], num: number) => {
-      const shuffled = [...pool].sort(() => 0.5 - Math.random());
-      return shuffled.slice(0, num);
-    };
-
-    const selectedQuestions = [
-      ...getRandomQuestions(questionsByDifficulty.easy, easyCount),
-      ...getRandomQuestions(questionsByDifficulty.medium, mediumCount),
-      ...getRandomQuestions(questionsByDifficulty.hard, hardCount)
-    ];
-
-    // Transform to Question format and shuffle
-    return shuffleArray(selectedQuestions.map(q => ({
-      id: q.id,
-      question: q.question,
-      correct: q.correct_answer,
-      options: shuffleArray([...q.incorrect_answers, q.correct_answer]),
-      difficulty: q.difficulty,
-      category: q.category,
-      ...(q.subcategory && { subcategory: q.subcategory }),
-      ...(q.titbits && { titbits: q.titbits }),
-      ...(q.image_url && { image_url: q.image_url })
-    })));
+    return getBalancedTriviaQuestions(count, { category });
 
   } catch (error) {
     console.error('Error in getCategoryQuestions:', error);
@@ -383,65 +336,7 @@ export async function getSubcategoryQuestions(
   count: number
 ): Promise<Question[]> {
   try {
-    const questions = await getRandomizedTriviaQuestionPool(count, { category, subcategory });
-    if (!questions || questions.length === 0) return [];
-
-    // Apply the same difficulty distribution logic as getCategoryQuestions
-    const questionsByDifficulty = {
-      easy: [] as DbQuestion[],
-      medium: [] as DbQuestion[],
-      hard: [] as DbQuestion[]
-    };
-
-    questions.forEach((question: DbQuestion) => {
-      const difficulty = question.difficulty?.toLowerCase() || 'medium';
-      if (difficulty === 'easy') {
-        questionsByDifficulty.easy.push(question);
-      } else if (difficulty === 'hard') {
-        questionsByDifficulty.hard.push(question);
-      } else {
-        questionsByDifficulty.medium.push(question);
-      }
-    });
-
-    // Calculate distribution
-    const easyCount = Math.min(
-      Math.ceil(count * 0.4),
-      questionsByDifficulty.easy.length
-    );
-    const hardCount = Math.min(
-      Math.ceil(count * 0.3),
-      questionsByDifficulty.hard.length
-    );
-    const mediumCount = Math.min(
-      count - easyCount - hardCount,
-      questionsByDifficulty.medium.length
-    );
-
-    // Select random questions from each difficulty
-    const getRandomQuestions = (pool: DbQuestion[], num: number) => {
-      const shuffled = [...pool].sort(() => 0.5 - Math.random());
-      return shuffled.slice(0, num);
-    };
-
-    const selectedQuestions = [
-      ...getRandomQuestions(questionsByDifficulty.easy, easyCount),
-      ...getRandomQuestions(questionsByDifficulty.medium, mediumCount),
-      ...getRandomQuestions(questionsByDifficulty.hard, hardCount)
-    ];
-
-    // Transform and shuffle
-    return shuffleArray(selectedQuestions.map(q => ({
-      id: q.id,
-      question: q.question,
-      correct: q.correct_answer,
-      options: shuffleArray([...q.incorrect_answers, q.correct_answer]),
-      difficulty: q.difficulty,
-      category: q.category,
-      subcategory: q.subcategory,
-      ...(q.titbits && { titbits: q.titbits }),
-      ...(q.image_url && { image_url: q.image_url })
-    })));
+    return getBalancedTriviaQuestions(count, { category, subcategory });
 
   } catch (error) {
     console.error('Error in getSubcategoryQuestions:', error);
@@ -680,6 +575,65 @@ function shuffleArray<T>(array: T[]): T[] {
     [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
   return newArray;
+}
+
+function toQuestion(q: DbQuestion): Question {
+  return {
+    id: q.id,
+    question: q.question,
+    correct: q.correct_answer,
+    options: shuffleArray([...q.incorrect_answers, q.correct_answer]),
+    difficulty: q.difficulty,
+    category: q.category,
+    ...(q.subcategory && { subcategory: q.subcategory }),
+    ...(q.titbits && { titbits: q.titbits }),
+    ...(q.image_url && { image_url: q.image_url })
+  };
+}
+
+async function getBalancedTriviaQuestions(
+  count: number,
+  filters: {
+    category?: string;
+    subcategory?: string;
+    requireImage?: boolean;
+  }
+): Promise<Question[]> {
+  if (count !== 10) {
+    const questions = await getRandomizedTriviaQuestionPool(count, filters);
+    return shuffleArray(questions.slice(0, count).map(toQuestion));
+  }
+
+  const [easyQuestions, mediumQuestions, hardQuestions] = await Promise.all([
+    getRandomizedTriviaQuestionPool(3, { ...filters, difficulty: 'easy' }),
+    getRandomizedTriviaQuestionPool(3, { ...filters, difficulty: 'medium' }),
+    getRandomizedTriviaQuestionPool(3, { ...filters, difficulty: 'hard' })
+  ]);
+
+  const selectedQuestions = [
+    ...shuffleArray(easyQuestions).slice(0, 3),
+    ...shuffleArray(mediumQuestions).slice(0, 3),
+    ...shuffleArray(hardQuestions).slice(0, 3)
+  ];
+
+  const selectedIds = new Set(selectedQuestions.map((question) => question.id));
+  const randomQuestions = await getRandomizedTriviaQuestionPool(1, {
+    ...filters,
+    excludeIds: [...selectedIds]
+  });
+
+  selectedQuestions.push(...randomQuestions.slice(0, 1));
+
+  if (selectedQuestions.length < count) {
+    const fillQuestions = await getRandomizedTriviaQuestionPool(count - selectedQuestions.length, {
+      ...filters,
+      excludeIds: selectedQuestions.map((question) => question.id)
+    });
+
+    selectedQuestions.push(...fillQuestions.slice(0, count - selectedQuestions.length));
+  }
+
+  return shuffleArray(selectedQuestions.slice(0, count).map(toQuestion));
 }
 
 export type HighScore = {
