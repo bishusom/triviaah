@@ -1,22 +1,42 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Play, Boxes, Star, Clock, Users, Gamepad2, Zap, Target, Trophy, History } from 'lucide-react';
+import { Play, Clock, Users, Gamepad2, Trophy, History } from 'lucide-react';
 import Ads from '@/components/common/Ads';
 import Script from 'next/script';
 import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
-import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
 import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
 
 export const metadata: Metadata = {
-  title: 'Retro Games Collection - Free Classic Arcade Games | Triviaah',
-  description: 'Play classic retro games including Minesweeper, Tetris, Pong, and Snake. Enjoy timeless arcade games that test your logic, strategy, and reflexes.',
+  title: 'Free Retro Games Online - Snake, Tetris, Pong & More | Triviaah',
+  description:
+    'Play 8 free retro games online including Snake, Tetris, Pong, Minesweeper, Pac-Man, Space Invaders, Breakout, and Tic Tac Toe. Classic arcade games with no sign-up required.',
+  keywords: [
+    'retro games',
+    'free retro games online',
+    'classic arcade games',
+    'snake game',
+    'tetris online',
+    'pong game',
+    'minesweeper online',
+    'pac man game',
+    'space invaders',
+    'breakout game',
+    'tic tac toe online',
+    'old school games',
+    'vintage games',
+    '80s arcade games',
+    '90s games',
+    'classic browser games',
+    'free arcade games',
+  ],
   alternates: {
     canonical: 'https://triviaah.com/retro-games',
   },
   openGraph: {
-    title: 'Retro Games Collection - Free Classic Arcade Games | Triviaah',
-    description: 'Play classic retro games including Minesweeper, Tetris, Pong, and Snake.',
+    title: 'Free Retro Games Online - Snake, Tetris, Pong & More | Triviaah',
+    description:
+      'Play 8 free retro games including Snake, Tetris, Pong, Minesweeper, Pac-Man, Space Invaders, Breakout, and Tic Tac Toe. No account needed.',
     url: 'https://triviaah.com/retro-games',
     siteName: 'Triviaah',
     images: [
@@ -24,20 +44,108 @@ export const metadata: Metadata = {
         url: '/imgs/retro-games/retro-games-og.webp',
         width: 1200,
         height: 630,
-        alt: 'Retro Games Collection',
+        alt: 'Free Retro Games Collection - Classic Arcade Games',
       },
     ],
     type: 'website',
+    locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Retro Games Collection | Triviaah',
-    description: 'Play classic retro games including Minesweeper, Tetris, Pong, and Snake.',
+    title: 'Free Retro Games Online | Triviaah',
+    description:
+      'Play Snake, Tetris, Pong, Minesweeper, Pac-Man and more classic arcade games free.',
     images: ['/imgs/retro-games/retro-games-og.webp'],
+    site: '@elitetrivias',
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
+
+const GAME_DETAIL_BLURBS: Record<
+  string,
+  { legacy: string; skills: string; tip: string; bestFor: string }
+> = {
+  snake: {
+    legacy:
+      'Snake became one of the defining mobile games because it turns a single movement rule into a steadily tightening spatial puzzle. Every snack makes the route longer, so the board shifts from open navigation to careful path planning.',
+    skills:
+      'Snake develops spatial awareness, route planning, impulse control, and risk assessment. Strong players think about where the snake will be in five moves, not just where the next snack appears.',
+    tip: 'Use the board perimeter as a safety lane early, then fold inward in predictable rows. Random sharp turns create traps; smooth loops preserve escape routes.',
+    bestFor:
+      'Short arcade sessions, mobile play, high-score chasing, and players who like simple controls with rising pressure.',
+  },
+  tetris: {
+    legacy:
+      'Tetris is the classic falling-block puzzle that proved a game can be instantly readable and endlessly deep. Its tetromino system rewards clean stacking, fast recognition, and long-term board management.',
+    skills:
+      'Tetris builds spatial rotation, pattern recognition, working memory, and decision speed. Each placement changes future options, so expert play is as much about maintaining a flexible board as clearing lines.',
+    tip: 'Keep the stack low and leave a single well open for the I-piece. Avoid covering holes, because buried gaps are far more expensive than an uneven surface.',
+    bestFor:
+      'Puzzle fans, reflex training, score attacks, and anyone who wants a timeless game with genuine mastery depth.',
+  },
+  pong: {
+    legacy:
+      'Pong distilled competitive video games to their essentials: timing, angle control, and positioning. Its simple table-tennis loop remains one of the clearest examples of skill-based arcade design.',
+    skills:
+      'Pong develops reaction time, hand-eye coordination, trajectory prediction, and tactical positioning. Good players control the paddle before the ball arrives instead of chasing it late.',
+    tip: 'Use the paddle edges to change return angles, and recover toward the center immediately after each hit. Center control reduces how far you must travel on the next shot.',
+    bestFor:
+      'Beginners, quick two-player sessions, reflex practice, and players who want the most accessible retro game in the collection.',
+  },
+  minesweeper: {
+    legacy:
+      'Minesweeper is a logic classic because every revealed number is a constraint. The game rewards deduction over speed at first, then turns into a fast pattern-recognition challenge as your confidence improves.',
+    skills:
+      'Minesweeper develops deductive reasoning, probability judgment, pattern recognition, and careful risk management. It is one of the strongest retro games for pure logic practice.',
+    tip: 'Start with forced moves around 1s and 2s. When a guess is unavoidable, choose the square that opens the largest likely safe area rather than the first unknown cell you see.',
+    bestFor:
+      'Logic puzzle fans, analytical players, and anyone who enjoys a slower retro game where careful thinking matters.',
+  },
+  pacman: {
+    legacy:
+      'Pac-Man added character, maze routing, and enemy behavior to arcade design. The ghosts have distinct movement patterns, so success comes from learning routes rather than simply reacting.',
+    skills:
+      'Pac-Man builds path planning, timing, enemy tracking, and risk-reward decision-making. Power pellets are limited resources, so when you use them matters as much as where you go.',
+    tip: 'Clear one quadrant at a time and save power pellets for escapes or clustered ghost captures. Wandering across the maze without a route wastes safe openings.',
+    bestFor:
+      'Arcade fans, maze-game players, and anyone who wants classic character-driven gameplay with strategic movement.',
+  },
+  'space-invaders': {
+    legacy:
+      'Space Invaders helped define the fixed shooter. Its descending enemy formation creates a natural tension curve: the fewer invaders remain, the faster and more dangerous the board becomes.',
+    skills:
+      'Space Invaders develops aiming rhythm, threat prioritization, timing, and composure under increasing speed. Players must balance clearing enemies with preserving defensive cover.',
+    tip: 'Trim columns evenly and remove low invaders before they compress your movement space. Use cover sparingly; destroyed shields cannot save you later.',
+    bestFor:
+      'Classic shooter fans, score chasers, and players who enjoy escalating arcade pressure.',
+  },
+  breakout: {
+    legacy:
+      'Breakout transformed Pong into a single-player precision challenge. Every bounce changes the board, and the game rewards controlled angles more than frantic paddle movement.',
+    skills:
+      'Breakout builds trajectory prediction, timing, fine motor control, and strategic targeting. Creating channels behind the brick wall is often the fastest path to big clears.',
+    tip: 'Aim for side gaps early. Once the ball gets above the bricks, stay calm and prepare for sharp returns instead of overcorrecting.',
+    bestFor:
+      'Players who like precision arcade games, short sessions, and satisfying chain reactions.',
+  },
+  'tic-tac-toe': {
+    legacy:
+      'Tic Tac Toe is one of the oldest strategy games because it teaches complete-information planning in its simplest form. Every move can be evaluated logically from the current board.',
+    skills:
+      'Tic Tac Toe develops turn planning, fork creation, defensive blocking, and minimax thinking. It is a compact introduction to the same reasoning used in more complex strategy games.',
+    tip: 'Take the center when available, block forks before single threats become unavoidable, and use corners to create two-way winning chances.',
+    bestFor:
+      'Beginners, children learning strategy, quick decision games, and players who want a calm classic between faster arcade sessions.',
   },
 };
 
@@ -121,6 +229,47 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
   );
 }
 
+function GameDetailCard({ game, accentClass }: { game: GamePageContent; accentClass: string }) {
+  const slug = game.route_path.split('/').pop() ?? '';
+  const blurb = GAME_DETAIL_BLURBS[slug];
+  const route = game.cta_href || game.route_path;
+
+  return (
+    <div className="border border-gray-700 rounded-xl p-5 hover:border-amber-500/30 transition-colors duration-300">
+      <h3 className={`text-lg font-bold mb-1 ${accentClass}`}>{game.title}</h3>
+      <p className="text-gray-300 text-sm leading-relaxed mb-3">
+        {game.supporting_copy || game.intro_text}
+      </p>
+      {blurb && (
+        <>
+          <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">
+            Why it matters
+          </p>
+          <p className="text-gray-400 text-sm leading-relaxed mb-3">{blurb.legacy}</p>
+          <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">
+            Skills it builds
+          </p>
+          <p className="text-gray-400 text-sm leading-relaxed mb-3">{blurb.skills}</p>
+          <p className="text-gray-500 text-xs leading-relaxed mb-2">
+            <span className="text-gray-400 font-semibold">Strategy tip: </span>
+            {blurb.tip}
+          </p>
+          <p className="text-gray-500 text-xs">
+            <span className="text-gray-400 font-semibold">Best for: </span>
+            {blurb.bestFor}
+          </p>
+        </>
+      )}
+      <Link
+        href={route}
+        className={`mt-3 inline-flex items-center gap-1 text-sm font-semibold ${accentClass} hover:underline`}
+      >
+        Play {game.title} -&gt;
+      </Link>
+    </div>
+  );
+}
+
 function StructuredData({ games, currentDate }: { games: GamePageContent[], currentDate: Date }) {
   const structuredData = {
     "@context": "https://schema.org",
@@ -147,8 +296,8 @@ function StructuredData({ games, currentDate }: { games: GamePageContent[], curr
         "@type": "WebPage",
         "@id": "https://triviaah.com/retro-games/#webpage",
         "url": "https://triviaah.com/retro-games",
-        "name": "Retro Games Collection - Free Classic Arcade Games | Triviaah",
-        "description": "Play classic retro games including Minesweeper, Tetris, Pong, and Snake. Enjoy timeless arcade games that test your logic, strategy, and reflexes.",
+        "name": "Free Retro Games Online - Snake, Tetris, Pong and More | Triviaah",
+        "description": "Play 8 free retro games online including Snake, Tetris, Pong, Minesweeper, Pac-Man, Space Invaders, Breakout, and Tic Tac Toe. Classic arcade games with no sign-up required.",
         "isPartOf": {
           "@id": "https://triviaah.com/#website"
         },
@@ -190,8 +339,8 @@ function StructuredData({ games, currentDate }: { games: GamePageContent[], curr
       {
         "@type": "ItemList",
         "@id": "https://triviaah.com/retro-games/#itemlist",
-        "name": "Retro Games Collection",
-        "description": "Collection of classic retro games from different decades, featuring timeless gameplay and nostalgic experiences",
+        "name": "Free Retro Games Collection",
+        "description": "Collection of free online retro games and classic arcade games designed for logic, reflexes, spatial reasoning, and high-score play",
         "numberOfItems": games.length,
         "itemListElement": games.map((game, index) => ({
           "@type": "ListItem",
@@ -202,7 +351,7 @@ function StructuredData({ games, currentDate }: { games: GamePageContent[], curr
             "description": game.intro_text || game.supporting_copy,
             "url": `https://triviaah.com${game.cta_href || game.route_path}`,
             "gameType": "RetroGame",
-            "genre": ["arcade", "puzzle", "strategy", "retro"],
+            "genre": ["arcade", "classic", "puzzle", "strategy", "retro"],
             "applicationCategory": "Game",
             "numberOfPlayers": {
               "@type": "QuantitativeValue",
@@ -242,10 +391,10 @@ function StructuredData({ games, currentDate }: { games: GamePageContent[], curr
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "What types of retro games are available?",
+            "name": "What free retro games are available on Triviaah?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "We offer classic retro games including Minesweeper (logic puzzle), Tetris (block puzzle), Pong (arcade sports), and Snake (arcade action). Each game represents a different era of gaming history and provides unique gameplay challenges."
+              "text": "Triviaah offers eight free retro games: Snake, Tetris, Pong, Minesweeper, Pac-Man, Space Invaders, Breakout, and Tic Tac Toe. Each game is playable instantly in your browser with no account required."
             }
           },
           {
@@ -261,7 +410,15 @@ function StructuredData({ games, currentDate }: { games: GamePageContent[], curr
             "name": "Which retro game is best for beginners?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Pong is great for beginners with its simple controls and gameplay. Snake is also beginner-friendly with gradual difficulty progression. For more challenge, try Minesweeper or Tetris which require more strategy and planning."
+              "text": "Pong is the easiest retro game for beginners because the controls and objective are immediately clear. Snake and Tic Tac Toe are also beginner-friendly, while Minesweeper and Tetris offer more strategic depth once you are ready for a harder challenge."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which retro game is the most challenging?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Tetris and Minesweeper are the most challenging overall. Tetris demands fast spatial decisions under pressure, while Minesweeper requires careful deduction and probability judgment. Space Invaders also becomes difficult as enemy speed increases."
             }
           },
           {
@@ -270,6 +427,14 @@ function StructuredData({ games, currentDate }: { games: GamePageContent[], curr
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "Yes! All retro games are fully responsive and work perfectly on smartphones, tablets, and desktop computers. We've optimized each game with touch controls for mobile play, making it easy to enjoy classic gaming anywhere."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need to create an account to play?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No account or registration is required. All retro games are free to play directly in your browser, and high scores are saved locally where supported."
             }
           }
         ]
@@ -291,6 +456,16 @@ export default async function RetroGamesPage() {
   const retroGames = allRows.filter((r) => r.route_path !== '/retro-games');
   const currentDate = new Date();
   const heroDescription = 'Relive the golden age of gaming with free classic retro games including Minesweeper, Tetris, Pong, Snake, Breakout, Pac-Man, Space Invaders, and Tic Tac Toe. Enjoy timeless arcade, puzzle, strategy, and reflex challenges optimized for modern mobile and desktop play.';
+  const accentClasses = [
+    'text-amber-400',
+    'text-red-400',
+    'text-cyan-400',
+    'text-green-400',
+    'text-purple-400',
+    'text-blue-400',
+    'text-orange-400',
+    'text-pink-400',
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
@@ -313,9 +488,9 @@ export default async function RetroGamesPage() {
                   </h1>
                 </div>
               </div>
-              <MobileExpandableDescription className="max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
+              <p className="max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
                 {heroDescription}
-              </MobileExpandableDescription>
+              </p>
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <ScrollToSectionButton
                   targetId="retro-games-grid"
@@ -370,6 +545,71 @@ export default async function RetroGamesPage() {
               ))}
             </div>
           </div>
+
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold text-white mb-3">
+              Every Retro Game, Explained in Detail
+            </h2>
+            <p className="text-gray-400 mb-8 leading-relaxed max-w-3xl">
+              Not sure what to play first? Here is a full breakdown of all {retroGames.length}{' '}
+              classic games: why each one matters, what skills it builds, a practical strategy tip,
+              and who it is best suited for.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {retroGames.map((game, index) => (
+                <GameDetailCard
+                  key={game.route_path}
+                  game={game}
+                  accentClass={accentClasses[index % accentClasses.length]}
+                />
+              ))}
+            </div>
+          </section>
+
+          <section className="mb-16 bg-slate-800/40 rounded-2xl p-8 border border-white/5">
+            <h2 className="text-3xl font-bold text-white mb-6">
+              How to Choose the Right Retro Game
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-gray-800/60 rounded-xl p-5 border border-gray-700">
+                <h3 className="text-lg font-bold text-amber-400 mb-3">
+                  You want a quick arcade break
+                </h3>
+                <p className="text-gray-300 text-sm leading-relaxed mb-3">
+                  Pong, Snake, and Breakout are the best picks when you want immediate action with
+                  almost no setup. Each has simple controls, fast restarts, and a clear score or win
+                  condition that makes a five-minute session feel complete.
+                </p>
+                <p className="text-gray-400 text-xs">Best picks: Pong, Snake, Breakout</p>
+              </div>
+
+              <div className="bg-gray-800/60 rounded-xl p-5 border border-gray-700">
+                <h3 className="text-lg font-bold text-cyan-400 mb-3">
+                  You want a thinking challenge
+                </h3>
+                <p className="text-gray-300 text-sm leading-relaxed mb-3">
+                  Minesweeper and Tic Tac Toe reward deduction, planning, and careful defense.
+                  Tetris also becomes deeply strategic at higher speeds, where clean stacking and
+                  future-piece planning matter more than pure reaction time.
+                </p>
+                <p className="text-gray-400 text-xs">
+                  Best picks: Minesweeper, Tic Tac Toe, Tetris
+                </p>
+              </div>
+
+              <div className="bg-gray-800/60 rounded-xl p-5 border border-gray-700">
+                <h3 className="text-lg font-bold text-green-400 mb-3">
+                  You want classic arcade pressure
+                </h3>
+                <p className="text-gray-300 text-sm leading-relaxed mb-3">
+                  Pac-Man and Space Invaders deliver the most iconic arcade tension: enemies close
+                  in, timing windows shrink, and every point must be earned. They are ideal when you
+                  want nostalgia with genuine skill progression.
+                </p>
+                <p className="text-gray-400 text-xs">Best picks: Pac-Man, Space Invaders</p>
+              </div>
+            </div>
+          </section>
 
           {/* Gaming Features Section */}
           <div className="mb-16">
