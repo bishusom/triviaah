@@ -118,6 +118,11 @@ export default function HomePageContent({ featuredTriviaCategories = [] }: HomeP
           />
         </SectionContainer>
         */}  
+
+        <SectionContainer className="horizontal-scroll-section">
+          <SeoContentSection />
+        </SectionContainer>
+
         <KeyFeatures />
       </main>
 
