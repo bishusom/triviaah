@@ -7,6 +7,7 @@ import Ads from '@/components/common/Ads';
 import { Play, Boxes, Clock, Users, Calendar, Star, Trophy, Brain, Zap } from 'lucide-react';
 import Timer from '@/components/daily/dailyQuizTimer';
 import { ScrollToDailyCategoriesButton } from '@/components/daily-trivias/ScrollToDailyCategoriesButton';
+import ExploreSections from '@/components/common/ExploreSections';
 import { getTriviaCategories, type TriviaCategoryRecord } from '@/lib/trivia-categories';
 
 export const metadata: Metadata = {
@@ -565,6 +566,8 @@ export default async function DailyQuizzesPage() {
             </p>
           </div>
         </section>
+
+        <ExploreSections exclude="daily-trivias" />
       </div>
     </div>
   );

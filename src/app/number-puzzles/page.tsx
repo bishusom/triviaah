@@ -6,6 +6,7 @@ import Ads from '@/components/common/Ads';
 import Script from 'next/script';
 import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
 import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
+import ExploreSections from '@/components/common/ExploreSections';
 
 export const metadata: Metadata = {
   title: 'Free Number Puzzles Online - Sudoku, 2048, KenKen & More | Triviaah',
@@ -844,6 +845,8 @@ export default async function NumberPuzzlesPage() {
             </div>
           </div>
         </section>
+
+        <ExploreSections exclude="number-puzzles" />
       </div>
     </div>
   );

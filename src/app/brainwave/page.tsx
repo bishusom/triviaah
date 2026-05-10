@@ -8,6 +8,7 @@ import { Play, Boxes, Star, Clock, Users } from 'lucide-react';
 import { getGamePagesBySection } from '@/lib/game-pages';
 import { getBrainwaveRouteDefinitions } from '@/lib/brainwave/brainwave-route-registry';
 import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
+import ExploreSections from '@/components/common/ExploreSections';
 
 interface Puzzle {
   route_path: string;
@@ -668,6 +669,8 @@ export default async function BrainwavePage() {
             </div>
           </div>
         </section>
+        
+        <ExploreSections exclude="brainwave" />
       </div>
     </div>
   );

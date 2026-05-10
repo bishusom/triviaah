@@ -7,6 +7,7 @@ import Script from 'next/script';
 import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
 import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
 import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
+import ExploreSections from '@/components/common/ExploreSections';
 
 export const metadata: Metadata = {
   title: 'Word Games Collection - Free Vocabulary & Spelling Games | Triviaah',
@@ -510,7 +511,9 @@ export default async function WordGamesPage() {
                 </div>
               </div>
             </div>
-        </section>
+          </section>
+
+        <ExploreSections exclude="word-games" />
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import ScrollButtons from '@/components/common/ScrollButtons';
 import { Play, Boxes, ShieldQuestionMark } from 'lucide-react';
 import TriviaCategoriesExplorer from '@/components/trivias/TriviaCategoriesExplorer';
 import { getTriviaCategories, getTriviaExplorerCards, type TriviaCategoryRecord } from '@/lib/trivia-categories';
+import ExploreSections from '@/components/common/ExploreSections';
 
 interface StructuredDataProps {
   categories: TriviaCategoryRecord[];
@@ -253,6 +254,8 @@ export default async function TriviasPage() {
             </div>
           </div>
         </section>
+
+        <ExploreSections exclude="trivias" />
 
         <ScrollButtons />
       </div>
