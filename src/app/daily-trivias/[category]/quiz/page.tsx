@@ -21,6 +21,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${cfg.displayName || cfg.title} Quiz | Triviaah`,
     description: cfg.description,
+    keywords: [
+      ...cfg.keywords,
+      'multiplayer trivia',
+      'multiplayer quiz',
+      'private trivia room',
+      `${cfg.displayName || cfg.title} multiplayer trivia`,
+    ],
     robots: {
       index: false,
       follow: true,

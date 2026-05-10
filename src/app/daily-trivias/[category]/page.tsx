@@ -22,7 +22,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description: cfg.description,
-    keywords: cfg.keywords,
+    keywords: [
+      ...cfg.keywords,
+      'multiplayer trivia',
+      'multiplayer quiz',
+      'private trivia room',
+      `${cfg.displayName || cfg.title} multiplayer trivia`,
+    ],
     robots: {
       index: true,
       follow: true,

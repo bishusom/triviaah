@@ -92,6 +92,11 @@ export async function generateMetadata({ params, searchParams }: QuizPageProps):
       `free ${formattedCategory.toLowerCase()} quiz`,
       `online ${formattedCategory.toLowerCase()} quiz`,
       `${formattedCategory.toLowerCase()} knowledge test`,
+      `${formattedCategory.toLowerCase()} multiplayer trivia`,
+      `${formattedCategory.toLowerCase()} multiplayer quiz`,
+      'multiplayer trivia',
+      'multiplayer quiz',
+      'private trivia room',
       'free trivia quiz',
       'online trivia questions',
       ...(formattedSubcategory
@@ -99,6 +104,7 @@ export async function generateMetadata({ params, searchParams }: QuizPageProps):
           `${formattedSubcategory.toLowerCase()} quiz`,
           `${formattedSubcategory.toLowerCase()} trivia questions`,
           `${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()} quiz`,
+          `${formattedSubcategory.toLowerCase()} multiplayer trivia`,
         ]
         : []),
       ...(categoryConfig?.keywords ?? []),

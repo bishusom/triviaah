@@ -119,6 +119,11 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
       `${categoryTitle.toLowerCase()} trivia`,
       `${categoryTitle.toLowerCase()} quiz questions`,
       `${categoryTitle.toLowerCase()} answers`,
+      `${categoryTitle.toLowerCase()} multiplayer trivia`,
+      `${categoryTitle.toLowerCase()} multiplayer quiz`,
+      'multiplayer trivia',
+      'multiplayer quiz',
+      'private trivia room',
       'free online trivia',
       'educational quiz',
       'interactive learning'

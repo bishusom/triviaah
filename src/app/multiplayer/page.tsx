@@ -6,6 +6,14 @@ import { getTriviaCategories } from '@/lib/trivia-categories';
 export const metadata: Metadata = {
   title: 'Multiplayer Trivia Rooms | Triviaah',
   description: 'Create a private trivia room and invite friends to compete live.',
+  keywords: [
+    'multiplayer trivia',
+    'multiplayer quiz',
+    'online multiplayer trivia',
+    'private trivia room',
+    'play trivia with friends',
+    'online quiz with friends',
+  ],
   robots: { index: false, follow: true },
 };
 

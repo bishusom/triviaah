@@ -27,7 +27,11 @@ export async function generateMetadata(): Promise<Metadata> {
       'science trivia',
       'entertainment trivia',
       'sports trivia',
-      'geography trivia'
+      'geography trivia',
+      'multiplayer trivia',
+      'multiplayer quiz',
+      'private trivia room',
+      'online multiplayer trivia'
     ],
     alternates: {
       canonical: 'https://triviaah.com/trivias',

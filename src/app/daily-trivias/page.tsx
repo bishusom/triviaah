@@ -13,7 +13,7 @@ import { getTriviaCategories, type TriviaCategoryRecord } from '@/lib/trivia-cat
 export const metadata: Metadata = {
   title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Triviaah',
   description: 'Play our free daily trivia game with new questions about history, pop culture, sports, science and more! Test your knowledge daily with 10 fresh questions across 8 categories.',
-  keywords: 'daily trivia game, daily quiz, trivia challenges, fun quiz, knowledge test, history trivia, sports trivia, science trivia',
+  keywords: 'daily trivia game, daily quiz, multiplayer trivia, multiplayer quiz, private trivia room, trivia challenges, fun quiz, knowledge test, history trivia, sports trivia, science trivia',
   alternates: {
     canonical: 'https://triviaah.com/daily-trivias',
   },

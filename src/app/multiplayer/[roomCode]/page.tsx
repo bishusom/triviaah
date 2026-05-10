@@ -9,6 +9,12 @@ type PageProps = {
 export const metadata: Metadata = {
   title: 'Multiplayer Trivia Room | Triviaah',
   description: 'Join a private Triviaah multiplayer trivia room.',
+  keywords: [
+    'multiplayer trivia room',
+    'multiplayer quiz room',
+    'private trivia room',
+    'online trivia with friends',
+  ],
   robots: { index: false, follow: false },
 };
 
