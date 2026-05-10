@@ -4,7 +4,7 @@ import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { SpeedInsights } from '@vercel/speed-insights/next'; // Add this import
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
-import NavBar from '@/components/home/NavBar';
+import NavBar from '@/components/common/NavBar';
 import { SoundProvider } from '@/context/SoundContext';;
 import { Metadata } from 'next';
 import './globals.css';

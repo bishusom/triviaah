@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import localFont from 'next/font/local';
 import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
-import SearchBar from './SearchBar';
-import UserStatsPopover from './UserStatsPopover';
+import SearchBar from '../home/SearchBar';
+import UserStatsPopover from '../home/UserStatsPopover';
 
 const playfairDisplayBlack = localFont({
   src: '../../../public/fonts/PlayfairDisplay-Black.ttf',
@@ -49,7 +49,7 @@ export default function NavBar() {
   const navLinks = [
     { name: 'Daily Trivias', href: '/daily-trivias' },
     { name: 'All Trivias', href: '/trivias' },
-    { name: 'Puzzles', href: '#' },
+    { name: 'Puzzles', href: '/word-games' },
     { name: 'Leaderboard', href: '/leaderboard' },
     { name: 'Blog', href: '/blog' },
     { name: 'Trivia Bank', href: '/trivia-bank' },
@@ -106,14 +106,15 @@ export default function NavBar() {
                   onMouseEnter={() => setIsGamesMenuOpen(true)}
                   onMouseLeave={() => setIsGamesMenuOpen(false)}
                 >
-                  <button
+                  <Link
+                    href={link.href}
                     className="flex items-center gap-1 hover:text-cyan-400 transition-colors duration-300"
                     aria-haspopup="menu"
                     aria-expanded={isGamesMenuOpen}
                   >
                     {link.name}
                     <ChevronDown className={`h-4 w-4 transition-transform ${isGamesMenuOpen ? 'rotate-180' : ''}`} />
-                  </button>
+                  </Link>
 
                   {isGamesMenuOpen ? (
                     <div className="absolute left-0 top-full w-52 rounded-2xl border border-[#28486f] bg-[#141414] p-2 shadow-2xl">
@@ -189,14 +190,23 @@ export default function NavBar() {
             {navLinks.map((link) => (
               link.name === 'Puzzles' ? (
                 <div key={link.name} className="flex flex-col gap-3">
-                  <button
-                    onClick={() => setIsMobileGamesOpen((prev) => !prev)}
-                    className="flex items-center justify-between text-gray-300 text-lg font-semibold hover:text-cyan-400 transition-colors"
-                    aria-expanded={isMobileGamesOpen}
-                  >
-                    <span>{link.name}</span>
-                    <ChevronDown className={`h-5 w-5 transition-transform ${isMobileGamesOpen ? 'rotate-180' : ''}`} />
-                  </button>
+                  <div className="flex items-center justify-between">
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-gray-300 text-lg font-semibold hover:text-cyan-400 transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                    <button
+                      onClick={() => setIsMobileGamesOpen((prev) => !prev)}
+                      className="text-gray-300 hover:text-cyan-400 transition-colors p-1"
+                      aria-expanded={isMobileGamesOpen}
+                      aria-label="Toggle puzzle categories"
+                    >
+                      <ChevronDown className={`h-5 w-5 transition-transform ${isMobileGamesOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                  </div>
 
                   {isMobileGamesOpen ? (
                     <div className="ml-3 flex flex-col gap-3 border-l border-white/10 pl-4">

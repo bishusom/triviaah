@@ -3,7 +3,7 @@
 
 import { useEffect } from 'react';
 import Ads from '@/components/common/Ads';
-import NavBar from '@/components/home/NavBar';
+import NavBar from '@/components/common/NavBar';
 import CategoryShowcase from '@/components/home/sections/collapsible/CategoryShowcase';
 import HorizontalScrollSection from '@/components/home/sections/collapsible/HorizontalScrollSection';
 import Footer from '@/components/home/Footer'

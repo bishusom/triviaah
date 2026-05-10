@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { ArrowRight, ChevronRight } from 'lucide-react';
-import NavBar from './NavBar';
+import NavBar from '../common/NavBar';
 import Billboard from './sections/netflix/Billboard';
 import { NetflixRow } from './sections/netflix/NetflixRow';
 import Footer from './Footer';
