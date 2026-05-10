@@ -10,7 +10,7 @@ import {
   getTriviaCategorySlugs,
 } from '@/lib/trivia-categories';
 import Ads from '@/components/common/Ads';
-import { Play, Timer, Info, ShieldQuestionMark, BookOpen, Trophy, CircleStar, Sparkles } from 'lucide-react';
+import { Play, Timer, Info, ShieldQuestionMark, BookOpen, Trophy, CircleStar, Sparkles, Users } from 'lucide-react';
 
 export const revalidate = 3600;
 
@@ -193,6 +193,13 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                 >
                   <Play className="w-4 h-4 fill-current group-hover:scale-110 transition-transform" />
                   Start Full Quiz
+                </Link>
+                <Link
+                  href={`/multiplayer?category=${encodeURIComponent(category)}`}
+                  className="group relative inline-flex items-center gap-3 rounded-xl border border-emerald-400/30 bg-slate-900/70 px-8 py-4 text-sm font-black uppercase tracking-widest text-emerald-100 shadow-lg shadow-emerald-950/10 transition-all duration-300 hover:border-emerald-300/50 hover:bg-slate-800 hover:text-white"
+                >
+                  <Users className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  Play With Friends
                 </Link>
               </div>
             </div>

@@ -7,9 +7,9 @@ export default function KeyFeatures() {
       color: "from-blue-500 to-cyan-500"
     },
     {
-      icon: "🏆", 
-      title: "Progressive Challenges",
-      description: "Earn badges and climb leaderboards with our achievement system",
+      icon: "👥",
+      title: "Private Multiplayer Rooms",
+      description: "Invite friends into real-time trivia rooms and compete on the same questions",
       color: "from-purple-500 to-pink-500"
     },
     {

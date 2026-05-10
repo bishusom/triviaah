@@ -25,7 +25,7 @@ export default function Footer() {
               </h3>
             </div>
             <p className="text-gray-300 text-lg mb-4 leading-relaxed">
-              Free daily trivia challenges with answers & online quiz games. Test your knowledge across countless categories!
+              Free daily trivia challenges, private multiplayer quiz rooms, and online knowledge games across countless categories.
             </p>
           </div>
 
@@ -102,7 +102,7 @@ export default function Footer() {
         <div className="pt-8 border-t border-gray-800">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-2 text-gray-400 text-sm">
-              © {new Date().getFullYear()} Triviaah. Play free daily trivia challenges with answers and online quiz games.
+              © {new Date().getFullYear()} Triviaah. Play free daily trivia challenges, multiplayer quiz rooms, and online games.
             </div>
             <div className="hidden md:block"></div>
             <div className="text-sm text-gray-400">

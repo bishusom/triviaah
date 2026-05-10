@@ -223,6 +223,20 @@ export default async function DailyQuizzesPage() {
                   })}
                 </p>
               </div>
+
+              <div className="mt-5 max-w-2xl rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-200">
+                    <Users className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-black text-white">Multiplayer trivia is available</h2>
+                    <p className="mt-1 text-sm text-emerald-100/80">
+                      Pick a daily category, create a private room, and invite friends to compete on the same questions.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Timer & Stats Column */}
@@ -243,8 +257,8 @@ export default async function DailyQuizzesPage() {
                 </div>
                 <div className="bg-slate-800/50 rounded-xl p-2 border border-white/5 text-center">
                   <Users className="text-lg text-green-400 mx-auto mb-1" />
-                  <div className="text-white font-black text-base">Free</div>
-                  <div className="text-[9px] uppercase tracking-widest text-gray-500">Access</div>
+                  <div className="text-white font-black text-base">Invite</div>
+                  <div className="text-[9px] uppercase tracking-widest text-gray-500">Friends</div>
                 </div>
               </div>
             </div>
@@ -464,7 +478,7 @@ export default async function DailyQuizzesPage() {
               {
                 question: 'Can I use daily trivia for a pub quiz or team game?',
                 answer:
-                  'Absolutely. Because everyone playing on the same day sees the same questions, Triviaah daily quizzes work perfectly as a shared team challenge. Have everyone play independently, then compare scores — or read the questions aloud for a group round.',
+                  'Absolutely. Because everyone playing on the same day sees the same questions, Triviaah daily quizzes work perfectly as a shared team challenge. You can also use Play With Friends to create a private multiplayer room with an invite link and shared scoreboard.',
               },
             ].map((faq, index) => (
               <div
@@ -490,6 +504,13 @@ export default async function DailyQuizzesPage() {
               which means the site always has something worth returning to. Whether you play one
               category over breakfast or work through all {dailyQuizzes.length} before dinner, the
               format adapts to however much time you have available.
+            </p>
+            <p className="text-gray-300 leading-relaxed mb-4">
+              Daily trivia also works as a lightweight multiplayer trivia game. Open a daily
+              category, choose Play With Friends, and Triviaah creates a private invite room where
+              friends answer the same daily questions with a shared scoreboard. It is built for
+              quick remote challenges, family quiz nights, classroom warmups, and small group
+              competitions without requiring accounts.
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
               The question bank behind each category is carefully curated rather than

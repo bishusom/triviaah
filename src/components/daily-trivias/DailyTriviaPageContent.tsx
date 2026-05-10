@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Play, CheckCircle2, Sparkles } from 'lucide-react';
+import { ArrowRight, Play, CheckCircle2, Sparkles, Users } from 'lucide-react';
 
 import QuizGame from '@/components/trivias/QuizGame';
 import { FAQSection } from '@/app/daily-trivias/[category]/FAQSection';
@@ -169,6 +169,13 @@ export function DailyTriviaPageContent({
                     <Play className="h-4 w-4 transition-transform group-hover:scale-110" />
                     Start Quiz Now
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                  <Link
+                    href={`/multiplayer?quizType=daily-trivias&category=${encodeURIComponent(category)}`}
+                    className="group inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-400/20 bg-slate-900/70 px-5 py-3 text-sm font-semibold text-emerald-100 shadow-lg shadow-emerald-950/10 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300/40 hover:bg-slate-800/90 hover:text-white"
+                  >
+                    <Users className="h-4 w-4" />
+                    Play With Friends
                   </Link>
                   <Link
                     href="/daily-trivias"

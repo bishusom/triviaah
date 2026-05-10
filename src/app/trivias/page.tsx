@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Ads from '@/components/common/Ads';
 import ScrollButtons from '@/components/common/ScrollButtons';
-import { Play, Boxes, ShieldQuestionMark } from 'lucide-react';
+import { Play, Boxes, ShieldQuestionMark, Users } from 'lucide-react';
 import TriviaCategoriesExplorer from '@/components/trivias/TriviaCategoriesExplorer';
 import { getTriviaCategories, getTriviaExplorerCards, type TriviaCategoryRecord } from '@/lib/trivia-categories';
 import ExploreSections from '@/components/common/ExploreSections';
@@ -80,6 +80,19 @@ export default async function TriviasPage() {
                 Test your knowledge across {categories.length} high-octane categories. 
                 From history buffs to pop-culture fans, we have the ultimate challenge waiting for you.
               </p>
+              <div className="mt-5 max-w-2xl rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-200">
+                    <Users className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-black text-white">Multiplayer rooms are live</h2>
+                    <p className="mt-1 text-sm text-emerald-100/80">
+                      Open any category or topic, tap Play With Friends, and share a private invite link.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Integrated Stats */}
@@ -95,8 +108,8 @@ export default async function TriviasPage() {
                     <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Questions</div>
                   </div>
                   <div className="px-6">
-                    <div className="text-white font-black text-3xl leading-none">FREE</div>
-                    <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Play</div>
+                    <div className="text-white font-black text-3xl leading-none">LIVE</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Rooms</div>
                   </div>
                 </div>
               </div>
@@ -166,10 +179,10 @@ export default async function TriviasPage() {
             
             <div className="bg-gradient-to-br from-cyan-500/5 to-blue-500/5 rounded-2xl p-6 border border-white/5 text-center group hover:border-cyan-500/20 transition-colors">
               <div className="w-12 h-12 bg-cyan-400 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-400/20 group-hover:scale-110 transition-transform">
-                <span className="text-xl">🏆</span>
+                <Users className="h-6 w-6 text-slate-950" />
               </div>
-              <h3 className="text-lg font-black text-white mb-2 uppercase tracking-tight">Track Progress</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">Monitor your improvement and compete for high scores across all gaming categories.</p>
+              <h3 className="text-lg font-black text-white mb-2 uppercase tracking-tight">Play With Friends</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">Create private invite rooms from category and topic pages, then race through the same questions together.</p>
             </div>
           </div>
         </div>
@@ -220,7 +233,9 @@ export default async function TriviasPage() {
                   At <strong>Triviaah</strong>, we believe knowledge should be accessible and entertaining. Our vast library of 
                   <strong> trivia categories</strong> is curated to challenge both casual players and hard-core quiz enthusiasts. 
                   Whether you're looking for <strong>History trivia</strong> to test your timeline knowledge, <strong>Science quizzes</strong> 
-                  to explore the universe, or <strong>Entertainment trivia</strong> to prove your pop-culture prowess, we have it all.
+                  to explore the universe, or <strong>Entertainment trivia</strong> to prove your pop-culture prowess, we have it all. Many
+                  trivia category and topic pages also support <strong>multiplayer trivia rooms</strong>, so you can invite friends and compete
+                  on the same questions in real time.
                 </p>
               </div>
 
@@ -245,7 +260,8 @@ export default async function TriviasPage() {
               <div className="space-y-4">
                 <h3 className="text-lg font-black text-blue-400 uppercase tracking-widest">How to Play & Win</h3>
                 <p className="text-gray-400 leading-relaxed">
-                  Simply select one of the categories above to launch a dedicated trivia session. Each topic features multiple 
+                  Simply select one of the categories above to launch a dedicated trivia session, or choose Play With Friends on a category
+                  or topic page to create a private multiplayer quiz room. Each topic features multiple 
                   difficulty levels, from <strong>Easy</strong> introductions to <strong>Hard</strong> challenges that will 
                   test even the most seasoned experts. Perfect for <strong>classroom activities</strong>, <strong>family game nights</strong>, 
                   or a quick mental break during the day.
@@ -291,7 +307,7 @@ function StructuredData({ categories }: StructuredDataProps) {
         "@id": "https://triviaah.com/trivias/#webpage",
         "url": "https://triviaah.com/trivias",
         "name": "Free Online Trivia Categories | Quiz Games Online Free",
-        "description": "Browse our collection of free online trivia quizzes and categories. Play fun quiz games online free across various topics including history, science, entertainment and more.",
+        "description": "Browse our collection of free online trivia quizzes, categories, and multiplayer trivia rooms across topics including history, science, entertainment and more.",
         "isPartOf": {
           "@id": "https://triviaah.com/#website"
         },
@@ -399,7 +415,15 @@ function StructuredData({ categories }: StructuredDataProps) {
             "name": "Do I need to create an account to play?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No account creation is required! You can start playing any of our trivia games immediately without signing up. We believe in making knowledge accessible to everyone without barriers."
+              "text": "No account creation is required! You can start playing any of our trivia games immediately without signing up. Multiplayer trivia rooms also work with guest display names and private invite links."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I play trivia with friends online?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Many Triviaah category and topic pages include a Play With Friends option that creates a private multiplayer trivia room with an invite link, synchronized questions, and a shared scoreboard."
             }
           },
           {

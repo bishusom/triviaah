@@ -12,7 +12,7 @@ export default async function Home() {
         '@type': 'WebSite',
         name: 'Triviaah',
         url: 'https://triviaah.com',
-        description: 'Free daily trivia, quizzes, word games, number puzzles, and brain training challenges.',
+        description: 'Free daily trivia, multiplayer quiz rooms, word games, number puzzles, and brain training challenges.',
         potentialAction: {
           '@type': 'SearchAction',
           target: 'https://triviaah.com/trivias?search={search_term_string}',
@@ -30,7 +30,7 @@ export default async function Home() {
         name: 'Triviaah: Free Daily Trivia & Quiz Games',
         url: 'https://triviaah.com',
         description:
-          'Discover fun, free daily trivia challenges across 20+ exciting categories like movies, history, and science at Triviaah. Test your knowledge with fresh questions every 24 hours.',
+          'Discover fun, free daily trivia challenges, multiplayer quiz rooms, and knowledge games across categories like movies, history, and science at Triviaah.',
         isPartOf: {
           '@type': 'WebSite',
           name: 'Triviaah',

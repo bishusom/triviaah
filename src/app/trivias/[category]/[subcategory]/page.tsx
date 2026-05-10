@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
-import { ArrowRight, CircleStar, Play, Trophy, Sparkles } from 'lucide-react';
+import { ArrowRight, CircleStar, Play, Trophy, Sparkles, Users } from 'lucide-react';
 import { getEnrichedSubcategoriesWithMinQuestions } from '@/lib/supabase';
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
 import { buildMetaDescription } from '@/lib/seo';
@@ -181,6 +181,7 @@ export default async function SubcategoryPage({
     .then((items) => items.filter((item): item is { key: string; data: NonNullable<typeof item> extends { data: infer T } ? T : never } => item !== null));
 
   const quizHref = `/trivias/${category}/quiz?subcategory=${encodeURIComponent(activeSubcategory.subcategory)}`;
+  const multiplayerHref = `/multiplayer?category=${encodeURIComponent(category)}&subcategory=${encodeURIComponent(activeSubcategory.subcategory)}`;
   const canonical = `https://triviaah.com/trivias/${category}/${subcategory}`;
 
   const structuredData = {
@@ -243,6 +244,13 @@ export default async function SubcategoryPage({
             >
               Play {activeSubcategory.subcategory} Quiz
               <Play className="ml-2 h-4 w-4" />
+            </Link>
+            <Link
+              href={multiplayerHref}
+              className="inline-flex items-center justify-center rounded-2xl border border-emerald-400/30 bg-gray-800 px-8 py-4 text-base font-semibold text-emerald-100 transition-colors hover:border-emerald-300/50 hover:text-white"
+            >
+              Play With Friends
+              <Users className="ml-2 h-4 w-4" />
             </Link>
             <Link
               href={`/trivias/${category}`}
