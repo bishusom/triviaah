@@ -4,32 +4,31 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Plus, Users } from 'lucide-react';
 
+import Ads from '@/components/common/Ads';
 import { getPersistentGuestId } from '@/lib/guestId';
 
-type CategoryOption = {
-  slug: string;
-  name: string;
-};
+const TIMER_OPTIONS = [10, 15, 20, 30, 45, 60];
 
 type MultiplayerHomeClientProps = {
-  categories: CategoryOption[];
   initialCategory?: string;
+  initialCategoryName?: string;
   initialSubcategory?: string;
   quizType?: 'trivias' | 'daily-trivias';
 };
 
 export function MultiplayerHomeClient({
-  categories,
   initialCategory,
+  initialCategoryName,
   initialSubcategory,
   quizType = 'trivias',
 }: MultiplayerHomeClientProps) {
   const router = useRouter();
-  const initialCategoryName = categories.find((item) => item.slug === initialCategory)?.name || initialCategory || '';
-  const [category, setCategory] = useState(
-    initialCategory || categories[0]?.slug || 'general-knowledge'
+  const category = initialCategory || '';
+  const subcategory = initialSubcategory || '';
+  const displayCategory = initialCategoryName || initialCategory || '';
+  const [timePerQuestion, setTimePerQuestion] = useState(
+    quizType === 'daily-trivias' && category === 'quick-fire' ? 15 : 30
   );
-  const [subcategory, setSubcategory] = useState(initialSubcategory || '');
   const [name, setName] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const [isCreating, setIsCreating] = useState(false);
@@ -51,6 +50,7 @@ export function MultiplayerHomeClient({
         category,
         subcategory,
         quizType,
+        timePerQuestion,
         hostGuestId: guestId,
         hostName: name || guestId,
       }),
@@ -111,7 +111,7 @@ export function MultiplayerHomeClient({
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
                     {quizType === 'daily-trivias' ? 'Daily quiz category' : 'Quiz category'}
                   </p>
-                  <p className="mt-2 font-bold text-white">{initialCategoryName}</p>
+                  <p className="mt-2 font-bold text-white">{displayCategory}</p>
                 </div>
               ) : null}
               {subcategory ? (
@@ -122,6 +122,25 @@ export function MultiplayerHomeClient({
                   <p className="mt-2 font-bold text-white">{subcategory}</p>
                 </div>
               ) : null}
+              <div className="grid gap-2">
+                <p className="text-sm font-semibold text-slate-200">Time per question</p>
+                <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+                  {TIMER_OPTIONS.map((seconds) => (
+                    <button
+                      key={seconds}
+                      type="button"
+                      onClick={() => setTimePerQuestion(seconds)}
+                      className={`rounded-xl border px-3 py-2 text-sm font-bold transition ${
+                        timePerQuestion === seconds
+                          ? 'border-cyan-300 bg-cyan-400 text-slate-950'
+                          : 'border-slate-700 bg-slate-950 text-slate-200 hover:border-cyan-400/60'
+                      }`}
+                    >
+                      {seconds} seconds
+                    </button>
+                  ))}
+                </div>
+              </div>
               {error ? <p className="text-sm text-rose-300">{error}</p> : null}
               <button
                 type="button"
@@ -156,6 +175,10 @@ export function MultiplayerHomeClient({
               </button>
             </div>
           </section>
+        </div>
+
+        <div className="mt-6">
+          <Ads format="horizontal" slot="2207590813" isMobileFooter={false} />
         </div>
       </main>
     </div>

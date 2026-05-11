@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 import { MultiplayerHomeClient } from '@/components/multiplayer/MultiplayerHomeClient';
-import { getTriviaCategories } from '@/lib/trivia-categories';
+import { getTriviaCategoryBySlug } from '@/lib/trivia-categories';
 
 export const metadata: Metadata = {
   title: 'Multiplayer Trivia Rooms | Triviaah',
@@ -27,18 +27,18 @@ type MultiplayerPageProps = {
 
 export default async function MultiplayerPage({ searchParams }: MultiplayerPageProps) {
   const resolvedSearchParams = await searchParams;
-  const categories = await getTriviaCategories('trivias');
-  const options = categories.map((category) => ({
-    slug: category.slug,
-    name: category.displayName || category.title,
-  }));
+  const quizType = resolvedSearchParams.quizType === 'daily-trivias' ? 'daily-trivias' : 'trivias';
+  const category = resolvedSearchParams.category;
+  const categoryData = category
+    ? await getTriviaCategoryBySlug(category, quizType)
+    : null;
 
   return (
     <MultiplayerHomeClient
-      categories={options}
-      initialCategory={resolvedSearchParams.category}
+      initialCategory={category}
+      initialCategoryName={categoryData?.displayName || categoryData?.title}
       initialSubcategory={resolvedSearchParams.subcategory}
-      quizType={resolvedSearchParams.quizType === 'daily-trivias' ? 'daily-trivias' : 'trivias'}
+      quizType={quizType}
     />
   );
 }

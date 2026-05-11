@@ -9,12 +9,19 @@ type CreateRoomBody = {
   category?: string;
   subcategory?: string;
   quizType?: 'trivias' | 'daily-trivias';
+  timePerQuestion?: number;
   hostGuestId?: string;
   hostName?: string;
 };
 
 function cleanText(value: unknown, fallback = '') {
   return typeof value === 'string' ? value.trim().slice(0, 80) || fallback : fallback;
+}
+
+function cleanTimePerQuestion(value: unknown, fallback: number) {
+  const seconds = Number(value);
+  if (!Number.isFinite(seconds)) return fallback;
+  return Math.min(120, Math.max(5, Math.round(seconds)));
 }
 
 export async function POST(request: Request) {
@@ -25,6 +32,10 @@ export async function POST(request: Request) {
   const hostGuestId = cleanText(body.hostGuestId, `guest-${crypto.randomUUID()}`);
   const hostName = cleanText(body.hostName, hostGuestId).replace(/\s+/g, ' ');
   const dateKey = new Date().toISOString().slice(0, 10);
+  const timePerQuestion = cleanTimePerQuestion(
+    body.timePerQuestion,
+    category === 'quick-fire' ? 15 : 30
+  );
 
   const questions = quizType === 'daily-trivias'
     ? await getDailyTriviaQuestions(category, dateKey)
@@ -45,7 +56,7 @@ export async function POST(request: Request) {
         host_guest_id: hostGuestId,
         category,
         subcategory: subcategory || null,
-        time_per_question: category === 'quick-fire' ? 15 : 30,
+        time_per_question: timePerQuestion,
       })
       .select()
       .single();

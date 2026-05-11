@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import { Check, Copy, Crown, Loader2, Play, Trophy, Users } from 'lucide-react';
 
+import Ads from '@/components/common/Ads';
 import { getPersistentGuestId } from '@/lib/guestId';
 import {
   loadMultiplayerRoom,
@@ -289,9 +289,7 @@ export function MultiplayerRoomClient({ roomCode }: { roomCode: string }) {
         <div className="max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 text-center">
           <h1 className="text-2xl font-bold">Room not found</h1>
           <p className="mt-2 text-slate-300">This invite code may have expired or been typed incorrectly.</p>
-          <Link href="/multiplayer" className="mt-5 inline-flex rounded-xl bg-cyan-500 px-5 py-3 font-bold text-slate-950">
-            Create a Room
-          </Link>
+          <p className="mt-5 text-sm text-slate-400">Start from a trivia category page to create a new room.</p>
         </div>
       </div>
     );
@@ -324,6 +322,9 @@ export function MultiplayerRoomClient({ roomCode }: { roomCode: string }) {
             {isJoining ? <Loader2 className="h-4 w-4 animate-spin" /> : <Users className="h-4 w-4" />}
             Join Room
           </button>
+          <div className="mt-6">
+            <Ads format="horizontal" slot="2207590813" isMobileFooter={false} />
+          </div>
         </section>
       </div>
     );
@@ -346,9 +347,6 @@ export function MultiplayerRoomClient({ roomCode }: { roomCode: string }) {
               {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               {isCopied ? 'Copied' : 'Copy Invite'}
             </button>
-            <Link href="/multiplayer" className="rounded-xl border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200 transition hover:bg-slate-800">
-              New Room
-            </Link>
           </div>
         </header>
 
@@ -375,6 +373,9 @@ export function MultiplayerRoomClient({ roomCode }: { roomCode: string }) {
                     Waiting for host to start
                   </p>
                 )}
+                <div className="mt-8 w-full max-w-2xl">
+                  <Ads format="horizontal" slot="2207590813" isMobileFooter={false} />
+                </div>
               </div>
             ) : null}
 
@@ -464,9 +465,10 @@ export function MultiplayerRoomClient({ roomCode }: { roomCode: string }) {
                     </div>
                   ))}
                 </div>
-                <Link href="/multiplayer" className="mt-6 rounded-xl bg-cyan-500 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-400">
-                  Create Another Room
-                </Link>
+                <div className="mt-8 w-full max-w-2xl">
+                  <Ads format="horizontal" slot="9040722315" isMobileFooter={false} />
+                </div>
+                <p className="mt-6 text-sm text-slate-400">Start from a trivia category page to create another room.</p>
               </div>
             ) : null}
           </section>
