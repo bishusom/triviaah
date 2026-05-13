@@ -31,6 +31,13 @@ function getDifficultyPillClass(difficulty?: string) {
   return difficultyPillStyles[difficulty?.toLowerCase() || 'easy'] || 'border-cyan-400/30 bg-cyan-500/15 text-cyan-200';
 }
 
+function formatQuizMetaLabel(value?: string) {
+  if (!value) return '';
+  return value
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 interface QuizConfig {
   isQuickfire?: boolean;
   timePerQuestion?: number;
@@ -43,6 +50,7 @@ interface QuizGameProps {
   subcategory?: string;
   quizConfig?: QuizConfig;
   quizType?: 'trivias' | 'daily-trivias' | 'quick-fire';
+  showDailyTriviaHistory?: boolean;
 }
 
 interface QuizResult {
@@ -62,7 +70,8 @@ export default function QuizGame({
   category,
   subcategory,
   quizConfig,
-  quizType
+  quizType,
+  showDailyTriviaHistory = true
 }: QuizGameProps) {
   
   /* ---------- Config ---------- */
@@ -302,7 +311,14 @@ export default function QuizGame({
 
   if (isLoading) return <div className="flex items-center justify-center min-h-[400px]"><motion.div className="w-16 h-16 border-4 border-cyan-500 border-dashed rounded-full" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} /></div>;
 
-  if (showSummary && quizResult) return <QuizSummary result={quizResult} context={quizType || 'trivias'}onRestart={() => window.location.reload()} />;
+  if (showSummary && quizResult) return (
+    <QuizSummary
+      result={quizResult}
+      context={quizType || 'trivias'}
+      onRestart={() => window.location.reload()}
+      showDailyTriviaHistory={showDailyTriviaHistory}
+    />
+  );
 
   return (
     <div className={isFullScreen ? "fixed inset-0 z-50 bg-gray-900 overflow-y-auto p-4" : "relative max-w-4xl mx-auto p-2 sm:p-4 bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl"}>
@@ -368,9 +384,19 @@ export default function QuizGame({
                 </div>
               )}
               <div className="flex flex-1 flex-col items-center gap-2 sm:items-start">
-                <span className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wide ${getDifficultyPillClass(currentQuestion.difficulty)}`}>
-                  {getDifficultyLabel(currentQuestion.difficulty)}
-                </span>
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+                  <span className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wide ${getDifficultyPillClass(currentQuestion.difficulty)}`}>
+                    {getDifficultyLabel(currentQuestion.difficulty)}
+                  </span>
+                  <span className="inline-flex w-fit items-center rounded-full border border-cyan-400/20 bg-cyan-500/10 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wide text-cyan-100">
+                    {formatQuizMetaLabel(currentQuestion.category)}
+                  </span>
+                  {currentQuestion.subcategory && (
+                    <span className="inline-flex w-fit items-center rounded-full border border-violet-400/20 bg-violet-500/10 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wide text-violet-100">
+                      {formatQuizMetaLabel(currentQuestion.subcategory)}
+                    </span>
+                  )}
+                </div>
                 <h2 className="text-base font-bold leading-snug text-white sm:text-lg md:text-xl">
                   {currentQuestion.question}
                 </h2>

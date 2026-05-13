@@ -35,6 +35,12 @@ type DailyTriviaPageContentProps = {
   showQuiz?: boolean;
 };
 
+function getShowDailyTriviaHistory() {
+  const value = process.env.NEXT_SHOW_DAILY_TRIVIA_HISTORY;
+  if (!value) return true;
+  return !['false', '0', 'no', 'off'].includes(value.trim().toLowerCase());
+}
+
 function getCategoryAccent(color?: string) {
   // Elegant dark blue/black theme accent colors
   return color || 'from-blue-600 to-cyan-500';
@@ -63,6 +69,7 @@ export function DailyTriviaPageContent({
   const accent = getCategoryAccent(cfg.color);
   const heroImage = cfg.ogImage || `/imgs/daily-trivias/${category}.webp`;
   const playHref = startQuizHref || `/daily-trivias/${category}/quiz`;
+  const showDailyTriviaHistory = getShowDailyTriviaHistory();
   const lastUpdated = dateKey ? `${dateKey}T00:00:00Z` : cfg.updatedAt || new Date().toISOString();
   const learningPoints = cfg.learningPoints.length > 0
     ? cfg.learningPoints
@@ -220,6 +227,7 @@ export function DailyTriviaPageContent({
               category={category}
               quizConfig={quizConfig}
               quizType="daily-trivias"
+              showDailyTriviaHistory={showDailyTriviaHistory}
             />
           </div>
         )}

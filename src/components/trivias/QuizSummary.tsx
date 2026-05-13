@@ -53,10 +53,12 @@ export default function QuizSummary({
   result,
   onRestart,
   context = 'trivias',
+  showDailyTriviaHistory = true,
 }: {
   result: QuizResult;
   onRestart: () => void;
   context?: 'trivias' | 'daily-trivias' | 'quick-fire';
+  showDailyTriviaHistory?: boolean;
 }) {
   const [showReview, setShowReview] = useState(false);
   const [highScores, setHighScores] = useState<HighScore[]>([]);
@@ -332,7 +334,7 @@ export default function QuizSummary({
       </div>
 
       {/* Previous daily quizzes (daily-trivias only) */}
-      {context === 'daily-trivias' && result.category !== 'quick-fire' && (
+      {showDailyTriviaHistory && context === 'daily-trivias' && result.category !== 'quick-fire' && (
         <div className="mt-12 w-full max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="flex items-center justify-between mb-4 px-2">
             <h3 className="text-sm font-black italic uppercase tracking-tighter flex items-center gap-2 text-cyan-300">
