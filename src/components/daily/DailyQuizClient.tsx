@@ -126,16 +126,9 @@ export default function DailyQuizClient({
         ) : (
           <Link
             href={quiz.path} 
-            onClick={() => {
-              const next = { 
-                ...JSON.parse(localStorage.getItem('playedQuizzes') || '{}'), 
-                [quiz.category]: { played: true, timestamp: Date.now() } 
-              };
-              localStorage.setItem('playedQuizzes', JSON.stringify(next));
-            }}
             className="block w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium py-2.5 px-4 rounded-lg text-center transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
           >
-            Play Now
+            Explore
           </Link>
         )}
       </div>

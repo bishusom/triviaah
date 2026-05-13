@@ -351,7 +351,7 @@ export default function QuizSummary({
             {getLast7Days().map((day: HistoricalDay) => (
               <Link
                 key={day.dateParam}
-                href={`/daily-trivias/${result.category}?date=${day.dateParam}`}
+                href={`/daily-trivias/${result.category}/quiz?date=${day.dateParam}`}
                 className="group relative flex min-h-[92px] flex-col items-center justify-between overflow-hidden rounded-2xl border border-cyan-400/15 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 p-3 sm:p-4 text-center shadow-lg shadow-cyan-950/20 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-[0_18px_40px_rgba(34,211,238,0.18)]"
               >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.16),transparent_50%)] opacity-80 transition-opacity group-hover:opacity-100" />
