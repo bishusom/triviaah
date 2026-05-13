@@ -206,10 +206,10 @@ export default async function DailyQuizzesPage() {
               </div>
 
               <p className="max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
-                Fresh challenges every 24 hours. Play our free daily trivia quizzes across history,
-                sports, science, geography, entertainment, arts, literature, and pop culture. Pick a
-                category, answer 10 new questions, and come back each day for a refreshed set
-                designed for quick learning and casual competition.
+                Fresh trivia challenges every 24 hours. Delve into daily trivia quizzes across topics like History,
+                Sports, Science, Geography, Entertainment, Arts & Literature and mother of all - General Knowledge. Choose a
+                category, answer 10 new questions, and come back tomorrow again for a refreshed set of brain-teasers. 
+                No accounts, no fees — just pure daily trivia fun for everyone.
               </p>
 
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
