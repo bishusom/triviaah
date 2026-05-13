@@ -26,8 +26,9 @@ export function MultiplayerHomeClient({
   const category = initialCategory || '';
   const subcategory = initialSubcategory || '';
   const displayCategory = initialCategoryName || initialCategory || '';
+  const isQuickFire = quizType === 'daily-trivias' && category === 'quick-fire';
   const [timePerQuestion, setTimePerQuestion] = useState(
-    quizType === 'daily-trivias' && category === 'quick-fire' ? 15 : 30
+    isQuickFire ? 10 : 30
   );
   const [name, setName] = useState('');
   const [roomCode, setRoomCode] = useState('');
@@ -50,7 +51,7 @@ export function MultiplayerHomeClient({
         category,
         subcategory,
         quizType,
-        timePerQuestion,
+        timePerQuestion: isQuickFire ? 10 : timePerQuestion,
         hostGuestId: guestId,
         hostName: name || guestId,
       }),
@@ -124,17 +125,26 @@ export function MultiplayerHomeClient({
               ) : null}
               <div className="grid gap-2">
                 <p className="text-sm font-semibold text-slate-200">Time per question</p>
+                {isQuickFire ? (
+                  <p className="text-xs font-medium text-slate-400">
+                    Quick-fire rooms always use a 10 second timer.
+                  </p>
+                ) : null}
                 <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
                   {TIMER_OPTIONS.map((seconds) => (
                     <button
                       key={seconds}
                       type="button"
-                      onClick={() => setTimePerQuestion(seconds)}
+                      onClick={() => {
+                        if (!isQuickFire) setTimePerQuestion(seconds);
+                      }}
+                      disabled={isQuickFire}
+                      aria-disabled={isQuickFire}
                       className={`rounded-xl border px-3 py-2 text-sm font-bold transition ${
                         timePerQuestion === seconds
                           ? 'border-cyan-300 bg-cyan-400 text-slate-950'
                           : 'border-slate-700 bg-slate-950 text-slate-200 hover:border-cyan-400/60'
-                      }`}
+                      } ${isQuickFire ? 'cursor-not-allowed opacity-70 hover:border-slate-700' : ''}`}
                     >
                       {seconds} seconds
                     </button>

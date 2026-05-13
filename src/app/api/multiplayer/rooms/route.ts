@@ -32,10 +32,10 @@ export async function POST(request: Request) {
   const hostGuestId = cleanText(body.hostGuestId, `guest-${crypto.randomUUID()}`);
   const hostName = cleanText(body.hostName, hostGuestId).replace(/\s+/g, ' ');
   const dateKey = new Date().toISOString().slice(0, 10);
-  const timePerQuestion = cleanTimePerQuestion(
-    body.timePerQuestion,
-    category === 'quick-fire' ? 15 : 30
-  );
+  const isQuickFire = quizType === 'daily-trivias' && category === 'quick-fire';
+  const timePerQuestion = isQuickFire
+    ? 10
+    : cleanTimePerQuestion(body.timePerQuestion, 30);
 
   const questions = quizType === 'daily-trivias'
     ? await getDailyTriviaQuestions(category, dateKey)
