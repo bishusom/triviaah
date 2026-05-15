@@ -27,7 +27,7 @@ interface Puzzle {
 export const metadata: Metadata = {
   title: 'Free Brainwave Games Online - Daily Trivia Puzzles | Triviaah',
   description:
-    'Play free Brainwave games online including Plotle, Capitale, Songle, Historidle, Foodle, Landmarkdle, Synonymle, and more daily trivia puzzles. No sign-up required.',
+    'Play free Brainwave games online including Plotle, Capitale, Songle, Historidle, Foodle, Landmarkdle, Synonymle, and more daily trivia puzzles. No sign-up.',
   keywords: [
     'brainwave games',
     'free brainwave games online',

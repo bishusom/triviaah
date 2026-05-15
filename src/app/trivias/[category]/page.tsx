@@ -110,7 +110,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
 
   const categoryTitle = categoryData.title;
   const categoryDescription = categoryData.description;
-  const description = `Play free ${categoryTitle} trivia quiz. ${categoryDescription} Test your knowledge with 100+ questions across multiple topics. No registration required.`;
+  const description = `${categoryDescription}`.trim() || `Test your knowledge with our ${categoryTitle.toLowerCase()} trivia quiz. Free online questions and answers to challenge yourself and learn new facts!`;
 
   return {
     title: `${categoryTitle} Trivia Quiz | Questions & Answers | Triviaah`,
