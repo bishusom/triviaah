@@ -65,6 +65,35 @@ export default function QuizSummary({
   const [isLoadingScores, setIsLoadingScores] = useState(true);
   const [scoreSaved, setScoreSaved] = useState(false);
   const [playerMoniker, setPlayerMoniker] = useState(getPersistentGuestId());
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const baseUrl = window.location.origin;
+    const shareUrl = `${baseUrl}/api/share?score=${result.score}&correct=${result.correctCount}&total=${result.totalQuestions}&category=${encodeURIComponent(result.category)}&time=${result.timeUsed}`;
+
+    const shareTitle = 'Triviaah Challenge!';
+    const shareText = `I scored ${result.score} points (${result.correctCount}/${result.totalQuestions} correct) on ${result.category} trivia! Can you beat my score?`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (err) {
+        console.error('Sharing failed:', err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error('Clipboard copy failed:', err);
+      }
+    }
+  };
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const reviewRef = useRef<HTMLDivElement>(null);
@@ -198,8 +227,19 @@ export default function QuizSummary({
                   </>
                 )}
               </button>
-              <button className="bg-indigo-600 py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-indigo-500">
-                <Share2 size={20} /> SHARE
+              <button
+                onClick={handleShare}
+                className="bg-indigo-600 py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-indigo-500 transition-colors"
+              >
+                {copied ? (
+                  <>
+                    <CheckCircle2 size={20} className="text-green-400" /> COPIED!
+                  </>
+                ) : (
+                  <>
+                    <Share2 size={20} /> SHARE
+                  </>
+                )}
               </button>
             </div>
           </div>
