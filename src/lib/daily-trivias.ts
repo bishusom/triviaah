@@ -166,7 +166,7 @@ export async function getDailyTriviaQuestions(
   dateKey: string
 ): Promise<Question[]> {
   if (category === 'today-in-history') {
-    return getTodaysHistoryQuestions(10, dateKey);
+    return getTodaysHistoryQuestions(6, dateKey);
   }
 
   return getDailyQuizQuestions(category, dateKey);

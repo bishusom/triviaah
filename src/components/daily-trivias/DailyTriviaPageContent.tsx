@@ -14,6 +14,7 @@ type QuizConfig = {
   isQuickfire: boolean;
   timePerQuestion: number;
   hasBonusQuestion: boolean;
+  regularQuestionCount?: number;
 };
 
 type DailyTriviaSiblingCategory = {
@@ -60,10 +61,12 @@ export function DailyTriviaPageContent({
 }: DailyTriviaPageContentProps) {
   const cfg = categoryData;
   const isQuickfire = category === 'quick-fire';
+  const isTodayInHistory = category === 'today-in-history';
   const quizConfig: QuizConfig = {
     isQuickfire,
     timePerQuestion: isQuickfire ? 15 : 30,
-    hasBonusQuestion: isQuickfire,
+    hasBonusQuestion: isQuickfire || isTodayInHistory,
+    regularQuestionCount: isTodayInHistory ? 5 : 6,
   };
   const title = cfg.displayName || cfg.title;
   const accent = getCategoryAccent(cfg.color);

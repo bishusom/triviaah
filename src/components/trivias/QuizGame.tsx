@@ -42,6 +42,7 @@ interface QuizConfig {
   isQuickfire?: boolean;
   timePerQuestion?: number;
   hasBonusQuestion?: boolean;
+  regularQuestionCount?: number;
 }
 
 interface QuizGameProps {
@@ -76,8 +77,9 @@ export default function QuizGame({
   
   /* ---------- Config ---------- */
   const isQuickfire = quizConfig?.isQuickfire || category === 'quick-fire';
-  const timePerQuestion = isQuickfire ? 10 : 30;
+  const timePerQuestion = quizConfig?.timePerQuestion ?? (isQuickfire ? 10 : 30);
   const hasBonusQuestion = quizConfig?.hasBonusQuestion ?? (category === 'quick-fire');
+  const regularQuestionCount = quizConfig?.regularQuestionCount ?? 6;
   
   /* ---------- States ---------- */
   const [isTimedMode] = useState(true);
@@ -113,15 +115,15 @@ export default function QuizGame({
 
   /* ---------- Logic ---------- */
   useEffect(() => {
-    if (isQuickfire && hasBonusQuestion && initialQuestions.length >= 6) {
-      setRegularQuestions(initialQuestions.slice(0, 6));
-      setBonusQuestion(initialQuestions[6]);
+    if (hasBonusQuestion && initialQuestions.length > regularQuestionCount) {
+      setRegularQuestions(initialQuestions.slice(0, regularQuestionCount));
+      setBonusQuestion(initialQuestions[regularQuestionCount]);
     } else {
       setRegularQuestions(initialQuestions);
       setBonusQuestion(null);
     }
     setIsLoading(false);
-  }, [initialQuestions, isQuickfire, hasBonusQuestion]);
+  }, [initialQuestions, hasBonusQuestion, regularQuestionCount]);
 
   const questions = showBonusQuestion && bonusQuestion ? [bonusQuestion] : regularQuestions;
   const currentQuestion = questions[currentIndex];
@@ -157,7 +159,7 @@ export default function QuizGame({
   }, [isMuted]);
 
   const moveToNextQuestion = useCallback(() => {
-    if (isQuickfire && hasBonusQuestion && bonusQuestion && currentIndex === regularQuestions.length - 1 && !showBonusQuestion) {
+    if (hasBonusQuestion && bonusQuestion && currentIndex === regularQuestions.length - 1 && !showBonusQuestion) {
       setShowBonusQuestion(true);
       setCurrentIndex(0);
     } else {
@@ -169,7 +171,7 @@ export default function QuizGame({
     setShowNextButton(false);
     setTimeUp(false);
     setMilestone(null);
-  }, [timePerQuestion, isQuickfire, hasBonusQuestion, currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion]);
+  }, [timePerQuestion, hasBonusQuestion, currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion]);
 
   const finishQuiz = useCallback(async (finalScore: number, finalCorrectCount: number) => {
     event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});    
