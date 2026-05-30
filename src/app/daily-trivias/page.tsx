@@ -10,6 +10,8 @@ import { ScrollToDailyCategoriesButton } from '@/components/daily-trivias/Scroll
 import ExploreSections from '@/components/common/ExploreSections';
 import { getTriviaCategories, type TriviaCategoryRecord } from '@/lib/trivia-categories';
 
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Triviaah',
   description: 'Play our free daily trivia game with new questions about history, geography, sports, science and more! Test your skill with fresh questions across 8 categories.',
@@ -17,6 +19,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://triviaah.com/daily-trivias',
   },
+  category: 'games',
   openGraph: {
     title: 'Daily Trivia Game - New Questions Every Day | Triviaah',
     description: 'Challenge yourself with our daily trivia game. 10 fresh questions every 24 hours across history, sports, science, geography and more!',
@@ -628,7 +631,9 @@ function StructuredData({ quizzes, currentDate }: { quizzes: any[]; currentDate:
         about: { '@id': 'https://triviaah.com/daily-trivias/#itemlist' },
         datePublished: '2024-01-01T00:00:00+00:00',
         dateModified: currentDate.toISOString(),
+        inLanguage: 'en-US',
         breadcrumb: { '@id': 'https://triviaah.com/daily-trivias/#breadcrumb' },
+        mainEntity: { '@id': 'https://triviaah.com/daily-trivias/#itemlist' },
         primaryImageOfPage: {
           '@type': 'ImageObject',
           url: 'https://triviaah.com/imgs/daily-trivias/daily-trivia-og.webp',

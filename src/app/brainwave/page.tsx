@@ -10,6 +10,8 @@ import { getBrainwaveRouteDefinitions } from '@/lib/brainwave/brainwave-route-re
 import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
 import ExploreSections from '@/components/common/ExploreSections';
 
+export const revalidate = 86400;
+
 interface Puzzle {
   route_path: string;
   category: string;
@@ -49,6 +51,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://triviaah.com/brainwave',
   },
+  category: 'games',
   openGraph: {
     title: 'Free Brainwave Games Online - Daily Trivia Puzzles | Triviaah',
     description:
@@ -541,8 +544,8 @@ export default async function BrainwavePage() {
               <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">⚡</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">No Daily Limits</h3>
-              <p className="text-gray-300">Play anytime, anywhere - all games are always available!</p>
+              <h3 className="text-xl font-bold text-white mb-2">Daily Rotation</h3>
+              <p className="text-gray-300">Each game gets a fresh challenge every day while staying easy to replay and share.</p>
             </div>
 
             <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20 text-center">
@@ -713,8 +716,12 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
         },
         "datePublished": "2024-01-01T00:00:00+00:00",
         "dateModified": currentDate.toISOString(),
+        "inLanguage": "en-US",
         "breadcrumb": {
           "@id": "https://triviaah.com/brainwave/#breadcrumb"
+        },
+        "mainEntity": {
+          "@id": "https://triviaah.com/brainwave/#itemlist"
         },
         "primaryImageOfPage": {
           "@type": "ImageObject",
@@ -869,20 +876,6 @@ function StructuredData({ puzzles, currentDate }: { puzzles: Puzzle[], currentDa
             }
           }
         ]
-      },
-      {
-        "@type": "QAPage",
-        "mainEntity": {
-          "@type": "Question",
-          "name": "Brainwave Trivia Games",
-          "text": "What types of brainwave trivia games are available?",
-          "answerCount": 4,
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Our Brainwave section includes movie guessing with Plotle, capital-city clues with Capitale, music challenges with Songle, celebrity trivia with Celebrile, historical puzzles with Historidle, animal trivia with Creaturedle, food puzzles with Foodle, literature challenges with Literale, landmark identification with Landmarkdle, invention guessing with Inventionle, word similarity games with Synonymle, car trivia with Automoble, plant clues with Botanle, city puzzles with Citadle, country puzzles with Countridle, and mixed trivia-word deduction with Trordle."
-          },
-          "dateCreated": currentDate.toISOString()
-        }
       }
     ]
   };

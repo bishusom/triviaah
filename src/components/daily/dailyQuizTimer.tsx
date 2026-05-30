@@ -24,7 +24,7 @@ export default function Timer() {
   }, []);
 
   return (
-    <div className="text-blue-600 font-medium mt-2">
+    <div className="text-cyan-400 font-medium mt-2">
       {timeLeft ? `Resets in ${timeLeft}` : 'Loading...'}
     </div>
   );
