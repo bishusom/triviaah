@@ -602,10 +602,6 @@ export default async function BrainwavePage() {
               {
                 question: "Can I share my results?",
                 answer: "Yes! After completing each Brainwave game, you'll have the option to share your results on social media and challenge your friends to beat your score."
-              },
-              {
-                question: "Do I need to create an account?",
-                answer: "No account is required. You can open any Brainwave game and start playing immediately in your browser."
               }
             ].map((faq, index) => (
               <div key={index} className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">

@@ -9,6 +9,8 @@ import { MobileExpandableDescription } from '@/components/daily-trivias/MobileEx
 import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
 import ExploreSections from '@/components/common/ExploreSections';
 
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: 'Word Games Collection - Free Vocabulary & Spelling Games | Triviaah',
   description: 'Challenge your vocabulary with our collection of free word games including Cryptogram, Spelling Bee, Boggle, Word Search, Word Ladder, Crossgrid, Word Connect, and Anagram Scramble.',
@@ -139,8 +141,12 @@ function StructuredData({ games, currentDate }: { games: GamePageContent[], curr
         },
         "datePublished": "2024-01-01T00:00:00+00:00",
         "dateModified": currentDate.toISOString(),
+        "inLanguage": "en-US",
         "breadcrumb": {
           "@id": "https://triviaah.com/word-games/#breadcrumb"
+        },
+        "mainEntity": {
+          "@id": "https://triviaah.com/word-games/#itemlist"
         },
         "primaryImageOfPage": {
           "@type": "ImageObject",
@@ -272,7 +278,7 @@ export default async function WordGamesPage() {
   const allRows = await getGamePagesBySection('word-games');
   const wordGames = allRows.filter((r) => r.route_path !== '/word-games');
   const currentDate = new Date();
-  const heroDescription = 'Challenge your vocabulary with our exciting collection of free word games, including Cryptogram, Spelling Bee, Boggle, Word Search, Word Ladder, Crossgrid, Word Connect, and Anagram Scramble. Build spelling, pattern recognition, word recall, and puzzle-solving skills with games designed for quick play on mobile and desktop.';
+  const heroDescription = 'A good word game should make you pause for one more try, not read like a vocabulary worksheet. This collection mixes calm search puzzles, fast letter-bank games, clue-led grids, and daily decoding challenges so you can choose the kind of word thinking you actually feel like doing today.';
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
@@ -347,6 +353,32 @@ export default async function WordGamesPage() {
               ))}
             </div>
           </div>
+
+          <section className="mb-16 rounded-2xl border border-emerald-400/20 bg-slate-900/70 p-6 md:p-8">
+            <p className="text-xs font-black uppercase tracking-[0.24em] text-emerald-300">
+              Our Take
+            </p>
+            <h2 className="mt-3 text-2xl font-bold text-white md:text-3xl">
+              The best word game is the one that changes how you scan language
+            </h2>
+            <div className="mt-4 grid gap-5 text-sm leading-7 text-gray-300 md:grid-cols-3">
+              <p>
+                Word Connect is the snackable one: it feels more forgiving than a crossword because
+                the letters are already on the table, but it still rewards the same quiet habit of
+                testing prefixes, endings, and unlikely vowel pairs.
+              </p>
+              <p>
+                Crossgrid and Cryptogram are slower by design. They are better when you want a
+                puzzle that pushes back, because the answer usually arrives through deduction
+                rather than raw vocabulary size.
+              </p>
+              <p>
+                Boggle, Word Search, and Anagram Scramble work best as warmups. They train your eye
+                to stop reading left-to-right only and start noticing fragments, stems, and hidden
+                word shapes.
+              </p>
+            </div>
+          </section>
 
           {/* Gaming Features Section */}
           <div className="mb-16">
@@ -427,10 +459,13 @@ export default async function WordGamesPage() {
           {/* SEO Content Section */}
           <section className="bg-gray-800 rounded-2xl p-8 mb-12 border border-gray-700">
             <div className="prose prose-invert max-w-none">
-              <h2 className="text-3xl font-bold text-white mb-6">Word Games Collection - Educational Vocabulary Challenges</h2>
+              <h2 className="text-3xl font-bold text-white mb-6">How We Think About Word Games</h2>
               <p className="text-lg text-gray-300 mb-6">
-                Our <strong className="text-green-400">word games collection</strong> offers engaging educational challenges designed to 
-                improve vocabulary, spelling, and cognitive skills through fun, interactive gameplay that makes learning enjoyable.
+                We do not treat every <strong className="text-green-400">word game</strong> as the
+                same vocabulary drill. A letter-bank puzzle, a hidden-word grid, and a cryptogram
+                ask your brain to do different work. The collection is organized so you can pick a
+                specific kind of attention: quick pattern spotting, careful clue solving, spelling
+                memory, or relaxed discovery.
               </p>
               
               <div className="grid md:grid-cols-2 gap-8">

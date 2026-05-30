@@ -10,6 +10,28 @@ type GameRouteShellProps = {
   children: ReactNode;
 };
 
+const EDITORIAL_NOTES: Record<string, { title: string; body: string; links: Array<{ href: string; label: string }> }> = {
+  '/word-games/word-connect': {
+    title: 'Our Take: Why Word Connect is stickier than it looks',
+    body:
+      'Word Connect works because it gives you just enough structure to feel fair. The letters are visible, so the puzzle is not asking for trivia recall; it is asking you to rotate the same small set of letters until a real word clicks. Short words clear the board, but longer answers usually come from spotting prefixes, plural endings, and vowel-heavy combinations before you start tapping.',
+    links: [
+      { href: '/word-games/crossgrid', label: 'Try Crossgrid for clue-based solving' },
+      { href: '/word-games/anagram-scramble', label: 'Try Anagram Scramble for faster letter play' },
+      { href: '/word-games/spelling-bee', label: 'Try Spelling Bee for deeper vocabulary' },
+    ],
+  },
+  '/word-games/crossgrid': {
+    title: 'Developer Note: Crossgrid is intentionally compact',
+    body:
+      'Crossgrid is built for the moment when a full crossword feels like too much. Smaller grids make every clue matter, and the crossing letters give useful pressure without turning the puzzle into a long session.',
+    links: [
+      { href: '/word-games/word-connect', label: 'Switch to Word Connect' },
+      { href: '/word-games/cryptogram', label: 'Decode a Cryptogram' },
+    ],
+  },
+};
+
 export default function GameRouteShell({
   page,
   sectionLabel,
@@ -31,6 +53,31 @@ export default function GameRouteShell({
         </div>
 
         <div className="mt-6">{children}</div>
+
+        {EDITORIAL_NOTES[page.route_path] ? (
+          <section className="mt-8 rounded-3xl border border-emerald-400/20 bg-emerald-400/10 p-4 md:p-6 shadow-2xl">
+            <p className="text-xs font-black uppercase tracking-[0.24em] text-emerald-200">
+              Editor's Note
+            </p>
+            <h2 className="mt-2 text-xl font-bold text-white">
+              {EDITORIAL_NOTES[page.route_path].title}
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-emerald-50/80">
+              {EDITORIAL_NOTES[page.route_path].body}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {EDITORIAL_NOTES[page.route_path].links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="rounded-full border border-emerald-300/20 bg-black/20 px-3 py-2 text-xs font-semibold text-emerald-100 transition-colors hover:border-emerald-200/50 hover:bg-emerald-300/10"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <div className="mt-6 flex flex-wrap gap-2">
           {page.featured ? (
