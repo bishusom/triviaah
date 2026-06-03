@@ -4,7 +4,7 @@ import Script from 'next/script';
 import Link from 'next/link';
 import Image from 'next/image';
 import Ads from '@/components/common/Ads';
-import { Play, Boxes, Clock, Users, Calendar, Star, Trophy, Brain, Zap } from 'lucide-react';
+import { Play, Boxes, Clock, Users, Calendar, Star, Trophy, Zap } from 'lucide-react';
 import Timer from '@/components/daily/dailyQuizTimer';
 import { ScrollToDailyCategoriesButton } from '@/components/daily-trivias/ScrollToDailyCategoriesButton';
 import ExploreSections from '@/components/common/ExploreSections';
@@ -13,9 +13,9 @@ import { getTriviaCategories, type TriviaCategoryRecord } from '@/lib/trivia-cat
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Triviaah',
-  description: 'Play our free daily trivia game with new questions about history, geography, sports, science and more! Test your skill with fresh questions across 8 categories.',
-  keywords: 'daily trivia game, daily quiz, multiplayer trivia, multiplayer quiz, private trivia room, trivia challenges, fun quiz, knowledge test, history trivia, sports trivia, science trivia',
+  title: 'Daily Trivia Games | Fresh Quizzes Every Day | Triviaah',
+  description: 'Play free daily trivia quizzes on Triviaah. Choose history, geography, sports, science, entertainment, arts, quick fire, or general knowledge.',
+  keywords: 'daily trivia, daily quiz, trivia games, general knowledge quiz',
   alternates: {
     canonical: 'https://triviaah.com/daily-trivias',
   },
@@ -60,7 +60,6 @@ type DailyQuizCard = {
   path: string;
   image: string;
   tagline: string;
-  keywords: string;
 };
 
 function categoryToDailyQuizCard(category: TriviaCategoryRecord): DailyQuizCard {
@@ -71,7 +70,6 @@ function categoryToDailyQuizCard(category: TriviaCategoryRecord): DailyQuizCard 
     path: `/daily-trivias/${category.slug}`,
     image: category.ogImage || `/imgs/daily-trivias/${category.slug}.webp`,
     tagline: category.description || category.longDescription || `Play ${name} daily trivia.`,
-    keywords: category.keywords.join(', '),
   };
 }
 
@@ -133,51 +131,6 @@ function QuizCard({ quiz, index }: { quiz: DailyQuizCard; index: number }) {
   );
 }
 
-// Category detail card for the SEO section
-function CategoryDetail({
-  quiz,
-  accentClass,
-  details,
-}: {
-  quiz: DailyQuizCard;
-  accentClass: string;
-  details: string;
-}) {
-  return (
-    <div className="border border-gray-700 rounded-xl p-5 hover:border-cyan-500/30 transition-colors duration-300">
-      <h3 className={`text-lg font-bold mb-2 ${accentClass}`}>{quiz.name} Daily Trivia</h3>
-      <p className="text-gray-300 text-sm leading-relaxed mb-2">{quiz.tagline}</p>
-      <p className="text-gray-400 text-sm leading-relaxed">{details}</p>
-      <Link
-        href={quiz.path}
-        className={`mt-3 inline-flex items-center gap-1 text-sm font-semibold ${accentClass} hover:underline`}
-      >
-        Play {quiz.name} →
-      </Link>
-    </div>
-  );
-}
-
-// Static extra detail blurbs per category slug
-const categoryDetails: Record<string, string> = {
-  'quick-fire':
-    'Perfect for players who love a fast-paced challenge. Six questions, ten seconds each — no time to second-guess yourself. Topics rotate daily across sports, science, pop culture, and history, so every session feels completely different.',
-  'general-knowledge':
-    'The broadest of our daily trivia categories, covering geography, history, science, language, and everyday facts. Ideal if you want a well-rounded mental workout that touches every corner of human knowledge in a single ten-question session.',
-  'today-in-history':
-    'Each day the quiz is anchored to real events that occurred on that exact calendar date throughout history — births, discoveries, battles, treaties, and cultural milestones. It is the most dynamic category on the site because the content is literally tied to the day.',
-  'entertainment':
-    'From Oscar-winning films and Grammy-award albums to viral TV moments and celebrity headlines, this category covers the full spectrum of pop culture. Questions range from classic Hollywood to current streaming hits, making it great for all generations.',
-  'geography':
-    'Test your spatial knowledge with questions on country capitals, flags, mountain ranges, oceans, and cultural regions. Whether you are a seasoned traveller or an armchair explorer, this quiz sharpens your awareness of the world we live in.',
-  'science':
-    'Covering biology, chemistry, physics, astronomy, environmental science, and technology breakthroughs, this category is refreshed daily with questions that range from beginner-friendly to genuinely challenging for science enthusiasts.',
-  'arts-literature':
-    'From Renaissance painters and Shakespearean plays to contemporary novelists and graphic novels, this category celebrates creative expression across centuries and continents. A great daily habit for book lovers, art fans, and culture-curious minds alike.',
-  'sports':
-    'Featuring questions on football, basketball, tennis, athletics, cricket, the Olympics, and more, this category covers the full range of global sport. Expect questions about legendary athletes, record-breaking moments, championship history, and sporting rules.',
-};
-
 export default async function DailyQuizzesPage() {
   const dailyCategories = await getTriviaCategories('daily-trivias');
   const dailyQuizzes = dailyCategories.map(categoryToDailyQuizCard);
@@ -209,10 +162,9 @@ export default async function DailyQuizzesPage() {
               </div>
 
               <p className="max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
-                Fresh trivia challenges every 24 hours. Delve into daily trivia quizzes across topics like History,
-                Sports, Science, Geography, Entertainment, Arts & Literature and mother of all - General Knowledge. Choose a
-                category, answer 10 new questions, and come back tomorrow again for a refreshed set of brain-teasers. 
-                No accounts, no fees — just pure daily trivia fun for everyone.
+                Pick a category and play today&apos;s quiz. New questions refresh every 24 hours across
+                history, sports, science, geography, entertainment, arts and general knowledge. No
+                account required.
               </p>
 
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -292,11 +244,10 @@ export default async function DailyQuizzesPage() {
         {/* ── How It Works ──────────────────────────────────────────────── */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-white text-center mb-4">
-            How Daily Trivia Quizzes Work
+            How It Works
           </h2>
           <p className="text-gray-400 text-center max-w-2xl mx-auto mb-8">
-            Triviaah's daily trivia system is built around one simple idea: a fresh mental challenge
-            every single day, for free, with no account required. Here is exactly how it works.
+            Choose a category, answer the day&apos;s questions, and compare scores before the next reset.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-2xl p-6 border border-cyan-500/20">
@@ -305,9 +256,8 @@ export default async function DailyQuizzesPage() {
               </div>
               <h3 className="text-xl font-bold text-white mb-2">New Questions Every 24 Hours</h3>
               <p className="text-gray-300">
-                All quiz categories reset at midnight local time. Each reset brings a completely new
-                set of questions — nothing is repeated from the previous day. This means you can
-                build a daily habit and always expect something new when you return.
+                Each category refreshes daily, so returning players get a new set instead of replaying
+                yesterday&apos;s quiz.
               </p>
             </div>
 
@@ -317,9 +267,7 @@ export default async function DailyQuizzesPage() {
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Track Your Daily Streak</h3>
               <p className="text-gray-300">
-                Categories you have already played show a completion checkmark so you always know
-                where you stand. Once the clock resets, all categories open back up. Come back
-                tomorrow and start your streak over — or beat yesterday's score.
+                Played categories show a completion checkmark until the next reset.
               </p>
             </div>
 
@@ -329,113 +277,11 @@ export default async function DailyQuizzesPage() {
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Share and Compete</h3>
               <p className="text-gray-300">
-                After completing a quiz you can share your score directly with friends via link or
-                social media. Challenge colleagues or family members to beat your result before the
-                day's questions disappear. It is the easiest way to add a little friendly rivalry to
-                your day.
+                Share your score or create a private room so friends can play the same questions.
               </p>
             </div>
           </div>
         </div>
-
-        {/* ── Why Daily Trivia ──────────────────────────────────────────── */}
-        <section className="mb-16 bg-slate-800/40 rounded-2xl p-8 border border-white/5">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Why Play Daily Trivia Every Day?
-          </h2>
-          <p className="text-gray-300 mb-6 leading-relaxed">
-            Research consistently shows that regular recall practice — answering questions from
-            memory rather than simply re-reading — is one of the most effective ways to retain
-            information long-term. A short daily trivia session gives your brain exactly that kind
-            of workout in five minutes or less.
-          </p>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-bold text-cyan-400 mb-3 flex items-center gap-2">
-                <Brain className="w-5 h-5" /> Keeps Your Mind Sharp
-              </h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Switching between different knowledge domains — from a geography question to a
-                science fact to a sports record — exercises the same mental flexibility that helps
-                you think clearly and creatively throughout the day. Our rotating categories are
-                designed specifically to make every session feel like a different workout for your
-                brain.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-purple-400 mb-3 flex items-center gap-2">
-                <Users className="w-5 h-5" /> Great for Groups
-              </h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Because every player sees the same questions on any given day, daily trivia creates
-                a shared experience. Families use it at the dinner table, office teams run it as a
-                quick lunchtime competition, and friend groups share screenshots of their scores.
-                The 24-hour window means everyone has an equal shot before the questions reset.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-green-400 mb-3 flex items-center gap-2">
-                <Zap className="w-5 h-5" /> Learn Something New Every Day
-              </h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Wrong answers are learning opportunities. Each question comes with the correct
-                answer at the end of the quiz, so even a tough day leaves you walking away with
-                five or ten new facts. Over weeks and months, those daily snippets of knowledge
-                genuinely add up to a broader understanding of history, science, culture, and the
-                world around you.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-yellow-400 mb-3 flex items-center gap-2">
-                <Clock className="w-5 h-5" /> Fits Any Schedule
-              </h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Each quiz takes roughly three to five minutes to complete. That is shorter than
-                scrolling your news feed during a coffee break. No registration, no downloads, no
-                subscriptions — just tap a category and start answering. The simplicity is
-                intentional: the goal is to make it as easy as possible to show up every day.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Category Deep-Dives ───────────────────────────────────────── */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Explore Every Daily Trivia Category
-          </h2>
-          <p className="text-gray-400 mb-8 leading-relaxed max-w-3xl">
-            Each of the {dailyQuizzes.length} categories below gets a completely fresh set of
-            questions every 24 hours. Browse the descriptions to find the category that matches your
-            interests — or challenge yourself by playing all of them before midnight.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {dailyQuizzes.map((quiz, index) => {
-              const accents = [
-                'text-cyan-400',
-                'text-purple-400',
-                'text-green-400',
-                'text-yellow-400',
-                'text-pink-400',
-                'text-orange-400',
-                'text-blue-400',
-                'text-red-400',
-              ];
-              const accent = accents[index % accents.length];
-              const details =
-                categoryDetails[quiz.category] ||
-                `A hand-curated selection of ${quiz.name.toLowerCase()} questions refreshed every day. Whether you are a beginner or an expert, you will find questions that challenge and entertain.`;
-              return (
-                <CategoryDetail
-                  key={quiz.category}
-                  quiz={quiz}
-                  accentClass={accent}
-                  details={details}
-                />
-              );
-            })}
-          </div>
-        </section>
 
         {/* ── FAQ ──────────────────────────────────────────────────────── */}
         <div className="mb-16">
@@ -447,12 +293,12 @@ export default async function DailyQuizzesPage() {
               {
                 question: 'How often are new daily trivia quizzes available?',
                 answer:
-                  'All daily trivia quizzes are updated every 24 hours at midnight in your local timezone. Each quiz category gets a completely fresh set of questions daily, so there is always something new waiting for you when you return.',
+                  'Daily quizzes refresh every 24 hours. Played categories open again after the next reset.',
               },
               {
                 question: 'Are the daily trivia quizzes completely free?',
                 answer:
-                  'Yes — every quiz on Triviaah is 100% free to play. There are no hidden fees, no subscription tiers, and no premium question packs. We believe knowledge challenges should be accessible to everyone.',
+                  'Yes. The daily trivia categories are free to play, and you do not need an account.',
               },
               {
                 question: 'What categories of daily trivia are available?',
@@ -461,27 +307,27 @@ export default async function DailyQuizzesPage() {
               {
                 question: 'Do I need to create an account to play?',
                 answer:
-                  'No account or registration is required. Simply choose a category and start answering. Your completed quizzes are tracked locally in your browser so the checkmarks persist until the next daily reset.',
+                  'No. Choose a category and start answering. Completion checkmarks are stored in your browser.',
               },
               {
                 question: 'How many questions are in each daily quiz?',
                 answer:
-                  'Most categories contain 10 carefully selected questions. The Quick Fire category is an exception — it features 6 questions but with a strict 10-second timer per question, making it our most intense daily challenge.',
+                  'Most categories have 10 questions. Quick Fire has 6 timed questions.',
               },
               {
                 question: 'Can I play previous days\' quizzes?',
                 answer:
-                  'Currently Triviaah focuses on today\'s fresh content only. Each day\'s questions are replaced at midnight and previous sets are not archived. This keeps the experience focused on a shared daily challenge rather than an on-demand quiz bank.',
+                  'No. Daily trivia is built around today\'s shared quiz. Older sets are replaced at reset.',
               },
               {
-                question: 'What difficulty level are the questions?',
+                question: 'How difficult are the questions?',
                 answer:
-                  'Each daily set mixes question difficulty deliberately — you will typically find a few straightforward questions to get you started, several moderate challenges, and one or two that will stump even frequent players. The mix keeps every quiz engaging regardless of your experience level.',
+                  'Each set mixes easy, medium, and harder questions so casual players and regulars both have a reason to play.',
               },
               {
                 question: 'Can I use daily trivia for a pub quiz or team game?',
                 answer:
-                  'Absolutely. Because everyone playing on the same day sees the same questions, Triviaah daily quizzes work perfectly as a shared team challenge. You can also use Play With Friends to create a private multiplayer room with an invite link and shared scoreboard.',
+                  'Yes. Use Play With Friends to create a private room with an invite link and shared scoreboard.',
               },
             ].map((faq, index) => (
               <div
@@ -495,110 +341,13 @@ export default async function DailyQuizzesPage() {
           </div>
         </div>
 
-        {/* ── SEO Content Section ───────────────────────────────────────── */}
-        <section className="bg-gray-800 rounded-2xl p-8 mb-12 border border-gray-700">
-          <div className="prose prose-invert max-w-none">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              About Our Daily Trivia Game
-            </h2>
-            <p className="text-gray-300 leading-relaxed mb-4">
-              Triviaah's daily trivia game is built for people who want a meaningful mental
-              challenge without a major time commitment. Every category resets every 24 hours,
-              which means the site always has something worth returning to. Whether you play one
-              category over breakfast or work through all {dailyQuizzes.length} before dinner, the
-              format adapts to however much time you have available.
-            </p>
-            <p className="text-gray-300 leading-relaxed mb-4">
-              Daily trivia also works as a lightweight multiplayer trivia game. Open a daily
-              category, choose Play With Friends, and Triviaah creates a private invite room where
-              friends answer the same daily questions with a shared scoreboard. It is built for
-              quick remote challenges, family quiz nights, classroom warmups, and small group
-              competitions without requiring accounts.
-            </p>
-            <p className="text-gray-300 leading-relaxed mb-4">
-              The question bank behind each category is carefully curated rather than
-              algorithmically generated. Our team reviews every question for accuracy, clarity, and
-              appropriate difficulty before it appears in a daily set. That means you will not
-              encounter trick questions with ambiguous wording or obscure trivia that requires
-              specialist knowledge to answer — just well-crafted questions that genuinely test what
-              you know.
-            </p>
-            <p className="text-gray-300 leading-relaxed mb-6">
-              We cover {dailyQuizzes.length} distinct knowledge areas:{' '}
-              {dailyQuizzes.map((q) => q.name).join(', ')}. Each topic has its own dedicated
-              question pool, so playing General Knowledge one day and Geography the next gives you
-              a genuinely different experience rather than the same questions reshuffled. The
-              breadth of topics also means you are likely to find at least one category that sits
-              squarely in your area of interest — and several that push you outside your comfort
-              zone.
-            </p>
-
-            <h3 className="text-xl font-bold text-white mb-3">Tips for Getting the Best Score</h3>
-            <p className="text-gray-300 leading-relaxed mb-4">
-              Daily trivia rewards consistency more than raw knowledge. Players who return every
-              day tend to improve steadily because the act of recalling information — even
-              incorrectly — primes your memory for related facts in future sessions. A few
-              practical tips:
-            </p>
-            <ul className="space-y-2 text-gray-300 mb-6 list-none pl-0">
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400 mt-1">→</span>
-                <span>
-                  <strong className="text-white">Read questions carefully.</strong> Many incorrect
-                  answers come from skimming. Trivia questions often hinge on a single word —
-                  "first," "largest," "before," or "after."
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400 mt-1">→</span>
-                <span>
-                  <strong className="text-white">Trust your instincts on the first pass.</strong>{' '}
-                  Research shows that your initial answer in a recall task is correct more often
-                  than changed answers, especially under time pressure.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400 mt-1">→</span>
-                <span>
-                  <strong className="text-white">Review the answers at the end.</strong> Every
-                  question you get wrong is a learning opportunity. Spending 30 seconds reading the
-                  correct answers after you finish will help those facts stick.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400 mt-1">→</span>
-                <span>
-                  <strong className="text-white">Try categories outside your comfort zone.</strong>{' '}
-                  If you are a sports expert, push yourself on Arts & Literature. Cross-domain
-                  knowledge builds stronger long-term memory connections.
-                </span>
-              </li>
-            </ul>
-
-            <h3 className="text-xl font-bold text-white mb-3">
-              Daily Trivia vs. Regular Quiz Apps
-            </h3>
-            <p className="text-gray-300 leading-relaxed">
-              Most quiz apps offer unlimited on-demand questions, which sounds appealing but often
-              leads to binge sessions followed by long gaps. The daily format enforces a natural
-              rhythm: one focused session per day, then a 24-hour wait for new content. This
-              structure is more sustainable as a long-term habit, similar to how daily word games
-              and puzzle apps have built loyal audiences by offering one meaningful challenge per
-              day rather than an endless scroll of questions. Triviaah takes the same approach and
-              applies it across {dailyQuizzes.length} knowledge categories, so you get variety
-              without losing the satisfying routine of a daily ritual.
-            </p>
-          </div>
-        </section>
-
         <ExploreSections exclude="daily-trivias" />
       </div>
     </div>
   );
 }
 
-// Structured Data Component for SEO
-function StructuredData({ quizzes, currentDate }: { quizzes: any[]; currentDate: Date }) {
+function StructuredData({ quizzes, currentDate }: { quizzes: DailyQuizCard[]; currentDate: Date }) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -624,9 +373,9 @@ function StructuredData({ quizzes, currentDate }: { quizzes: any[]; currentDate:
         '@type': 'WebPage',
         '@id': 'https://triviaah.com/daily-trivias/#webpage',
         url: 'https://triviaah.com/daily-trivias',
-        name: 'Daily Trivia Game - Play Fresh Quizzes Every 24 Hours | Triviaah',
+        name: 'Daily Trivia Games | Fresh Quizzes Every Day | Triviaah',
         description:
-          'Play our free daily trivia game with new questions about history, pop culture, sports, and more! Test your knowledge daily with 10 fresh questions.',
+          'Play free daily trivia quizzes on Triviaah. Choose history, geography, sports, science, entertainment, arts, quick fire, or general knowledge.',
         isPartOf: { '@id': 'https://triviaah.com/#website' },
         about: { '@id': 'https://triviaah.com/daily-trivias/#itemlist' },
         datePublished: '2024-01-01T00:00:00+00:00',
@@ -703,7 +452,7 @@ function StructuredData({ quizzes, currentDate }: { quizzes: any[]; currentDate:
             name: 'How often are new daily trivia quizzes available?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'All daily trivia quizzes are updated every 24 hours at midnight in your local timezone. Each quiz category gets a completely fresh set of questions daily.',
+              text: 'Daily quizzes refresh every 24 hours. Played categories open again after the next reset.',
             },
           },
           {
@@ -711,7 +460,7 @@ function StructuredData({ quizzes, currentDate }: { quizzes: any[]; currentDate:
             name: 'Are the daily trivia quizzes completely free?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Yes! All our daily trivia quizzes are 100% free to play with no registration required. No hidden fees or subscriptions.',
+              text: 'Yes. The daily trivia categories are free to play, and you do not need an account.',
             },
           },
           {
@@ -719,7 +468,7 @@ function StructuredData({ quizzes, currentDate }: { quizzes: any[]; currentDate:
             name: 'What categories of daily trivia are available?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `We offer ${quizzes.length} different trivia categories including ${quizzes.map((q) => q.name).join(', ')}. Each category has unique questions updated daily.`,
+              text: `We currently offer ${quizzes.length} categories: ${quizzes.map((q) => q.name).join(', ')}. Each one covers a different knowledge domain and is refreshed independently every 24 hours.`,
             },
           },
           {
@@ -727,7 +476,7 @@ function StructuredData({ quizzes, currentDate }: { quizzes: any[]; currentDate:
             name: 'Do I need to create an account to play daily trivia?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'No account or registration is required. You can start playing any daily trivia quiz immediately without signing up.',
+              text: 'No. Choose a category and start answering. Completion checkmarks are stored in your browser.',
             },
           },
           {
@@ -735,15 +484,15 @@ function StructuredData({ quizzes, currentDate }: { quizzes: any[]; currentDate:
             name: 'How many questions are in each daily quiz?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Most categories contain 10 carefully selected questions. Quick Fire features 6 questions with a 10-second timer per question.',
+              text: 'Most categories have 10 questions. Quick Fire has 6 timed questions.',
             },
           },
           {
             '@type': 'Question',
-            name: 'What difficulty level are the questions?',
+            name: 'How difficult are the questions?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Each daily set deliberately mixes difficulty levels — a few straightforward questions to get started, several moderate challenges, and one or two that will stump even frequent players.',
+              text: 'Each set mixes easy, medium, and harder questions so casual players and regulars both have a reason to play.',
             },
           },
         ],
