@@ -339,6 +339,44 @@ function normalizeForComparison(text: string): string {
   return text.toLowerCase().trim().replace(/[^\w\s]/g, '');
 }
 
+function escapeRegex(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+const personOccupationGroups: Record<string, string[]> = {
+  actor: ['actor', 'actress', 'film actor', 'television actor', 'voice actor'],
+  actress: ['actor', 'actress', 'film actor', 'television actor', 'voice actor'],
+  musician: ['musician', 'singer', 'songwriter', 'rapper', 'record producer'],
+  singer: ['musician', 'singer', 'songwriter', 'rapper', 'record producer'],
+  politician: ['politician', 'minister', 'senator', 'governor', 'mayor', 'mp'],
+  athlete: ['athlete', 'footballer', 'basketball player', 'tennis player', 'cricketer', 'baseball player'],
+  writer: ['writer', 'author', 'novelist', 'poet', 'screenwriter'],
+  director: ['director', 'filmmaker', 'screenwriter', 'producer']
+};
+
+function getPersonContextTerms(context?: string): string[] {
+  if (!context) return [];
+  return context
+    .toLowerCase()
+    .split(/[,|;/]+|\band\b/)
+    .map(term => normalizeForComparison(term))
+    .filter(term => term.length > 1);
+}
+
+function expandPersonOccupationTerms(contextTerms: string[]): string[] {
+  const expanded = new Set<string>();
+
+  for (const term of contextTerms) {
+    expanded.add(term);
+    const group = personOccupationGroups[term];
+    if (group) {
+      group.forEach(groupTerm => expanded.add(groupTerm));
+    }
+  }
+
+  return Array.from(expanded);
+}
+
 // Helper function to score a Wikipedia page based on entity type
 function scorePage(page: WikipediaSearchResult, entityType: EntityType, searchTerm: string, context?: string): number {
   let score = 0;
@@ -396,6 +434,10 @@ function scorePage(page: WikipediaSearchResult, entityType: EntityType, searchTe
   if (entityType === 'person') {
     const searchParts = normalizedSearchTerm.split(/\s+/);
     const titleParts = normalizedTitle.split(/\s+/);
+    const disambiguatorMatch = page.title.match(/\(([^)]+)\)$/);
+    const disambiguator = disambiguatorMatch ? normalizeForComparison(disambiguatorMatch[1]) : '';
+    const personContextTerms = getPersonContextTerms(context);
+    const occupationTerms = expandPersonOccupationTerms(personContextTerms);
     
     // Check if all search term parts appear in title in the same order
     if (searchParts.length >= 2) {
@@ -413,6 +455,30 @@ function scorePage(page: WikipediaSearchResult, entityType: EntityType, searchTe
       
       if (allPartsMatch) {
         score += 15; // All name parts match in order
+      }
+    }
+
+    if (disambiguator) {
+      for (const term of occupationTerms) {
+        if (term && disambiguator.includes(term)) {
+          score += 35;
+          break;
+        }
+      }
+
+      const conflictingOccupation = Object.values(personOccupationGroups)
+        .flat()
+        .some(term => disambiguator.includes(term) && !occupationTerms.includes(term));
+
+      if (occupationTerms.length > 0 && conflictingOccupation) {
+        score -= 35;
+      }
+    }
+
+    for (const term of personContextTerms) {
+      const regex = new RegExp(`\\b${escapeRegex(term)}\\b`, 'i');
+      if (regex.test(fullText)) {
+        score += 10;
       }
     }
   }
@@ -444,7 +510,7 @@ function scorePage(page: WikipediaSearchResult, entityType: EntityType, searchTe
   
   // Context bonus (e.g., country for capital)
   if (context) {
-    const contextRegex = new RegExp(`\\b${context.toLowerCase()}\\b`, 'i');
+    const contextRegex = new RegExp(`\\b${escapeRegex(context.toLowerCase())}\\b`, 'i');
     if (contextRegex.test(fullText)) {
       score += 10;
     }

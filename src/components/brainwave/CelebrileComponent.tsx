@@ -342,7 +342,16 @@ export default function CelebrileComponent({ initialData }: CelebrileComponentPr
       try {
         setImageLoading(true);
         setImageError(false);
-        const imageUrl = await fetchWikimediaImage(puzzleData.targetName, { entityType: 'person' });
+        const context = [
+          puzzleData.category,
+          ...(puzzleData.validationHints.profession || []),
+          puzzleData.validationHints.nationality,
+          ...(puzzleData.validationHints.notableWorks || [])
+        ].filter(Boolean).join(', ');
+        const imageUrl = await fetchWikimediaImage(puzzleData.targetName, {
+          entityType: 'person',
+          context
+        });
         
         if (imageUrl) {
           console.log('Image found:', imageUrl);

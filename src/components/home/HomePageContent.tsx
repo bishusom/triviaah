@@ -16,7 +16,6 @@ import SeoContentSection from '@/components/home/sections/collapsible/SeoContent
 import KeyFeatures from '@/components/home/sections/collapsible/KeyFeatures';
 import DailyTriviaFact from '@/components/home/sections/DailyTriviaFact';
 import SectionContainer from '@/components/home/sections/collapsible/SectionContainer';
-import MoreGames from '@/components/home/sections/collapsible/MoreGames';
 
 type FeaturedTriviaCategory = {
   key: string;

@@ -7,19 +7,33 @@ import NavBar from '@/components/common/NavBar';
 import CategoryShowcase from '@/components/home/sections/collapsible/CategoryShowcase';
 import HorizontalScrollSection from '@/components/home/sections/collapsible/HorizontalScrollSection';
 import Footer from '@/components/home/Footer'
-import { DAILY_QUIZZES, BRAIN_WAVES, RETRO_GAMES, IQ_PERSONALITY_TESTS } from '@/config/homeContentNew';
+import { DAILY_QUIZZES, BRAIN_WAVES, WORD_GAMES, NUMBER_PUZZLES, RETRO_GAMES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
 
 // Import new section components
-import HeaderSection from '@/components/home/sections/collapsible/HeaderSection';
 import HeroSection from '@/components/home/sections/collapsible/HeroSection';
 //import { HolidaySpecial } from '@/components/home/sections/HolidaySpecial';
-//import SeoContentSection from '@/components/home/sections/SeoContentSection';
+import SeoContentSection from '@/components/home/sections/collapsible/SeoContentSection';
 import KeyFeatures from '@/components/home/sections/collapsible/KeyFeatures';
 import DailyTriviaFact from '@/components/home/sections/DailyTriviaFact';
 import SectionContainer from '@/components/home/sections/collapsible/SectionContainer';
-import MoreGames from '@/components/home/sections/collapsible/MoreGames';
 
-export default function HomePageContent() {
+type FeaturedTriviaCategory = {
+  key: string;
+  category: {
+    title: string;
+    description: string;
+    displayName?: string;
+    keywords: string[];
+    ogImage?: string;
+    related?: string[];
+  };
+};
+
+interface HomePageContentProps {
+  featuredTriviaCategories?: FeaturedTriviaCategory[];
+}
+
+export default function HomePageContent({ featuredTriviaCategories = [] }: HomePageContentProps) {
   useEffect(() => {
     const sections = document.querySelectorAll('.horizontal-scroll-section, .category-section');
     sections.forEach(section => {
@@ -32,7 +46,6 @@ export default function HomePageContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex flex-col">
-      <HeaderSection />
       <NavBar />
      
       <div className="bg-gray-800/50 py-6">
@@ -43,12 +56,12 @@ export default function HomePageContent() {
       
       <main className="container mx-auto px-4 py-6 flex-grow">
         <HeroSection />
-
         <SectionContainer className="horizontal-scroll-section">
           <HorizontalScrollSection 
             title="Daily Quiz Challenges" 
             items={DAILY_QUIZZES} 
             isQuizSection={true}
+            link="/daily-trivias"
           />
         </SectionContainer>
 
@@ -56,6 +69,7 @@ export default function HomePageContent() {
           <HorizontalScrollSection 
             title="Brain Waves - Daily Puzzle Games" 
             items={BRAIN_WAVES} 
+            link="/brainwave"
           />
         </SectionContainer>
         
@@ -67,8 +81,25 @@ export default function HomePageContent() {
 
         <SectionContainer className="horizontal-scroll-section">
           <HorizontalScrollSection 
+            title="Word Games Collection" 
+            items={WORD_GAMES} 
+            link="/word-games"
+          />
+        </SectionContainer>
+
+        <SectionContainer className="horizontal-scroll-section">
+          <HorizontalScrollSection 
+            title="Number Puzzles Collection" 
+            items={NUMBER_PUZZLES} 
+            link="/number-puzzles"
+          />
+        </SectionContainer>
+
+        <SectionContainer className="horizontal-scroll-section">
+          <HorizontalScrollSection 
             title="Retro Games Collection" 
             items={RETRO_GAMES} 
+            link="/retro-games"
           />
         </SectionContainer>
 
@@ -76,20 +107,22 @@ export default function HomePageContent() {
           <DailyTriviaFact />
         </SectionContainer>
 
-        <MoreGames />
+        <CategoryShowcase featuredTriviaCategories={featuredTriviaCategories} />
 
-        <CategoryShowcase />
-
-        <SectionContainer className="horizontal-scroll-section">
+        {/*<SectionContainer className="horizontal-scroll-section">
           <HorizontalScrollSection 
             title="IQ & Personality Tests" 
             items={IQ_PERSONALITY_TESTS} 
+            link="/iq-and-personality-tests"
           />
         </SectionContainer>
- 
-        <KeyFeatures />
+        */}  
 
-        
+        <SectionContainer className="horizontal-scroll-section">
+          <SeoContentSection />
+        </SectionContainer>
+
+        <KeyFeatures />
       </main>
 
       <div className="bg-gray-800/50 py-6">
@@ -97,7 +130,6 @@ export default function HomePageContent() {
           <Ads format="fluid" style={{ width: '100%', height: '90px' }} />
         </div>
       </div>
-      
       <Footer />
     </div>
   );
