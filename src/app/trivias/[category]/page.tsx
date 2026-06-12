@@ -161,6 +161,10 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   const showPrintableQuizCTA = categoryRecord?.showPrintableQuizCTA !== false;
 
   let subcategories = await getEnrichedSubcategoriesWithMinQuestions(category, 30);
+  const chooseChallengeHeading = `Choose Your ${categoryData.title} Trivia Challenge`;
+  const masteryHeading = `${categoryData.title} Trivia Skills You'll Master`;
+  const relatedHeading = `Explore Categories Related to ${categoryData.title} Trivia`;
+  const faqHeading = `${categoryData.title} Trivia Frequently Asked Questions`;
   const relatedCategories = await Promise.all((categoryData.related || [])
     .slice(0, 6)
     .map(async (relatedKey) => {
@@ -246,7 +250,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         {/* Subcategories Section */}
         {subcategories.length > 0 && (
           <div className="mb-16">
-            <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter"><span className="text-cyan-400">Or</span> Choose Your <span className="text-cyan-400">Challenge</span></h2>
+            <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">
+              {chooseChallengeHeading}
+            </h2>
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 auto-rows-fr">
               {subcategories.map((subcat, index) => {
                 const variant = getSubcategoryCardVariant(index);
@@ -291,7 +297,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
         {/* Learning Objectives */}
         <div className="mb-16">
-          <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">What You&apos;ll <span className="text-cyan-400">Master</span></h2>
+          <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">
+            {masteryHeading}
+          </h2>
           <section className="mb-24">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {(categoryData.learningPoints || [
@@ -333,7 +341,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         {/* Related Categories */}
         {relatedCategories.length > 0 && (
           <div className="mb-16">
-            <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-8 uppercase tracking-tighter">Explore <span className="text-cyan-400">Related</span> Categories</h2>
+            <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-8 uppercase tracking-tighter">
+              {relatedHeading}
+            </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {relatedCategories.map(({ key, data }) => {
                 return (
@@ -360,7 +370,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
         {/* FAQ Section */}
         <div className="mb-16">
-          <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">Frequently Asked <span className="text-blue-400">Questions</span></h2>
+          <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">
+            {faqHeading}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {

@@ -183,6 +183,8 @@ export default async function SubcategoryPage({
   const quizHref = `/trivias/${category}/quiz?subcategory=${encodeURIComponent(activeSubcategory.subcategory)}`;
   const multiplayerHref = `/multiplayer?category=${encodeURIComponent(category)}&subcategory=${encodeURIComponent(activeSubcategory.subcategory)}`;
   const canonical = `https://triviaah.com/trivias/${category}/${subcategory}`;
+  const subcategoryHeading = `${activeSubcategory.subcategory} Trivia Topics in ${categoryData.title}`;
+  const relatedCategoriesHeading = `Related Categories for ${activeSubcategory.subcategory} Trivia`;
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -286,7 +288,7 @@ export default async function SubcategoryPage({
 
         {siblingSubcategories.length > 0 && (
           <section className="mt-12">
-            <h2 className="text-3xl font-bold text-white text-center">More {categoryData.title} Topics</h2>
+            <h2 className="text-3xl font-bold text-white text-center">{subcategoryHeading}</h2>
             <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {siblingSubcategories.slice(0, 9).map((item: SubcategoryInfo) => {
                 const href = `/trivias/${category}/${slugifyTriviaSegment(item.subcategory)}`;
@@ -350,7 +352,7 @@ export default async function SubcategoryPage({
 
         {relatedCategories.length > 0 && (
           <section className="mt-12">
-            <h2 className="text-3xl font-bold text-white text-center">Related Trivia Categories</h2>
+            <h2 className="text-3xl font-bold text-white text-center">{relatedCategoriesHeading}</h2>
             <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
               {relatedCategories.map(({ key, data }) => (
                 <Link
