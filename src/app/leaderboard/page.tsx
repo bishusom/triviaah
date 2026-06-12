@@ -101,6 +101,8 @@ export default function LeaderboardPage() {
         <img 
           src={player.avatar} 
           alt={player.displayName}
+          width={40}
+          height={40}
           className="w-10 h-10 rounded-full object-cover border border-gray-700"
           onError={(e) => {
             // Fallback to initials if image fails to load

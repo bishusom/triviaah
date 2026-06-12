@@ -43,6 +43,10 @@ type PageParams = {
 };
 
 const DEFAULT_OG_IMAGE = '/imgs/brainwave/brainwave-trivia-og.webp';
+const BRAINWAVE_SEO_TITLES: Record<string, string> = {
+  plotle: 'Plotle - Daily Movie Puzzle Game Online',
+  foodle: 'Foodle - Daily Food Puzzle Game Online',
+};
 
 export async function generateStaticParams() {
   const pages = await getGamePagesBySection('brainwave');
@@ -72,19 +76,20 @@ export async function generateMetadata({
   }
 
   const ogImage = page.og_image || routeDefinition?.ogImage || DEFAULT_OG_IMAGE;
+  const seoTitle = BRAINWAVE_SEO_TITLES[puzzle] ?? `${page.title} - Daily Brainwave Puzzle Game`;
   const metadataKeywords = page.keywords.length
     ? page.keywords
     : [page.title, 'Brainwave puzzle', 'daily puzzle', 'trivia game'];
 
   return {
-    title: page.title,
+    title: seoTitle,
     description: page.meta_description,
     keywords: metadataKeywords,
     alternates: {
       canonical: `https://triviaah.com${page.route_path}`,
     },
     openGraph: {
-      title: page.title,
+      title: seoTitle,
       description: page.meta_description,
       url: `https://triviaah.com${page.route_path}`,
       siteName: 'Triviaah',
@@ -100,7 +105,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: page.title,
+      title: seoTitle,
       description: page.meta_description,
       images: [ogImage],
     },

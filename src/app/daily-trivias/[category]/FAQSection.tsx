@@ -96,7 +96,9 @@ export function FAQSection({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />
 
-      <h2 className="text-3xl font-bold text-white text-center mb-8">Quiz Information</h2>
+      <h2 className="text-3xl font-bold text-white text-center mb-8">
+        About This {formattedCategory} Daily Quiz
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {items.map((item, index) => (
           <div

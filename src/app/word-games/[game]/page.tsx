@@ -12,6 +12,16 @@ type PageParams = {
 };
 
 const DEFAULT_OG_IMAGE = '/imgs/word-games/word-games.webp';
+const WORD_GAME_SEO_TITLES: Record<string, string> = {
+  cryptogram: 'Cryptogram Game - Free Online Word Puzzle',
+  'spelling-bee': 'Spelling Bee Game - Free Online Word Puzzle',
+  boggle: 'Boggle Game - Free Online Word Search Puzzle',
+  'word-search': 'Word Search Game - Free Online Word Puzzle',
+  'word-ladder': 'Word Ladder Game - Free Online Word Puzzle',
+  crossgrid: 'Crossgrid Game - Free Online Word Puzzle',
+  'word-connect': 'Word Connect - Free Online Word Puzzle Game',
+  'anagram-scramble': 'Anagram Scramble - Free Online Word Game',
+};
 
 export async function generateStaticParams() {
   const pages = await getGamePagesBySection('word-games');
@@ -41,19 +51,20 @@ export async function generateMetadata({
   }
 
   const ogImage = page.og_image || routeDefinition?.ogImage || DEFAULT_OG_IMAGE;
+  const seoTitle = WORD_GAME_SEO_TITLES[game] ?? `${page.title} - Free Online Word Game`;
   const metadataKeywords = page.keywords.length
     ? page.keywords
     : [page.title, 'word games', 'vocabulary game', 'word puzzle'];
 
   return {
-    title: page.title,
+    title: seoTitle,
     description: page.meta_description,
     keywords: metadataKeywords,
     alternates: {
       canonical: `https://triviaah.com${page.route_path}`,
     },
     openGraph: {
-      title: page.title,
+      title: seoTitle,
       description: page.meta_description,
       url: `https://triviaah.com${page.route_path}`,
       siteName: 'Triviaah',
@@ -69,7 +80,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: page.title,
+      title: seoTitle,
       description: page.meta_description,
       images: [ogImage],
     },

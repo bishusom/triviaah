@@ -83,11 +83,13 @@ function CardPopup({
       onMouseLeave={onMouseLeave}
     >
       <div className="relative aspect-video w-full group/popup-img">
-        <Link href={item.path || '#'} className="block w-full h-full">
+        <Link href={item.path || '#'} className="block w-full h-full" aria-label={`Open ${item.title || item.name || 'item'}`}>
           <img
             src={item.image || item.image_url || '/api/placeholder/400/225'}
             className="w-full h-full object-cover transition-filter duration-300 group-hover/popup-img:brightness-75"
             alt={item.title || item.name}
+            width={400}
+            height={225}
             draggable={false}
           />
           {/* Large Play Button Overlay */}
@@ -404,7 +406,7 @@ export const NetflixRow = ({ title, items, sectionHref = '#' }: NetflixRowProps)
                 onMouseEnter={(e) => handleMouseEnter(key, item, e.currentTarget)}
                 onMouseLeave={handleMouseLeave}
               >
-                <Link href={item.path || '#'}>
+                <Link href={item.path || '#'} aria-label={`Open ${item.title || item.name || 'item'}`}>
                   <div
                     className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden border border-white/5 transition-transform duration-300"
                     style={{ transform: isActive && !isMobile ? 'scale(1.03)' : 'scale(1)' }}
@@ -412,6 +414,8 @@ export const NetflixRow = ({ title, items, sectionHref = '#' }: NetflixRowProps)
                     <img
                       src={item.image || item.image_url || '/api/placeholder/400/225'}
                       alt={item.title || item.name}
+                      width={400}
+                      height={225}
                       className="w-full h-full object-cover brightness-90"
                       draggable={false}
                     />

@@ -98,7 +98,7 @@ export default function UserStatsPopover() {
                         className="flex items-center gap-3 bg-white/5 hover:bg-white/10 rounded-md p-2 transition-all"
                       >
                         <div className="w-10 h-10 bg-gray-800 rounded overflow-hidden flex-shrink-0">
-                          <img src={fav.image || "/api/placeholder/40/40"} alt={fav.title} className="w-full h-full object-cover" />
+                          <img src={fav.image || "/api/placeholder/40/40"} alt={fav.title} width={40} height={40} className="w-full h-full object-cover" />
                         </div>
                         <span className="text-sm text-gray-200 truncate">{fav.title}</span>
                       </Link>

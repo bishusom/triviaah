@@ -100,6 +100,8 @@ export default function TriviaContent({ trivia }: TriviaContentProps) {
     exportToPdfDirect(trivia, `${trivia.slug}-questions`);
   };
 
+  const triviaTopic = trivia.title.replace(/\s+trivias?$/i, '').trim();
+
   // We cast the entries to ensure 'questions' is recognized as TriviaQuestion[]
   const sortedLevels = Object.entries(trivia.levels).sort(([a], [b]) => {
     return levelOrder.indexOf(a.toLowerCase()) - levelOrder.indexOf(b.toLowerCase());
@@ -136,7 +138,9 @@ export default function TriviaContent({ trivia }: TriviaContentProps) {
           <div key={level} className="overflow-hidden rounded-3xl border border-gray-800 bg-gray-900/40">
             <div className={`bg-gradient-to-r ${difficultyColors[level.toLowerCase()] || difficultyColors.default} px-8 py-6 flex justify-between items-center`}>
               <div>
-                <h2 className="text-2xl font-bold text-white capitalize">{level} Level</h2>
+                <h2 className="text-2xl font-bold text-white capitalize">
+                  {level} {triviaTopic} Questions
+                </h2>
                 <p className="text-white/80 text-sm">{questions.length} Questions</p>
               </div>
             </div>

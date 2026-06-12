@@ -16,6 +16,8 @@ function RankAvatar({ name, avatar }: { name: string; avatar: string }) {
         <img
           src={avatar}
           alt={name}
+          width={32}
+          height={32}
           className="h-full w-full object-cover"
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = 'none';

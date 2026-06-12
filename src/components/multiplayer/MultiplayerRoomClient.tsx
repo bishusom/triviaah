@@ -402,6 +402,8 @@ export function MultiplayerRoomClient({ roomCode }: { roomCode: string }) {
                   <img
                     src={questionImage}
                     alt=""
+                    width={640}
+                    height={160}
                     className="mb-4 h-28 w-full rounded-xl border border-slate-800 bg-slate-950 object-contain sm:h-36 md:h-40"
                   />
                 ) : null}

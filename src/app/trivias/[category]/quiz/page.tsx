@@ -499,7 +499,9 @@ function QuizFAQ({
 }) {
   return (
     <div className="mt-12">
-      <h2 className="text-3xl font-bold text-white text-center mb-8">Quiz Information</h2>
+      <h2 className="text-3xl font-bold text-white text-center mb-8">
+        About This {formattedSubcategory ? `${formattedSubcategory} ` : ''}{formattedCategory} Quiz
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
           {

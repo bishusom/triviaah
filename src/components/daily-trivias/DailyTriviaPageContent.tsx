@@ -242,7 +242,9 @@ export function DailyTriviaPageContent({
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">
                 Expand Your Knowledge
               </p>
-              <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">What You'll Learn</h2>
+              <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+                What You'll Learn About {title}
+              </h2>
             </div>
           </div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">

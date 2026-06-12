@@ -12,6 +12,16 @@ type PageParams = {
 };
 
 const DEFAULT_OG_IMAGE = '/imgs/retro-games/retro-games-collection.webp';
+const RETRO_GAME_SEO_TITLES: Record<string, string> = {
+  'tic-tac-toe': 'Tic Tac Toe - Free Online Classic Game',
+  snake: 'Snake Game - Classic Free Online Snake',
+  pong: 'Pong Game - Free Classic Arcade Game Online',
+  minesweeper: 'Minesweeper - Free Online Classic Puzzle Game',
+  tetris: 'Tetris Game - Free Classic Block Puzzle Online',
+  'space-invaders': 'Space Invaders - Free Classic Arcade Game',
+  pacman: 'Pac-Man - Free Classic Arcade Game Online',
+  breakout: 'Breakout Game - Free Classic Arcade Game',
+};
 
 export async function generateStaticParams() {
   const pages = await getGamePagesBySection('retro-games');
@@ -41,19 +51,20 @@ export async function generateMetadata({
   }
 
   const ogImage = page.og_image || routeDefinition?.ogImage || DEFAULT_OG_IMAGE;
+  const seoTitle = RETRO_GAME_SEO_TITLES[game] ?? `${page.title} - Free Online Retro Game`;
   const metadataKeywords = page.keywords.length
     ? page.keywords
     : [page.title, 'retro games', 'arcade game', 'classic game'];
 
   return {
-    title: page.title,
+    title: seoTitle,
     description: page.meta_description,
     keywords: metadataKeywords,
     alternates: {
       canonical: `https://triviaah.com${page.route_path}`,
     },
     openGraph: {
-      title: page.title,
+      title: seoTitle,
       description: page.meta_description,
       url: `https://triviaah.com${page.route_path}`,
       siteName: 'Triviaah',
@@ -69,7 +80,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: page.title,
+      title: seoTitle,
       description: page.meta_description,
       images: [ogImage],
     },

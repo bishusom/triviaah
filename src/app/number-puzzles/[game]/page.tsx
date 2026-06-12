@@ -15,6 +15,16 @@ const DEFAULT_OG_IMAGE = '/imgs/number-puzzles.webp';
 const LEGACY_NUMBER_PYRAMIDS_SLUG = 'number-pyramids';
 const LEGACY_NUMBER_BONDS_SLUG = 'number-bonds';
 const NUMBER_PYRAMID_SLUG = 'number-pyramid';
+const NUMBER_PUZZLE_SEO_TITLES: Record<string, string> = {
+  '2048': '2048 Game - Free Online Number Puzzle',
+  'prime-hunter': 'Prime Hunter - Free Online Number Puzzle Game',
+  'number-sequence': 'Number Sequence - Free Online Math Puzzle',
+  'number-tower': 'Number Tower - Free Online Math Puzzle Game',
+  sudoku: 'Sudoku - Free Online Puzzle Game',
+  kakuro: 'Kakuro Puzzle - Free Online Number Game',
+  kenken: 'KenKen Puzzle Game - Free Online Play',
+  'number-pyramid': 'Number Pyramid - Free Online Math Puzzle Game',
+};
 
 export async function generateStaticParams() {
   const pages = await getGamePagesBySection('number-puzzles');
@@ -45,19 +55,20 @@ export async function generateMetadata({
   }
 
   const ogImage = page.og_image || routeDefinition?.ogImage || DEFAULT_OG_IMAGE;
+  const seoTitle = NUMBER_PUZZLE_SEO_TITLES[normalizedGame] ?? `${page.title} - Free Online Number Puzzle`;
   const metadataKeywords = page.keywords.length
     ? page.keywords
     : [page.title, 'number puzzles', 'math game', 'number puzzle'];
 
   return {
-    title: page.title,
+    title: seoTitle,
     description: page.meta_description,
     keywords: metadataKeywords,
     alternates: {
       canonical: `https://triviaah.com${page.route_path}`,
     },
     openGraph: {
-      title: page.title,
+      title: seoTitle,
       description: page.meta_description,
       url: `https://triviaah.com${page.route_path}`,
       siteName: 'Triviaah',
@@ -73,7 +84,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: page.title,
+      title: seoTitle,
       description: page.meta_description,
       images: [ogImage],
     },

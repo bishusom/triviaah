@@ -23,20 +23,37 @@ interface BlogListPageProps {
   searchParams: Promise<SearchParams>;
 }
 
+const BLOG_URL = 'https://triviaah.com/blog';
+const POSTS_PER_PAGE = 8;
+
+function getBlogPageUrl(page: number) {
+  return page <= 1 ? BLOG_URL : `${BLOG_URL}?page=${page}`;
+}
+
+function getBlogPageHref(page: number) {
+  return page <= 1 ? '/blog' : `/blog?page=${page}`;
+}
+
 // Generate metadata for the blog list page
 export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const { page: pageParam } = await searchParams;
   const page: number = parseInt(pageParam || '1') || 1;
   
   const allPosts: PostData[] = await getAllPosts();
-  const pageSuffix = page > 1 ? ` - Page ${page}` : '';
+  const totalPages: number = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE));
+  const safePage = Math.min(Math.max(page, 1), Math.max(totalPages, 1));
+  const pageSuffix = safePage > 1 ? ` - Page ${safePage}` : '';
   
   return {
     title: `Gaming Insights & Trivia Blog${pageSuffix} | Triviaah`,
     description: 'Level up your knowledge with our gaming blog. Explore expert tips, trivia facts, and deep dives into history, science, and pop culture through the lens of gaming.',
     keywords: 'gaming blog, trivia insights, game tips, educational gaming, triviaah news',
     alternates: {
-      canonical: 'https://triviaah.com/blog'
+      canonical: getBlogPageUrl(safePage)
+    },
+    pagination: {
+      previous: safePage > 1 ? getBlogPageUrl(safePage - 1) : null,
+      next: safePage < totalPages ? getBlogPageUrl(safePage + 1) : null,
     },
     openGraph: {
       title: `Gaming Insights & Trivia Blog${pageSuffix} | Triviaah`,
@@ -86,14 +103,14 @@ function StructuredData({ posts }: { posts: PostData[] }) {
 export default async function BlogListPage({ searchParams }: BlogListPageProps) {
   const { page: pageParam } = await searchParams;
   const page: number = parseInt(pageParam || '1') || 1;
-  const postsPerPage: number = 8; // Better for 4-column grid
   
   const allPosts: PostData[] = await getAllPosts();
   const sortedPosts = allPosts.sort((a, b) => new Date(b.isoDate).getTime() - new Date(a.isoDate).getTime());
   
-  const totalPages: number = Math.ceil(sortedPosts.length / postsPerPage);
-  const startIndex: number = (page - 1) * postsPerPage;
-  const paginatedPosts: PostData[] = sortedPosts.slice(startIndex, startIndex + postsPerPage);
+  const totalPages: number = Math.max(1, Math.ceil(sortedPosts.length / POSTS_PER_PAGE));
+  const safePage = Math.min(Math.max(page, 1), Math.max(totalPages, 1));
+  const startIndex: number = (safePage - 1) * POSTS_PER_PAGE;
+  const paginatedPosts: PostData[] = sortedPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
@@ -131,7 +148,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                   </div>
                   <div className="w-px h-10 bg-white/10 mx-6"></div>
                   <div>
-                    <div className="text-white font-black text-3xl leading-none">{page}</div>
+                    <div className="text-white font-black text-3xl leading-none">{safePage}</div>
                     <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Current Page</div>
                   </div>
                 </div>
@@ -205,9 +222,9 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
         {/* Pagination - Gaming Style */}
         {totalPages > 1 && (
           <div className="flex items-center justify-center gap-4 mt-12">
-            {page > 1 && (
+            {safePage > 1 && (
               <Link
-                href={`/blog?page=${page - 1}`}
+                href={getBlogPageHref(safePage - 1)}
                 className="bg-gray-800 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg border-2 border-gray-700 hover:border-cyan-500 transition-all duration-300 font-semibold"
               >
                 ← Previous
@@ -218,9 +235,9 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
                 <Link
                   key={pageNum}
-                  href={`/blog?page=${pageNum}`}
+                  href={getBlogPageHref(pageNum)}
                   className={`w-10 h-10 flex items-center justify-center rounded-lg border-2 font-semibold transition-all duration-300 ${
-                    pageNum === page
+                    pageNum === safePage
                       ? 'bg-cyan-600 border-cyan-500 text-white'
                       : 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700'
                   }`}
@@ -230,9 +247,9 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
               ))}
             </div>
 
-            {page < totalPages && (
+            {safePage < totalPages && (
               <Link
-                href={`/blog?page=${page + 1}`}
+                href={getBlogPageHref(safePage + 1)}
                 className="bg-gray-800 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg border-2 border-gray-700 hover:border-cyan-500 transition-all duration-300 font-semibold"
               >
                 Next →

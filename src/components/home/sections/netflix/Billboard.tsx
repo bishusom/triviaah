@@ -78,6 +78,8 @@ export default function Billboard() {
             src={current.image} 
             className="w-full h-full object-cover brightness-[0.6]"
             alt={current.title}
+            width={1920}
+            height={1080}
           />
           {/* Netflix Gradients */}
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />

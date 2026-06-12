@@ -123,6 +123,8 @@ function GameGallerySection({
                     <img
                       src={img}
                       alt={label}
+                      width={208}
+                      height={96}
                       loading="lazy"
                       decoding="async"
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -403,6 +405,8 @@ function MiniContentCard({
                 <img
                   src={item.image || item.image_url}
                   alt={item.title || item.name}
+                  width={40}
+                  height={40}
                   className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity"
                 />
               ) : (
@@ -518,6 +522,8 @@ function ContentCard({
                 <img
                   src={item.image || item.image_url}
                   alt={item.title || item.name}
+                  width={48}
+                  height={48}
                   className="w-full h-full object-cover"
                 />
               ) : (
