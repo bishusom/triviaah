@@ -6,7 +6,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'; // Add this import
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
 import NavBar from '@/components/common/NavBar';
 import { SoundProvider } from '@/context/SoundContext';;
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import './globals.css';
 
 const geist = Geist({ 
@@ -45,13 +45,17 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const isProduction = process.env.NODE_ENV === 'production';
   
   return (
     <html lang="en" className={`${geist.variable} antialiased`}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
          {/* Critical CSS to prevent layout shifts */}
           <style
             dangerouslySetInnerHTML={{

@@ -3,7 +3,6 @@
 
 import { useEffect } from 'react';
 import Ads from '@/components/common/Ads';
-import NavBar from '@/components/common/NavBar';
 import CategoryShowcase from '@/components/home/sections/collapsible/CategoryShowcase';
 import HorizontalScrollSection from '@/components/home/sections/collapsible/HorizontalScrollSection';
 import Footer from '@/components/home/Footer'
@@ -46,8 +45,6 @@ export default function HomePageContent({ featuredTriviaCategories = [] }: HomeP
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex flex-col">
-      <NavBar />
-     
       <div className="bg-gray-800/50 py-6">
         <div className="container mx-auto px-4">
           <Ads format="fluid" style={{ width: '100%', height: '90px' }} />

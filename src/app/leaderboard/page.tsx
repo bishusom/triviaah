@@ -1,5 +1,6 @@
 // app/leaderboard/page.tsx
 'use client';
+import Link from 'next/link';
 import { getPersistentGuestId, rerollGuestId } from '@/lib/guestId';
 import { Crown, Trophy, Star, Medal, Clock, Target, Award, BarChart3, UserCircle, RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -391,6 +392,36 @@ export default function LeaderboardPage() {
             )}
           </div>
         )}
+
+        <section className="mt-10 grid gap-6 lg:grid-cols-3">
+          <div className="bg-gray-800/40 rounded-xl border border-gray-700 p-6">
+            <h2 className="text-lg font-bold text-white mb-3">How the Trivia Leaderboard Works</h2>
+            <p className="text-gray-300 leading-relaxed text-sm">
+              The Triviaah leaderboard ranks players by the points they earn from completed trivia games.
+              Scores reward correct answers, steady accuracy, and consistent play across daily quizzes,
+              category trivia, and other knowledge challenges on the site.
+            </p>
+          </div>
+
+          <div className="bg-gray-800/40 rounded-xl border border-gray-700 p-6">
+            <h2 className="text-lg font-bold text-white mb-3">Weekly, Monthly, and All-Time Rankings</h2>
+            <p className="text-gray-300 leading-relaxed text-sm">
+              Use the timeframe controls to compare short-term performance or long-running progress.
+              Weekly rankings are useful for fresh competition, monthly rankings show recent consistency,
+              and all-time rankings highlight players who keep returning to improve.
+            </p>
+          </div>
+
+          <div className="bg-gray-800/40 rounded-xl border border-gray-700 p-6">
+            <h2 className="text-lg font-bold text-white mb-3">Climb the Rankings</h2>
+            <p className="text-gray-300 leading-relaxed text-sm">
+              Start with <Link href="/daily-trivias" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">daily trivia</Link>,
+              browse <Link href="/trivias" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">all trivia categories</Link>,
+              or try <Link href="/word-games" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">word games</Link> to keep your streak going.
+              Replaying topics helps you learn missed facts and build stronger scores over time.
+            </p>
+          </div>
+        </section>
       </div>
     </div>
   );

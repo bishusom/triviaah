@@ -181,6 +181,55 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
+
+          <section className="mt-12 grid gap-6">
+            <div className="bg-gray-800/40 rounded-2xl border border-gray-700 p-6">
+              <h2 className="text-2xl font-bold text-white mb-4">What to Include in Your Message</h2>
+              <p className="text-gray-300 leading-relaxed mb-4">
+                The more context you share, the faster we can understand the issue. If you are reporting a quiz
+                question, include the page URL, category name, question text, and the answer you believe should be
+                corrected. If something is not loading, mention your browser, device, and whether the problem happens
+                on mobile, desktop, or both.
+              </p>
+              <p className="text-gray-300 leading-relaxed">
+                We also welcome suggestions for new trivia categories, puzzle formats, classroom-friendly features,
+                accessibility improvements, and multiplayer quiz ideas. Clear examples help us prioritize updates that
+                improve the experience for the widest group of players.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-5">
+                <h3 className="font-semibold text-purple-300 mb-2">Question Corrections</h3>
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  Send the exact question, category, and source context if an answer looks outdated, ambiguous, or wrong.
+                </p>
+              </div>
+              <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-5">
+                <h3 className="font-semibold text-purple-300 mb-2">Feature Requests</h3>
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  Tell us what you wanted to do, where you expected to find it, and how it would improve your quiz flow.
+                </p>
+              </div>
+              <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-5">
+                <h3 className="font-semibold text-purple-300 mb-2">Partnerships</h3>
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  For schools, publishers, creators, and communities, include your audience, use case, and timeline.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gray-800/40 rounded-2xl border border-gray-700 p-6">
+              <h2 className="text-2xl font-bold text-white mb-4">Before You Contact Us</h2>
+              <p className="text-gray-300 leading-relaxed">
+                If you want to keep playing while you wait for a reply, browse our
+                {' '}<Link href="/daily-trivias" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">daily trivia challenges</Link>,
+                explore the full <Link href="/trivias" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">trivia category library</Link>,
+                or try our <Link href="/brainwave" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">daily brainwave puzzles</Link>.
+                These pages cover the most common gameplay paths and may help you find the quiz or feature you were looking for.
+              </p>
+            </div>
+          </section>
         </div>
       </div>
     </div>

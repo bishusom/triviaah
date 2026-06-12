@@ -34,6 +34,8 @@ export async function generateMetadata({
     ? `Test your ${formattedSubcategory.toLowerCase()} knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 multi-choice questions to beat the highscore. Invite your friends on social media if they can beat your scores!`
     : `Test your knowledge with our ${formattedCategory.toLowerCase()} quiz. Challenge yourself with 10 multi-choice questions to beat the highscore. Invite your friends on social media if they can beat your scores!`;
 
+  const canonicalUrl = `https://triviaah.com/special-quizzes/${category}`;
+
   return {
     title,
     description,
@@ -62,7 +64,7 @@ export async function generateMetadata({
       description: formattedSubcategory
         ? `Can you answer these ${formattedSubcategory.toLowerCase()} ${formattedCategory.toLowerCase()} questions? Take the challenge!`
         : `Can you answer these ${formattedCategory.toLowerCase()} questions? Take the challenge!`,
-      url: `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
+      url: canonicalUrl,
       siteName: 'Triviaah',
       type: 'website',
       images: [
@@ -85,7 +87,7 @@ export async function generateMetadata({
       images: ['/imgs/quiz-og.webp'],
     },
     alternates: {
-      canonical: `https://triviaah.com/trivias/${category}/quiz${subcategory ? `?subcategory=${encodeURIComponent(subcategory)}` : ''}`,
+      canonical: canonicalUrl,
     }
   };
 }

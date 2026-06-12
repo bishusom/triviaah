@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
+const { HTML_LIMITED_BOT_UA_RE_STRING } = require('next/dist/shared/lib/router/utils/is-bot');
+
 const nextConfig = {
   compress: true,
+  htmlLimitedBots: new RegExp(`${HTML_LIMITED_BOT_UA_RE_STRING}|Screaming Frog SEO Spider|Screaming Frog`, 'i'),
   
   // Redirect configuration - UPDATED: Now redirecting triviaah.com to elitetrivias.com
   async redirects() {
@@ -42,6 +45,16 @@ const nextConfig = {
           }
         ],
         destination: '/trivia-bank/:slug',
+        permanent: true,
+      },
+      {
+        source: '/trivias/quick-fire',
+        destination: '/daily-trivias/quick-fire',
+        permanent: true,
+      },
+      {
+        source: '/trivias/general-knowledge',
+        destination: '/daily-trivias/general-knowledge',
         permanent: true,
       },
     ];

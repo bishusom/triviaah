@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Target, Users, Star, Heart } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -71,6 +72,11 @@ export default function AboutPage() {
               enthusiasts worldwide. We believe learning should be enjoyable and accessible to everyone, 
               combining the thrill of gaming with the satisfaction of learning.
             </p>
+            <p className="text-lg text-gray-300 leading-relaxed mt-4">
+              The site brings together quick daily quizzes, deep trivia category pages, word games, number
+              puzzles, retro games, and clue-based brainwave challenges. Our goal is to make it easy to play
+              for a few minutes, discover a new fact, and come back tomorrow for a fresh challenge.
+            </p>
           </div>
 
           {/* How It Works */}
@@ -105,6 +111,45 @@ export default function AboutPage() {
             </div>
           </div>
 
+          <div className="bg-gray-800/50 rounded-2xl border-2 border-gray-700 p-8 mb-8">
+            <h2 className="text-3xl font-bold text-white mb-6">What You Can Play</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-gray-700/30 rounded-xl border border-gray-600 p-5">
+                <h3 className="text-xl font-semibold text-blue-300 mb-3">Daily Trivia</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Our <Link href="/daily-trivias" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">daily trivia challenges</Link>
+                  {' '}refresh around focused themes such as general knowledge, geography, science, entertainment,
+                  history, arts, literature, and sports. They are built for short sessions with clear results.
+                </p>
+              </div>
+              <div className="bg-gray-700/30 rounded-xl border border-gray-600 p-5">
+                <h3 className="text-xl font-semibold text-blue-300 mb-3">Trivia Categories</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  The <Link href="/trivias" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">trivia library</Link>
+                  {' '}lets players browse topic pages, subtopics, and quiz modes across history, science, movies,
+                  literature, music, food, animals, business, mythology, and more.
+                </p>
+              </div>
+              <div className="bg-gray-700/30 rounded-xl border border-gray-600 p-5">
+                <h3 className="text-xl font-semibold text-blue-300 mb-3">Puzzle Games</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Players who prefer deduction can try <Link href="/brainwave" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">Brainwave puzzles</Link>,
+                  {' '}or switch to <Link href="/word-games" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">word games</Link>
+                  {' '}and <Link href="/number-puzzles" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">number puzzles</Link>
+                  {' '}for vocabulary, pattern, and logic challenges.
+                </p>
+              </div>
+              <div className="bg-gray-700/30 rounded-xl border border-gray-600 p-5">
+                <h3 className="text-xl font-semibold text-blue-300 mb-3">Friendly Competition</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Triviaah supports casual competition through score tracking,
+                  {' '}<Link href="/leaderboard" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">leaderboards</Link>,
+                  and private multiplayer quiz rooms that let friends answer the same questions together.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Team Section */}
           <div className="bg-gray-800/50 rounded-2xl border-2 border-gray-700 p-8 mb-8">
             <div className="flex items-center gap-4 mb-6">
@@ -117,6 +162,12 @@ export default function AboutPage() {
               Triviaah is developed by a passionate team of trivia enthusiasts, gamers, and developers 
               who are dedicated to creating engaging educational experiences that feel more like play 
               than work.
+            </p>
+            <p className="text-lg text-gray-300 leading-relaxed mt-4">
+              We review feedback, refine unclear questions, improve page structure, and keep adding better ways
+              to discover quizzes. If you spot an issue or want to suggest a category, the
+              {' '}<Link href="/contact" className="text-blue-300 hover:text-blue-200 underline underline-offset-4">contact page</Link>
+              {' '}is the best place to send details.
             </p>
           </div>
 
