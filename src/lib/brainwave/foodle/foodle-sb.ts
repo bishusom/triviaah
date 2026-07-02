@@ -83,6 +83,10 @@ export async function getDailyFood(customDate?: Date): Promise<{puzzle: FoodPuzz
     
     // If no daily puzzle found, get a random one
     if (!puzzleData) {
+      if (customDate) {
+        console.log('No foodle puzzle found for requested date:', dateString);
+        return { puzzle: null };
+      }
       console.log('Getting random food puzzle instead of daily');
       const { data: randomPuzzles, error: randomError } = await supabase
         .from('random_foodle_puzzles')

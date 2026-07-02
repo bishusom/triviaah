@@ -73,10 +73,14 @@ export async function getDailyTrordle(customDate?: Date): Promise<TrordlePuzzle 
           .eq('category', 'trordle')
           .limit(1);
     
-        if (dailyError || !dailyPuzzles || dailyPuzzles.length === 0) {
+      if (dailyError || !dailyPuzzles || dailyPuzzles.length === 0) {
+          if (customDate) {
+              console.log('No daily trordle found for requested date:', dateString);
+              return null;
+          }
           console.log('No daily puzzle found for date:', dateString, '- getting random puzzle');
           return getRandomTrordle();
-        }
+      }
         
         const dailyPuzzle = dailyPuzzles[0];
         const puzzleId = dailyPuzzle.puzzle_id;
@@ -88,10 +92,14 @@ export async function getDailyTrordle(customDate?: Date): Promise<TrordlePuzzle 
           .eq('id', puzzleId)
           .single();
     
-        if (puzzleError || !puzzleData) {
+      if (puzzleError || !puzzleData) {
+          if (customDate) {
+              console.log('No trordle puzzle found with ID for requested date:', puzzleId, dateString);
+              return null;
+          }
           console.log('No trordle puzzle found with ID:', puzzleId, '- getting random puzzle');
           return getRandomTrordle();
-        }
+      }
 
     if (!puzzleData) {
       console.log('No valid trordle puzzle data found - getting random puzzle');

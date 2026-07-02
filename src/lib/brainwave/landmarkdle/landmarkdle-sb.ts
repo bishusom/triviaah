@@ -75,6 +75,10 @@ export async function getDailyLandmark(customDate?: Date): Promise<{puzzle: Land
     
     // If no daily puzzle found, get a random one
     if (!puzzleData) {
+      if (customDate) {
+        console.log('No landmarkdle puzzle found for requested date:', dateString);
+        return { puzzle: null };
+      }
       console.log('Getting random landmark puzzle instead of daily');
       const { data: randomPuzzles, error: randomError } = await supabase
         .from('random_landmarkdle_puzzles')

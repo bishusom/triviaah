@@ -100,6 +100,10 @@ export async function getDailyCountry(customDate?: Date): Promise<{
     
     // If no daily puzzle found, get a random one
     if (!puzzleData) {
+      if (customDate) {
+        console.log('No countridle puzzle found for requested date:', dateString);
+        return { puzzle: null, allCountries: [] };
+      }
       console.log('Getting random country puzzle instead of daily');
       const { data: randomPuzzles, error: randomError } = await supabase
         .from('random_countridle_puzzles')

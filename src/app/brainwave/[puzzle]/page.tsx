@@ -144,6 +144,7 @@ export default async function BrainwavePuzzlePage({
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const parsedDate = resolvedSearchParams.date ? new Date(`${resolvedSearchParams.date}T00:00:00`) : undefined;
   const targetDate = parsedDate && !isNaN(parsedDate.getTime()) ? parsedDate : undefined;
+  const gameInstanceKey = `${routeDefinition.slug}-${resolvedSearchParams.date ?? 'today'}`;
 
   let game: React.ReactNode | null = null;
 
@@ -153,97 +154,97 @@ export default async function BrainwavePuzzlePage({
     case 'plotle': {
       const initialData = await getDailyPlotle(targetDate);
       if (!initialData) notFound();
-      game = <PlotleComponent initialData={initialData} />;
+      game = <PlotleComponent key={gameInstanceKey} initialData={initialData} />;
       break;
     }
     case 'capitale': {
       const initialData = await getDailyCapitale(targetDate);
       if (!initialData?.puzzle) notFound();
-      game = <CapitaleComponent initialData={initialData.puzzle} allCapitals={initialData.allCapitals} />;
+      game = <CapitaleComponent key={gameInstanceKey} initialData={initialData.puzzle} allCapitals={initialData.allCapitals} />;
       break;
     }
     case 'historidle': {
       const initialData = await getDailyHistoridle(targetDate);
       if (!initialData) notFound();
-      game = <HistoridleComponent initialData={initialData} />;
+      game = <HistoridleComponent key={gameInstanceKey} initialData={initialData} />;
       break;
     }
     case 'celebrile': {
       const initialData = await getDailyCelebrile(targetDate);
       if (!initialData) notFound();
-      game = <CelebrileComponent initialData={initialData} />;
+      game = <CelebrileComponent key={gameInstanceKey} initialData={initialData} />;
       break;
     }
     case 'songle': {
       const initialData = await getDailySongle(targetDate);
       if (!initialData) notFound();
-      game = <SongleComponent initialData={initialData} />;
+      game = <SongleComponent key={gameInstanceKey} initialData={initialData} />;
       break;
     }
     case 'literale': {
       const initialData = await getDailyLiterale(targetDate);
       if (!initialData) notFound();
-      game = <LiteraleComponent initialData={initialData} />;
+      game = <LiteraleComponent key={gameInstanceKey} initialData={initialData} />;
       break;
     }
     case 'creaturedle': {
       const initialData = await getDailyCreature(targetDate);
       if (!initialData?.puzzle) notFound();
-      game = <CreaturedleComponent initialData={initialData as any} />;
+      game = <CreaturedleComponent key={gameInstanceKey} initialData={initialData as any} />;
       break;
     }
     case 'foodle': {
       const initialData = await getDailyFood(targetDate);
       if (!initialData?.puzzle) notFound();
-      game = <FoodleComponent initialData={initialData as any} />;
+      game = <FoodleComponent key={gameInstanceKey} initialData={initialData as any} />;
       break;
     }
     case 'landmarkdle': {
       const initialData = await getDailyLandmark(targetDate);
       if (!initialData?.puzzle) notFound();
-      game = <LandmarkdleComponent initialData={initialData as any} />;
+      game = <LandmarkdleComponent key={gameInstanceKey} initialData={initialData as any} />;
       break;
     }
     case 'inventionle': {
       const initialData = await getDailyInvention(targetDate);
       if (!initialData?.puzzle) notFound();
-      game = <InventionleComponent initialData={initialData as any} />;
+      game = <InventionleComponent key={gameInstanceKey} initialData={initialData as any} />;
       break;
     }
     case 'synonymle': {
       const initialData = await getDailySynonymle(targetDate);
       if (!initialData) notFound();
-      game = <SynonymleComponent initialData={initialData} />;
+      game = <SynonymleComponent key={gameInstanceKey} initialData={initialData} />;
       break;
     }
     case 'automoble': {
       const initialData = await getDailyCar(targetDate);
       if (!initialData?.puzzle) notFound();
-      game = <AutomobleComponent initialData={initialData.puzzle} />;
+      game = <AutomobleComponent key={gameInstanceKey} initialData={initialData.puzzle} />;
       break;
     }
     case 'botanle': {
       const initialData = await getDailyPlant(targetDate);
       if (!initialData?.puzzle) notFound();
-      game = <BotanleComponent initialData={{ puzzle: initialData.puzzle }} />;
+      game = <BotanleComponent key={gameInstanceKey} initialData={{ puzzle: initialData.puzzle }} />;
       break;
     }
     case 'citadle': {
       const initialData = await getDailyCityPuzzle(targetDate);
       if (!initialData) notFound();
-      game = <CitadleComponent initialData={initialData} />;
+      game = <CitadleComponent key={gameInstanceKey} initialData={initialData} />;
       break;
     }
     case 'countridle': {
       const initialData = await getDailyCountry(targetDate);
       if (!initialData?.puzzle) notFound();
-      game = <CountridleComponent initialData={initialData.puzzle} allCountries={initialData.allCountries} />;
+      game = <CountridleComponent key={gameInstanceKey} initialData={initialData.puzzle} allCountries={initialData.allCountries} />;
       break;
     }
     case 'trordle': {
       const initialData = await getDailyTrordle(targetDate);
       if (!initialData) notFound();
-      game = <TrordleComponent initialData={initialData} />;
+      game = <TrordleComponent key={gameInstanceKey} initialData={initialData} />;
       break;
     }
     default:

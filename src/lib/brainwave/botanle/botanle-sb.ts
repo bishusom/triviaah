@@ -108,6 +108,10 @@ export async function getDailyPlant(customDate?: Date): Promise<{
     
     // If no daily puzzle found, get a random one
     if (!puzzleData) {
+      if (customDate) {
+        console.log('No botanle puzzle found for requested date:', dateString);
+        return { puzzle: null };
+      }
       console.log('Getting random botanle puzzle instead of daily');
       const { data: randomPuzzles, error: randomError } = await supabase
         .from('random_botanle_puzzles')

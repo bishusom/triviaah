@@ -69,6 +69,10 @@ export async function getDailyLiterale(customDate?: Date): Promise<LiteralePuzzl
       .limit(1);
 
     if (dailyError || !dailyPuzzles || dailyPuzzles.length === 0) {
+      if (customDate) {
+        console.log('No daily literale found for requested date:', dateString);
+        return null;
+      }
       console.log('No daily literale found for date:', dateString, '- getting random puzzle');
       return getRandomLiterale();
     }
@@ -83,6 +87,10 @@ export async function getDailyLiterale(customDate?: Date): Promise<LiteralePuzzl
       .single();
 
     if (puzzleError || !puzzleData) {
+      if (customDate) {
+        console.log('No literale puzzle found with ID for requested date:', puzzleId, dateString);
+        return null;
+      }
       console.log('No literale puzzle found with ID:', puzzleId, '- getting random puzzle');
       return getRandomLiterale();
     }

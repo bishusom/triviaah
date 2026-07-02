@@ -83,6 +83,10 @@ export async function getDailyInvention(customDate?: Date): Promise<{puzzle: Inv
     
     // If no daily puzzle found, get a random one
     if (!puzzleData) {
+      if (customDate) {
+        console.log('No inventionle puzzle found for requested date:', dateString);
+        return { puzzle: null };
+      }
       console.log('Getting random invention puzzle instead of daily');
       const { data: randomPuzzles, error: randomError } = await supabase
         .from('random_inventionle_puzzles')

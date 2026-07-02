@@ -85,6 +85,10 @@ export async function getDailyCapitale(customDate?: Date): Promise<{puzzle: Capi
     
     // If no daily puzzle found, get a random one
     if (!puzzleData) {
+      if (customDate) {
+        console.log('No capitale puzzle found for requested date:', dateString);
+        return { puzzle: null, allCapitals: [] };
+      }
       console.log('Getting random puzzle instead of daily');
       const { data: randomPuzzles, error: randomError } = await supabase
         .from('random_capitale_puzzles')

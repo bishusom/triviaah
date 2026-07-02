@@ -48,6 +48,10 @@ export async function getDailyHistoridle(customDate?: Date): Promise<HistoridleD
       .limit(1);
 
     if (dailyError || !dailyPuzzles || dailyPuzzles.length === 0) {
+      if (customDate) {
+        console.log('No daily historidle found for requested date:', dateString);
+        return null;
+      }
       console.log('No daily historidle found for date:', dateString, '- getting random puzzle');
       return getRandomHistoridle();
     }
@@ -63,6 +67,10 @@ export async function getDailyHistoridle(customDate?: Date): Promise<HistoridleD
       .single();
 
     if (puzzleError || !puzzleData) {
+      if (customDate) {
+        console.log('No historidle puzzle found with ID for requested date:', puzzleId, dateString);
+        return null;
+      }
       console.log('No historidle puzzle found with ID:', puzzleId, '- getting random puzzle');
       return getRandomHistoridle();
     }

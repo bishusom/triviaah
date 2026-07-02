@@ -77,6 +77,10 @@ export async function getDailyPlotle(customDate?: Date): Promise<PlotlePuzzle | 
       .limit(1);
 
     if (dailyError || !dailyPuzzles || dailyPuzzles.length === 0) {
+      if (customDate) {
+        console.log('No daily plotle found for requested date:', dateString);
+        return null;
+      }
       console.log('No daily puzzle found for date:', dateString, '- getting random puzzle');
       return getRandomPlotle();
     }
@@ -92,6 +96,10 @@ export async function getDailyPlotle(customDate?: Date): Promise<PlotlePuzzle | 
       .single();
 
     if (puzzleError || !puzzleData) {
+      if (customDate) {
+        console.log('No plotle puzzle found with ID for requested date:', puzzleId, dateString);
+        return null;
+      }
       console.log('No plotle puzzle found with ID:', puzzleId, '- getting random puzzle');
       return getRandomPlotle();
     }

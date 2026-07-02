@@ -134,6 +134,10 @@ export async function getDailyCityPuzzle(customDate?: Date): Promise<CityPuzzle 
     
     // If no daily puzzle found, get a random one
     if (!puzzleData) {
+      if (customDate) {
+        console.log('No citadle puzzle found for requested date:', dateString);
+        return null;
+      }
       console.log('Getting random city puzzle instead of daily');
       const { data: randomPuzzles, error: randomError } = await supabase
         .from('random_citadle_puzzles')

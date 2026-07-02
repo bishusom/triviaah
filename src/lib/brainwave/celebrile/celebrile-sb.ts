@@ -68,6 +68,10 @@ export async function getDailyCelebrile(customDate?: Date): Promise<CelebrilePuz
       .limit(1);
 
     if (dailyError || !dailyPuzzles || dailyPuzzles.length === 0) {
+      if (customDate) {
+        console.log('No daily celebrile found for requested date:', dateString);
+        return null;
+      }
       console.log('No daily celebrile found for date:', dateString, '- getting random puzzle');
       return getRandomCelebrile();
     }
@@ -83,6 +87,10 @@ export async function getDailyCelebrile(customDate?: Date): Promise<CelebrilePuz
       .single();
 
     if (puzzleError || !puzzleData) {
+      if (customDate) {
+        console.log('No celebrile puzzle found with ID for requested date:', puzzleId, dateString);
+        return null;
+      }
       console.log('No celebrile puzzle found with ID:', puzzleId, '- getting random puzzle');
       return getRandomCelebrile();
     }

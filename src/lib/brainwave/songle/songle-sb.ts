@@ -78,6 +78,10 @@ export async function getDailySongle(customDate?: Date): Promise<SonglePuzzle | 
       .limit(1);
 
     if (dailyError || !dailyPuzzles || dailyPuzzles.length === 0) {
+      if (customDate) {
+        console.log('No daily songle found for requested date:', dateString);
+        return null;
+      }
       console.log('No daily puzzle found for date:', dateString, '- getting random puzzle');
       return getRandomSongle();
     }
@@ -93,6 +97,10 @@ export async function getDailySongle(customDate?: Date): Promise<SonglePuzzle | 
       .single();
 
     if (puzzleError || !puzzleData) {
+      if (customDate) {
+        console.log('No songle puzzle found with ID for requested date:', puzzleId, dateString);
+        return null;
+      }
       console.log('No songle puzzle found with ID:', puzzleId, '- getting random puzzle');
       return getRandomSongle();
     }
