@@ -43,10 +43,6 @@ type PageParams = {
 };
 
 const DEFAULT_OG_IMAGE = '/imgs/brainwave/brainwave-trivia-og.webp';
-const BRAINWAVE_SEO_TITLES: Record<string, string> = {
-  plotle: 'Plotle - Daily Movie Puzzle Game Online',
-  foodle: 'Foodle - Daily Food Puzzle Game Online',
-};
 
 export async function generateStaticParams() {
   const pages = await getGamePagesBySection('brainwave');
@@ -76,7 +72,7 @@ export async function generateMetadata({
   }
 
   const ogImage = page.og_image || routeDefinition?.ogImage || DEFAULT_OG_IMAGE;
-  const seoTitle = BRAINWAVE_SEO_TITLES[puzzle] ?? `${page.title} - Daily Brainwave Puzzle Game`;
+  const seoTitle = page.title.includes('|') ? page.title : `${page.title} | Triviaah`;
   const metadataKeywords = page.keywords.length
     ? page.keywords
     : [page.title, 'Brainwave puzzle', 'daily puzzle', 'trivia game'];
