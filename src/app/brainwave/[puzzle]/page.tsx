@@ -56,10 +56,13 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<PageParams>;
+  searchParams?: Promise<{ date?: string }> | { date?: string };
 }): Promise<Metadata> {
   const { puzzle } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
   const routeDefinition = getBrainwaveRouteDefinition(puzzle);
   const routePath = routeDefinition?.routePath ?? `/brainwave/${puzzle}`;
   const page = await getGamePageContent(routePath);
@@ -76,6 +79,7 @@ export async function generateMetadata({
   const metadataKeywords = page.keywords.length
     ? page.keywords
     : [page.title, 'Brainwave puzzle', 'daily puzzle', 'trivia game'];
+  const isArchiveVariant = Boolean(resolvedSearchParams.date);
 
   return {
     title: seoTitle,
@@ -106,10 +110,10 @@ export async function generateMetadata({
       images: [ogImage],
     },
     robots: {
-      index: true,
+      index: !isArchiveVariant,
       follow: true,
       googleBot: {
-        index: true,
+        index: !isArchiveVariant,
         follow: true,
         'max-video-preview': -1,
         'max-image-preview': 'large',
