@@ -152,17 +152,13 @@ export default function HorizontalScrollSection({
             ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' 
             : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
         } gap-6`}>
-          {desktopItems.map((item, idx) => isQuizSection && isQuizItem(item) ? (
+          {desktopItems.map((item) => isQuizSection && isQuizItem(item) ? (
             <div 
               key={item.category}
               className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 shadow-lg backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/50 hover:shadow-cyan-500/10 before:absolute before:inset-0 before:bg-[radial-gradient(90%_120%_at_20%_10%,rgba(37,99,235,0.16)_0%,transparent_58%)] before:pointer-events-none"
             >
               <div className="relative z-10 h-full">
-                <DailyQuizClient 
-                  quiz={item}
-                  priorityImage={idx < 2}
-                  timeLeft={getTimeLeft()}
-                />
+                <DailyQuizClient quiz={item} timeLeft={getTimeLeft()} />
               </div>
             </div>
           ) : (
@@ -239,7 +235,7 @@ export default function HorizontalScrollSection({
               WebkitOverflowScrolling: 'touch'
             }}
           >
-            {items.map((item, idx) => (
+            {items.map((item) => (
               <div 
                 key={item.category} 
                 className="w-56 flex-shrink-0"
@@ -248,11 +244,7 @@ export default function HorizontalScrollSection({
                 {isQuizSection && isQuizItem(item) ? (
                   <div className="relative h-full overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 shadow-lg backdrop-blur-sm transition-all duration-300 hover:border-cyan-500/50 hover:shadow-cyan-500/10 before:absolute before:inset-0 before:bg-[radial-gradient(90%_120%_at_20%_10%,rgba(37,99,235,0.16)_0%,transparent_58%)] before:pointer-events-none">
                     <div className="relative z-10 h-full">
-                      <DailyQuizClient 
-                        quiz={item}
-                        priorityImage={idx < 2}
-                        timeLeft={getTimeLeft()}
-                      />
+                      <DailyQuizClient quiz={item} timeLeft={getTimeLeft()} />
                     </div>
                   </div>
                 ) : (

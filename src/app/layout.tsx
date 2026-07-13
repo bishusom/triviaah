@@ -1,7 +1,6 @@
 // app/layout.tsx (fixed)
 import { Geist } from 'next/font/google';
 import Script from 'next/script';
-import { GoogleAnalytics } from '@next/third-parties/google';
 import { SpeedInsights } from '@vercel/speed-insights/next'; // Add this import
 import { Breadcrumbs, SeoBreadcrumbs } from '@/components/Breadcrumbs';
 import NavBar from '@/components/common/NavBar';
@@ -137,8 +136,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <SeoBreadcrumbs />
           
-          {/* Google Analytics - only load in production */}
-          {isProduction && <GoogleAnalytics gaId="G-K4KZ7XR85V" />}
+          {/* Keep analytics off the critical rendering path. */}
+          {isProduction && (
+            <>
+              <Script
+                src="https://www.googletagmanager.com/gtag/js?id=G-K4KZ7XR85V"
+                strategy="lazyOnload"
+              />
+              <Script id="google-analytics" strategy="lazyOnload">
+                {`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', 'G-K4KZ7XR85V');
+                `}
+              </Script>
+            </>
+          )}
           
           {/* Vercel Speed Insights */}
           {isProduction && <SpeedInsights />}

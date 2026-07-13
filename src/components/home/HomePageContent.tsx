@@ -1,12 +1,9 @@
-// components/home/HomePageContent.tsx
-'use client';
-
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 import Ads from '@/components/common/Ads';
 import CategoryShowcase from '@/components/home/sections/collapsible/CategoryShowcase';
 import HorizontalScrollSection from '@/components/home/sections/collapsible/HorizontalScrollSection';
 import Footer from '@/components/home/Footer'
-import { DAILY_QUIZZES, BRAIN_WAVES, WORD_GAMES, NUMBER_PUZZLES, RETRO_GAMES, IQ_PERSONALITY_TESTS } from '@/config/homeContent';
+import { DAILY_QUIZZES, BRAIN_WAVES, WORD_GAMES, NUMBER_PUZZLES, RETRO_GAMES } from '@/config/homeContent';
 
 // Import new section components
 import HeroSection from '@/components/home/sections/collapsible/HeroSection';
@@ -15,34 +12,14 @@ import SeoContentSection from '@/components/home/sections/collapsible/SeoContent
 import KeyFeatures from '@/components/home/sections/collapsible/KeyFeatures';
 import DailyTriviaFact from '@/components/home/sections/DailyTriviaFact';
 import SectionContainer from '@/components/home/sections/collapsible/SectionContainer';
+import { getTriviaExplorerCards } from '@/lib/trivia-categories';
 
-type FeaturedTriviaCategory = {
-  key: string;
-  category: {
-    title: string;
-    description: string;
-    displayName?: string;
-    keywords: string[];
-    ogImage?: string;
-    related?: string[];
-  };
-};
-
-interface HomePageContentProps {
-  featuredTriviaCategories?: FeaturedTriviaCategory[];
+async function FeaturedTriviaCategories() {
+  const featuredTriviaCategories = await getTriviaExplorerCards('trivias');
+  return <CategoryShowcase featuredTriviaCategories={featuredTriviaCategories} />;
 }
 
-export default function HomePageContent({ featuredTriviaCategories = [] }: HomePageContentProps) {
-  useEffect(() => {
-    const sections = document.querySelectorAll('.horizontal-scroll-section, .category-section');
-    sections.forEach(section => {
-      section.setAttribute('data-no-ads', 'true');
-    });
-  }, []);
-
-  // Check if holiday specials should be shown
-  const showHolidaySpecial = process.env.NEXT_PUBLIC_SHOW_HOLIDAY_SPECIALS === 'true';
-
+export default function HomePageContent() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex flex-col">
       <div className="bg-gray-800/50 py-6">
@@ -104,7 +81,9 @@ export default function HomePageContent({ featuredTriviaCategories = [] }: HomeP
           <DailyTriviaFact />
         </SectionContainer>
 
-        <CategoryShowcase featuredTriviaCategories={featuredTriviaCategories} />
+        <Suspense fallback={<div className="mb-8 min-h-48 rounded-2xl border border-white/10 bg-slate-900" aria-hidden="true" />}>
+          <FeaturedTriviaCategories />
+        </Suspense>
 
         {/*<SectionContainer className="horizontal-scroll-section">
           <HorizontalScrollSection 

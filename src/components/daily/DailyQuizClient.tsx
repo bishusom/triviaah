@@ -17,11 +17,9 @@ type Quiz = {
 
 export default function DailyQuizClient({
   quiz,
-  priorityImage = false,
   timeLeft: initialTimeLeft
 }: {
   quiz: Quiz;
-  priorityImage?: boolean;
   timeLeft: string;
 }) {
   const [played, setPlayed] = useState(false);
@@ -87,8 +85,7 @@ export default function DailyQuizClient({
             width={80}
             height={80}
             className="object-cover w-full h-full p-1"
-            priority={priorityImage}
-            loading={priorityImage ? 'eager' : 'lazy'}
+            loading="lazy"
             quality={75}
           />
         </div>

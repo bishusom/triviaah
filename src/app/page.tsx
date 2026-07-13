@@ -1,7 +1,7 @@
-import Script from 'next/script';
 import type { Metadata } from 'next';
 import HomePageContent from '@/components/home/HomePageContent';
-import { getTriviaExplorerCards } from '@/lib/trivia-categories';
+
+export const revalidate = 3600;
 
 const title = 'Triviaah: Free Daily Trivia & Quiz Games';
 const description =
@@ -40,9 +40,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Home() {
-  const featuredTriviaCategories = await getTriviaExplorerCards('trivias');
-
+export default function Home() {
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -80,12 +78,12 @@ export default async function Home() {
 
   return (
     <>
-      <Script
+      <script
         id="homepage-structured-data"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <HomePageContent featuredTriviaCategories={featuredTriviaCategories} />
+      <HomePageContent />
     </>
   );
 }

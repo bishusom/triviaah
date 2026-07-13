@@ -1,6 +1,3 @@
-// src/components/home/CategoryShowcase.tsx
-'use client';
-
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 

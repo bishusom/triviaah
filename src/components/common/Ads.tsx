@@ -34,11 +34,13 @@ export default function Ads({
     if (!isVisible || !shouldShowAds) return;
 
     const loadAd = () => {
-      if (typeof window !== 'undefined' && window.adsbygoogle && insRef.current) {
+      const adWindow = window as typeof window & { adsbygoogle?: unknown[] };
+
+      if (adWindow.adsbygoogle && insRef.current) {
         // Only initialize if this specific element hasn't been processed
         if (insRef.current.getAttribute('data-adsbygoogle-status') !== 'processed') {
           try {
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            (adWindow.adsbygoogle = adWindow.adsbygoogle || []).push({});
             setIsLoaded(true);
           } catch (error) {
             console.error('AdSense error:', error);

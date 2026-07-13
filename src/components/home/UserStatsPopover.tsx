@@ -2,10 +2,8 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Flame, History, User, Heart, Hash } from 'lucide-react'; // Added Hash icon
 import { getGuestStats, GuestStats } from '@/lib/guestStats';
-import { userProfile } from '@/hooks/userProfile';
 import { getPersistentGuestId } from '@/lib/guestId'; // Import your existing utility
 import { getFavorites, FavoriteItem } from '@/lib/favourites';
 
@@ -14,14 +12,6 @@ export default function UserStatsPopover() {
   const [stats, setStats] = useState<GuestStats | null>(null);
   const [guestId, setGuestId] = useState<string>('');
   
-  const { profile, loading } = userProfile(null); 
-
-  useEffect(() => {
-    setStats(getGuestStats());
-    // Get the same ID used in the leaderboard
-    setGuestId(getPersistentGuestId());
-  }, [isOpen]); // Refresh stats whenever the popover opens
-
   // Logic for the Dynamic Title
   const isFirstTime = !stats || stats.gamesPlayed === 0;
   const displayTitle = isFirstTime ? "Knowledge Seeker" : guestId;
@@ -31,7 +21,7 @@ export default function UserStatsPopover() {
   useEffect(() => {
     setStats(getGuestStats());
     setGuestId(getPersistentGuestId());
-    setFavorites(getFavorites()); // load favorites when popover opens
+    setFavorites(getFavorites());
   }, [isOpen]);
 
   return (
@@ -39,21 +29,17 @@ export default function UserStatsPopover() {
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="w-8 h-8 rounded-sm bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center hover:ring-2 ring-white/50 transition-all active:scale-95"
+        aria-label="Open player stats"
+        aria-expanded={isOpen}
       >
         <User size={18} className="text-white" />
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
+      {isOpen && (
           <>
             <div className="fixed inset-0 z-[110]" onClick={() => setIsOpen(false)} />
             
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="absolute right-0 mt-4 w-72 bg-[#181818] border border-white/10 rounded-md shadow-2xl z-[120] overflow-hidden"
-            >
+            <div className="absolute right-0 mt-4 w-72 origin-top-right animate-[popover-in_150ms_ease-out] bg-[#181818] border border-white/10 rounded-md shadow-2xl z-[120] overflow-hidden">
               {/* Header with Dynamic Guest ID / Title */}
               <div className="p-4 border-b border-white/5 bg-gradient-to-b from-white/5 to-transparent">
                 <p className="text-[10px] font-bold text-cyan-500 uppercase tracking-[0.2em] mb-1">
@@ -157,10 +143,9 @@ export default function UserStatsPopover() {
                   No registration required.
                 </p>
               </div>
-            </motion.div>
+            </div>
           </>
-        )}
-      </AnimatePresence>
+      )}
     </div>
   );
 }
