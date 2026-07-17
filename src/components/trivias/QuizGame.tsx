@@ -12,6 +12,7 @@ import { useSound } from '@/context/SoundContext';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import { updateGuestStats } from '@/lib/guestStats';
 import QuizSummary from '@/components/trivias/QuizSummary';
+import QuestionReport from '@/components/trivias/QuestionReport';
 import { Maximize2, Minimize2, Flame, Zap } from 'lucide-react';
 
 const FALLBACK_QUESTION_IMAGE = '/imgs/default-question-img.png';
@@ -142,6 +143,8 @@ export default function QuizGame({
   const incorrectSound = useRef<HTMLAudioElement | null>(null);
   const timeUpSound = useRef<HTMLAudioElement | null>(null);
   const tickSound = useRef<HTMLAudioElement | null>(null);
+  const reportOpenRef = useRef(false);
+  const quickfireAdvancePendingRef = useRef(false);
 
   useEffect(() => {
     correctSound.current = new Audio('/sounds/correct.mp3');
@@ -159,6 +162,8 @@ export default function QuizGame({
   }, [isMuted]);
 
   const moveToNextQuestion = useCallback(() => {
+    reportOpenRef.current = false;
+    quickfireAdvancePendingRef.current = false;
     if (hasBonusQuestion && bonusQuestion && currentIndex === regularQuestions.length - 1 && !showBonusQuestion) {
       setShowBonusQuestion(true);
       setCurrentIndex(0);
@@ -212,7 +217,12 @@ export default function QuizGame({
     playSound('timeUp');
     setShowFeedback(true);
     setTitbit(currentQuestion?.titbits || 'Time\'s up!');
-    if (isQuickfire) setTimeout(() => handleAdvance(), 3500);
+    if (isQuickfire) {
+      setTimeout(() => {
+        if (reportOpenRef.current) quickfireAdvancePendingRef.current = true;
+        else handleAdvance();
+      }, 3500);
+    }
     else setTimeout(() => setShowNextButton(true), 2000);
   }, [showFeedback, gameStarted, playSound, currentQuestion, handleAdvance, isQuickfire]);
 
@@ -252,9 +262,23 @@ export default function QuizGame({
       playSound('incorrect');
     }
     
-    if (isQuickfire) setTimeout(() => handleAdvance(), 4000);
+    if (isQuickfire) {
+      setTimeout(() => {
+        if (reportOpenRef.current) quickfireAdvancePendingRef.current = true;
+        else handleAdvance();
+      }, 4000);
+    }
     else setTimeout(() => setShowNextButton(true), 2000);
   }, [gameStarted, showFeedback, timeUp, currentQuestion, isQuickfire, showBonusQuestion, timeLeft, streak, playSound, handleAdvance]);
+
+  const handleReportOpenChange = useCallback((isOpen: boolean) => {
+    reportOpenRef.current = isOpen;
+
+    if (!isOpen && isQuickfire && quickfireAdvancePendingRef.current) {
+      quickfireAdvancePendingRef.current = false;
+      handleAdvance();
+    }
+  }, [handleAdvance, isQuickfire]);
 
   useEffect(() => {
     if (!gameStarted || timeLeft <= 0 || showFeedback) {
@@ -409,6 +433,12 @@ export default function QuizGame({
               {showFeedback && (
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="mt-4 flex flex-col gap-3">
                   {titbit && <div className="bg-amber-500/10 border-l-4 border-amber-500 p-3 text-amber-100 rounded text-xs sm:text-sm italic">💡 <strong>Fun Fact:</strong> {titbit}</div>}
+                  <div className="flex justify-end">
+                    <QuestionReport
+                      questionId={currentQuestion.id}
+                      onOpenChange={handleReportOpenChange}
+                    />
+                  </div>
                   {!isQuickfire && showNextButton && (
                     <motion.button initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} onClick={handleAdvance} className="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg shadow-lg uppercase tracking-wider animate-pulse">
                       { (currentIndex >= regularQuestions.length - 1 && !showBonusQuestion && !bonusQuestion) ? "Finish Result 🏁" : "Continue →" }
