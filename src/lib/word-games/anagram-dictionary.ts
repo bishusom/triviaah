@@ -1,6 +1,5 @@
 import { supabase } from '@/lib/supabase';
-
-const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
+import { getDictionaryLookupUrl } from '@/lib/word-games/dictionary-api';
 
 const candidateCache = new Map<string, string[]>();
 const validationCache = new Map<string, boolean>();
@@ -109,15 +108,8 @@ async function isValidViaMerriamWebster(word: string) {
   const cached = validationCache.get(cacheKey);
   if (typeof cached === 'boolean') return cached;
 
-  if (!DICTIONARY_API_KEY) {
-    validationCache.set(cacheKey, false);
-    return false;
-  }
-
   try {
-    const response = await fetch(
-      `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${cacheKey}?key=${DICTIONARY_API_KEY}`,
-    );
+    const response = await fetch(getDictionaryLookupUrl(cacheKey));
 
     if (!response.ok) {
       validationCache.set(cacheKey, false);

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { createClient } from '@supabase/supabase-js';
 import { useSound } from '@/context/SoundContext';
+import { getDictionaryLookupUrl } from '@/lib/word-games/dictionary-api';
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -11,7 +12,6 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Add Merriam-Webster API key
-const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
 
 interface GameConfig {
   wordLength: {
@@ -430,9 +430,7 @@ export default function WordLadderGame() {
       isValid = wordCache.get(word.toLowerCase())!;
     } else {
       try {
-        const response = await fetch(
-          `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word.toLowerCase()}?key=${DICTIONARY_API_KEY}`
-        );
+        const response = await fetch(getDictionaryLookupUrl(word));
         
         if (!response.ok) {
           throw new Error(`API returned ${response.status}`);

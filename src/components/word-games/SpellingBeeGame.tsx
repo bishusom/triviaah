@@ -3,6 +3,7 @@ import { event } from '@/lib/gtag';
 import { useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/context/SoundContext';
+import { getDictionaryLookupUrl } from '@/lib/word-games/dictionary-api';
 
 type FeedbackType = 'error' | 'success' | 'info' | 'hint';
 type HexagonPosition = 'top' | 'bottom' | 'left' | 'right' | 'center';
@@ -31,7 +32,6 @@ export default function SpellingBeeGame() {
   const [feedback, setFeedback] = useState<FeedbackState>({ message: '', type: '' });
   const { isMuted } = useSound();
   const [showGameOverModal, setShowGameOverModal] = useState(false);
-  const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
 
   // Sound effects
   const playSound = useCallback((type: string) => {
@@ -120,9 +120,7 @@ export default function SpellingBeeGame() {
     }
 
     try {
-      const response = await fetch(
-        `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${wordLower}?key=${DICTIONARY_API_KEY}`
-      );
+      const response = await fetch(getDictionaryLookupUrl(wordLower));
 
       if (!response.ok) {
         throw new Error(`API returned ${response.status}`);
@@ -173,7 +171,7 @@ export default function SpellingBeeGame() {
       }
       return isInLocalList;
     }
-  }, [letters, centerLetter, allPossibleWords, showFeedback, DICTIONARY_API_KEY]);
+  }, [letters, centerLetter, allPossibleWords, showFeedback]);
 
   const initGame = useCallback(() => {
     const vowels = ['A', 'E', 'I', 'O', 'U'];

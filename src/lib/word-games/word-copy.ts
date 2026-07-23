@@ -1,4 +1,4 @@
-const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
+import { getDictionaryLookupUrl } from '@/lib/word-games/dictionary-api';
 
 export type WordGameCopyContext = 'scramble' | 'connect';
 
@@ -59,12 +59,8 @@ function fallbackCopy(word: string, context: WordGameCopyContext): WordGameCopy 
 }
 
 async function fetchWordEntry(word: string): Promise<DictionaryEntry | null> {
-  if (!DICTIONARY_API_KEY) return null;
-
   try {
-    const response = await fetch(
-      `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${encodeURIComponent(word)}?key=${DICTIONARY_API_KEY}`,
-    );
+    const response = await fetch(getDictionaryLookupUrl(word));
 
     if (!response.ok) return null;
 

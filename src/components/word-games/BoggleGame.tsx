@@ -3,6 +3,7 @@ import { event } from '@/lib/gtag';
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { useSound } from '@/context/SoundContext';
+import { getDictionaryLookupUrl } from '@/lib/word-games/dictionary-api';
 
 interface GridCell {
   letter: string;
@@ -97,7 +98,6 @@ export default function BoggleGame() {
   const [solvableWords, setSolvableWords] = useState<BoardWord[]>([]);
 
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
-  const DICTIONARY_API_KEY = process.env.NEXT_PUBLIC_MW_DICTIONARY_KEY;
 
   // Game configuration - UPDATED with expert level
   const config: GameConfig = useMemo(() => ({
@@ -633,9 +633,7 @@ export default function BoggleGame() {
     }
 
     try {
-      const response = await fetch(
-        `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${wordLower}?key=${DICTIONARY_API_KEY}`
-      );
+      const response = await fetch(getDictionaryLookupUrl(wordLower));
       
       if (!response.ok) {
         throw new Error(`API returned ${response.status}`);
@@ -683,7 +681,7 @@ export default function BoggleGame() {
       setWordCache(prev => new Map(prev).set(wordLower, isInLocalList));
       return isInLocalList;
     }
-  }, [wordCache, commonWords, DICTIONARY_API_KEY, showFeedback]);
+  }, [wordCache, commonWords, showFeedback]);
 
   // Initialize game
   const initGame = useCallback(() => {
