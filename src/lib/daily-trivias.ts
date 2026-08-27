@@ -131,6 +131,21 @@ export const CATEGORY_CONFIG: Record<string, DailyTriviaCategoryConfig> = {
     icon: '⚽',
     triviaSlugs: ['sports'],
   },
+  nature: {
+    name: 'Nature',
+    subject: 'geography, animals, and plant life',
+    description: 'Daily nature trivia across geography, animals, habitats, ecosystems, and plant science. 10 fresh questions every day.',
+    longDescription: 'The Nature daily quiz combines world geography, wildlife, ecosystems, and plant science into one recurring challenge. It is designed for players who enjoy learning how places, animals, habitats, and natural systems connect.',
+    learningPoints: [
+      'Recognize animals, habitats, ecosystems, and natural landmarks.',
+      'Connect geography with the living world and environmental patterns.',
+      'Build practical knowledge of nature, wildlife, and plant science.',
+    ],
+    keywords: 'nature trivia quiz, animal trivia, geography quiz, botany trivia, ecosystem quiz',
+    color: 'from-emerald-500 to-cyan-500',
+    icon: '🌿',
+    triviaSlugs: ['geography', 'animals', 'science'],
+  },
 };
 
 export const DAILY_TRIVIA_CATEGORIES = Object.entries(CATEGORY_CONFIG).map(([slug, cfg]) => ({

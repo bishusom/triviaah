@@ -40,7 +40,6 @@ export default function HorizontalScrollSection({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [totalVisibleItems, setTotalVisibleItems] = useState(1);
   const [isScrolling, setIsScrolling] = useState(false);
-  const [showAllDesktop, setShowAllDesktop] = useState(false); // New state for desktop expansion
 
   const updateScrollPosition = () => {
     if (!scrollContainerRef.current) return;
@@ -121,10 +120,6 @@ export default function HorizontalScrollSection({
     setCurrentIndex(index);
   };
 
-  // Calculate items to show on desktop - first 4 when collapsed, all when expanded
-  const desktopItems = showAllDesktop ? items : items.slice(0, 4);
-  const canExpand = items.length > 4;
-
   const totalDots = Math.max(1, Math.ceil(items.length / Math.max(1, totalVisibleItems)));
 
   return (
@@ -146,19 +141,15 @@ export default function HorizontalScrollSection({
       </h2>
       
       <div className="relative w-full">
-        {/* Desktop Grid - Now conditional based on showAllDesktop */}
-        <div className={`hidden sm:grid ${
-          isQuizSection 
-            ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' 
-            : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-        } gap-6`}>
-          {desktopItems.map((item) => isQuizSection && isQuizItem(item) ? (
+        {/* Desktop Grid */}
+        <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((item) => isQuizSection && isQuizItem(item) ? (
             <div 
               key={item.category}
               className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 shadow-lg backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/50 hover:shadow-cyan-500/10 before:absolute before:inset-0 before:bg-[radial-gradient(90%_120%_at_20%_10%,rgba(37,99,235,0.16)_0%,transparent_58%)] before:pointer-events-none"
             >
               <div className="relative z-10 h-full">
-                <DailyQuizClient quiz={item} timeLeft={getTimeLeft()} />
+                <DailyQuizClient quiz={item} timeLeft={getTimeLeft()} layout="wide" />
               </div>
             </div>
           ) : (
@@ -166,25 +157,24 @@ export default function HorizontalScrollSection({
               key={item.category} 
               className="group relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 shadow-lg backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/50 hover:shadow-cyan-500/10 before:absolute before:inset-0 before:bg-[radial-gradient(90%_120%_at_20%_10%,rgba(37,99,235,0.16)_0%,transparent_58%)] before:pointer-events-none"
             >
-              <div className="relative z-10 p-5 flex flex-col h-full">
-                {/* Square Image Container */}
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-20 h-20 rounded-lg bg-gradient-to-r from-cyan-500/20 to-blue-600/20 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105 group-hover:from-cyan-500/30 group-hover:to-blue-600/30">
+              <div className="relative z-10 flex min-h-[23rem] h-full flex-col p-5">
+                <div className="mb-4 overflow-hidden rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-600/20 transition-transform duration-300 group-hover:from-cyan-500/30 group-hover:to-blue-600/30">
+                  <div className="relative aspect-[16/10] w-full">
                     <Image
                       src={item.image}
                       alt={item.name}
-                      width={80}
-                      height={80}
-                      className="object-cover w-full h-full p-1"
+                      fill
+                      className="object-contain p-4"
                       loading="lazy"
                       quality={75}
+                      sizes="(min-width: 1024px) 33vw, 50vw"
                     />
                   </div>
                 </div>
 
-                <div className="text-center mb-4 flex-grow">
-                  <h3 className="text-md font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">{item.name}</h3>
-                  <p className="text-xs text-gray-300 italic hidden sm:block mb-3">
+                <div className="min-w-0 flex-1 text-center">
+                  <h3 className="text-xl font-black leading-tight text-white group-hover:text-cyan-300 transition-colors">{item.name}</h3>
+                  <p className="mx-auto mt-2 line-clamp-2 max-w-sm text-sm leading-6 text-gray-300">
                     {item.tagline}
                   </p>
                   <div className="sr-only" aria-hidden="true">
@@ -194,7 +184,7 @@ export default function HorizontalScrollSection({
 
                 <Link 
                   href={getItemPath(item)}
-                  className="block w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium py-2.5 px-4 rounded-lg text-center transition-all duration-300 text-sm hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                  className="mt-auto inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 px-4 py-2.5 text-sm font-bold text-white transition-all duration-300 hover:from-cyan-500 hover:to-blue-500 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
                 >
                   Explore
                 </Link>
@@ -203,26 +193,6 @@ export default function HorizontalScrollSection({
           ))}
         </div>
 
-        {/* Expand/Collapse Button for Desktop */}
-        {canExpand && (
-          <div className="hidden sm:flex justify-center mt-6">
-            <button
-              onClick={() => setShowAllDesktop(!showAllDesktop)}
-              className="flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium py-2 px-6 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-            >
-              <span>{showAllDesktop ? 'Show Less' : `Show All ${items.length}`}</span>
-              <svg 
-                className={`w-4 h-4 transition-transform duration-300 ${showAllDesktop ? 'rotate-180' : ''}`}
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-          </div>
-        )}
-        
         {/* Mobile horizontal scroll */}
         <div className="sm:hidden relative w-full">
           <div 

@@ -7,27 +7,24 @@ const primaryLinks = [
     description: 'Fresh timed quizzes across general knowledge, science, sports, history, geography, and pop culture.',
   },
   {
-    href: '/trivia-bank',
-    label: 'free trivia questions and answers',
-    description: 'Browse ready-to-use trivia questions for quiz nights, classroom warmups, and team games.',
-  },
-  {
-    href: '/word-games',
-    label: 'free online word games',
-    description: 'Play vocabulary puzzles including word search, spelling challenges, anagrams, and cryptograms.',
-  },
-  {
     href: '/brainwave',
     label: 'daily brain teaser games',
     description: 'Solve clue-based guessing games for movies, music, geography, history, books, food, and more.',
   },
+  {
+    href: '/challenges',
+    label: 'weekly trivia challenges',
+    description: 'Focused weekly topic challenges across food, history, science, sports, and culture with 30-second timers.',
+  },
+  {
+    href: '/trivia-bank',
+    label: 'free trivia questions and answers',
+    description: 'Browse ready-to-use trivia questions for quiz nights, classroom warmups, and team games.',
+  },
 ];
 
 const supportingLinks = [
-  { href: '/number-puzzles', label: 'online number puzzle games' },
-  { href: '/retro-games', label: 'classic retro games online' },
-  { href: '/trivias', label: 'trivia categories for every topic' },
-  { href: '/blog', label: 'trivia facts and quiz guides' },
+  { href: '/leaderboard', label: 'daily and weekly trivia leaderboard' },
 ];
 
 export default function SeoContentSection() {
@@ -42,7 +39,7 @@ export default function SeoContentSection() {
             Free Trivia Games, Daily Quizzes, and Brain Puzzles
           </h2>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-6 text-gray-300 md:text-base">
-            Triviaah brings together daily quiz challenges, searchable trivia questions, word games, number puzzles, and brain teasers in one place. Use it for quick solo practice, classroom trivia, virtual trivia nights, or team-building quiz games with answers.
+            Triviaah focuses on daily quiz challenges, clue-led Brainwave puzzles, weekly timed topic routes, searchable trivia questions, and score chasing. Use it for quick solo practice, classroom trivia, virtual trivia nights, or team-building quiz games with answers.
           </p>
         </div>
 

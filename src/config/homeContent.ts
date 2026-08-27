@@ -98,6 +98,18 @@ export const DAILY_QUIZZES: ReadonlyQuizItems = [
     duration: '300',
     difficulty: 'medium',
   },
+  {
+    category: 'nature',
+    name: 'Nature',
+    path: '/daily-trivias/nature',
+    image: '/imgs/thumbnails/nature-160x160.webp',
+    tagline: 'Explore geography, animals, and plant life in one daily nature quiz',
+    keywords: 'nature trivia quiz, animal trivia, geography quiz, botany trivia, daily nature quiz',
+    playCount: 0,
+    isNew: true,
+    duration: '300',
+    difficulty: 'medium',
+  },
 ] as const;
 
 export const BRAIN_WAVES: ReadonlySectionItems = [

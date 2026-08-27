@@ -591,7 +591,7 @@ function toQuestion(q: DbQuestion): Question {
   };
 }
 
-async function getBalancedTriviaQuestions(
+export async function getBalancedTriviaQuestions(
   count: number,
   filters: {
     category?: string;

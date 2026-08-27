@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     images: ['/imgs/word-games/word-games.webp'],
   },
   robots: {
-    index: true,
+    index: false,
     follow: true,
   },
 };

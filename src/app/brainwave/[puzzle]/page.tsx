@@ -43,6 +43,14 @@ type PageParams = {
 };
 
 const DEFAULT_OG_IMAGE = '/imgs/brainwave/brainwave-trivia-og.webp';
+const FEATURED_BRAINWAVE_SLUGS = new Set([
+  'plotle',
+  'capitale',
+  'historidle',
+  'celebrile',
+  'songle',
+  'literale',
+]);
 
 export async function generateStaticParams() {
   const pages = await getGamePagesBySection('brainwave');
@@ -80,6 +88,7 @@ export async function generateMetadata({
     ? page.keywords
     : [page.title, 'Brainwave puzzle', 'daily puzzle', 'trivia game'];
   const isArchiveVariant = Boolean(resolvedSearchParams.date);
+  const isFeaturedPuzzle = FEATURED_BRAINWAVE_SLUGS.has(puzzle);
 
   return {
     title: seoTitle,
@@ -110,10 +119,10 @@ export async function generateMetadata({
       images: [ogImage],
     },
     robots: {
-      index: !isArchiveVariant,
+      index: isFeaturedPuzzle && !isArchiveVariant,
       follow: true,
       googleBot: {
-        index: !isArchiveVariant,
+        index: isFeaturedPuzzle && !isArchiveVariant,
         follow: true,
         'max-video-preview': -1,
         'max-image-preview': 'large',
@@ -152,7 +161,11 @@ export default async function BrainwavePuzzlePage({
 
   let game: React.ReactNode | null = null;
 
-  const allBrainwaveGames = await getGamePagesBySection('brainwave');
+  const allBrainwaveGames = (await getGamePagesBySection('brainwave'))
+    .filter((item) => {
+      const slug = item.route_path.split('/').pop() || '';
+      return item.route_path === '/brainwave' || FEATURED_BRAINWAVE_SLUGS.has(slug);
+    });
 
   switch (routeDefinition.slug) {
     case 'plotle': {

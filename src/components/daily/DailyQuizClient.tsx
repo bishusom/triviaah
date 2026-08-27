@@ -17,10 +17,12 @@ type Quiz = {
 
 export default function DailyQuizClient({
   quiz,
-  timeLeft: initialTimeLeft
+  timeLeft: initialTimeLeft,
+  layout = 'default',
 }: {
   quiz: Quiz;
   timeLeft: string;
+  layout?: 'default' | 'wide';
 }) {
   const [played, setPlayed] = useState(false);
   const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
@@ -74,9 +76,63 @@ export default function DailyQuizClient({
     return () => clearInterval(interval);
   }, [quiz.category]);
 
+  if (layout === 'wide') {
+    return (
+      <div className="flex h-full min-h-[23rem] flex-col p-5">
+        <div className="mb-4 overflow-hidden rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-600/20 transition-transform duration-300 hover:from-cyan-500/30 hover:to-blue-600/30">
+          <div className="relative aspect-[16/10] w-full">
+            <Image
+              src={quiz.image}
+              alt={`${quiz.name} Trivia Challenge`}
+              fill
+              className="object-contain p-4"
+              loading="lazy"
+              quality={75}
+              sizes="(min-width: 1024px) 33vw, 50vw"
+            />
+          </div>
+        </div>
+
+        <div className="min-w-0 flex-1 text-center">
+          <h3 className="text-xl font-black leading-tight text-white">{quiz.name}</h3>
+          {isMounted && (
+            <>
+              <p className="mx-auto mt-2 line-clamp-2 max-w-sm text-sm leading-6 text-gray-300">
+                {quiz.tagline}
+              </p>
+              <div className="sr-only" aria-hidden="true">
+                Keywords: {quiz.keywords}
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="mt-auto">
+          {!isMounted ? (
+            <div className="h-10 w-full animate-pulse rounded-lg bg-gray-700"></div>
+          ) : played ? (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-600 bg-gray-700/50 px-4 py-2.5 text-sm text-gray-300">
+              <span className="inline-flex items-center">
+                <FaCheckCircle className="mr-2 text-green-400" />
+                Completed Today
+              </span>
+              <span className="text-xs text-gray-400">New in {timeLeft}</span>
+            </div>
+          ) : (
+            <Link
+              href={quiz.path}
+              className="inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 px-4 py-2.5 text-sm font-bold text-white transition-all duration-300 hover:from-cyan-500 hover:to-blue-500 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+            >
+              Explore
+            </Link>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-5 flex flex-col h-full">
-      {/* Square Image Container */}
       <div className="flex items-center justify-center mb-4">
         <div className="w-20 h-20 rounded-lg bg-gradient-to-r from-cyan-500/20 to-blue-600/20 flex items-center justify-center overflow-hidden transition-transform duration-300 hover:scale-105 hover:from-cyan-500/30 hover:to-blue-600/30">
           <Image

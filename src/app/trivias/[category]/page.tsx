@@ -144,7 +144,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
       canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/trivias/${category}`,
     },
     robots: {
-      index: true,
+      index: false,
       follow: true,
     }
   };

@@ -76,11 +76,21 @@ const BRAINWAVE_IMAGE_MAP = Object.fromEntries(
   getBrainwaveRouteDefinitions().map((definition) => [definition.routePath, definition.ogImage]),
 );
 
+const FEATURED_BRAINWAVE_SLUGS = new Set([
+  'plotle',
+  'capitale',
+  'historidle',
+  'celebrile',
+  'songle',
+  'literale',
+]);
+
 async function getDailyPuzzles() {
   const rows = await getGamePagesBySection('brainwave');
 
   return rows
     .filter((row) => row.route_path !== '/brainwave')
+    .filter((row) => FEATURED_BRAINWAVE_SLUGS.has(row.route_path.split('/').pop() || ''))
     .map((row) => ({
       route_path: row.route_path,
       category: row.route_path.split('/').pop() || row.route_path,
@@ -225,8 +235,8 @@ export default async function BrainwavePage() {
 
         {/* Puzzle Grid */}
         <div id="brainwave-games-grid" className="mb-16 scroll-mt-6">
-          <h2 className="text-2xl font-bold text-white mb-6 text-center">All Brainwave Games</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">Featured Brainwave Games</h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 lg:gap-6">
             {dailyPuzzles.map((puzzle, index) => (
               <PuzzleCard key={puzzle.category} puzzle={puzzle} index={index} />
             ))}

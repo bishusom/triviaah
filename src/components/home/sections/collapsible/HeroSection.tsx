@@ -32,10 +32,10 @@ export default function HeroSection() {
             <Zap className="h-4 w-4" />
           </Link>
           <Link
-            href="/trivias"
+            href="/challenges"
             className="inline-flex items-center justify-center gap-2 rounded-full border border-cyan-400/30 bg-white/5 px-6 py-2.5 text-sm font-medium text-cyan-100 transition-all duration-300 hover:scale-105 hover:border-cyan-400/60 hover:bg-cyan-400/10 hover:text-white active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-950"
           >
-            Explore Categories
+            Explore Trivia Challenges
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

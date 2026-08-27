@@ -9,6 +9,15 @@ interface PageProps {
   searchParams: Promise<{ date?: string }>;
 }
 
+const FEATURED_DAILY_TRIVIA_CATEGORIES = new Set([
+  'general-knowledge',
+  'quick-fire',
+  'today-in-history',
+  'entertainment',
+  'sports',
+  'nature',
+]);
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { category } = await params;
   const cfg = await getTriviaCategoryBySlug(category, 'daily-trivias');
@@ -18,6 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const title = `${cfg.displayName || cfg.title} Daily Quiz | Free Trivia Questions | Triviaah`;
   const canonicalUrl = `https://triviaah.com/daily-trivias/${category}`;
+  const isFeaturedCategory = FEATURED_DAILY_TRIVIA_CATEGORIES.has(category);
 
   return {
     title,
@@ -30,10 +40,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       `${cfg.displayName || cfg.title} multiplayer trivia`,
     ],
     robots: {
-      index: true,
+      index: isFeaturedCategory,
       follow: true,
       googleBot: {
-        index: true,
+        index: isFeaturedCategory,
         follow: true,
         'max-video-preview': -1,
         'max-image-preview': 'large',
@@ -83,7 +93,7 @@ export default async function DailyQuizPage({ params, searchParams }: PageProps)
   }
 
   const siblingLinks = siblingCategories
-    .filter((item) => item.slug !== category)
+    .filter((item) => item.slug !== category && FEATURED_DAILY_TRIVIA_CATEGORIES.has(item.slug))
     .map((item) => ({
       slug: item.slug,
       name: item.displayName || item.title,

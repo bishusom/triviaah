@@ -1,23 +1,23 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Trivia Challenges | Upcoming Daily, Weekly, and Monthly Events',
+  title: 'Curated Trivia Challenges | Weekly Quiz Routes | Triviaah',
   description:
-    'See what is coming next on Triviaah, including daily challenges, weekly quests, monthly tournaments, and achievement-based competition features.',
+    'Play curated weekly Triviaah challenges built around daily trivia, Brainwave puzzles, and focused topical quiz routes.',
   alternates: {
     canonical: 'https://triviaah.com/challenges',
   },
   openGraph: {
-    title: 'Trivia Challenges | Upcoming Daily, Weekly, and Monthly Events',
+    title: 'Curated Trivia Challenges | Weekly Quiz Routes | Triviaah',
     description:
-      'See what is coming next on Triviaah, including daily challenges, weekly quests, monthly tournaments, and achievement-based competition features.',
+      'Play curated weekly Triviaah challenges built around daily trivia, Brainwave puzzles, and focused topical quiz routes.',
     url: 'https://triviaah.com/challenges',
     siteName: 'Triviaah',
     images: [
       {
-        url: '/imgs/triviaah-og.webp',
-        width: 1200,
-        height: 630,
+        url: '/imgs/daily-trivias/nature.webp',
+        width: 1024,
+        height: 1024,
         alt: 'Triviaah Challenges',
       },
     ],
@@ -25,10 +25,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Trivia Challenges | Upcoming Daily, Weekly, and Monthly Events',
+    title: 'Curated Trivia Challenges | Weekly Quiz Routes | Triviaah',
     description:
-      'See what is coming next on Triviaah, including daily challenges, weekly quests, monthly tournaments, and achievement-based competition features.',
-    images: ['/imgs/triviaah-og.webp'],
+      'Play curated weekly Triviaah challenges built around daily trivia, Brainwave puzzles, and focused topical quiz routes.',
+    images: ['/imgs/daily-trivias/nature.webp'],
   },
   robots: {
     index: true,

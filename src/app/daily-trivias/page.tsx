@@ -62,13 +62,26 @@ type DailyQuizCard = {
   tagline: string;
 };
 
+const FEATURED_DAILY_TRIVIA_CATEGORIES = new Set([
+  'general-knowledge',
+  'quick-fire',
+  'today-in-history',
+  'entertainment',
+  'sports',
+  'nature',
+]);
+
+function resolveDailyQuizImage(category: TriviaCategoryRecord) {
+  return category.ogImage || `/imgs/daily-trivias/${category.slug}.webp`;
+}
+
 function categoryToDailyQuizCard(category: TriviaCategoryRecord): DailyQuizCard {
   const name = category.displayName || category.title;
   return {
     category: category.slug,
     name,
     path: `/daily-trivias/${category.slug}`,
-    image: category.ogImage || `/imgs/daily-trivias/${category.slug}.webp`,
+    image: resolveDailyQuizImage(category),
     tagline: category.description || category.longDescription || `Play ${name} daily trivia.`,
   };
 }
@@ -133,7 +146,9 @@ function QuizCard({ quiz, index }: { quiz: DailyQuizCard; index: number }) {
 
 export default async function DailyQuizzesPage() {
   const dailyCategories = await getTriviaCategories('daily-trivias');
-  const dailyQuizzes = dailyCategories.map(categoryToDailyQuizCard);
+  const dailyQuizzes = dailyCategories
+    .filter((category) => FEATURED_DAILY_TRIVIA_CATEGORIES.has(category.slug))
+    .map(categoryToDailyQuizCard);
   const lastUpdated = new Date();
 
   return (
@@ -163,7 +178,7 @@ export default async function DailyQuizzesPage() {
 
               <p className="max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
                 Pick a category and play today&apos;s quiz. New questions refresh every 24 hours across
-                history, sports, science, geography, entertainment, arts and general knowledge. No
+                general knowledge, fast recall, history, entertainment, sports, and nature. No
                 account required.
               </p>
 
@@ -232,9 +247,9 @@ export default async function DailyQuizzesPage() {
         {/* ── Category Grid ─────────────────────────────────────────────── */}
         <div id="daily-trivia-categories" className="mb-16 scroll-mt-6">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">
-            All Daily Trivia Categories
+            Featured Daily Trivia Categories
           </h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 lg:gap-6">
             {dailyQuizzes.map((quiz, index) => (
               <QuizCard key={quiz.category} quiz={quiz} index={index} />
             ))}
