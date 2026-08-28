@@ -8,12 +8,14 @@ import {
   Clock,
   Flame,
   HelpCircle,
+  History,
   Play,
   Sparkles,
   Trophy,
   Zap,
 } from 'lucide-react';
 
+import ExploreSections from '@/components/common/ExploreSections';
 import { getWeeklyChallenges, type WeeklyTriviaChallenge } from '@/lib/challenges';
 
 export const revalidate = 3600;
@@ -135,11 +137,24 @@ function ChallengeCard({
   );
 }
 
+function isPastThreeMonthsChallenge(challenge: WeeklyTriviaChallenge) {
+  if (challenge.status !== 'past') {
+    return false;
+  }
+
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - 3);
+  const challengeEndDate = new Date(`${challenge.endDate}T23:59:59Z`);
+
+  return challengeEndDate >= cutoff;
+}
+
 export default async function ChallengesPage() {
   const challenges = await getWeeklyChallenges();
   // Filter only active challenges for the challenges homepage
   const activeChallenges = challenges.filter((c) => c.status === 'active');
-  const displayChallenges = activeChallenges.length > 0 ? activeChallenges : challenges;
+  const displayChallenges = activeChallenges.length > 0 ? activeChallenges : challenges.filter((c) => c.status !== 'past');
+  const archivedChallenges = challenges.filter(isPastThreeMonthsChallenge).slice(0, 24);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#060913] via-[#0b1021] to-[#040711] px-4 py-8 text-white sm:px-6 lg:px-8">
@@ -230,6 +245,62 @@ export default async function ChallengesPage() {
           </div>
         </section>
 
+        {archivedChallenges.length > 0 && (
+          <section className="mb-12 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-2xl backdrop-blur sm:p-8">
+            <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+                  <History className="h-4 w-4" />
+                  Challenge Archive
+                </p>
+                <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">
+                  Past 3 Months
+                </h2>
+              </div>
+              <p className="text-sm text-gray-400">
+                {archivedChallenges.length} previous challenges
+              </p>
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {archivedChallenges.map((challenge) => (
+                <Link
+                  key={`archive-${challenge.id}`}
+                  href={`/challenges/${challenge.slug}`}
+                  className="group rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:bg-white/[0.06]"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-cyan-300">
+                        {challenge.categoryTitle}
+                      </p>
+                      <h3 className="mt-2 truncate text-base font-black text-white group-hover:text-cyan-200">
+                        {challenge.subcategory}
+                      </h3>
+                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-400">
+                        {challenge.description}
+                      </p>
+                    </div>
+                    <span className="shrink-0 rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                      Past
+                    </span>
+                  </div>
+                  <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-3 text-xs text-gray-400">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Calendar className="h-3.5 w-3.5 text-cyan-400" />
+                      {challenge.formattedDateRange}
+                    </span>
+                    <span className="inline-flex items-center gap-1 font-bold text-cyan-300">
+                      View
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* ── Bottom Banner CTA ────────────────────────────────────────── */}
         <section className="mt-12 rounded-3xl border border-white/10 bg-gradient-to-r from-slate-900 via-slate-900/80 to-blue-950/40 p-8 shadow-2xl backdrop-blur">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
@@ -253,6 +324,8 @@ export default async function ChallengesPage() {
             </Link>
           </div>
         </section>
+
+        <ExploreSections exclude="challenges" />
       </div>
     </main>
   );

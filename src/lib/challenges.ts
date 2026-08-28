@@ -1,6 +1,12 @@
 import { cache } from 'react';
 
-import { supabase, getBalancedTriviaQuestions, type Question } from '@/lib/supabase';
+import {
+  supabase,
+  getBalancedTriviaQuestions,
+  getEnrichedSubcategoriesWithMinQuestions,
+  type Question,
+  type Subcategory,
+} from '@/lib/supabase';
 import { getTriviaCategoryBySlug, getTriviaCategories, type TriviaCategoryRecord } from '@/lib/trivia-categories';
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
 
@@ -27,6 +33,7 @@ export interface WeeklyTriviaChallenge {
   questionCount: number;
   seoTitle: string;
   seoDescription: string;
+  keywords: string[];
 }
 
 export type ChallengeCadence = 'weekly' | 'seasonal' | 'evergreen';
@@ -141,9 +148,12 @@ function formatCategoryLabel(category: string): string {
 export function normalizeWeeklyChallenge(
   row: WeeklyTriviaChallengeRow,
   categoryMap: Record<string, TriviaCategoryRecord>,
+  subcategoryMap: Record<string, Subcategory>,
   index: number
 ): WeeklyTriviaChallenge {
   const catRecord = categoryMap[row.category];
+  const subcategorySlug = slugifyTriviaSegment(row.subcategory);
+  const subcategoryRecord = subcategoryMap[`${row.category}:${subcategorySlug}`];
   const categoryTitle = catRecord?.title || catRecord?.displayName || formatCategoryLabel(row.category);
   const heroImage = resolveCategoryHeroImage(row.category, catRecord);
   const status = computeChallengeStatus(row.start_date, row.end_date);
@@ -151,7 +161,12 @@ export function normalizeWeeklyChallenge(
   const slug = createChallengeSlug(row.id, row.category, row.subcategory);
 
   const title = `${row.subcategory} Weekly Challenge`;
-  const description = `Test your knowledge with 10 questions on ${row.subcategory} in the ${categoryTitle} category with a 30-second question timer.`;
+  const description =
+    subcategoryRecord?.description ||
+    `Test your knowledge with 10 questions on ${row.subcategory} in the ${categoryTitle} category with a 30-second question timer.`;
+  const seoDescription =
+    subcategoryRecord?.meta_description ||
+    `Play the ${row.subcategory} weekly trivia challenge on Triviaah. 10 curated ${categoryTitle} questions with a 30-second timer and instant feedback.`;
 
   return {
     id: row.id,
@@ -173,7 +188,8 @@ export function normalizeWeeklyChallenge(
     estimatedMinutes: 5,
     questionCount: 10,
     seoTitle: `${row.subcategory} Trivia Challenge | ${categoryTitle} Weekly Quiz | Triviaah`,
-    seoDescription: `Play the ${row.subcategory} weekly trivia challenge on Triviaah. 10 curated ${categoryTitle} questions with a 30-second timer and instant feedback.`,
+    seoDescription,
+    keywords: subcategoryRecord?.keywords ?? [],
   };
 }
 
@@ -202,7 +218,7 @@ export function weeklyChallengeToCollection(challenge: WeeklyTriviaChallenge): C
     items: [
       {
         title: `Play ${challenge.subcategory} Challenge`,
-        description: `10 fast-paced questions on ${challenge.subcategory} with a 30-second timer.`,
+        description: challenge.description,
         href: `/challenges/${challenge.slug}/quiz`,
         quizType: 'weekly-challenge',
         category: challenge.category,
@@ -233,9 +249,19 @@ export const getWeeklyChallenges = cache(async (): Promise<WeeklyTriviaChallenge
   }, {});
 
   const rows = (challengesResponse.data ?? []) as WeeklyTriviaChallengeRow[];
+  const sourceCategories = [...new Set(rows.map((row) => row.category))];
+  const subcategoryResults = await Promise.all(
+    sourceCategories.map(async (category) => getEnrichedSubcategoriesWithMinQuestions(category, 0))
+  );
+  const subcategoryMap = subcategoryResults.flat().reduce<Record<string, Subcategory>>((acc, item) => {
+    const category = item.category || item.category_slug;
+    if (!category) return acc;
+    acc[`${category}:${slugifyTriviaSegment(item.subcategory)}`] = item;
+    return acc;
+  }, {});
   
   // Sort into active first, then upcoming, then past
-  const normalized = rows.map((row, index) => normalizeWeeklyChallenge(row, categoryMap, index));
+  const normalized = rows.map((row, index) => normalizeWeeklyChallenge(row, categoryMap, subcategoryMap, index));
   
   const statusOrder: Record<ChallengeStatus, number> = {
     active: 0,

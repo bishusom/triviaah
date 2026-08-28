@@ -1,14 +1,12 @@
 import Link from 'next/link';
-import { Home, Brain, Layout, Hash, Gamepad2, Calendar, Trophy } from 'lucide-react';
+import { Home, Brain, Calendar, Trophy, Sparkles } from 'lucide-react';
 
 const SECTIONS = [
   { id: 'home', name: 'Home', href: '/', icon: Home, color: 'from-blue-500 to-cyan-500', description: 'Main dashboard' },
   { id: 'daily-trivias', name: 'Daily Trivias', href: '/daily-trivias', icon: Calendar, color: 'from-cyan-500 to-blue-500', description: 'Fresh daily challenges' },
   { id: 'brainwave', name: 'Brainwave', href: '/brainwave', icon: Brain, color: 'from-purple-500 to-pink-500', description: 'Daily deduction puzzles' },
-  { id: 'word-games', name: 'Word Games', href: '/word-games', icon: Layout, color: 'from-green-500 to-emerald-500', description: 'Vocabulary & spelling' },
-  { id: 'number-puzzles', name: 'Number Puzzles', href: '/number-puzzles', icon: Hash, color: 'from-yellow-500 to-orange-500', description: 'Math & logic puzzles' },
-  { id: 'retro-games', name: 'Retro Games', href: '/retro-games', icon: Gamepad2, color: 'from-red-500 to-pink-500', description: 'Classic arcade fun' },
-  { id: 'trivias', name: 'All Trivias', href: '/trivias', icon: Trophy, color: 'from-indigo-500 to-purple-500', description: 'Browse all categories' },
+  { id: 'challenges', name: 'Challenges', href: '/challenges', icon: Sparkles, color: 'from-emerald-500 to-teal-500', description: 'Weekly quiz routes' },
+  { id: 'leaderboard', name: 'Leaderboard', href: '/leaderboard', icon: Trophy, color: 'from-indigo-500 to-purple-500', description: 'Compare scores' },
 ];
 
 export default function ExploreSections({ exclude }: { exclude?: string }) {
@@ -17,7 +15,7 @@ export default function ExploreSections({ exclude }: { exclude?: string }) {
   return (
     <section className="mt-16 mb-12">
       <h2 className="text-3xl font-bold text-white text-center mb-8">Discover More</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {filteredSections.map((section) => (
           <Link
             key={section.id}

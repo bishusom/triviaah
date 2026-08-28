@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
-import { ArrowLeft, Calendar, Clock, Flame, Sparkles } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Flame, Sparkles, Users } from 'lucide-react';
 
 import QuizGame from '@/components/trivias/QuizGame';
 import {
@@ -32,7 +32,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${challenge.subcategory} Weekly Quiz | 30s Timer | Triviaah`,
-    description: `Play the timed 30-second weekly trivia quiz for ${challenge.subcategory} (${challenge.categoryTitle}). 10 questions with instant feedback and score tracking.`,
+    description: challenge.seoDescription,
+    keywords: challenge.keywords,
     alternates: { canonical },
     robots: {
       index: false,
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     openGraph: {
       title: `${challenge.subcategory} Weekly Quiz | 30s Timer | Triviaah`,
-      description: `Play the timed 30-second weekly trivia quiz for ${challenge.subcategory}.`,
+      description: challenge.seoDescription,
       url: canonical,
       siteName: 'Triviaah',
       images: [{ url: challenge.heroImage, width: 1024, height: 1024 }],
@@ -69,6 +70,7 @@ export default async function ChallengeQuizPage({ params }: PageProps) {
   }
 
   const canonical = `https://triviaah.com/challenges/${challenge.slug}/quiz`;
+  const multiplayerHref = `/multiplayer?category=${encodeURIComponent(challenge.category)}&subcategory=${encodeURIComponent(challenge.subcategory)}`;
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#050812] via-[#090e1f] to-[#030610] px-4 py-6 text-white sm:px-6 lg:px-8">
@@ -116,6 +118,13 @@ export default async function ChallengeQuizPage({ params }: PageProps) {
           </Link>
 
           <div className="flex flex-wrap items-center gap-2 text-xs">
+            <Link
+              href={multiplayerHref}
+              className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 font-black text-emerald-300 transition-colors hover:bg-emerald-500/20"
+            >
+              <Users className="h-3.5 w-3.5" />
+              Multiplayer Room
+            </Link>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1 font-bold text-cyan-300">
               <Sparkles className="h-3.5 w-3.5" />
               {challenge.categoryTitle}

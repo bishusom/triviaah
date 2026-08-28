@@ -7,6 +7,7 @@ import {
   Calendar,
   CircleStar,
   Clock,
+  Users,
   Play,
   Sparkles,
   Trophy,
@@ -17,6 +18,7 @@ import {
   getWeeklyChallenges,
   type WeeklyTriviaChallenge,
 } from '@/lib/challenges';
+import ExploreSections from '@/components/common/ExploreSections';
 import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
 
 export const revalidate = 3600;
@@ -41,6 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${challenge.subcategory} in ${challenge.categoryTitle} Trivia | Weekly Challenge | Triviaah`,
     description: challenge.seoDescription,
+    keywords: challenge.keywords,
     alternates: { canonical },
     openGraph: {
       title: `${challenge.subcategory} in ${challenge.categoryTitle} Trivia | Weekly Challenge | Triviaah`,
@@ -91,6 +94,7 @@ export default async function ChallengeDetailPage({ params }: PageProps) {
   const pageTitle = `${challenge.subcategory} in ${challenge.categoryTitle} Trivia`;
   const canonical = `https://triviaah.com/challenges/${challenge.slug}`;
   const quizHref = `/challenges/${challenge.slug}/quiz`;
+  const multiplayerHref = `/multiplayer?category=${encodeURIComponent(challenge.category)}&subcategory=${encodeURIComponent(challenge.subcategory)}`;
   const heroDescription = `${challenge.description} Test your recall with 10 questions focused on ${challenge.subcategory} with a strict 30-second timer per question. Available for the week of ${challenge.formattedDateRange}.`;
 
   const structuredData = {
@@ -178,6 +182,13 @@ export default async function ChallengeDetailPage({ params }: PageProps) {
               className="inline-flex items-center justify-center rounded-2xl border border-gray-600 bg-gray-800 px-8 py-4 text-base font-semibold text-white transition-colors hover:border-cyan-500/40 hover:text-cyan-300"
             >
               Back to Weekly Challenges
+            </Link>
+            <Link
+              href={multiplayerHref}
+              className="inline-flex items-center justify-center rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-8 py-4 text-base font-semibold text-emerald-200 transition-colors hover:border-emerald-400 hover:bg-emerald-500/20"
+            >
+              Play With Friends
+              <Users className="ml-2 h-4 w-4" />
             </Link>
           </div>
 
@@ -272,6 +283,8 @@ export default async function ChallengeDetailPage({ params }: PageProps) {
             </div>
           </section>
         )}
+
+        <ExploreSections exclude="challenges" />
       </div>
     </div>
   );
