@@ -17,7 +17,7 @@ export default function HeroSection() {
           PLAY. <span className="text-blue-500">THINK.</span> WIN.
         </h1>
         <p className="mx-auto mb-5 max-w-2xl text-sm leading-relaxed text-gray-400 md:text-base">
-          Test your knowledge across thousands of curated questions, solve elegant logic puzzles, and compete on the global leaderboard. Fresh challenges delivered every single day.
+          Play a fresh set of Daily Trivia, Brainwave Puzzles and Weekly Challenges built around focused topics. Track your scores, invite friends, and build a streak worth defending.
         </p>
         <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200">
           <Users className="h-3.5 w-3.5" />

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Calendar, Clock, Play, Sparkles, Trophy } from 'lucide-react';
+import { ArrowRight, Calendar, Clock, Play, Trophy } from 'lucide-react';
 import { getWeeklyChallenges } from '@/lib/challenges';
 
 export default async function WeeklyChallengesSection() {
@@ -12,26 +12,17 @@ export default async function WeeklyChallengesSection() {
 
   return (
     <section aria-labelledby="weekly-challenges-heading" className="w-full">
-      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="mb-1 flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-cyan-400" />
-            <p className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
-              Weekly Trivia Challenges
-            </p>
-          </div>
-          <h2 id="weekly-challenges-heading" className="text-2xl font-bold text-white md:text-3xl">
-            Live Weekly Routes
-          </h2>
-        </div>
+      <h2 id="weekly-challenges-heading" className="mb-4 text-center text-xl font-bold text-white">
         <Link
           href="/challenges"
-          className="inline-flex items-center gap-1 text-sm font-semibold text-cyan-400 transition-colors hover:text-cyan-300"
+          className="group inline-flex items-center justify-center gap-2 rounded-md transition-colors hover:text-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
         >
-          View all challenges
-          <ArrowRight className="h-4 w-4" />
+          <span>Weekly Trivia Challenges</span>
+          <span aria-hidden="true" className="text-cyan-400 transition-transform group-hover:translate-x-1">
+            →
+          </span>
         </Link>
-      </div>
+      </h2>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-6">
         {displayChallenges.map((challenge, index) => {
