@@ -1,6 +1,7 @@
 export const revalidate = 3600;
 import { MetadataRoute } from 'next'
 import { getBrainwaveRouteDefinitions } from '@/lib/brainwave/brainwave-route-registry'
+import { getWeeklyChallenges } from '@/lib/challenges'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -104,6 +105,22 @@ async function fetchBlogPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   return pages
 }
 
+async function fetchChallengePages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+  try {
+    const challenges = await getWeeklyChallenges()
+
+    return challenges.map(challenge => ({
+      url: `${baseUrl}/challenges/${challenge.slug}`,
+      lastModified: challenge.createdAt ? new Date(challenge.createdAt) : new Date(),
+      changeFrequency: challenge.status === 'active' ? 'weekly' as const : 'monthly' as const,
+      priority: challenge.status === 'active' ? PRIORITY.HIGH : PRIORITY.MEDIUM,
+    }))
+  } catch (error) {
+    console.error('Error fetching challenge pages:', error)
+    return []
+  }
+}
+
 // ─── Validate a URL is live before adding to sitemap ─────────────────────────
 // ✅ FIX: This is the most important addition. Before including any dynamic URL,
 // verify it returns 200. This eliminates the 76 redirect + 23 404 entries that
@@ -173,15 +190,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [
     triviaBankPages,
     blogPages,
+    challengePages,
   ] = await Promise.all([
     fetchTriviaBankPages(baseUrl),
     fetchBlogPages(baseUrl),
+    fetchChallengePages(baseUrl),
   ])
 
   // ─── Final assembly ────────────────────────────────────────────────────────
   const dynamicPages = [
     ...triviaBankPages,  // Only re-enable after confirming all slugs are live
     ...blogPages,
+    ...challengePages,
   ]
 
   // Uncomment this once you've confirmed your dynamic routes are stable:

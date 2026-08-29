@@ -5,7 +5,7 @@ export const revalidate = 3600;
 
 const title = 'Triviaah: Free Daily Trivia & Quiz Games';
 const description =
-  'Discover fun, free daily trivia challenges across 20+ exciting categories like movies, history, and science at Triviaah. Test your knowledge with fresh questions every 24 hours.';
+  'Play free daily trivia, Brainwave puzzles, and weekly quiz challenges on Triviaah. Track scores, invite friends, and build a streak worth defending every week.';
 
 export const metadata: Metadata = {
   title,
@@ -48,7 +48,7 @@ export default function Home() {
         '@type': 'WebSite',
         name: 'Triviaah',
         url: 'https://triviaah.com',
-        description: 'Free daily trivia, multiplayer quiz rooms, word games, number puzzles, and brain training challenges.',
+        description,
         potentialAction: {
           '@type': 'SearchAction',
           target: 'https://triviaah.com/trivias?search={search_term_string}',
@@ -65,8 +65,7 @@ export default function Home() {
         '@type': 'WebPage',
         name: 'Triviaah: Free Daily Trivia & Quiz Games',
         url: 'https://triviaah.com',
-        description:
-          'Discover fun, free daily trivia challenges, multiplayer quiz rooms, and knowledge games across categories like movies, history, and science at Triviaah.',
+        description,
         isPartOf: {
           '@type': 'WebSite',
           name: 'Triviaah',
