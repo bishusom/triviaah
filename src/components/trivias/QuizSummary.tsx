@@ -10,6 +10,7 @@ import {
 import FeedbackComponent from '@/components/common/FeedbackComponent';
 import Ads from '@/components/common/Ads';
 import { getPersistentGuestId, getUniquePersistentGuestId } from '@/lib/guestId';
+import { updateGuestStats } from '@/lib/guestStats';
 
 type QuizResult = {
   score: number;
@@ -53,17 +54,23 @@ export default function QuizSummary({
   result,
   onRestart,
   context = 'trivias',
+  quizDate,
+  initialPracticeMode = false,
   showDailyTriviaHistory = true,
 }: {
   result: QuizResult;
   onRestart: () => void;
   context?: 'trivias' | 'daily-trivias' | 'quick-fire';
+  quizDate?: string;
+  initialPracticeMode?: boolean;
   showDailyTriviaHistory?: boolean;
 }) {
   const [showReview, setShowReview] = useState(false);
   const [highScores, setHighScores] = useState<HighScore[]>([]);
   const [isLoadingScores, setIsLoadingScores] = useState(true);
-  const [scoreSaved, setScoreSaved] = useState(false);
+  const [rankedResult, setRankedResult] = useState<boolean | null>(
+    initialPracticeMode ? false : null
+  );
   const [playerMoniker, setPlayerMoniker] = useState(getPersistentGuestId());
   const [copied, setCopied] = useState(false);
 
@@ -102,7 +109,12 @@ export default function QuizSummary({
 
   const fetchHighScores = useCallback(async () => {
     try {
-      const res = await fetch(`/api/highscores?category=${result.category}`);
+      const params = new URLSearchParams({ category: result.category });
+      if (context === 'daily-trivias' && quizDate) {
+        params.set('quizType', 'daily-trivias');
+        params.set('quizDate', quizDate);
+      }
+      const res = await fetch(`/api/highscores?${params.toString()}`);
       const data = await res.json();
       setHighScores(Array.isArray(data) ? data : data.localHighScores || []);
     } catch (err) {
@@ -110,7 +122,7 @@ export default function QuizSummary({
     } finally {
       setIsLoadingScores(false);
     }
-  }, [result.category]);
+  }, [context, quizDate, result.category]);
 
   useEffect(() => {
     const saveScore = async () => {
@@ -119,7 +131,13 @@ export default function QuizSummary({
       try {
         const uniquePlayerMoniker = await getUniquePersistentGuestId();
         setPlayerMoniker(uniquePlayerMoniker);
-        await fetch('/api/highscores', {
+        if (initialPracticeMode) {
+          setRankedResult(false);
+          await fetchHighScores();
+          return;
+        }
+
+        const response = await fetch('/api/highscores', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -129,16 +147,29 @@ export default function QuizSummary({
             correct_answers: result.correctCount,
             total_questions: result.totalQuestions,
             time_used: result.timeUsed,
+            quiz_type: context === 'daily-trivias' ? 'daily-trivias' : 'trivias',
+            quiz_date: context === 'daily-trivias' ? quizDate : undefined,
           }),
         });
-        setScoreSaved(true);
+        if (!response.ok) throw new Error('Could not save score');
+        const data = await response.json() as { ranked?: boolean };
+        const wasRanked = data.ranked !== false;
+        setRankedResult(wasRanked);
+        if (context === 'daily-trivias' && wasRanked) {
+          updateGuestStats(result.score, {
+            title: result.subcategory || result.category || 'Daily Trivia',
+            score: result.score,
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            href: window.location.pathname,
+          });
+        }
         fetchHighScores();
       } catch (err) {
         console.error('Save failed', err);
       }
     };
     saveScore();
-  }, [result, fetchHighScores, playerMoniker]);
+  }, [context, fetchHighScores, initialPracticeMode, quizDate, result]);
 
   useEffect(() => {
     if (!hasMountedRef.current) {
@@ -177,6 +208,18 @@ export default function QuizSummary({
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8 flex flex-col items-center">
+
+      {context === 'daily-trivias' && rankedResult !== null && (
+        <div className={`mb-6 w-full max-w-4xl rounded-xl border px-4 py-3 text-center text-sm font-bold ${
+          rankedResult
+            ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-200'
+            : 'border-violet-400/30 bg-violet-500/10 text-violet-200'
+        }`}>
+          {rankedResult
+            ? 'Ranked attempt recorded — this is your leaderboard score for this quiz.'
+            : 'Practice result — this replay did not affect the leaderboard or your stats.'}
+        </div>
+      )}
 
       {/* Row 1: Results + Leaderboard */}
       <div ref={resultsRef} className="w-full max-w-4xl grid lg:grid-cols-2 gap-6">
@@ -442,15 +485,15 @@ export default function QuizSummary({
 
       {/* Action buttons */}
       <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
-        {context === 'trivias' &&
+        {((context === 'trivias' &&
           result.category !== 'quick-fire' &&
-          result.category !== 'today-in-history' && (
+          result.category !== 'today-in-history') || context === 'daily-trivias') && (
             <button
               onClick={() => onRestart()}
               className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base"
             >
               <RotateCcw className="text-lg md:text-xl" />
-              Play Again
+              {context === 'daily-trivias' ? 'Replay in Practice' : 'Play Again'}
             </button>
           )}
 

@@ -1,4 +1,4 @@
-// components/common/FeedbackComponent.tsx - Updated with context-aware comments
+// components/common/FeedbackComponent.tsx
 'use client';
 
 import { useState } from 'react';
@@ -11,7 +11,6 @@ interface FeedbackProps {
   category?: string;
   metadata?: Record<string, unknown>;
   onSubmitted?: () => void;
-  showCommentsForAll?: boolean; // Optional: show comments for all ratings
 }
 
 const FEEDBACK_OPTIONS = [
@@ -22,7 +21,6 @@ const FEEDBACK_OPTIONS = [
     color: 'text-red-400',
     hoverColor: 'text-red-300',
     bgColor: 'bg-red-500',
-    showComment: true // Always show for low ratings
   },
   {
     icon: Frown,
@@ -31,7 +29,6 @@ const FEEDBACK_OPTIONS = [
     color: 'text-pink-400',
     hoverColor: 'text-pink-300',
     bgColor: 'bg-pink-500',
-    showComment: true // Always show for low ratings
   },
   {
     icon: Annoyed,
@@ -40,7 +37,6 @@ const FEEDBACK_OPTIONS = [
     color: 'text-amber-400',
     hoverColor: 'text-amber-300',
     bgColor: 'bg-amber-500',
-    showComment: true // Show for average ratings
   },
   {
     icon: Smile,
@@ -49,7 +45,6 @@ const FEEDBACK_OPTIONS = [
     color: 'text-cyan-400',
     hoverColor: 'text-cyan-300',
     bgColor: 'bg-cyan-500',
-    showComment: false // Optional for good ratings
   },
   {
     icon: SmilePlus,
@@ -58,7 +53,6 @@ const FEEDBACK_OPTIONS = [
     color: 'text-emerald-400',
     hoverColor: 'text-emerald-300',
     bgColor: 'bg-emerald-500',
-    showComment: false // Optional for excellent ratings
   }
 ];
 
@@ -67,7 +61,6 @@ export default function FeedbackComponent({
   category = '',
   metadata = {},
   onSubmitted,
-  showCommentsForAll = false
 }: FeedbackProps) {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
@@ -77,18 +70,7 @@ export default function FeedbackComponent({
 
   const handleRatingSelect = (rating: number) => {
     setSelectedRating(rating);
-    const option = FEEDBACK_OPTIONS.find(opt => opt.value === rating);
-
-    // Show comment field based on context
-    if (showCommentsForAll) {
-      setShowCommentField(true);
-    } else if (option && option.showComment) {
-      setShowCommentField(true);
-    } else {
-      setShowCommentField(false);
-      // Submit immediately for high ratings without comment prompt
-      handleSubmit(rating, '');
-    }
+    setShowCommentField(true);
   };
 
   const handleSubmit = async (rating: number, commentText: string) => {
@@ -180,7 +162,7 @@ export default function FeedbackComponent({
         </p>
       )}
 
-      {/* Comment Field (Context-aware) */}
+      {/* Optional comment field for every rating */}
       {showCommentField && selectedRating > 0 && (
         <div className="mt-4 animate-fade-in max-w-md mx-auto">
           <div className="flex items-center gap-2 mb-2">
@@ -214,14 +196,11 @@ export default function FeedbackComponent({
                 onClick={() => {
                   setShowCommentField(false);
                   setComment('');
-                  if (selectedRating >= 4) {
-                    // Skip comment for high ratings
-                    handleSubmit(selectedRating, '');
-                  }
+                  handleSubmit(selectedRating, '');
                 }}
                 className="px-3 py-1 text-sm text-gray-400 hover:text-white transition-colors"
               >
-                {selectedRating >= 4 ? 'Skip' : 'Skip comment'}
+                Skip comment
               </button>
               <button
                 onClick={handleCommentSubmit}

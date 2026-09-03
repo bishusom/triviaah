@@ -48,8 +48,8 @@ export function FAQSection({
     },
     {
       icon: '🔁',
-      title: 'Can I retake the quiz?',
-      answer: "Yes — you can retake today's quiz as many times as you like. Your best score is recorded for the daily leaderboard.",
+      title: 'Can I replay the quiz?',
+      answer: "You get one ranked attempt at today's quiz. After finishing, you can replay it in Practice mode, but practice scores do not affect the leaderboard.",
     },
     {
       icon: '🎯',

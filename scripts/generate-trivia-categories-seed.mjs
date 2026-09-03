@@ -57,7 +57,7 @@ function buildDailyFaqItems(title) {
     {
       icon: '🏆',
       title: 'Can I replay the quiz?',
-      answer: 'Yes. You can replay the quiz to improve your score or challenge yourself again later.',
+      answer: "You get one ranked attempt at today's quiz. After finishing, you can replay it in Practice mode, but practice scores do not affect the leaderboard.",
     },
     {
       icon: '📚',

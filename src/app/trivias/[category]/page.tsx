@@ -1,7 +1,7 @@
 // src/app/trivias/[category]/page.tsx
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getEnrichedSubcategoriesWithMinQuestions } from '@/lib/supabase';
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs';
 import { buildMetaDescription } from '@/lib/seo';
@@ -152,6 +152,10 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
+  if (category === 'quick-fire') {
+    redirect('/daily-trivias/quick-fire');
+  }
+
   const categoryRecord = await getTriviaCategoryBySlug(category);
   if (!categoryRecord) {
     notFound();

@@ -228,6 +228,7 @@ export function DailyTriviaPageContent({
               key={`${category}-${dateKey}`}
               initialQuestions={questions}
               category={category}
+              quizDate={dateKey}
               quizConfig={quizConfig}
               quizType="daily-trivias"
               showDailyTriviaHistory={showDailyTriviaHistory}

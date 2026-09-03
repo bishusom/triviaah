@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import QuizGame from '@/components/trivias/QuizGame';
 import { getCategoryQuestions, getSubcategoryQuestions, Question } from '@/lib/supabase';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import { Play } from 'lucide-react';
@@ -325,8 +325,12 @@ function generateStructuredData(
 // ─── Page component ───────────────────────────────────────────────────────────
 
 export default async function QuizPage({ params, searchParams }: QuizPageProps) {
+  const { category } = await params;
+  if (category === 'quick-fire') {
+    redirect('/daily-trivias/quick-fire/quiz');
+  }
+
   try {
-    const { category } = await params;
     const searchParamsObj = await searchParams;
     const subcategory = searchParamsObj?.subcategory as string | undefined;
 

@@ -646,19 +646,28 @@ export type HighScore = {
   correct_answers: number;
   total_questions: number;
   time_used: number; 
+  quiz_type?: 'trivias' | 'daily-trivias';
+  quiz_date?: string | null;
   timestamp?: Date;
 };
 
 export async function getHighScores(
   category: string, 
-  limitCount: number = 5
+  limitCount: number = 5,
+  quizType?: 'trivias' | 'daily-trivias',
+  quizDate?: string
 ): Promise<HighScore[]> {
   try {
-    const { data: scores, error } = await supabase
+    let query = supabase
       .from('trivia_scores')
       .select('*')
       .eq('category', category)
-      .eq('platform', 'web')
+      .eq('platform', 'web');
+
+    if (quizType) query = query.eq('quiz_type', quizType);
+    if (quizDate) query = query.eq('quiz_date', quizDate);
+
+    const { data: scores, error } = await query
       .order('score', { ascending: false })
       .limit(limitCount);
 
@@ -686,6 +695,8 @@ export async function getHighScores(
       correct_answers: score.correct_answers,
       total_questions: score.total_questions,
       time_used: score.time_used,
+      quiz_type: quizType,
+      quiz_date: quizDate,
       timestamp: new Date(score.created_at)
     }));
 
@@ -742,7 +753,9 @@ export async function addHighScore(scoreData: Omit<HighScore, 'id'>): Promise<st
         difficulty: scoreData.difficulty,
         correct_answers: scoreData.correct_answers,
         total_questions: scoreData.total_questions,
-        time_used: scoreData.time_used,      
+        time_used: scoreData.time_used,
+        quiz_type: scoreData.quiz_type ?? 'trivias',
+        quiz_date: scoreData.quiz_date ?? null,
         created_at: new Date().toISOString()
       }])
       .select()
@@ -755,6 +768,47 @@ export async function addHighScore(scoreData: Omit<HighScore, 'id'>): Promise<st
     console.error('Error in addHighScore:', error);
     throw error;
   }
+}
+
+export async function hasDailyTriviaAttempt(
+  name: string,
+  category: string,
+  quizDate: string
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('trivia_scores')
+    .select('id')
+    .eq('name', name.trim())
+    .eq('category', category)
+    .eq('quiz_type', 'daily-trivias')
+    .eq('quiz_date', quizDate)
+    .limit(1);
+
+  if (error) throw error;
+  if (data?.length) return true;
+
+  // Quick Fire has always been a daily-only category. During the rollout,
+  // already-open clients saved some of these rows without daily metadata.
+  // Recognize those legacy rows so they cannot grant another ranked attempt.
+  if (category === 'quick-fire') {
+    const dayStart = `${quizDate}T00:00:00.000Z`;
+    const nextDay = new Date(dayStart);
+    nextDay.setUTCDate(nextDay.getUTCDate() + 1);
+
+    const { data: legacyRows, error: legacyError } = await supabase
+      .from('trivia_scores')
+      .select('id')
+      .eq('name', name.trim())
+      .eq('category', category)
+      .gte('created_at', dayStart)
+      .lt('created_at', nextDay.toISOString())
+      .limit(1);
+
+    if (legacyError) throw legacyError;
+    return Boolean(legacyRows?.length);
+  }
+
+  return false;
 }
 
 // Define interface for database feedback row

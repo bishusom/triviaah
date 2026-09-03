@@ -11,6 +11,7 @@ import { fetchPixabayImage } from '@/lib/pixabay';
 import { useSound } from '@/context/SoundContext';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import { updateGuestStats } from '@/lib/guestStats';
+import { getUniquePersistentGuestId } from '@/lib/guestId';
 import QuizSummary from '@/components/trivias/QuizSummary';
 import QuestionReport from '@/components/trivias/QuestionReport';
 import { Maximize2, Minimize2, Flame, Zap } from 'lucide-react';
@@ -52,6 +53,7 @@ interface QuizGameProps {
   subcategory?: string;
   quizConfig?: QuizConfig;
   quizType?: 'trivias' | 'daily-trivias' | 'quick-fire';
+  quizDate?: string;
   showDailyTriviaHistory?: boolean;
 }
 
@@ -73,6 +75,7 @@ export default function QuizGame({
   subcategory,
   quizConfig,
   quizType,
+  quizDate,
   showDailyTriviaHistory = true
 }: QuizGameProps) {
   
@@ -110,6 +113,9 @@ export default function QuizGame({
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [wrongAnswers, setWrongAnswers] = useState<{ question: string; correct: string; userSelected: string }[]>([]);
   const [questionImageSource, setQuestionImageSource] = useState<'provided' | 'pixabay' | 'fallback' | null>(null);
+  const [attemptMode, setAttemptMode] = useState<'checking' | 'ranked' | 'practice'>(
+    quizType === 'daily-trivias' ? 'checking' : 'ranked'
+  );
 
   const { isMuted } = useSound();
   const { width, height } = useWindowSize();
@@ -188,13 +194,15 @@ export default function QuizGame({
       wrongAnswers: wrongAnswers
     });
     setShowSummary(true);
-    updateGuestStats(finalScore, {
-      title: subcategory || category || "Daily Trivia",
-      score: finalScore,
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      href: window.location.pathname
-    });
-  }, [regularQuestions.length, bonusQuestion, timeUsed, category, subcategory, isTimedMode, wrongAnswers]);
+    if (quizType !== 'daily-trivias') {
+      updateGuestStats(finalScore, {
+        title: subcategory || category || "Daily Trivia",
+        score: finalScore,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        href: window.location.pathname
+      });
+    }
+  }, [regularQuestions.length, bonusQuestion, timeUsed, category, subcategory, isTimedMode, wrongAnswers, quizType]);
 
   const handleAdvance = useCallback(() => {
     const isLastRegularQuestion = currentIndex >= regularQuestions.length - 1 && !showBonusQuestion;
@@ -324,7 +332,40 @@ export default function QuizGame({
     fetchImage();
   }, [currentQuestion, category]);
 
-  useEffect(() => { setGameStarted(true); }, []);
+  useEffect(() => {
+    if (quizType !== 'daily-trivias' || !quizDate) {
+      setAttemptMode('ranked');
+      setGameStarted(true);
+      return;
+    }
+
+    let cancelled = false;
+    const checkAttempt = async () => {
+      try {
+        const playerName = await getUniquePersistentGuestId();
+        const params = new URLSearchParams({
+          category,
+          quizType: 'daily-trivias',
+          quizDate,
+          playerName,
+        });
+        const response = await fetch(`/api/highscores?${params.toString()}`);
+        if (!response.ok) throw new Error('Could not check daily attempt');
+        const data = await response.json() as { hasRankedAttempt?: boolean };
+        if (!cancelled) setAttemptMode(data.hasRankedAttempt ? 'practice' : 'ranked');
+      } catch (error) {
+        console.error('Daily attempt check failed', error);
+        // The score API and database uniqueness constraint still make the
+        // final decision if this advisory pre-check is unavailable.
+        if (!cancelled) setAttemptMode('ranked');
+      } finally {
+        if (!cancelled) setGameStarted(true);
+      }
+    };
+
+    checkAttempt();
+    return () => { cancelled = true; };
+  }, [category, quizDate, quizType]);
 
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
@@ -335,12 +376,14 @@ export default function QuizGame({
     }
   };
 
-  if (isLoading) return <div className="flex items-center justify-center min-h-[400px]"><motion.div className="w-16 h-16 border-4 border-cyan-500 border-dashed rounded-full" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} /></div>;
+  if (isLoading || attemptMode === 'checking') return <div className="flex items-center justify-center min-h-[400px]"><motion.div className="w-16 h-16 border-4 border-cyan-500 border-dashed rounded-full" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} /></div>;
 
   if (showSummary && quizResult) return (
     <QuizSummary
       result={quizResult}
       context={quizType || 'trivias'}
+      quizDate={quizDate}
+      initialPracticeMode={attemptMode === 'practice'}
       onRestart={() => window.location.reload()}
       showDailyTriviaHistory={showDailyTriviaHistory}
     />
@@ -349,6 +392,11 @@ export default function QuizGame({
   return (
     <div className={isFullScreen ? "fixed inset-0 z-50 bg-gray-900 overflow-y-auto p-4" : "relative max-w-4xl mx-auto p-2 sm:p-4 bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl"}>
       {showConfetti && <Confetti width={width} height={height} recycle={false} />}
+      {attemptMode === 'practice' && (
+        <div className="mb-4 rounded-xl border border-violet-400/30 bg-violet-500/10 px-4 py-3 text-center text-sm font-bold text-violet-200">
+          Practice mode — this replay will not affect the leaderboard or your stats.
+        </div>
+      )}
       
       <AnimatePresence>
         {milestone && (
