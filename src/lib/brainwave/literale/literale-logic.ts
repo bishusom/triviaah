@@ -26,10 +26,14 @@ export interface LiteraleData {
 }
 
 export function checkLetterGuess(guessTitle: string, puzzle: LiteraleData): LiteraleGuessResult {
-  const guess = guessTitle.toLowerCase().trim();
-  const target = puzzle.targetTitle.toLowerCase().trim();
+  // Punctuation is part of a book's display title, not part of the puzzle.
+  // Normalize both values so guesses such as "I Robot" and "I, Robot" are
+  // treated identically. Ignore spacing for correctness as punctuation such as
+  // hyphens can otherwise create inconsistent word boundaries.
+  const guess = normalizeBookTitle(guessTitle);
+  const target = normalizeBookTitle(puzzle.targetTitle);
   
-  const isCorrect = guess === target;
+  const isCorrect = guess.replace(/\s/g, '') === target.replace(/\s/g, '');
   const letterStatuses: ('correct' | 'present' | 'absent')[] = [];
   
   const targetLetters = target.split('');
@@ -70,7 +74,7 @@ export function checkLetterGuess(guessTitle: string, puzzle: LiteraleData): Lite
   }
   
   return {
-    guess: guessTitle,
+    guess,
     clues: [],
     statuses: [],
     letterStatuses,

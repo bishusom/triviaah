@@ -26,11 +26,11 @@ export interface PlotleData {
 }
 
 export function checkLetterGuess(guessTitle: string, puzzle: PlotleData): PlotleGuessResult {
-  // Don't normalize for letter comparison - we want to compare the actual titles
-  const guess = guessTitle.toLowerCase().trim();
-  const target = puzzle.targetTitle.toLowerCase().trim();
+  // Formatting punctuation is not a playable part of a movie title.
+  const guess = normalizeMovieTitle(guessTitle);
+  const target = normalizeMovieTitle(puzzle.targetTitle);
   
-  const isCorrect = guess === target;
+  const isCorrect = guess.replace(/\s/g, '') === target.replace(/\s/g, '');
   const letterStatuses: ('correct' | 'present' | 'absent')[] = [];
   
   // Convert to arrays for easier processing
@@ -73,7 +73,7 @@ export function checkLetterGuess(guessTitle: string, puzzle: PlotleData): Plotle
   }
   
   return {
-    guess: guessTitle,
+    guess,
     emojis: [],
     statuses: [],
     letterStatuses,
@@ -91,7 +91,7 @@ export function checkPlotleGuess(guessTitle: string, guessEmojis: string[], puzz
   const normalizedGuess = normalizeMovieTitle(guessTitle);
   const normalizedTarget = normalizeMovieTitle(puzzle.targetTitle);
   
-  const isCorrect = normalizedGuess === normalizedTarget;
+  const isCorrect = normalizedGuess.replace(/\s/g, '') === normalizedTarget.replace(/\s/g, '');
 
   const statuses: ('correct' | 'present' | 'absent')[] = new Array(6).fill('absent');
   const targetCount = new Map<string, number>();
@@ -121,7 +121,7 @@ export function checkPlotleGuess(guessTitle: string, guessEmojis: string[], puzz
   }
 
   return {
-    guess: guessTitle,
+    guess: normalizedGuess,
     emojis: guessEmojis,
     statuses,
     isCorrect

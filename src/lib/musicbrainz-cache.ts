@@ -1,16 +1,21 @@
 // lib/musicbrainz-cache.ts
-import { fetchPersonImage } from './wikimedia';
-
 interface CoverArtCache {
   songKey: string;
   imageUrl: string;
   timestamp: number;
+  version?: number;
 }
+
+const COVER_ART_CACHE_VERSION = 2;
 
 // MusicBrainz API response interfaces
 export interface MusicBrainzRelease {
   id: string;
   title: string;
+  "release-group"?: {
+    id: string;
+    title: string;
+  };
   "cover-art-archive"?: {
     front: boolean;
     back: boolean;
@@ -73,7 +78,11 @@ export class MusicBrainzCache {
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {
         const result: CoverArtCache | undefined = request.result;
-        if (result && this.isCacheValid(result.timestamp)) {
+        if (
+          result &&
+          result.version === COVER_ART_CACHE_VERSION &&
+          this.isCacheValid(result.timestamp)
+        ) {
           resolve(result.imageUrl);
         } else {
           resolve(null);
@@ -89,7 +98,8 @@ export class MusicBrainzCache {
     const cacheItem: CoverArtCache = {
       songKey,
       imageUrl,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      version: COVER_ART_CACHE_VERSION
     };
 
     return new Promise((resolve, reject) => {
@@ -114,20 +124,45 @@ export class MusicBrainzCache {
 }
 
 // MusicBrainz API functions
-export async function searchMusicBrainzRelease(songTitle: string, artist: string): Promise<MusicBrainzRelease | null> {
+function getPrimaryArtist(artist: string): string {
+  return artist.split(/\s+(?:ft\.?|feat\.?|featuring)\s+/i)[0].trim();
+}
+
+function normalizeReleaseTitle(title: string): string {
+  return title.toLowerCase().replace(/^(?:the|a|an)\s+/, '').replace(/[^a-z0-9]/g, '');
+}
+
+export async function searchMusicBrainzRelease(
+  songTitle: string,
+  artist: string,
+  albumTitle?: string
+): Promise<MusicBrainzRelease | null> {
   try {
-    const query = `release:"${songTitle}" AND artist:"${artist}"`;
-    const response = await fetch(
-      `https://musicbrainz.org/ws/2/release/?query=${encodeURIComponent(query)}&fmt=json`
-    );
-    
-    if (!response.ok) {
-      console.error('MusicBrainz API error:', response.status);
-      return null;
+    const primaryArtist = getPrimaryArtist(artist);
+    const titles = Array.from(new Set([albumTitle, songTitle].filter((title): title is string => !!title)));
+
+    for (const title of titles) {
+      const query = `release:"${title}" AND artist:"${primaryArtist}"`;
+      const response = await fetch(
+        `https://musicbrainz.org/ws/2/release/?query=${encodeURIComponent(query)}&fmt=json&limit=25`
+      );
+
+      if (!response.ok) {
+        console.error('MusicBrainz API error:', response.status);
+        continue;
+      }
+
+      const data: MusicBrainzReleaseResponse = await response.json();
+      const releases = data.releases || [];
+      const expectedTitle = normalizeReleaseTitle(title);
+      const matchingRelease = releases.find(release =>
+        normalizeReleaseTitle(release.title) === expectedTitle
+      );
+
+      if (matchingRelease) return matchingRelease;
     }
-    
-    const data: MusicBrainzReleaseResponse = await response.json();
-    return data.releases?.[0] || null;
+
+    return null;
   } catch (error) {
     console.error('MusicBrainz search error:', error);
     return null;
@@ -170,8 +205,19 @@ export async function getCoverArt(releaseId: string): Promise<string | null> {
   }
 }
 
+function getReleaseGroupCoverArtUrl(releaseGroupId: string): string {
+  // Let the image element follow Cover Art Archive's redirect directly. A
+  // browser-side HEAD request can fail because of cross-origin redirect rules
+  // even when the image itself is available and safe to display.
+  return `https://coverartarchive.org/release-group/${releaseGroupId}/front-500`;
+}
+
 // Helper function to get cover art for a song
-export async function getSongCoverArt(songTitle: string, artist: string): Promise<string | null> {
+export async function getSongCoverArt(
+  songTitle: string,
+  artist: string,
+  albumTitle?: string
+): Promise<string | null> {
   const cache = new MusicBrainzCache();
   await cache.init();
   
@@ -187,22 +233,15 @@ export async function getSongCoverArt(songTitle: string, artist: string): Promis
   
   try {
     // Try MusicBrainz first
-    const release = await searchMusicBrainzRelease(songTitle, artist);
+    const release = await searchMusicBrainzRelease(songTitle, artist, albumTitle);
     if (release) {
-      imageUrl = await getCoverArt(release.id);
+      imageUrl = release["release-group"]?.id
+        ? getReleaseGroupCoverArtUrl(release["release-group"].id)
+        : null;
+      imageUrl ||= await getCoverArt(release.id);
       if (imageUrl) {
         source = 'musicbrainz';
         console.log(`Found image on MusicBrainz for ${artist} - ${songTitle}`);
-      }
-    }
-    
-    // Fallback to Wikipedia if MusicBrainz failed
-    if (!imageUrl) {
-      console.log('MusicBrainz cover art not found, trying Wikipedia...');
-      imageUrl = await fetchPersonImage(`${artist} music artist`);
-      if (imageUrl) {
-        source = 'wikipedia';
-        console.log(`Found image on Wikipedia for ${artist}`);
       }
     }
     

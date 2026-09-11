@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { getSongCoverArt } from '@/lib/musicbrainz-cache';
 
-export function useCoverArt(songTitle: string, artist: string) {
+export function useCoverArt(songTitle: string, artist: string, albumTitle?: string) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,8 +15,8 @@ export function useCoverArt(songTitle: string, artist: string) {
         setIsLoading(true);
         setError(null);
 
-        // Use the enhanced function that includes both MusicBrainz and Wikipedia fallback
-        const coverArtUrl = await getSongCoverArt(songTitle, artist);
+        // Prefer the validated album metadata when resolving release artwork.
+        const coverArtUrl = await getSongCoverArt(songTitle, artist, albumTitle);
         
         if (isMounted) {
           if (coverArtUrl) {
@@ -39,7 +39,7 @@ export function useCoverArt(songTitle: string, artist: string) {
     return () => {
       isMounted = false;
     };
-  }, [songTitle, artist]);
+  }, [songTitle, artist, albumTitle]);
 
   return { imageUrl, isLoading, error };
 }

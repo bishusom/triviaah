@@ -11,7 +11,7 @@ import { MdShare } from "react-icons/md";
 import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { useCoverArt } from '@/hooks/useCoverArt';
 import { SonglePuzzle, addSongleResult } from '@/lib/brainwave/songle/songle-sb';
-import { checkSongleGuess, SongleGuessResult, getProgressiveClues } from '@/lib/brainwave/songle/songle-logic';
+import { checkSongleGuess, SongleGuessResult, getProgressiveClues, normalizeSongTitle } from '@/lib/brainwave/songle/songle-logic';
 import { Home, Brain, Music, Target, Users, Search, Sparkles, Eye, EyeOff, Flame, Mic } from 'lucide-react';
 
 interface SongleComponentProps {
@@ -304,7 +304,11 @@ export default function SongleComponent({ initialData }: SongleComponentProps) {
   const [isGuessLoading, setIsGuessLoading] = useState(false);
   const confettiCanvasRef = useRef<HTMLCanvasElement>(null);
   const [gameStarted, setGameStarted] = useState(false);
-  const { imageUrl, isLoading: imageLoading, error: imageError } = useCoverArt(puzzleData.targetTitle, puzzleData.artist);
+  const { imageUrl, isLoading: imageLoading, error: imageError } = useCoverArt(
+    puzzleData.targetTitle,
+    puzzleData.artist,
+    puzzleData.validationHints.album
+  );
   const [revealPercentage, setRevealPercentage] = useState(0);
   const [revealedBlocks, setRevealedBlocks] = useState<number[]>([]);
   const blockRevealOrderRef = useRef<number[]>([]);
@@ -487,9 +491,9 @@ export default function SongleComponent({ initialData }: SongleComponentProps) {
   /* --------------------------- guess handler -------------------------- */
   const handleGuess = async () => {
     if (gameState !== 'playing' || attempts.length >= 6) return;
-    const normalizedGuess = guess.trim();
+    const normalizedGuess = normalizeSongTitle(guess);
     if (!normalizedGuess) return;
-    if (attempts.some(a => a.guess.toLowerCase() === normalizedGuess.toLowerCase())) {
+    if (attempts.some(a => normalizeSongTitle(a.guess) === normalizedGuess)) {
       setErrorMessage('Already guessed this song');
       setTimeout(() => setErrorMessage(''), 3000);
       return;

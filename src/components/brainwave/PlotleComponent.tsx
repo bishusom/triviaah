@@ -7,7 +7,7 @@ import { useSound } from '@/context/SoundContext';
 import { MdShare } from "react-icons/md";
 import FeedbackComponent from '@/components/common/FeedbackComponent';
 import { addPlotleResult } from '@/lib/brainwave/plotle/plotle-sb';
-import { checkLetterGuess, validateMovieGuess, type PlotleData, type PlotleGuessResult } from '@/lib/brainwave/plotle/plotle-logic';
+import { checkLetterGuess, normalizeMovieTitle, validateMovieGuess, type PlotleData, type PlotleGuessResult } from '@/lib/brainwave/plotle/plotle-logic';
 import Image from 'next/image';
 import { Home, Brain, Film, Target, Zap, Eye, EyeOff, Search, Sparkles, Clapperboard } from 'lucide-react';
 import Link from 'next/link';
@@ -475,11 +475,12 @@ export default function PlotleComponent({ initialData }: PlotleComponentProps) {
   const handleGuess = async () => {
     if (gameState !== 'playing' || attempts.length >= 6) return;
     
-    const normalizedGuess = guess.trim();
+    const normalizedGuess = normalizeMovieTitle(guess);
     if (!normalizedGuess) return;
     
     // Check if already guessed
-    if (attempts.some(a => a.guess.toLowerCase() === normalizedGuess.toLowerCase())) {
+    const comparableGuess = normalizedGuess.replace(/\s/g, '');
+    if (attempts.some(a => normalizeMovieTitle(a.guess).replace(/\s/g, '') === comparableGuess)) {
       setErrorMessage('Already guessed this movie');
       setTimeout(() => setErrorMessage(''), 3000);
       return;

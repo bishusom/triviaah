@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 
 import ExploreSections from '@/components/common/ExploreSections';
+import { getArchiveCardGradient } from '@/components/challenges/archive-card-styles';
 import { getWeeklyChallenges, type WeeklyTriviaChallenge } from '@/lib/challenges';
 
 export const revalidate = 3600;
@@ -137,24 +138,13 @@ function ChallengeCard({
   );
 }
 
-function isPastThreeMonthsChallenge(challenge: WeeklyTriviaChallenge) {
-  if (challenge.status !== 'past') {
-    return false;
-  }
-
-  const cutoff = new Date();
-  cutoff.setMonth(cutoff.getMonth() - 3);
-  const challengeEndDate = new Date(`${challenge.endDate}T23:59:59Z`);
-
-  return challengeEndDate >= cutoff;
-}
-
 export default async function ChallengesPage() {
   const challenges = await getWeeklyChallenges();
   // Filter only active challenges for the challenges homepage
   const activeChallenges = challenges.filter((c) => c.status === 'active');
   const displayChallenges = activeChallenges.length > 0 ? activeChallenges : challenges.filter((c) => c.status !== 'past');
-  const archivedChallenges = challenges.filter(isPastThreeMonthsChallenge).slice(0, 24);
+  const allArchivedChallenges = challenges.filter((challenge) => challenge.status === 'past');
+  const archivedChallenges = allArchivedChallenges.slice(0, 6);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#060913] via-[#0b1021] to-[#040711] px-4 py-8 text-white sm:px-6 lg:px-8">
@@ -246,55 +236,70 @@ export default async function ChallengesPage() {
         </section>
 
         {archivedChallenges.length > 0 && (
-          <section className="mb-12 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-2xl backdrop-blur sm:p-8">
-            <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <section className="mb-12 rounded-3xl border border-white/10 bg-slate-900/60 p-5 shadow-2xl backdrop-blur sm:p-7">
+            <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-slate-400">
                   <History className="h-4 w-4" />
                   Challenge Archive
                 </p>
                 <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">
-                  Past 3 Months
+                  Recently Ended
                 </h2>
+                <p className="mt-1 text-sm text-gray-400">
+                  Replay a recent challenge or browse the complete archive.
+                </p>
               </div>
-              <p className="text-sm text-gray-400">
-                {archivedChallenges.length} previous challenges
-              </p>
+              <Link
+                href="/challenges/archive"
+                className="inline-flex w-fit items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-4 py-2 text-sm font-black text-cyan-200 transition hover:border-cyan-300/60 hover:bg-cyan-500/20"
+              >
+                Browse all {allArchivedChallenges.length}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
 
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-              {archivedChallenges.map((challenge) => (
+            <div className="grid gap-2.5 md:grid-cols-2">
+              {archivedChallenges.map((challenge, index) => (
                 <Link
                   key={`archive-${challenge.id}`}
                   href={`/challenges/${challenge.slug}`}
-                  className="group rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:bg-white/[0.06]"
+                  className={`group relative flex items-center gap-3 overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br p-2.5 shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:shadow-xl hover:shadow-black/25 ${getArchiveCardGradient(index)}`}
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <p className="text-[11px] font-black uppercase tracking-[0.18em] text-cyan-300">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-slate-950 sm:h-[72px] sm:w-[72px]">
+                    <Image
+                      src={challenge.heroImage}
+                      alt=""
+                      fill
+                      className="object-cover opacity-80 transition duration-500 group-hover:scale-110 group-hover:opacity-100"
+                      sizes="72px"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+                    {challenge.icon && (
+                      <span aria-hidden="true" className="absolute bottom-1.5 left-1.5 text-base drop-shadow-md">
+                        {challenge.icon}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                      <p className="rounded-full border border-cyan-400/15 bg-cyan-400/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.14em] text-cyan-200">
                         {challenge.categoryTitle}
                       </p>
-                      <h3 className="mt-2 truncate text-base font-black text-white group-hover:text-cyan-200">
-                        {challenge.subcategory}
-                      </h3>
-                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-400">
-                        {challenge.description}
+                      <p className="inline-flex items-center gap-1 text-xs text-gray-400">
+                        <Calendar className="h-3 w-3" />
+                        {challenge.formattedDateRange}
                       </p>
                     </div>
-                    <span className="shrink-0 rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-gray-400">
-                      Past
-                    </span>
+                    <h3 className="mt-1 truncate text-base font-black text-white group-hover:text-cyan-200">
+                      {challenge.subcategory}
+                    </h3>
                   </div>
-                  <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-3 text-xs text-gray-400">
-                    <span className="inline-flex items-center gap-1.5">
-                      <Calendar className="h-3.5 w-3.5 text-cyan-400" />
-                      {challenge.formattedDateRange}
-                    </span>
-                    <span className="inline-flex items-center gap-1 font-bold text-cyan-300">
-                      View
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </div>
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-cyan-400/20 bg-cyan-400/10 text-cyan-200 transition group-hover:border-cyan-300/50 group-hover:bg-cyan-400 group-hover:text-slate-950">
+                    <span className="sr-only">Replay {challenge.subcategory}</span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </span>
                 </Link>
               ))}
             </div>

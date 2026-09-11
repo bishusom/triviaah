@@ -11,6 +11,7 @@ import { getBookCover } from '@/lib/brainwave/literale/book-cover'
 import { addLiteraleResult } from '@/lib/brainwave/literale/literale-sb';
 import { 
   checkLetterGuess, 
+  normalizeBookTitle,
   validateBookGuess, 
   type LiteraleData, 
   type LiteraleGuessResult 
@@ -500,10 +501,11 @@ export default function LiteraleComponent({ initialData }: LiteraleComponentProp
   const handleGuess = async () => {
     if (gameState !== 'playing' || attempts.length >= 6) return;
     
-    const normalizedGuess = guess.trim();
+    const normalizedGuess = normalizeBookTitle(guess);
     if (!normalizedGuess) return;
     
-    if (attempts.some(a => a.guess.toLowerCase() === normalizedGuess.toLowerCase())) {
+    const comparableGuess = normalizedGuess.replace(/\s/g, '');
+    if (attempts.some(a => normalizeBookTitle(a.guess).replace(/\s/g, '') === comparableGuess)) {
       setErrorMessage('Already guessed this book title');
       setTimeout(() => setErrorMessage(''), 3000);
       return;

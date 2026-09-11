@@ -65,7 +65,8 @@ export function checkSongleGuess(guessTitle: string, puzzle: SongleData): Songle
   }
   
   return {
-    guess: guessTitle,
+    // Keep the rendered guess aligned with the normalized status array.
+    guess: normalizedGuess,
     statuses,
     isCorrect
   };
