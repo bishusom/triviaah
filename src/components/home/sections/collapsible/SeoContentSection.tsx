@@ -3,28 +3,32 @@ import Link from 'next/link';
 const primaryLinks = [
   {
     href: '/daily-trivias',
-    label: 'free daily trivia quizzes with answers',
-    description: 'Fresh timed quizzes across general knowledge, science, sports, history, geography, and pop culture.',
+    label: 'Daily trivia quizzes',
+    description: 'Make a little room for curiosity. Answer a new set of questions each day and discover which subjects surprise you.',
+    cta: 'Try today’s questions',
   },
   {
     href: '/brainwave',
-    label: 'daily brain teaser games',
-    description: 'Solve clue-based guessing games for movies, music, geography, history, books, food, and more.',
+    label: 'Brainwave puzzles',
+    description: 'Prefer connecting clues to choosing an answer? Narrow down the possibilities to uncover a mystery movie, place, person, or song.',
+    cta: 'Solve a puzzle',
   },
   {
     href: '/challenges',
-    label: 'weekly trivia challenges',
-    description: 'Focused weekly topic challenges across food, history, science, sports, and culture with 30-second timers.',
+    label: 'Weekly trivia challenges',
+    description: 'Put your knowledge of one topic to the test. Each themed challenge gives you 30 seconds per question to make your choice.',
+    cta: 'Pick a challenge',
   },
   {
     href: '/trivia-bank',
-    label: 'free trivia questions and answers',
-    description: 'Browse ready-to-use trivia questions for quiz nights, classroom warmups, and team games.',
+    label: 'Trivia questions and answers',
+    description: 'Hosting a quiz? Find questions for a pub night, classroom warmup, or get-together, with answers ready for the host.',
+    cta: 'Browse the question bank',
   },
 ];
 
 const supportingLinks = [
-  { href: '/leaderboard', label: 'daily and weekly trivia leaderboard' },
+  { href: '/leaderboard', label: 'View the leaderboard' },
 ];
 
 export default function SeoContentSection() {
@@ -33,13 +37,13 @@ export default function SeoContentSection() {
       <div className="mx-auto max-w-5xl py-4 sm:py-6">
         <div className="mb-8 text-center">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
-            Play, learn, and host better quizzes
+            Follow your curiosity
           </p>
           <h2 id="seo-content-heading" className="text-2xl font-bold text-white md:text-3xl">
-            Free Trivia Games, Daily Quizzes, and Brain Puzzles
+            Find Your Next Trivia Game or Puzzle
           </h2>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-6 text-gray-300 md:text-base">
-            Triviaah focuses on daily quiz challenges, clue-led Brainwave puzzles, weekly timed topic routes, searchable trivia questions, and score chasing. Use it for quick solo practice, classroom trivia, virtual trivia nights, or team-building quiz games with answers.
+            A quick break, a tricky mystery, or a quiz night with friends: start with what you feel like doing. These free games and question collections offer a different way to put your knowledge to use.
           </p>
         </div>
 
@@ -57,7 +61,7 @@ export default function SeoContentSection() {
                 {item.description}
               </span>
               <span aria-hidden="true" className="relative z-10 mt-4 inline-flex text-sm font-semibold text-white">
-                Explore {item.label}
+                {item.cta}
                 <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
               </span>
             </Link>
@@ -66,7 +70,7 @@ export default function SeoContentSection() {
 
         <div className="mt-6 rounded-xl border border-white/10 bg-slate-950/50 p-5">
           <h3 className="text-base font-semibold text-white">
-            More ways to play free puzzles online
+            See how your scores compare
           </h3>
           <div className="mt-4 flex flex-wrap gap-3">
             {supportingLinks.map((item) => (
