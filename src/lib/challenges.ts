@@ -334,9 +334,9 @@ export const getChallengeBySlug = cache(async (slug: string): Promise<ChallengeC
   return challenge ? weeklyChallengeToCollection(challenge) : null;
 });
 
-export async function getWeeklyChallengeQuestions(
+export async function getWeeklyChallengeAllQuestions(
   challenge: WeeklyTriviaChallenge,
-  count: number = 10
+  count: number = 13
 ): Promise<Question[]> {
   try {
     const questions = await getBalancedTriviaQuestions(count, {
@@ -357,3 +357,27 @@ export async function getWeeklyChallengeQuestions(
     return [];
   }
 }
+
+export async function getWeeklyChallengeWarmupQuestions(
+  challenge: WeeklyTriviaChallenge,
+  count: number = 3
+): Promise<Question[]> {
+  const all = await getWeeklyChallengeAllQuestions(challenge, count + 10);
+  return all.slice(0, count);
+}
+
+export async function getWeeklyChallengeQuestions(
+  challenge: WeeklyTriviaChallenge,
+  count: number = 10
+): Promise<Question[]> {
+  const all = await getWeeklyChallengeAllQuestions(challenge, 13);
+  // Skip the first 3 warmup questions so the live quiz has zero overlap with the landing page sneak peek
+  if (all.length >= 13) {
+    return all.slice(3, 3 + count);
+  }
+  if (all.length > count) {
+    return all.slice(all.length - count);
+  }
+  return all.slice(0, count);
+}
+

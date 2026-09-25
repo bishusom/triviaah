@@ -16,9 +16,11 @@ import {
 import {
   getWeeklyChallengeByIdOrSlug,
   getWeeklyChallenges,
+  getWeeklyChallengeWarmupQuestions,
   type WeeklyTriviaChallenge,
 } from '@/lib/challenges';
 import ExploreSections from '@/components/common/ExploreSections';
+import TriviaSneakPeek from '@/components/common/TriviaSneakPeek';
 import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
 
 export const revalidate = 3600;
@@ -86,7 +88,11 @@ export default async function ChallengeDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const allChallenges = await getWeeklyChallenges();
+  const [allChallenges, sneakPeekQuestions] = await Promise.all([
+    getWeeklyChallenges(),
+    getWeeklyChallengeWarmupQuestions(challenge, 3).catch(() => []),
+  ]);
+
   const siblingChallenges = allChallenges
     .filter((c) => c.id !== challenge.id && c.status === 'active')
     .slice(0, 6);
@@ -96,6 +102,21 @@ export default async function ChallengeDetailPage({ params }: PageProps) {
   const quizHref = `/challenges/${challenge.slug}/quiz`;
   const multiplayerHref = `/multiplayer?category=${encodeURIComponent(challenge.category)}&subcategory=${encodeURIComponent(challenge.subcategory)}`;
   const heroDescription = `${challenge.description} Test your recall with 10 questions focused on ${challenge.subcategory} with a strict 30-second timer per question. Available for the week of ${challenge.formattedDateRange}.`;
+
+  const questionSchemas = sneakPeekQuestions.map((q, idx) => ({
+    '@type': 'Question',
+    name: q.question,
+    position: idx + 1,
+    suggestedAnswer: (q.options || []).map((opt, optIdx) => ({
+      '@type': 'Answer',
+      position: optIdx + 1,
+      text: opt,
+    })),
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: q.correct,
+    },
+  }));
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -120,6 +141,7 @@ export default async function ChallengeDetailPage({ params }: PageProps) {
           '@type': 'Thing',
           name: challenge.subcategory,
         },
+        hasPart: questionSchemas,
       },
       {
         '@type': 'BreadcrumbList',
@@ -216,6 +238,17 @@ export default async function ChallengeDetailPage({ params }: PageProps) {
             </div>
           </div>
         </div>
+
+        {/* ── Sneak Peek Section ─────────────────────────────────────── */}
+        {sneakPeekQuestions && sneakPeekQuestions.length > 0 && (
+          <TriviaSneakPeek
+            questions={sneakPeekQuestions}
+            title={`${challenge.subcategory} Sneak Peek & Sample Questions`}
+            subtitle={`Preview verified questions from this week's ${challenge.subcategory.toLowerCase()} challenge. Click to reveal answers and explanations.`}
+            playHref={quizHref}
+            playButtonText="Start Full Challenge"
+          />
+        )}
 
         {/* ── Other Weekly Challenges Section ────────────────────────── */}
         {siblingChallenges.length > 0 && (

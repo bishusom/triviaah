@@ -3,6 +3,8 @@ import type { GamePageContent } from '@/lib/game-pages';
 import { CalendarDays, Sparkles, HelpCircle, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import BrainwaveWarmup from '@/components/brainwave/BrainwaveWarmup';
+import { getBrainwaveWarmups } from '@/lib/brainwave/brainwave-warmup-data';
 
 const SEO_CONTENT: Record<string, {
   howItWorks: string;
@@ -204,6 +206,9 @@ export default function BrainwaveRouteShell({
     .filter(g => g.route_path !== page.route_path && g.page_kind !== 'hub')
     .slice(0, 12); // Allowing up to 12 for the full collection
   const seoContent = SEO_CONTENT[page.route_path];
+  const slug = page.route_path.replace('/brainwave/', '');
+  const warmupPuzzles = getBrainwaveWarmups(slug);
+  const gameName = page.title.split(' - ')[0];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
@@ -241,6 +246,10 @@ export default function BrainwaveRouteShell({
         <div className="mt-6">
           {children}
         </div>
+
+        {warmupPuzzles.length > 0 && (
+          <BrainwaveWarmup puzzles={warmupPuzzles} gameTitle={gameName} />
+        )}
 
         {seoContent ? (
           <section className="mt-8 rounded-3xl border border-white/10 bg-white/[0.04] p-4 md:p-6 shadow-2xl">

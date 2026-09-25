@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { DailyTriviaPageContent } from '@/components/daily-trivias/DailyTriviaPageContent';
+import { getDailyTriviaWarmupQuestions } from '@/lib/daily-trivias';
 import { getTriviaCategories, getTriviaCategoryBySlug } from '@/lib/trivia-categories';
 
 interface PageProps {
@@ -83,9 +84,10 @@ export default async function DailyQuizPage({ params, searchParams }: PageProps)
     ? `/daily-trivias/${category}/quiz?date=${encodeURIComponent(resolvedSearch.date)}`
     : `/daily-trivias/${category}/quiz`;
 
-  const [categoryData, siblingCategories] = await Promise.all([
+  const [categoryData, siblingCategories, sneakPeekQuestions] = await Promise.all([
     getTriviaCategoryBySlug(category, 'daily-trivias'),
     getTriviaCategories('daily-trivias'),
+    getDailyTriviaWarmupQuestions(category, 3, resolvedSearch.date).catch(() => []),
   ]);
 
   if (!categoryData) {
@@ -105,6 +107,7 @@ export default async function DailyQuizPage({ params, searchParams }: PageProps)
       category={category}
       categoryData={categoryData}
       siblingCategories={siblingLinks}
+      sneakPeekQuestions={sneakPeekQuestions}
       startQuizHref={startQuizHref}
       showIntro
       showFAQ

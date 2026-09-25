@@ -1,4 +1,4 @@
-import { getDailyQuizQuestions, getTodaysHistoryQuestions, type Question } from '@/lib/supabase';
+import { getDailyQuizQuestions, getTodaysHistoryQuestions, getBalancedTriviaQuestions, type Question } from '@/lib/supabase';
 
 export type DailyTriviaCategoryConfig = {
   name: string;
@@ -178,11 +178,42 @@ export function getDailyTriviaConfig(category: string): DailyTriviaCategoryConfi
 
 export async function getDailyTriviaQuestions(
   category: string,
-  dateKey: string
+  dateKey?: string
 ): Promise<Question[]> {
+  const effectiveDate = dateKey || new Date().toISOString().slice(0, 10);
   if (category === 'today-in-history') {
-    return getTodaysHistoryQuestions(6, dateKey);
+    return getTodaysHistoryQuestions(6, effectiveDate);
   }
 
-  return getDailyQuizQuestions(category, dateKey);
+  return getDailyQuizQuestions(category, effectiveDate);
 }
+
+export async function getDailyTriviaWarmupQuestions(
+  category: string,
+  count: number = 3,
+  dateKey?: string
+): Promise<Question[]> {
+  try {
+    const effectiveDate = dateKey || new Date().toISOString().slice(0, 10);
+    // 1. Get today's active quiz questions to identify their IDs
+    const activeQuestions = await getDailyTriviaQuestions(category, effectiveDate);
+    const activeIds = (activeQuestions || []).map((q) => q.id).filter(Boolean);
+
+    // 2. Fetch distinct warmup questions from the category bank excluding today's active quiz IDs
+    const warmupQuestions = await getBalancedTriviaQuestions(count, {
+      category,
+      excludeIds: activeIds,
+    });
+
+    if (warmupQuestions && warmupQuestions.length > 0) {
+      return warmupQuestions;
+    }
+
+    return (activeQuestions || []).slice(0, count);
+  } catch (error) {
+    console.error('Error fetching daily trivia warmup questions:', error);
+    return [];
+  }
+}
+
+

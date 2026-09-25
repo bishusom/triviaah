@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowRight, Play, CheckCircle2, Sparkles, Users } from 'lucide-react';
 
 import QuizGame from '@/components/trivias/QuizGame';
+import TriviaSneakPeek from '@/components/common/TriviaSneakPeek';
 import { FAQSection } from '@/app/daily-trivias/[category]/FAQSection';
 import { StructuredData } from '@/app/daily-trivias/[category]/structured-data';
 import type { Question } from '@/lib/supabase';
@@ -28,6 +29,7 @@ type DailyTriviaPageContentProps = {
   categoryData: TriviaCategoryRecord;
   siblingCategories?: DailyTriviaSiblingCategory[];
   questions?: Question[];
+  sneakPeekQuestions?: Question[];
   dateKey?: string;
   displayDate?: string;
   startQuizHref?: string;
@@ -52,6 +54,7 @@ export function DailyTriviaPageContent({
   categoryData,
   siblingCategories = [],
   questions = [],
+  sneakPeekQuestions = [],
   dateKey,
   displayDate,
   startQuizHref,
@@ -105,6 +108,7 @@ export function DailyTriviaPageContent({
           title={title}
           description={cfg.description}
           lastUpdated={lastUpdated}
+          questions={sneakPeekQuestions}
         />
 
         {showQuiz && dateKey && questions.length > 0 ? (
@@ -234,6 +238,16 @@ export function DailyTriviaPageContent({
               showDailyTriviaHistory={showDailyTriviaHistory}
             />
           </div>
+        )}
+
+        {sneakPeekQuestions && sneakPeekQuestions.length > 0 && (
+          <TriviaSneakPeek
+            questions={sneakPeekQuestions}
+            title={`${title} Sample Questions & Trivia Facts`}
+            subtitle={`Preview verified questions from ${title.toLowerCase()} trivia. Click each question to reveal answers, choices, and explanations.`}
+            playHref={playHref}
+            playButtonText="Start Today's Quiz"
+          />
         )}
 
         {/* What You'll Learn Section */}

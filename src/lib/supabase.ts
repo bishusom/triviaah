@@ -597,6 +597,7 @@ export async function getBalancedTriviaQuestions(
     category?: string;
     subcategory?: string;
     requireImage?: boolean;
+    excludeIds?: string[];
   }
 ): Promise<Question[]> {
   if (count !== 10) {
@@ -616,7 +617,10 @@ export async function getBalancedTriviaQuestions(
     ...shuffleArray(hardQuestions).slice(0, 3)
   ];
 
-  const selectedIds = new Set(selectedQuestions.map((question) => question.id));
+  const selectedIds = new Set([
+    ...(filters.excludeIds || []),
+    ...selectedQuestions.map((question) => question.id)
+  ]);
   const randomQuestions = await getRandomizedTriviaQuestionPool(1, {
     ...filters,
     excludeIds: [...selectedIds]
