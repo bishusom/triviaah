@@ -50,7 +50,7 @@ export default function SearchBar() {
           <div className="p-3 border-b border-white/5 bg-cyan-500/5 flex justify-between items-center">
             <span className="text-[10px] font-black text-cyan-500 uppercase tracking-widest">Recommended Quizzes</span>
           </div>
-          
+
           <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
             {filtered.map((item, i) => (
               <Link

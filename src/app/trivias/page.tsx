@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
       images: ['/imgs/triviaah-og.webp'],
     },
     robots: {
-      index: false,
+      index: true,
       follow: true,
     }
   };

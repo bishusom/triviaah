@@ -152,6 +152,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ── Static pages ──────────────────────────────────────────────────────────
   const mainPages: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
+    { url: `${baseUrl}/trivias`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.HIGH },
     { url: `${baseUrl}/challenges`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.HIGH },
     { url: `${baseUrl}/challenges/archive`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
     { url: `${baseUrl}/leaderboard`, lastModified: new Date('2025-11-28'), changeFrequency: 'daily', priority: 0.9 },

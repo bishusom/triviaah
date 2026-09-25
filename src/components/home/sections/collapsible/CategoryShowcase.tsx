@@ -166,7 +166,7 @@ export default function CategoryShowcase({ featuredTriviaCategories = [] }: Cate
             <ArrowRight className="h-5 w-5 text-cyan-400 transition-transform group-hover:translate-x-1" />
           </Link>
           <p className="mt-2 text-sm text-gray-400 md:text-base">
-            Choose from {totalCategories}+ categories and {categories.reduce((sum, cat) => sum + cat.quizzes, 0)}+ daily quizzes
+            Choose from {totalCategories}+ categories and {categories.reduce((sum, cat) => sum + cat.quizzes, 0)}+ quizzes
           </p>
         </div>
 

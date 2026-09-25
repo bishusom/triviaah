@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { Home, Brain, Calendar, Trophy, Sparkles } from 'lucide-react';
+import { Home, Brain, Calendar, Boxes, Sparkles } from 'lucide-react';
 
 const SECTIONS = [
   { id: 'home', name: 'Home', href: '/', icon: Home, color: 'from-blue-500 to-cyan-500', description: 'Main dashboard' },
   { id: 'daily-trivias', name: 'Daily Trivias', href: '/daily-trivias', icon: Calendar, color: 'from-cyan-500 to-blue-500', description: 'Fresh daily challenges' },
   { id: 'brainwave', name: 'Brainwave', href: '/brainwave', icon: Brain, color: 'from-purple-500 to-pink-500', description: 'Daily deduction puzzles' },
-  { id: 'challenges', name: 'Challenges', href: '/challenges', icon: Sparkles, color: 'from-emerald-500 to-teal-500', description: 'Weekly quiz routes' },
-  { id: 'leaderboard', name: 'Leaderboard', href: '/leaderboard', icon: Trophy, color: 'from-indigo-500 to-purple-500', description: 'Compare scores' },
+  { id: 'challenges', name: 'Challenges', href: '/challenges', icon: Sparkles, color: 'from-emerald-500 to-teal-500', description: 'Weekly quiz challenges' },
+  { id: 'trivias', name: 'Trivia Library', href: '/trivias', icon: Boxes, color: 'from-indigo-500 to-purple-500', description: '30+ topic categories' },
 ];
 
 export default function ExploreSections({ exclude }: { exclude?: string }) {

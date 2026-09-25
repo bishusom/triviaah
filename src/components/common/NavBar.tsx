@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import UserStatsPopover from '../home/UserStatsPopover';
+import SearchBar from '../home/SearchBar';
 
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -14,7 +15,7 @@ export default function NavBar() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Determine background transparency/shadow
       setIsScrolled(currentScrollY > 50);
 
@@ -40,29 +41,29 @@ export default function NavBar() {
     { name: 'Daily Trivias', href: '/daily-trivias' },
     { name: 'Brainwave', href: '/brainwave' },
     { name: 'Challenges', href: '/challenges' },
+    { name: 'Trivia Library', href: '/trivias' },
     { name: 'Leaderboard', href: '/leaderboard' },
     { name: 'Blog', href: '/blog' },
+    { name: 'Trivia Bank', href: '/trivia-bank' },
   ];
 
   return (
     <>
-      <nav className={`fixed top-0 w-full z-[100] transition-all duration-300 px-4 md:px-12 py-3 flex items-center justify-between ${
-        isVisible || isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
-      } ${
-        isScrolled || isMobileMenuOpen 
-          ? 'bg-[#0a0a0a] shadow-2xl border-b border-white/5' 
+      <nav className={`fixed top-0 w-full z-[100] transition-all duration-300 px-4 md:px-12 py-3 flex items-center justify-between ${isVisible || isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
+        } ${isScrolled || isMobileMenuOpen
+          ? 'bg-[#0a0a0a] shadow-2xl border-b border-white/5'
           : 'bg-black/60 backdrop-blur-md border-b border-white/5'
-      }`}>
-        
+        }`}>
+
         {/* LEFT SIDE: Hamburger + Brand */}
         <div className="flex items-center gap-3 md:gap-8">
           {/* Mobile Menu Trigger (Now on the far left) */}
-          <button 
+          <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden text-white p-1 hover:bg-white/10 rounded-md transition-colors"
             aria-label="Toggle Menu"
           >
-            {isMobileMenuOpen ? <X size={24}/> : <Menu size={24}/>}
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
 
           {/* Logo */}
@@ -81,41 +82,41 @@ export default function NavBar() {
           {/* Desktop Links (Visible only on LG+) */}
           <div className="hidden lg:flex gap-6 text-sm font-medium text-gray-200">
             {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="hover:text-cyan-400 transition-colors duration-300"
-                >
-                  {link.name}
-                </Link>
+              <Link
+                key={link.name}
+                href={link.href}
+                className="hover:text-cyan-400 transition-colors duration-300"
+              >
+                {link.name}
+              </Link>
             ))}
           </div>
         </div>
 
         {/* RIGHT SIDE: Functional Icons */}
         <div className="flex items-center gap-4 text-white">
+          <div className="hidden md:block">
+            <SearchBar />
+          </div>
           <UserStatsPopover />
         </div>
       </nav>
 
       {/* MOBILE DRAWER: Slides in from the left */}
-      <div 
-        className={`fixed inset-0 z-[90] lg:hidden transition-all duration-300 ${
-          isMobileMenuOpen ? 'visible' : 'invisible'
-        }`}
+      <div
+        className={`fixed inset-0 z-[90] lg:hidden transition-all duration-300 ${isMobileMenuOpen ? 'visible' : 'invisible'
+          }`}
       >
         {/* Dark Backdrop */}
-        <div 
-          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-            isMobileMenuOpen ? 'opacity-100' : 'opacity-0'
-          }`}
+        <div
+          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'
+            }`}
           onClick={() => setIsMobileMenuOpen(false)}
         />
-        
+
         {/* Sidebar Content */}
-        <div className={`absolute top-0 left-0 h-full w-[280px] bg-[#141414] shadow-2xl transform transition-transform duration-300 ease-in-out pt-6 px-6 ${
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}>
+        <div className={`absolute top-0 left-0 h-full w-[280px] bg-[#141414] shadow-2xl transform transition-transform duration-300 ease-in-out pt-6 px-6 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}>
           {/* Mobile User Profile Section */}
           <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
             <Link href="/" className="flex items-center gap-2 group" onClick={() => setIsMobileMenuOpen(false)}>
@@ -133,15 +134,15 @@ export default function NavBar() {
 
           <div className="flex flex-col gap-6">
             {navLinks.map((link) => (
-                <Link 
-                  key={link.name} 
-                  href={link.href} 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-gray-300 text-lg font-semibold hover:text-cyan-400 transition-colors flex items-center justify-between" // Already using cyan-400
-                >
-                  {link.name}
-                  <span className="text-gray-600 text-xs group-hover:text-cyan-400">›</span>
-                </Link>
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-gray-300 text-lg font-semibold hover:text-cyan-400 transition-colors flex items-center justify-between" // Already using cyan-400
+              >
+                {link.name}
+                <span className="text-gray-600 text-xs group-hover:text-cyan-400">›</span>
+              </Link>
             ))}
 
             <div className="h-[1px] w-full bg-white/10 my-2" />

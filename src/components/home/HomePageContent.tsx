@@ -8,7 +8,13 @@ import KeyFeatures from '@/components/home/sections/collapsible/KeyFeatures';
 import DailyTriviaFact from '@/components/home/sections/DailyTriviaFact';
 import SectionContainer from '@/components/home/sections/collapsible/SectionContainer';
 import WeeklyChallengesSection from '@/components/home/sections/WeeklyChallengesSection';
+import { getTriviaExplorerCards } from '@/lib/trivia-categories';
+import CategoryShowcase from '@/components/home/sections/collapsible/CategoryShowcase';
 
+async function FeaturedTriviaCategories() {
+  const featuredTriviaCategories = await getTriviaExplorerCards('trivias');
+  return <CategoryShowcase featuredTriviaCategories={featuredTriviaCategories} />;
+}
 const FEATURED_DAILY_QUIZZES = DAILY_QUIZZES.filter((item) =>
   ['general-knowledge', 'quick-fire', 'today-in-history', 'entertainment', 'sports', 'nature'].includes(item.category),
 );
@@ -59,6 +65,10 @@ export default function HomePageContent() {
         {/* Weekly Challenges section placed below Daily Facts */}
         <SectionContainer className="horizontal-scroll-section">
           <WeeklyChallengesSection />
+        </SectionContainer>
+
+        <SectionContainer className="horizontal-scroll-section">
+          <FeaturedTriviaCategories />
         </SectionContainer>
 
         <SectionContainer className="horizontal-scroll-section">

@@ -143,7 +143,7 @@ export async function generateMetadata({
       images: categoryData.ogImage ? [categoryData.ogImage] : [],
     },
     robots: {
-      index: false,
+      index: true,
       follow: true,
     },
   };
