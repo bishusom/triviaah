@@ -1,7 +1,12 @@
 export const revalidate = 3600;
 import { MetadataRoute } from 'next'
+import { getCategoriesWithMinQuestions, getAllSubcategories } from '@/lib/supabase'
+import { getTriviaCategorySlugs } from '@/lib/trivia-categories'
+import { slugifyTriviaSegment } from '@/lib/trivia-slugs'
 import { getBrainwaveRouteDefinitions } from '@/lib/brainwave/brainwave-route-registry'
-import { getWeeklyChallenges } from '@/lib/challenges'
+import { getNumberPuzzlesRouteDefinitions } from '@/lib/number-puzzles/number-puzzles-route-registry'
+import { getRetroGamesRouteDefinitions } from '@/lib/retro-games/retro-games-route-registry'
+import { getWordGamesRouteDefinitions } from '@/lib/word-games/word-games-route-registry'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -45,7 +50,38 @@ const FEATURED_BRAINWAVE_SLUGS = [
   'literale',
 ] as const
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+const VIRTUAL_TRIVIA_CATEGORIES = ['picture-clues'] as const
+
+// ─── Helpers (module-level — not nested inside sitemap()) ─────────────────────
+// Previously these were nested inside sitemap(), which caused scoping issues
+// and made them harder to test. Move them to the top level.
+
+async function fetchSubcategoryPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+  const pages: MetadataRoute.Sitemap = []
+  try {
+    const subcategories = await getAllSubcategories()
+    
+    for (const subcat of subcategories) {
+      if (!subcat.category) continue;
+
+      // ✅ FIX: Use a real URL path, NOT a query string.
+      // /trivias/science/evolution is indexable.
+      // /trivias/science/quiz?subcategory=evolution is not — Google treats it
+      // as a duplicate of /trivias/science/quiz and ignores it.
+      const slug = slugifyTriviaSegment(subcat.subcategory)
+
+      pages.push({
+        url: `${baseUrl}/trivias/${subcat.category}/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.5,
+      })
+    }
+  } catch (error) {
+    console.error('Error fetching subcategory pages:', error)
+  }
+  return pages
+}
 
 async function fetchTriviaBankPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   const pages: MetadataRoute.Sitemap = [{
@@ -105,22 +141,6 @@ async function fetchBlogPages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   return pages
 }
 
-async function fetchChallengePages(baseUrl: string): Promise<MetadataRoute.Sitemap> {
-  try {
-    const challenges = await getWeeklyChallenges()
-
-    return challenges.map(challenge => ({
-      url: `${baseUrl}/challenges/${challenge.slug}`,
-      lastModified: challenge.createdAt ? new Date(challenge.createdAt) : new Date(),
-      changeFrequency: challenge.status === 'active' ? 'weekly' as const : 'monthly' as const,
-      priority: challenge.status === 'active' ? PRIORITY.HIGH : PRIORITY.MEDIUM,
-    }))
-  } catch (error) {
-    console.error('Error fetching challenge pages:', error)
-    return []
-  }
-}
-
 // ─── Validate a URL is live before adding to sitemap ─────────────────────────
 // ✅ FIX: This is the most important addition. Before including any dynamic URL,
 // verify it returns 200. This eliminates the 76 redirect + 23 404 entries that
@@ -153,8 +173,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const mainPages: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
     { url: `${baseUrl}/trivias`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.HIGH },
-    { url: `${baseUrl}/challenges`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.HIGH },
-    { url: `${baseUrl}/challenges/archive`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
     { url: `${baseUrl}/leaderboard`, lastModified: new Date('2025-11-28'), changeFrequency: 'daily', priority: 0.9 },
     { url: `${baseUrl}/about`, lastModified: new Date('2025-11-28'), changeFrequency: 'yearly', priority: PRIORITY.LOW },
     { url: `${baseUrl}/contact`, lastModified: new Date('2025-11-28'), changeFrequency: 'yearly', priority: PRIORITY.LOW },
@@ -188,22 +206,100 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]
 
-  // ── Dynamic editorial content ────────────────────────────────────────────
+  // ── Trivia category + subcategory pages (dynamic from Supabase) ──────────
+  // Category pages (/trivias/science) and subcategory pages
+  // (/trivias/science/evolution) are included, but NOT subcategory query-string URLs.
+  // Quiz pages remain omitted because their canonicals point at the category routes.
+  // Fetch data concurrently to reduce sitemap load time
   const [
+    triviaCategorySlugs,
+    dbCategoriesWithMinQuestions,
+    subcategoryPages,
     triviaBankPages,
-    blogPages,
-    challengePages,
+    blogPages
   ] = await Promise.all([
+    getTriviaCategorySlugs('trivias'),
+    getCategoriesWithMinQuestions(10),
+    fetchSubcategoryPages(baseUrl),
     fetchTriviaBankPages(baseUrl),
-    fetchBlogPages(baseUrl),
-    fetchChallengePages(baseUrl),
+    fetchBlogPages(baseUrl)
   ])
 
+  const triviaCategories = Array.from(
+    new Set([
+      ...triviaCategorySlugs,
+      ...dbCategoriesWithMinQuestions,
+      ...VIRTUAL_TRIVIA_CATEGORIES,
+    ])
+  )
+
+  const triviaCategoryPages: MetadataRoute.Sitemap = triviaCategories.map(category => ({
+    url: `${baseUrl}/trivias/${category}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: PRIORITY.MEDIUM,
+  }))
+
+  const triviaQuizPages: MetadataRoute.Sitemap = triviaCategories.map(category => ({
+    url: `${baseUrl}/trivias/${category}/quiz`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    // ✅ FIX: Quiz pages are your most valuable content — raise priority
+    priority: PRIORITY.HIGH,
+  }))
+
+  // ✅ Subcategory pages: only enable once you have real routes (not query params)
+  // (subcategoryPages fetched concurrently above)
+
+  // ── Retro games ───────────────────────────────────────────────────────────
+  const retroGames = getRetroGamesRouteDefinitions().map(page => page.slug)
+  const retroGamePages: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/retro-games`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
+    ...retroGames.map(game => ({
+      url: `${baseUrl}/retro-games/${game}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: PRIORITY.MEDIUM,
+    })),
+  ]
+
+  // ── Word games ────────────────────────────────────────────────────────────
+  const wordGames = getWordGamesRouteDefinitions().map(page => page.slug)
+  const wordGamePages: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/word-games`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
+    ...wordGames.map(game => ({
+      url: `${baseUrl}/word-games/${game}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: PRIORITY.MEDIUM,
+    })),
+  ]
+
+  // ── Number puzzles ────────────────────────────────────────────────────────
+  const numberPuzzles = getNumberPuzzlesRouteDefinitions().map(page => page.slug)
+  const numberPuzzlePages: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/number-puzzles`, lastModified: new Date(), changeFrequency: 'weekly', priority: PRIORITY.MEDIUM },
+    ...numberPuzzles.map(puzzle => ({
+      url: `${baseUrl}/number-puzzles/${puzzle}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: PRIORITY.MEDIUM,
+    })),
+  ]
+
+  // ── Dynamic content (Contentful) ──────────────────────────────────────────
+  // (triviaBankPages and blogPages are fetched concurrently above)
+
   // ─── Final assembly ────────────────────────────────────────────────────────
+  // ✅ FIX: Only include URLs that actually exist and return 200.
+  // The filterLiveUrls() call runs HEAD requests at build time on dynamic routes.
+  // For hardcoded routes you're confident about, skip the filter to save build time.
   const dynamicPages = [
+    ...triviaCategoryPages,
+    //...triviaQuizPages,
+    ...subcategoryPages,
     ...triviaBankPages,  // Only re-enable after confirming all slugs are live
     ...blogPages,
-    ...challengePages,
   ]
 
   // Uncomment this once you've confirmed your dynamic routes are stable:
@@ -214,5 +310,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...dailyTriviaPages,
     ...brainwavePages,
     ...dynamicPages,       // swap with verifiedDynamicPages once enabled
+    //...retroGamePages,
+    //...wordGamePages,
+    //..numberPuzzlePages,
   ]
 }
