@@ -522,6 +522,12 @@ export default function QuizSummary({
         )}
 
         <Link
+          href="/leaderboard/groups"
+          className="flex items-center justify-center rounded-xl border border-cyan-400/30 px-6 py-3 text-sm font-bold text-cyan-200 hover:bg-cyan-400/10"
+        >
+          Group leaderboard
+        </Link>
+        <Link
           href="/"
           className="flex items-center justify-center gap-1 md:gap-2 bg-gradient-to-br from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center text-sm md:text-base"
         >

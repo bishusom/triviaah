@@ -150,6 +150,9 @@ export default function LeaderboardPage() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-2">Leaderboard</h1>
           <p className="text-gray-400">Compete with quiz enthusiasts worldwide</p>
+          <Link href="/leaderboard/groups" className="mt-4 inline-block rounded-lg border border-cyan-400/30 px-4 py-2 text-cyan-300 hover:bg-cyan-400/10">
+            Compete with friends in a private group →
+          </Link>
           
           {/* Guest ID Display */}
           <div className="mt-4 flex items-center justify-center gap-2">

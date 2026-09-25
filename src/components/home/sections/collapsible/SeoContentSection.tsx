@@ -29,6 +29,7 @@ const primaryLinks = [
 
 const supportingLinks = [
   { href: '/leaderboard', label: 'View the leaderboard' },
+  { href: '/leaderboard/groups', label: 'Create a private group leaderboard' },
 ];
 
 export default function SeoContentSection() {
