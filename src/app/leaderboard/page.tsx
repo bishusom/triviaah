@@ -241,7 +241,7 @@ export default function LeaderboardPage() {
                       key={`${player.username}-${player.rank}`}
                       className={`flex items-center gap-4 p-4 rounded-lg border-2 transition-all ${
                         player.displayName === guestId
-                          ? 'bg-gradient-to-r from-purple-600/20 to-blue-500/20 border-purple-500/30'
+                          ? `${styles.currentPlayer} bg-gradient-to-r from-purple-600/20 to-blue-500/20 border-purple-500/30`
                           : 'bg-gray-800/30 border-gray-700 hover:bg-gray-700/50'
                       }`}
                     >

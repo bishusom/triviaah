@@ -37,3 +37,9 @@
 .page :global(.text-blue-400) { color: #17675b !important; }
 
 .page :global(.border-purple-500\/30) { border-color: #8fb1a5 !important; }
+
+.page .currentPlayer :global(.text-white),
+.page .currentPlayer :global(.text-gray-400),
+.page .currentPlayer :global(.text-blue-400) {
+  color: #fff !important;
+}
