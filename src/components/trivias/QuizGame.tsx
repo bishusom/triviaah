@@ -460,14 +460,14 @@ export default function QuizGame({
               )}
               <div className="flex flex-1 flex-col items-center gap-2 sm:items-start">
                 <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-                  <span className={`inline-flex w-fit items-center rounded-full border px-3 py-1.5 text-[11px] font-extrabold uppercase leading-none tracking-wide ${getDifficultyPillClass(currentQuestion.difficulty)}`}>
+                  <span className={`${styles.metaPill} inline-flex w-fit items-center rounded-full border px-3 py-1.5 text-[11px] font-extrabold uppercase leading-none tracking-wide ${getDifficultyPillClass(currentQuestion.difficulty)}`}>
                     {getDifficultyLabel(currentQuestion.difficulty)}
                   </span>
-                  <span className="inline-flex w-fit items-center rounded-full border border-[#105348] bg-[#17675b] px-3 py-1.5 text-[11px] font-extrabold uppercase leading-none tracking-wide text-white">
+                  <span className={`${styles.metaPill} inline-flex w-fit items-center rounded-full border border-[#105348] bg-[#17675b] px-3 py-1.5 text-[11px] font-extrabold uppercase leading-none tracking-wide text-white`}>
                     {formatQuizMetaLabel(currentQuestion.category)}
                   </span>
                   {currentQuestion.subcategory && (
-                    <span className="inline-flex w-fit items-center rounded-full border border-[#5c3e68] bg-[#765384] px-3 py-1.5 text-[11px] font-extrabold uppercase leading-none tracking-wide text-white">
+                    <span className={`${styles.metaPill} inline-flex w-fit items-center rounded-full border border-[#5c3e68] bg-[#765384] px-3 py-1.5 text-[11px] font-extrabold uppercase leading-none tracking-wide text-white`}>
                       {formatQuizMetaLabel(currentQuestion.subcategory)}
                     </span>
                   )}

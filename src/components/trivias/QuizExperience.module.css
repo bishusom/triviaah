@@ -55,6 +55,11 @@
   color: #203b3a;
 }
 
+/* Keep metadata labels white despite page-level light-theme text overrides. */
+.quiz .questionCard .metaPill {
+  color: #fff !important;
+}
+
 .answer {
   width: 100%;
   color: #29443d;
