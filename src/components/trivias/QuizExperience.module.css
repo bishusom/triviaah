@@ -1,0 +1,226 @@
+.loading {
+  min-height: 400px;
+  display: grid;
+  place-items: center;
+  background: #faf8f2;
+}
+
+.loading > div {
+  width: 56px;
+  height: 56px;
+  border: 4px dashed #17675b;
+  border-radius: 50%;
+}
+
+.quiz {
+  position: relative;
+  width: 100%;
+  max-width: 896px;
+  margin-inline: auto;
+  padding: 16px;
+  color: #203b3a;
+  background: #fffefb;
+  border: 1px solid #d8ddd2;
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgba(32, 59, 58, 0.08);
+}
+
+.fullScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  max-width: none;
+  overflow-y: auto;
+  border: 0;
+  border-radius: 0;
+  padding: 24px max(16px, calc((100vw - 896px) / 2));
+  background: #faf8f2;
+}
+
+.statusBar {
+  color: #fff;
+  background: #17675b;
+  border: 1px solid #105348;
+  border-radius: 10px;
+}
+
+.questionCard {
+  color: #203b3a;
+  background: #faf8f2;
+  border: 1px solid #d8ddd2;
+  border-radius: 13px;
+}
+
+.questionText {
+  color: #203b3a;
+}
+
+.answer {
+  width: 100%;
+  color: #29443d;
+  background: #fffefb;
+  border: 1px solid #ccd5c8;
+  border-radius: 11px;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.answerDefault:hover:not(:disabled) {
+  border-color: #17675b;
+  background: #eef2e8;
+  transform: translateY(-1px);
+}
+
+.answer:focus-visible,
+.continueButton:focus-visible {
+  outline: 3px solid #c66c35;
+  outline-offset: 3px;
+}
+
+.correct {
+  color: #174b38;
+  background: #dcecdf;
+  border-color: #5a9a75;
+}
+
+.wrong {
+  color: #7a352c;
+  background: #f6dfd8;
+  border-color: #c98270;
+}
+
+.dimmed {
+  color: #788079;
+  background: #f0f0e9;
+  border-color: #dedfd4;
+  opacity: .68;
+}
+
+.continueButton {
+  width: 100%;
+  padding: 13px 18px;
+  color: #fff;
+  background: #17675b;
+  border-radius: 9px;
+  font-weight: 750;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.continueButton:hover {
+  background: #104b42;
+}
+
+.titbit {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  color: #59461d;
+  background: #fff3ce;
+  border: 1px solid #e5c978;
+  border-left: 4px solid #b98722;
+  border-radius: 9px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.titbit > span {
+  flex-shrink: 0;
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.titbit strong {
+  color: #6b4d0d;
+}
+
+.summary {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+  color: #203b3a;
+  background: #faf8f2;
+}
+
+.resultCard,
+.leaderboardCard {
+  color: #203b3a;
+  background: #fffefb;
+  border: 1px solid #d8ddd2;
+  border-radius: 18px;
+  box-shadow: 0 14px 36px rgba(32, 59, 58, .07);
+}
+
+.summary :global(.text-white),
+.summary :global(.text-gray-200),
+.summary :global(.text-slate-100) {
+  color: #203b3a !important;
+}
+
+.summary :global(.text-gray-300),
+.summary :global(.text-gray-400),
+.summary :global(.text-gray-500) {
+  color: #627065 !important;
+}
+
+.summary :global(.bg-gray-800),
+.summary :global(.bg-gray-800\/50),
+.summary :global(.bg-gray-900\/50),
+.summary :global(.bg-gray-900\/30),
+.summary :global(.bg-slate-800\/90) {
+  background: #f1f3e9 !important;
+}
+
+.summary :global(.border-gray-700),
+.summary :global(.border-slate-700),
+.summary :global(.border-white\/5) {
+  border-color: #d8ddd2 !important;
+}
+
+.summary :global(.bg-gray-700),
+.summary :global(.bg-gray-900\/60),
+.summary :global(.bg-slate-900\/60),
+.summary :global(.bg-slate-950) {
+  background: #e9eee0 !important;
+}
+
+.summary :global(.text-cyan-200),
+.summary :global(.text-cyan-300),
+.summary :global(.text-cyan-400) {
+  color: #17675b !important;
+}
+
+.summary :global(.border-cyan-400\/15),
+.summary :global(.border-cyan-400\/20),
+.summary :global(.border-cyan-400\/30),
+.summary :global(.border-cyan-500\/30) {
+  border-color: #b9cdc2 !important;
+}
+
+.summary :global(.bg-cyan-400\/10),
+.summary :global(.bg-cyan-500\/10) {
+  background: #e9eee0 !important;
+}
+
+@media (max-width: 640px) {
+  .quiz {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .summary {
+    padding: 20px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer {
+    transition: none;
+  }
+
+  .answerDefault:hover:not(:disabled) {
+    transform: none;
+  }
+}

@@ -7,6 +7,8 @@ import Script from 'next/script';
 import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
 import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
 import ExploreSections from '@/components/common/ExploreSections';
+import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
+import styles from '@/components/word-games/WordGamesClub.module.css';
 
 export const metadata: Metadata = {
   title: 'Free Retro Games Online - Snake, Tetris, Pong & More | Triviaah',
@@ -162,7 +164,7 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
       key={game.route_path}
       href={route}
       title={`Play ${game.title} - ${tagline}`}
-      className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-gray-800 to-gray-900 border border-amber-500/20 hover:border-amber-400/40"
+      className={`${styles.gameCard} group relative overflow-hidden rounded-2xl border transition-all duration-300`}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
@@ -175,7 +177,7 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
       
       <div className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-400/10 to-amber-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
       
-      <div className="relative aspect-square w-full bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">  
+      <div className={`${styles.gameArt} relative aspect-square w-full overflow-hidden`}>
         <Image
           src={imageSrc}
           alt={`${game.title} Retro Game`}
@@ -201,10 +203,10 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
       </div>
       
       <div className="p-6 relative z-10">
-        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-amber-300 transition-colors">
+        <h3 className={`${styles.gameCardTitle} mb-2 text-lg font-bold transition-colors`}>
           {game.title}
         </h3>
-        <p className="text-sm text-gray-300 line-clamp-2 mb-3">
+        <p className={`${styles.gameCardCopy} mb-3 line-clamp-2 text-sm`}>
           {game.supporting_copy || game.intro_text}
         </p>
         
@@ -469,7 +471,7 @@ export default async function RetroGamesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
+    <div id="retro-games-main" className={styles.page}>
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Structured Data */}
         <StructuredData games={retroGames} currentDate={currentDate} />
@@ -816,6 +818,7 @@ export default async function RetroGamesPage() {
 
         <ExploreSections exclude="retro-games" />
       </div>
+      <PuzzleClubFooter />
     </div>
   );
 }

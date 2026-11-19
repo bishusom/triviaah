@@ -1,0 +1,52 @@
+.page {
+  min-height: 100vh;
+  color: #203b3a;
+  background: #faf8f2 !important;
+  background-image: none !important;
+}
+
+.page :global(.text-white),
+.page :global(.text-gray-200),
+.page :global(.text-gray-300) { color: #203b3a !important; }
+
+.page :global(.text-gray-400),
+.page :global(.text-gray-500) { color: #627065 !important; }
+
+.page :global(.text-cyan-300),
+.page :global(.text-cyan-400) { color: #17675b !important; }
+
+.page :global(.bg-slate-800\/30),
+.page :global(.bg-slate-900\/50),
+.page :global(.bg-gray-800) { background: #fffefb !important; }
+
+.page :global(.border-white\/5),
+.page :global(.border-white\/10),
+.page :global(.border-gray-700),
+.page :global(.border-gray-800) { border-color: #d8ddd2 !important; }
+
+.page :global(.bg-cyan-600),
+.page :global(.group-hover\:bg-cyan-500:hover) { background: #17675b !important; }
+
+.page :global(button.text-white),
+.page :global(a.bg-cyan-600.text-white),
+.page :global(.bg-cyan-600\/90.text-white) { color: #fff !important; }
+
+.articleCard {
+  background: #fffefb !important;
+  border-color: #d8ddd2 !important;
+  box-shadow: 0 12px 30px rgba(32, 59, 58, .07);
+}
+
+.articleCard:hover {
+  border-color: #17675b !important;
+  box-shadow: 0 16px 36px rgba(32, 59, 58, .12);
+}
+
+.articleCard :global(h2) { color: #203b3a !important; }
+.articleCard:hover :global(h2) { color: #17675b !important; }
+
+.readingPanel {
+  background: #fffefb !important;
+  border: 1px solid #d8ddd2;
+  box-shadow: 0 18px 48px rgba(32, 59, 58, .08) !important;
+}

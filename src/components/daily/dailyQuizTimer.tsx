@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 
-export default function Timer() {
+export default function Timer({ className = 'text-cyan-400 font-medium mt-2' }: { className?: string }) {
   const [timeLeft, setTimeLeft] = useState('');
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function Timer() {
   }, []);
 
   return (
-    <div className="text-cyan-400 font-medium mt-2">
+    <div className={className}>
       {timeLeft ? `Resets in ${timeLeft}` : 'Loading...'}
     </div>
   );

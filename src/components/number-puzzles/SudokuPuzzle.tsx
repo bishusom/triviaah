@@ -330,7 +330,7 @@ export default function SudokuPuzzle() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#08111f] via-[#0d1b30] to-[#12243d] py-8 px-4">
+    <div data-club-surface className="min-h-screen bg-gradient-to-br from-[#08111f] via-[#0d1b30] to-[#12243d] py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">

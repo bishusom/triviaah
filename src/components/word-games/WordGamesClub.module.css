@@ -1,0 +1,245 @@
+.page {
+  min-height: 100vh;
+  color: #203b3a;
+  background: #faf8f2;
+}
+
+.page :global(.text-white),
+.page :global(.text-gray-100),
+.page :global(.text-gray-200) {
+  color: #203b3a !important;
+}
+
+.page :global(.text-gray-300),
+.page :global(.text-gray-400),
+.page :global(.text-gray-500) {
+  color: #627065 !important;
+}
+
+.page :global(.bg-slate-800\/50),
+.page :global(.bg-slate-800\/30),
+.page :global(.bg-slate-900\/70),
+.page :global(.bg-gray-800\/60),
+.page :global(.bg-gray-800) {
+  background: #fffefb !important;
+}
+
+.page :global(.border-white\/5),
+.page :global(.border-gray-700) {
+  border-color: #d8ddd2 !important;
+}
+
+.page :global(.prose-invert) {
+  --tw-prose-body: #627065;
+  --tw-prose-headings: #203b3a;
+  --tw-prose-bold: #203b3a;
+}
+
+.gameCard {
+  color: #203b3a;
+  background: #fffefb !important;
+  background-image: none !important;
+  border-color: #d8ddd2 !important;
+  box-shadow: 0 12px 30px rgba(32, 59, 58, .08) !important;
+}
+
+.gameCard:hover {
+  border-color: #17675b !important;
+  box-shadow: 0 16px 36px rgba(32, 59, 58, .13) !important;
+}
+
+.gameArt {
+  background: #e9eee0 !important;
+  background-image: radial-gradient(circle at 50% 40%, #f7f3e8, #dce6d8) !important;
+}
+
+.gameCardTitle {
+  color: #203b3a !important;
+}
+
+.gameCard:hover .gameCardTitle {
+  color: #17675b !important;
+}
+
+.gameCardCopy {
+  color: #627065 !important;
+}
+
+.page section,
+.page [id="word-games-grid"] {
+  scroll-margin-top: 105px;
+}
+
+.gamePage {
+  min-height: 100vh;
+  color: #203b3a !important;
+  background: #faf8f2 !important;
+  background-image: none !important;
+}
+
+.gamePage > div > div:first-child,
+.gamePage :global(section.bg-black\/30) {
+  color: #203b3a;
+  background: #fffefb !important;
+  border-color: #d8ddd2 !important;
+  box-shadow: 0 14px 36px rgba(32, 59, 58, .07) !important;
+}
+
+.gamePage :global(.text-white),
+.gamePage :global(.text-white\/70),
+.gamePage :global(.text-white\/40) {
+  color: #203b3a !important;
+}
+
+.gamePage :global(.text-cyan-200),
+.gamePage :global(.text-cyan-300),
+.gamePage :global(.text-cyan-500\/80) {
+  color: #17675b !important;
+}
+
+.gamePage :global(.border-white\/10),
+.gamePage :global(.border-white\/5) {
+  border-color: #d8ddd2 !important;
+}
+
+.gameExperience {
+  color: #203b3a;
+}
+
+.gameExperience > div:first-child {
+  color: #203b3a;
+  background: #fffefb !important;
+  border-color: #d8ddd2 !important;
+  box-shadow: 0 14px 36px rgba(32, 59, 58, .07) !important;
+}
+
+.gameExperience :global([class*="min-h-screen"][class*="from-gray"]),
+.gameExperience :global([class*="min-h-screen"][class*="from-slate"]) {
+  min-height: auto !important;
+  color: #203b3a !important;
+  background: #faf8f2 !important;
+  background-image: none !important;
+}
+
+.gameExperience :global([class*="from-slate-9"]),
+.gameExperience :global([class*="via-slate-9"]),
+.gameExperience :global([class*="from-gray-8"][class*="to-gray-9"]) {
+  color: #203b3a !important;
+  background: #fffefb !important;
+  background-image: none !important;
+  border-color: #d8ddd2 !important;
+}
+
+.gameExperience :global(.bg-gray-800\/50),
+.gameExperience :global(.bg-gray-800\/40),
+.gameExperience :global(.bg-gray-800\/30),
+.gameExperience :global(.bg-gray-900\/80),
+.gameExperience :global(.bg-gray-900\/50),
+.gameExperience :global(.bg-slate-900\/70),
+.gameExperience :global(.bg-slate-800\/80),
+.gameExperience :global(.bg-gray-700\/50),
+.gameExperience :global(.bg-gray-700\/30),
+.gameExperience :global(.bg-white\/5),
+.gameExperience :global(.bg-black\/30),
+.gameExperience :global(.bg-black),
+.gameExperience :global([data-club-surface]) {
+  background: #fffefb !important;
+  background-image: none !important;
+}
+
+.gameExperience :global(.border-gray-700),
+.gameExperience :global(.border-gray-700\/50),
+.gameExperience :global(.border-gray-700\/60),
+.gameExperience :global(.border-white\/10),
+.gameExperience :global(.border-white\/5) {
+  border-color: #d8ddd2 !important;
+}
+
+.gameExperience :global(.text-white),
+.gameExperience :global(.text-white\/80),
+.gameExperience :global(.text-white\/75),
+.gameExperience :global(.text-white\/70),
+.gameExperience :global(.text-white\/60),
+.gameExperience :global(.text-white\/55),
+.gameExperience :global(.text-gray-200) {
+  color: #203b3a !important;
+}
+
+.gameExperience :global(.text-gray-300),
+.gameExperience :global(.text-gray-400),
+.gameExperience :global(.text-gray-500) {
+  color: #627065 !important;
+}
+
+.gameExperience :global(.text-cyan-100\/70),
+.gameExperience :global(.text-cyan-200),
+.gameExperience :global(.text-cyan-300),
+.gameExperience :global(.text-cyan-300\/70),
+.gameExperience :global(.text-cyan-300\/80) {
+  color: #17675b !important;
+}
+
+.gameExperience :global(button.text-white),
+.gameExperience :global(a.text-white),
+.gameExperience :global(.bg-blue-500.text-white),
+.gameExperience :global(.bg-blue-600.text-white),
+.gameExperience :global(.bg-green-600.text-white),
+.gameExperience :global(.bg-cyan-500.text-white) {
+  color: #fff !important;
+}
+
+.gameExperience :global(input.bg-white\/5),
+.gameExperience :global(select.bg-gray-800) {
+  color: #203b3a !important;
+  background: #fffefb !important;
+  border-color: #b9c8bd !important;
+}
+
+.landingArt {
+  background: #e9eee0 !important;
+  background-image: none !important;
+  border-color: #cdd8cf !important;
+  box-shadow: none !important;
+}
+
+.landingArt > div {
+  background: #f7f3e8 !important;
+  border-color: #d8ddd2 !important;
+}
+
+.retroExperience {
+  padding: 14px;
+  color: #203b3a;
+  background: #fffefb;
+  border: 1px solid #d8ddd2;
+  border-radius: 18px;
+  box-shadow: 0 14px 36px rgba(32, 59, 58, .07);
+}
+
+.retroGamePage {
+  min-height: 100vh;
+  color: #203b3a;
+  background: #faf8f2 !important;
+  background-image: none !important;
+}
+
+.retroGamePage > div > div:first-child,
+.retroGamePage > div > section {
+  color: #203b3a;
+  background: #fffefb !important;
+  border-color: #d8ddd2 !important;
+  box-shadow: 0 14px 36px rgba(32, 59, 58, .07) !important;
+}
+
+.retroGamePage > div > div:first-child :global(.text-white),
+.retroGamePage > div > section :global(.text-white),
+.retroGamePage > div > section :global(.text-white\/70),
+.retroGamePage > div > section :global(.text-white\/40) {
+  color: #203b3a !important;
+}
+
+.retroGamePage > div > section :global(.text-cyan-200),
+.retroGamePage > div > section :global(.text-cyan-300),
+.retroGamePage > div > section :global(.text-cyan-500\/80) {
+  color: #17675b !important;
+}

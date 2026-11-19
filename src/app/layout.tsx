@@ -128,7 +128,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geist.variable} font-[Geist,Geist-fallback] overflow-x-hidden`}>
         <SoundProvider>
           <NavBar />
-          <div className="pt-20 bg-[var(--background)] min-h-screen"> {/* Add padding top to account for fixed navbar */}
+          <div className="site-content min-h-screen bg-[var(--background)] pt-20"> {/* Add padding top to account for fixed navbar */}
             <Breadcrumbs />
             <div className="w-full overflow-x-hidden">
               {children}

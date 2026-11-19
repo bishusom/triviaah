@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getAllPosts } from '@/lib/markdown';
 import Ads from '@/components/common/Ads';
+import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
+import styles from '@/components/blog/BlogClub.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -113,7 +115,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
   const paginatedPosts: PostData[] = sortedPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+    <div id="blog-main" className={styles.page}>
       <StructuredData posts={paginatedPosts} />
       
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -127,8 +129,8 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                   <span className="text-2xl text-white">✍️</span>
                 </div>
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
-                    Triviaah <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Blog</span>
+                  <h1 className="font-serif text-4xl font-bold leading-tight text-[#203b3a] md:text-5xl">
+                    Triviaah <span className="text-[#17675b]">Blog</span>
                   </h1>
                 </div>
               </div>
@@ -168,7 +170,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
               key={post.slug}
               href={`/blog/${post.slug}`}
               title={`Read full article: ${post.header}`}
-              className="group flex flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-900/50 transition-all duration-300 hover:border-cyan-500/50 hover:shadow-glow-blue"
+              className={`${styles.articleCard} group flex flex-col overflow-hidden rounded-xl border transition-all duration-300`}
             >
               {/* Post Image - Smaller aspect ratio */}
               <div className="relative aspect-[16/10] overflow-hidden">
@@ -258,6 +260,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
           </div>
         )}
       </div>
+      <PuzzleClubFooter />
     </div>
   );
 }

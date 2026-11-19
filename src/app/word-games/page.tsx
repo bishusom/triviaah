@@ -8,6 +8,8 @@ import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
 import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
 import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
 import ExploreSections from '@/components/common/ExploreSections';
+import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
+import styles from '@/components/word-games/WordGamesClub.module.css';
 
 export const revalidate = 86400;
 
@@ -55,7 +57,7 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
       key={game.route_path}
       href={route}
       title={`Play ${game.title} - ${tagline}`}
-      className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
+      className={`${styles.gameCard} group relative overflow-hidden rounded-2xl border transition-all duration-300`}
     >
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -64,7 +66,7 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
       <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
       
       {/* Game Image */}
-      <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">  
+      <div className={`${styles.gameArt} relative aspect-square w-full overflow-hidden`}>
         <Image
           src={imageSrc}
           alt={`${game.title} Word Game`}
@@ -89,10 +91,10 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
       
       {/* Game Content */}
       <div className="p-6 relative z-10">
-        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-cyan-300 transition-colors">
+        <h3 className={`${styles.gameCardTitle} mb-2 text-lg font-bold transition-colors`}>
           {game.title}
         </h3>
-        <p className="text-sm text-gray-300 line-clamp-2">
+        <p className={`${styles.gameCardCopy} line-clamp-2 text-sm`}>
           {game.supporting_copy || game.intro_text}
         </p>
         
@@ -281,7 +283,7 @@ export default async function WordGamesPage() {
   const heroDescription = 'A good word game should make you pause for one more try, not read like a vocabulary worksheet. This collection mixes calm search puzzles, fast letter-bank games, clue-led grids, and daily decoding challenges so you can choose the kind of word thinking you actually feel like doing today.';
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+    <div id="word-games-main" className={styles.page}>
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Structured Data */}
         <StructuredData games={wordGames} currentDate={currentDate} />
@@ -550,6 +552,7 @@ export default async function WordGamesPage() {
 
         <ExploreSections exclude="word-games" />
       </div>
+      <PuzzleClubFooter />
     </div>
   );
 }

@@ -1,0 +1,56 @@
+.page {
+  min-height: 100vh;
+  color: #203b3a;
+  background: #faf8f2 !important;
+  background-image: none !important;
+}
+
+.page :global(.text-white),
+.page :global(.text-gray-200),
+.page :global(.text-gray-300) { color: #203b3a !important; }
+
+.page :global(.text-gray-400),
+.page :global(.text-gray-500) { color: #627065 !important; }
+
+.page :global(.text-blue-200),
+.page :global(.text-blue-300),
+.page :global(.text-purple-300),
+.page :global(.text-purple-400) { color: #17675b !important; }
+
+.page :global(.bg-gray-800\/50),
+.page :global(.bg-gray-800\/40),
+.page :global(.bg-gray-800\/30),
+.page :global(.bg-gray-700\/30) { background: #fffefb !important; }
+
+.page :global(.border-gray-600),
+.page :global(.border-gray-700) { border-color: #d8ddd2 !important; }
+
+.page :global([class*="from-purple-600"][class*="to-blue-500"]) {
+  color: #fff !important;
+  background: linear-gradient(90deg, #17675b, #2f7d66) !important;
+}
+
+.page :global(.bg-purple-600),
+.page :global(.bg-blue-600),
+.page :global(.bg-green-600) { background: #17675b !important; }
+
+.page :global(input.bg-gray-700),
+.page :global(textarea.bg-gray-700) {
+  color: #203b3a !important;
+  background: #fffefb !important;
+  border-color: #b9c8bd !important;
+}
+
+.page :global(input.bg-gray-700:focus),
+.page :global(textarea.bg-gray-700:focus) {
+  border-color: #17675b !important;
+  box-shadow: 0 0 0 3px rgba(23, 103, 91, .14);
+}
+
+.page :global(button.text-white),
+.page :global(.bg-purple-600 .text-white),
+.page :global(.bg-blue-600 .text-white),
+.page :global(.bg-green-600 .text-white),
+.page :global([class*="from-purple-600"][class*="to-blue-500"].text-white) { color: #fff !important; }
+
+.page :global(a) { text-underline-offset: 4px; }

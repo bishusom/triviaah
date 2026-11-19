@@ -73,7 +73,7 @@ export default async function ChallengeQuizPage({ params }: PageProps) {
   const multiplayerHref = `/multiplayer?category=${encodeURIComponent(challenge.category)}&subcategory=${encodeURIComponent(challenge.subcategory)}`;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#050812] via-[#090e1f] to-[#030610] px-4 py-6 text-white sm:px-6 lg:px-8">
+    <main id="quiz-main" className="min-h-screen bg-[#faf8f2] px-4 py-6 text-[#203b3a] sm:px-6 lg:px-8">
       {/* ── Schema.org Quiz Data ─────────────────────────────────────── */}
       <Script
         id={`structured-data-quiz-${challenge.slug}`}
@@ -111,7 +111,7 @@ export default async function ChallengeQuizPage({ params }: PageProps) {
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Link
             href={`/challenges/${challenge.slug}`}
-            className="inline-flex items-center gap-2 text-sm font-bold text-cyan-300 transition-colors hover:text-cyan-200"
+            className="inline-flex items-center gap-2 text-sm font-bold text-[#17675b] transition-colors hover:text-[#104b42]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to challenge overview
@@ -141,12 +141,12 @@ export default async function ChallengeQuizPage({ params }: PageProps) {
         </div>
 
         {/* Quiz Game Container */}
-        <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-4 shadow-2xl backdrop-blur sm:p-6 lg:p-8">
+        <div className="rounded-3xl border border-[#d8ddd2] bg-[#fffefb] p-4 shadow-[0_18px_48px_rgba(32,59,58,0.08)] sm:p-6 lg:p-8">
           <div className="mb-6 text-center">
-            <h1 className="text-2xl font-black text-white sm:text-3xl">
+            <h1 className="font-serif text-2xl font-bold text-[#203b3a] sm:text-3xl">
               {challenge.subcategory} Challenge
             </h1>
-            <p className="mt-1 text-sm text-gray-400">
+            <p className="mt-1 text-sm text-[#627065]">
               10 questions • 30 seconds per question • Test your mastery
             </p>
           </div>

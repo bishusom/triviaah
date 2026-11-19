@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { getAllTriviaPreviews } from '@/lib/tbank';
 import TriviaFilter from '@/components/trivia-bank/TriviaFilter';
 import Ads from '@/components/common/Ads';
+import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
+import styles from '@/components/trivia-bank/TriviaBankClub.module.css';
 
 interface TriviaCategory {
   slug: string;
@@ -105,7 +107,7 @@ export default async function TriviaBankPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+    <div id="trivia-bank-main" className={styles.page}>
       <TriviaBankJsonLd count={triviaCategories.length} />
       
       <div className="container mx-auto px-4 py-8">
@@ -119,8 +121,8 @@ export default async function TriviaBankPage() {
                   <span className="text-2xl text-white">📚</span>
                 </div>
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
-                    Trivia <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Bank</span>
+                  <h1 className="font-serif text-4xl font-bold leading-tight text-[#203b3a] md:text-5xl">
+                    Trivia <span className="text-[#17675b]">Bank</span>
                   </h1>
                 </div>
               </div>
@@ -229,6 +231,7 @@ export default async function TriviaBankPage() {
             </div>
           </section>
         </div>
+        <PuzzleClubFooter />
       </div>
   );
 }

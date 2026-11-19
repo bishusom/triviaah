@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
 import type { GamePageContent } from '@/lib/game-pages';
-import { CalendarDays, Sparkles, HelpCircle, ChevronDown } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import club from '@/components/home/PuzzleClub.module.css';
+import styles from './BrainwaveClub.module.css';
+import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
 import Link from 'next/link';
 import Image from 'next/image';
 import BrainwaveWarmup from '@/components/brainwave/BrainwaveWarmup';
@@ -211,178 +214,18 @@ export default function BrainwaveRouteShell({
   const gameName = page.title.split(' - ')[0];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-      <div className="max-w-3xl mx-auto px-4 py-4 md:py-5">
-        <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 md:p-6 shadow-2xl">
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            {page.featured ? (
-              <span className="inline-flex items-center gap-2 rounded-full bg-red-500 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-white">
-                <Sparkles className="h-3.5 w-3.5" />
-                Featured
-              </span>
-            ) : null}
-            {page.is_daily_refresh ? (
-              <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-200">
-                <CalendarDays className="h-3.5 w-3.5" />
-                Daily Refresh
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/70">
-                Evergreen
-              </span>
-            )}
-          </div>
-
-          <h1 className="text-2xl md:text-4xl font-black tracking-tight text-white">
-            {page.title}
-          </h1>
-          {showIntro ? (
-            <p className="mt-2 max-w-3xl text-sm md:text-base text-white/75">
-              {page.intro_text}
-            </p>
-          ) : null}
-        </div>
-
-        <div className="mt-6">
-          {children}
-        </div>
-
-        {warmupPuzzles.length > 0 && (
-          <BrainwaveWarmup puzzles={warmupPuzzles} gameTitle={gameName} />
-        )}
-
-        {seoContent ? (
-          <section className="mt-8 rounded-3xl border border-white/10 bg-white/[0.04] p-4 md:p-6 shadow-2xl">
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-300">
-              Game Guide
-            </p>
-            <h2 className="mt-2 text-2xl font-bold text-white">
-              How {page.title.split(' - ')[0]} Works
-            </h2>
-            <p className="mt-3 text-sm leading-7 text-white/75">
-              {seoContent.howItWorks}
-            </p>
-
-            <div className="mt-5 grid gap-4 md:grid-cols-2">
-              <article className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                <h3 className="text-base font-semibold text-cyan-200">Clue Types</h3>
-                <ul className="mt-3 space-y-2 text-sm leading-6 text-white/70">
-                  {seoContent.clueTypes.map((clue) => (
-                    <li key={clue} className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
-                      <span>{clue}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
-              <article className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                <h3 className="text-base font-semibold text-cyan-200">Solving Strategy</h3>
-                <p className="mt-3 text-sm leading-6 text-white/70">
-                  {seoContent.strategy}
-                </p>
-              </article>
-            </div>
-
-            <article className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-4">
-              <h3 className="text-base font-semibold text-cyan-200">Who This Puzzle Is For</h3>
-              <p className="mt-3 text-sm leading-6 text-white/70">
-                {seoContent.audience}
-              </p>
-            </article>
-          </section>
-        ) : null}
-
-        {PUZZLE_NOTES[page.route_path] ? (
-          <section className="mt-8 rounded-3xl border border-cyan-400/20 bg-cyan-400/10 p-4 md:p-6 shadow-2xl">
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-200">
-              Developer's Note
-            </p>
-            <h2 className="mt-2 text-xl font-bold text-white">
-              {PUZZLE_NOTES[page.route_path].title}
-            </h2>
-            <p className="mt-3 text-sm leading-7 text-cyan-50/80">
-              {PUZZLE_NOTES[page.route_path].body}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {PUZZLE_NOTES[page.route_path].links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="rounded-full border border-cyan-300/20 bg-black/20 px-3 py-2 text-xs font-semibold text-cyan-100 transition-colors hover:border-cyan-200/50 hover:bg-cyan-300/10"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        {page.highlights.length ? (
-          <div className="mt-6 flex flex-wrap gap-3">
-            {page.highlights.map((highlight) => (
-              <span
-                key={highlight}
-                className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-100"
-              >
-                {highlight}
-              </span>
-            ))}
-          </div>
-        ) : null}
-
-        {page.faq_items.length ? (
-          <details className="group mt-5 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 md:p-6 shadow-2xl">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
-              <h2 className="flex items-center gap-2 text-xl font-bold text-white">
-                <HelpCircle className="h-5 w-5 text-cyan-300" />
-                Frequently Asked Questions
-              </h2>
-              <ChevronDown className="h-5 w-5 text-cyan-300 transition-transform duration-200 group-open:rotate-180" />
-            </summary>
-            <div className="mt-4 grid gap-3 md:grid-cols-2">
-              {page.faq_items.map((faq, index) => (
-                <article key={`${faq.question}-${index}`} className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                  <h3 className="text-base font-semibold text-cyan-200">{faq.question}</h3>
-                  <p className="mt-2 text-sm leading-6 text-white/70">{faq.answer}</p>
-                </article>
-              ))}
-            </div>
-          </details>
-        ) : null}
-
-        {/* Subtle More Brainwave Section */}
-        {otherGames.length > 0 && (
-          <section className="mt-12 pt-8 border-t border-white/5">
-            <h2 className="text-[10px] uppercase tracking-[0.3em] text-cyan-500/80 mb-6 font-black">
-              More Brainwave Games
-            </h2>
-            <div className="flex flex-wrap gap-4 sm:gap-6">
-              {otherGames.map((game) => (
-                <Link
-                  key={game.route_path}
-                  href={game.route_path}
-                  className="group block w-20 sm:w-24"
-                >
-                  <div className="relative aspect-square overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-all duration-300 group-hover:border-cyan-500/40 group-hover:bg-white/10 group-hover:scale-105">
-                    {game.og_image && (
-                      <Image
-                        src={game.og_image}
-                        alt={game.title}
-                        fill
-                        className="object-contain p-2.5 opacity-50 group-hover:opacity-100 transition-opacity duration-300"
-                        sizes="(max-width: 768px) 80px, 96px"
-                      />
-                    )}
-                  </div>
-                  <h3 className="mt-2 text-[10px] font-medium text-white/40 group-hover:text-cyan-300 transition-colors line-clamp-1 text-center">
-                    {game.title}
-                  </h3>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-      </div>
+    <div className={styles.page}>
+      <main id="brainwave-main" className={styles.puzzleMain}>
+        <header className={styles.puzzleHeader}><p className={club.eyebrow}>{page.featured ? 'FEATURED · ' : ''}{page.is_daily_refresh ? 'A FRESH PUZZLE EVERY DAY' : 'PLAY AT YOUR OWN PACE'}</p><h1>{page.title}</h1>{showIntro && <p className={styles.intro}>{page.intro_text}</p>}</header>
+        {children}
+        {warmupPuzzles.length > 0 && <BrainwaveWarmup puzzles={warmupPuzzles} gameTitle={gameName} light />}
+        {seoContent && <section className={styles.guide}><p className={club.eyebrow}>GAME GUIDE</p><h2>How {gameName} works</h2><p>{seoContent.howItWorks}</p><div className={styles.guideColumns}><article><h3>Clue types</h3><ul>{seoContent.clueTypes.map(clue => <li key={clue}>{clue}</li>)}</ul></article><article><h3>Solving strategy</h3><p>{seoContent.strategy}</p></article></div><h3>Who this puzzle is for</h3><p>{seoContent.audience}</p></section>}
+        {PUZZLE_NOTES[page.route_path] && <section className={styles.note}><p className={club.eyebrow}>A CLOSER LOOK</p><h2>{PUZZLE_NOTES[page.route_path].title}</h2><p>{PUZZLE_NOTES[page.route_path].body}</p><div className={styles.links}>{PUZZLE_NOTES[page.route_path].links.map(link => <Link key={link.href} href={link.href} className={club.textLink}>{link.label}<ArrowRight size={15} /></Link>)}</div></section>}
+        {page.highlights.length > 0 && <div className={styles.highlights}>{page.highlights.map(highlight => <span key={highlight}>{highlight}</span>)}</div>}
+        {page.faq_items.length > 0 && <section className={styles.faq}><h2>Frequently asked questions</h2>{page.faq_items.map((faq, index) => <details key={index}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}</section>}
+        {otherGames.length > 0 && <section className={styles.section}><p className={club.eyebrow}>YOUR NEXT AHA! MOMENT</p><h2>More Brainwave games</h2><div className={styles.related}>{otherGames.map(game => <Link key={game.route_path} href={game.route_path}>{game.og_image && <Image src={game.og_image} alt="" width={60} height={60} />}<span>{game.title}</span><ArrowRight size={16} /></Link>)}</div></section>}
+      </main>
+      <PuzzleClubFooter />
     </div>
   );
 }

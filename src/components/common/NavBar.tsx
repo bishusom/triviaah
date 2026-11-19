@@ -1,12 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import PuzzleClubNav from '../home/PuzzleClubNav';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import UserStatsPopover from '../home/UserStatsPopover';
 import SearchBar from '../home/SearchBar';
 
 export default function NavBar() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -37,11 +40,59 @@ export default function NavBar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
+  if (/^\/trivias(?:\/[^/]+){0,2}(?:\/quiz)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId={pathname.endsWith('/quiz') ? 'quiz-main' : 'library-main'} />;
+  }
+
+  if (/^\/trivia-bank(?:\/[^/]+)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId="trivia-bank-main" />;
+  }
+
+  if (pathname === '/about' || pathname === '/contact') {
+    return <PuzzleClubNav mainId={pathname === '/about' ? 'about-main' : 'contact-main'} />;
+  }
+
+  if (/^\/blog(?:\/[^/]+)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId="blog-main" />;
+  }
+
+  if (/^\/multiplayer(?:\/[^/]+)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId="multiplayer-main" />;
+  }
+
+  if (/^\/brainwave(?:\/[^/]+)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId="brainwave-main" />;
+  }
+
+  if (/^\/word-games(?:\/[^/]+)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId={pathname === '/word-games' ? 'word-games-main' : 'game-main'} />;
+  }
+
+  if (/^\/number-puzzles(?:\/[^/]+)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId={pathname === '/number-puzzles' ? 'number-puzzles-main' : 'game-main'} />;
+  }
+
+  if (/^\/retro-games(?:\/[^/]+)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId={pathname === '/retro-games' ? 'retro-games-main' : 'game-main'} />;
+  }
+
+  if (/^\/leaderboard(?:\/groups)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId="leaderboard-main" />;
+  }
+
+  if (/^\/challenges(?:\/[^/]+)?(?:\/quiz)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId={pathname.endsWith('/quiz') ? 'quiz-main' : 'challenges-main'} />;
+  }
+
+  if (pathname === '/' || /^\/daily-trivias(?:\/[^/]+)?(?:\/quiz)?$/.test(pathname)) {
+    return <PuzzleClubNav mainId={pathname === '/' ? 'home-main' : pathname.endsWith('/quiz') ? 'quiz-main' : 'daily-main'} />;
+  }
+
   const navLinks = [
     { name: 'Daily Trivias', href: '/daily-trivias' },
     { name: 'Brainwave', href: '/brainwave' },
     { name: 'Challenges', href: '/challenges' },
-    { name: 'Trivia Library', href: '/trivias' },
+    { name: 'Quiz Categories', href: '/trivias' },
     { name: 'Leaderboard', href: '/leaderboard' },
     { name: 'Blog', href: '/blog' },
     { name: 'Trivia Bank', href: '/trivia-bank' },

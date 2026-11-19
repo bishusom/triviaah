@@ -1,3 +1,5 @@
+import styles from './BrainwaveClub.module.css';
+import club from '@/components/home/PuzzleClub.module.css';
 import React from 'react';
 import { Sparkles, ChevronDown, CheckCircle, Lightbulb, Brain, Tag } from 'lucide-react';
 import type { BrainwaveWarmupPuzzle } from '@/lib/brainwave/brainwave-warmup-data';
@@ -5,9 +7,10 @@ import type { BrainwaveWarmupPuzzle } from '@/lib/brainwave/brainwave-warmup-dat
 interface BrainwaveWarmupProps {
   puzzles: BrainwaveWarmupPuzzle[];
   gameTitle: string;
+  light?: boolean;
 }
 
-export default function BrainwaveWarmup({ puzzles, gameTitle }: BrainwaveWarmupProps) {
+export default function BrainwaveWarmup({ puzzles, gameTitle, light = false }: BrainwaveWarmupProps) {
   if (!puzzles || puzzles.length === 0) {
     return null;
   }
@@ -34,6 +37,21 @@ export default function BrainwaveWarmup({ puzzles, gameTitle }: BrainwaveWarmupP
     },
     hasPart: questionSchemas,
   };
+
+  if (light) {
+    return (
+      <section className={styles.warmup}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+        <p className={club.eyebrow}>PRACTICE DEDUCTION · NO DAILY SPOILERS</p>
+        <h2>{gameTitle} warmup: {puzzles.length} sample puzzles</h2>
+        <p className={styles.intro}>Try these practice clues before the daily mystery. Open each one to reveal the answer and backstory.</p>
+        <div className={styles.faq}>{puzzles.map(puzzle => <details key={puzzle.id}>
+          <summary>{puzzle.clue}</summary>
+          <div className={styles.answer}><strong>Answer: {puzzle.answer}</strong><p>{puzzle.factoid}</p><span>{puzzle.category}</span>{puzzle.hints?.length ? <ul>{puzzle.hints.map(hint => <li key={hint}>{hint}</li>)}</ul> : null}</div>
+        </details>)}</div>
+      </section>
+    );
+  }
 
   return (
     <section className="my-10 rounded-3xl border border-white/10 bg-white/[0.04] p-5 md:p-7 shadow-2xl backdrop-blur-xl">

@@ -1,3 +1,4 @@
+import styles from '@/components/daily-trivias/DailyTriviaClub.module.css';
 // src/app/daily-trivias/[category]/FAQSection.tsx
 //
 // ✅ FIX: FAQ structured data text now matches visible text exactly.
@@ -20,7 +21,9 @@ export function FAQSection({
   hasBonusQuestion,
   lastUpdated,
   faqItems = [],
+  light = false,
 }: {
+  light?: boolean;
   formattedCategory: string;
   hasBonusQuestion: boolean;
   lastUpdated: string;
@@ -88,6 +91,16 @@ export function FAQSection({
       },
     })),
   };
+
+  if (light) {
+    return (
+      <section className={styles.faq}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }} />
+        <h2>About this {formattedCategory} daily quiz</h2>
+        {items.map((item, index) => <details key={index}><summary>{item.title}</summary><p>{item.answer}</p></details>)}
+      </section>
+    );
+  }
 
   return (
     <div className="mt-12 bg-transparent">

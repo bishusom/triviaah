@@ -119,7 +119,7 @@ export default function QuestionReport({
 
   if (isSubmitted) {
     return (
-      <div className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-300">
+      <div className="inline-flex items-center gap-1.5 rounded-lg border border-[#91b39d] bg-[#e3efe5] px-3 py-2 text-xs font-semibold text-[#174b38]">
         <CheckCircle2 size={14} />
         Thanks—report received
       </div>
@@ -131,9 +131,9 @@ export default function QuestionReport({
       <button
         type="button"
         onClick={() => changeOpen(true)}
-        className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-400 transition-colors hover:text-amber-200"
+        className="inline-flex items-center gap-2 rounded-lg border border-[#d5b665] bg-[#fff3ce] px-3 py-2 text-xs font-bold text-[#6b4d0d] shadow-sm transition-all hover:border-[#b98722] hover:bg-[#fbe8ad] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#c66c35]"
       >
-        <Flag size={14} />
+        <Flag size={15} strokeWidth={2.25} />
         Flag an issue
       </button>
 

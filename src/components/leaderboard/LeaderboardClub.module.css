@@ -1,0 +1,39 @@
+.page {
+  min-height: 100vh;
+  color: #203b3a;
+  background: #faf8f2 !important;
+  background-image: none !important;
+}
+
+.page :global(.text-white),
+.page :global(.text-gray-200),
+.page :global(.text-gray-300) { color: #203b3a !important; }
+
+.page :global(.text-gray-400),
+.page :global(.text-gray-500),
+.page :global(.text-gray-600) { color: #627065 !important; }
+
+.page :global(.bg-gray-800),
+.page :global(.bg-gray-800\/50),
+.page :global(.bg-gray-800\/40),
+.page :global(.bg-gray-800\/30),
+.page :global(.bg-gray-700\/50),
+.page :global(.bg-slate-950\/70) { background: #fffefb !important; }
+
+.page :global(.border-gray-700),
+.page :global(.border-white\/10),
+.page :global(.border-white\/20) { border-color: #d8ddd2 !important; }
+
+.page :global([class*="from-purple-600"][class*="to-blue-500"]) {
+  background: linear-gradient(90deg, #17675b, #2f7d66) !important;
+}
+
+.page :global(button.text-white),
+.page :global([class*="from-purple-600"][class*="to-blue-500"].text-white) {
+  color: #fff !important;
+}
+
+.page :global(.text-blue-300),
+.page :global(.text-blue-400) { color: #17675b !important; }
+
+.page :global(.border-purple-500\/30) { border-color: #8fb1a5 !important; }

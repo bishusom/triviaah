@@ -18,6 +18,7 @@ import {
 import { supabase } from '@/lib/supabase';
 import { extractKeywords } from '@/lib/nlpKeywords';
 import { fetchPixabayImage } from '@/lib/pixabay';
+import styles from './MultiplayerClub.module.css';
 
 type RoomBundle = {
   players: MultiplayerPlayer[];
@@ -277,7 +278,7 @@ export function MultiplayerRoomClient({ roomCode }: { roomCode: string }) {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
+      <div id="multiplayer-main" className={`${styles.page} flex min-h-screen items-center justify-center`}>
         <Loader2 className="h-6 w-6 animate-spin text-cyan-300" />
       </div>
     );
@@ -285,7 +286,7 @@ export function MultiplayerRoomClient({ roomCode }: { roomCode: string }) {
 
   if (!room) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
+      <div id="multiplayer-main" className={`${styles.page} flex min-h-screen items-center justify-center px-4`}>
         <div className="max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 text-center">
           <h1 className="text-2xl font-bold">Room not found</h1>
           <p className="mt-2 text-slate-300">This invite code may have expired or been typed incorrectly.</p>
@@ -297,7 +298,7 @@ export function MultiplayerRoomClient({ roomCode }: { roomCode: string }) {
 
   if (!player) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
+      <div id="multiplayer-main" className={`${styles.page} flex min-h-screen items-center justify-center px-4`}>
         <section className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
           <div className="mb-5">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">Room {room.room_code}</p>
@@ -331,7 +332,7 @@ export function MultiplayerRoomClient({ roomCode }: { roomCode: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div id="multiplayer-main" className={styles.page}>
       <main className="mx-auto max-w-6xl px-4 py-6">
         <header className="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

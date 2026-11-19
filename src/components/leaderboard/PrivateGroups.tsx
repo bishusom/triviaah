@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { getUniquePersistentGuestId } from '@/lib/guestId';
 import { groupAction, type GroupBoard, type GroupPeriod, type PrivateGroup } from '@/lib/private-groups';
+import styles from './LeaderboardClub.module.css';
 
-const inputClass = 'w-full rounded-lg border border-white/20 bg-slate-900 px-3 py-2 text-white';
-const buttonClass = 'rounded-lg bg-cyan-700 px-4 py-2 font-semibold text-white hover:bg-cyan-600 disabled:opacity-50';
-const secondaryClass = 'rounded-lg border border-white/20 px-4 py-2 hover:bg-white/10 disabled:opacity-50';
+const inputClass = 'w-full rounded-lg border border-[#b9c8bd] bg-[#fffefb] px-3 py-2 text-[#203b3a]';
+const buttonClass = 'rounded-lg bg-[#17675b] px-4 py-2 font-semibold text-white hover:bg-[#104b42] disabled:opacity-50';
+const secondaryClass = 'rounded-lg border border-[#b9c8bd] bg-[#fffefb] px-4 py-2 text-[#203b3a] hover:bg-[#e9eee0] disabled:opacity-50';
 const periods: { value: GroupPeriod; label: string }[] = [
   { value: 'weekly', label: 'This week' },
   { value: 'monthly', label: 'This month' },
@@ -118,7 +119,7 @@ export default function PrivateGroups() {
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-4 py-10 text-gray-100">
+    <main id="leaderboard-main" className={`${styles.page} mx-auto min-h-screen max-w-5xl px-4 py-10`}>
       <Link href="/leaderboard" className="text-cyan-300 hover:underline">← Global leaderboard</Link>
       <h1 className="mt-5 text-3xl font-bold">Private group leaderboards</h1>
       <p className="mt-3 text-gray-300">A little friendly competition for your friends, family, or classroom. Create a group, share the invite, and earn points as you play.</p>

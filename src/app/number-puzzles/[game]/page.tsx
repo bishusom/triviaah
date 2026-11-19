@@ -146,6 +146,7 @@ export default async function NumberPuzzlePage({
           backHref="/number-puzzles"
           backLabel="Back to Number Puzzles"
           game={<NumberPuzzlesGameClient slug={routeDefinition.slug} />}
+          theme="puzzle-club"
         />
       </GameRouteShell>
     </GamePageChrome>

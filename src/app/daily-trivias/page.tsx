@@ -4,10 +4,11 @@ import Script from 'next/script';
 import Link from 'next/link';
 import Image from 'next/image';
 import Ads from '@/components/common/Ads';
-import { Play, Boxes, Clock, Users, Calendar, Star, Trophy, Zap } from 'lucide-react';
+import { ArrowRight, CalendarDays, Users, Sparkles } from 'lucide-react';
+import club from '@/components/home/PuzzleClub.module.css';
+import styles from '@/components/daily-trivias/DailyTriviaClub.module.css';
+import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
 import Timer from '@/components/daily/dailyQuizTimer';
-import { ScrollToDailyCategoriesButton } from '@/components/daily-trivias/ScrollToDailyCategoriesButton';
-import ExploreSections from '@/components/common/ExploreSections';
 import { getTriviaCategories, type TriviaCategoryRecord } from '@/lib/trivia-categories';
 
 export const revalidate = 86400;
@@ -86,59 +87,17 @@ function categoryToDailyQuizCard(category: TriviaCategoryRecord): DailyQuizCard 
   };
 }
 
-// Gaming-style quiz card
 function QuizCard({ quiz, index }: { quiz: DailyQuizCard; index: number }) {
   return (
-    <Link
-      key={quiz.category}
-      href={quiz.path}
-      title={`Play ${quiz.name} Daily Quiz - ${quiz.tagline}`}
-      className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
-    >
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-      {/* Glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-
-      {/* Quiz Image */}
-      <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">
-        <Image
-          src={quiz.image}
-          alt={`${quiz.name} Daily Trivia Quiz`}
-          fill
-          className="object-contain transition-all duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          placeholder="blur"
-          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAAcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-          loading={index < 8 ? 'eager' : 'lazy'}
-          priority={index < 4}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-        {/* Play button overlay */}
-        <div className="absolute bottom-4 right-4 w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-          <Play className="w-5 h-5 text-white" />
-        </div>
-
-        {/* Daily badge */}
-        <div className="absolute top-4 left-4 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
-          <Calendar className="w-3 h-3" />
-          DAILY
-        </div>
+    <Link href={quiz.path} className={styles.card}>
+      <div className={`${styles.cardArt} ${club[`tone${index % 4}`]}`}>
+        <Image src={quiz.image} alt="" width={128} height={128} className={styles.cardImage} />
+        <span className={styles.dailyBadge}>FRESH DAILY</span>
       </div>
-
-      {/* Quiz Content */}
-      <div className="p-6 relative z-10">
-        <h3 className="min-h-[4.5rem] text-lg font-bold leading-tight text-white mb-2 line-clamp-3 group-hover:text-cyan-300 transition-colors sm:min-h-[5.5rem]">
-          {quiz.name}
-        </h3>
-        <p className="text-sm text-gray-300 line-clamp-2">{quiz.tagline}</p>
-
-        {/* Progress bar effect */}
-        <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 w-0 group-hover:w-full transition-all duration-700" />
-        </div>
+      <div className={styles.cardBody}>
+        <h3>{quiz.name}</h3>
+        <p>{quiz.tagline}</p>
+        <span className={club.cardAction}>Explore today’s quiz <ArrowRight size={18} /></span>
       </div>
     </Link>
   );
@@ -152,159 +111,59 @@ export default async function DailyQuizzesPage() {
   const lastUpdated = new Date();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Structured Data for SEO */}
+    <div className={club.club}>
+      <main id="daily-main" className={club.main}>
         <StructuredData quizzes={dailyQuizzes} currentDate={lastUpdated} />
-
-        {/* ── Hero Section ─────────────────────────────────────────────── */}
-        <div className="mb-8 lg:mb-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Title & Description */}
-            <div className="lg:col-span-7">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <Calendar className="text-2xl text-white" />
-                </div>
-                <div>
-                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
-                    Daily{' '}
-                    <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                      Trivias
-                    </span>
-                  </h1>
-                </div>
-              </div>
-
-              <p className="max-w-2xl text-base leading-relaxed text-gray-300 md:text-lg">
-                Pick a category and play today&apos;s quiz. New questions refresh every 24 hours across
-                general knowledge, fast recall, history, entertainment, sports, and nature. No
-                account required.
-              </p>
-
-              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <ScrollToDailyCategoriesButton targetId="daily-trivia-categories" />
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5 inline-block">
-                  Last Updated:{' '}
-                  {lastUpdated.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
-                </p>
-              </div>
-
-              <div className="mt-5 max-w-2xl rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-200">
-                    <Users className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-base font-black text-white">Multiplayer trivia is available</h2>
-                    <p className="mt-1 text-sm text-emerald-100/80">
-                      Pick a daily category, create a private room, and invite friends to compete on the same questions.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Timer & Stats Column */}
-            <div className="lg:col-span-5 space-y-4">
-              <div className="bg-slate-800/40 rounded-2xl p-4 border border-white/5 backdrop-blur-sm">
-                <Timer />
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-slate-800/50 rounded-xl p-2 border border-white/5 text-center">
-                  <Boxes className="text-lg text-cyan-400 mx-auto mb-1" />
-                  <div className="text-white font-black text-base">{dailyQuizzes.length}</div>
-                  <div className="text-[9px] uppercase tracking-widest text-gray-500">Topics</div>
-                </div>
-                <div className="bg-slate-800/50 rounded-xl p-2 border border-white/5 text-center">
-                  <Clock className="text-lg text-yellow-400 mx-auto mb-1" />
-                  <div className="text-white font-black text-base">24h</div>
-                  <div className="text-[9px] uppercase tracking-widest text-gray-500">Reset</div>
-                </div>
-                <div className="bg-slate-800/50 rounded-xl p-2 border border-white/5 text-center">
-                  <Users className="text-lg text-green-400 mx-auto mb-1" />
-                  <div className="text-white font-black text-base">Invite</div>
-                  <div className="text-[9px] uppercase tracking-widest text-gray-500">Friends</div>
-                </div>
-              </div>
+        <section className={styles.hero}>
+          <div>
+            <p className={club.eyebrow}><CalendarDays size={15} /> YOUR DAILY DOSE OF DISCOVERY</p>
+            <h1>A new day.<br />A little <em>more curious.</em></h1>
+            <p className={styles.intro}>Pick your topic, put your knowledge to the test, and learn something unexpected. Fresh daily trivia, ready whenever you are.</p>
+            <div className={club.actions}>
+              <Link href="#daily-trivia-categories" className={club.primary}>Choose your quiz <ArrowRight size={18} /></Link>
+              <span className={styles.note}>Free to play · No account needed</span>
             </div>
           </div>
-        </div>
+          <aside className={styles.dailyNote}>
+            <CalendarDays size={35} strokeWidth={1.5} />
+            <p className={club.eyebrow}>MAKE A LITTLE TIME FOR TRIVIA</p>
+            <h2>A fresh set.<br />Every single day.</h2>
+            <p>{dailyQuizzes.length} featured topics. Plenty of possibilities.</p>
+            <div className={styles.reset}><Timer className={styles.timer} /></div>
+          </aside>
+        </section>
 
-        <div className="py-4">
-          <Ads
-            format="horizontal"
-            slot="2207590813"
-            isMobileFooter={false}
-            className="lg:hidden"
-          />
-        </div>
-
-        {/* ── Category Grid ─────────────────────────────────────────────── */}
-        <div id="daily-trivia-categories" className="mb-16 scroll-mt-6">
-          <h2 className="text-2xl font-bold text-white mb-6 text-center">
-            Featured Daily Trivia Categories
-          </h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 lg:gap-6">
-            {dailyQuizzes.map((quiz, index) => (
-              <QuizCard key={quiz.category} quiz={quiz} index={index} />
-            ))}
+        <section id="daily-trivia-categories" className={styles.categories}>
+          <div className={club.sectionHeading}>
+            <div><p className={club.eyebrow}>FOLLOW YOUR CURIOSITY</p><h2>What’s your topic today?</h2><p>Start with a favourite. Come back for something new.</p></div>
+            <span className={styles.note}><Sparkles size={15} /> {dailyQuizzes.length} daily quizzes</span>
           </div>
-        </div>
+          <div className={styles.grid}>{dailyQuizzes.map((quiz, index) => <QuizCard key={quiz.category} quiz={quiz} index={index} />)}</div>
+          {dailyQuizzes.length === 0 && <p className={styles.empty}>Today’s categories are unavailable right now. Please try again shortly.</p>}
+        </section>
 
-        {/* ── How It Works ──────────────────────────────────────────────── */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-white text-center mb-4">
-            How It Works
-          </h2>
-          <p className="text-gray-400 text-center max-w-2xl mx-auto mb-8">
-            Choose a category, answer the day&apos;s questions, and compare scores before the next reset.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-2xl p-6 border border-cyan-500/20">
-              <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center mb-4">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">New Questions Every 24 Hours</h3>
-              <p className="text-gray-300">
-                Each category refreshes daily, so returning players get a new set instead of replaying
-                yesterday&apos;s quiz.
-              </p>
-            </div>
+        <div className={`${club.ad} lg:hidden`}><span>ADVERTISEMENT</span><Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" /></div>
 
-            <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-6 border border-purple-500/20">
-              <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mb-4">
-                <Star className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Track Your Daily Streak</h3>
-              <p className="text-gray-300">
-                Played categories show a completion checkmark until the next reset.
-              </p>
-            </div>
+        <section className={styles.friends}>
+          <span className={styles.friendsIcon}><Users size={36} strokeWidth={1.5} /></span>
+          <div><p className={club.eyebrow}>BETTER WITH A LITTLE FRIENDLY RIVALRY</p><h2>Same questions. Different bragging rights.</h2><p>Create a private quiz room, share the invite, and see who knows their stuff.</p></div>
+          <Link href="/multiplayer?quizType=daily-trivias" className={club.primary}>Play with friends <ArrowRight size={18} /></Link>
+        </section>
 
-            <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20">
-              <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-4">
-                <Trophy className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Share and Compete</h3>
-              <p className="text-gray-300">
-                Share your score or create a private room so friends can play the same questions.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* ── FAQ ──────────────────────────────────────────────────────── */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-white text-center mb-8">
-            Frequently Asked Questions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section className={club.section}>
+          <div className={club.sectionHeading}><div><p className={club.eyebrow}>A SIMPLE DAILY RITUAL</p><h2>Pick. Play. Come back curious.</h2></div></div>
+          <div className={styles.steps}>
             {[
+              ['01', 'Find your favourite', 'Choose a topic you love or try something outside your usual interests.'],
+              ['02', 'Put your knowledge to work', 'Answer the day’s questions and discover something new along the way.'],
+              ['03', 'Make it a daily habit', 'Compare scores with friends and return for a fresh set after the next reset.'],
+            ].map(([number, title, text]) => <div key={number}><span>{number}</span><h3>{title}</h3><p>{text}</p></div>)}
+          </div>
+        </section>
+
+        <section className={styles.faq}>
+          <p className={club.eyebrow}>GOOD TO KNOW</p><h2>A few curious questions.</h2>
+          {[
               {
                 question: 'How often are new daily trivia quizzes available?',
                 answer:
@@ -344,20 +203,14 @@ export default async function DailyQuizzesPage() {
                 answer:
                   'Yes. Use Play With Friends to create a private room with an invite link and shared scoreboard.',
               },
-            ].map((faq, index) => (
-              <div
-                key={index}
-                className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300"
-              >
-                <h3 className="font-semibold text-lg text-white mb-3">{faq.question}</h3>
-                <p className="text-gray-300">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <ExploreSections exclude="daily-trivias" />
-      </div>
+            ].map((faq) => <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}
+        </section>
+        <section className={club.explore}>
+          <div><p className={club.eyebrow}>KEEP EXPLORING</p><h2>Still in a curious mood?</h2><p>There’s always another way to challenge your mind.</p></div>
+          <div className={club.exploreLinks}>{[['Brainwave puzzles', '/brainwave'], ['Weekly challenges', '/challenges'], ['Trivia library', '/trivias'], ['Leaderboard', '/leaderboard']].map(([label, href]) => <Link key={href} href={href}>{label}<ArrowRight size={17} /></Link>)}</div>
+        </section>
+      </main>
+      <PuzzleClubFooter />
     </div>
   );
 }

@@ -9,17 +9,26 @@ export function Breadcrumbs() {
   const paths = pathname.split('/').filter(Boolean);
 
   if (paths.length === 0) return null;
+  const light = /^\/(?:daily-trivias|challenges)(?:\/[^/]+)?(?:\/quiz)?$/.test(pathname)
+    || /^\/brainwave(?:\/[^/]+)?$/.test(pathname)
+    || /^\/trivias(?:\/[^/]+){0,2}(?:\/quiz)?$/.test(pathname)
+    || /^\/trivia-bank(?:\/[^/]+)?$/.test(pathname)
+    || /^\/(?:about|contact)$/.test(pathname)
+    || /^\/blog(?:\/[^/]+)?$/.test(pathname)
+    || /^\/multiplayer(?:\/[^/]+)?$/.test(pathname)
+    || /^\/(?:word-games|number-puzzles|retro-games)(?:\/[^/]+)?$/.test(pathname)
+    || /^\/leaderboard(?:\/groups)?$/.test(pathname);
 
   return (
     <nav 
       aria-label="Breadcrumb navigation" 
-      className="bg-black/20 backdrop-blur-sm border-b border-white/5 text-white/60 px-4 py-2"
+      className={light ? "bg-[#faf8f2] border-b border-[#dedfd4] text-[#526a5e] px-4 py-2" : "bg-black/20 backdrop-blur-sm border-b border-white/5 text-white/60 px-4 py-2"}
     >
-      <ol className="container mx-auto flex items-center gap-2 text-sm">
+      <ol className="container mx-auto flex flex-wrap items-center gap-2 text-sm">
         <li>
           <Link 
             href="/" 
-            className="hover:text-grey-200 transition-colors"
+            className={light ? "transition-colors hover:text-[#17675b]" : "transition-colors hover:text-gray-200"}
             aria-label="Home"
           >
             Home
@@ -32,10 +41,10 @@ export function Breadcrumbs() {
 
           return (
             <li key={href} className="flex items-center gap-2">
-              <ChevronRight className="text-grey-300 text-xs" />
+              <ChevronRight size={14} className={light ? "text-[#9aa79d]" : "text-gray-400"} aria-hidden="true" />
               {isLast ? (
                 <span 
-                  className="font-medium capitalize text-white" 
+                  className={`font-medium capitalize ${light ? "text-[#203b3a]" : "text-white"}`}
                   aria-current="page"
                 >
                   {name}
@@ -43,7 +52,7 @@ export function Breadcrumbs() {
               ) : (
                 <Link 
                   href={href}
-                  className="hover:text-grey-200 transition-colors capitalize"
+                  className={light ? "capitalize transition-colors hover:text-[#17675b]" : "capitalize transition-colors hover:text-gray-200"}
                 >
                   {name}
                 </Link>

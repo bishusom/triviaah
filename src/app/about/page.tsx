@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Target, Users, Star, Heart } from 'lucide-react';
+import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
+import styles from '@/components/common/InfoPagesClub.module.css';
 
 export const metadata: Metadata = {
   title: 'About Triviaah | Free Trivia and Quiz Games',
@@ -40,7 +42,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+    <div id="about-main" className={styles.page}>
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
@@ -49,7 +51,7 @@ export default function AboutPage() {
             OUR STORY
           </div>
           
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h1 className="mb-6 font-serif text-5xl font-bold text-[#203b3a] md:text-6xl">
             About Triviaah
           </h1>
           
@@ -194,6 +196,7 @@ export default function AboutPage() {
           </div> */}
         </div>
       </div>
+      <PuzzleClubFooter />
     </div>
   );
 }

@@ -1,0 +1,536 @@
+.page {
+  background: #faf8f2;
+  color: #203b3a;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 64px;
+  align-items: center;
+  padding: 54px 0;
+}
+
+.hero h1 {
+  font: 700 clamp(44px, 5vw, 66px)/1.08 Georgia, serif;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+}
+
+.hero h1 em {
+  color: #17675b;
+  font-weight: 400;
+}
+
+.intro {
+  color: #606f65;
+  font-size: 14px;
+  line-height: 1.85;
+  margin-top: 14px;
+  max-width: 600px;
+}
+
+.muted {
+  font-size: 12px;
+  color: #617160;
+}
+
+.heroArt {
+  position: relative;
+  padding: 30px;
+  border: 1px solid #d9d1e4;
+  background: #ece6f2;
+  text-align: center;
+  border-radius: 18px;
+  color: #655276;
+}
+
+.heroArt > svg:first-child {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #8b6a9f;
+}
+
+.heroArt > p {
+  font-size: 9px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  margin: 12px 0 22px;
+}
+
+.heroArt > svg {
+  margin: auto;
+}
+
+.heroArt strong {
+  display: block;
+  font: 28px Georgia, serif;
+  margin: 18px 0;
+}
+
+.heroArt > span {
+  font-size: 11px;
+}
+
+.tiles {
+  display: flex;
+  gap: 9px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.tiles span {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 46px;
+  border: 1px solid #cec3d9;
+  border-radius: 7px;
+  background: #faf8f2;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.tiles span:last-child {
+  background: #dce9de;
+  color: #17675b;
+  border-color: #bdd1bc;
+}
+
+.section {
+  margin: 40px 0;
+  scroll-margin-top: 105px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dedfd4;
+  border-radius: 13px;
+  background: #fffefb;
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px #203b3a12;
+}
+
+.cardArt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 23px;
+}
+
+.cardArt img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  border-radius: 16px;
+}
+
+.cardArt span {
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: 1.6px;
+}
+
+.cardBody {
+  padding: 23px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cardBody h3 {
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.cardBody p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #627065;
+  margin: 12px 0 22px;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 25px;
+}
+
+.steps article {
+  border-top: 1px solid #dedfd4;
+  padding-top: 22px;
+}
+
+.steps span {
+  display: block;
+  font: 26px Georgia, serif;
+  color: #17675b;
+  margin-bottom: 16px;
+}
+
+.steps p {
+  color: #627065;
+  font-size: 13px;
+  line-height: 1.8;
+  margin-top: 10px;
+}
+
+.faq {
+  margin: 35px 0;
+}
+
+.faq h2 {
+  margin-bottom: 22px;
+}
+
+.faq details {
+  border-bottom: 1px solid #dedfd4;
+}
+
+.faq summary {
+  padding: 20px 4px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.75;
+  font-weight: 650;
+}
+
+.faq details > p {
+  color: #627065;
+  font-size: 14px;
+  line-height: 1.85;
+  padding: 0 4px 22px;
+}
+
+.page a:focus-visible, .landing button:focus-visible, .faq summary:focus-visible {
+  outline: 3px solid #c66c35;
+  outline-offset: 4px;
+}
+
+.empty {
+  padding: 30px;
+  border: 1px dashed #becdb7;
+  border-radius: 12px;
+}
+
+.puzzleMain {
+  max-width: 768px;
+  margin: auto;
+  padding: 30px 16px;
+}
+
+.puzzleHeader {
+  margin-bottom: 25px;
+}
+
+.puzzleHeader h1 {
+  font: 700 clamp(28px, 4vw, 40px)/1.18 Georgia, serif;
+  letter-spacing: -.8px;
+}
+
+.landing {
+  padding: 26px;
+  background: #fffefb;
+  border: 1px solid #dedfd4;
+  border-radius: 15px;
+}
+
+.landing h2, .guide h2, .note h2, .warmup h2, .puzzleMain > .faq h2, .puzzleMain > .section h2 {
+  font: 700 26px/1.25 Georgia, serif;
+  letter-spacing: -.5px;
+}
+
+.landingTop {
+  display: grid;
+  grid-template-columns: 1fr 170px;
+  gap: 25px;
+  align-items: center;
+}
+
+.landingImage {
+  background: #e9eee0;
+  padding: 12px;
+  border-radius: 13px;
+}
+
+.landingImage img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.playNotes {
+  border-top: 1px solid #dedfd4;
+  margin-top: 24px;
+  padding-top: 22px;
+}
+
+.playNotes h3, .guide h3 {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.playNotes ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  margin-top: 14px;
+  padding-left: 18px;
+  list-style: disc;
+  color: #627065;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.gameBoard {
+  background: #0a0f1c;
+  color: #fff;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.guide {
+  margin: 35px 0;
+}
+
+.guide p, .note > p:not(:first-child) {
+  color: #627065;
+  font-size: 14px;
+  line-height: 1.9;
+  margin: 15px 0;
+}
+
+.guideColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.guideColumns article {
+  padding: 20px;
+  background: #fffefb;
+  border: 1px solid #dedfd4;
+  border-radius: 12px;
+}
+
+.guide ul {
+  list-style: disc;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.85;
+  color: #627065;
+  margin-top: 12px;
+}
+
+.note {
+  padding: 25px;
+  background: #e9eee0;
+  border: 1px solid #d6dfcc;
+  border-radius: 14px;
+  margin: 30px 0;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.highlights span {
+  background: #f3e7c9;
+  border: 1px solid #e3d7b8;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #655d45;
+}
+
+.warmup {
+  margin: 35px 0;
+  padding: 25px;
+  border: 1px solid #dedfd4;
+  border-radius: 14px;
+  background: #fffefb;
+}
+
+.warmup .faq {
+  margin-bottom: 0;
+}
+
+.answer {
+  padding: 20px;
+  background: #e9eee0;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.answer p {
+  margin: 12px 0;
+}
+
+.answer > span {
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.answer ul {
+  list-style: disc;
+  padding-left: 18px;
+  margin-top: 10px;
+}
+
+.related {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.related a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #fffefb;
+  border: 1px solid #dedfd4;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.related img {
+  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.related a > span {
+  flex: 1;
+}
+
+.related svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    gap: 28px;
+  }
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 34px 0;
+  }
+  .hero h1 {
+    font-size: 44px;
+    letter-spacing: -1.5px;
+  }
+  .heroArt {
+    padding: 22px;
+  }
+  .heroArt > svg:not(:first-child) {
+    width: 55px;
+    height: 55px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .card {
+    flex-direction: row;
+  }
+  .cardArt {
+    width: 110px;
+    flex-shrink: 0;
+    padding: 15px 10px;
+    justify-content: center;
+  }
+  .cardArt img {
+    width: 82px;
+    height: 82px;
+  }
+  .cardArt span {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .cardBody {
+    padding: 18px 14px;
+    min-width: 0;
+  }
+  .cardBody h3 {
+    font-size: 15px;
+  }
+  .cardBody p {
+    font-size: 12px;
+  }
+  .steps, .guideColumns, .related {
+    grid-template-columns: 1fr;
+  }
+  .steps {
+    gap: 22px;
+  }
+  .landing {
+    padding: 20px;
+  }
+  .landingTop {
+    grid-template-columns: 1fr;
+  }
+  .landingImage {
+    max-width: 150px;
+    margin: auto;
+  }
+  .playNotes ul {
+    grid-template-columns: 1fr;
+  }
+  .warmup, .note {
+    padding: 20px;
+  }
+  .gameBoard {
+    padding: 0;
+  }
+  .puzzleMain {
+    padding-top: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+  .card:hover {
+    transform: none;
+  }
+}
+

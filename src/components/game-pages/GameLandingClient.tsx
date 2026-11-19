@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Play } from 'lucide-react';
 import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
+import wordStyles from '@/components/word-games/WordGamesClub.module.css';
 
 type GameLandingClientProps = {
   game: ReactNode;
@@ -19,6 +20,7 @@ type GameLandingClientProps = {
   isDailyRefresh?: boolean;
   backHref?: string;
   backLabel?: string;
+  theme?: 'default' | 'puzzle-club' | 'retro-club';
 };
 
 export default function GameLandingClient({
@@ -34,8 +36,10 @@ export default function GameLandingClient({
   isDailyRefresh = true,
   backHref = '/',
   backLabel = 'Back',
+  theme = 'default',
 }: GameLandingClientProps) {
   const [hasStarted, setHasStarted] = useState(false);
+  const usesClubLanding = theme === 'puzzle-club' || theme === 'retro-club';
   const descriptionParts = [
     introText,
     supportingCopy,
@@ -47,18 +51,18 @@ export default function GameLandingClient({
 
   if (hasStarted) {
     return (
-      <div className="mx-auto w-full max-w-3xl px-4">
+      <div className={`${theme === 'puzzle-club' ? wordStyles.gameExperience : theme === 'retro-club' ? wordStyles.retroExperience : ''} mx-auto w-full max-w-3xl px-4`}>
         {game}
       </div>
     );
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4">
+    <div className={`${usesClubLanding ? wordStyles.gameExperience : ''} mx-auto w-full max-w-3xl px-4`}>
       <div className="rounded-3xl border border-white/10 bg-black/30 p-4 md:p-6 shadow-2xl">
         <div className="grid gap-5 md:grid-cols-[180px_1fr] md:items-start">
           {landingImage ? (
-            <div className="order-2 mx-auto w-full max-w-[160px] overflow-hidden rounded-[1.35rem] border border-cyan-400/20 bg-gradient-to-br from-slate-800 to-slate-950 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.4)] md:order-1 md:mx-0 md:max-w-[180px]">
+            <div className={`${usesClubLanding ? wordStyles.landingArt : ''} order-2 mx-auto w-full max-w-[160px] overflow-hidden rounded-[1.35rem] border border-cyan-400/20 bg-gradient-to-br from-slate-800 to-slate-950 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.4)] md:order-1 md:mx-0 md:max-w-[180px]`}>
               <div className="relative aspect-square overflow-hidden rounded-[1.2rem] border border-white/10 bg-slate-950/80">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_25%,rgba(96,165,250,0.18),transparent_34%),radial-gradient(circle_at_70%_30%,rgba(34,211,238,0.16),transparent_30%),radial-gradient(circle_at_50%_75%,rgba(139,92,246,0.12),transparent_36%)]" />
                 <Image
@@ -92,8 +96,12 @@ export default function GameLandingClient({
                 onClick={() => setHasStarted(true)}
                 className="inline-flex shrink-0 items-center gap-2 rounded-full px-5 py-3 text-sm font-black uppercase tracking-[0.16em] text-white transition-all duration-200 active:scale-95 hover:scale-[1.02]"
                 style={{
-                  background: 'linear-gradient(90deg, #2563eb 0%, #06b6d4 100%)',
-                  boxShadow: '0 10px 30px rgba(37,99,235,0.32)',
+                  background: usesClubLanding
+                    ? 'linear-gradient(90deg, #17675b 0%, #2f7d66 100%)'
+                    : 'linear-gradient(90deg, #2563eb 0%, #06b6d4 100%)',
+                  boxShadow: usesClubLanding
+                    ? '0 10px 26px rgba(23,103,91,0.22)'
+                    : '0 10px 30px rgba(37,99,235,0.32)',
                 }}
               >
                 <Play className="h-4 w-4 fill-current" />

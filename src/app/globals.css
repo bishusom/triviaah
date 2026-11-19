@@ -46,3 +46,36 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Quiz routes opt into the light Puzzle Club canvas at the page-shell level. */
+body:has(#quiz-main),
+body:has(#quiz-main) .site-content {
+  background: #faf8f2;
+}
+
+body:has(#leaderboard-main),
+body:has(#leaderboard-main) .site-content {
+  background: #faf8f2;
+}
+
+body:has(#trivia-bank-main),
+body:has(#trivia-bank-main) .site-content {
+  background: #faf8f2;
+}
+
+body:has(#about-main),
+body:has(#about-main) .site-content,
+body:has(#contact-main),
+body:has(#contact-main) .site-content {
+  background: #faf8f2;
+}
+
+body:has(#blog-main),
+body:has(#blog-main) .site-content {
+  background: #faf8f2;
+}
+
+body:has(#multiplayer-main),
+body:has(#multiplayer-main) .site-content {
+  background: #faf8f2;
+}

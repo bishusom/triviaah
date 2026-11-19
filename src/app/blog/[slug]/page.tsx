@@ -6,6 +6,8 @@ import { getPostData } from '@/lib/markdown';
 import { Twitter, Linkedin, Facebook, Share2 } from 'lucide-react';
 import CopyLinkButton from '@/components/blog/CopyLinkButton';
 import Ads from '@/components/common/Ads';
+import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
+import styles from '@/components/blog/BlogClub.module.css';
 
 // src/app/blog/[slug]/page.tsx
 
@@ -95,7 +97,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const bottomContent = contentParts.slice(middleIndex).join('</p>');
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white">
+    <div id="blog-main" className={styles.page}>
       <Script
         id="blog-post-schema"
         type="application/ld+json"
@@ -104,7 +106,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
       <article className="container mx-auto px-4 py-8 max-w-4xl">
         <header className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 mb-8 border-b border-white/10 pb-6">
-          <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight leading-tight">
+          <h1 className="font-serif text-3xl font-bold leading-tight text-[#203b3a] md:text-5xl">
             {post.header}
           </h1>
           <time className="text-gray-400 text-xs font-black uppercase tracking-widest shrink-0 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
@@ -113,7 +115,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </header>
 
         {/* Grayish readability container */}
-        <div className="bg-gray-50 rounded-2xl shadow-xl overflow-hidden text-black">
+        <div className={`${styles.readingPanel} overflow-hidden rounded-2xl text-black`}>
           {post.image && (
             <div className="relative h-64 md:h-96 w-full border-b border-gray-200">
               <Image src={post.image} alt={post.title} fill className="object-cover" priority />
@@ -194,6 +196,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </div>
         </footer>
       </article>
+      <PuzzleClubFooter />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import styles from './QuizExperience.module.css';
 import {
   Home, Medal, RotateCcw, Share2, Trophy,
   BookOpen, XCircle, CheckCircle2, User, CalendarDays, ArrowRight
@@ -207,12 +208,12 @@ export default function QuizSummary({
   const rankMessage = MESSAGES[tier][Math.floor(Math.random() * MESSAGES[tier].length)];
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8 flex flex-col items-center">
+    <div className={styles.summary}>
 
       {context === 'daily-trivias' && rankedResult !== null && (
         <div className={`mb-6 w-full max-w-4xl rounded-xl border px-4 py-3 text-center text-sm font-bold ${
           rankedResult
-            ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-200'
+            ? 'border-[#6d9e7d] bg-[#dcecdf] text-[#174b38]'
             : 'border-violet-400/30 bg-violet-500/10 text-violet-200'
         }`}>
           {rankedResult
@@ -228,7 +229,7 @@ export default function QuizSummary({
         <motion.div
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          className="bg-gray-800 rounded-3xl p-6 border border-gray-700 shadow-2xl flex flex-col items-center text-center"
+          className={`${styles.resultCard} p-6 flex flex-col items-center text-center`}
         >
           <div className="relative mb-4">
             <Trophy className={`w-16 h-16 ${tier === 'gold' ? 'text-yellow-400' : 'text-gray-400'}`} />
@@ -292,7 +293,7 @@ export default function QuizSummary({
         <motion.div
           initial={{ x: 20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          className="bg-gray-800/50 rounded-3xl p-6 border border-gray-700"
+          className={`${styles.leaderboardCard} p-6`}
         >
           <h3 className="text-lg font-bold flex items-center gap-2 mb-6 text-yellow-500 uppercase tracking-tighter">
             <Medal /> Category Leaderboard

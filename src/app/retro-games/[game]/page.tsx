@@ -138,6 +138,7 @@ export default async function RetroGamePage({
           backHref="/retro-games"
           backLabel="Back to Retro Games"
           game={<RetroGamesGameClient componentKey={routeDefinition.componentKey} />}
+          theme="retro-club"
         />
       </GameRouteShell>
     </GamePageChrome>

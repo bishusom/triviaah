@@ -138,6 +138,7 @@ export default async function WordGamePage({
           backHref="/word-games"
           backLabel="Back to Word Games"
           game={<WordGamesGameClient slug={routeDefinition.slug} />}
+          theme="puzzle-club"
         />
       </GameRouteShell>
     </GamePageChrome>
