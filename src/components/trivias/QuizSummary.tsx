@@ -61,7 +61,7 @@ export default function QuizSummary({
 }: {
   result: QuizResult;
   onRestart: () => void;
-  context?: 'trivias' | 'daily-trivias' | 'quick-fire';
+  context?: 'trivias' | 'daily-trivias' | 'quick-fire' | 'weekly_challenge';
   quizDate?: string;
   initialPracticeMode?: boolean;
   showDailyTriviaHistory?: boolean;
@@ -114,6 +114,8 @@ export default function QuizSummary({
       if (context === 'daily-trivias' && quizDate) {
         params.set('quizType', 'daily-trivias');
         params.set('quizDate', quizDate);
+      } else if (context === 'weekly_challenge') {
+        params.set('quizType', 'weekly_challenge');
       }
       const res = await fetch(`/api/highscores?${params.toString()}`);
       const data = await res.json();
@@ -148,7 +150,12 @@ export default function QuizSummary({
             correct_answers: result.correctCount,
             total_questions: result.totalQuestions,
             time_used: result.timeUsed,
-            quiz_type: context === 'daily-trivias' ? 'daily-trivias' : 'trivias',
+            subcategory: result.subcategory,
+            quiz_type: context === 'daily-trivias'
+              ? 'daily-trivias'
+              : context === 'weekly_challenge'
+                ? 'weekly_challenge'
+                : 'trivias',
             quiz_date: context === 'daily-trivias' ? quizDate : undefined,
           }),
         });

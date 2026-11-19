@@ -53,7 +53,7 @@ interface QuizGameProps {
   category: string;
   subcategory?: string;
   quizConfig?: QuizConfig;
-  quizType?: 'trivias' | 'daily-trivias' | 'quick-fire';
+  quizType?: 'trivias' | 'daily-trivias' | 'quick-fire' | 'weekly_challenge';
   quizDate?: string;
   showDailyTriviaHistory?: boolean;
 }

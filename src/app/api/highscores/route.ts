@@ -16,7 +16,7 @@ type SaveScorePayload = {
   time_used: number;
   difficulty?: string;
   subcategory?: string | null;
-  quiz_type?: 'trivias' | 'daily-trivias';
+  quiz_type?: 'trivias' | 'daily-trivias' | 'weekly_challenge';
   quiz_date?: string;
 };
 
@@ -25,7 +25,10 @@ const DATE_KEY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get('category') || 'general knowledge';
-  const quizType = searchParams.get('quizType') === 'daily-trivias' ? 'daily-trivias' : undefined;
+  const requestedQuizType = searchParams.get('quizType');
+  const quizType = requestedQuizType === 'daily-trivias' || requestedQuizType === 'weekly_challenge'
+    ? requestedQuizType
+    : undefined;
   const quizDate = searchParams.get('quizDate') || undefined;
   const playerName = searchParams.get('playerName')?.trim();
 

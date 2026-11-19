@@ -650,7 +650,7 @@ export type HighScore = {
   correct_answers: number;
   total_questions: number;
   time_used: number; 
-  quiz_type?: 'trivias' | 'daily-trivias';
+  quiz_type?: 'trivias' | 'daily-trivias' | 'weekly_challenge';
   quiz_date?: string | null;
   timestamp?: Date;
 };
@@ -658,7 +658,7 @@ export type HighScore = {
 export async function getHighScores(
   category: string, 
   limitCount: number = 5,
-  quizType?: 'trivias' | 'daily-trivias',
+  quizType?: 'trivias' | 'daily-trivias' | 'weekly_challenge',
   quizDate?: string
 ): Promise<HighScore[]> {
   try {
@@ -753,7 +753,7 @@ export async function addHighScore(scoreData: Omit<HighScore, 'id'>): Promise<st
         name: scoreData.name,
         score: scoreData.score,
         category: scoreData.category,
-        subcategory: scoreData.category|| null,
+        subcategory: scoreData.subcategory ?? null,
         difficulty: scoreData.difficulty,
         correct_answers: scoreData.correct_answers,
         total_questions: scoreData.total_questions,

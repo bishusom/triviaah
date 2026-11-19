@@ -161,7 +161,7 @@ export default async function ChallengeQuizPage({ params }: PageProps) {
               hasBonusQuestion: false,
               regularQuestionCount: questions.length,
             }}
-            quizType="trivias"
+            quizType="weekly_challenge"
             showDailyTriviaHistory={false}
           />
         </div>
