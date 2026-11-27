@@ -1,0 +1,10 @@
+Generated with the built-in image_gen tool.
+
+Retro Games
+Create a square website category illustration for Retro Games. Dark navy background, softly textured polished 3D illustration matching a collection of blue, violet and warm golden yellow beveled puzzle tiles. Central large blue retro joystick with golden ball top and violet and gold arcade buttons, small arrangement of block puzzle pieces behind it. Bold simple silhouette readable at 160px, centered with generous margin. Subtle shadows and warm highlights. No text, no letters, no logos, no watermark. Save this as a standalone category image.
+
+IQ & Personality Tests
+Create a square website category illustration for IQ & Personality Tests. Dark navy background, softly textured polished 3D illustration matching a collection of blue, violet and warm golden yellow beveled puzzle tiles. Central stylized brain assembled from a few rounded blue and violet puzzle sections with one warm gold section, with two subtle overlapping human profile silhouettes integrated into the composition. Friendly educational mood. Bold simple silhouette readable at 160px, centered with generous margin. Subtle shadows and warm highlights. No text, no letters, no logos, no watermark. Save this as a standalone category image.
+
+Background correction (built-in image_gen edit, applied separately to Retro Games and IQ & Personality Tests)
+Edit image 1 only. Image 2 (Word Games) is the BACKGROUND COLOR REFERENCE ONLY. Replace the saturated deep blue background in image 1 with the same muted, low-saturation charcoal slate navy as the background of image 2, approximately #171f2a, subtle matte texture. Match the reference's background brightness and neutral gray-blue hue closely across the full image including edges and negative spaces. Preserve all foreground objects, shapes, layout, colors, lighting, size and detail from image 1 exactly. Do not add anything, do not change composition. Square output.
