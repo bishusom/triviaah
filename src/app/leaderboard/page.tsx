@@ -5,8 +5,6 @@ import { getPersistentGuestId, rerollGuestId } from '@/lib/guestId';
 import { Crown, Trophy, Star, Medal, Clock, Target, Award, BarChart3, UserCircle, RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { getLeaderboard, getUserRank, getUserStats, type LeaderboardEntry } from '@/lib/leaderboard';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
-import styles from '@/components/leaderboard/LeaderboardClub.module.css';
 
 type Timeframe = 'weekly' | 'monthly' | 'all-time';
 
@@ -40,20 +38,20 @@ export default function LeaderboardPage() {
   const loadLeaderboardData = async (currentGuestId: string) => {
     try {
       setLoading(true);
-      
+
       console.log('Loading leaderboard data...');
       console.log('Guest ID:', currentGuestId);
       console.log('Timeframe:', timeframe);
-      
+
       const leaderboard = await getLeaderboard(timeframe);
       console.log('Leaderboard loaded:', leaderboard);
-      
+
       const rank = await getUserRank(currentGuestId, timeframe);
       console.log('User rank:', rank);
-      
+
       const stats = await getUserStats(currentGuestId, timeframe);
       console.log('User stats:', stats);
-      
+
       setLeaderboardData(leaderboard);
       setUserRank(rank);
       setUserStats(stats);
@@ -100,8 +98,8 @@ export default function LeaderboardPage() {
   const renderAvatar = (player: LeaderboardEntry) => {
     if (isAvatarUrl(player.avatar)) {
       return (
-        <img 
-          src={player.avatar} 
+        <img
+          src={player.avatar}
           alt={player.displayName}
           width={40}
           height={40}
@@ -127,10 +125,10 @@ export default function LeaderboardPage() {
 
   if (loading) {
     return (
-      <div id="leaderboard-main" className={`${styles.page} py-8`}>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black py-8">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-8">
-            <h1 className="mb-2 font-serif text-4xl font-bold text-[#203b3a]">Leaderboard</h1>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-2">Leaderboard</h1>
             <p className="text-gray-400">Loading leaderboard data...</p>
           </div>
           <div className="bg-gray-800/50 rounded-xl border-2 border-gray-700 p-6">
@@ -146,16 +144,16 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div id="leaderboard-main" className={`${styles.page} py-8`}>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black py-8">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="mb-2 font-serif text-4xl font-bold text-[#203b3a]">Leaderboard</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-2">Leaderboard</h1>
           <p className="text-gray-400">Compete with quiz enthusiasts worldwide</p>
-          <Link href="/leaderboard/groups" className="mt-4 inline-block rounded-lg border border-[#8fb1a5] px-4 py-2 font-semibold text-[#17675b] transition-colors hover:bg-[#e9eee0] hover:text-[#104b42]">
+          <Link href="/leaderboard/groups" className="mt-4 inline-block rounded-lg border border-cyan-400/30 px-4 py-2 text-cyan-300 hover:bg-cyan-400/10">
             Compete with friends in a private group →
           </Link>
-          
+
           {/* Guest ID Display */}
           <div className="mt-4 flex items-center justify-center gap-2">
             <div className="text-sm text-gray-400">
@@ -241,7 +239,7 @@ export default function LeaderboardPage() {
                       key={`${player.username}-${player.rank}`}
                       className={`flex items-center gap-4 p-4 rounded-lg border-2 transition-all ${
                         player.displayName === guestId
-                          ? `${styles.currentPlayer} bg-gradient-to-r from-purple-600/20 to-blue-500/20 border-purple-500/30`
+                          ? 'bg-gradient-to-r from-purple-600/20 to-blue-500/20 border-purple-500/30'
                           : 'bg-gray-800/30 border-gray-700 hover:bg-gray-700/50'
                       }`}
                     >
@@ -255,7 +253,7 @@ export default function LeaderboardPage() {
                         {renderAvatar(player)}
                         {/* Fallback initials div (hidden by default, shown if image fails) */}
                         {isAvatarUrl(player.avatar) && (
-                          <div 
+                          <div
                             className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm absolute top-0 left-0 border border-gray-700"
                             style={{ display: 'none' }}
                           >
@@ -303,7 +301,7 @@ export default function LeaderboardPage() {
           /* Stats Tab */
           <div className="bg-gray-800/50 rounded-xl border-2 border-gray-700 p-6">
             <h2 className="text-xl font-bold text-white mb-6">Your Statistics - {getTimeframeText(timeframe)}</h2>
-            
+
             {!userStats ? (
               <div className="text-center text-gray-400 py-12">
                 <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-600" />
@@ -430,7 +428,6 @@ export default function LeaderboardPage() {
           </div>
         </section>
       </div>
-      <PuzzleClubFooter />
     </div>
   );
 }

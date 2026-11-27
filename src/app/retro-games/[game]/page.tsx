@@ -85,10 +85,10 @@ export async function generateMetadata({
       images: [ogImage],
     },
     robots: {
-      index: false,
+      index: true,
       follow: true,
       googleBot: {
-        index: false,
+        index: true,
         follow: true,
         'max-video-preview': -1,
         'max-image-preview': 'large',
@@ -120,8 +120,8 @@ export default async function RetroGamePage({
 
   return (
     <GamePageChrome>
-      <GameRouteShell 
-        page={page} 
+      <GameRouteShell
+        page={page}
         sectionLabel="Retro Games"
         relatedGames={allRetroGames}
       >
@@ -138,7 +138,6 @@ export default async function RetroGamePage({
           backHref="/retro-games"
           backLabel="Back to Retro Games"
           game={<RetroGamesGameClient componentKey={routeDefinition.componentKey} />}
-          theme="retro-club"
         />
       </GameRouteShell>
     </GamePageChrome>

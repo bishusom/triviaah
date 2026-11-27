@@ -8,18 +8,18 @@ import { SoundProvider } from '@/context/SoundContext';;
 import { Metadata, Viewport } from 'next';
 import './globals.css';
 
-const geist = Geist({ 
-  subsets: ['latin'], 
+const geist = Geist({
+  subsets: ['latin'],
   variable: '--font-geist',
   display: 'swap',
-  adjustFontFallback: true, 
+  adjustFontFallback: true,
   fallback: ['system-ui', 'arial']
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://triviaah.com'),
   title: 'Triviaah: Free Daily Trivia & Quiz Games',
-  description: 'Play free daily trivia, Brainwave puzzles, and weekly quiz challenges on Triviaah. Track scores, invite friends, and build a streak worth defending every week.',
+  description: 'Play free daily trivia, Brainwave puzzles, and topic quizzes on Triviaah. Track scores, invite friends, and build a streak worth defending every week.',
   keywords: 'daily trivia, daily quiz, multiplayer trivia, multiplayer quiz, online multiplayer trivia, private trivia room, free trivia, trivia questions, quiz games, daily challenge, trivia app, quiz app, trivia online, trivia categories, fun quizzes, trivia competition, trivia game, quiz challenge, trivia fun, plotle, songle, capitale',
   openGraph: {
     title: 'Triviaah: Free Daily Trivia & Quiz Games',
@@ -51,7 +51,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const isProduction = process.env.NODE_ENV === 'production';
-  
+
   return (
     <html lang="en" className={`${geist.variable} antialiased`}>
       <head>
@@ -60,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             dangerouslySetInnerHTML={{
               __html: `
                 /* Critical above-the-fold CSS to prevent CLS */
-                .logo-container { 
+                .logo-container {
                     min-height: 50px;
                     display: flex;
                     align-items: center;
@@ -83,29 +83,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   justify-content: center;
                   contain: layout style paint;
                 }
-                
-                main { 
+
+                main {
                   min-height: 60vh;
                   contain: layout style paint;
                 }
-                
+
                 /* Ensure containers don't collapse */
-                .container { 
-                  width: 100%; 
-                  margin-left: auto; 
-                  margin-right: auto; 
+                .container {
+                  width: 100%;
+                  margin-left: auto;
+                  margin-right: auto;
                 }
 
-                .hero-section { 
+                .hero-section {
                   min-height: 200px;
                   contain: layout style paint;
                 }
-                
+
                 .category-grid {
                   min-height: 400px;
                   contain: layout style paint;
                 }
-                
+
                 /* Ad containers must reserve space */
                 .ad-container {
                   min-height: 90px;
@@ -115,7 +115,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   align-items: center;
                   justify-content: center;
                 }
-                
+
                 @media (min-width: 640px) { .container { max-width: 640px; } }
                 @media (min-width: 768px) { .container { max-width: 768px; } }
                 @media (min-width: 1024px) { .container { max-width: 1024px; } }
@@ -128,14 +128,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geist.variable} font-[Geist,Geist-fallback] overflow-x-hidden`}>
         <SoundProvider>
           <NavBar />
-          <div className="site-content min-h-screen bg-[var(--background)] pt-20"> {/* Add padding top to account for fixed navbar */}
+          <div className="pt-20 bg-[var(--background)] min-h-screen"> {/* Add padding top to account for fixed navbar */}
             <Breadcrumbs />
             <div className="w-full overflow-x-hidden">
               {children}
             </div>
           </div>
           <SeoBreadcrumbs />
-          
+
           {/* Keep analytics off the critical rendering path. */}
           {isProduction && (
             <>
@@ -153,10 +153,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Script>
             </>
           )}
-          
+
           {/* Vercel Speed Insights */}
           {isProduction && <SpeedInsights />}
-          
+
           {/* AdSense Configuration */}
           {isProduction && (
             <>

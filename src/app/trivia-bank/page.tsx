@@ -2,8 +2,6 @@ import { Metadata } from 'next';
 import { getAllTriviaPreviews } from '@/lib/tbank';
 import TriviaFilter from '@/components/trivia-bank/TriviaFilter';
 import Ads from '@/components/common/Ads';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
-import styles from '@/components/trivia-bank/TriviaBankClub.module.css';
 
 interface TriviaCategory {
   slug: string;
@@ -16,7 +14,7 @@ interface TriviaCategory {
 // Generate metadata
 export async function generateMetadata(): Promise<Metadata> {
   const canonicalUrl = 'https://triviaah.com/trivia-bank';
-  
+
   return {
     title: 'Trivia Question Bank | Create Free Online Quiz Games | Triviaah',
     description: 'Explore our extensive trivia question bank. Create your own online quiz for free, perfect for virtual trivia games, team building, and classroom fun. Thousands of questions across 50+ categories.',
@@ -102,14 +100,14 @@ function TriviaBankJsonLd({ count }: { count: number }) {
 
 export default async function TriviaBankPage() {
   const triviaCategories: TriviaCategory[] = await getAllTriviaPreviews();
-  const sortedCategories = [...triviaCategories].sort((a, b) => 
+  const sortedCategories = [...triviaCategories].sort((a, b) =>
     a.header.localeCompare(b.header)
   );
 
   return (
-    <div id="trivia-bank-main" className={styles.page}>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <TriviaBankJsonLd count={triviaCategories.length} />
-      
+
       <div className="container mx-auto px-4 py-8">
         {/* ── Compact Hero Section ────────────────────────────────────────── */}
         <div className="mb-8 lg:mb-10">
@@ -121,13 +119,13 @@ export default async function TriviaBankPage() {
                   <span className="text-2xl text-white">📚</span>
                 </div>
                 <div>
-                  <h1 className="font-serif text-4xl font-bold leading-tight text-[#203b3a] md:text-5xl">
-                    Trivia <span className="text-[#17675b]">Bank</span>
+                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
+                    Trivia <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Bank</span>
                   </h1>
                 </div>
               </div>
               <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
-                Unlock thousands of high-quality trivia questions across 50+ categories. 
+                Unlock thousands of high-quality trivia questions across 50+ categories.
                 Perfect for creating custom quizzes, hosting game nights, or boosting your knowledge bank.
               </p>
             </div>
@@ -165,15 +163,15 @@ export default async function TriviaBankPage() {
             </h2>
             <div className="prose prose-lg prose-invert max-w-none">
               <p className="text-gray-300 mb-4">
-                Our free trivia question bank allows you to create your own online quiz for free with ease. 
-                As one of the best online quiz tools free available, we provide everything you need to 
-                create online trivia game free of charge. Whether you need free virtual trivia for teams, 
+                Our free trivia question bank allows you to create your own online quiz for free with ease.
+                As one of the best online quiz tools free available, we provide everything you need to
+                create online trivia game free of charge. Whether you need free virtual trivia for teams,
                 trivia games for adults online, or fun quiz games for friends, our question bank has you covered.
               </p>
               <p className="text-gray-300 mb-6">
-                Looking for free quiz hosting website capabilities? Our platform enables you to create quiz game online free 
-                and share it with others. Enjoy free online quiz for team building events or simply test your knowledge 
-                with our extensive collection of questions. As a completely free quiz website, we&apos;re committed to 
+                Looking for free quiz hosting website capabilities? Our platform enables you to create quiz game online free
+                and share it with others. Enjoy free online quiz for team building events or simply test your knowledge
+                with our extensive collection of questions. As a completely free quiz website, we&apos;re committed to
                 providing the best online trivia games experience without any cost.
               </p>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-300">
@@ -231,7 +229,6 @@ export default async function TriviaBankPage() {
             </div>
           </section>
         </div>
-        <PuzzleClubFooter />
       </div>
   );
 }

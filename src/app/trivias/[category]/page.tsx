@@ -10,11 +10,7 @@ import {
   getTriviaCategorySlugs,
 } from '@/lib/trivia-categories';
 import Ads from '@/components/common/Ads';
-import { ArrowRight, BookOpen, Users } from 'lucide-react';
-import club from '@/components/home/PuzzleClub.module.css';
-import styles from '@/components/trivias/TriviaLibrary.module.css';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
-
+import { Play, Timer, Info, ShieldQuestionMark, BookOpen, Trophy, CircleStar, Sparkles, Users } from 'lucide-react';
 
 export const revalidate = 3600;
 
@@ -45,12 +41,50 @@ interface Subcategory {
   question_count: number;
 }
 
+interface SubcategoryCardVariant {
+  shell: string;
+  glow: string;
+  topBar: string;
+  icon: string;
+}
+
 function getSubcategoryDescription(subcategory: Subcategory, categoryTitle: string) {
   if (subcategory.description && subcategory.description.trim().length > 0) {
     return subcategory.description;
   }
 
   return `Explore ${subcategory.subcategory.toLowerCase()} trivia inside ${categoryTitle.toLowerCase()} trivia.`;
+}
+
+function getSubcategoryCardVariant(index: number): SubcategoryCardVariant {
+  const variants: SubcategoryCardVariant[] = [
+    {
+      shell: 'from-slate-900/95 via-slate-900 to-cyan-950/60',
+      glow: 'rgba(34, 211, 238, 0.18)',
+      topBar: 'from-cyan-400 via-sky-400 to-blue-500',
+      icon: 'border-cyan-400/30 bg-cyan-400/12 text-cyan-200 shadow-cyan-500/15',
+    },
+    {
+      shell: 'from-slate-900/95 via-slate-900 to-indigo-950/60',
+      glow: 'rgba(59, 130, 246, 0.18)',
+      topBar: 'from-sky-400 via-blue-400 to-indigo-500',
+      icon: 'border-sky-400/30 bg-sky-400/12 text-sky-200 shadow-sky-500/15',
+    },
+    {
+      shell: 'from-slate-900/95 via-slate-900 to-blue-950/60',
+      glow: 'rgba(37, 99, 235, 0.18)',
+      topBar: 'from-blue-400 via-indigo-400 to-blue-600',
+      icon: 'border-blue-400/30 bg-blue-400/12 text-blue-200 shadow-blue-500/15',
+    },
+    {
+      shell: 'from-slate-900/95 via-slate-900 to-emerald-950/60',
+      glow: 'rgba(16, 185, 129, 0.18)',
+      topBar: 'from-emerald-400 via-teal-400 to-cyan-500',
+      icon: 'border-emerald-400/30 bg-emerald-400/12 text-emerald-200 shadow-emerald-500/15',
+    },
+  ];
+
+  return variants[index % variants.length];
 }
 
 interface StructuredDataProps {
@@ -130,7 +164,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   const categoryData: TriviaCategory = categoryRecord;
   const showPrintableQuizCTA = categoryRecord?.showPrintableQuizCTA !== false;
 
-  const subcategories = await getEnrichedSubcategoriesWithMinQuestions(category, 30);
+  let subcategories = await getEnrichedSubcategoriesWithMinQuestions(category, 30);
   const chooseChallengeHeading = `Choose Your ${categoryData.title} Trivia Challenge`;
   const masteryHeading = `${categoryData.title} Trivia Skills You'll Master`;
   const relatedHeading = `Explore Categories Related to ${categoryData.title} Trivia`;
@@ -144,18 +178,207 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     .then((items) => items.filter((item): item is { key: string; data: NonNullable<typeof item> extends { data: infer T } ? T : never } => item !== null));
 
   return (
-    <div className={club.club}>
-      <main id="library-main" className={club.main}>
-        <section className={styles.hero}>
-          <div><p className={club.eyebrow}>FROM THE TRIVIA LIBRARY</p><h1>{categoryData.displayName || categoryData.title}<br /><em>Follow your curiosity.</em></h1><p className={styles.intro}>{categoryData.description}</p><div className={club.actions}><Link href={`/trivias/${category}/quiz`} className={club.primary}>Start the full quiz <ArrowRight size={18} /></Link><Link href={`/multiplayer?category=${encodeURIComponent(category)}`} className={club.textLink}><Users size={17} /> Play with friends</Link></div></div>
-          <aside className={styles.libraryNote}><BookOpen size={52} strokeWidth={1.3} /><p className={club.eyebrow}>TAKE A CLOSER LOOK</p><h2>A whole subject.<br />So many discoveries.</h2><div className={styles.noteStats}><strong>{subcategories.length}</strong><span>topics to explore · Free to play</span></div></aside>
+    <div className="min-h-screen bg-[#0f172a] text-white">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+
+        {/* ── Compact Hero Section ────────────────────────────────────────── */}
+        <div className="mb-10 lg:mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center border-b border-white/5 pb-10">
+            {/* Title & Play Action */}
+            <div className="lg:col-span-8 text-left">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-2xl">🎯</span>
+                </div>
+                <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight leading-tight">
+                  {categoryData.title} <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Quiz</span>
+                </h1>
+              </div>
+
+              <p className="text-base md:text-xl text-gray-300 max-w-2xl mb-8 leading-relaxed italic">
+                &ldquo;{categoryData.description}&rdquo;
+              </p>
+
+              <div className="flex flex-wrap items-center gap-4">
+                <Link
+                  href={`/trivias/${category}/quiz`}
+                  className="group relative inline-flex items-center gap-3 bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-4 rounded-xl shadow-lg shadow-cyan-600/20 transition-all duration-300 font-black uppercase tracking-widest text-sm"
+                >
+                  <Play className="w-4 h-4 fill-current group-hover:scale-110 transition-transform" />
+                  Start Full Quiz
+                </Link>
+                <Link
+                  href={`/multiplayer?category=${encodeURIComponent(category)}`}
+                  className="group relative inline-flex items-center gap-3 rounded-xl border border-emerald-400/30 bg-slate-900/70 px-8 py-4 text-sm font-black uppercase tracking-widest text-emerald-100 shadow-lg shadow-emerald-950/10 transition-all duration-300 hover:border-emerald-300/50 hover:bg-slate-800 hover:text-white"
+                >
+                  <Users className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  Play With Friends
+                </Link>
+              </div>
+            </div>
+
+            {/* Integrated Stats Panel */}
+            <div className="lg:col-span-4 hidden lg:block">
+              <div className="bg-slate-800/40 rounded-3xl p-6 border border-white/5 backdrop-blur-sm">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                    <ShieldQuestionMark className="text-xl text-cyan-400 mb-2" />
+                    <div className="text-white font-black text-2xl">100+</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500">Questions</div>
+                  </div>
+                  <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                    <Timer className="text-xl text-yellow-400 mb-2" />
+                    <div className="text-white font-black text-2xl">30s</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500">Per Q</div>
+                  </div>
+                  <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                    <Trophy className="text-xl text-green-400 mb-2" />
+                    <div className="text-white font-black text-2xl">{subcategories.length}</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500">Modules</div>
+                  </div>
+                  <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                    <Sparkles className="text-xl text-blue-400 mb-2" />
+                    <div className="text-white font-black text-2xl">FREE</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-500">Access</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="py-4">
+          <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
+        </div>
+
+        {/* Subcategories Section */}
+        {subcategories.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">
+              {chooseChallengeHeading}
+            </h2>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 auto-rows-fr">
+              {subcategories.map((subcat, index) => {
+                const variant = getSubcategoryCardVariant(index);
+                return (
+                <Link
+                  key={subcat.subcategory}
+                  href={`/trivias/${category}/${slugifyTriviaSegment(subcat.subcategory)}`}
+                  className={`group relative flex h-full min-h-[150px] items-center justify-center overflow-hidden rounded-3xl border border-slate-700/80 bg-gradient-to-br ${variant.shell} p-5 text-center transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-300/30 hover:shadow-[0_28px_70px_rgba(8,145,178,0.24)]`}
+                >
+                  <div
+                    className="absolute inset-0 opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+                    style={{
+                      background: `radial-gradient(circle at top right, ${variant.glow}, transparent 32%), radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.14), transparent 28%), linear-gradient(180deg, rgba(255,255,255,0.03), transparent 45%)`,
+                    }}
+                  />
+                  <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${variant.topBar}`} />
+                  <div className="absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                  <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-cyan-400/10 blur-3xl transition-all duration-300 group-hover:bg-cyan-400/20" />
+
+                  <div className="relative z-10 flex w-full max-w-md flex-col items-center gap-3">
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+                        SUB-TOPIC
+                      </p>
+                      <h3 className="mt-2 flex items-center justify-center gap-2 text-xl font-bold text-white transition-colors group-hover:text-cyan-300">
+                        <Sparkles className="h-4 w-4 flex-shrink-0 text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.95)] transition-transform duration-300 group-hover:scale-110 group-hover:text-white" />
+                        <span>{subcat.subcategory}</span>
+                      </h3>
+                    </div>
+
+                    <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200 transition-colors group-hover:border-cyan-300/40 group-hover:bg-cyan-300/15">
+                      <Play className="h-3.5 w-3.5 translate-x-[1px]" />
+                      Explore
+                    </div>
+                  </div>
+                </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Learning Objectives */}
+        <div className="mb-16">
+          <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">
+            {masteryHeading}
+          </h2>
+          <section className="mb-24">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {(categoryData.learningPoints || [
+                "Master fundamental principles and terminology",
+                "Understand key historical developments",
+                "Discover practical applications and trivia facts"
+              ]).map((point, index) => (
+                <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-8 border border-gray-700 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <BookOpen size={64} className="text-cyan-400" />
+                  </div>
+                  <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center text-white font-bold text-xl mb-6 shadow-lg shadow-cyan-500/20">
+                    {index + 1}
+                  </div>
+                  <p className="text-gray-300 leading-relaxed font-medium">
+                    {point}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        {/* 4. LONG-FORM CONTENT SECTION: Vital for SEO Information Gain */}
+        <section className="bg-gray-800/30 rounded-3xl p-8 md:p-12 border border-gray-700 mb-20">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="bg-blue-500/20 p-2 rounded-lg">
+              <Info className="text-blue-400" size={24} />
+            </div>
+            <h2 className="text-2xl font-bold text-white">Deep Dive: {categoryData.title}</h2>
+          </div>
+          <div className="prose prose-invert max-w-none">
+            <p className="text-gray-400 leading-loose text-lg italic">
+              {categoryData.longDescription}
+            </p>
+          </div>
         </section>
-        {subcategories.length > 0 && <section className={styles.section}><div className={club.sectionHeading}><div><p className={club.eyebrow}>GO A LITTLE DEEPER</p><h2>{chooseChallengeHeading}</h2></div></div><div className={styles.topicGrid}>{subcategories.map(subcat => <Link key={subcat.subcategory} href={`/trivias/${category}/${slugifyTriviaSegment(subcat.subcategory)}`} className={styles.topicCard}><span className={styles.muted}>{subcat.question_count} questions</span><h3>{subcat.subcategory}</h3><p>{getSubcategoryDescription(subcat, categoryData.title)}</p><span className={club.cardAction}>Explore topic <ArrowRight size={17} /></span></Link>)}</div></section>}
-        <div className={`${club.ad} lg:hidden`}><span>ADVERTISEMENT</span><Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" /></div>
-        <section className={styles.section}><p className={club.eyebrow}>SOMETHING NEW TO LEARN</p><h2>{masteryHeading}</h2><div className={styles.learning}>{(categoryData.learningPoints || ['Master fundamental principles and terminology', 'Understand key historical developments', 'Discover practical applications and trivia facts']).map((point, index) => <article key={index}><span>{String(index + 1).padStart(2, '0')}</span><p>{point}</p></article>)}</div></section>
-        {categoryData.longDescription && <section className={styles.note}><h2>Deep dive: {categoryData.title}</h2><p>{categoryData.longDescription}</p></section>}
-        {relatedCategories.length > 0 && <section className={styles.section}><div className={club.sectionHeading}><h2>{relatedHeading}</h2></div><div className={styles.topicGrid}>{relatedCategories.map(({ key, data }) => <Link key={key} href={`/trivias/${key}`} className={styles.topicCard}><h3>{data.displayName || data.title}</h3><p>{data.description}</p><span className={club.cardAction}>Explore category <ArrowRight size={17} /></span></Link>)}</div></section>}
-        <section className={styles.faq}><h2>{faqHeading}</h2>{[
+
+        {/* Related Categories */}
+        {relatedCategories.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-8 uppercase tracking-tighter">
+              {relatedHeading}
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {relatedCategories.map(({ key, data }) => {
+                return (
+                  <Link
+                    key={key}
+                    href={`/trivias/${key}`}
+                    className="group bg-slate-800/40 hover:bg-slate-800/60 rounded-2xl p-6 border border-white/5 hover:border-cyan-500/20 transition-all duration-300 text-center"
+                  >
+                    <h3 className="font-black text-sm text-white group-hover:text-cyan-300 transition-colors mb-2 uppercase tracking-tight">
+                      {data.displayName || data.title}
+                    </h3>
+                    <p className="text-gray-500 text-xs line-clamp-2">
+                      Explore this related topic
+                    </p>
+                    <div className="mt-3 h-1 bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 w-0 group-hover:w-full transition-all duration-700" />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* FAQ Section */}
+        <div className="mb-16">
+          <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-10 uppercase tracking-tighter">
+            {faqHeading}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
               {
                 question: `How many questions are in the ${categoryData.title} trivia quiz?`,
                 answer: `Our ${categoryData.title.toLowerCase()} trivia quiz contains a variety of questions. The full category quiz includes questions from all topics, while specific subcategory quizzes focus on particular areas.`
@@ -172,20 +395,59 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                 question: `Can I play on my phone or tablet?`,
                 answer: `Absolutely! Our ${categoryData.title.toLowerCase()} trivia quizzes are fully responsive and work perfectly on all devices including smartphones, tablets, and desktop computers.`
               }
-            ].map(faq => <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}</section>
-        {showPrintableQuizCTA && <section className={styles.banner}><BookOpen size={36} /><div><h2>Take the quiz offline.</h2><p>Download a printable quiz sheet for your next trivia night or classroom activity.</p></div><Link href={`/trivia-bank/${category}-top-50-trivias`} className={club.primary}>Get the quiz sheet <ArrowRight size={17} /></Link></section>}
-        <nav className={styles.backLinks} aria-label="Library navigation"><Link href="/trivias" className={club.textLink}>← Back to the trivia library</Link></nav>
-        <StructuredData category={category} categoryData={categoryData} subcategories={subcategories} />
-      </main><PuzzleClubFooter />
+            ].map((faq, index) => (
+              <div key={index} className="bg-slate-800/40 rounded-2xl p-6 border border-white/5 hover:border-cyan-500/20 transition-all duration-300">
+                <h3 className="font-black text-white mb-3 uppercase tracking-tight text-sm">{faq.question}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA for Specific Trivia Bank Content */}
+        {showPrintableQuizCTA && (
+          <section className="mt-12 p-6 md:p-8 rounded-3xl border border-cyan-500/10 bg-cyan-900/5 backdrop-blur-sm">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8 max-w-5xl mx-auto text-left">
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 shrink-0 bg-blue-500/10 rounded-2xl flex items-center justify-center border border-blue-500/20 shadow-inner">
+                  <Trophy className="w-7 h-7 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight mb-1">
+                    Need a Printable Quiz?
+                  </h3>
+                  <p className="text-gray-400 text-sm md:text-base max-w-md leading-tight">
+                    Download curated quiz sheets. Perfect for hosting your own trivia night or classroom activity.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={`/trivia-bank/${category}-top-50-trivias`}
+                title={`Download ${categoryData.title} quiz sheet`}
+                className="group flex items-center gap-3 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all duration-300 shadow-lg shadow-blue-600/20 font-black uppercase tracking-widest text-xs shrink-0"
+              >
+                Get Sheet
+                <CircleStar className="w-3 h-3 fill-current" />
+              </Link>
+            </div>
+          </section>
+        )}
+      </div>
+      {/* JSON-LD Structured Data */}
+      <StructuredData
+        category={category}
+        categoryData={categoryData}
+        subcategories={subcategories}
+      />
     </div>
   );
 }
 
 // Structured Data Component for SEO
-function StructuredData({ 
-  category, 
-  categoryData, 
-  subcategories 
+function StructuredData({
+  category,
+  categoryData,
+  subcategories
 }: StructuredDataProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://triviaah.com';
   const categoryUrl = `${siteUrl}/trivias/${category}`;

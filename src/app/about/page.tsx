@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Target, Users, Star, Heart } from 'lucide-react';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
-import styles from '@/components/common/InfoPagesClub.module.css';
 
 export const metadata: Metadata = {
   title: 'About Triviaah | Free Trivia and Quiz Games',
@@ -42,7 +40,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div id="about-main" className={styles.page}>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
@@ -50,11 +48,11 @@ export default function AboutPage() {
             <Heart size={18} />
             OUR STORY
           </div>
-          
-          <h1 className="mb-6 font-serif text-5xl font-bold text-[#203b3a] md:text-6xl">
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             About Triviaah
           </h1>
-          
+
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Level up your knowledge with daily trivia challenges designed for gamers and knowledge enthusiasts.
           </p>
@@ -70,8 +68,8 @@ export default function AboutPage() {
               <h2 className="text-3xl font-bold text-white">Our Mission</h2>
             </div>
             <p className="text-lg text-gray-300 leading-relaxed">
-              Triviaah was created to bring fun, engaging daily trivia challenges to knowledge 
-              enthusiasts worldwide. We believe learning should be enjoyable and accessible to everyone, 
+              Triviaah was created to bring fun, engaging daily trivia challenges to knowledge
+              enthusiasts worldwide. We believe learning should be enjoyable and accessible to everyone,
               combining the thrill of gaming with the satisfaction of learning.
             </p>
             <p className="text-lg text-gray-300 leading-relaxed mt-4">
@@ -161,8 +159,8 @@ export default function AboutPage() {
               <h2 className="text-3xl font-bold text-white">The Team</h2>
             </div>
             <p className="text-lg text-gray-300 leading-relaxed">
-              Triviaah is developed by a passionate team of trivia enthusiasts, gamers, and developers 
-              who are dedicated to creating engaging educational experiences that feel more like play 
+              Triviaah is developed by a passionate team of trivia enthusiasts, gamers, and developers
+              who are dedicated to creating engaging educational experiences that feel more like play
               than work.
             </p>
             <p className="text-lg text-gray-300 leading-relaxed mt-4">
@@ -173,12 +171,12 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* Community Section 
+          {/* Community Section
           <div className="bg-gray-800/50 rounded-2xl border-2 border-gray-700 p-8">
             <div className="text-center">
               <h2 className="text-3xl font-bold text-white mb-6">Join Our Gaming Community</h2>
               <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
-                Connect with other players, suggest new categories, and stay updated on new features 
+                Connect with other players, suggest new categories, and stay updated on new features
                 through our social media channels and community forums.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
@@ -196,7 +194,6 @@ export default function AboutPage() {
           </div> */}
         </div>
       </div>
-      <PuzzleClubFooter />
     </div>
   );
 }

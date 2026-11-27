@@ -61,7 +61,7 @@ export default function SudokuPuzzle() {
       win: '/sounds/win.mp3',
       error: '/sounds/incorrect.mp3'
     };
-    
+
     try {
       const audio = new Audio(sounds[type]);
       audio.play().catch(err => console.error(`Error playing ${type} sound:`, err));
@@ -80,10 +80,10 @@ export default function SudokuPuzzle() {
     if (row === 9) return true;
     if (col === 9) return fillBoard(board, row + 1, 0);
     if (board[row][col] !== 0) return fillBoard(board, row, col + 1);
-    
+
     const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     shuffleArray(nums);
-    
+
     for (const num of nums) {
       if (isValidPlacement(board, row, col, num)) {
         board[row][col] = num;
@@ -91,7 +91,7 @@ export default function SudokuPuzzle() {
         board[row][col] = 0;
       }
     }
-    
+
     return false;
   }, []);
 
@@ -103,18 +103,18 @@ export default function SudokuPuzzle() {
       hard: 60,
     };
     const emptyCells = difficultySettings[gameState.difficulty];
-    
+
     const board = JSON.parse(JSON.stringify(solution));
     let cellsRemoved = 0;
-    
+
     while (cellsRemoved < emptyCells) {
       const row = Math.floor(Math.random() * 9);
       const col = Math.floor(Math.random() * 9);
-      
+
       if (board[row][col] !== 0) {
         const backup = board[row][col];
         board[row][col] = 0;
-        
+
         if (countSolutions(JSON.parse(JSON.stringify(board)))) {
           cellsRemoved++;
         } else {
@@ -122,7 +122,7 @@ export default function SudokuPuzzle() {
         }
       }
     }
-    
+
     setGameState(prev => ({
       ...prev,
       board,
@@ -133,7 +133,7 @@ export default function SudokuPuzzle() {
       timeElapsed: 0,
       isComplete: false,
     }));
-    
+
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
@@ -149,7 +149,7 @@ export default function SudokuPuzzle() {
     }, 100);
 
     setFeedback({ text: '', type: '' });
-  }, [gameState.difficulty]); 
+  }, [gameState.difficulty]);
 
   useEffect(() => {
     generateNewPuzzle();
@@ -168,20 +168,20 @@ export default function SudokuPuzzle() {
     for (let i = 0; i < 9; i++) {
       if (board[row][i] === num) return false;
     }
-    
+
     for (let i = 0; i < 9; i++) {
       if (board[i][col] === num) return false;
     }
-    
+
     const boxRow = Math.floor(row / 3) * 3;
     const boxCol = Math.floor(col / 3) * 3;
-    
+
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         if (board[boxRow + i][boxCol + j] === num) return false;
       }
     }
-    
+
     return true;
   };
 
@@ -199,8 +199,8 @@ export default function SudokuPuzzle() {
     playSound('select');
     setGameState(prev => ({
       ...prev,
-      selectedCell: prev.selectedCell?.row === row && prev.selectedCell?.col === col 
-        ? null 
+      selectedCell: prev.selectedCell?.row === row && prev.selectedCell?.col === col
+        ? null
         : { row, col }
     }));
   };
@@ -214,11 +214,11 @@ export default function SudokuPuzzle() {
     const newBoard = [...gameState.board];
     newBoard[row] = [...newBoard[row]];
     newBoard[row][col] = num;
-    
+
     const isCorrect = num === gameState.solution[row][col];
     const newEmptyCells = isCorrect ? gameState.emptyCells - 1 : gameState.emptyCells;
     const isComplete = newEmptyCells === 0;
-    
+
     if (isComplete) {
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -236,9 +236,9 @@ export default function SudokuPuzzle() {
       }));
       playSound('win');
       confetti({ particleCount: 100, spread: 70 });
-      setFeedback({ 
-        text: `🎉 Puzzle solved in ${formatTime(gameState.timeElapsed)}!`, 
-        type: 'success' 
+      setFeedback({
+        text: `🎉 Puzzle solved in ${formatTime(gameState.timeElapsed)}!`,
+        type: 'success'
       });
     } else {
       setGameState(prev => ({
@@ -246,7 +246,7 @@ export default function SudokuPuzzle() {
         board: newBoard,
         emptyCells: newEmptyCells,
       }));
-      
+
       if (!isCorrect) {
         playSound('error');
         setFeedback({ text: 'Incorrect number', type: 'error'});
@@ -259,7 +259,7 @@ export default function SudokuPuzzle() {
       setFeedback({ text: 'No hints remaining', type: 'error' });
       return;
     }
-    
+
     const emptyCells: {row: number, col: number}[] = [];
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
@@ -268,21 +268,21 @@ export default function SudokuPuzzle() {
         }
       }
     }
-    
+
     if (emptyCells.length === 0) return;
-    
+
     const { row, col } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
     const newBoard = [...gameState.board];
     newBoard[row] = [...newBoard[row]];
     newBoard[row][col] = gameState.solution[row][col];
-    
+
     setGameState(prev => ({
       ...prev,
       board: newBoard,
       hintsUsed: prev.hintsUsed + 1,
       emptyCells: prev.emptyCells - 1,
     }));
-    
+
     setFeedback({ text: 'Hint applied', type: 'info' });
   };
 
@@ -290,7 +290,7 @@ export default function SudokuPuzzle() {
     let hasErrors = false;
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
-        if (gameState.board[row][col] !== 0 && 
+        if (gameState.board[row][col] !== 0 &&
             gameState.board[row][col] !== gameState.solution[row][col]) {
           hasErrors = true;
           break;
@@ -302,7 +302,7 @@ export default function SudokuPuzzle() {
         playSound('found');
       }
     }
-    
+
     setFeedback({
       text: hasErrors ? 'Errors found' : 'No errors found',
       type: hasErrors ? 'error' : 'success'
@@ -330,7 +330,7 @@ export default function SudokuPuzzle() {
   };
 
   return (
-    <div data-club-surface className="min-h-screen bg-gradient-to-br from-[#08111f] via-[#0d1b30] to-[#12243d] py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#08111f] via-[#0d1b30] to-[#12243d] py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -344,7 +344,7 @@ export default function SudokuPuzzle() {
         <div className="grid grid-cols-3 gap-4 mb-8 p-6 bg-[#0f1d31]/80 backdrop-blur-sm rounded-2xl border border-[#27476d] shadow-2xl">
           <div className="text-center">
             <div className="text-sm text-blue-100/60 font-medium mb-2">Difficulty</div>
-            <select 
+            <select
               value={gameState.difficulty}
               onChange={(e) => changeDifficulty(e.target.value as Difficulty)}
               className="bg-[#142742] border border-[#355a87] rounded-lg px-3 py-2 text-blue-50 font-semibold focus:outline-none focus:ring-2 focus:ring-sky-400"
@@ -382,13 +382,13 @@ export default function SudokuPuzzle() {
           <div className="grid grid-cols-9 grid-rows-9 gap-0 bg-[#11243c] p-3 rounded-2xl shadow-2xl border border-[#2f5a87]">
             {gameState.board.map((row, rowIndex) => (
               row.map((cell, colIndex) => {
-                const isSelected = gameState.selectedCell?.row === rowIndex && 
+                const isSelected = gameState.selectedCell?.row === rowIndex &&
                                   gameState.selectedCell?.col === colIndex;
-                const isFixed = gameState.board[rowIndex][colIndex] !== 0 && 
+                const isFixed = gameState.board[rowIndex][colIndex] !== 0 &&
                               gameState.board[rowIndex][colIndex] === gameState.solution[rowIndex][colIndex];
-                const isError = gameState.board[rowIndex][colIndex] !== 0 && 
+                const isError = gameState.board[rowIndex][colIndex] !== 0 &&
                               gameState.board[rowIndex][colIndex] !== gameState.solution[rowIndex][colIndex];
-                
+
                 return (
                   <div
                     key={`${rowIndex}-${colIndex}`}
@@ -429,7 +429,7 @@ export default function SudokuPuzzle() {
             onClick={() => {
               if (gameState.selectedCell) {
                 const { row, col } = gameState.selectedCell;
-                if (gameState.board[row][col] !== 0 && 
+                if (gameState.board[row][col] !== 0 &&
                     gameState.board[row][col] !== gameState.solution[row][col]) {
                   const newBoard = [...gameState.board];
                   newBoard[row] = [...newBoard[row]];

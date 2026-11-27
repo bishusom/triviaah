@@ -8,8 +8,6 @@ import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
 import { MobileExpandableDescription } from '@/components/daily-trivias/MobileExpandableDescription';
 import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
 import ExploreSections from '@/components/common/ExploreSections';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
-import styles from '@/components/word-games/WordGamesClub.module.css';
 
 export const revalidate = 86400;
 
@@ -41,7 +39,7 @@ export const metadata: Metadata = {
     images: ['/imgs/word-games/word-games.webp'],
   },
   robots: {
-    index: false,
+    index: true,
     follow: true,
   },
 };
@@ -57,16 +55,16 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
       key={game.route_path}
       href={route}
       title={`Play ${game.title} - ${tagline}`}
-      className={`${styles.gameCard} group relative overflow-hidden rounded-2xl border transition-all duration-300`}
+      className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
     >
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
+
       {/* Glow effect */}
       <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-      
+
       {/* Game Image */}
-      <div className={`${styles.gameArt} relative aspect-square w-full overflow-hidden`}>
+      <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">
         <Image
           src={imageSrc}
           alt={`${game.title} Word Game`}
@@ -77,7 +75,7 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
           priority={index < 2}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-        
+
         {/* Play button overlay */}
         <div className="absolute bottom-4 right-4 w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
           <Play className="w-5 h-5 text-white" />
@@ -88,16 +86,16 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
           #{index + 1}
         </div>
       </div>
-      
+
       {/* Game Content */}
       <div className="p-6 relative z-10">
-        <h3 className={`${styles.gameCardTitle} mb-2 text-lg font-bold transition-colors`}>
+        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-cyan-300 transition-colors">
           {game.title}
         </h3>
-        <p className={`${styles.gameCardCopy} line-clamp-2 text-sm`}>
+        <p className="text-sm text-gray-300 line-clamp-2">
           {game.supporting_copy || game.intro_text}
         </p>
-        
+
         {/* Progress bar effect */}
         <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
           <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 w-0 group-hover:w-full transition-all duration-700" />
@@ -283,11 +281,11 @@ export default async function WordGamesPage() {
   const heroDescription = 'A good word game should make you pause for one more try, not read like a vocabulary worksheet. This collection mixes calm search puzzles, fast letter-bank games, clue-led grids, and daily decoding challenges so you can choose the kind of word thinking you actually feel like doing today.';
 
   return (
-    <div id="word-games-main" className={styles.page}>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Structured Data */}
         <StructuredData games={wordGames} currentDate={currentDate} />
-        
+
         {/* ── Compact Hero Section ────────────────────────────────────────── */}
         <div className="mb-8 lg:mb-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -341,7 +339,7 @@ export default async function WordGamesPage() {
               </div>
             </div>
           </div>
-        </div>       
+        </div>
 
           <div className="py-4">
             <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
@@ -393,7 +391,7 @@ export default async function WordGamesPage() {
                 <h3 className="text-xl font-bold text-white mb-2">Vocabulary Builder</h3>
                 <p className="text-gray-300">Expand your vocabulary and discover new words through engaging gameplay</p>
               </div>
-              
+
               <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-2xl p-6 border border-blue-500/20 text-center">
                 <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">⚡</span>
@@ -401,7 +399,7 @@ export default async function WordGamesPage() {
                 <h3 className="text-xl font-bold text-white mb-2">Brain Training</h3>
                 <p className="text-gray-300">Improve cognitive skills, memory, and problem-solving abilities</p>
               </div>
-              
+
               <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-6 border border-purple-500/20 text-center">
                 <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">🎯</span>
@@ -409,7 +407,7 @@ export default async function WordGamesPage() {
                 <h3 className="text-xl font-bold text-white mb-2">Skill Levels</h3>
                 <p className="text-gray-300">Multiple difficulty levels perfect for beginners to word masters</p>
               </div>
-              
+
               <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl p-6 border border-orange-500/20 text-center">
                 <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">🏆</span>
@@ -469,7 +467,7 @@ export default async function WordGamesPage() {
                 specific kind of attention: quick pattern spotting, careful clue solving, spelling
                 memory, or relaxed discovery.
               </p>
-              
+
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
                   <h3 className="text-xl font-bold text-white mb-4">Featured Word Games</h3>
@@ -500,7 +498,7 @@ export default async function WordGamesPage() {
                     </li>
                   </ul>
                 </div>
-                
+
                 <div>
                   <h3 className="text-xl font-bold text-white mb-4">Educational Benefits</h3>
                   <ul className="space-y-3 text-gray-300">
@@ -552,7 +550,6 @@ export default async function WordGamesPage() {
 
         <ExploreSections exclude="word-games" />
       </div>
-      <PuzzleClubFooter />
     </div>
   );
 }

@@ -25,7 +25,6 @@ interface HomePageContentProps {
 }
 
 const CHALLENGE_PREVIEWS = [
-  { label: 'Weekly Challenge', status: 'Coming Soon', hint: 'A rotating curated set of tougher quizzes.' },
   { label: 'Monthly Challenge', status: 'Coming Soon', hint: 'A larger seasonal event with milestone rewards.' },
 ];
 

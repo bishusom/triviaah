@@ -6,8 +6,6 @@ import { getPostData } from '@/lib/markdown';
 import { Twitter, Linkedin, Facebook, Share2 } from 'lucide-react';
 import CopyLinkButton from '@/components/blog/CopyLinkButton';
 import Ads from '@/components/common/Ads';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
-import styles from '@/components/blog/BlogClub.module.css';
 
 // src/app/blog/[slug]/page.tsx
 
@@ -92,12 +90,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   // Split HTML content at paragraph tags to inject an ad
   const contentParts = post.contentHtml.split('</p>');
   const middleIndex = Math.floor(contentParts.length / 2);
-  
+
   const topContent = contentParts.slice(0, middleIndex).join('</p>') + '</p>';
   const bottomContent = contentParts.slice(middleIndex).join('</p>');
 
   return (
-    <div id="blog-main" className={styles.page}>
+    <div className="min-h-screen bg-[#0f172a] text-white">
       <Script
         id="blog-post-schema"
         type="application/ld+json"
@@ -106,7 +104,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
       <article className="container mx-auto px-4 py-8 max-w-4xl">
         <header className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 mb-8 border-b border-white/10 pb-6">
-          <h1 className="font-serif text-3xl font-bold leading-tight text-[#203b3a] md:text-5xl">
+          <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight leading-tight">
             {post.header}
           </h1>
           <time className="text-gray-400 text-xs font-black uppercase tracking-widest shrink-0 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
@@ -115,7 +113,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </header>
 
         {/* Grayish readability container */}
-        <div className={`${styles.readingPanel} overflow-hidden rounded-2xl text-black`}>
+        <div className="bg-gray-50 rounded-2xl shadow-xl overflow-hidden text-black">
           {post.image && (
             <div className="relative h-64 md:h-96 w-full border-b border-gray-200">
               <Image src={post.image} alt={post.title} fill className="object-cover" priority />
@@ -124,18 +122,18 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
           <div className="px-6 py-10 md:px-16 md:py-16">
             {/* Top Half - prose-p:mb-6 fixes the line break issue */}
-            <div 
+            <div
               className="prose prose-lg max-w-none prose-p:mb-6 prose-p:text-gray-800 prose-headings:text-black prose-strong:text-black"
-              dangerouslySetInnerHTML={{ __html: topContent }} 
+              dangerouslySetInnerHTML={{ __html: topContent }}
             />
 
             {/* In-Article Ad */}
             <Ads isInArticle={true} format="fluid" />
 
             {/* Bottom Half */}
-            <div 
+            <div
               className="prose prose-lg max-w-none prose-p:mb-6 prose-p:text-gray-800 prose-headings:text-black prose-strong:text-black"
-              dangerouslySetInnerHTML={{ __html: bottomContent }} 
+              dangerouslySetInnerHTML={{ __html: bottomContent }}
             />
           </div>
         </div>
@@ -196,7 +194,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </div>
         </footer>
       </article>
-      <PuzzleClubFooter />
     </div>
   );
 }

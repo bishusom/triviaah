@@ -5,9 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Loader2, Plus, Users } from 'lucide-react';
 
 import Ads from '@/components/common/Ads';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
 import { getPersistentGuestId } from '@/lib/guestId';
-import styles from './MultiplayerClub.module.css';
 
 const TIMER_OPTIONS = [10, 15, 20, 30, 45, 60];
 
@@ -76,7 +74,7 @@ export function MultiplayerHomeClient({
   }
 
   return (
-    <div id="multiplayer-main" className={styles.page}>
+    <div className="min-h-screen bg-slate-950 text-white">
       <main className="mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-4 py-10">
         <div className="mb-8">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200">
@@ -193,7 +191,6 @@ export function MultiplayerHomeClient({
           <Ads format="horizontal" slot="2207590813" isMobileFooter={false} />
         </div>
       </main>
-      <PuzzleClubFooter />
     </div>
   );
 }

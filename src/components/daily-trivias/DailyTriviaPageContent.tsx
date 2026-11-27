@@ -1,4 +1,3 @@
-import DailyTriviaClubLanding from './DailyTriviaClubLanding';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Play, CheckCircle2, Sparkles, Users } from 'lucide-react';
@@ -11,7 +10,6 @@ import type { Question } from '@/lib/supabase';
 import type { TriviaCategoryFaqItem, TriviaCategoryRecord } from '@/lib/trivia-categories';
 import { LandingStructuredData } from './LandingStructuredData';
 import { MobileExpandableDescription } from './MobileExpandableDescription';
-import quizPageStyles from './DailyTriviaClub.module.css';
 
 type QuizConfig = {
   isQuickfire: boolean;
@@ -96,20 +94,13 @@ export function DailyTriviaPageContent({
         },
       ];
 
-  if (showIntro && !showQuiz) {
-    return <DailyTriviaClubLanding category={category} categoryData={categoryData}
-      siblingCategories={siblingCategories} sneakPeekQuestions={sneakPeekQuestions}
-      playHref={playHref} lastUpdated={lastUpdated} showFAQ={showFAQ} />;
-  }
-
   return (
-    <div id={!showIntro && showQuiz ? 'quiz-main' : undefined} className={showIntro ? "relative min-h-screen bg-gradient-to-b from-[#050810] via-[#0a0f1c] to-[#030612]" : `${quizPageStyles.quizPage} relative min-h-screen bg-[#faf8f2] text-[#203b3a]`}>
-      {showIntro && (
-        <div className="pointer-events-none fixed inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-blue-600/10 blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-cyan-600/10 blur-3xl" />
-        </div>
-      )}
+    <div className="relative min-h-screen bg-gradient-to-b from-[#050810] via-[#0a0f1c] to-[#030612]">
+      {/* Subtle background glow */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-blue-600/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-cyan-600/10 blur-3xl" />
+      </div>
 
       <div className="relative mx-auto max-w-full px-4 py-6 sm:px-6 lg:max-w-6xl lg:px-8 lg:py-8">
         <LandingStructuredData
@@ -216,17 +207,17 @@ export function DailyTriviaPageContent({
         )}
 
         {showQuiz && !showIntro && (
-          <section className="mb-8 text-center">
+          <section className="text-center mb-8">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-5">
               <div className="flex items-center gap-3 sm:gap-4">
-                <div className="rounded-md bg-[#17675b] p-3 shadow-lg">
+                <div className="bg-gradient-to-r from-cyan-400 to-blue-500 p-3 rounded-md shadow-lg">
                   <Play className="w-3 h-3 text-white" />
                 </div>
                 <div className="text-left">
-                  <h1 className="mb-0.5 font-serif text-xl font-bold leading-tight text-[#203b3a] sm:mb-1 sm:text-3xl md:text-4xl">
+                  <h1 className="mb-0.5 text-xl font-bold leading-tight text-white sm:mb-1 sm:text-3xl md:text-4xl">
                     {title} Quiz Challenge
                   </h1>
-                  <p className="max-w-[90vw] overflow-hidden whitespace-nowrap text-ellipsis text-sm leading-none text-[#627065] sm:max-w-xl sm:text-base">
+                  <p className="max-w-[90vw] overflow-hidden whitespace-nowrap text-ellipsis text-sm leading-none text-gray-300 sm:max-w-xl sm:text-base">
                     {cfg.description}
                   </p>
                 </div>
@@ -236,7 +227,7 @@ export function DailyTriviaPageContent({
         )}
 
         {showQuiz && (
-          <div className="mb-10 rounded-2xl border border-[#d8ddd2] bg-[#fffefb] p-4 shadow-[0_18px_48px_rgba(32,59,58,0.06)] sm:p-6">
+          <div className="mb-10 rounded-2xl border border-slate-800/60 bg-slate-900/30 p-4 backdrop-blur-sm sm:p-6">
             <QuizGame
               key={`${category}-${dateKey}`}
               initialQuestions={questions}
@@ -300,7 +291,7 @@ export function DailyTriviaPageContent({
                 </p>
                 <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">More Daily Challenges</h2>
               </div>
-              <Link 
+              <Link
                 href="/daily-trivias"
                 className="hidden sm:flex items-center gap-2 text-sm font-bold text-blue-400 hover:text-blue-300 transition-colors group"
               >
@@ -325,7 +316,7 @@ export function DailyTriviaPageContent({
                       sizes="(max-width: 640px) 25vw, (max-width: 1024px) 15vw, 12vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
-                    
+
                     {/* Icon Overlay */}
                     <div className="absolute top-1.5 left-1.5 flex h-5 w-5 items-center justify-center rounded-md bg-black/60 text-[10px] backdrop-blur-sm">
                       {icon}

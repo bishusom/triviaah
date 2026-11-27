@@ -2,8 +2,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getAllPosts } from '@/lib/markdown';
 import Ads from '@/components/common/Ads';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
-import styles from '@/components/blog/BlogClub.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,12 +38,12 @@ function getBlogPageHref(page: number) {
 export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const { page: pageParam } = await searchParams;
   const page: number = parseInt(pageParam || '1') || 1;
-  
+
   const allPosts: PostData[] = await getAllPosts();
   const totalPages: number = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE));
   const safePage = Math.min(Math.max(page, 1), Math.max(totalPages, 1));
   const pageSuffix = safePage > 1 ? ` - Page ${safePage}` : '';
-  
+
   return {
     title: `Gaming Insights & Trivia Blog${pageSuffix} | Triviaah`,
     description: 'Level up your knowledge with our gaming blog. Explore expert tips, trivia facts, and deep dives into history, science, and pop culture through the lens of gaming.',
@@ -105,19 +103,19 @@ function StructuredData({ posts }: { posts: PostData[] }) {
 export default async function BlogListPage({ searchParams }: BlogListPageProps) {
   const { page: pageParam } = await searchParams;
   const page: number = parseInt(pageParam || '1') || 1;
-  
+
   const allPosts: PostData[] = await getAllPosts();
   const sortedPosts = allPosts.sort((a, b) => new Date(b.isoDate).getTime() - new Date(a.isoDate).getTime());
-  
+
   const totalPages: number = Math.max(1, Math.ceil(sortedPosts.length / POSTS_PER_PAGE));
   const safePage = Math.min(Math.max(page, 1), Math.max(totalPages, 1));
   const startIndex: number = (safePage - 1) * POSTS_PER_PAGE;
   const paginatedPosts: PostData[] = sortedPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
 
   return (
-    <div id="blog-main" className={styles.page}>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <StructuredData posts={paginatedPosts} />
-      
+
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* ── Compact Hero Section ────────────────────────────────────────── */}
         <div className="mb-8 lg:mb-10">
@@ -129,13 +127,13 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                   <span className="text-2xl text-white">✍️</span>
                 </div>
                 <div>
-                  <h1 className="font-serif text-4xl font-bold leading-tight text-[#203b3a] md:text-5xl">
-                    Triviaah <span className="text-[#17675b]">Blog</span>
+                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
+                    Triviaah <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Blog</span>
                   </h1>
                 </div>
               </div>
               <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
-                Expert insights, gaming tips, and fascinating trivia deep-dives. 
+                Expert insights, gaming tips, and fascinating trivia deep-dives.
                 Stay updated with the latest challenges and knowledge boosters.
               </p>
             </div>
@@ -166,11 +164,11 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
         {/* Blog Grid - Compact 4-column layout */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
           {paginatedPosts.map((post, index) => (
-            <Link 
+            <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
               title={`Read full article: ${post.header}`}
-              className={`${styles.articleCard} group flex flex-col overflow-hidden rounded-xl border transition-all duration-300`}
+              className="group flex flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-900/50 transition-all duration-300 hover:border-cyan-500/50 hover:shadow-glow-blue"
             >
               {/* Post Image - Smaller aspect ratio */}
               <div className="relative aspect-[16/10] overflow-hidden">
@@ -201,11 +199,11 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                     </span>
                   </div>
                 </div>
-                
+
                 <h2 className="mb-2 line-clamp-3 text-sm font-black leading-snug text-white transition-colors group-hover:text-cyan-400 sm:line-clamp-2 sm:text-base">
                   {post.header}
                 </h2>
-                
+
                 <p className="mb-4 line-clamp-2 text-[11px] leading-relaxed text-gray-400 sm:line-clamp-3 sm:text-xs">
                   {post.excerpt}
                 </p>
@@ -232,7 +230,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                 ← Previous
               </Link>
             )}
-            
+
             <div className="flex items-center gap-2">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
                 <Link
@@ -260,7 +258,6 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
           </div>
         )}
       </div>
-      <PuzzleClubFooter />
     </div>
   );
 }

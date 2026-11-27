@@ -5,7 +5,7 @@ export const revalidate = 3600;
 
 const title = 'Triviaah: Free Daily Trivia & Quiz Games';
 const description =
-  'Play free daily trivia, Brainwave puzzles, and weekly quiz challenges on Triviaah. Track scores, invite friends, and build a streak worth defending every week.';
+  'Play free daily trivia, Brainwave puzzles, and topic quizzes on Triviaah. Track scores, invite friends, and build a streak worth defending every week.';
 
 export const metadata: Metadata = {
   title,

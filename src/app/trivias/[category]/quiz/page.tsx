@@ -371,7 +371,7 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
       .slice(0, 6);
 
     return (
-      <div id="quiz-main" className="min-h-screen bg-[#faf8f2] py-6 text-[#203b3a]">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-4">
         <div className="max-w-4xl mx-auto px-4">
           <Script
             id="quiz-structured-data"
@@ -383,21 +383,21 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
           <div className="text-center mb-8">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-5">
               <div className="flex items-center gap-3 sm:gap-4">
-                <div className="rounded-md bg-[#17675b] p-3 shadow-lg">
+                <div className="bg-gradient-to-r from-cyan-400 to-blue-500 p-3 rounded-md shadow-lg">
                   <Play className="w-3 h-3 text-white" />
                 </div>
                 <div className="text-left">
                   {formattedSubcategory ? (
-                    <div className="mb-2 inline-flex items-center rounded-full border border-[#b9cdc2] bg-[#e9eee0] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#17675b]">
+                    <div className="mb-2 inline-flex items-center rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300 shadow-[0_0_18px_rgba(34,211,238,0.12)]">
                       {formattedCategory}
                     </div>
                   ) : null}
-                  <h1 className="mb-0.5 font-serif text-xl font-bold leading-tight text-[#203b3a] sm:mb-1 sm:text-3xl md:text-4xl">
+                  <h1 className="mb-0.5 text-xl font-bold leading-tight text-white sm:mb-1 sm:text-3xl md:text-4xl">
                     {formattedSubcategory ? formattedSubcategory : formattedCategory} Quiz Challenge
                   </h1>
                   {/* ✅ Visible description text — helps Google understand page content
                       beyond just the quiz UI. Previously this was commented out. */}
-                  <p className="max-w-[90vw] overflow-hidden whitespace-nowrap text-ellipsis text-sm leading-none text-[#627065] sm:max-w-xl sm:text-base">
+                  <p className="max-w-[90vw] overflow-hidden whitespace-nowrap text-ellipsis text-sm leading-none text-gray-300 sm:max-w-xl sm:text-base">
                     {formattedSubcategory
                       ? `${questions.length} ${formattedSubcategory.toLowerCase()} trivia questions — see how you score!`
                       : `${questions.length} free ${formattedCategory.toLowerCase()} trivia questions with instant results.`
@@ -430,28 +430,28 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
 
           {/* ✅ Internal links — passes PageRank back up to category and across
               to related categories. Previously the quiz page was a dead end. */}
-          <div className="mt-10 border-t border-[#d8ddd2] pt-8">
-            <p className="mb-4 text-center text-sm text-[#627065]">
+          <div className="mt-10 pt-8 border-t border-gray-700">
+            <p className="text-gray-400 text-sm text-center mb-4">
               Explore more in{' '}
               <Link
                 href={`/trivias/${category}`}
-                className="text-[#17675b] underline underline-offset-2 hover:text-[#104b42]"
+                className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2"
               >
                 {formattedCategory} trivia
               </Link>
               {' '}or browse all{' '}
               <Link
                 href="/trivias"
-                className="text-[#17675b] underline underline-offset-2 hover:text-[#104b42]"
+                className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2"
               >
                 trivia categories
               </Link>.
             </p>
 
             {relatedCategories.length > 0 && (
-              <div className="mt-6 rounded-2xl border border-[#d8ddd2] bg-[#fffefb] p-6">
-                <h2 className="text-center font-serif text-xl font-bold text-[#203b3a]">Related Trivia Categories</h2>
-                <p className="mt-2 text-center text-sm text-[#627065]">
+              <div className="mt-6 rounded-2xl border border-gray-700 bg-gray-800/60 p-6">
+                <h2 className="text-xl font-bold text-white text-center">Related Trivia Categories</h2>
+                <p className="mt-2 text-center text-sm text-gray-400">
                   Explore adjacent topics to discover more quizzes and strengthen topical paths across the site.
                 </p>
                 <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -459,12 +459,12 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
                     <Link
                       key={key}
                       href={`/trivias/${key}`}
-                      className="rounded-xl border border-[#d8ddd2] bg-[#f1f3e9] p-4 transition-colors hover:border-[#17675b] hover:bg-[#e9eee0]"
+                      className="rounded-xl border border-gray-700 bg-gray-900/60 p-4 transition-colors hover:border-cyan-500/40 hover:bg-gray-900"
                     >
-                      <p className="font-semibold text-[#203b3a]">
+                      <p className="font-semibold text-white">
                         {config.displayName || config.title}
                       </p>
-                      <p className="mt-1 line-clamp-2 text-sm text-[#627065]">
+                      <p className="mt-1 text-sm text-gray-400 line-clamp-2">
                         {config.description}
                       </p>
                     </Link>
@@ -503,7 +503,7 @@ function QuizFAQ({
 }) {
   return (
     <div className="mt-12">
-      <h2 className="mb-8 text-center font-serif text-3xl font-bold text-[#203b3a]">
+      <h2 className="text-3xl font-bold text-white text-center mb-8">
         About This {formattedSubcategory ? `${formattedSubcategory} ` : ''}{formattedCategory} Quiz
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -533,15 +533,15 @@ function QuizFAQ({
         ].map((item, index) => (
           <div
             key={index}
-            className="rounded-2xl border border-[#d8ddd2] bg-[#fffefb] p-6 transition-all duration-300 hover:border-[#17675b]"
+            className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300"
           >
             <div className="flex items-center gap-4 mb-3">
-              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-[#e9eee0]">
+              <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
                 <span className="text-xl">{item.icon}</span>
               </div>
-              <h3 className="text-lg font-semibold text-[#203b3a]">{item.title}</h3>
+              <h3 className="font-semibold text-lg text-white">{item.title}</h3>
             </div>
-            <p className="text-[#627065]">{item.description}</p>
+            <p className="text-gray-300">{item.description}</p>
           </div>
         ))}
       </div>

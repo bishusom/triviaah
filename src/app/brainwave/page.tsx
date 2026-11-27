@@ -4,12 +4,11 @@ import Script from 'next/script';
 import Link from 'next/link';
 import Image from 'next/image';
 import Ads from '@/components/common/Ads';
-import { ArrowRight, Brain, Sparkles } from 'lucide-react';
-import club from '@/components/home/PuzzleClub.module.css';
-import styles from '@/components/brainwave/BrainwaveClub.module.css';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
+import { Play, Boxes, Star, Clock, Users } from 'lucide-react';
 import { getGamePagesBySection } from '@/lib/game-pages';
 import { getBrainwaveRouteDefinitions } from '@/lib/brainwave/brainwave-route-registry';
+import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
+import ExploreSections from '@/components/common/ExploreSections';
 
 export const revalidate = 86400;
 
@@ -106,16 +105,58 @@ async function getDailyPuzzles() {
     }));
 }
 
+// Gaming-style puzzle card matching the trivias page design
 function PuzzleCard({ puzzle, index }: { puzzle: Puzzle; index: number }) {
   return (
-    <Link href={puzzle.path} className={styles.card}>
-      <div className={`${styles.cardArt} ${club[`tone${index % 4}`]}`}>
-        <Image src={puzzle.image} alt="" width={120} height={120} />
-        <span>{puzzle.is_daily_refresh ? 'FRESH DAILY' : 'PLAY ANYTIME'}</span>
+    <Link
+      key={puzzle.category}
+      href={puzzle.path}
+      title={`Play ${puzzle.name} - ${puzzle.tagline}`}
+      className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/20 hover:border-cyan-400/40"
+    >
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+      {/* Glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+
+      {/* Puzzle Image */}
+      <div className="relative aspect-square w-full bg-gradient-to-br from-cyan-900 to-purple-900 overflow-hidden">
+        <Image
+          src={puzzle.image}
+          alt={`${puzzle.name} Puzzle Game`}
+          fill
+          className="object-contain transition-all duration-500 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          loading={index < 8 ? "eager" : "lazy"}
+          priority={index < 4}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+        {/* Play button overlay */}
+        <div className="absolute bottom-4 right-4 w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+          <Play className="w-5 h-5 text-white" />
+        </div>
+
+        {/* Puzzle number badge */}
+        <div className="absolute top-4 left-4 bg-black/70 text-white text-sm font-semibold px-3 py-1 rounded-full">
+          #{index + 1}
+        </div>
       </div>
-      <div className={styles.cardBody}>
-        <h3>{puzzle.name}</h3><p>{puzzle.tagline}</p>
-        <span className={club.cardAction}>Find your aha! moment <ArrowRight size={18} /></span>
+
+      {/* Puzzle Content */}
+      <div className="p-6 relative z-10">
+        <h3 className="min-h-[4.5rem] text-lg font-bold leading-tight text-white mb-2 line-clamp-3 group-hover:text-cyan-300 transition-colors sm:min-h-[5.5rem]">
+          {puzzle.name}
+        </h3>
+        <p className="min-h-[3rem] text-sm leading-relaxed text-gray-300 line-clamp-2 sm:min-h-[3.5rem]">
+          {puzzle.tagline}
+        </p>
+
+        {/* Progress bar effect */}
+        <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 w-0 group-hover:w-full transition-all duration-700" />
+        </div>
       </div>
     </Link>
   );
@@ -126,25 +167,123 @@ export default async function BrainwavePage() {
   const currentDate = new Date();
 
   return (
-    <div className={club.club}>
-      <main id="brainwave-main" className={club.main}>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Structured Data for SEO */}
         <StructuredData puzzles={dailyPuzzles} currentDate={currentDate} />
-        <section className={styles.hero}>
-          <div><p className={club.eyebrow}>BRAINWAVE · DAILY PUZZLES</p><h1>Follow the clues.<br /><em>Find your aha!</em></h1><p className={styles.intro}>A movie, a melody, a place, a moment in history. Turn a handful of clues into one satisfying discovery.</p><div className={club.actions}><Link href="#brainwave-games-grid" className={club.primary}>Pick your puzzle <ArrowRight size={18} /></Link><span className={styles.muted}>Free to play · No account needed</span></div></div>
-          <div className={styles.heroArt} aria-hidden="true"><Sparkles size={32} /><p>ONE CLUE CLOSER</p><Brain size={72} strokeWidth={1.3} /><strong>Connect the dots.</strong><div className={styles.tiles}>{['?', '?', '!', '✓'].map((letter, i) => <span key={i}>{letter}</span>)}</div><span>A little curiosity goes a long way.</span></div>
-        </section>
-        <section id="brainwave-games-grid" className={styles.section}>
-          <div className={club.sectionHeading}><div><p className={club.eyebrow}>FOLLOW YOUR CURIOSITY</p><h2>What will you figure out today?</h2><p>Pick a topic you love. Let the clues do the rest.</p></div><span className={styles.muted}>{dailyPuzzles.length} featured puzzles</span></div>
-          <div className={styles.grid}>{dailyPuzzles.map((puzzle, index) => <PuzzleCard key={puzzle.category} puzzle={puzzle} index={index} />)}</div>
-          {dailyPuzzles.length === 0 && <p className={styles.empty}>The puzzle collection is unavailable right now. Please try again shortly.</p>}
-        </section>
-        <div className={`${club.ad} lg:hidden`}><span>ADVERTISEMENT</span><Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" /></div>
-        <section className={styles.section}><p className={club.eyebrow}>A LITTLE DAILY DEDUCTION</p><h2>Curiosity is all you need.</h2><div className={styles.steps}>{[
-          ['01', 'Pick your world', 'Movies, music, books, capitals, history, or celebrities. Start with something that sparks your interest.'],
-          ['02', 'Follow the clues', 'Make a guess and use the feedback. Each puzzle has its own hints to help you narrow things down.'],
-          ['03', 'Come back curious', 'Enjoy the solve, share your result, and return for another daily mystery.'],
-        ].map(([number, title, text]) => <article key={number}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
-        <section className={styles.faq}><p className={club.eyebrow}>GOOD TO KNOW</p><h2>A few clues before you begin.</h2>{[
+
+        {/* ── Compact Hero Section ────────────────────────────────────────── */}
+        <div className="mb-8 lg:mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Title & Description */}
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 shrink-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <Star className="text-2xl text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-black text-white leading-tight uppercase tracking-tight">
+                    Brainwave <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Puzzles</span>
+                  </h1>
+                </div>
+              </div>
+              <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                Pick a daily puzzle and solve it from clues. Brainwave covers movies, music,
+                geography, history, food, landmarks, inventions, words, nature, cities, countries,
+                and celebrities. No account required.
+              </p>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <ScrollToSectionButton
+                  targetId="brainwave-games-grid"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-cyan-900/20 transition-all hover:-translate-y-0.5 hover:shadow-cyan-900/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 sm:w-auto"
+                >
+                  <Play className="h-4 w-4" />
+                  Browse Brainwave Games
+                </ScrollToSectionButton>
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 bg-slate-800/30 px-3 py-1.5 rounded-full border border-white/5 inline-block">
+                  Last Updated: {currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </p>
+              </div>
+            </div>
+
+            {/* Stats & Metadata Cards */}
+            <div className="lg:col-span-5">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Boxes className="text-xl text-cyan-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">{dailyPuzzles.length}</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Games</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Clock className="text-xl text-yellow-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">Daily</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Puzzles</div>
+                </div>
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-white/5 text-center backdrop-blur-sm">
+                  <Users className="text-xl text-green-400 mx-auto mb-1.5" />
+                  <div className="text-white font-black text-lg leading-none">Free</div>
+                  <div className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Access</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="py-4">
+          <Ads format="horizontal" slot="2207590813" isMobileFooter={false} className="lg:hidden" />
+        </div>
+
+        {/* Puzzle Grid */}
+        <div id="brainwave-games-grid" className="mb-16 scroll-mt-6">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">Featured Brainwave Games</h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 lg:gap-6">
+            {dailyPuzzles.map((puzzle, index) => (
+              <PuzzleCard key={puzzle.category} puzzle={puzzle} index={index} />
+            ))}
+          </div>
+        </div>
+
+        {/* Only one ad allowed per page
+          <div className="py-4">
+          <Ads format="horizontal" slot="9040722315" isMobileFooter={false} className="lg:hidden" />
+        </div>
+        */}
+
+        {/* Gaming Features Section */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">How Brainwave Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-2xl p-6 border border-cyan-500/20 text-center">
+              <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🎯</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Pick a Theme</h3>
+              <p className="text-gray-300">Choose from pop culture, places, words, history, science, food, and more.</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-6 border border-purple-500/20 text-center">
+              <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">⚡</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Daily Rotation</h3>
+              <p className="text-gray-300">Each game gets a fresh puzzle on its own daily schedule.</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20 text-center">
+              <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🧠</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Use the Clues</h3>
+              <p className="text-gray-300">Hints narrow the answer while keeping each round quick to play.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ Section - Gaming Style */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
               {
                 question: "What are Brainwave games?",
                 answer: "Brainwave games are free daily trivia puzzles built around clues and themed answers."
@@ -177,10 +316,17 @@ export default async function BrainwavePage() {
                 question: "Can I share my results?",
                 answer: "Yes. Completed games include a share option for your result."
               }
-            ].map(faq => <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}</section>
-        <section className={club.explore}><div><p className={club.eyebrow}>KEEP EXPLORING</p><h2>More ways to give your brain a break.</h2></div><div className={club.exploreLinks}>{[['Daily trivia', '/daily-trivias'], ['Weekly challenges', '/challenges'], ['Word games', '/word-games'], ['Trivia library', '/trivias']].map(([label, href]) => <Link key={href} href={href}>{label}<ArrowRight size={17} /></Link>)}</div></section>
-      </main>
-      <PuzzleClubFooter />
+            ].map((faq, index) => (
+              <div key={index} className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
+                <h3 className="font-semibold text-lg text-white mb-3">{faq.question}</h3>
+                <p className="text-gray-300">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <ExploreSections exclude="brainwave" />
+      </div>
     </div>
   );
 }

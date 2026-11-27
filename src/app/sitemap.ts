@@ -1,5 +1,6 @@
 export const revalidate = 3600;
 import { MetadataRoute } from 'next'
+import { IQ_PERSONALITY_TESTS } from '@/config/homeContent'
 import { getCategoriesWithMinQuestions, getAllSubcategories } from '@/lib/supabase'
 import { getTriviaCategorySlugs } from '@/lib/trivia-categories'
 import { slugifyTriviaSegment } from '@/lib/trivia-slugs'
@@ -287,6 +288,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]
 
+  // ── IQ and personality tests ─────────────────────────────────────────────
+  const assessmentPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/iq-and-personality-tests`,
+      changeFrequency: 'monthly',
+      priority: PRIORITY.MEDIUM,
+    },
+    ...IQ_PERSONALITY_TESTS.map(test => ({
+      url: `${baseUrl}${test.path}`,
+      changeFrequency: 'monthly' as const,
+      priority: PRIORITY.MEDIUM,
+    })),
+  ]
+
   // ── Dynamic content (Contentful) ──────────────────────────────────────────
   // (triviaBankPages and blogPages are fetched concurrently above)
 
@@ -310,8 +325,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...dailyTriviaPages,
     ...brainwavePages,
     ...dynamicPages,       // swap with verifiedDynamicPages once enabled
-    //...retroGamePages,
-    //...wordGamePages,
-    //..numberPuzzlePages,
+    ...retroGamePages,
+    ...wordGamePages,
+    ...numberPuzzlePages,
+    ...assessmentPages,
   ]
 }

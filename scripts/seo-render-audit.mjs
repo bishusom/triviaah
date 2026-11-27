@@ -10,19 +10,18 @@ const seedPaths = [
   '/brainwave',
   '/brainwave/plotle',
   '/brainwave/literale',
-  '/challenges',
   '/trivias',
   '/word-games',
   '/number-puzzles',
   '/retro-games',
+  '/word-games/cryptogram',
+  '/number-puzzles/sudoku',
+  '/retro-games/snake',
+  '/iq-and-personality-tests',
+  '/iq-and-personality-tests/matrixiq',
 ];
 
-const prunedLinkTargets = [
-  '/trivias',
-  '/word-games',
-  '/number-puzzles',
-  '/retro-games',
-];
+const prunedLinkTargets = ['/trivias'];
 
 function stripTags(html) {
   return html
@@ -93,7 +92,7 @@ function isIndexAllowed(robots) {
 }
 
 function expectedIndexability(path) {
-  if (['/trivias', '/word-games', '/number-puzzles', '/retro-games'].includes(path)) {
+  if (path === '/trivias') {
     return false;
   }
 
@@ -115,17 +114,6 @@ async function fetchHtml(path) {
     status: response.status,
     html,
   };
-}
-
-async function discoverChallengePaths() {
-  try {
-    const { html } = await fetchHtml('/challenges');
-    return [...new Set(getLinks(html)
-      .filter((href) => /^\/challenges\/[^/?#]+$/.test(href))
-      .slice(0, 3))];
-  } catch {
-    return [];
-  }
 }
 
 function auditHtml({ url, path, status, html }) {
@@ -168,7 +156,7 @@ function auditHtml({ url, path, status, html }) {
   if (expectedIndex && wordCount < 250) issues.push(`thin rendered HTML (${wordCount} words)`);
   if (jsonLdErrors.length > 0) issues.push(`invalid JSON-LD (${jsonLdErrors.length})`);
   if (expectedIndex && jsonLdBlocks.length === 0) issues.push('no JSON-LD');
-  if (['/', '/daily-trivias', '/brainwave', '/challenges'].includes(path) && prominentPrunedLinks.length > 0) {
+  if (['/', '/daily-trivias', '/brainwave'].includes(path) && prominentPrunedLinks.length > 0) {
     issues.push(`links to pruned pages: ${[...new Set(prominentPrunedLinks)].join(', ')}`);
   }
 
@@ -205,8 +193,7 @@ function printResult(result) {
 }
 
 async function main() {
-  const challengePaths = await discoverChallengePaths();
-  const paths = [...new Set([...seedPaths, ...challengePaths])];
+  const paths = [...new Set(seedPaths)];
 
   console.log(`SEO render audit against ${baseUrl}`);
   console.log(`Auditing ${paths.length} URLs`);

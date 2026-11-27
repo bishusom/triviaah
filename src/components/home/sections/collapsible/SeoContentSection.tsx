@@ -14,16 +14,16 @@ const primaryLinks = [
     cta: 'Solve a puzzle',
   },
   {
-    href: '/challenges',
-    label: 'Weekly trivia challenges',
-    description: 'Put your knowledge of one topic to the test. Each themed challenge gives you 30 seconds per question to make your choice.',
-    cta: 'Pick a challenge',
-  },
-  {
     href: '/trivia-bank',
     label: 'Trivia questions and answers',
     description: 'Hosting a quiz? Find questions for a pub night, classroom warmup, or get-together, with answers ready for the host.',
     cta: 'Browse the question bank',
+  },
+  {
+    href: '/multiplayer',
+    label: 'Multiplayer trivia',
+    description: 'Bring friends together for a quiz. Create a private room, invite your players, and see who knows the most.',
+    cta: 'Play with friends',
   },
 ];
 

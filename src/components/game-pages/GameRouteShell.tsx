@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import type { GamePageContent } from '@/lib/game-pages';
 import Link from 'next/link';
 import Image from 'next/image';
-import wordStyles from '@/components/word-games/WordGamesClub.module.css';
 
 type GameRouteShellProps = {
   page: GamePageContent;
@@ -43,11 +42,9 @@ export default function GameRouteShell({
   const otherGames = relatedGames
     .filter(g => g.route_path !== page.route_path && g.page_kind !== 'hub')
     .slice(0, 6);
-  const usesPuzzleClubTheme = page.route_path.startsWith('/word-games/') || page.route_path.startsWith('/number-puzzles/');
-  const usesRetroClubTheme = page.route_path.startsWith('/retro-games/');
 
   return (
-    <div id="game-main" className={`${usesPuzzleClubTheme ? wordStyles.gamePage : usesRetroClubTheme ? wordStyles.retroGamePage : ''} min-h-screen bg-gradient-to-br from-gray-900 to-black text-white`}>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <div className="mx-auto w-full max-w-3xl px-4 py-6 md:py-8">
         <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 md:p-6 shadow-2xl">
           <h1 className="text-2xl md:text-4xl font-black tracking-tight text-white">

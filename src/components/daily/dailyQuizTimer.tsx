@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 
-export default function Timer({ className = 'text-cyan-400 font-medium mt-2' }: { className?: string }) {
+export default function Timer() {
   const [timeLeft, setTimeLeft] = useState('');
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export default function Timer({ className = 'text-cyan-400 font-medium mt-2' }: 
       const now = new Date();
       const midnight = new Date();
       midnight.setHours(24, 0, 0, 0);
-      
+
       const diff = midnight.getTime() - now.getTime();
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -24,7 +24,7 @@ export default function Timer({ className = 'text-cyan-400 font-medium mt-2' }: 
   }, []);
 
   return (
-    <div className={className}>
+    <div className="text-cyan-400 font-medium mt-2">
       {timeLeft ? `Resets in ${timeLeft}` : 'Loading...'}
     </div>
   );

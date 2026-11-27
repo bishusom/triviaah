@@ -7,8 +7,6 @@ import Script from 'next/script';
 import { getGamePagesBySection, type GamePageContent } from '@/lib/game-pages';
 import { ScrollToSectionButton } from '@/components/common/ScrollToSectionButton';
 import ExploreSections from '@/components/common/ExploreSections';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
-import styles from '@/components/word-games/WordGamesClub.module.css';
 
 export const metadata: Metadata = {
   title: 'Free Retro Games Online - Snake, Tetris, Pong & More | Triviaah',
@@ -62,10 +60,10 @@ export const metadata: Metadata = {
     site: '@elitetrivias',
   },
   robots: {
-    index: false,
+    index: true,
     follow: true,
     googleBot: {
-      index: false,
+      index: true,
       follow: true,
       'max-video-preview': -1,
       'max-image-preview': 'large',
@@ -164,20 +162,20 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
       key={game.route_path}
       href={route}
       title={`Play ${game.title} - ${tagline}`}
-      className={`${styles.gameCard} group relative overflow-hidden rounded-2xl border transition-all duration-300`}
+      className="group relative overflow-hidden rounded-2xl shadow-2xl hover:shadow-glow transition-all duration-500 bg-gradient-to-br from-gray-800 to-gray-900 border border-amber-500/20 hover:border-amber-400/40"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
+
       <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none">
         <div className="absolute inset-0" style={{
           backgroundImage: 'linear-gradient(0deg, transparent 50%, rgba(255,255,255,.05) 50%)',
           backgroundSize: '100% 4px',
         }} />
       </div>
-      
+
       <div className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-400/10 to-amber-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-      
-      <div className={`${styles.gameArt} relative aspect-square w-full overflow-hidden`}>
+
+      <div className="relative aspect-square w-full bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
         <Image
           src={imageSrc}
           alt={`${game.title} Retro Game`}
@@ -188,7 +186,7 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
           priority={index < 2}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-        
+
         <div className="absolute bottom-4 right-4 w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
           <Play className="w-5 h-5 text-white" />
         </div>
@@ -196,25 +194,25 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
         <div className="absolute top-4 left-4 bg-black/70 text-white text-sm font-semibold px-3 py-1 rounded-full">
           #{index + 1}
         </div>
-        
+
         <div className="absolute top-4 right-4 bg-amber-600/80 text-white text-xs font-bold px-2 py-1 rounded">
           {year}
         </div>
       </div>
-      
+
       <div className="p-6 relative z-10">
-        <h3 className={`${styles.gameCardTitle} mb-2 text-lg font-bold transition-colors`}>
+        <h3 className="font-bold text-lg text-white mb-2 group-hover:text-amber-300 transition-colors">
           {game.title}
         </h3>
-        <p className={`${styles.gameCardCopy} mb-3 line-clamp-2 text-sm`}>
+        <p className="text-sm text-gray-300 line-clamp-2 mb-3">
           {game.supporting_copy || game.intro_text}
         </p>
-        
+
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs text-gray-400">Difficulty:</span>
           <div className="flex gap-1">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div 
+              <div
                 key={i}
                 className={`w-2 h-2 rounded-full ${
                   i < 2 ? 'bg-green-500' : 'bg-gray-700'
@@ -223,7 +221,7 @@ function GameCard({ game, index }: { game: GamePageContent; index: number }) {
             ))}
           </div>
         </div>
-        
+
         <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
           <div className="h-full bg-gradient-to-r from-amber-500 to-red-500 w-0 group-hover:w-full transition-all duration-700" />
         </div>
@@ -471,11 +469,11 @@ export default async function RetroGamesPage() {
   ];
 
   return (
-    <div id="retro-games-main" className={styles.page}>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Structured Data */}
         <StructuredData games={retroGames} currentDate={currentDate} />
-        
+
         {/* ── Compact Hero Section ────────────────────────────────────────── */}
         <div className="mb-8 lg:mb-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -625,7 +623,7 @@ export default async function RetroGamesPage() {
                 <h3 className="text-xl font-bold text-white mb-2">Pure Gameplay</h3>
                 <p className="text-gray-300">Simple controls, deep strategy - no complex mechanics or tutorials needed</p>
               </div>
-              
+
               <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-6 border border-purple-500/20 text-center">
                 <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">🧠</span>
@@ -633,7 +631,7 @@ export default async function RetroGamesPage() {
                 <h3 className="text-xl font-bold text-white mb-2">Brain Training</h3>
                 <p className="text-gray-300">Improve logic, reflexes, pattern recognition, and strategic thinking</p>
               </div>
-              
+
               <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-2xl p-6 border border-blue-500/20 text-center">
                 <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">⏱️</span>
@@ -641,7 +639,7 @@ export default async function RetroGamesPage() {
                 <h3 className="text-xl font-bold text-white mb-2">Quick Sessions</h3>
                 <p className="text-gray-300">Perfect for short breaks - most games can be enjoyed in 5-10 minutes</p>
               </div>
-              
+
               <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20 text-center">
                 <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">📈</span>
@@ -698,12 +696,12 @@ export default async function RetroGamesPage() {
             <div className="prose prose-invert max-w-none">
               <h2 className="text-3xl font-bold text-white mb-6">Retro Games Collection - Timeless Classic Arcade Experiences</h2>
               <p className="text-lg text-gray-300 mb-6">
-                Our <strong className="text-amber-400">retro games collection</strong> brings back the golden age of gaming with 
-                carefully preserved classics that have stood the test of time. From the strategic depth of Minesweeper 
-                to the addictive gameplay of Tetris, these games offer pure, unadulterated entertainment that modern 
+                Our <strong className="text-amber-400">retro games collection</strong> brings back the golden age of gaming with
+                carefully preserved classics that have stood the test of time. From the strategic depth of Minesweeper
+                to the addictive gameplay of Tetris, these games offer pure, unadulterated entertainment that modern
                 titles often overlook.
               </p>
-              
+
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
                   <h3 className="text-xl font-bold text-white mb-4">Featured Retro Games</h3>
@@ -726,7 +724,7 @@ export default async function RetroGamesPage() {
                     </li>
                   </ul>
                 </div>
-                
+
                 <div>
                   <h3 className="text-xl font-bold text-white mb-4">Cognitive Benefits</h3>
                   <ul className="space-y-3 text-gray-300">
@@ -777,15 +775,15 @@ export default async function RetroGamesPage() {
               <div className="mt-8">
                 <h3 className="text-2xl font-bold text-white mb-4">The Legacy of Retro Gaming</h3>
                 <p className="text-gray-300 mb-4">
-                  Retro games represent the foundation of modern gaming. Each game in our collection has influenced 
-                  countless titles that followed. <strong className="text-amber-400">Pong</strong> demonstrated that electronic games could 
-                  be commercially viable. <strong className="text-purple-400">Tetris</strong> showed how simple mechanics could create endless 
-                  engagement. <strong className="text-blue-400">Minesweeper</strong> proved that logic puzzles could be as addictive as action 
+                  Retro games represent the foundation of modern gaming. Each game in our collection has influenced
+                  countless titles that followed. <strong className="text-amber-400">Pong</strong> demonstrated that electronic games could
+                  be commercially viable. <strong className="text-purple-400">Tetris</strong> showed how simple mechanics could create endless
+                  engagement. <strong className="text-blue-400">Minesweeper</strong> proved that logic puzzles could be as addictive as action
                   games, and <strong className="text-emerald-400">Snake</strong> pioneered mobile gaming on a global scale.
                 </p>
                 <p className="text-gray-300">
-                  These games have endured for decades because they focus on what matters most: <strong>engaging gameplay</strong>, 
-                  <strong> skill-based challenges</strong>, and <strong>pure fun</strong>. In an era of complex graphics and 
+                  These games have endured for decades because they focus on what matters most: <strong>engaging gameplay</strong>,
+                  <strong> skill-based challenges</strong>, and <strong>pure fun</strong>. In an era of complex graphics and
                   sprawling narratives, sometimes the simplest games provide the deepest satisfaction.
                 </p>
               </div>
@@ -797,8 +795,8 @@ export default async function RetroGamesPage() {
             <div className="bg-gradient-to-r from-amber-500/20 to-red-500/20 rounded-2xl p-8 border border-amber-500/30">
               <h3 className="text-2xl font-bold text-white mb-4">Ready to Play Some Classics?</h3>
               <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-                Choose any game above to start playing instantly. No downloads, no registration, 
-                just pure retro gaming fun. Challenge yourself, beat your high scores, and 
+                Choose any game above to start playing instantly. No downloads, no registration,
+                just pure retro gaming fun. Challenge yourself, beat your high scores, and
                 experience why these games have remained popular for decades.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
@@ -818,7 +816,6 @@ export default async function RetroGamesPage() {
 
         <ExploreSections exclude="retro-games" />
       </div>
-      <PuzzleClubFooter />
     </div>
   );
 }

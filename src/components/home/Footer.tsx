@@ -43,12 +43,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/challenges" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300 flex items-center gap-2 group">
-                  <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full group-hover:scale-150 transition-transform"></div>
-                  Weekly Challenges
-                </Link>
-              </li>
-              <li>
                 <Link href="/leaderboard" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300 flex items-center gap-2 group">
                   <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full group-hover:scale-150 transition-transform"></div>
                   Leaderboard

@@ -85,10 +85,10 @@ export async function generateMetadata({
       images: [ogImage],
     },
     robots: {
-      index: false,
+      index: true,
       follow: true,
       googleBot: {
-        index: false,
+        index: true,
         follow: true,
         'max-video-preview': -1,
         'max-image-preview': 'large',
@@ -138,7 +138,6 @@ export default async function WordGamePage({
           backHref="/word-games"
           backLabel="Back to Word Games"
           game={<WordGamesGameClient slug={routeDefinition.slug} />}
-          theme="puzzle-club"
         />
       </GameRouteShell>
     </GamePageChrome>

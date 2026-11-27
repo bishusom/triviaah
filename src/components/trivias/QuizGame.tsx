@@ -15,14 +15,13 @@ import { getUniquePersistentGuestId } from '@/lib/guestId';
 import QuizSummary from '@/components/trivias/QuizSummary';
 import QuestionReport from '@/components/trivias/QuestionReport';
 import { Maximize2, Minimize2, Flame, Zap } from 'lucide-react';
-import styles from './QuizExperience.module.css';
 
 const FALLBACK_QUESTION_IMAGE = '/imgs/default-question-img.png';
 
 const difficultyPillStyles: Record<string, string> = {
-  easy: 'border-[#245b40] bg-[#347a58] text-white',
-  medium: 'border-[#78500d] bg-[#9a6812] text-white',
-  hard: 'border-[#8d382f] bg-[#ad4d42] text-white',
+  easy: 'border-emerald-400/30 bg-emerald-500/15 text-emerald-200',
+  medium: 'border-amber-400/30 bg-amber-500/15 text-amber-200',
+  hard: 'border-rose-400/30 bg-rose-500/15 text-rose-200',
 };
 
 function getDifficultyLabel(difficulty?: string) {
@@ -31,7 +30,7 @@ function getDifficultyLabel(difficulty?: string) {
 }
 
 function getDifficultyPillClass(difficulty?: string) {
-  return difficultyPillStyles[difficulty?.toLowerCase() || 'easy'] || 'border-[#105348] bg-[#17675b] text-white';
+  return difficultyPillStyles[difficulty?.toLowerCase() || 'easy'] || 'border-cyan-400/30 bg-cyan-500/15 text-cyan-200';
 }
 
 function formatQuizMetaLabel(value?: string) {
@@ -53,7 +52,7 @@ interface QuizGameProps {
   category: string;
   subcategory?: string;
   quizConfig?: QuizConfig;
-  quizType?: 'trivias' | 'daily-trivias' | 'quick-fire' | 'weekly_challenge';
+  quizType?: 'trivias' | 'daily-trivias' | 'quick-fire';
   quizDate?: string;
   showDailyTriviaHistory?: boolean;
 }
@@ -79,13 +78,13 @@ export default function QuizGame({
   quizDate,
   showDailyTriviaHistory = true
 }: QuizGameProps) {
-  
+
   /* ---------- Config ---------- */
   const isQuickfire = quizConfig?.isQuickfire || category === 'quick-fire';
   const timePerQuestion = quizConfig?.timePerQuestion ?? (isQuickfire ? 10 : 30);
   const hasBonusQuestion = quizConfig?.hasBonusQuestion ?? (category === 'quick-fire');
   const regularQuestionCount = quizConfig?.regularQuestionCount ?? 6;
-  
+
   /* ---------- States ---------- */
   const [isTimedMode] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -186,7 +185,7 @@ export default function QuizGame({
   }, [timePerQuestion, hasBonusQuestion, currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion]);
 
   const finishQuiz = useCallback(async (finalScore: number, finalCorrectCount: number) => {
-    event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});    
+    event({action: 'quiz_completed', category: 'quiz', label: 'quiz'});
     setQuizResult({
       score: finalScore,
       correctCount: finalCorrectCount,
@@ -209,7 +208,7 @@ export default function QuizGame({
     const isLastRegularQuestion = currentIndex >= regularQuestions.length - 1 && !showBonusQuestion;
     const isLastBonusQuestion = showBonusQuestion;
     const finished = isLastBonusQuestion || (isLastRegularQuestion && !bonusQuestion);
-    
+
     if (finished) finishQuiz(score, correctCount);
     else moveToNextQuestion();
   }, [currentIndex, regularQuestions.length, showBonusQuestion, bonusQuestion, finishQuiz, moveToNextQuestion, score, correctCount]);
@@ -237,14 +236,14 @@ export default function QuizGame({
 
   const handleAnswer = useCallback((option: string) => {
     if (!gameStarted || showFeedback || timeUp) return;
-    
+
     const correct = option === currentQuestion.correct;
     const base = { easy: 100, medium: 200, hard: 300 }[currentQuestion.difficulty || 'easy'] || 100;
-    
+
     const multiplier = correct ? Math.min(1 + streak * 0.1, 2) : 1;
     const earned = isQuickfire ? (showBonusQuestion ? 500 : base + (timeLeft || 0) * 10) : (timeLeft || 0) * 10 + 50;
     const finalEarned = Math.floor(earned * multiplier);
-    
+
     setSelectedOption(option);
     setShowFeedback(true);
     setTitbit(currentQuestion.titbits || '');
@@ -270,7 +269,7 @@ export default function QuizGame({
       setStreak(0);
       playSound('incorrect');
     }
-    
+
     if (isQuickfire) {
       setTimeout(() => {
         if (reportOpenRef.current) quickfireAdvancePendingRef.current = true;
@@ -377,7 +376,7 @@ export default function QuizGame({
     }
   };
 
-  if (isLoading || attemptMode === 'checking') return <div className={styles.loading}><motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} /></div>;
+  if (isLoading || attemptMode === 'checking') return <div className="flex items-center justify-center min-h-[400px]"><motion.div className="w-16 h-16 border-4 border-cyan-500 border-dashed rounded-full" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} /></div>;
 
   if (showSummary && quizResult) return (
     <QuizSummary
@@ -391,14 +390,14 @@ export default function QuizGame({
   );
 
   return (
-    <div className={`${styles.quiz} ${isFullScreen ? styles.fullScreen : ''}`}>
+    <div className={isFullScreen ? "fixed inset-0 z-50 bg-gray-900 overflow-y-auto p-4" : "relative max-w-4xl mx-auto p-2 sm:p-4 bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl"}>
       {showConfetti && <Confetti width={width} height={height} recycle={false} />}
       {attemptMode === 'practice' && (
         <div className="mb-4 rounded-xl border border-violet-400/30 bg-violet-500/10 px-4 py-3 text-center text-sm font-bold text-violet-200">
           Practice mode — this replay will not affect the leaderboard or your stats.
         </div>
       )}
-      
+
       <AnimatePresence>
         {milestone && (
           <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1.2, opacity: 1 }} exit={{ scale: 0, opacity: 0 }} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] bg-yellow-500 text-black font-black px-8 py-4 rounded-full shadow-[0_0_30px_rgba(234,179,8,0.6)] text-2xl pointer-events-none">
@@ -418,7 +417,7 @@ export default function QuizGame({
 
       {gameStarted && currentQuestion && (
         <>
-          <div className={`${styles.statusBar} mb-3 flex flex-col gap-2 p-3 font-bold text-xs sm:flex-row sm:items-center sm:justify-between sm:p-2 sm:text-sm`}>
+          <div className="mb-3 flex flex-col gap-2 rounded-lg bg-blue-600 p-3 text-white font-bold text-xs sm:flex-row sm:items-center sm:justify-between sm:p-2 sm:text-sm">
             <span className="flex items-center gap-1 text-[11px] sm:text-xs">
               {showBonusQuestion ? 'BONUS ⚡' : `Q${currentIndex + 1}/${regularQuestions.length + (bonusQuestion ? 1 : 0)}`}
               {streak > 1 && <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-orange-500 px-2 py-0.5 text-[10px] animate-bounce"><Flame size={10} /> {streak}</span>}
@@ -432,7 +431,7 @@ export default function QuizGame({
             </div>
           </div>
 
-          <motion.div key={currentQuestion.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`${styles.questionCard} mb-3 p-4 sm:p-6`}>
+          <motion.div key={currentQuestion.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-3 rounded-xl border border-gray-600 bg-gray-800 p-3 sm:p-4">
             <div className={`flex flex-col gap-4 sm:flex-row ${questionImage ? 'items-start' : 'items-center justify-center text-center'}`}>
               {questionImage && (
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 mx-auto sm:mx-0">
@@ -460,19 +459,19 @@ export default function QuizGame({
               )}
               <div className="flex flex-1 flex-col items-center gap-2 sm:items-start">
                 <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-                  <span className={`${styles.metaPill} inline-flex w-fit items-center rounded-full border px-3 py-1.5 text-[11px] font-extrabold uppercase leading-none tracking-wide ${getDifficultyPillClass(currentQuestion.difficulty)}`}>
+                  <span className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wide ${getDifficultyPillClass(currentQuestion.difficulty)}`}>
                     {getDifficultyLabel(currentQuestion.difficulty)}
                   </span>
-                  <span className={`${styles.metaPill} inline-flex w-fit items-center rounded-full border border-[#105348] bg-[#17675b] px-3 py-1.5 text-[11px] font-extrabold uppercase leading-none tracking-wide text-white`}>
+                  <span className="inline-flex w-fit items-center rounded-full border border-cyan-400/20 bg-cyan-500/10 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wide text-cyan-100">
                     {formatQuizMetaLabel(currentQuestion.category)}
                   </span>
                   {currentQuestion.subcategory && (
-                    <span className={`${styles.metaPill} inline-flex w-fit items-center rounded-full border border-[#5c3e68] bg-[#765384] px-3 py-1.5 text-[11px] font-extrabold uppercase leading-none tracking-wide text-white`}>
+                    <span className="inline-flex w-fit items-center rounded-full border border-violet-400/20 bg-violet-500/10 px-2.5 py-1 text-[10px] font-bold uppercase leading-none tracking-wide text-violet-100">
                       {formatQuizMetaLabel(currentQuestion.subcategory)}
                     </span>
                   )}
                 </div>
-                <h2 className={`${styles.questionText} text-base font-bold leading-snug sm:text-lg md:text-xl`}>
+                <h2 className="text-base font-bold leading-snug text-white sm:text-lg md:text-xl">
                   {currentQuestion.question}
                 </h2>
               </div>
@@ -481,12 +480,7 @@ export default function QuizGame({
             <AnimatePresence>
               {showFeedback && (
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="mt-4 flex flex-col gap-3">
-                  {titbit && (
-                    <div className={styles.titbit} role="note">
-                      <span aria-hidden="true">💡</span>
-                      <p><strong>Fun Fact:</strong> {titbit}</p>
-                    </div>
-                  )}
+                  {titbit && <div className="bg-amber-500/10 border-l-4 border-amber-500 p-3 text-amber-100 rounded text-xs sm:text-sm italic">💡 <strong>Fun Fact:</strong> {titbit}</div>}
                   <div className="flex justify-end">
                     <QuestionReport
                       questionId={currentQuestion.id}
@@ -494,7 +488,7 @@ export default function QuizGame({
                     />
                   </div>
                   {!isQuickfire && showNextButton && (
-                    <motion.button initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} onClick={handleAdvance} className={styles.continueButton}>
+                    <motion.button initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} onClick={handleAdvance} className="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg shadow-lg uppercase tracking-wider animate-pulse">
                       { (currentIndex >= regularQuestions.length - 1 && !showBonusQuestion && !bonusQuestion) ? "Finish Result 🏁" : "Continue →" }
                     </motion.button>
                   )}
@@ -507,11 +501,11 @@ export default function QuizGame({
             {shuffledOptions.map((opt) => {
               const status = showFeedback ? (opt === currentQuestion.correct ? 'correct' : selectedOption === opt ? 'wrong' : 'dimmed') : 'default';
               return (
-                <button key={opt} disabled={showFeedback || timeUp} onClick={() => handleAnswer(opt)} className={`${styles.answer} p-3 sm:p-4 text-left font-medium text-sm sm:text-base ${
-                  status === 'correct' ? styles.correct :
-                  status === 'wrong' ? styles.wrong :
-                  status === 'dimmed' ? styles.dimmed :
-                  styles.answerDefault
+                <button key={opt} disabled={showFeedback || timeUp} onClick={() => handleAnswer(opt)} className={`p-3 sm:p-4 rounded-xl text-left border-2 transition-all font-medium text-sm sm:text-base ${
+                  status === 'correct' ? 'bg-green-600/40 border-green-500 text-white' :
+                  status === 'wrong' ? 'bg-red-600/40 border-red-500 text-white' :
+                  status === 'dimmed' ? 'bg-gray-800 border-gray-700 text-gray-400 opacity-60' :
+                  'bg-gray-700 border-gray-600 text-gray-100 hover:border-cyan-500'
                 }`}>
                   <div className="flex justify-between items-center">
                     <span>{opt}</span>

@@ -2,8 +2,6 @@
 import Link from 'next/link';
 import { useState, FormEvent } from 'react';
 import { ArrowLeft, CheckCircle, XCircle, Mail, User, MessageSquare } from 'lucide-react';
-import PuzzleClubFooter from '@/components/home/PuzzleClubFooter';
-import styles from '@/components/common/InfoPagesClub.module.css';
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -43,18 +41,18 @@ export default function ContactPage() {
   };
 
   return (
-    <div id="contact-main" className={styles.page}>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-block bg-gradient-to-r from-purple-600 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
             GET IN TOUCH
           </div>
-          
-          <h1 className="mb-6 font-serif text-5xl font-bold text-[#203b3a] md:text-6xl">
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Contact Us
           </h1>
-          
+
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Have questions or feedback? We&apos;d love to hear from you!
           </p>
@@ -234,7 +232,6 @@ export default function ContactPage() {
           </section>
         </div>
       </div>
-      <PuzzleClubFooter />
     </div>
   );
 }

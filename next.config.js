@@ -8,6 +8,11 @@ const nextConfig = {
   // Redirect configuration - UPDATED: Now redirecting triviaah.com to elitetrivias.com
   async redirects() {
     return [
+      {
+        source: "/challenges/:path*",
+        destination: "/trivias",
+        permanent: true,
+      },
       // Redirect triviaah.com to elitetrivias.com
       //{
       //  source: '/:path*',

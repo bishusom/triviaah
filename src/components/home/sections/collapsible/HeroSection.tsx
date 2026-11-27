@@ -17,7 +17,7 @@ export default function HeroSection() {
           PLAY. <span className="text-blue-500">THINK.</span> WIN.
         </h1>
         <p className="mx-auto mb-5 max-w-2xl text-sm leading-relaxed text-gray-400 md:text-base">
-          Play a fresh set of Daily Trivia, Brainwave Puzzles and Weekly Challenges built around focused topics. Track your scores, invite friends, and build a streak worth defending.
+          Play a fresh set of Daily Trivia, Brainwave Puzzles and topic quizzes built around focused topics. Track your scores, invite friends, and build a streak worth defending.
         </p>
         <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200">
           <Users className="h-3.5 w-3.5" />
@@ -32,10 +32,10 @@ export default function HeroSection() {
             <Zap className="h-4 w-4" />
           </Link>
           <Link
-            href="/challenges"
+            href="/trivias"
             className="inline-flex items-center justify-center gap-2 rounded-full border border-cyan-400/30 bg-white/5 px-6 py-2.5 text-sm font-medium text-cyan-100 transition-all duration-300 hover:scale-105 hover:border-cyan-400/60 hover:bg-cyan-400/10 hover:text-white active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-950"
           >
-            Explore Trivia Challenges
+            Explore Trivia Categories
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

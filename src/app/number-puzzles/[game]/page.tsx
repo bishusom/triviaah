@@ -89,10 +89,10 @@ export async function generateMetadata({
       images: [ogImage],
     },
     robots: {
-      index: false,
+      index: true,
       follow: true,
       googleBot: {
-        index: false,
+        index: true,
         follow: true,
         'max-video-preview': -1,
         'max-image-preview': 'large',
@@ -128,8 +128,8 @@ export default async function NumberPuzzlePage({
 
   return (
     <GamePageChrome>
-      <GameRouteShell 
-        page={page} 
+      <GameRouteShell
+        page={page}
         sectionLabel="Number Puzzles"
         relatedGames={allNumberPuzzles}
       >
@@ -146,7 +146,6 @@ export default async function NumberPuzzlePage({
           backHref="/number-puzzles"
           backLabel="Back to Number Puzzles"
           game={<NumberPuzzlesGameClient slug={routeDefinition.slug} />}
-          theme="puzzle-club"
         />
       </GameRouteShell>
     </GamePageChrome>
